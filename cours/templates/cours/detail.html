@@ -1,0 +1,570 @@
+{% extends 'base.html' %}
+{% load video_tags %}
+{% block titre %}{{ cours.titre }} — Numeria Institute{% endblock %}
+
+{% block contenu %}
+
+<div class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 flex flex-col">
+
+    <!-- ===== BARRE DE PROGRESSION EN HAUT ===== -->
+    <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-16 z-40">
+        <div class="w-full px-4 sm:px-8 lg:px-16 py-3">
+            <div class="flex items-center gap-4">
+
+                <!-- Lien retour -->
+                <a href="{% url 'cours:catalogue' %}"
+                   class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-or transition-colors flex-shrink-0 text-sm">
+                    ← Catalogue
+                </a>
+
+                <!-- Titre du cours -->
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs text-gray-400 dark:text-gray-500 truncate">{{ cours.titre }}</p>
+                    {% if est_inscrit %}
+                    <div class="flex items-center gap-2 mt-1">
+                        <div class="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
+                            <div class="bg-numeria-or rounded-full h-1.5 transition-all"
+                                 style="width: {{ inscription.progression }}%">
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-numeria-or flex-shrink-0">
+                            {{ inscription.progression }}%
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Statut inscription -->
+                {% if est_inscrit %}
+                <span class="text-xs text-green-500 font-bold flex-shrink-0">
+                    {{ lecons_terminees_count }}/{{ total_lecons }} leçons
+                </span>
+                {% else %}
+                <form method="POST" action="{% url 'cours:inscrire' cours.id %}">
+                    {% csrf_token %}
+                    <button type="submit"
+                        class="bg-numeria-or text-numeria-bleu font-bold px-4 py-1.5 rounded-lg text-xs hover:bg-yellow-400 transition-colors">
+                        {% if cours.est_gratuit %}S'inscrire gratuitement{% else %}S'inscrire{% endif %}
+                    </button>
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MESSAGES ===== -->
+    {% if messages %}
+    <div class="w-full px-4 sm:px-8 lg:px-16 mt-3">
+        {% for message in messages %}
+        <div class="p-3 rounded-xl mb-2 text-sm
+            {% if message.tags == 'error' %}bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-200
+            {% elif message.tags == 'warning' %}bg-yellow-50 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-200
+            {% elif message.tags == 'info' %}bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200
+            {% else %}bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-200{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <div class="flex flex-col lg:flex-row flex-1">
+
+        <!-- ── SIDEBAR LEÇONS ── -->
+        <div class="lg:w-72 xl:w-80 flex-shrink-0 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 lg:sticky lg:top-28 lg:h-screen lg:overflow-y-auto">
+
+            <!-- Infos cours -->
+            <div class="p-5 border-b border-gray-100 dark:border-gray-700">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-numeria-or text-xs font-bold uppercase tracking-wide">
+                        {{ cours.get_matiere_display }}
+                    </span>
+                    {% if cours.type_cours == 'scolaire' and cours.classe %}
+                    <span class="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 text-xs font-bold px-2 py-0.5 rounded-full">
+                        {{ cours.get_classe_display }}
+                    </span>
+                    {% endif %}
+                </div>
+                <h2 class="font-bold text-gray-800 dark:text-gray-100 text-sm leading-snug">
+                    {{ cours.titre }}
+                </h2>
+                <p class="text-gray-400 dark:text-gray-500 text-xs mt-1">
+                    {{ cours.get_niveau_display }} · {{ total_lecons }} leçons
+                </p>
+            </div>
+
+            <!-- Liste des leçons -->
+            <div class="p-3">
+                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide px-2 mb-2">
+                    Contenu du cours
+                </p>
+
+                {% for lecon in lecons %}
+                <a href="?lecon={{ lecon.id }}"
+                   class="flex items-center gap-3 p-2.5 rounded-xl mb-1 transition-colors group
+                   {% if lecon_active and lecon.id == lecon_active.id %}
+                       bg-numeria-bleu text-white
+                   {% else %}
+                       hover:bg-gray-50 dark:hover:bg-gray-700
+                   {% endif %}">
+
+                    <!-- Icône statut -->
+                    <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold
+                        {% if lecon.id in lecons_terminees_ids %}
+                            bg-green-500 text-white
+                        {% elif lecon_active and lecon.id == lecon_active.id %}
+                            bg-white text-numeria-bleu
+                        {% else %}
+                            bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400
+                        {% endif %}">
+                        {% if lecon.id in lecons_terminees_ids %}
+                            ✓
+                        {% else %}
+                            {{ lecon.ordre }}
+                        {% endif %}
+                    </div>
+
+                    <!-- Titre leçon -->
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium truncate
+                            {% if lecon_active and lecon.id == lecon_active.id %}
+                                text-white
+                            {% elif lecon.id in lecons_terminees_ids %}
+                                text-green-600 dark:text-green-400
+                            {% else %}
+                                text-gray-700 dark:text-gray-200
+                            {% endif %}">
+                            {{ lecon.titre }}
+                        </p>
+                        <p class="text-xs
+                            {% if lecon_active and lecon.id == lecon_active.id %}
+                                text-blue-200
+                            {% else %}
+                                text-gray-400 dark:text-gray-500
+                            {% endif %}">
+                            ⏱ {{ lecon.duree_minutes }} min
+                        </p>
+                    </div>
+
+                </a>
+                {% endfor %}
+
+                {% if not est_inscrit %}
+                <div class="p-3 mt-3 bg-numeria-or rounded-xl text-center">
+                    <p class="text-numeria-bleu text-xs font-bold mb-2">
+                        Inscris-toi pour accéder aux leçons
+                    </p>
+                    <form method="POST" action="{% url 'cours:inscrire' cours.id %}">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="w-full bg-numeria-bleu text-white font-bold py-2 rounded-lg text-xs hover:bg-numeria-bleu-fonce transition-colors">
+                            {% if cours.est_gratuit %}Commencer gratuitement{% else %}S'inscrire{% endif %}
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <!-- ── ZONE PRINCIPALE ── -->
+        <div class="flex-1 min-w-0">
+
+            {% if lecon_active %}
+
+                <!-- VIDÉO DE LA LEÇON -->
+                {% if lecon_active.video_youtube %}
+                <div class="w-full bg-black">
+                    <div class="max-w-5xl mx-auto">
+                        {% lecteur_video lecon_active.video_youtube titre=lecon_active.titre %}
+                    </div>
+                </div>
+                {% elif cours.video_youtube and not est_inscrit %}
+                <!-- Vidéo principale du cours pour les non-inscrits -->
+                <div class="w-full bg-black">
+                    <div class="max-w-5xl mx-auto">
+                        {% lecteur_video cours.video_youtube titre=cours.titre %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- CONTENU DE LA LEÇON -->
+                <div class="max-w-4xl mx-auto px-4 sm:px-8 py-8">
+
+                    <!-- Titre de la leçon -->
+                    <div class="flex items-start justify-between gap-4 mb-6">
+                        <div>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mb-1">
+                                Leçon {{ lecon_active.ordre }} sur {{ total_lecons }}
+                            </p>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-numeria-bleu dark:text-numeria-or">
+                                {{ lecon_active.titre }}
+                            </h1>
+                            <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">
+                                ⏱ {{ lecon_active.duree_minutes }} minutes
+                                {% if lecon_active.id in lecons_terminees_ids %}
+                                · <span class="text-green-500 font-semibold">✅ Terminée</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Contenu texte + LaTeX + code -->
+                    {% if est_inscrit %}
+                    <div class="contenu-article prose dark:prose-invert max-w-none
+                                text-gray-700 dark:text-gray-200 leading-relaxed mb-8">
+                        {{ lecon_active.contenu|safe }}
+                    </div>
+                    {% else %}
+                    <!-- Aperçu pour non-inscrits -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-8 text-center mb-8">
+                        <div class="text-4xl mb-3">🔒</div>
+                        <h3 class="font-bold text-gray-700 dark:text-gray-200 mb-2">
+                            Contenu réservé aux inscrits
+                        </h3>
+                        <p class="text-gray-400 dark:text-gray-500 text-sm mb-4">
+                            Inscris-toi gratuitement pour accéder à tout le contenu.
+                        </p>
+                        <form method="POST" action="{% url 'cours:inscrire' cours.id %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
+                                {% if cours.est_gratuit %}🚀 Commencer gratuitement{% else %}💳 S'inscrire{% endif %}
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+
+                    <!-- ===== EXERCICES DE LA LEÇON ===== -->
+                    {% if exercices and est_inscrit %}
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-8 mb-8">
+
+                        <h2 class="text-xl font-bold text-numeria-bleu dark:text-numeria-or mb-6 flex items-center gap-2">
+                            <span>🧪</span> Exercices
+                            <span class="text-sm font-normal text-gray-400 dark:text-gray-500">
+                                ({{ exercices_reussis_ids|length }}/{{ exercices|length }} réussis)
+                            </span>
+                        </h2>
+
+                        <div class="flex flex-col gap-6">
+                            {% for exercice in exercices %}
+
+                            <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl border
+                                {% if exercice.id in exercices_reussis_ids %}
+                                    border-green-300 dark:border-green-700
+                                {% elif exercice_actif_id == exercice.id and resultat_exercice == 'incorrect' %}
+                                    border-red-300 dark:border-red-700
+                                {% else %}
+                                    border-gray-200 dark:border-gray-600
+                                {% endif %}
+                                overflow-hidden">
+
+                                <!-- En-tête exercice -->
+                                <div class="flex items-center justify-between p-4
+                                    {% if exercice.id in exercices_reussis_ids %}
+                                        bg-green-50 dark:bg-green-900
+                                    {% elif exercice_actif_id == exercice.id and resultat_exercice == 'incorrect' %}
+                                        bg-red-50 dark:bg-red-900
+                                    {% else %}
+                                        bg-white dark:bg-gray-800
+                                    {% endif %}">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm
+                                            {% if exercice.id in exercices_reussis_ids %}
+                                                bg-green-500 text-white
+                                            {% elif exercice_actif_id == exercice.id and resultat_exercice == 'incorrect' %}
+                                                bg-red-500 text-white
+                                            {% else %}
+                                                bg-numeria-bleu text-numeria-or
+                                            {% endif %}">
+                                            {% if exercice.id in exercices_reussis_ids %}✓
+                                            {% elif exercice_actif_id == exercice.id and resultat_exercice == 'incorrect' %}✗
+                                            {% else %}{{ exercice.ordre }}{% endif %}
+                                        </div>
+                                        <span class="font-bold text-sm text-gray-700 dark:text-gray-200">
+                                            Exercice {{ exercice.ordre }}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs text-gray-400 dark:text-gray-500">
+                                            {{ exercice.points }} point{{ exercice.points|pluralize }}
+                                        </span>
+                                        {% if exercice.id in exercices_reussis_ids %}
+                                        <span class="bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300 text-xs font-bold px-2 py-0.5 rounded-full">
+                                            ✅ Réussi
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Corps de l'exercice -->
+                                <div class="p-5">
+
+                                    <!-- Question -->
+                                    <div class="mb-5">
+                                        <p class="font-semibold text-gray-800 dark:text-gray-100 leading-relaxed">
+                                            {{ exercice.question|safe }}
+                                        </p>
+                                    </div>
+
+                                    <!-- Résultat de la soumission pour CET exercice -->
+                                    {% if exercice_actif_id == exercice.id %}
+                                        {% if resultat_exercice == 'correct' %}
+                                        <div class="bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-xl p-4 mb-4">
+                                            <p class="text-green-700 dark:text-green-300 font-bold flex items-center gap-2">
+                                                <span>🎉</span> Excellente réponse ! Tu as bien répondu.
+                                            </p>
+                                        </div>
+                                        {% elif resultat_exercice == 'incorrect' %}
+                                        <div class="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-xl p-4 mb-4">
+                                            <p class="text-red-700 dark:text-red-300 font-bold flex items-center gap-2">
+                                                <span>❌</span>
+                                                Ce n'est pas la bonne réponse. Tu as choisi
+                                                <span class="underline">{{ reponse_choisie }}</span>.
+                                                Réessaie !
+                                            </p>
+                                        </div>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    <!-- Formulaire de réponse (si pas encore réussi) -->
+                                    {% if exercice.id not in exercices_reussis_ids %}
+                                    <form method="POST" action="{% url 'cours:soumettre_exercice' exercice.id %}">
+                                        {% csrf_token %}
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+
+                                            <!-- Choix A -->
+                                            <label class="flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all
+                                                {% if exercice_actif_id == exercice.id and reponse_choisie == 'A' and resultat_exercice == 'incorrect' %}
+                                                    border-red-400 bg-red-50 dark:bg-red-900
+                                                {% else %}
+                                                    border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-numeria-or hover:bg-yellow-50 dark:hover:bg-gray-700
+                                                {% endif %}">
+                                                <input type="radio" name="reponse" value="A" class="mt-0.5 accent-numeria-or" required>
+                                                <span class="font-bold text-numeria-bleu dark:text-numeria-or mr-1">A.</span>
+                                                <span class="text-gray-700 dark:text-gray-200 text-sm">{{ exercice.choix_a }}</span>
+                                            </label>
+
+                                            <!-- Choix B -->
+                                            <label class="flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all
+                                                {% if exercice_actif_id == exercice.id and reponse_choisie == 'B' and resultat_exercice == 'incorrect' %}
+                                                    border-red-400 bg-red-50 dark:bg-red-900
+                                                {% else %}
+                                                    border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-numeria-or hover:bg-yellow-50 dark:hover:bg-gray-700
+                                                {% endif %}">
+                                                <input type="radio" name="reponse" value="B" class="mt-0.5 accent-numeria-or" required>
+                                                <span class="font-bold text-numeria-bleu dark:text-numeria-or mr-1">B.</span>
+                                                <span class="text-gray-700 dark:text-gray-200 text-sm">{{ exercice.choix_b }}</span>
+                                            </label>
+
+                                            <!-- Choix C -->
+                                            <label class="flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all
+                                                {% if exercice_actif_id == exercice.id and reponse_choisie == 'C' and resultat_exercice == 'incorrect' %}
+                                                    border-red-400 bg-red-50 dark:bg-red-900
+                                                {% else %}
+                                                    border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-numeria-or hover:bg-yellow-50 dark:hover:bg-gray-700
+                                                {% endif %}">
+                                                <input type="radio" name="reponse" value="C" class="mt-0.5 accent-numeria-or" required>
+                                                <span class="font-bold text-numeria-bleu dark:text-numeria-or mr-1">C.</span>
+                                                <span class="text-gray-700 dark:text-gray-200 text-sm">{{ exercice.choix_c }}</span>
+                                            </label>
+
+                                            <!-- Choix D -->
+                                            <label class="flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all
+                                                {% if exercice_actif_id == exercice.id and reponse_choisie == 'D' and resultat_exercice == 'incorrect' %}
+                                                    border-red-400 bg-red-50 dark:bg-red-900
+                                                {% else %}
+                                                    border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-numeria-or hover:bg-yellow-50 dark:hover:bg-gray-700
+                                                {% endif %}">
+                                                <input type="radio" name="reponse" value="D" class="mt-0.5 accent-numeria-or" required>
+                                                <span class="font-bold text-numeria-bleu dark:text-numeria-or mr-1">D.</span>
+                                                <span class="text-gray-700 dark:text-gray-200 text-sm">{{ exercice.choix_d }}</span>
+                                            </label>
+
+                                        </div>
+
+                                        <button type="submit"
+                                            class="bg-numeria-bleu text-white font-bold px-6 py-2.5 rounded-xl hover:bg-numeria-bleu-fonce transition-colors text-sm">
+                                            Soumettre ma réponse →
+                                        </button>
+
+                                    </form>
+
+                                    {% else %}
+                                    <!-- Exercice réussi — afficher le corrigé -->
+                                    <div class="border-t border-green-200 dark:border-green-700 pt-4 mt-2">
+
+                                        <!-- Bonne réponse -->
+                                        <div class="flex items-center gap-2 mb-4">
+                                            <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                                Bonne réponse : {{ exercice.bonne_reponse }}
+                                            </span>
+                                            <span class="text-green-600 dark:text-green-400 text-sm font-semibold">
+                                                {{ exercice.get_bonne_reponse_texte }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Corrigé détaillé -->
+                                        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-green-200 dark:border-green-700">
+                                            <p class="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wide mb-3 flex items-center gap-1">
+                                                <span>📖</span> Corrigé détaillé
+                                            </p>
+                                            <div class="text-gray-700 dark:text-gray-200 text-sm leading-relaxed contenu-article">
+                                                {{ exercice.corrige|safe }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- NAVIGATION ET ACTIONS -->
+                    {% if est_inscrit %}
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+
+                        <!-- Bouton terminer la leçon -->
+                        <div class="flex flex-col sm:flex-row items-center gap-4 mb-6">
+
+                            {% if lecon_active.id in lecons_terminees_ids %}
+                            <!-- Leçon déjà terminée -->
+                            <div class="flex items-center gap-3">
+                                <div class="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 font-bold px-5 py-2.5 rounded-xl text-sm">
+                                    ✅ Leçon terminée
+                                </div>
+                                <form method="POST" action="{% url 'cours:annuler_lecon' lecon_active.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                        class="text-xs text-gray-400 hover:text-red-500 transition-colors">
+                                        Annuler
+                                    </button>
+                                </form>
+                            </div>
+                            {% else %}
+                            <!-- Marquer comme terminée -->
+                            <form method="POST" action="{% url 'cours:terminer_lecon' lecon_active.id %}">
+                                {% csrf_token %}
+                                <button type="submit"
+                                    class="bg-numeria-or text-numeria-bleu font-bold px-6 py-2.5 rounded-xl hover:bg-yellow-400 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 transform text-sm">
+                                    ✅ Marquer comme terminée
+                                </button>
+                            </form>
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Navigation précédent / suivant -->
+                        <div class="flex items-center justify-between">
+                            {% if lecon_precedente %}
+                            <a href="?lecon={{ lecon_precedente.id }}"
+                               class="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-or transition-colors">
+                                <span>←</span>
+                                <div class="text-left">
+                                    <p class="text-xs text-gray-400">Précédente</p>
+                                    <p class="text-sm font-semibold truncate max-w-32">{{ lecon_precedente.titre }}</p>
+                                </div>
+                            </a>
+                            {% else %}
+                            <div></div>
+                            {% endif %}
+
+                            {% if lecon_suivante %}
+                            <a href="?lecon={{ lecon_suivante.id }}"
+                               class="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-or transition-colors">
+                                <div class="text-right">
+                                    <p class="text-xs text-gray-400">Suivante</p>
+                                    <p class="text-sm font-semibold truncate max-w-32">{{ lecon_suivante.titre }}</p>
+                                </div>
+                                <span>→</span>
+                            </a>
+                            {% else %}
+                            <!-- Cours terminé -->
+                            {% if inscription.est_termine %}
+                            <div class="text-right">
+                                <p class="text-green-500 font-bold text-sm">🎉 Cours terminé !</p>
+                                <a href="{% url 'comptes:tableau_de_bord' %}"
+                                   class="text-xs text-numeria-bleu dark:text-numeria-or hover:opacity-75">
+                                    Voir mon certificat →
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            {% else %}
+
+                <!-- PAS DE LEÇON — Page d'introduction du cours -->
+                <div class="max-w-4xl mx-auto px-4 sm:px-8 py-8">
+
+                    {% if cours.video_youtube %}
+                    <div class="mb-8 rounded-2xl overflow-hidden shadow-lg">
+                        {% lecteur_video cours.video_youtube titre=cours.titre %}
+                    </div>
+                    {% endif %}
+
+                    <h1 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-4">
+                        {{ cours.titre }}
+                    </h1>
+
+                    <div class="flex flex-wrap gap-3 mb-6">
+                        <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full">
+                            {{ cours.get_matiere_display }}
+                        </span>
+                        <span class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-semibold px-3 py-1 rounded-full">
+                            {{ cours.get_niveau_display }}
+                        </span>
+                        {% if cours.est_gratuit %}
+                        <span class="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 text-xs font-bold px-3 py-1 rounded-full">
+                            Gratuit
+                        </span>
+                        {% endif %}
+                        {% if cours.type_cours == 'scolaire' and cours.classe %}
+                        <span class="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 text-xs font-bold px-3 py-1 rounded-full">
+                            {{ cours.get_classe_display }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-lg mb-8">
+                        {{ cours.description }}
+                    </p>
+
+                    <!-- Bouton inscription -->
+                    {% if not est_inscrit %}
+                    <form method="POST" action="{% url 'cours:inscrire' cours.id %}">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="bg-numeria-or text-numeria-bleu font-bold px-10 py-4 rounded-xl hover:bg-yellow-400 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform text-lg">
+                            {% if cours.est_gratuit %}🚀 Commencer gratuitement{% else %}💳 S'inscrire — {{ cours.prix }} FCFA{% endif %}
+                        </button>
+                    </form>
+                    {% else %}
+                    {% if lecons %}
+                    <a href="?lecon={{ lecons.first.id }}"
+                       class="inline-block bg-numeria-or text-numeria-bleu font-bold px-10 py-4 rounded-xl hover:bg-yellow-400 transition-colors text-lg">
+                        Continuer le cours →
+                    </a>
+                    {% endif %}
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block titre %}Mon profil — Numeria Institute{% endblock %}
+{% block contenu %}
+
+<section class="w-full py-12">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-4xl mx-auto">
+
+            <!-- En-tête profil -->
+            <div class="bg-numeria-bleu rounded-xl p-8 text-white mb-8">
+                <div class="flex flex-col sm:flex-row items-center gap-6">
+
+                    <!-- Avatar : photo si disponible, sinon initiales -->
+                    {% if profil.photo %}
+                        <img
+                            src="{{ profil.photo.url }}"
+                            alt="Photo de {{ user.first_name }}"
+                            class="w-24 h-24 rounded-full object-cover border-4 border-numeria-or flex-shrink-0"
+                        >
+                    {% else %}
+                        <div class="w-24 h-24 bg-numeria-or rounded-full flex items-center justify-center text-numeria-bleu text-3xl font-bold flex-shrink-0">
+                            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                        </div>
+                    {% endif %}
+
+                    <!-- Infos principales -->
+                    <div class="text-center sm:text-left">
+                        <h1 class="text-2xl font-bold">
+                            {{ user.first_name }} {{ user.last_name }}
+                        </h1>
+                        <p class="text-blue-300 mt-1">@{{ user.username }}</p>
+                        <p class="text-blue-300 text-sm mt-1">{{ user.email }}</p>
+                        {% if profil.pays %}
+                        <p class="text-blue-200 text-sm mt-1">📍 {{ profil.ville }}{% if profil.ville and profil.pays %}, {% endif %}{{ profil.pays }}</p>
+                        {% endif %}
+                        <p class="text-blue-400 text-xs mt-2">
+                            Membre depuis {{ user.date_joined|date:"F Y" }}
+                        </p>
+                    </div>
+                </div>
+
+                {% if profil.bio %}
+                <div class="mt-6 pt-6 border-t border-blue-700">
+                    <p class="text-blue-200 italic">{{ profil.bio }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Grille infos + actions -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Informations académiques -->
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-bold text-numeria-bleu mb-4">
+                        Informations académiques
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-gray-400 text-sm">Niveau d'études</p>
+                            <p class="font-semibold text-gray-700">
+                                {{ profil.get_niveau_etudes_display|default:"Non renseigné" }}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Domaine</p>
+                            <p class="font-semibold text-gray-700">
+                                {{ profil.domaine|default:"Non renseigné" }}
+                            </p>
+                        </div>
+                        {% if profil.linkedin %}
+                        <div>
+                            <p class="text-gray-400 text-sm">LinkedIn</p>
+                            <a href="{{ profil.linkedin }}" target="_blank" class="text-numeria-bleu hover:text-numeria-or text-sm">
+                                Voir le profil →
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if profil.github %}
+                        <div>
+                            <p class="text-gray-400 text-sm">GitHub</p>
+                            <a href="{{ profil.github }}" target="_blank" class="text-numeria-bleu hover:text-numeria-or text-sm">
+                                Voir le profil →
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Actions rapides -->
+                <div class="flex flex-col gap-3">
+                    <a href="{% url 'comptes:tableau_de_bord' %}"
+                       class="block bg-numeria-bleu text-white font-semibold py-3 px-4 rounded-lg hover:bg-numeria-bleu-fonce transition-colors text-center">
+                        🎓 Tableau de bord
+                    </a>
+                    <a href="{% url 'comptes:modifier_profil' %}"
+                       class="block bg-numeria-or text-numeria-bleu font-semibold py-3 px-4 rounded-lg hover:bg-yellow-400 transition-colors text-center">
+                        ✏️ Modifier le profil
+                    </a>
+                    <a href="{% url 'comptes:changer_mot_de_passe' %}"
+                       class="block border border-numeria-bleu text-numeria-bleu font-semibold py-3 px-4 rounded-lg hover:bg-numeria-bleu hover:text-white transition-colors text-center">
+                        🔐 Changer le mot de passe
+                    </a>
+                    <a href="{% url 'comptes:deconnexion' %}"
+                       class="block border border-gray-300 text-gray-500 font-semibold py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors text-center">
+                        👋 Se déconnecter
+                    </a>
+                    <a href="{% url 'comptes:supprimer_compte' %}"
+                       class="block border border-red-300 text-red-500 font-semibold py-3 px-4 rounded-lg hover:bg-red-50 transition-colors text-center text-sm">
+                        ⚠️ Supprimer mon compte
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

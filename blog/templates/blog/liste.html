@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block titre %}Blog — Numeria Institute{% endblock %}
+
+{% block contenu %}
+
+<section class="bg-numeria-bleu text-white w-full">
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-12">
+        <h1 class="text-3xl sm:text-4xl font-bold mb-3">Blog scientifique</h1>
+        <p class="text-blue-200 text-lg">
+            {{ articles|length }} article{{ articles|length|pluralize }} disponible{{ articles|length|pluralize }}
+        </p>
+    </div>
+</section>
+
+<section class="w-full py-16 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="flex flex-col lg:flex-row gap-12">
+
+            <!-- LISTE DES ARTICLES -->
+            <div class="flex-1">
+                {% if articles %}
+                <div class="flex flex-col gap-8">
+                    {% for article in articles %}
+                    <article class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        <div class="flex flex-col md:flex-row">
+
+                            {% if article.image_couverture %}
+                            <div class="md:w-64 flex-shrink-0">
+                                <img src="{{ article.image_couverture }}" alt="{{ article.titre }}"
+                                     class="w-full h-48 md:h-full object-cover">
+                            </div>
+                            {% endif %}
+
+                            <div class="p-6 flex flex-col justify-between flex-1">
+                                <div>
+                                    <div class="flex items-center gap-3 mb-3">
+                                        {% if article.categorie %}
+                                        <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full">
+                                            {{ article.categorie.nom }}
+                                        </span>
+                                        {% endif %}
+                                        <span class="text-gray-400 dark:text-gray-500 text-xs">
+                                            {{ article.date_creation|date:"d F Y" }}
+                                        </span>
+                                    </div>
+                                    <h2 class="text-xl font-bold text-numeria-bleu dark:text-numeria-or mb-2">
+                                        <a href="{% url 'blog:detail' article.slug %}"
+                                           class="hover:text-numeria-or dark:hover:text-yellow-300 transition-colors">
+                                            {{ article.titre }}
+                                        </a>
+                                    </h2>
+                                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
+                                        {{ article.resume }}
+                                    </p>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 bg-numeria-bleu rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                            {{ article.auteur.username|first|upper }}
+                                        </div>
+                                        <span class="text-gray-500 dark:text-gray-400 text-sm">
+                                            {{ article.auteur.username }}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <span class="text-gray-400 dark:text-gray-500 text-xs">
+                                            👁 {{ article.nombre_vues }} vues
+                                        </span>
+                                        <a href="{% url 'blog:detail' article.slug %}"
+                                           class="text-numeria-bleu dark:text-numeria-or font-semibold text-sm hover:opacity-75 transition-opacity">
+                                            Lire →
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-20">
+                    <p class="text-gray-400 dark:text-gray-500 text-xl">Aucun article disponible.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- SIDEBAR -->
+            <div class="lg:w-72 flex flex-col gap-6">
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                    <h3 class="text-numeria-bleu dark:text-numeria-or font-bold text-lg mb-4">Catégories</h3>
+                    <ul class="space-y-2">
+                        {% for categorie in categories %}
+                        <li>
+                            <a href="#" class="flex items-center justify-between text-gray-600 dark:text-gray-300 hover:text-numeria-or transition-colors text-sm py-1">
+                                <span>{{ categorie.nom }}</span>
+                                <span class="bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-400 text-xs px-2 py-0.5 rounded-full">
+                                    {{ categorie.articles.count }}
+                                </span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="bg-numeria-bleu rounded-xl p-6 text-center">
+                    <h3 class="text-numeria-or font-bold text-lg mb-2">Rejoins Numeria</h3>
+                    <p class="text-blue-200 text-sm mb-4">Accède à tous nos cours scientifiques.</p>
+                    <a href="{% url 'comptes:inscription' %}"
+                       class="block bg-numeria-or text-numeria-bleu font-bold py-2 rounded-lg hover:bg-yellow-400 transition-colors text-sm">
+                        S'inscrire gratuitement
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

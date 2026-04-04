@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block titre %}Accueil — Numeria Institute{% endblock %}
+
+{% block contenu %}
+
+<!-- ===== HERO ===== -->
+<section class="bg-numeria-bleu text-white w-full">
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-16 md:py-24">
+        <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+
+            <div class="flex-1 text-center lg:text-left">
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6">
+                    La science accessible à
+                    <span class="text-numeria-or"> tous les esprits curieux</span>
+                </h1>
+                <p class="text-blue-200 text-base sm:text-lg leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0">
+                    Des cours scientifiques gratuits et payants, conçus pour les apprenants africains et francophones du monde entier.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="{% url 'cours:catalogue' %}" class="bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-lg hover:bg-yellow-400 transition-colors text-center">
+                        Découvrir les cours →
+                    </a>
+                    <a href="#" class="border-2 border-numeria-or text-numeria-or font-semibold px-8 py-3 rounded-lg hover:bg-numeria-or hover:text-numeria-bleu transition-colors text-center">
+                        En savoir plus
+                    </a>
+                </div>
+            </div>
+
+            <div class="hidden sm:flex flex-1 justify-center items-center">
+                <div style="position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center;">
+                    <div style="position:absolute; width:30px; height:30px; background:#E8A020; border-radius:50%; z-index:10;"></div>
+                    <div style="position:absolute; width:220px; height:85px; border:2px solid #E8A020; border-radius:50%; opacity:0.7;"></div>
+                    <div style="position:absolute; width:220px; height:85px; border:2px solid #E8A020; border-radius:50%; opacity:0.7; transform:rotate(60deg);"></div>
+                    <div style="position:absolute; width:220px; height:85px; border:2px solid #E8A020; border-radius:50%; opacity:0.7; transform:rotate(120deg);"></div>
+                    <div style="position:absolute; width:12px; height:12px; background:#E8A020; border-radius:50%; top:14px; left:50%; transform:translateX(-50%);"></div>
+                    <div style="position:absolute; width:12px; height:12px; background:#E8A020; border-radius:50%; bottom:14px; right:24px;"></div>
+                    <div style="position:absolute; width:12px; height:12px; background:#E8A020; border-radius:50%; bottom:14px; left:24px;"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===== STATISTIQUES ===== -->
+<section class="bg-numeria-bleu-fonce w-full">
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-8">
+        <div class="grid grid-cols-3 gap-4 text-center">
+            <div class="py-2">
+                <div class="text-numeria-or text-2xl sm:text-3xl lg:text-4xl font-bold">12 000+</div>
+                <div class="text-blue-300 text-xs sm:text-sm mt-1">Étudiants inscrits</div>
+            </div>
+            <div class="py-2 border-x border-blue-700">
+                <div class="text-numeria-or text-2xl sm:text-3xl lg:text-4xl font-bold">48</div>
+                <div class="text-blue-300 text-xs sm:text-sm mt-1">Cours disponibles</div>
+            </div>
+            <div class="py-2">
+                <div class="text-numeria-or text-2xl sm:text-3xl lg:text-4xl font-bold">100%</div>
+                <div class="text-blue-300 text-xs sm:text-sm mt-1">Gratuit pour commencer</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== COURS POPULAIRES ===== -->
+<section class="w-full py-16 md:py-20 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+
+        <h2 class="text-2xl sm:text-3xl font-bold text-numeria-bleu dark:text-numeria-or text-center mb-3">
+            Cours populaires
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 text-center mb-10 sm:mb-12">
+            Commence ton apprentissage dès aujourd'hui — gratuitement.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+
+            {% for un_cours in cours_recents %}
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-numeria-bleu px-6 py-4">
+                    <span class="text-numeria-or text-xs font-bold tracking-widest uppercase">
+                        {{ un_cours.get_matiere_display }}
+                    </span>
+                    <h3 class="text-white font-bold text-lg mt-1">
+                        {{ un_cours.titre }}
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 leading-relaxed">
+                        {{ un_cours.resume }}
+                    </p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-gray-400 dark:text-gray-500 text-xs">
+                            {{ un_cours.nombre_lecons }} leçons · {{ un_cours.get_niveau_display }}
+                        </span>
+                        {% if un_cours.est_gratuit %}
+                            <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full">Gratuit</span>
+                        {% else %}
+                            <span class="bg-numeria-bleu text-white text-xs font-bold px-3 py-1 rounded-full">{{ un_cours.prix }} FCFA</span>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'cours:detail' un_cours.id %}"
+                       class="block w-full text-center bg-numeria-bleu dark:bg-numeria-bleu-fonce text-white font-semibold py-2 rounded-lg hover:bg-numeria-bleu-fonce transition-colors text-sm">
+                        Voir le cours →
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-3 text-center py-10">
+                <p class="text-gray-400">Aucun cours disponible pour le moment.</p>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <div class="text-center mt-12">
+            <a href="{% url 'cours:catalogue' %}"
+               class="inline-block border-2 border-numeria-bleu dark:border-numeria-or text-numeria-bleu dark:text-numeria-or font-bold px-8 py-3 rounded-lg hover:bg-numeria-bleu hover:text-white dark:hover:bg-numeria-or dark:hover:text-numeria-bleu transition-colors">
+                Voir tous les cours →
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<!-- ===== APPEL À L'ACTION ===== -->
+<section class="bg-numeria-bleu w-full">
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-16 md:py-20 text-center">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
+            Prêt à commencer ton voyage scientifique ?
+        </h2>
+        <p class="text-blue-200 mb-8 text-sm sm:text-base max-w-xl mx-auto">
+            Rejoins des milliers d'apprenants qui transforment leur avenir grâce à la science.
+        </p>
+        <a href="{% url 'comptes:inscription' %}"
+           class="inline-block bg-numeria-or text-numeria-bleu font-bold px-8 sm:px-12 py-3 sm:py-4 rounded-lg text-base sm:text-lg hover:bg-yellow-400 transition-colors">
+            Créer mon compte gratuitement
+        </a>
+    </div>
+</section>
+
+{% endblock %}

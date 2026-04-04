@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block titre %}{{ article.titre }} — Numeria Institute{% endblock %}
+
+{% block contenu %}
+
+<section class="bg-numeria-bleu text-white w-full">
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-12">
+
+        <div class="text-blue-300 text-sm mb-4">
+            <a href="/" class="hover:text-numeria-or transition-colors">Accueil</a>
+            <span class="mx-2">›</span>
+            <a href="{% url 'blog:liste' %}" class="hover:text-numeria-or transition-colors">Blog</a>
+            <span class="mx-2">›</span>
+            <span class="text-white">{{ article.titre|truncatechars:40 }}</span>
+        </div>
+
+        {% if article.categorie %}
+        <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block">
+            {{ article.categorie.nom }}
+        </span>
+        {% endif %}
+
+        <h1 class="text-3xl sm:text-4xl font-bold mb-4">{{ article.titre }}</h1>
+
+        <div class="flex flex-wrap items-center gap-4 text-blue-300 text-sm">
+            <span>✍️ {{ article.auteur.username }}</span>
+            <span>📅 {{ article.date_creation|date:"d F Y" }}</span>
+            <span>👁 {{ article.nombre_vues }} vues</span>
+        </div>
+
+    </div>
+</section>
+
+<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="flex flex-col lg:flex-row gap-12">
+
+            <!-- ARTICLE PRINCIPAL -->
+            <article class="flex-1 min-w-0">
+
+                {% if article.image_couverture %}
+                <div class="mb-8 rounded-xl overflow-hidden shadow-lg">
+                    <img src="{{ article.image_couverture }}" alt="{{ article.titre }}"
+                         class="w-full h-64 sm:h-80 object-cover">
+                </div>
+                {% endif %}
+
+                <!-- Résumé mis en avant -->
+                <div class="bg-white dark:bg-gray-800 border-l-4 border-numeria-or p-6 rounded-r-xl mb-8">
+                    <p class="text-gray-700 dark:text-gray-200 text-lg leading-relaxed italic">
+                        {{ article.resume }}
+                    </p>
+                </div>
+
+                <!-- Contenu principal -->
+                <div class="
+                    text-gray-700 dark:text-gray-200
+                    leading-relaxed
+                    prose-headings:text-numeria-bleu
+                    dark:prose-headings:text-numeria-or
+                ">
+                    <!-- Style inline pour le contenu HTML dynamique -->
+                    <style>
+                        .contenu-article { color: inherit; }
+                        .contenu-article h1,
+                        .contenu-article h2,
+                        .contenu-article h3 {
+                            color: #1A3C6E;
+                            font-weight: 700;
+                            margin-top: 1.5rem;
+                            margin-bottom: 0.75rem;
+                        }
+                        .contenu-article p {
+                            margin-bottom: 1rem;
+                            line-height: 1.8;
+                        }
+                        .contenu-article ul, .contenu-article ol {
+                            margin-left: 1.5rem;
+                            margin-bottom: 1rem;
+                        }
+                        .contenu-article li {
+                            margin-bottom: 0.4rem;
+                        }
+                        .contenu-article a {
+                            color: #1A3C6E;
+                            text-decoration: underline;
+                        }
+                        /* Mode sombre pour le contenu */
+                        .dark .contenu-article {
+                            color: #E5E7EB;
+                        }
+                        .dark .contenu-article h1,
+                        .dark .contenu-article h2,
+                        .dark .contenu-article h3 {
+                            color: #E8A020;
+                        }
+                        .dark .contenu-article a {
+                            color: #E8A020;
+                        }
+                        .dark code:not(.hljs) {
+                            background: #374151;
+                            color: #E8A020;
+                        }
+                    </style>
+                    <div class="contenu-article">
+                        {{ article.contenu|safe }}
+                    </div>
+                </div>
+
+            </article>
+
+            <!-- SIDEBAR -->
+            <div class="lg:w-72 flex flex-col gap-6 flex-shrink-0">
+
+                {% if articles_recents %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                    <h3 class="text-numeria-bleu dark:text-numeria-or font-bold text-lg mb-4">
+                        Articles récents
+                    </h3>
+                    <div class="flex flex-col gap-4">
+                        {% for recent in articles_recents %}
+                        <a href="{% url 'blog:detail' recent.slug %}" class="group">
+                            <h4 class="text-gray-700 dark:text-gray-200 group-hover:text-numeria-or text-sm font-medium transition-colors leading-snug">
+                                {{ recent.titre }}
+                            </h4>
+                            <span class="text-gray-400 dark:text-gray-500 text-xs">
+                                {{ recent.date_creation|date:"d F Y" }}
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="bg-numeria-bleu rounded-xl p-6 text-center">
+                    <h3 class="text-numeria-or font-bold text-lg mb-2">Aller plus loin</h3>
+                    <p class="text-blue-200 text-sm mb-4">Explore nos cours pour approfondir ce sujet.</p>
+                    <a href="{% url 'cours:catalogue' %}"
+                       class="block bg-numeria-or text-numeria-bleu font-bold py-2 rounded-lg hover:bg-yellow-400 transition-colors text-sm">
+                        Voir les cours →
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

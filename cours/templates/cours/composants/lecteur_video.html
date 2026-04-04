@@ -1,0 +1,136 @@
+{% if url %}
+<div class="lecteur-video-wrapper" style="position: relative; width: 100%;">
+
+    <!-- Conteneur ratio 16:9 -->
+    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+                background: #000; border-radius: 12px;">
+
+        {% if miniature and est_youtube and id_youtube %}
+        {# ── Miniature cliquable (lazy-load de l'iframe YouTube) ── #}
+        <div id="miniature-{{ id_youtube }}"
+             onclick="lancerVideo('{{ id_youtube }}')"
+             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                    cursor: pointer; z-index: 2;">
+
+            <!-- Image miniature, repli sur hqdefault si maxresdefault absent -->
+            <img
+                src="{{ miniature }}"
+                alt="{{ titre|default:'Aperçu de la vidéo' }}"
+                onerror="this.src='https://img.youtube.com/vi/{{ id_youtube }}/hqdefault.jpg'"
+                style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;"
+                loading="lazy"
+            >
+
+            <!-- Overlay sombre -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                        background: rgba(0,0,0,0.3); border-radius: 12px;
+                        display: flex; align-items: center; justify-content: center;">
+
+                <!-- Bouton Play -->
+                <div style="width: 72px; height: 72px; background: #E8A020; border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center;
+                            box-shadow: 0 4px 20px rgba(232,160,32,0.5);
+                            transition: transform 0.2s, box-shadow 0.2s;"
+                     onmouseover="this.style.transform='scale(1.1)';
+                                  this.style.boxShadow='0 6px 25px rgba(232,160,32,0.7)'"
+                     onmouseout="this.style.transform='scale(1)';
+                                 this.style.boxShadow='0 4px 20px rgba(232,160,32,0.5)'">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="#1A3C6E" aria-hidden="true">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </div>
+
+            </div>
+
+            <!-- Titre en bas si fourni -->
+            {% if titre %}
+            <div style="position: absolute; bottom: 12px; left: 12px; right: 12px;">
+                <p style="color: white; font-size: 13px; font-weight: 600;
+                          text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+                          overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+                          margin: 0;">
+                    {{ titre }}
+                </p>
+            </div>
+            {% endif %}
+
+        </div>
+
+        {#
+          iframe YouTube — src vide au chargement (performance).
+          CORRIGÉ : data-src construit avec '&' car url contient déjà '?'.
+          On utilise directement {{ url }} qui est déjà l'URL embed nocookie
+          avec ses paramètres, puis on ajoute &autoplay=1.
+        #}
+        <iframe
+            id="iframe-{{ id_youtube }}"
+            src=""
+            data-src="{{ url }}&autoplay=1"
+            title="{{ titre|default:'Lecteur vidéo' }}"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                   border: none; border-radius: 12px; display: none;"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media;
+                   gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin">
+        </iframe>
+
+        {% else %}
+        {# ── iframe directe : Vimeo ou YouTube sans miniature ── #}
+        <iframe
+            src="{{ url }}"
+            title="{{ titre|default:'Lecteur vidéo' }}"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                   border: none; border-radius: 12px;"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media;
+                   gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin">
+        </iframe>
+        {% endif %}
+
+    </div>
+
+    <!-- Lien de secours (ouvre la vidéo dans un nouvel onglet) -->
+    <div style="text-align: center; margin-top: 8px;">
+        <a href="{{ url_originale }}" target="_blank" rel="noopener noreferrer"
+           style="font-size: 12px; color: #9CA3AF; text-decoration: none;">
+            {% if est_youtube %}▶ Regarder sur YouTube
+            {% elif est_vimeo %}▶ Regarder sur Vimeo
+            {% else %}▶ Ouvrir la vidéo
+            {% endif %}
+        </a>
+    </div>
+
+</div>
+
+<script>
+/**
+ * Lance la vidéo YouTube : injecte l'URL embed dans l'iframe
+ * et cache la miniature (lazy-load pattern — meilleure performance).
+ * @param {string} id  - Identifiant YouTube à 11 caractères
+ */
+function lancerVideo(id) {
+    var miniature = document.getElementById('miniature-' + id);
+    var iframe    = document.getElementById('iframe-' + id);
+
+    if (!miniature || !iframe) return;
+
+    // Charger l'URL réelle avec autoplay depuis data-src
+    iframe.src = iframe.getAttribute('data-src');
+
+    // Cacher la miniature, afficher l'iframe
+    miniature.style.display = 'none';
+    iframe.style.display    = 'block';
+}
+</script>
+
+{% else %}
+<!-- Pas de vidéo disponible -->
+<div style="background: #F3F4F6; border-radius: 12px; padding: 40px; text-align: center;">
+    <p style="color: #9CA3AF; font-size: 14px; margin: 0;">
+        Aucune vidéo disponible pour cette leçon.
+    </p>
+</div>
+{% endif %}

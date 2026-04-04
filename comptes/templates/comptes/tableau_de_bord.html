@@ -1,0 +1,354 @@
+{% extends 'base.html' %}
+{% block titre %}Tableau de bord — Numeria Institute{% endblock %}
+{% block contenu %}
+
+<section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-10">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+
+        <!-- ===== EN-TÊTE PERSONNALISÉ ===== -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+
+            <div class="flex items-center gap-4">
+                <!-- Avatar -->
+                {% if profil.photo %}
+                    <img src="{{ profil.photo.url }}" alt="Photo"
+                         class="w-14 h-14 rounded-full object-cover border-3 border-numeria-or shadow-md">
+                {% else %}
+                    <div class="w-14 h-14 rounded-full bg-numeria-or flex items-center justify-center text-numeria-bleu text-xl font-bold shadow-md">
+                        {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                    </div>
+                {% endif %}
+
+                <div>
+                    <h1 class="text-2xl font-bold text-numeria-bleu dark:text-numeria-or">
+                        Bonjour, {{ user.first_name }} 👋
+                    </h1>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">
+                        {% if profil.pays %}📍 {{ profil.pays }}{% endif %}
+                        · Membre depuis {{ user.date_joined|date:"F Y" }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="flex items-center gap-3">
+                <a href="{% url 'cours:catalogue' %}"
+                   class="bg-numeria-or text-numeria-bleu font-bold px-5 py-2.5 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
+                    + Nouveau cours
+                </a>
+                <a href="{% url 'comptes:profil' %}"
+                   class="border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold px-5 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm">
+                    Mon profil
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== STATISTIQUES ===== -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+
+            <!-- Cours inscrits -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-2xl">📚</span>
+                    <span class="text-xs font-semibold text-blue-500 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded-full">Total</span>
+                </div>
+                <div class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-1">
+                    {{ total_inscrits }}
+                </div>
+                <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Cours inscrits</p>
+            </div>
+
+            <!-- En cours -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-2xl">⚡</span>
+                    <span class="text-xs font-semibold text-orange-500 bg-orange-50 dark:bg-orange-900 px-2 py-0.5 rounded-full">Actif</span>
+                </div>
+                <div class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-1">
+                    {{ en_cours|length }}
+                </div>
+                <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">En cours</p>
+            </div>
+
+            <!-- Terminés -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-2xl">✅</span>
+                    <span class="text-xs font-semibold text-green-500 bg-green-50 dark:bg-green-900 px-2 py-0.5 rounded-full">Fini</span>
+                </div>
+                <div class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-1">
+                    {{ total_termines }}
+                </div>
+                <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Terminés</p>
+            </div>
+
+            <!-- Progression globale -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-2xl">📈</span>
+                    <span class="text-xs font-semibold text-purple-500 bg-purple-50 dark:bg-purple-900 px-2 py-0.5 rounded-full">Moy.</span>
+                </div>
+                <div class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-1">
+                    {{ progression_totale }}%
+                </div>
+                <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Progression globale</p>
+            </div>
+
+        </div>
+
+        <!-- ===== CONTENU PRINCIPAL ===== -->
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- COLONNE PRINCIPALE -->
+            <div class="flex-1 min-w-0">
+
+                <!-- MES COURS EN COURS -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm mb-6">
+
+                    <div class="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
+                        <h2 class="text-lg font-bold text-numeria-bleu dark:text-numeria-or flex items-center gap-2">
+                            <span>📚</span> Mes cours
+                        </h2>
+                        <a href="{% url 'cours:catalogue' %}"
+                           class="text-numeria-bleu dark:text-numeria-or text-sm font-semibold hover:opacity-75 transition-opacity">
+                            Voir tout →
+                        </a>
+                    </div>
+
+                    <div class="p-6">
+                        {% if inscriptions %}
+
+                            <div class="flex flex-col gap-4">
+                                {% for inscription in inscriptions %}
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+
+                                    <!-- Info cours -->
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="text-numeria-or text-xs font-bold uppercase tracking-wide">
+                                                {{ inscription.cours.get_matiere_display }}
+                                            </span>
+                                            {% if inscription.est_termine %}
+                                            <span class="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 text-xs font-bold px-2 py-0.5 rounded-full">
+                                                ✅ Terminé
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm truncate">
+                                            {{ inscription.cours.titre }}
+                                        </h3>
+                                        <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">
+                                            {{ inscription.cours.nombre_lecons }} leçons
+                                            · Inscrit le {{ inscription.date_inscription|date:"d/m/Y" }}
+                                        </p>
+                                    </div>
+
+                                    <!-- Progression + bouton -->
+                                    <div class="sm:w-40 flex flex-col gap-2">
+                                        <!-- Barre de progression -->
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                                <div class="bg-numeria-or rounded-full h-2 transition-all"
+                                                     style="width: {{inscription.progression}}%">
+                                                </div>
+                                            </div>
+                                            <span class="text-xs font-bold text-gray-600 dark:text-gray-300 min-w-8">
+                                                {{ inscription.progression }}%
+                                            </span>
+                                        </div>
+                                        <a href="{% url 'cours:detail' inscription.cours.id %}"
+                                           class="text-center bg-numeria-bleu text-white text-xs font-bold py-1.5 rounded-lg hover:bg-numeria-bleu-fonce transition-colors">
+                                            {% if inscription.est_termine %}Revoir{% else %}Continuer{% endif %}
+                                        </a>
+                                    </div>
+
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                        {% else %}
+
+                            <!-- Aucun cours -->
+                            <div class="text-center py-12">
+                                <div class="text-6xl mb-4">🎓</div>
+                                <h3 class="text-gray-700 dark:text-gray-200 font-bold text-lg mb-2">
+                                    Tu n'es inscrit à aucun cours
+                                </h3>
+                                <p class="text-gray-400 dark:text-gray-500 text-sm mb-6">
+                                    Découvre notre catalogue et commence à apprendre dès aujourd'hui !
+                                </p>
+                                <a href="{% url 'cours:catalogue' %}"
+                                   class="inline-block bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
+                                    Explorer les cours →
+                                </a>
+                            </div>
+
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- DERNIERS ARTICLES -->
+                {% if articles_recents %}
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+
+                    <div class="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
+                        <h2 class="text-lg font-bold text-numeria-bleu dark:text-numeria-or flex items-center gap-2">
+                            <span>📝</span> Derniers articles
+                        </h2>
+                        <a href="{% url 'blog:liste' %}"
+                           class="text-numeria-bleu dark:text-numeria-or text-sm font-semibold hover:opacity-75 transition-opacity">
+                            Voir tout →
+                        </a>
+                    </div>
+
+                    <div class="p-6 flex flex-col gap-4">
+                        {% for article in articles_recents %}
+                        <a href="{% url 'blog:detail' article.slug %}"
+                           class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
+                            <div class="w-10 h-10 bg-numeria-bleu rounded-lg flex items-center justify-center flex-shrink-0">
+                                <span class="text-numeria-or text-lg">📄</span>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-sm font-bold text-gray-800 dark:text-gray-100 group-hover:text-numeria-or transition-colors truncate">
+                                    {{ article.titre }}
+                                </h3>
+                                <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">
+                                    {{ article.date_creation|date:"d F Y" }}
+                                    · 👁 {{ article.nombre_vues }} vues
+                                </p>
+                            </div>
+                            <span class="text-gray-300 dark:text-gray-600 group-hover:text-numeria-or transition-colors">→</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                {% endif %}
+
+            </div>
+
+            <!-- SIDEBAR -->
+            <div class="lg:w-80 flex flex-col gap-6 flex-shrink-0">
+
+                <!-- PROFIL RAPIDE -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
+
+                    <h2 class="text-base font-bold text-numeria-bleu dark:text-numeria-or mb-4 flex items-center gap-2">
+                        <span>👤</span> Mon profil
+                    </h2>
+
+                    <div class="flex flex-col gap-3 text-sm">
+                        {% if profil.niveau_etudes %}
+                        <div class="flex items-center gap-3">
+                            <span class="text-gray-400 w-5">🎓</span>
+                            <span class="text-gray-700 dark:text-gray-200">{{ profil.get_niveau_etudes_display }}</span>
+                        </div>
+                        {% endif %}
+                        {% if profil.domaine %}
+                        <div class="flex items-center gap-3">
+                            <span class="text-gray-400 w-5">🔬</span>
+                            <span class="text-gray-700 dark:text-gray-200">{{ profil.domaine }}</span>
+                        </div>
+                        {% endif %}
+                        {% if profil.ville or profil.pays %}
+                        <div class="flex items-center gap-3">
+                            <span class="text-gray-400 w-5">📍</span>
+                            <span class="text-gray-700 dark:text-gray-200">
+                                {% if profil.ville %}{{ profil.ville }}, {% endif %}{{ profil.pays }}
+                            </span>
+                        </div>
+                        {% endif %}
+                        <div class="flex items-center gap-3">
+                            <span class="text-gray-400 w-5">📅</span>
+                            <span class="text-gray-700 dark:text-gray-200">
+                                Membre depuis {{ user.date_joined|date:"F Y" }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'comptes:modifier_profil' %}"
+                       class="block text-center mt-4 border border-numeria-bleu dark:border-numeria-or text-numeria-bleu dark:text-numeria-or font-semibold py-2 rounded-xl hover:bg-numeria-bleu hover:text-white dark:hover:bg-numeria-or dark:hover:text-numeria-bleu transition-colors text-sm">
+                        Compléter mon profil
+                    </a>
+                </div>
+
+                <!-- COURS RECOMMANDÉS -->
+                {% if cours_recommandes %}
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
+
+                    <h2 class="text-base font-bold text-numeria-bleu dark:text-numeria-or mb-4 flex items-center gap-2">
+                        <span>✨</span> Recommandés pour toi
+                    </h2>
+
+                    <div class="flex flex-col gap-3">
+                        {% for cours in cours_recommandes %}
+                        <a href="{% url 'cours:detail' cours.id %}"
+                           class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
+                            <div class="w-10 h-10 bg-numeria-bleu rounded-lg flex items-center justify-center flex-shrink-0">
+                                <span class="text-numeria-or text-xs font-bold">
+                                    {{ cours.get_matiere_display|first|upper }}
+                                </span>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-sm font-bold text-gray-800 dark:text-gray-100 group-hover:text-numeria-or transition-colors leading-tight truncate">
+                                    {{ cours.titre }}
+                                </h3>
+                                <div class="flex items-center gap-2 mt-0.5">
+                                    <span class="text-xs text-gray-400">{{ cours.nombre_lecons }} leçons</span>
+                                    {% if cours.est_gratuit %}
+                                    <span class="text-xs font-bold text-green-500">Gratuit</span>
+                                    {% else %}
+                                    <span class="text-xs font-bold text-numeria-or">{{ cours.prix }} FCFA</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+
+                    <a href="{% url 'cours:catalogue' %}"
+                       class="block text-center mt-4 bg-numeria-or text-numeria-bleu font-bold py-2 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
+                        Voir tout le catalogue →
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- LIENS RAPIDES -->
+                <div class="bg-numeria-bleu dark:bg-gray-800 rounded-2xl p-6 border border-numeria-bleu-fonce dark:border-gray-700">
+                    <h2 class="text-base font-bold text-numeria-or mb-4">⚡ Actions rapides</h2>
+                    <div class="flex flex-col gap-2">
+                        <a href="{% url 'comptes:profil' %}"
+                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
+                            <span>👤</span> Voir mon profil
+                        </a>
+                        <a href="{% url 'comptes:modifier_profil' %}"
+                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
+                            <span>✏️</span> Modifier mon profil
+                        </a>
+                        <a href="{% url 'comptes:changer_mot_de_passe' %}"
+                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
+                            <span>🔐</span> Changer mon mot de passe
+                        </a>
+                        <a href="{% url 'cours:catalogue' %}"
+                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
+                            <span>📚</span> Explorer les cours
+                        </a>
+                        <a href="{% url 'blog:liste' %}"
+                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
+                            <span>📝</span> Lire le blog
+                        </a>
+                        <div class="border-t border-blue-800 dark:border-gray-600 my-2"></div>
+                        <a href="{% url 'comptes:deconnexion' %}"
+                           class="flex items-center gap-3 text-blue-300 hover:text-red-400 py-2 transition-colors text-sm">
+                            <span>👋</span> Se déconnecter
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

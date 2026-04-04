@@ -1,0 +1,206 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
+from .forms import FormulaireInscription, FormulaireConnexion, FormulaireProfil
+from .models import Profil
+
+
+def inscription(request):
+    """Inscription d'un nouvel utilisateur."""
+    if request.user.is_authenticated:
+        return redirect('comptes:tableau_de_bord')
+
+    if request.method == 'POST':
+        formulaire = FormulaireInscription(request.POST)
+        if formulaire.is_valid():
+            user = formulaire.save()
+            login(request, user)
+            messages.success(request, f"Bienvenue sur Numeria, {user.first_name} ! 🎓")
+            return redirect('comptes:tableau_de_bord')
+        else:
+            messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
+    else:
+        formulaire = FormulaireInscription()
+
+    return render(request, 'comptes/inscription.html', {'formulaire': formulaire})
+
+
+def connexion(request):
+    """Connexion d'un utilisateur existant."""
+    if request.user.is_authenticated:
+        return redirect('comptes:tableau_de_bord')
+
+    if request.method == 'POST':
+        formulaire = FormulaireConnexion(request.POST)
+        if formulaire.is_valid():
+            username = formulaire.cleaned_data['username']
+            password = formulaire.cleaned_data['password']
+
+            # On vérifie les identifiants
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                messages.success(request, f"Bon retour, {user.first_name} ! 👋")
+
+                # Rediriger vers la page demandée avant la connexion
+                next_url = request.GET.get('next', 'comptes:tableau_de_bord')
+                return redirect(next_url)
+            else:
+                messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
+    else:
+        formulaire = FormulaireConnexion()
+
+    return render(request, 'comptes/connexion.html', {'formulaire': formulaire})
+
+
+@login_required
+def deconnexion(request):
+    """Déconnexion de l'utilisateur."""
+    prenom = request.user.first_name
+    logout(request)
+    messages.success(request, f"À bientôt, {prenom} ! 👋")
+    return redirect('accueil')
+
+
+@login_required
+def tableau_de_bord(request):
+    """Tableau de bord complet de l'étudiant."""
+    from cours.models import Cours, InscriptionCours
+    from blog.models import Article
+
+    # Profil de l'étudiant
+    profil, cree = Profil.objects.get_or_create(utilisateur=request.user)
+
+    # Inscriptions de l'étudiant
+    inscriptions = InscriptionCours.objects.filter(
+        etudiant=request.user
+    ).select_related('cours')
+
+    # Statistiques
+    total_inscrits = inscriptions.count()
+    total_termines = inscriptions.filter(est_termine=True).count()
+    en_cours = inscriptions.filter(est_termine=False)
+
+    # Progression globale moyenne
+    if total_inscrits > 0:
+        progression_totale = sum(i.progression for i in inscriptions) // total_inscrits
+    else:
+        progression_totale = 0
+
+    # Cours recommandés — cours publiés auxquels l'étudiant n'est pas inscrit
+    ids_inscrits = inscriptions.values_list('cours_id', flat=True)
+    cours_recommandes = Cours.objects.filter(
+        est_publie=True
+    ).exclude(
+        id__in=ids_inscrits
+    )[:3]
+
+    # Derniers articles du blog
+    articles_recents = Article.objects.filter(est_publie=True)[:3]
+
+    contexte = {
+        'profil': profil,
+        'inscriptions': inscriptions,
+        'en_cours': en_cours,
+        'total_inscrits': total_inscrits,
+        'total_termines': total_termines,
+        'progression_totale': progression_totale,
+        'cours_recommandes': cours_recommandes,
+        'articles_recents': articles_recents,
+    }
+
+    return render(request, 'comptes/tableau_de_bord.html', contexte)
+
+@login_required
+def modifier_profil(request):
+    """Modifier les informations du profil avec photo."""
+    profil, cree = Profil.objects.get_or_create(utilisateur=request.user)
+
+    if request.method == 'POST':
+        formulaire = FormulaireProfil(
+            request.POST,
+            request.FILES,
+            instance=profil,
+            user=request.user
+        )
+        if formulaire.is_valid():
+            formulaire.save()
+            messages.success(request, "Ton profil a été mis à jour ! ✅")
+            return redirect('comptes:profil')
+        else:
+            messages.error(request, "Veuillez corriger les erreurs.")
+    else:
+        formulaire = FormulaireProfil(instance=profil, user=request.user)
+
+    return render(request, 'comptes/modifier_profil.html', {
+        'formulaire': formulaire,
+        'profil': profil,       # ← vérifie que cette ligne existe bien !
+    })
+
+@login_required
+def supprimer_photo(request):
+    """Supprimer la photo de profil."""
+    if request.method == 'POST':
+        profil, cree = Profil.objects.get_or_create(utilisateur=request.user)
+        if profil.photo:
+            # On supprime le fichier physique du serveur
+            import os
+            if os.path.isfile(profil.photo.path):
+                os.remove(profil.photo.path)
+            # On vide le champ photo dans la base de données
+            profil.photo = None
+            profil.save()
+            messages.success(request, "Ta photo de profil a été supprimée. ✅")
+        else:
+            messages.error(request, "Tu n'as pas de photo de profil à supprimer.")
+    return redirect('comptes:modifier_profil')
+
+@login_required
+def profil(request):
+    """Page de profil public de l'étudiant."""
+    profil, cree = Profil.objects.get_or_create(utilisateur=request.user)
+    return render(request, 'comptes/profil.html', {'profil': profil})
+
+
+@login_required
+def changer_mot_de_passe(request):
+    """Changer le mot de passe."""
+    if request.method == 'POST':
+        formulaire = PasswordChangeForm(request.user, request.POST)
+        if formulaire.is_valid():
+            user = formulaire.save()
+            # Important : mettre à jour la session pour ne pas déconnecter l'utilisateur
+            update_session_auth_hash(request, user)
+            messages.success(request, "Ton mot de passe a été changé avec succès ! 🔐")
+            return redirect('comptes:profil')
+        else:
+            messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
+    else:
+        formulaire = PasswordChangeForm(request.user)
+
+    return render(request, 'comptes/changer_mot_de_passe.html', {'formulaire': formulaire})
+
+
+@login_required
+def supprimer_compte(request):
+    """Suppression définitive du compte."""
+    if request.method == 'POST':
+        # On vérifie le mot de passe avant de supprimer
+        password = request.POST.get('password')
+        user = authenticate(request, username=request.user.username, password=password)
+
+        if user is not None:
+            # Mot de passe correct — on supprime le compte
+            prenom = request.user.first_name
+            request.user.delete()
+            messages.success(request, f"Ton compte a été supprimé, {prenom}. Nous espérons te revoir ! 👋")
+            return redirect('accueil')
+        else:
+            # Mot de passe incorrect
+            messages.error(request, "Mot de passe incorrect. Ton compte n'a pas été supprimé.")
+
+    return render(request, 'comptes/supprimer_compte.html')

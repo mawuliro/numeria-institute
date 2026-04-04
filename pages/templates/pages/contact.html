@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% block titre %}Contact — Numeria Institute{% endblock %}
+{% block contenu %}
+
+<!-- ===== HERO ===== -->
+<section class="bg-numeria-bleu text-white w-full">
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-16">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-4xl font-bold mb-4">
+                Contactez <span class="text-numeria-or">Numeria Institute</span>
+            </h1>
+            <p class="text-blue-200 text-lg">
+                Une question, une idée de partenariat ou simplement envie d'en savoir plus ?
+                Nous sommes là pour vous.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CONTENU PRINCIPAL ===== -->
+<section class="w-full py-16 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col lg:flex-row gap-12">
+
+                <!-- ── FORMULAIRE ── -->
+                <div class="flex-1 min-w-0">
+
+                    <h2 class="text-2xl font-bold text-numeria-bleu dark:text-numeria-or mb-6">
+                        Envoyer un message
+                    </h2>
+
+                    <!-- Messages -->
+                    {% if messages %}
+                    <div class="mb-6">
+                        {% for message in messages %}
+                        <div class="p-4 rounded-xl flex items-center gap-3
+                            {% if message.tags == 'error' %}
+                                bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-200 border border-red-200
+                            {% else %}
+                                bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-200 border border-green-200
+                            {% endif %}">
+                            <span class="text-xl">{% if message.tags == 'error' %}❌{% else %}✅{% endif %}</span>
+                            <span class="font-medium text-sm">{{ message }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+
+                        <!-- Barre colorée -->
+                        <div class="h-1 bg-gradient-to-r from-numeria-bleu via-numeria-or to-numeria-bleu"></div>
+
+                        <form method="POST" class="p-8" novalidate>
+                            {% csrf_token %}
+
+                            <!-- Nom + Email -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                        Nom complet <span class="text-red-400">*</span>
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
+                                        <input type="text"
+                                            name="nom_complet"
+                                            value="{{ formulaire.nom_complet.value|default:'' }}"
+                                            placeholder="Votre nom et prénom"
+                                            class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or transition-colors"
+                                            required>
+                                    </div>
+                                    {% if formulaire.nom_complet.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ formulaire.nom_complet.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                        Email <span class="text-red-400">*</span>
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">✉️</span>
+                                        <input type="email"
+                                            name="email"
+                                            value="{{ formulaire.email.value|default:'' }}"
+                                            placeholder="votre@email.com"
+                                            class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or transition-colors"
+                                            required>
+                                    </div>
+                                    {% if formulaire.email.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ formulaire.email.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Organisation -->
+                            <div class="mb-5">
+                                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                    Organisation
+                                    <span class="normal-case font-normal text-gray-400 ml-1">(optionnel)</span>
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🏛️</span>
+                                    <input type="text"
+                                        name="organisation"
+                                        value="{{ formulaire.organisation.value|default:'' }}"
+                                        placeholder="Université, entreprise, ONG..."
+                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or transition-colors">
+                                </div>
+                            </div>
+
+                            <!-- Sujet -->
+                            <div class="mb-5">
+                                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                    Sujet <span class="text-red-400">*</span>
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10">📋</span>
+                                    <select name="sujet"
+                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or transition-colors appearance-none"
+                                        required>
+                                        {% for valeur, label in formulaire.fields.sujet.choices %}
+                                        <option value="{{ valeur }}"
+                                            {% if formulaire.sujet.value == valeur %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">▼</span>
+                                </div>
+                                {% if formulaire.sujet.errors %}
+                                <p class="text-red-500 text-xs mt-1">{{ formulaire.sujet.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Message -->
+                            <div class="mb-5">
+                                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                    Message <span class="text-red-400">*</span>
+                                </label>
+                                <textarea
+                                    name="message"
+                                    rows="6"
+                                    placeholder="Écrivez votre message ici... (minimum 20 caractères)"
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or transition-colors resize-none"
+                                    required>{{ formulaire.message.value|default:'' }}</textarea>
+                                {% if formulaire.message.errors %}
+                                <p class="text-red-500 text-xs mt-1">{{ formulaire.message.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Case partenariat -->
+                            <div class="mb-6">
+                                <label class="flex items-start gap-3 cursor-pointer group">
+                                    <input type="checkbox"
+                                        name="est_partenaire"
+                                        class="mt-0.5 w-4 h-4 accent-numeria-or"
+                                        {% if formulaire.est_partenaire.value %}checked{% endif %}>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300 group-hover:text-numeria-bleu dark:group-hover:text-numeria-or transition-colors">
+                                        Je souhaite discuter d'un <strong>partenariat</strong> avec Numeria Institute
+                                        (université, entreprise, ONG, institution)
+                                    </span>
+                                </label>
+                            </div>
+
+                            <!-- Bouton envoyer -->
+                            <button type="submit"
+                                class="w-full bg-numeria-or text-numeria-bleu font-bold py-4 rounded-xl hover:bg-yellow-400 transition-all text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform">
+                                Envoyer le message 📨
+                            </button>
+
+                            <p class="text-center text-gray-400 dark:text-gray-500 text-xs mt-4">
+                                Nous répondons sous 24 à 48 heures ouvrables.
+                            </p>
+
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ── INFOS DE CONTACT ── -->
+                <div class="lg:w-80 flex flex-col gap-5 flex-shrink-0">
+
+                    <!-- Coordonnées -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+                        <h3 class="font-bold text-numeria-bleu dark:text-numeria-or text-lg mb-5">
+                            Nos coordonnées
+                        </h3>
+                        <div class="flex flex-col gap-4">
+
+                            <div class="flex items-start gap-3">
+                                <div class="w-10 h-10 bg-numeria-or rounded-xl flex items-center justify-center flex-shrink-0 text-lg">
+                                    📍
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">Adresse</p>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm">Lomé, Togo</p>
+                                    <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">Zone estudiantins</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <div class="w-10 h-10 bg-numeria-or rounded-xl flex items-center justify-center flex-shrink-0 text-lg">
+                                    ✉️
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">Email</p>
+                                    <a href="mailto:contact@numeriainstitute.com"
+                                       class="text-numeria-bleu dark:text-numeria-or text-sm hover:opacity-75 transition-opacity">
+                                        contact@numeriainstitute.com
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <div class="w-10 h-10 bg-numeria-or rounded-xl flex items-center justify-center flex-shrink-0 text-lg">
+                                    ⏰
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">Horaires</p>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm">Lun – Ven : 8h – 18h</p>
+                                    <p class="text-gray-400 dark:text-gray-500 text-xs">Heure de Lomé (GMT+0)</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- FAQ rapide -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+                        <h3 class="font-bold text-numeria-bleu dark:text-numeria-or text-lg mb-4">
+                            Questions fréquentes
+                        </h3>
+                        <div class="flex flex-col gap-4">
+
+                            <div>
+                                <p class="font-semibold text-gray-700 dark:text-gray-200 text-sm mb-1">
+                                    Les cours en ligne sont-ils gratuits ?
+                                </p>
+                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">
+                                    Oui, la majorité des cours en ligne sont gratuits. Certains cours avancés sont payants.
+                                </p>
+                            </div>
+
+                            <div class="border-t border-gray-100 dark:border-gray-700 pt-3">
+                                <p class="font-semibold text-gray-700 dark:text-gray-200 text-sm mb-1">
+                                    Comment candidater aux filières physiques ?
+                                </p>
+                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">
+                                    Les candidatures se font en ligne. Créez un compte et suivez le processus de candidature.
+                                </p>
+                            </div>
+
+                            <div class="border-t border-gray-100 dark:border-gray-700 pt-3">
+                                <p class="font-semibold text-gray-700 dark:text-gray-200 text-sm mb-1">
+                                    Proposez-vous des bourses ?
+                                </p>
+                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">
+                                    Oui, des bourses sont disponibles pour les candidats méritants. Contactez-nous pour en savoir plus.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Partenariat CTA -->
+                    <div class="bg-numeria-bleu rounded-2xl p-6 text-center">
+                        <div class="text-3xl mb-3">🤝</div>
+                        <h3 class="text-numeria-or font-bold text-lg mb-2">
+                            Devenir partenaire
+                        </h3>
+                        <p class="text-blue-200 text-sm mb-4 leading-relaxed">
+                            Université, entreprise, ONG ou institution — construisons ensemble l'avenir scientifique de l'Afrique.
+                        </p>
+                        <p class="text-blue-300 text-xs">
+                            Cochez la case partenariat dans le formulaire pour qu'on vous recontacte en priorité.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== RÉSEAUX SOCIAUX ===== -->
+<section class="w-full py-12 bg-white dark:bg-gray-800">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-3xl mx-auto text-center">
+
+            <h2 class="text-2xl font-bold text-numeria-bleu dark:text-numeria-or mb-3">
+                Suivez-nous
+            </h2>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mb-8">
+                Restez informés des dernières actualités de Numeria Institute
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-4">
+
+                <a href="#" class="flex items-center gap-3 bg-numeria-blanc dark:bg-gray-700 border border-gray-200 dark:border-gray-600 px-6 py-3 rounded-xl hover:border-numeria-or hover:shadow-md transition-all group">
+                    <span class="text-2xl">▶️</span>
+                    <div class="text-left">
+                        <p class="font-bold text-numeria-bleu dark:text-numeria-or text-sm group-hover:text-numeria-or">YouTube</p>
+                        <p class="text-gray-400 text-xs">Cours & tutoriels</p>
+                    </div>
+                </a>
+
+                <a href="#" class="flex items-center gap-3 bg-numeria-blanc dark:bg-gray-700 border border-gray-200 dark:border-gray-600 px-6 py-3 rounded-xl hover:border-numeria-or hover:shadow-md transition-all group">
+                    <span class="text-2xl">💼</span>
+                    <div class="text-left">
+                        <p class="font-bold text-numeria-bleu dark:text-numeria-or text-sm group-hover:text-numeria-or">LinkedIn</p>
+                        <p class="text-gray-400 text-xs">Actualités pro</p>
+                    </div>
+                </a>
+
+                <a href="#" class="flex items-center gap-3 bg-numeria-blanc dark:bg-gray-700 border border-gray-200 dark:border-gray-600 px-6 py-3 rounded-xl hover:border-numeria-or hover:shadow-md transition-all group">
+                    <span class="text-2xl">📘</span>
+                    <div class="text-left">
+                        <p class="font-bold text-numeria-bleu dark:text-numeria-or text-sm group-hover:text-numeria-or">Facebook</p>
+                        <p class="text-gray-400 text-xs">Communauté</p>
+                    </div>
+                </a>
+
+                <a href="#" class="flex items-center gap-3 bg-numeria-blanc dark:bg-gray-700 border border-gray-200 dark:border-gray-600 px-6 py-3 rounded-xl hover:border-numeria-or hover:shadow-md transition-all group">
+                    <span class="text-2xl">📸</span>
+                    <div class="text-left">
+                        <p class="font-bold text-numeria-bleu dark:text-numeria-or text-sm group-hover:text-numeria-or">Instagram</p>
+                        <p class="text-gray-400 text-xs">Vie du campus</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+# ── Environnement virtuel ──
+env/
+venv/
+.venv/
+
+# ── Variables d'environnement — NE JAMAIS PARTAGER ──
+.env
+.env.local
+.env.production
+
+# ── Base de données SQLite ──
+*.sqlite3
+
+# ── Fichiers Python compilés ──
+__pycache__/
+*.py[cod]
+*.pyc
+
+# ── Médias uploadés ──
+media/
+
+# ── Fichiers système ──
+.DS_Store
+Thumbs.db
+
+# ── VS Code ──
+.vscode/
+
+# ── Logs ──
+*.log

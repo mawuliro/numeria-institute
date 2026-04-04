@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% block titre %}Créer un compte — Numeria Institute{% endblock %}
+{% block contenu %}
+
+<section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-12">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-lg mx-auto">
+
+            <!-- En-tête -->
+            <div class="text-center mb-8">
+
+                <!-- Logo atome -->
+                <div style="position:relative; width:64px; height:64px; display:flex; align-items:center; justify-content:center; margin: 0 auto 1.2rem;">
+                    <div style="position:absolute; width:18px; height:18px; background:#E8A020; border-radius:50%; z-index:10;"></div>
+                    <div style="position:absolute; width:64px; height:26px; border:2px solid #1A3C6E; border-radius:50%;"></div>
+                    <div style="position:absolute; width:64px; height:26px; border:2px solid #1A3C6E; border-radius:50%; transform:rotate(60deg);"></div>
+                    <div style="position:absolute; width:64px; height:26px; border:2px solid #1A3C6E; border-radius:50%; transform:rotate(120deg);"></div>
+                </div>
+
+                <h1 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-2">
+                    Rejoins Numeria Institute
+                </h1>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">
+                    Crée ton compte gratuitement et commence à apprendre
+                </p>
+            </div>
+
+            <!-- Messages -->
+            {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                <div class="p-4 rounded-xl mb-2 flex items-center gap-3
+                    {% if message.tags == 'error' %}
+                        bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-200 border border-red-200
+                    {% else %}
+                        bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-200 border border-green-200
+                    {% endif %}">
+                    <span>{% if message.tags == 'error' %}❌{% else %}✅{% endif %}</span>
+                    <span class="text-sm">{{ message }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Formulaire -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+
+                <!-- Barre colorée en haut -->
+                <div class="h-1.5 bg-gradient-to-r from-numeria-bleu via-numeria-or to-numeria-bleu"></div>
+
+                <div class="p-8">
+                    <form method="POST" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Prénom + Nom -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                    Prénom <span class="text-red-400">*</span>
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
+                                    <input type="text" name="first_name"
+                                        value="{{ formulaire.first_name.value|default:'' }}"
+                                        placeholder="Ton prénom"
+                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
+                                    >
+                                </div>
+                                {% if formulaire.first_name.errors %}
+                                <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                    <span>⚠️</span> {{ formulaire.first_name.errors.0 }}
+                                </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                    Nom <span class="text-red-400">*</span>
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
+                                    <input type="text" name="last_name"
+                                        value="{{ formulaire.last_name.value|default:'' }}"
+                                        placeholder="Ton nom"
+                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
+                                    >
+                                </div>
+                                {% if formulaire.last_name.errors %}
+                                <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                    <span>⚠️</span> {{ formulaire.last_name.errors.0 }}
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-5">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                Adresse email <span class="text-red-400">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">✉️</span>
+                                <input type="email" name="email"
+                                    value="{{ formulaire.email.value|default:'' }}"
+                                    placeholder="votre@email.com"
+                                    class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
+                                >
+                            </div>
+                            {% if formulaire.email.errors %}
+                            <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                <span>⚠️</span> {{ formulaire.email.errors.0 }}
+                            </p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Nom d'utilisateur -->
+                        <div class="mb-5">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                Nom d'utilisateur <span class="text-red-400">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">@</span>
+                                <input type="text" name="username"
+                                    value="{{ formulaire.username.value|default:'' }}"
+                                    placeholder="nom_utilisateur_unique"
+                                    class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
+                                >
+                            </div>
+                            {% if formulaire.username.errors %}
+                            <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                <span>⚠️</span> {{ formulaire.username.errors.0 }}
+                            </p>
+                            {% endif %}
+                            <p class="text-gray-400 text-xs mt-1">
+                                Lettres, chiffres et @/./+/-/_ uniquement
+                            </p>
+                        </div>
+
+                        <!-- Pays -->
+                        <div class="mb-5">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                Pays
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🌍</span>
+                                <input type="text" name="pays"
+                                    value="{{ formulaire.pays.value|default:'Togo' }}"
+                                    placeholder="Ex: Togo, Sénégal, Côte d'Ivoire..."
+                                    class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Séparateur -->
+                        <div class="flex items-center gap-3 my-5">
+                            <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+                            <span class="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide">Sécurité</span>
+                            <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+                        </div>
+
+                        <!-- Mot de passe -->
+                        <div class="mb-5">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                Mot de passe <span class="text-red-400">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔐</span>
+                                <input type="password" name="password1"
+                                    placeholder="8 caractères minimum"
+                                    id="password1"
+                                    class="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
+                                >
+                                <!-- Bouton afficher/cacher -->
+                                <button type="button"
+                                    onclick="togglePassword('password1', 'oeil1')"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                                    <span id="oeil1">👁️</span>
+                                </button>
+                            </div>
+                            {% if formulaire.password1.errors %}
+                            <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                <span>⚠️</span> {{ formulaire.password1.errors.0 }}
+                            </p>
+                            {% endif %}
+
+                            <!-- Indicateur de force du mot de passe -->
+                            <div class="mt-2">
+                                <div class="flex gap-1">
+                                    <div id="force1" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all"></div>
+                                    <div id="force2" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all"></div>
+                                    <div id="force3" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all"></div>
+                                    <div id="force4" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all"></div>
+                                </div>
+                                <p id="texte-force" class="text-xs text-gray-400 mt-1"></p>
+                            </div>
+                        </div>
+
+                        <!-- Confirmer mot de passe -->
+                        <div class="mb-6">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                Confirmer le mot de passe <span class="text-red-400">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔐</span>
+                                <input type="password" name="password2"
+                                    placeholder="Répète ton mot de passe"
+                                    id="password2"
+                                    class="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
+                                >
+                                <button type="button"
+                                    onclick="togglePassword('password2', 'oeil2')"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                                    <span id="oeil2">👁️</span>
+                                </button>
+                            </div>
+                            {% if formulaire.password2.errors %}
+                            <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                <span>⚠️</span> {{ formulaire.password2.errors.0 }}
+                            </p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Bouton inscription -->
+                        <button type="submit"
+                            class="w-full bg-numeria-or text-numeria-bleu font-bold py-4 rounded-xl hover:bg-yellow-400 transition-all text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform">
+                            Créer mon compte gratuitement 🚀
+                        </button>
+
+                    </form>
+
+                    <!-- Lien connexion -->
+                    <div class="text-center mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">
+                            Déjà un compte ?
+                            <a href="{% url 'comptes:connexion' %}"
+                               class="text-numeria-bleu dark:text-numeria-or font-bold hover:opacity-75 transition-opacity ml-1">
+                                Se connecter →
+                            </a>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Avantages -->
+            <div class="mt-6 grid grid-cols-3 gap-3 text-center">
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-3 border border-gray-100 dark:border-gray-700">
+                    <div class="text-2xl mb-1">🎓</div>
+                    <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">Cours gratuits</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-3 border border-gray-100 dark:border-gray-700">
+                    <div class="text-2xl mb-1">📜</div>
+                    <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">Certificats</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-3 border border-gray-100 dark:border-gray-700">
+                    <div class="text-2xl mb-1">🌍</div>
+                    <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">Communauté</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Scripts -->
+<script>
+    /* Afficher/cacher le mot de passe */
+    function togglePassword(inputId, oeilId) {
+        const input = document.getElementById(inputId);
+        const oeil = document.getElementById(oeilId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            oeil.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            oeil.textContent = '👁️';
+        }
+    }
+
+    /* Indicateur de force du mot de passe */
+    document.getElementById('password1').addEventListener('input', function() {
+        const mdp = this.value;
+        const barres = [
+            document.getElementById('force1'),
+            document.getElementById('force2'),
+            document.getElementById('force3'),
+            document.getElementById('force4'),
+        ];
+        const texte = document.getElementById('texte-force');
+
+        /* Calcul du score */
+        let score = 0;
+        if (mdp.length >= 8) score++;
+        if (/[A-Z]/.test(mdp)) score++;
+        if (/[0-9]/.test(mdp)) score++;
+        if (/[^A-Za-z0-9]/.test(mdp)) score++;
+
+        /* Couleurs selon le score */
+        const couleurs = ['', 'bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-green-500'];
+        const labels = ['', 'Faible', 'Moyen', 'Bon', 'Excellent'];
+
+        barres.forEach((b, i) => {
+            b.className = 'h-1 flex-1 rounded-full transition-all ' +
+                (i < score ? couleurs[score] : 'bg-gray-200 dark:bg-gray-700');
+        });
+
+        texte.textContent = mdp.length > 0 ? labels[score] : '';
+        texte.className = 'text-xs mt-1 ' + (
+            score <= 1 ? 'text-red-400' :
+            score === 2 ? 'text-orange-400' :
+            score === 3 ? 'text-yellow-500' : 'text-green-500'
+        );
+    });
+</script>
+
+{% endblock %}

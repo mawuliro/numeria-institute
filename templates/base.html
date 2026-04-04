@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <!-- ⚡ Mode sombre — EN PREMIER pour éviter le flash -->
+    <script>
+        const modeSombre = localStorage.getItem('mode-sombre');
+        if (modeSombre === 'actif') {
+            document.documentElement.classList.add('dark');
+        } else if (modeSombre === null) {
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('mode-sombre', 'actif');
+            }
+        }
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titre %}Numeria Institute{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'numeria-bleu': '#1A3C6E',
+                        'numeria-bleu-fonce': '#152f58',
+                        'numeria-or': '#E8A020',
+                        'numeria-blanc': '#F4F6F8',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/fortran.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/matlab.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                packages: {'[+]': ['ams', 'boldsymbol']}
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 100%; overflow-x: hidden; }
+        #menu-mobile { display: none; }
+        #menu-mobile.ouvert { display: block; }
+
+        /* Transition douce mode sombre */
+        body, header, footer, main, section, div, p, h1, h2, h3, a {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Header scroll effect */
+        #header-principal {
+            transition: all 0.3s ease;
+        }
+        #header-principal.scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Blocs de code */
+        pre { border-radius: 8px; margin: 1.5rem 0; padding: 0 !important; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
+        pre code.hljs { border-radius: 8px; padding: 1.5rem !important; font-size: 0.9rem; line-height: 1.6; font-family: 'Courier New', Courier, monospace; }
+        .code-wrapper { position: relative; margin: 1.5rem 0; }
+        .code-lang-badge { position: absolute; top: 0; right: 0; background: #E8A020; color: #1A3C6E; font-size: 0.7rem; font-weight: 700; padding: 3px 12px; border-radius: 0 8px 0 8px; z-index: 10; text-transform: uppercase; letter-spacing: 1px; }
+        .copy-btn { position: absolute; top: 8px; right: 90px; background: rgba(255,255,255,0.1); color: #ccc; border: 1px solid rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; z-index: 10; transition: all 0.2s; }
+        .copy-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+        code:not(.hljs) { background: #f0f0f0; color: #1A3C6E; padding: 2px 6px; border-radius: 4px; font-size: 0.85em; font-family: 'Courier New', Courier, monospace; }
+
+        /* Formulaires en mode sombre */
+        .dark input[type="text"],
+        .dark input[type="email"],
+        .dark input[type="password"],
+        .dark input[type="url"],
+        .dark textarea,
+        .dark select {
+            background-color: #374151;
+            color: #F9FAFB;
+            border-color: #4B5563;
+        }
+        .dark input::placeholder,
+        .dark textarea::placeholder {
+            color: #9CA3AF;
+        }
+        .dark input:focus,
+        .dark textarea:focus,
+        .dark select:focus {
+            border-color: #E8A020;
+            outline: none;
+        }
+        .dark .bg-white { background-color: #1F2937 !important; }
+        .dark .text-gray-600 { color: #D1D5DB !important; }
+        .dark .text-gray-700 { color: #E5E7EB !important; }
+        .dark .text-gray-500 { color: #9CA3AF !important; }
+        .dark label { color: #E5E7EB; }
+
+        /* Lien actif dans la navigation */
+        .nav-lien-actif {
+            color: #E8A020 !important;
+            border-bottom: 2px solid #E8A020;
+            padding-bottom: 4px;
+        }
+    </style>
+
+</head>
+
+<body class="bg-numeria-blanc dark:bg-gray-900 font-sans w-full">
+
+    <!-- ===== HEADER STICKY ===== -->
+    <header id="header-principal" class="bg-numeria-bleu w-full sticky top-0 z-50 shadow-lg">
+        <div class="w-full px-4 sm:px-8 lg:px-16">
+            <div class="flex items-center justify-between h-16 md:h-20">
+
+                <!-- LOGO -->
+                <a href="/" class="flex items-center gap-3 flex-shrink-0">
+                    <div style="position:relative; width:38px; height:38px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <div style="position:absolute; width:10px; height:10px; background:#E8A020; border-radius:50%; z-index:10;"></div>
+                        <div style="position:absolute; width:38px; height:15px; border:1.5px solid #E8A020; border-radius:50%;"></div>
+                        <div style="position:absolute; width:38px; height:15px; border:1.5px solid #E8A020; border-radius:50%; transform:rotate(60deg);"></div>
+                        <div style="position:absolute; width:38px; height:15px; border:1.5px solid #E8A020; border-radius:50%; transform:rotate(120deg);"></div>
+                    </div>
+                    <div>
+                        <div class="text-numeria-or font-bold tracking-widest text-lg leading-none">NUMERIA</div>
+                        <div class="text-blue-300 text-xs tracking-widest leading-none mt-1">INSTITUTE</div>
+                    </div>
+                </a>
+
+                <!-- NAVIGATION DESKTOP -->
+                <nav class="hidden lg:flex items-center gap-6 xl:gap-8">
+                    <a href="/"
+                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200 {% if request.path == '/' %}nav-lien-actif{% endif %}">
+                        Accueil
+                    </a>
+                    <a href="{% url 'cours:catalogue' %}"
+                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200 {% if '/cours' in request.path %}nav-lien-actif{% endif %}">
+                        Cours
+                    </a>
+                    <a href="{% url 'blog:liste' %}"
+                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200 {% if '/blog' in request.path %}nav-lien-actif{% endif %}">
+                        Blog
+                    </a>
+                    <a href="#"
+                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200">
+                        Communauté
+                    </a>
+                    <a href="{% url 'a_propos' %}"
+                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200 {% if '/a-propos' in request.path %}nav-lien-actif{% endif %}">
+                        À propos
+                    </a>
+                    <a href="{% url 'contact' %}"
+                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200 {% if '/contact' in request.path %}nav-lien-actif{% endif %}">
+                        Contact
+                    </a>
+                </nav>
+
+                <!-- BOUTONS + MODE SOMBRE + HAMBURGER -->
+                <div class="flex items-center gap-2">
+
+                    <!-- Bouton mode sombre -->
+                    <button
+                        onclick="basculerMode()"
+                        class="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-numeria-bleu-fonce transition-colors"
+                        aria-label="Basculer le mode sombre"
+                        title="Mode sombre / clair"
+                    >
+                        <span class="text-lg dark:hidden">🌙</span>
+                        <span class="text-lg hidden dark:block">☀️</span>
+                    </button>
+
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'comptes:tableau_de_bord' %}"
+                           class="hidden sm:block text-blue-200 hover:text-numeria-or text-sm transition-colors">
+                            Tableau de bord
+                        </a>
+                        <a href="{% url 'comptes:profil' %}"
+                           class="hidden sm:flex items-center gap-2 bg-numeria-or text-numeria-bleu font-bold text-sm px-4 py-2 rounded-lg hover:bg-yellow-400 transition-colors">
+                            {% if user.profil.photo %}
+                                <img src="{{ user.profil.photo.url }}" alt="Photo"
+                                     class="w-6 h-6 rounded-full object-cover">
+                            {% else %}
+                                <span class="w-6 h-6 bg-numeria-bleu rounded-full flex items-center justify-center text-numeria-or text-xs font-bold">
+                                    {{ user.first_name|first|upper }}
+                                </span>
+                            {% endif %}
+                            {{ user.first_name }}
+                        </a>
+                    {% else %}
+                        <a href="{% url 'comptes:connexion' %}"
+                           class="hidden sm:block border border-numeria-or text-numeria-or font-semibold text-sm px-4 py-2 rounded-lg hover:bg-numeria-or hover:text-numeria-bleu transition-colors duration-200">
+                            Se connecter
+                        </a>
+                        <a href="{% url 'comptes:inscription' %}"
+                           class="hidden sm:block bg-numeria-or text-numeria-bleu font-bold text-sm px-4 py-2 rounded-lg hover:bg-yellow-400 transition-colors duration-200">
+                            S'inscrire
+                        </a>
+                    {% endif %}
+
+                    <!-- Bouton hamburger -->
+                    <button
+                        id="bouton-hamburger"
+                        class="lg:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-numeria-bleu-fonce transition-colors"
+                        aria-label="Ouvrir le menu"
+                    >
+                        <span id="barre1" class="block w-6 h-0.5 bg-white transition-all duration-300"></span>
+                        <span id="barre2" class="block w-6 h-0.5 bg-white transition-all duration-300 my-1.5"></span>
+                        <span id="barre3" class="block w-6 h-0.5 bg-white transition-all duration-300"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MENU MOBILE -->
+        <div id="menu-mobile" class="lg:hidden bg-numeria-bleu-fonce border-t border-blue-800 w-full">
+            <div class="w-full px-4 sm:px-8 py-4 flex flex-col gap-1">
+                <a href="/"
+                   class="py-3 px-4 rounded-lg text-sm transition-colors
+                   {% if request.path == '/' %}bg-blue-900 text-numeria-or font-medium{% else %}text-blue-200 hover:text-numeria-or hover:bg-blue-900{% endif %}">
+                    Accueil
+                </a>
+                <a href="{% url 'cours:catalogue' %}"
+                   class="py-3 px-4 rounded-lg text-sm transition-colors
+                   {% if '/cours' in request.path %}bg-blue-900 text-numeria-or font-medium{% else %}text-blue-200 hover:text-numeria-or hover:bg-blue-900{% endif %}">
+                    Cours
+                </a>
+                <a href="{% url 'blog:liste' %}"
+                   class="py-3 px-4 rounded-lg text-sm transition-colors
+                   {% if '/blog' in request.path %}bg-blue-900 text-numeria-or font-medium{% else %}text-blue-200 hover:text-numeria-or hover:bg-blue-900{% endif %}">
+                    Blog
+                </a>
+                <a href="#"
+                   class="text-blue-200 hover:text-numeria-or hover:bg-blue-900 py-3 px-4 rounded-lg text-sm transition-colors">
+                    Communauté
+                </a>
+                <a href="{% url 'a_propos' %}"
+                   class="py-3 px-4 rounded-lg text-sm transition-colors
+                   {% if '/a-propos' in request.path %}bg-blue-900 text-numeria-or font-medium{% else %}text-blue-200 hover:text-numeria-or hover:bg-blue-900{% endif %}">
+                    À propos
+                </a>
+                <a href="{% url 'contact' %}"
+                   class="py-3 px-4 rounded-lg text-sm transition-colors
+                   {% if '/contact' in request.path %}bg-blue-900 text-numeria-or font-medium{% else %}text-blue-200 hover:text-numeria-or hover:bg-blue-900{% endif %}">
+                    Contact
+                </a>
+
+                <div class="border-t border-blue-800 my-2"></div>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'comptes:tableau_de_bord' %}"
+                       class="text-blue-200 hover:text-numeria-or hover:bg-blue-900 py-3 px-4 rounded-lg text-sm transition-colors">
+                        🎓 Tableau de bord
+                    </a>
+                    <a href="{% url 'comptes:profil' %}"
+                       class="text-blue-200 hover:text-numeria-or hover:bg-blue-900 py-3 px-4 rounded-lg text-sm transition-colors">
+                        👤 Mon profil
+                    </a>
+                    <a href="{% url 'comptes:deconnexion' %}"
+                       class="border border-gray-500 text-gray-300 font-semibold text-sm px-4 py-3 rounded-lg text-center hover:bg-blue-900 transition-colors">
+                        👋 Se déconnecter
+                    </a>
+                {% else %}
+                    <a href="{% url 'comptes:connexion' %}"
+                       class="border border-numeria-or text-numeria-or font-semibold text-sm px-4 py-3 rounded-lg text-center hover:bg-numeria-or hover:text-numeria-bleu transition-colors">
+                        Se connecter
+                    </a>
+                    <a href="{% url 'comptes:inscription' %}"
+                       class="bg-numeria-or text-numeria-bleu font-bold text-sm px-4 py-3 rounded-lg text-center hover:bg-yellow-400 transition-colors">
+                        S'inscrire gratuitement
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <main class="w-full">
+        {% block contenu %}
+        {% endblock %}
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-numeria-bleu dark:bg-gray-800 w-full mt-20">
+        <div class="w-full px-4 sm:px-8 lg:px-16 py-12">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+
+                <!-- Colonne 1 : Logo et mission -->
+                <div class="lg:col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div style="position:relative; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <div style="position:absolute; width:8px; height:8px; background:#E8A020; border-radius:50%; z-index:10;"></div>
+                            <div style="position:absolute; width:32px; height:12px; border:1.5px solid #E8A020; border-radius:50%;"></div>
+                            <div style="position:absolute; width:32px; height:12px; border:1.5px solid #E8A020; border-radius:50%; transform:rotate(60deg);"></div>
+                            <div style="position:absolute; width:32px; height:12px; border:1.5px solid #E8A020; border-radius:50%; transform:rotate(120deg);"></div>
+                        </div>
+                        <div class="text-numeria-or font-bold text-lg tracking-widest">NUMERIA INSTITUTE</div>
+                    </div>
+                    <p class="text-blue-300 text-sm leading-relaxed mb-4">
+                        L'éducation scientifique accessible, engageante et gratuite pour tous les apprenants africains et francophones du monde entier.
+                    </p>
+                    <p class="text-blue-400 text-xs">📍 Lomé, Togo: Rayonnement CEDEAO</p>
+                </div>
+
+                <!-- Colonne 2 : Liens rapides -->
+                <div>
+                    <div class="text-white font-semibold mb-4">Navigation</div>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'cours:catalogue' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">Nos cours</a></li>
+                        <li><a href="{% url 'blog:liste' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">Le blog</a></li>
+                        <li><a href="{% url 'a_propos' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">À propos</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">Contact</a></li>
+                        <li><a href="#" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">Communauté</a></li>
+                    </ul>
+                </div>
+
+                <!-- Colonne 3 : Contact -->
+                <div>
+                    <div class="text-white font-semibold mb-4">Contact</div>
+                    <div class="space-y-2">
+                        <p class="text-blue-300 text-sm flex items-center gap-2">
+                            <span>✉️</span>
+                            <a href="mailto:contact@numeriainstitute.com"
+                               class="hover:text-numeria-or transition-colors">
+                                contact@numeriainstitute.com
+                            </a>
+                        </p>
+                        <p class="text-blue-300 text-sm flex items-center gap-2">
+                            <span>📍</span> Lomé, Togo
+                        </p>
+                        <p class="text-blue-300 text-sm flex items-center gap-2">
+                            <span>🌍</span> Afrique de l'Ouest
+                        </p>
+                    </div>
+
+                    <!-- Réseaux sociaux -->
+                    <div class="flex gap-3 mt-4">
+                        <a href="#" class="w-8 h-8 bg-blue-800 hover:bg-numeria-or rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-colors text-sm font-bold">
+                            in
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-blue-800 hover:bg-numeria-or rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-colors text-xs font-bold">
+                            YT
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-blue-800 hover:bg-numeria-or rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-colors text-xs font-bold">
+                            FB
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-blue-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p class="text-blue-400 text-sm">
+                    © 2025 Numeria Institute, Tous droits réservés
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="text-blue-400 hover:text-numeria-or text-xs transition-colors">
+                        Politique de confidentialité
+                    </a>
+                    <a href="#" class="text-blue-400 hover:text-numeria-or text-xs transition-colors">
+                        Conditions d'utilisation
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        /* ── Menu hamburger ── */
+        const bouton = document.getElementById('bouton-hamburger');
+        const menuMobile = document.getElementById('menu-mobile');
+        const barre1 = document.getElementById('barre1');
+        const barre2 = document.getElementById('barre2');
+        const barre3 = document.getElementById('barre3');
+        let menuOuvert = false;
+
+        bouton.addEventListener('click', function() {
+            menuOuvert = !menuOuvert;
+            if (menuOuvert) {
+                menuMobile.classList.add('ouvert');
+                barre1.style.transform = 'translateY(8px) rotate(45deg)';
+                barre2.style.opacity = '0';
+                barre3.style.transform = 'translateY(-8px) rotate(-45deg)';
+            } else {
+                menuMobile.classList.remove('ouvert');
+                barre1.style.transform = 'none';
+                barre2.style.opacity = '1';
+                barre3.style.transform = 'none';
+            }
+        });
+
+        menuMobile.querySelectorAll('a').forEach(function(lien) {
+            lien.addEventListener('click', function() {
+                menuMobile.classList.remove('ouvert');
+                menuOuvert = false;
+                barre1.style.transform = 'none';
+                barre2.style.opacity = '1';
+                barre3.style.transform = 'none';
+            });
+        });
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 1024) {
+                menuMobile.classList.remove('ouvert');
+                menuOuvert = false;
+                barre1.style.transform = 'none';
+                barre2.style.opacity = '1';
+                barre3.style.transform = 'none';
+            }
+        });
+
+        /* ── Effet scroll sur le header ── */
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header-principal');
+            if (window.scrollY > 20) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        /* ── Mode sombre ── */
+        function basculerMode() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('mode-sombre', 'inactif');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('mode-sombre', 'actif');
+            }
+        }
+
+        /* ── Highlight.js ── */
+        document.addEventListener('DOMContentLoaded', function() {
+            hljs.highlightAll();
+        });
+
+        /* ── Blocs de code — badge + bouton copier ── */
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('pre code').forEach(function(bloc) {
+                let langage = '';
+                bloc.classList.forEach(function(cls) {
+                    if (cls.startsWith('language-')) {
+                        langage = cls.replace('language-', '');
+                    }
+                });
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-wrapper';
+                const pre = bloc.parentNode;
+                pre.parentNode.insertBefore(wrapper, pre);
+                wrapper.appendChild(pre);
+                if (langage) {
+                    const badge = document.createElement('span');
+                    badge.className = 'code-lang-badge';
+                    badge.textContent = langage;
+                    wrapper.appendChild(badge);
+                }
+                const btnCopier = document.createElement('button');
+                btnCopier.className = 'copy-btn';
+                btnCopier.textContent = '📋 Copier';
+                wrapper.appendChild(btnCopier);
+                btnCopier.addEventListener('click', function() {
+                    navigator.clipboard.writeText(bloc.innerText).then(function() {
+                        btnCopier.textContent = '✅ Copié !';
+                        setTimeout(function() { btnCopier.textContent = '📋 Copier'; }, 2000);
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
