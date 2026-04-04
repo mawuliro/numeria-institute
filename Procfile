@@ -1,0 +1,1 @@
+web: gunicorn numeria_project.wsgi --log-file -
