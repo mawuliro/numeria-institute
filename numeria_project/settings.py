@@ -75,28 +75,21 @@ WSGI_APPLICATION = 'numeria_project.wsgi.application'
 
 
 # ── BASE DE DONNÉES ────────────────────────────────────────────────
-# En développement : SQLite
-# En production : PostgreSQL (défini dans DATABASE_URL)
-USE_POSTGRES = config('USE_POSTGRES', default=False, cast=bool)
 
-if USE_POSTGRES:
-    # PostgreSQL — pour la production
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=config('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
-else:
-    # SQLite — pour le développement local
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
+
+# DATABASES
+DATABASES = {
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600,
+        conn_health_checks=True
+    )
+}
 
 # ── VALIDATION DES MOTS DE PASSE ──────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [
