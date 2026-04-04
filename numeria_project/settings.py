@@ -156,10 +156,13 @@ CONTACT_EMAIL = config('CONTACT_EMAIL', default='contact@numeriainstitute.com')
 
 # ── SÉCURITÉ EN PRODUCTION ─────────────────────────────────────────
 if not DEBUG:
-    # HTTPS obligatoire en production
-    SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    # Railway gère déjà HTTPS — on désactive la redirection forcée
+    # pour éviter la boucle de redirections
+    SECURE_SSL_REDIRECT = False
+
+    # Ces paramètres sont OK avec Railway
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+    # Faire confiance au proxy de Railway
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
