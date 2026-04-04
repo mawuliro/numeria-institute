@@ -77,13 +77,9 @@ WSGI_APPLICATION = 'numeria_project.wsgi.application'
 # ── BASE DE DONNÉES ────────────────────────────────────────────────
 # ── BASE DE DONNÉES ────────────────────────────────────────────────
 
-
-# On essaie d'abord DATABASE_URL (production Railway)
-# Si pas disponible, on utilise SQLite (développement local)
-DATABASE_URL = config('DATABASE_URL', default='')
+DATABASE_URL = os.environ.get('DATABASE_URL', '') or config('DATABASE_URL', default='')
 
 if DATABASE_URL:
-    # Production — PostgreSQL via DATABASE_URL
     DATABASES = {
         'default': dj_database_url.config(
             default=DATABASE_URL,
@@ -93,7 +89,6 @@ if DATABASE_URL:
         )
     }
 else:
-    # Développement — SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
