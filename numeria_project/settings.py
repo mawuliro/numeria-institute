@@ -80,7 +80,6 @@ WSGI_APPLICATION = 'numeria_project.wsgi.application'
 USE_POSTGRES = config('USE_POSTGRES', default=False, cast=bool)
 
 if USE_POSTGRES:
-    # PostgreSQL — pour la production
     DATABASES = {
         'default': dj_database_url.config(
             default=config('DATABASE_URL'),
@@ -89,14 +88,12 @@ if USE_POSTGRES:
         )
     }
 else:
-    # SQLite — pour le développement local
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
 
 # ── VALIDATION DES MOTS DE PASSE ──────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [
