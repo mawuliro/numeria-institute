@@ -3,9 +3,93 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Profil
 
+# Liste complète des pays francophones et africains en priorité
+PAYS_CHOICES = [
+    ('', '🌍 Sélectionner votre pays'),
+    # ── Afrique de l\'Ouest (priorité) ──────────────────────────────
+    ('Togo', '🇹🇬 Togo'),
+    ('Bénin', '🇧🇯 Bénin'),
+    ('Ghana', '🇬🇭 Ghana'),
+    ('Côte d\'Ivoire', '🇨🇮 Côte d\'Ivoire'),
+    ('Sénégal', '🇸🇳 Sénégal'),
+    ('Mali', '🇲🇱 Mali'),
+    ('Burkina Faso', '🇧🇫 Burkina Faso'),
+    ('Niger', '🇳🇪 Niger'),
+    ('Guinée', '🇬🇳 Guinée'),
+    ('Sierra Leone', '🇸🇱 Sierra Leone'),
+    ('Liberia', '🇱🇷 Liberia'),
+    ('Gambie', '🇬🇲 Gambie'),
+    ('Guinée-Bissau', '🇬🇼 Guinée-Bissau'),
+    ('Cap-Vert', '🇨🇻 Cap-Vert'),
+    ('Mauritanie', '🇲🇷 Mauritanie'),
+    ('Nigeria', '🇳🇬 Nigeria'),
+    # ── Afrique Centrale ────────────────────────────────────────────
+    ('Cameroun', '🇨🇲 Cameroun'),
+    ('Congo', '🇨🇬 Congo'),
+    ('RD Congo', '🇨🇩 RD Congo'),
+    ('Gabon', '🇬🇦 Gabon'),
+    ('Tchad', '🇹🇩 Tchad'),
+    ('République Centrafricaine', '🇨🇫 République Centrafricaine'),
+    ('Guinée Équatoriale', '🇬🇶 Guinée Équatoriale'),
+    ('São Tomé-et-Príncipe', '🇸🇹 São Tomé-et-Príncipe'),
+    ('Burundi', '🇧🇮 Burundi'),
+    ('Rwanda', '🇷🇼 Rwanda'),
+    # ── Afrique de l\'Est ───────────────────────────────────────────
+    ('Éthiopie', '🇪🇹 Éthiopie'),
+    ('Kenya', '🇰🇪 Kenya'),
+    ('Tanzanie', '🇹🇿 Tanzanie'),
+    ('Ouganda', '🇺🇬 Ouganda'),
+    ('Mozambique', '🇲🇿 Mozambique'),
+    ('Madagascar', '🇲🇬 Madagascar'),
+    ('Comores', '🇰🇲 Comores'),
+    ('Djibouti', '🇩🇯 Djibouti'),
+    ('Érythrée', '🇪🇷 Érythrée'),
+    ('Somalie', '🇸🇴 Somalie'),
+    # ── Afrique du Nord ─────────────────────────────────────────────
+    ('Maroc', '🇲🇦 Maroc'),
+    ('Algérie', '🇩🇿 Algérie'),
+    ('Tunisie', '🇹🇳 Tunisie'),
+    ('Libye', '🇱🇾 Libye'),
+    ('Égypte', '🇪🇬 Égypte'),
+    # ── Afrique du Sud ──────────────────────────────────────────────
+    ('Afrique du Sud', '🇿🇦 Afrique du Sud'),
+    ('Zimbabwe', '🇿🇼 Zimbabwe'),
+    ('Zambie', '🇿🇲 Zambie'),
+    ('Angola', '🇦🇴 Angola'),
+    ('Namibie', '🇳🇦 Namibie'),
+    ('Botswana', '🇧🇼 Botswana'),
+    ('Malawi', '🇲🇼 Malawi'),
+    ('Lesotho', '🇱🇸 Lesotho'),
+    ('Eswatini', '🇸🇿 Eswatini'),
+    # ── Europe ──────────────────────────────────────────────────────
+    ('France', '🇫🇷 France'),
+    ('Belgique', '🇧🇪 Belgique'),
+    ('Suisse', '🇨🇭 Suisse'),
+    ('Canada', '🇨🇦 Canada'),
+    ('Luxembourg', '🇱🇺 Luxembourg'),
+    ('Allemagne', '🇩🇪 Allemagne'),
+    ('Royaume-Uni', '🇬🇧 Royaume-Uni'),
+    ('Espagne', '🇪🇸 Espagne'),
+    ('Italie', '🇮🇹 Italie'),
+    ('Portugal', '🇵🇹 Portugal'),
+    ('Pays-Bas', '🇳🇱 Pays-Bas'),
+    # ── Amériques ───────────────────────────────────────────────────
+    ('États-Unis', '🇺🇸 États-Unis'),
+    ('Haïti', '🇭🇹 Haïti'),
+    ('Brésil', '🇧🇷 Brésil'),
+    ('Mexique', '🇲🇽 Mexique'),
+    # ── Asie & Océanie ──────────────────────────────────────────────
+    ('Chine', '🇨🇳 Chine'),
+    ('Inde', '🇮🇳 Inde'),
+    ('Japon', '🇯🇵 Japon'),
+    ('Australie', '🇦🇺 Australie'),
+    # ── Autre ───────────────────────────────────────────────────────
+    ('Autre', '🌐 Autre'),
+]
+
 
 class FormulaireInscription(UserCreationForm):
-    """Formulaire d'inscription personnalisé."""
+    """Formulaire d'inscription personnalisé pour Numeria."""
 
     email = forms.EmailField(
         required=True,
@@ -24,12 +108,10 @@ class FormulaireInscription(UserCreationForm):
         max_length=50,
         widget=forms.TextInput(attrs={'placeholder': 'Votre nom'})
     )
-    pays = forms.CharField(
+    pays = forms.ChoiceField(
         required=False,
         label="Pays",
-        max_length=100,
-        initial='Togo',
-        widget=forms.TextInput(attrs={'placeholder': "Ex: Togo, Sénégal..."})
+        choices=PAYS_CHOICES,
     )
 
     class Meta:
@@ -57,14 +139,13 @@ class FormulaireInscription(UserCreationForm):
             user.save()
             Profil.objects.create(
                 utilisateur=user,
-                pays=self.cleaned_data.get('pays', 'Togo')
+                pays=self.cleaned_data.get('pays', '')
             )
         return user
 
 
 class FormulaireConnexion(forms.Form):
     """Formulaire de connexion."""
-
     username = forms.CharField(
         label="Nom d'utilisateur",
         widget=forms.TextInput(attrs={'placeholder': "Nom d'utilisateur"})
@@ -76,7 +157,7 @@ class FormulaireConnexion(forms.Form):
 
 
 class FormulaireProfil(forms.ModelForm):
-    """Formulaire de modification du profil avec photo."""
+    """Formulaire de modification du profil."""
 
     first_name = forms.CharField(
         required=True,
@@ -95,30 +176,28 @@ class FormulaireProfil(forms.ModelForm):
         label="Email",
         widget=forms.EmailInput(attrs={'placeholder': 'votre@email.com'})
     )
+    pays = forms.ChoiceField(
+        required=False,
+        label="Pays",
+        choices=PAYS_CHOICES,
+    )
 
     class Meta:
         model = Profil
         fields = [
-            'photo',        # On ajoute la photo ici
-            'bio',
-            'pays',
-            'ville',
-            'niveau_etudes',
-            'domaine',
-            'linkedin',
-            'github',
+            'photo', 'bio', 'pays', 'ville',
+            'niveau_etudes', 'domaine', 'linkedin', 'github',
         ]
         widgets = {
             'photo': forms.FileInput(attrs={
-                'accept': 'image/*',    # Accepte seulement les images
-                'class': 'hidden',      # On cachera l'input par défaut
+                'accept': 'image/*',
+                'class': 'hidden',
                 'id': 'input-photo'
             }),
             'bio': forms.Textarea(attrs={
                 'placeholder': 'Parlez-nous de vous...',
                 'rows': 4
             }),
-            'pays': forms.TextInput(attrs={'placeholder': 'Ex: Togo'}),
             'ville': forms.TextInput(attrs={'placeholder': 'Ex: Lomé'}),
             'domaine': forms.TextInput(attrs={'placeholder': 'Ex: Mathématiques, Physique...'}),
             'linkedin': forms.URLInput(attrs={'placeholder': 'https://linkedin.com/in/...'}),
