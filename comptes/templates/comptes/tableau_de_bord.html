@@ -2,39 +2,34 @@
 {% block titre %}Tableau de bord — Numeria Institute{% endblock %}
 {% block contenu %}
 
-<section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-10">
+<section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-8 sm:py-10">
     <div class="w-full px-4 sm:px-8 lg:px-16">
 
-        <!-- ===== EN-TÊTE PERSONNALISÉ ===== -->
+        <!-- ===== EN-TÊTE ===== -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-
             <div class="flex items-center gap-4">
-                <!-- Avatar -->
                 {% if profil.photo %}
                     <img src="{{ profil.photo.url }}" alt="Photo"
-                         class="w-14 h-14 rounded-full object-cover border-3 border-numeria-or shadow-md">
+                         class="w-14 h-14 rounded-2xl object-cover ring-2 ring-numeria-teal ring-offset-2 ring-offset-numeria-blanc dark:ring-offset-gray-900 shadow-md">
                 {% else %}
-                    <div class="w-14 h-14 rounded-full bg-numeria-or flex items-center justify-center text-numeria-bleu text-xl font-bold shadow-md">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-numeria-bleu to-numeria-teal flex items-center justify-center text-white text-xl font-black shadow-md" style="font-family:'Outfit',sans-serif;">
                         {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
                     </div>
                 {% endif %}
-
                 <div>
-                    <h1 class="text-2xl font-bold text-numeria-bleu dark:text-numeria-or">
+                    <h1 style="font-family:'Outfit',sans-serif;" class="text-2xl font-bold text-numeria-bleu dark:text-white">
                         Bonjour, {{ user.first_name }} 👋
                     </h1>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm">
-                        {% if profil.pays %}📍 {{ profil.pays }}{% endif %}
-                        · Membre depuis {{ user.date_joined|date:"F Y" }}
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-0.5">
+                        {% if profil.pays %}📍 {{ profil.pays }} · {% endif %}Membre depuis {{ user.date_joined|date:"F Y" }}
                     </p>
                 </div>
             </div>
-
-            <!-- Actions rapides -->
             <div class="flex items-center gap-3">
                 <a href="{% url 'cours:catalogue' %}"
-                   class="bg-numeria-or text-numeria-bleu font-bold px-5 py-2.5 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
-                    + Nouveau cours
+                   class="flex items-center gap-2 bg-numeria-teal text-numeria-bleu font-bold px-5 py-2.5 rounded-xl hover:bg-teal-300 transition-colors text-sm" style="font-family:'Outfit',sans-serif;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Nouveau cours
                 </a>
                 <a href="{% url 'comptes:profil' %}"
                    class="border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold px-5 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm">
@@ -47,51 +42,55 @@
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
 
             <!-- Cours inscrits -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-2xl">📚</span>
-                    <span class="text-xs font-semibold text-blue-500 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded-full">Total</span>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-bl-3xl"></div>
+                <div class="relative">
+                    <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center mb-3">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A3C6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dark:stroke-blue-300"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    </div>
+                    <div style="font-family:'Outfit',sans-serif;" class="text-3xl font-black text-numeria-bleu dark:text-white mb-0.5">{{ total_inscrits }}</div>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Cours inscrits</p>
                 </div>
-                <div class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-1">
-                    {{ total_inscrits }}
-                </div>
-                <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Cours inscrits</p>
             </div>
 
             <!-- En cours -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-2xl">⚡</span>
-                    <span class="text-xs font-semibold text-orange-500 bg-orange-50 dark:bg-orange-900 px-2 py-0.5 rounded-full">Actif</span>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-orange-50 dark:bg-orange-900/20 rounded-bl-3xl"></div>
+                <div class="relative">
+                    <div class="w-10 h-10 bg-orange-100 dark:bg-orange-900/40 rounded-xl flex items-center justify-center mb-3">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8A020" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <div style="font-family:'Outfit',sans-serif;" class="text-3xl font-black text-numeria-bleu dark:text-white mb-0.5">{{ en_cours|length }}</div>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">En cours</p>
                 </div>
-                <div class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-1">
-                    {{ en_cours|length }}
-                </div>
-                <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">En cours</p>
             </div>
 
             <!-- Terminés -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-2xl">✅</span>
-                    <span class="text-xs font-semibold text-green-500 bg-green-50 dark:bg-green-900 px-2 py-0.5 rounded-full">Fini</span>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-green-50 dark:bg-green-900/20 rounded-bl-3xl"></div>
+                <div class="relative">
+                    <div class="w-10 h-10 bg-green-100 dark:bg-green-900/40 rounded-xl flex items-center justify-center mb-3">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div style="font-family:'Outfit',sans-serif;" class="text-3xl font-black text-numeria-bleu dark:text-white mb-0.5">{{ total_termines }}</div>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Terminés</p>
                 </div>
-                <div class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-1">
-                    {{ total_termines }}
-                </div>
-                <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Terminés</p>
             </div>
 
             <!-- Progression globale -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-2xl">📈</span>
-                    <span class="text-xs font-semibold text-purple-500 bg-purple-50 dark:bg-purple-900 px-2 py-0.5 rounded-full">Moy.</span>
+            <div class="bg-gradient-to-br from-numeria-bleu to-numeria-teal rounded-2xl p-5 shadow-sm relative overflow-hidden">
+                <div class="absolute bottom-0 right-0 w-24 h-24 bg-white/10 rounded-tl-3xl"></div>
+                <div class="relative">
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    </div>
+                    <div style="font-family:'Outfit',sans-serif;" class="text-3xl font-black text-white mb-0.5">{{ progression_totale }}%</div>
+                    <p class="text-white/80 text-xs font-medium">Progression globale</p>
+                    <!-- Mini barre de progression -->
+                    <div class="mt-3 bg-white/20 rounded-full h-1.5">
+                        <div class="bg-white rounded-full h-1.5 transition-all duration-700" style="width:{{ progression_totale }}%"></div>
+                    </div>
                 </div>
-                <div class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-1">
-                    {{ progression_totale }}%
-                </div>
-                <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Progression globale</p>
             </div>
 
         </div>
@@ -100,117 +99,87 @@
         <div class="flex flex-col lg:flex-row gap-8">
 
             <!-- COLONNE PRINCIPALE -->
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0 flex flex-col gap-6">
 
                 <!-- MES COURS -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm mb-6">
-
-                    <div class="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
-                        <h2 class="text-lg font-bold text-numeria-bleu dark:text-numeria-or flex items-center gap-2">
-                            <span>📚</span> Mes cours
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+                    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+                        <h2 style="font-family:'Outfit',sans-serif;" class="text-base font-bold text-numeria-bleu dark:text-white flex items-center gap-2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-numeria-teal"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                            Mes cours
                         </h2>
-                        <a href="{% url 'cours:catalogue' %}"
-                           class="text-numeria-bleu dark:text-numeria-or text-sm font-semibold hover:opacity-75 transition-opacity">
-                            Voir tout →
+                        <a href="{% url 'cours:catalogue' %}" class="text-numeria-teal text-sm font-semibold hover:opacity-75 transition-opacity flex items-center gap-1">
+                            Voir tout <span>→</span>
                         </a>
                     </div>
 
                     <div class="p-6">
                         {% if inscriptions %}
-
-                            <div class="flex flex-col gap-4">
+                            <div class="flex flex-col gap-3">
                                 {% for inscription in inscriptions %}
-                                <div class="flex flex-col sm:flex-row sm:items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group">
+
+                                    <!-- Icône matière -->
+                                    <div class="w-11 h-11 rounded-xl bg-numeria-bleu flex items-center justify-center flex-shrink-0 text-numeria-teal font-black text-sm" style="font-family:'Outfit',sans-serif;">
+                                        {{ inscription.cours.get_matiere_display|first|upper }}
+                                    </div>
 
                                     <!-- Info cours -->
                                     <div class="flex-1 min-w-0">
-                                        <div class="flex items-center gap-2 mb-1">
-                                            <span class="text-numeria-or text-xs font-bold uppercase tracking-wide">
-                                                {{ inscription.cours.get_matiere_display }}
-                                            </span>
+                                        <div class="flex flex-wrap items-center gap-1.5 mb-1">
+                                            <span class="text-numeria-teal text-xs font-bold uppercase tracking-wide">{{ inscription.cours.get_matiere_display }}</span>
                                             {% if inscription.est_termine %}
-                                            <span class="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 text-xs font-bold px-2 py-0.5 rounded-full">
-                                                ✅ Terminé
-                                            </span>
+                                                <span class="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 text-xs font-bold px-2 py-0.5 rounded-full">✓ Terminé</span>
                                             {% endif %}
                                             {% if not inscription.cours.est_gratuit %}
-                                            <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-2 py-0.5 rounded-full">
-                                                Payant
-                                            </span>
+                                                <span class="bg-numeria-or/20 text-numeria-or text-xs font-bold px-2 py-0.5 rounded-full">Payant</span>
                                             {% endif %}
                                         </div>
-                                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm truncate">
+                                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm truncate group-hover:text-numeria-bleu dark:group-hover:text-numeria-teal transition-colors">
                                             {{ inscription.cours.titre }}
                                         </h3>
                                         <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">
-                                            {{ inscription.cours.nombre_lecons }} leçons
-                                            · Inscrit le {{ inscription.date_inscription|date:"d/m/Y" }}
+                                            {{ inscription.cours.nombre_lecons }} leçons · Inscrit le {{ inscription.date_inscription|date:"d/m/Y" }}
                                         </p>
                                     </div>
 
                                     <!-- Progression + boutons -->
-                                    <div class="sm:w-48 flex flex-col gap-2">
-
-                                        <!-- Barre de progression -->
+                                    <div class="sm:w-44 flex flex-col gap-2 flex-shrink-0">
                                         <div class="flex items-center gap-2">
-                                            <div class="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                                <div class="bg-numeria-or rounded-full h-2 transition-all"
-                                                     style="width: {{ inscription.progression }}%">
+                                            <div class="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
+                                                <div class="rounded-full h-1.5 transition-all duration-500"
+                                                     style="width:{{ inscription.progression }}%; background: {% if inscription.est_termine %}#22c55e{% else %}#2DD4BF{% endif %}">
                                                 </div>
                                             </div>
-                                            <span class="text-xs font-bold text-gray-600 dark:text-gray-300 min-w-8">
-                                                {{ inscription.progression }}%
-                                            </span>
+                                            <span class="text-xs font-bold text-gray-600 dark:text-gray-300 min-w-[30px] text-right">{{ inscription.progression }}%</span>
                                         </div>
-
-                                        <!-- Bouton Revoir / Continuer -->
                                         <a href="{% url 'cours:detail' inscription.cours.id %}"
                                            class="text-center bg-numeria-bleu text-white text-xs font-bold py-1.5 rounded-lg hover:bg-numeria-bleu-fonce transition-colors">
-                                            {% if inscription.est_termine %}Revoir{% else %}Continuer{% endif %}
+                                            {% if inscription.est_termine %}Revoir{% else %}Continuer →{% endif %}
                                         </a>
-
-                                        <!-- ── BOUTON CERTIFICAT ──────────────────
-                                             Visible uniquement si :
-                                             - Le cours est terminé
-                                             - Le cours est payant
-                                        ──────────────────────────────────────── -->
                                         {% if inscription.est_termine and not inscription.cours.est_gratuit %}
                                         <a href="{% url 'cours:telecharger_certificat' inscription.id %}"
-                                           class="flex items-center justify-center gap-1.5 bg-numeria-or text-numeria-bleu font-bold py-1.5 rounded-lg hover:bg-yellow-400 transition-all text-xs">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                 stroke="currentColor" stroke-width="2.5"
-                                                 stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                                <polyline points="7 10 12 15 17 10"/>
-                                                <line x1="12" y1="15" x2="12" y2="3"/>
-                                            </svg>
+                                           class="flex items-center justify-center gap-1.5 bg-numeria-or/10 border border-numeria-or text-numeria-or font-bold py-1.5 rounded-lg hover:bg-numeria-or hover:text-numeria-bleu transition-all text-xs">
+                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                             Certificat PDF
                                         </a>
                                         {% endif %}
-
                                     </div>
-
                                 </div>
                                 {% endfor %}
                             </div>
-
                         {% else %}
-
-                            <!-- Aucun cours -->
-                            <div class="text-center py-12">
-                                <div class="text-6xl mb-4">🎓</div>
-                                <h3 class="text-gray-700 dark:text-gray-200 font-bold text-lg mb-2">
-                                    Tu n'es inscrit à aucun cours
-                                </h3>
-                                <p class="text-gray-400 dark:text-gray-500 text-sm mb-6">
-                                    Découvre notre catalogue et commence à apprendre dès aujourd'hui !
-                                </p>
+                            <div class="text-center py-14">
+                                <div class="w-16 h-16 bg-numeria-bleu/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A3C6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                                </div>
+                                <h3 style="font-family:'Outfit',sans-serif;" class="text-gray-700 dark:text-gray-200 font-bold text-lg mb-2">Tu n'es inscrit à aucun cours</h3>
+                                <p class="text-gray-400 dark:text-gray-500 text-sm mb-6">Découvre notre catalogue et commence à apprendre dès aujourd'hui !</p>
                                 <a href="{% url 'cours:catalogue' %}"
-                                   class="inline-block bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
+                                   class="inline-block bg-numeria-teal text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-teal-300 transition-colors text-sm" style="font-family:'Outfit',sans-serif;">
                                     Explorer les cours →
                                 </a>
                             </div>
-
                         {% endif %}
                     </div>
                 </div>
@@ -218,161 +187,137 @@
                 <!-- DERNIERS ARTICLES -->
                 {% if articles_recents %}
                 <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
-
-                    <div class="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
-                        <h2 class="text-lg font-bold text-numeria-bleu dark:text-numeria-or flex items-center gap-2">
-                            <span>📝</span> Derniers articles
+                    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+                        <h2 style="font-family:'Outfit',sans-serif;" class="text-base font-bold text-numeria-bleu dark:text-white flex items-center gap-2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            Derniers articles
                         </h2>
-                        <a href="{% url 'blog:liste' %}"
-                           class="text-numeria-bleu dark:text-numeria-or text-sm font-semibold hover:opacity-75 transition-opacity">
-                            Voir tout →
-                        </a>
+                        <a href="{% url 'blog:liste' %}" class="text-numeria-teal text-sm font-semibold hover:opacity-75 transition-opacity">Voir tout →</a>
                     </div>
-
-                    <div class="p-6 flex flex-col gap-4">
+                    <div class="p-4 flex flex-col gap-1">
                         {% for article in articles_recents %}
                         <a href="{% url 'blog:detail' article.slug %}"
                            class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
-                            <div class="w-10 h-10 bg-numeria-bleu rounded-lg flex items-center justify-center flex-shrink-0">
-                                <span class="text-numeria-or text-lg">📄</span>
+                            <div class="w-9 h-9 bg-numeria-bleu rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <h3 class="text-sm font-bold text-gray-800 dark:text-gray-100 group-hover:text-numeria-or transition-colors truncate">
-                                    {{ article.titre }}
-                                </h3>
-                                <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">
-                                    {{ article.date_creation|date:"d F Y" }}
-                                    · 👁 {{ article.nombre_vues }} vues
-                                </p>
+                                <h3 class="text-sm font-bold text-gray-800 dark:text-gray-100 group-hover:text-numeria-teal transition-colors truncate">{{ article.titre }}</h3>
+                                <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">{{ article.date_creation|date:"d F Y" }} · 👁 {{ article.nombre_vues }} vues</p>
                             </div>
-                            <span class="text-gray-300 dark:text-gray-600 group-hover:text-numeria-or transition-colors">→</span>
+                            <span class="text-gray-300 group-hover:text-numeria-teal transition-colors text-sm">→</span>
                         </a>
                         {% endfor %}
                     </div>
-
                 </div>
                 {% endif %}
 
             </div>
 
-            <!-- SIDEBAR -->
-            <div class="lg:w-80 flex flex-col gap-6 flex-shrink-0">
+            <!-- ===== SIDEBAR ===== -->
+            <div class="lg:w-72 flex flex-col gap-5 flex-shrink-0">
 
                 <!-- PROFIL RAPIDE -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
-
-                    <h2 class="text-base font-bold text-numeria-bleu dark:text-numeria-or mb-4 flex items-center gap-2">
-                        <span>👤</span> Mon profil
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-5">
+                    <h2 style="font-family:'Outfit',sans-serif;" class="text-sm font-bold text-numeria-bleu dark:text-white mb-4 flex items-center gap-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Mon profil
                     </h2>
-
-                    <div class="flex flex-col gap-3 text-sm">
+                    <div class="flex flex-col gap-2.5 text-sm">
                         {% if profil.niveau_etudes %}
-                        <div class="flex items-center gap-3">
-                            <span class="text-gray-400 w-5">🎓</span>
-                            <span class="text-gray-700 dark:text-gray-200">{{ profil.get_niveau_etudes_display }}</span>
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-numeria-teal w-4 flex-shrink-0">🎓</span>
+                            <span class="text-gray-700 dark:text-gray-200 text-xs">{{ profil.get_niveau_etudes_display }}</span>
                         </div>
                         {% endif %}
                         {% if profil.domaine %}
-                        <div class="flex items-center gap-3">
-                            <span class="text-gray-400 w-5">🔬</span>
-                            <span class="text-gray-700 dark:text-gray-200">{{ profil.domaine }}</span>
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-numeria-teal w-4 flex-shrink-0">🔬</span>
+                            <span class="text-gray-700 dark:text-gray-200 text-xs">{{ profil.domaine }}</span>
                         </div>
                         {% endif %}
                         {% if profil.ville or profil.pays %}
-                        <div class="flex items-center gap-3">
-                            <span class="text-gray-400 w-5">📍</span>
-                            <span class="text-gray-700 dark:text-gray-200">
-                                {% if profil.ville %}{{ profil.ville }}, {% endif %}{{ profil.pays }}
-                            </span>
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-numeria-teal w-4 flex-shrink-0">📍</span>
+                            <span class="text-gray-700 dark:text-gray-200 text-xs">{% if profil.ville %}{{ profil.ville }}, {% endif %}{{ profil.pays }}</span>
                         </div>
                         {% endif %}
-                        <div class="flex items-center gap-3">
-                            <span class="text-gray-400 w-5">📅</span>
-                            <span class="text-gray-700 dark:text-gray-200">
-                                Membre depuis {{ user.date_joined|date:"F Y" }}
-                            </span>
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-numeria-teal w-4 flex-shrink-0">📅</span>
+                            <span class="text-gray-700 dark:text-gray-200 text-xs">Depuis {{ user.date_joined|date:"F Y" }}</span>
                         </div>
                     </div>
-
                     <a href="{% url 'comptes:modifier_profil' %}"
-                       class="block text-center mt-4 border border-numeria-bleu dark:border-numeria-or text-numeria-bleu dark:text-numeria-or font-semibold py-2 rounded-xl hover:bg-numeria-bleu hover:text-white dark:hover:bg-numeria-or dark:hover:text-numeria-bleu transition-colors text-sm">
-                        Compléter mon profil
+                       class="block text-center mt-4 bg-numeria-bleu/5 border border-numeria-bleu/20 dark:border-numeria-teal/30 text-numeria-bleu dark:text-numeria-teal font-semibold py-2 rounded-xl hover:bg-numeria-bleu hover:text-white dark:hover:bg-numeria-teal dark:hover:text-numeria-bleu transition-colors text-xs">
+                        ✏️ Modifier mon profil
                     </a>
                 </div>
 
                 <!-- COURS RECOMMANDÉS -->
                 {% if cours_recommandes %}
-                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
-
-                    <h2 class="text-base font-bold text-numeria-bleu dark:text-numeria-or mb-4 flex items-center gap-2">
-                        <span>✨</span> Recommandés pour toi
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-5">
+                    <h2 style="font-family:'Outfit',sans-serif;" class="text-sm font-bold text-numeria-bleu dark:text-white mb-4 flex items-center gap-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        Pour toi
                     </h2>
-
-                    <div class="flex flex-col gap-3">
+                    <div class="flex flex-col gap-2">
                         {% for cours in cours_recommandes %}
                         <a href="{% url 'cours:detail' cours.id %}"
                            class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
-                            <div class="w-10 h-10 bg-numeria-bleu rounded-lg flex items-center justify-center flex-shrink-0">
-                                <span class="text-numeria-or text-xs font-bold">
-                                    {{ cours.get_matiere_display|first|upper }}
-                                </span>
+                            <div class="w-9 h-9 bg-numeria-bleu rounded-lg flex items-center justify-center flex-shrink-0 text-numeria-teal font-black text-xs" style="font-family:'Outfit',sans-serif;">
+                                {{ cours.get_matiere_display|first|upper }}
                             </div>
                             <div class="flex-1 min-w-0">
-                                <h3 class="text-sm font-bold text-gray-800 dark:text-gray-100 group-hover:text-numeria-or transition-colors leading-tight truncate">
-                                    {{ cours.titre }}
-                                </h3>
-                                <div class="flex items-center gap-2 mt-0.5">
+                                <h3 class="text-xs font-bold text-gray-800 dark:text-gray-100 group-hover:text-numeria-teal transition-colors leading-tight truncate">{{ cours.titre }}</h3>
+                                <div class="flex items-center gap-1.5 mt-0.5">
                                     <span class="text-xs text-gray-400">{{ cours.nombre_lecons }} leçons</span>
                                     {% if cours.est_gratuit %}
-                                    <span class="text-xs font-bold text-green-500">Gratuit</span>
+                                        <span class="text-xs font-bold text-green-500">· Gratuit</span>
                                     {% else %}
-                                    <span class="text-xs font-bold text-numeria-or">{{ cours.prix }} FCFA</span>
+                                        <span class="text-xs font-bold text-numeria-or">· {{ cours.prix }} FCFA</span>
                                     {% endif %}
                                 </div>
                             </div>
                         </a>
                         {% endfor %}
                     </div>
-
                     <a href="{% url 'cours:catalogue' %}"
-                       class="block text-center mt-4 bg-numeria-or text-numeria-bleu font-bold py-2 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
-                        Voir tout le catalogue →
+                       class="block text-center mt-3 bg-numeria-teal text-numeria-bleu font-bold py-2 rounded-xl hover:bg-teal-300 transition-colors text-xs" style="font-family:'Outfit',sans-serif;">
+                        Voir le catalogue →
                     </a>
                 </div>
                 {% endif %}
 
-                <!-- LIENS RAPIDES -->
-                <div class="bg-numeria-bleu dark:bg-gray-800 rounded-2xl p-6 border border-numeria-bleu-fonce dark:border-gray-700">
-                    <h2 class="text-base font-bold text-numeria-or mb-4">⚡ Actions rapides</h2>
-                    <div class="flex flex-col gap-2">
-                        <a href="{% url 'comptes:profil' %}"
-                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
-                            <span>👤</span> Voir mon profil
+                <!-- ACTIONS RAPIDES -->
+                <div class="bg-numeria-bleu rounded-2xl p-5 border border-numeria-bleu-fonce relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-numeria-teal/10 rounded-bl-3xl pointer-events-none"></div>
+                    <h2 style="font-family:'Outfit',sans-serif;" class="text-sm font-bold text-numeria-teal mb-4 flex items-center gap-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Actions rapides
+                    </h2>
+                    <div class="flex flex-col gap-0.5">
+                        {% for item in forloop.parentloop.0|default:"" %}{% endfor %}
+                        <a href="{% url 'comptes:profil' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
+                            <span class="w-5 text-center">👤</span> Voir mon profil
                         </a>
-                        <a href="{% url 'comptes:modifier_profil' %}"
-                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
-                            <span>✏️</span> Modifier mon profil
+                        <a href="{% url 'comptes:modifier_profil' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
+                            <span class="w-5 text-center">✏️</span> Modifier mon profil
                         </a>
-                        <a href="{% url 'comptes:changer_mot_de_passe' %}"
-                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
-                            <span>🔐</span> Changer mon mot de passe
+                        <a href="{% url 'comptes:changer_mot_de_passe' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
+                            <span class="w-5 text-center">🔐</span> Changer mot de passe
                         </a>
-                        <a href="{% url 'cours:catalogue' %}"
-                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
-                            <span>📚</span> Explorer les cours
+                        <a href="{% url 'cours:catalogue' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
+                            <span class="w-5 text-center">📚</span> Explorer les cours
                         </a>
-                        <a href="{% url 'blog:liste' %}"
-                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
-                            <span>📝</span> Lire le blog
+                        <a href="{% url 'blog:liste' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
+                            <span class="w-5 text-center">📝</span> Lire le blog
                         </a>
-                        <a href="{% url 'paiements:historique' %}"
-                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
-                            <span>💳</span> Mes paiements
+                        <a href="{% url 'paiements:historique' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
+                            <span class="w-5 text-center">💳</span> Mes paiements
                         </a>
-                        <div class="border-t border-blue-800 dark:border-gray-600 my-2"></div>
-                        <a href="{% url 'comptes:deconnexion' %}"
-                           class="flex items-center gap-3 text-blue-300 hover:text-red-400 py-2 transition-colors text-sm">
-                            <span>👋</span> Se déconnecter
+                        <div class="border-t border-white/10 my-2"></div>
+                        <a href="{% url 'comptes:deconnexion' %}" class="flex items-center gap-3 text-blue-300 hover:text-red-400 py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
+                            <span class="w-5 text-center">👋</span> Se déconnecter
                         </a>
                     </div>
                 </div>

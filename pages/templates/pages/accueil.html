@@ -1,41 +1,103 @@
 {% extends 'base.html' %}
-
 {% block titre %}Accueil — Numeria Institute{% endblock %}
-
 {% block contenu %}
 
 <!-- ===== HERO ===== -->
-<section class="bg-numeria-bleu text-white w-full">
-    <div class="w-full px-4 sm:px-8 lg:px-16 py-16 md:py-24">
-        <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
 
+    <!-- Motif de fond décoratif -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div style="position:absolute; top:-80px; right:-80px; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle, rgba(45,212,191,0.08) 0%, transparent 70%);"></div>
+        <div style="position:absolute; bottom:-60px; left:-60px; width:300px; height:300px; border-radius:50%; background:radial-gradient(circle, rgba(232,160,32,0.07) 0%, transparent 70%);"></div>
+        <!-- Grille de points -->
+        <svg width="100%" height="100%" style="opacity:0.04;" xmlns="http://www.w3.org/2000/svg">
+            <defs><pattern id="dots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#dots)"/>
+        </svg>
+    </div>
+
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-16 md:py-24 relative">
+        <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+
+            <!-- Texte -->
             <div class="flex-1 text-center lg:text-left">
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6">
-                    La science accessible à
-                    <span class="text-numeria-or"> tous les esprits curieux</span>
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-6 tracking-wide uppercase" style="font-family:'Outfit',sans-serif;">
+                    <span class="w-1.5 h-1.5 bg-numeria-teal rounded-full animate-pulse"></span>
+                    Scientific Computing & AI
+                </div>
+
+                <h1 style="font-family:'Outfit',sans-serif; font-weight:800; line-height:1.1;" class="text-4xl sm:text-5xl lg:text-6xl mb-6">
+                    La science<br>
+                    <span style="background: linear-gradient(135deg, #2DD4BF, #E8A020); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">accessible à tous</span><br>
+                    les esprits curieux
                 </h1>
+
                 <p class="text-blue-200 text-base sm:text-lg leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0">
-                    Des cours scientifiques gratuits et payants, conçus pour les apprenants africains et francophones du monde entier.
+                    Des cours scientifiques de qualité, conçus pour les apprenants africains et francophones du monde entier. Du lycée à l'IA avancée.
                 </p>
+
                 <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <a href="{% url 'cours:catalogue' %}" class="bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-lg hover:bg-yellow-400 transition-colors text-center">
+                    <a href="{% url 'cours:catalogue' %}"
+                       style="font-family:'Outfit',sans-serif; font-weight:700;"
+                       class="bg-numeria-teal text-numeria-bleu px-8 py-3.5 rounded-xl hover:bg-teal-300 transition-colors text-center text-base">
                         Découvrir les cours →
                     </a>
-                    <a href="#" class="border-2 border-numeria-or text-numeria-or font-semibold px-8 py-3 rounded-lg hover:bg-numeria-or hover:text-numeria-bleu transition-colors text-center">
-                        En savoir plus
+                    <a href="{% url 'comptes:inscription' %}"
+                       style="font-family:'Outfit',sans-serif; font-weight:600;"
+                       class="border-2 border-white/25 text-white px-8 py-3.5 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors text-center text-base">
+                        Créer un compte
                     </a>
+                </div>
+
+                <!-- Indicateurs rapides -->
+                <div class="flex items-center gap-6 mt-10 justify-center lg:justify-start">
+                    <div class="flex items-center gap-2">
+                        <div class="flex -space-x-2">
+                            <div class="w-7 h-7 rounded-full bg-numeria-teal flex items-center justify-center text-numeria-bleu font-black text-xs border-2 border-numeria-bleu" style="font-family:'Outfit',sans-serif;">A</div>
+                            <div class="w-7 h-7 rounded-full bg-numeria-or flex items-center justify-center text-numeria-bleu font-black text-xs border-2 border-numeria-bleu" style="font-family:'Outfit',sans-serif;">K</div>
+                            <div class="w-7 h-7 rounded-full bg-blue-400 flex items-center justify-center text-white font-black text-xs border-2 border-numeria-bleu" style="font-family:'Outfit',sans-serif;">F</div>
+                        </div>
+                        <span class="text-blue-300 text-sm">12 000+ étudiants</span>
+                    </div>
+                    <div class="h-4 w-px bg-white/20"></div>
+                    <div class="flex items-center gap-1.5 text-blue-300 text-sm">
+                        <span class="text-numeria-or">★★★★★</span>
+                        <span>4.9/5</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="hidden sm:flex flex-1 justify-center items-center">
-                <div style="position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center;">
-                    <div style="position:absolute; width:30px; height:30px; background:#E8A020; border-radius:50%; z-index:10;"></div>
-                    <div style="position:absolute; width:220px; height:85px; border:2px solid #E8A020; border-radius:50%; opacity:0.7;"></div>
-                    <div style="position:absolute; width:220px; height:85px; border:2px solid #E8A020; border-radius:50%; opacity:0.7; transform:rotate(60deg);"></div>
-                    <div style="position:absolute; width:220px; height:85px; border:2px solid #E8A020; border-radius:50%; opacity:0.7; transform:rotate(120deg);"></div>
-                    <div style="position:absolute; width:12px; height:12px; background:#E8A020; border-radius:50%; top:14px; left:50%; transform:translateX(-50%);"></div>
-                    <div style="position:absolute; width:12px; height:12px; background:#E8A020; border-radius:50%; bottom:14px; right:24px;"></div>
-                    <div style="position:absolute; width:12px; height:12px; background:#E8A020; border-radius:50%; bottom:14px; left:24px;"></div>
+            <!-- Logo grand format -->
+            <div class="hidden lg:flex flex-1 justify-center items-center">
+                <div class="relative">
+                    <!-- Halo derrière le logo -->
+                    <div style="position:absolute; inset:-40px; background:radial-gradient(circle, rgba(45,212,191,0.12) 0%, transparent 70%); border-radius:50%;"></div>
+                    <svg width="260" height="260" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Cercle extérieur (pointillé) -->
+                        <circle cx="130" cy="130" r="120" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="6 4" fill="none"/>
+                        <!-- Cercle principal -->
+                        <circle cx="130" cy="130" r="105" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none"/>
+                        <!-- Jambe gauche -->
+                        <line x1="80" y1="68" x2="80" y2="192" stroke="white" stroke-width="14" stroke-linecap="round"/>
+                        <!-- Diagonale -->
+                        <line x1="80" y1="68" x2="180" y2="192" stroke="white" stroke-width="14" stroke-linecap="round"/>
+                        <!-- Jambe droite -->
+                        <line x1="180" y1="68" x2="180" y2="192" stroke="white" stroke-width="14" stroke-linecap="round"/>
+                        <!-- Nœuds coins -->
+                        <circle cx="80" cy="68" r="18" fill="#1A3C6E" stroke="white" stroke-width="6"/>
+                        <circle cx="80" cy="192" r="18" fill="#1A3C6E" stroke="white" stroke-width="6"/>
+                        <circle cx="180" cy="68" r="18" fill="#1A3C6E" stroke="white" stroke-width="6"/>
+                        <circle cx="180" cy="192" r="18" fill="#1A3C6E" stroke="white" stroke-width="6"/>
+                        <!-- Nœuds teal centraux -->
+                        <circle cx="113" cy="110" r="16" fill="#2DD4BF"/>
+                        <circle cx="147" cy="150" r="16" fill="#2DD4BF"/>
+                        <!-- Petits points décoratifs -->
+                        <circle cx="130" cy="30" r="4" fill="rgba(255,255,255,0.3)"/>
+                        <circle cx="130" cy="230" r="4" fill="rgba(255,255,255,0.3)"/>
+                        <circle cx="30" cy="130" r="4" fill="rgba(255,255,255,0.3)"/>
+                        <circle cx="230" cy="130" r="4" fill="rgba(255,255,255,0.3)"/>
+                    </svg>
                 </div>
             </div>
 
@@ -44,19 +106,19 @@
 </section>
 
 <!-- ===== STATISTIQUES ===== -->
-<section class="bg-numeria-bleu-fonce w-full">
+<section class="bg-numeria-bleu-fonce w-full border-t border-white/10">
     <div class="w-full px-4 sm:px-8 lg:px-16 py-8">
         <div class="grid grid-cols-3 gap-4 text-center">
             <div class="py-2">
-                <div class="text-numeria-or text-2xl sm:text-3xl lg:text-4xl font-bold">12 000+</div>
+                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">12 000+</div>
                 <div class="text-blue-300 text-xs sm:text-sm mt-1">Étudiants inscrits</div>
             </div>
-            <div class="py-2 border-x border-blue-700">
-                <div class="text-numeria-or text-2xl sm:text-3xl lg:text-4xl font-bold">48</div>
+            <div class="py-2 border-x border-white/10">
+                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">48</div>
                 <div class="text-blue-300 text-xs sm:text-sm mt-1">Cours disponibles</div>
             </div>
             <div class="py-2">
-                <div class="text-numeria-or text-2xl sm:text-3xl lg:text-4xl font-bold">100%</div>
+                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">100%</div>
                 <div class="text-blue-300 text-xs sm:text-sm mt-1">Gratuit pour commencer</div>
             </div>
         </div>
@@ -67,27 +129,32 @@
 <section class="w-full py-16 md:py-20 bg-numeria-blanc dark:bg-gray-900">
     <div class="w-full px-4 sm:px-8 lg:px-16">
 
-        <h2 class="text-2xl sm:text-3xl font-bold text-numeria-bleu dark:text-numeria-or text-center mb-3">
-            Cours populaires
-        </h2>
-        <p class="text-gray-500 dark:text-gray-400 text-center mb-10 sm:mb-12">
-            Commence ton apprentissage dès aujourd'hui — gratuitement.
-        </p>
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 bg-numeria-teal/10 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">Cours populaires</div>
+            <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
+                Commence à apprendre aujourd'hui
+            </h2>
+            <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+                Mathématiques, sciences, IA — des contenus rigoureux accessibles à tous niveaux.
+            </p>
+        </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for un_cours in cours_recents %}
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <div class="bg-numeria-bleu px-6 py-4">
-                    <span class="text-numeria-or text-xs font-bold tracking-widest uppercase">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                <!-- Header carte -->
+                <div class="bg-numeria-bleu px-6 py-5 relative overflow-hidden">
+                    <div style="position:absolute; top:-20px; right:-20px; width:80px; height:80px; background:rgba(45,212,191,0.1); border-radius:50%;"></div>
+                    <span style="font-family:'Outfit',sans-serif; font-weight:700; letter-spacing:0.1em; font-size:0.65rem; text-transform:uppercase;" class="text-numeria-teal block mb-2">
                         {{ un_cours.get_matiere_display }}
                     </span>
-                    <h3 class="text-white font-bold text-lg mt-1">
+                    <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-white text-lg leading-snug">
                         {{ un_cours.titre }}
                     </h3>
                 </div>
-                <div class="p-6">
-                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 leading-relaxed">
+                <!-- Body carte -->
+                <div class="p-5">
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 leading-relaxed line-clamp-2">
                         {{ un_cours.resume }}
                     </p>
                     <div class="flex items-center justify-between mb-4">
@@ -95,13 +162,14 @@
                             {{ un_cours.nombre_lecons }} leçons · {{ un_cours.get_niveau_display }}
                         </span>
                         {% if un_cours.est_gratuit %}
-                            <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full">Gratuit</span>
+                            <span class="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full">Gratuit</span>
                         {% else %}
-                            <span class="bg-numeria-bleu text-white text-xs font-bold px-3 py-1 rounded-full">{{ un_cours.prix }} FCFA</span>
+                            <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-3 py-1 rounded-full">{{ un_cours.prix }} FCFA</span>
                         {% endif %}
                     </div>
                     <a href="{% url 'cours:detail' un_cours.id %}"
-                       class="block w-full text-center bg-numeria-bleu dark:bg-numeria-bleu-fonce text-white font-semibold py-2 rounded-lg hover:bg-numeria-bleu-fonce transition-colors text-sm">
+                       style="font-family:'Outfit',sans-serif; font-weight:700;"
+                       class="block w-full text-center bg-numeria-bleu text-white py-2.5 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-sm group-hover:bg-numeria-teal group-hover:text-numeria-bleu">
                         Voir le cours →
                     </a>
                 </div>
@@ -111,12 +179,12 @@
                 <p class="text-gray-400">Aucun cours disponible pour le moment.</p>
             </div>
             {% endfor %}
-
         </div>
 
         <div class="text-center mt-12">
             <a href="{% url 'cours:catalogue' %}"
-               class="inline-block border-2 border-numeria-bleu dark:border-numeria-or text-numeria-bleu dark:text-numeria-or font-bold px-8 py-3 rounded-lg hover:bg-numeria-bleu hover:text-white dark:hover:bg-numeria-or dark:hover:text-numeria-bleu transition-colors">
+               style="font-family:'Outfit',sans-serif; font-weight:700;"
+               class="inline-flex items-center gap-2 border-2 border-numeria-bleu dark:border-numeria-teal text-numeria-bleu dark:text-numeria-teal px-8 py-3 rounded-xl hover:bg-numeria-bleu hover:text-white dark:hover:bg-numeria-teal dark:hover:text-numeria-bleu transition-colors">
                 Voir tous les cours →
             </a>
         </div>
@@ -129,84 +197,62 @@
     <div class="w-full px-4 sm:px-8 lg:px-16">
         <div class="max-w-5xl mx-auto">
 
-            <h2 class="text-2xl sm:text-3xl font-bold text-numeria-bleu dark:text-numeria-or text-center mb-3">
-                Pourquoi choisir Numeria ?
-            </h2>
-            <p class="text-gray-500 dark:text-gray-400 text-center mb-12">
-                Une plateforme conçue pour les apprenants africains
-            </p>
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 bg-numeria-bleu/8 text-numeria-bleu dark:text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">Nos atouts</div>
+                <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
+                    Pourquoi choisir Numeria ?
+                </h2>
+                <p class="text-gray-500 dark:text-gray-400">Une plateforme conçue pour les apprenants africains</p>
+            </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {% for item in atouts %}{% endfor %}
 
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600">
-                    <div class="w-12 h-12 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">
-                        🎓
-                    </div>
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🎓</div>
                     <div>
-                        <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-1">Cours de qualité</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                            Contenus scientifiques rigoureux avec formules LaTeX et exercices corrigés.
-                        </p>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">Cours de qualité</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Contenus scientifiques rigoureux avec formules LaTeX et exercices corrigés.</p>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600">
-                    <div class="w-12 h-12 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">
-                        🌍
-                    </div>
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🌍</div>
                     <div>
-                        <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-1">Ancrage africain</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                            Des exemples et projets ancrés dans les réalités africaines et togolaises.
-                        </p>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">Ancrage africain</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Des exemples et projets ancrés dans les réalités africaines et togolaises.</p>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600">
-                    <div class="w-12 h-12 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">
-                        📱
-                    </div>
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">📱</div>
                     <div>
-                        <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-1">100% responsive</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                            Apprends depuis ton téléphone, ta tablette ou ton ordinateur.
-                        </p>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">100% responsive</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Apprends depuis ton téléphone, ta tablette ou ton ordinateur.</p>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600">
-                    <div class="w-12 h-12 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">
-                        🏆
-                    </div>
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🏆</div>
                     <div>
-                        <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-1">Certificats officiels</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                            Reçois un certificat PDF à la fin de chaque cours complété.
-                        </p>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">Certificats officiels</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Reçois un certificat PDF vérifiable à la fin de chaque cours payant complété.</p>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600">
-                    <div class="w-12 h-12 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">
-                        🧪
-                    </div>
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🧪</div>
                     <div>
-                        <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-1">Exercices interactifs</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                            Des QCM avec corrigés détaillés — visibles seulement après réussite.
-                        </p>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">Exercices interactifs</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Des QCM avec corrigés détaillés — visibles seulement après réussite.</p>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600">
-                    <div class="w-12 h-12 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">
-                        💰
-                    </div>
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">💰</div>
                     <div>
-                        <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-1">Accessible à tous</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                            La majorité des cours sont gratuits. Paiement en Mobile Money disponible.
-                        </p>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">Accessible à tous</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">La majorité des cours sont gratuits. Paiement Mobile Money disponible.</p>
                     </div>
                 </div>
 
@@ -220,55 +266,51 @@
     <div class="w-full px-4 sm:px-8 lg:px-16">
         <div class="max-w-5xl mx-auto">
 
-            <h2 class="text-2xl sm:text-3xl font-bold text-numeria-bleu dark:text-numeria-or text-center mb-12">
-                Ce que disent nos étudiants
-            </h2>
+            <div class="text-center mb-12">
+                <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white">
+                    Ce que disent nos étudiants
+                </h2>
+            </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
-                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
-                    <div class="text-numeria-or text-2xl mb-3">★★★★★</div>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 italic">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 hover:shadow-md transition-shadow">
+                    <div class="text-numeria-or text-lg mb-3 tracking-wider">★★★★★</div>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-5 italic">
                         "Les cours de mathématiques sont excellents. Les formules LaTeX sont claires et les exercices m'ont vraiment aidé à progresser."
                     </p>
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-numeria-bleu rounded-full flex items-center justify-center text-numeria-or font-bold text-sm">
-                            AK
-                        </div>
+                        <div class="w-9 h-9 bg-numeria-bleu rounded-full flex items-center justify-center text-numeria-teal font-black text-xs" style="font-family:'Outfit',sans-serif;">AK</div>
                         <div>
-                            <p class="font-bold text-gray-800 dark:text-gray-100 text-sm">Amélie K.</p>
-                            <p class="text-gray-400 dark:text-gray-500 text-xs">Étudiante en Licence, Lomé</p>
+                            <p style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-gray-800 dark:text-gray-100 text-sm">Amélie K.</p>
+                            <p class="text-gray-400 dark:text-gray-500 text-xs">Licence, Lomé</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
-                    <div class="text-numeria-or text-2xl mb-3">★★★★★</div>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 italic">
-                        "Enfin une plateforme africaine qui comprend nos réalités. Les cours de Python appliqués à l'agriculture m'ont ouvert les yeux."
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 hover:shadow-md transition-shadow">
+                    <div class="text-numeria-or text-lg mb-3 tracking-wider">★★★★★</div>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-5 italic">
+                        "Enfin une plateforme africaine qui comprend nos réalités. Les cours de Python appliqués m'ont ouvert de nouvelles portes."
                     </p>
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-numeria-or rounded-full flex items-center justify-center text-numeria-bleu font-bold text-sm">
-                            KD
-                        </div>
+                        <div class="w-9 h-9 bg-numeria-or rounded-full flex items-center justify-center text-numeria-bleu font-black text-xs" style="font-family:'Outfit',sans-serif;">KD</div>
                         <div>
-                            <p class="font-bold text-gray-800 dark:text-gray-100 text-sm">Kofi D.</p>
-                            <p class="text-gray-400 dark:text-gray-500 text-xs">Ingénieur agronome, Accra</p>
+                            <p style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-gray-800 dark:text-gray-100 text-sm">Kofi D.</p>
+                            <p class="text-gray-400 dark:text-gray-500 text-xs">Ingénieur, Accra</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
-                    <div class="text-numeria-or text-2xl mb-3">★★★★★</div>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 italic">
-                        "Le mode sombre est parfait pour étudier le soir. Et les vidéos YouTube intégrées facilitent vraiment la compréhension."
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 hover:shadow-md transition-shadow">
+                    <div class="text-numeria-or text-lg mb-3 tracking-wider">★★★★★</div>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-5 italic">
+                        "Le mode sombre est parfait pour étudier le soir. Les vidéos intégrées facilitent vraiment la compréhension."
                     </p>
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-numeria-bleu rounded-full flex items-center justify-center text-numeria-or font-bold text-sm">
-                            FB
-                        </div>
+                        <div class="w-9 h-9 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu font-black text-xs" style="font-family:'Outfit',sans-serif;">FB</div>
                         <div>
-                            <p class="font-bold text-gray-800 dark:text-gray-100 text-sm">Fatou B.</p>
+                            <p style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-gray-800 dark:text-gray-100 text-sm">Fatou B.</p>
                             <p class="text-gray-400 dark:text-gray-500 text-xs">Master Physique, Dakar</p>
                         </div>
                     </div>
@@ -280,18 +322,27 @@
 </section>
 
 <!-- ===== APPEL À L'ACTION ===== -->
-<section class="bg-numeria-bleu w-full">
-    <div class="w-full px-4 sm:px-8 lg:px-16 py-16 md:py-20 text-center">
-        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
-            Prêt à commencer ton voyage scientifique ?
+<section class="bg-numeria-bleu w-full relative overflow-hidden">
+    <div style="position:absolute; top:0; left:0; right:0; bottom:0; pointer-events:none;" aria-hidden="true">
+        <div style="position:absolute; top:-60px; right:10%; width:300px; height:300px; border-radius:50%; background:radial-gradient(circle, rgba(45,212,191,0.1) 0%, transparent 70%);"></div>
+        <div style="position:absolute; bottom:-80px; left:5%; width:250px; height:250px; border-radius:50%; background:radial-gradient(circle, rgba(232,160,32,0.08) 0%, transparent 70%);"></div>
+    </div>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-16 md:py-20 text-center relative">
+        <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-6 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
+            Rejoins-nous
+        </div>
+        <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl lg:text-5xl text-white mb-4">
+            Prêt à commencer ton<br>voyage scientifique ?
         </h2>
         <p class="text-blue-200 mb-8 text-sm sm:text-base max-w-xl mx-auto">
             Rejoins des milliers d'apprenants qui transforment leur avenir grâce à la science.
         </p>
         <a href="{% url 'comptes:inscription' %}"
-           class="inline-block bg-numeria-or text-numeria-bleu font-bold px-8 sm:px-12 py-3 sm:py-4 rounded-lg text-base sm:text-lg hover:bg-yellow-400 transition-colors">
-            Créer mon compte gratuitement
+           style="font-family:'Outfit',sans-serif; font-weight:800; font-size:1.05rem;"
+           class="inline-block bg-numeria-teal text-numeria-bleu px-10 sm:px-14 py-3.5 sm:py-4 rounded-xl hover:bg-teal-300 transition-colors">
+            Créer mon compte gratuitement →
         </a>
+        <p class="text-blue-400 text-xs mt-4">Aucune carte bancaire requise · Cours gratuits disponibles immédiatement</p>
     </div>
 </section>
 

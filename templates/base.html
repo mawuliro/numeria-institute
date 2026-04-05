@@ -19,6 +19,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block titre %}Numeria Institute{% endblock %}</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,17 +30,21 @@
             theme: {
                 extend: {
                     colors: {
-                        'numeria-bleu': '#1A3C6E',
+                        'numeria-bleu':       '#1A3C6E',
                         'numeria-bleu-fonce': '#152f58',
-                        'numeria-or': '#E8A020',
-                        'numeria-blanc': '#F4F6F8',
+                        'numeria-or':         '#E8A020',
+                        'numeria-blanc':      '#F4F6F8',
+                        'numeria-teal':       '#2DD4BF',
+                    },
+                    fontFamily: {
+                        'sans':    ['Inter', 'ui-sans-serif', 'system-ui'],
+                        'display': ['Outfit', 'ui-sans-serif', 'system-ui'],
                     }
                 }
             }
         }
     </script>
 
-    <!-- Highlight.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
@@ -45,7 +53,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
 
-    <!-- MathJax -->
     <script>
         MathJax = {
             tex: {
@@ -53,9 +60,7 @@
                 displayMath: [['$$', '$$'], ['\\[', '\\]']],
                 packages: {'[+]': ['ams', 'boldsymbol']}
             },
-            options: {
-                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-            }
+            options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
@@ -65,22 +70,15 @@
         html, body { width: 100%; overflow-x: hidden; }
         #menu-mobile { display: none; }
         #menu-mobile.ouvert { display: block; }
-
-        /* Transition douce mode sombre */
+        h1,h2,h3,h4,h5,h6 { font-family: 'Outfit', sans-serif; }
         body, header, footer, main, section, div, p, h1, h2, h3, a {
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
-
-        /* Header scroll effect */
-        #header-principal {
-            transition: all 0.3s ease;
-        }
+        #header-principal { transition: all 0.3s ease; }
         #header-principal.scrolled {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+            backdrop-filter: blur(12px);
         }
-
-        /* Blocs de code */
         pre { border-radius: 8px; margin: 1.5rem 0; padding: 0 !important; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
         pre code.hljs { border-radius: 8px; padding: 1.5rem !important; font-size: 0.9rem; line-height: 1.6; font-family: 'Courier New', Courier, monospace; }
         .code-wrapper { position: relative; margin: 1.5rem 0; }
@@ -88,119 +86,96 @@
         .copy-btn { position: absolute; top: 8px; right: 90px; background: rgba(255,255,255,0.1); color: #ccc; border: 1px solid rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; z-index: 10; transition: all 0.2s; }
         .copy-btn:hover { background: rgba(255,255,255,0.2); color: white; }
         code:not(.hljs) { background: #f0f0f0; color: #1A3C6E; padding: 2px 6px; border-radius: 4px; font-size: 0.85em; font-family: 'Courier New', Courier, monospace; }
-
-        /* Formulaires en mode sombre */
-        .dark input[type="text"],
-        .dark input[type="email"],
-        .dark input[type="password"],
-        .dark input[type="url"],
-        .dark textarea,
-        .dark select {
-            background-color: #374151;
-            color: #F9FAFB;
-            border-color: #4B5563;
+        .dark input[type="text"], .dark input[type="email"], .dark input[type="password"],
+        .dark input[type="url"], .dark textarea, .dark select {
+            background-color: #374151; color: #F9FAFB; border-color: #4B5563;
         }
-        .dark input::placeholder,
-        .dark textarea::placeholder {
-            color: #9CA3AF;
-        }
-        .dark input:focus,
-        .dark textarea:focus,
-        .dark select:focus {
-            border-color: #E8A020;
-            outline: none;
-        }
-        .dark .bg-white { background-color: #1F2937 !important; }
+        .dark input::placeholder, .dark textarea::placeholder { color: #9CA3AF; }
+        .dark input:focus, .dark textarea:focus, .dark select:focus { border-color: #2DD4BF; outline: none; }
+        .dark .bg-white  { background-color: #1F2937 !important; }
         .dark .text-gray-600 { color: #D1D5DB !important; }
         .dark .text-gray-700 { color: #E5E7EB !important; }
         .dark .text-gray-500 { color: #9CA3AF !important; }
         .dark label { color: #E5E7EB; }
-
-        /* Lien actif dans la navigation */
-        .nav-lien-actif {
-            color: #E8A020 !important;
-            border-bottom: 2px solid #E8A020;
-            padding-bottom: 4px;
+        /* Navigation pills */
+        .nav-pill {
+            position: relative; padding: 6px 0;
+            font-size: 0.875rem; color: #93c5fd;
+            transition: color 0.2s; font-weight: 500;
+            font-family: 'Inter', sans-serif;
         }
+        .nav-pill::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 2px; background: #2DD4BF; border-radius: 2px;
+            transform: scaleX(0); transition: transform 0.25s ease;
+        }
+        .nav-pill:hover { color: white; }
+        .nav-pill:hover::after { transform: scaleX(1); }
+        .nav-pill.actif { color: #2DD4BF; }
+        .nav-pill.actif::after { transform: scaleX(1); }
+        /* Legacy compat */
+        .nav-lien-actif { color: #2DD4BF !important; border-bottom: 2px solid #2DD4BF; padding-bottom: 3px; }
     </style>
 
 </head>
 
 <body class="bg-numeria-blanc dark:bg-gray-900 font-sans w-full">
 
-    <!-- ===== HEADER STICKY ===== -->
-    <header id="header-principal" class="bg-numeria-bleu w-full sticky top-0 z-50 shadow-lg">
+    <!-- ===== HEADER ===== -->
+    <header id="header-principal" class="bg-numeria-bleu w-full sticky top-0 z-50">
         <div class="w-full px-4 sm:px-8 lg:px-16">
             <div class="flex items-center justify-between h-16 md:h-20">
 
-                <!-- LOGO -->
-                <a href="/" class="flex items-center gap-3 flex-shrink-0">
-                    <div style="position:relative; width:38px; height:38px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <div style="position:absolute; width:10px; height:10px; background:#E8A020; border-radius:50%; z-index:10;"></div>
-                        <div style="position:absolute; width:38px; height:15px; border:1.5px solid #E8A020; border-radius:50%;"></div>
-                        <div style="position:absolute; width:38px; height:15px; border:1.5px solid #E8A020; border-radius:50%; transform:rotate(60deg);"></div>
-                        <div style="position:absolute; width:38px; height:15px; border:1.5px solid #E8A020; border-radius:50%; transform:rotate(120deg);"></div>
-                    </div>
-                    <div>
-                        <div class="text-numeria-or font-bold tracking-widest text-lg leading-none">NUMERIA</div>
-                        <div class="text-blue-300 text-xs tracking-widest leading-none mt-1">INSTITUTE</div>
+                <!-- LOGO OFFICIEL -->
+                <a href="/" class="flex items-center gap-3 flex-shrink-0 group">
+                    <svg width="42" height="42" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="22" cy="22" r="19" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" fill="none"/>
+                        <line x1="13" y1="10" x2="13" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                        <line x1="13" y1="10" x2="31" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                        <line x1="31" y1="10" x2="31" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                        <circle cx="13" cy="10" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
+                        <circle cx="13" cy="34" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
+                        <circle cx="31" cy="10" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
+                        <circle cx="31" cy="34" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
+                        <circle cx="18.5" cy="18" r="3" fill="#2DD4BF"/>
+                        <circle cx="25.5" cy="26" r="3" fill="#2DD4BF"/>
+                    </svg>
+                    <div class="leading-none">
+                        <div style="font-family:'Outfit',sans-serif; font-weight:800; letter-spacing:0.15em; color:white; font-size:1.1rem; line-height:1;" class="group-hover:text-numeria-teal transition-colors duration-200">NUMERIA</div>
+                        <div style="font-family:'Outfit',sans-serif; font-weight:600; letter-spacing:0.28em; color:#2DD4BF; font-size:0.62rem; margin-top:5px; text-transform:uppercase; line-height:1;">Institute</div>
                     </div>
                 </a>
 
                 <!-- NAVIGATION DESKTOP -->
-                <nav class="hidden lg:flex items-center gap-6 xl:gap-8">
-                    <a href="/"
-                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200 {% if request.path == '/' %}nav-lien-actif{% endif %}">
-                        Accueil
-                    </a>
-                    <a href="{% url 'cours:catalogue' %}"
-                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200 {% if '/cours' in request.path %}nav-lien-actif{% endif %}">
-                        Cours
-                    </a>
-                    <a href="{% url 'blog:liste' %}"
-                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200 {% if '/blog' in request.path %}nav-lien-actif{% endif %}">
-                        Blog
-                    </a>
-                    <a href="#"
-                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200">
-                        Communauté
-                    </a>
-                    <a href="{% url 'a_propos' %}"
-                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200 {% if '/a-propos' in request.path %}nav-lien-actif{% endif %}">
-                        À propos
-                    </a>
-                    <a href="{% url 'contact' %}"
-                       class="text-blue-200 hover:text-numeria-or text-sm transition-colors duration-200 {% if '/contact' in request.path %}nav-lien-actif{% endif %}">
-                        Contact
-                    </a>
+                <nav class="hidden lg:flex items-center gap-7 xl:gap-9">
+                    <a href="/" class="nav-pill {% if request.path == '/' %}actif{% endif %}">Accueil</a>
+                    <a href="{% url 'cours:catalogue' %}" class="nav-pill {% if '/cours' in request.path %}actif{% endif %}">Cours</a>
+                    <a href="{% url 'blog:liste' %}" class="nav-pill {% if '/blog' in request.path %}actif{% endif %}">Blog</a>
+                    <a href="#" class="nav-pill">Communauté</a>
+                    <a href="{% url 'a_propos' %}" class="nav-pill {% if '/a-propos' in request.path %}actif{% endif %}">À propos</a>
+                    <a href="{% url 'contact' %}" class="nav-pill {% if '/contact' in request.path %}actif{% endif %}">Contact</a>
                 </nav>
 
                 <!-- BOUTONS + MODE SOMBRE + HAMBURGER -->
                 <div class="flex items-center gap-2">
-
-                    <!-- Bouton mode sombre -->
-                    <button
-                        onclick="basculerMode()"
-                        class="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-numeria-bleu-fonce transition-colors"
-                        aria-label="Basculer le mode sombre"
-                        title="Mode sombre / clair"
-                    >
-                        <span class="text-lg dark:hidden">🌙</span>
-                        <span class="text-lg hidden dark:block">☀️</span>
+                    <button onclick="basculerMode()"
+                        class="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors"
+                        aria-label="Mode sombre">
+                        <span class="text-base dark:hidden">🌙</span>
+                        <span class="text-base hidden dark:block">☀️</span>
                     </button>
 
                     {% if user.is_authenticated %}
                         <a href="{% url 'comptes:tableau_de_bord' %}"
-                           class="hidden sm:block text-blue-200 hover:text-numeria-or text-sm transition-colors">
+                           class="hidden sm:block text-blue-200 hover:text-numeria-teal text-sm font-medium transition-colors">
                             Tableau de bord
                         </a>
                         <a href="{% url 'comptes:profil' %}"
-                           class="hidden sm:flex items-center gap-2 bg-numeria-or text-numeria-bleu font-bold text-sm px-4 py-2 rounded-lg hover:bg-yellow-400 transition-colors">
+                           class="hidden sm:flex items-center gap-2 bg-numeria-teal text-numeria-bleu font-bold text-sm px-4 py-2 rounded-xl hover:bg-teal-300 transition-colors">
                             {% if user.profil.photo %}
-                                <img src="{{ user.profil.photo.url }}" alt="Photo"
-                                     class="w-6 h-6 rounded-full object-cover">
+                                <img src="{{ user.profil.photo.url }}" alt="" class="w-6 h-6 rounded-full object-cover">
                             {% else %}
-                                <span class="w-6 h-6 bg-numeria-bleu rounded-full flex items-center justify-center text-numeria-or text-xs font-bold">
+                                <span class="w-6 h-6 bg-numeria-bleu rounded-full flex items-center justify-center text-numeria-teal text-xs font-black">
                                     {{ user.first_name|first|upper }}
                                 </span>
                             {% endif %}
@@ -208,189 +183,129 @@
                         </a>
                     {% else %}
                         <a href="{% url 'comptes:connexion' %}"
-                           class="hidden sm:block border border-numeria-or text-numeria-or font-semibold text-sm px-4 py-2 rounded-lg hover:bg-numeria-or hover:text-numeria-bleu transition-colors duration-200">
-                            Se connecter
+                           class="hidden sm:block border border-white/25 text-white font-semibold text-sm px-4 py-2 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors duration-200">
+                            Connexion
                         </a>
                         <a href="{% url 'comptes:inscription' %}"
-                           class="hidden sm:block bg-numeria-or text-numeria-bleu font-bold text-sm px-4 py-2 rounded-lg hover:bg-yellow-400 transition-colors duration-200">
+                           class="hidden sm:block bg-numeria-teal text-numeria-bleu font-bold text-sm px-4 py-2 rounded-xl hover:bg-teal-300 transition-colors duration-200">
                             S'inscrire
                         </a>
                     {% endif %}
 
-                    <!-- Bouton hamburger -->
-                    <button
-                        id="bouton-hamburger"
-                        class="lg:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-numeria-bleu-fonce transition-colors"
-                        aria-label="Ouvrir le menu"
-                    >
-                        <span id="barre1" class="block w-6 h-0.5 bg-white transition-all duration-300"></span>
-                        <span id="barre2" class="block w-6 h-0.5 bg-white transition-all duration-300 my-1.5"></span>
-                        <span id="barre3" class="block w-6 h-0.5 bg-white transition-all duration-300"></span>
+                    <button id="bouton-hamburger"
+                        class="lg:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-white/10 transition-colors"
+                        aria-label="Menu">
+                        <span id="barre1" class="block w-5 h-0.5 bg-white transition-all duration-300"></span>
+                        <span id="barre2" class="block w-5 h-0.5 bg-white transition-all duration-300 my-1.5"></span>
+                        <span id="barre3" class="block w-5 h-0.5 bg-white transition-all duration-300"></span>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- MENU MOBILE -->
-        <div id="menu-mobile" class="lg:hidden bg-numeria-bleu-fonce border-t border-blue-800 w-full">
+        <div id="menu-mobile" class="lg:hidden bg-numeria-bleu-fonce border-t border-white/10 w-full">
             <div class="w-full px-4 sm:px-8 py-4 flex flex-col gap-1">
-                <a href="/"
-                   class="py-3 px-4 rounded-lg text-sm transition-colors
-                   {% if request.path == '/' %}bg-blue-900 text-numeria-or font-medium{% else %}text-blue-200 hover:text-numeria-or hover:bg-blue-900{% endif %}">
-                    Accueil
-                </a>
-                <a href="{% url 'cours:catalogue' %}"
-                   class="py-3 px-4 rounded-lg text-sm transition-colors
-                   {% if '/cours' in request.path %}bg-blue-900 text-numeria-or font-medium{% else %}text-blue-200 hover:text-numeria-or hover:bg-blue-900{% endif %}">
-                    Cours
-                </a>
-                <a href="{% url 'blog:liste' %}"
-                   class="py-3 px-4 rounded-lg text-sm transition-colors
-                   {% if '/blog' in request.path %}bg-blue-900 text-numeria-or font-medium{% else %}text-blue-200 hover:text-numeria-or hover:bg-blue-900{% endif %}">
-                    Blog
-                </a>
-                <a href="#"
-                   class="text-blue-200 hover:text-numeria-or hover:bg-blue-900 py-3 px-4 rounded-lg text-sm transition-colors">
-                    Communauté
-                </a>
-                <a href="{% url 'a_propos' %}"
-                   class="py-3 px-4 rounded-lg text-sm transition-colors
-                   {% if '/a-propos' in request.path %}bg-blue-900 text-numeria-or font-medium{% else %}text-blue-200 hover:text-numeria-or hover:bg-blue-900{% endif %}">
-                    À propos
-                </a>
-                <a href="{% url 'contact' %}"
-                   class="py-3 px-4 rounded-lg text-sm transition-colors
-                   {% if '/contact' in request.path %}bg-blue-900 text-numeria-or font-medium{% else %}text-blue-200 hover:text-numeria-or hover:bg-blue-900{% endif %}">
-                    Contact
-                </a>
-
-                <div class="border-t border-blue-800 my-2"></div>
-
+                <a href="/" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if request.path == '/' %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Accueil</a>
+                <a href="{% url 'cours:catalogue' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/cours' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Cours</a>
+                <a href="{% url 'blog:liste' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/blog' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Blog</a>
+                <a href="#" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors">Communauté</a>
+                <a href="{% url 'a_propos' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/a-propos' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">À propos</a>
+                <a href="{% url 'contact' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/contact' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Contact</a>
+                <div class="border-t border-white/10 my-2"></div>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'comptes:tableau_de_bord' %}"
-                       class="text-blue-200 hover:text-numeria-or hover:bg-blue-900 py-3 px-4 rounded-lg text-sm transition-colors">
-                        🎓 Tableau de bord
-                    </a>
-                    <a href="{% url 'comptes:profil' %}"
-                       class="text-blue-200 hover:text-numeria-or hover:bg-blue-900 py-3 px-4 rounded-lg text-sm transition-colors">
-                        👤 Mon profil
-                    </a>
-                    <a href="{% url 'comptes:deconnexion' %}"
-                       class="border border-gray-500 text-gray-300 font-semibold text-sm px-4 py-3 rounded-lg text-center hover:bg-blue-900 transition-colors">
-                        👋 Se déconnecter
-                    </a>
+                    <a href="{% url 'comptes:tableau_de_bord' %}" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-numeria-teal hover:bg-white/10 transition-colors">🎓 Tableau de bord</a>
+                    <a href="{% url 'comptes:profil' %}" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-numeria-teal hover:bg-white/10 transition-colors">👤 Mon profil</a>
+                    <a href="{% url 'comptes:deconnexion' %}" class="border border-white/20 text-gray-300 font-semibold text-sm px-4 py-3 rounded-xl text-center hover:bg-white/10 transition-colors">👋 Se déconnecter</a>
                 {% else %}
-                    <a href="{% url 'comptes:connexion' %}"
-                       class="border border-numeria-or text-numeria-or font-semibold text-sm px-4 py-3 rounded-lg text-center hover:bg-numeria-or hover:text-numeria-bleu transition-colors">
-                        Se connecter
-                    </a>
-                    <a href="{% url 'comptes:inscription' %}"
-                       class="bg-numeria-or text-numeria-bleu font-bold text-sm px-4 py-3 rounded-lg text-center hover:bg-yellow-400 transition-colors">
-                        S'inscrire gratuitement
-                    </a>
+                    <a href="{% url 'comptes:connexion' %}" class="border border-white/25 text-white font-semibold text-sm px-4 py-3 rounded-xl text-center hover:border-numeria-teal hover:text-numeria-teal transition-colors">Se connecter</a>
+                    <a href="{% url 'comptes:inscription' %}" class="bg-numeria-teal text-numeria-bleu font-bold text-sm px-4 py-3 rounded-xl text-center hover:bg-teal-300 transition-colors">S'inscrire gratuitement</a>
                 {% endif %}
             </div>
         </div>
     </header>
 
-    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <!-- ===== CONTENU ===== -->
     <main class="w-full">
-        {% block contenu %}
-        {% endblock %}
+        {% block contenu %}{% endblock %}
     </main>
 
     <!-- ===== FOOTER ===== -->
-    <footer class="bg-numeria-bleu dark:bg-gray-800 w-full mt-20">
-        <div class="w-full px-4 sm:px-8 lg:px-16 py-12">
-
+    <footer class="bg-numeria-bleu dark:bg-gray-900 w-full mt-20 border-t border-white/10">
+        <div class="w-full px-4 sm:px-8 lg:px-16 py-14">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
 
-                <!-- Colonne 1 : Logo et mission -->
+                <!-- Logo + mission -->
                 <div class="lg:col-span-2">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div style="position:relative; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                            <div style="position:absolute; width:8px; height:8px; background:#E8A020; border-radius:50%; z-index:10;"></div>
-                            <div style="position:absolute; width:32px; height:12px; border:1.5px solid #E8A020; border-radius:50%;"></div>
-                            <div style="position:absolute; width:32px; height:12px; border:1.5px solid #E8A020; border-radius:50%; transform:rotate(60deg);"></div>
-                            <div style="position:absolute; width:32px; height:12px; border:1.5px solid #E8A020; border-radius:50%; transform:rotate(120deg);"></div>
+                    <div class="flex items-center gap-3 mb-5">
+                        <svg width="36" height="36" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="22" cy="22" r="19" stroke="rgba(255,255,255,0.18)" stroke-width="1.2" fill="none"/>
+                            <line x1="13" y1="10" x2="13" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                            <line x1="13" y1="10" x2="31" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                            <line x1="31" y1="10" x2="31" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                            <circle cx="13" cy="10" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
+                            <circle cx="13" cy="34" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
+                            <circle cx="31" cy="10" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
+                            <circle cx="31" cy="34" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
+                            <circle cx="18.5" cy="18" r="3" fill="#2DD4BF"/>
+                            <circle cx="25.5" cy="26" r="3" fill="#2DD4BF"/>
+                        </svg>
+                        <div class="leading-none">
+                            <div style="font-family:'Outfit',sans-serif; font-weight:800; letter-spacing:0.15em; color:white; font-size:1rem; line-height:1;">NUMERIA</div>
+                            <div style="font-family:'Outfit',sans-serif; font-weight:600; letter-spacing:0.28em; color:#2DD4BF; font-size:0.58rem; margin-top:5px; text-transform:uppercase; line-height:1;">Institute</div>
                         </div>
-                        <div class="text-numeria-or font-bold text-lg tracking-widest">NUMERIA INSTITUTE</div>
                     </div>
-                    <p class="text-blue-300 text-sm leading-relaxed mb-4">
+                    <p class="text-blue-300 text-sm leading-relaxed mb-4 max-w-xs">
                         L'éducation scientifique accessible, engageante et gratuite pour tous les apprenants africains et francophones du monde entier.
                     </p>
-                    <p class="text-blue-400 text-xs">📍 Lomé, Togo: Rayonnement CEDEAO</p>
+                    <p class="text-blue-400 text-xs">📍 Lomé, Togo — Rayonnement CEDEAO</p>
                 </div>
 
-                <!-- Colonne 2 : Liens rapides -->
+                <!-- Navigation -->
                 <div>
-                    <div class="text-white font-semibold mb-4">Navigation</div>
-                    <ul class="space-y-2">
-                        <li><a href="{% url 'cours:catalogue' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">Nos cours</a></li>
-                        <li><a href="{% url 'blog:liste' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">Le blog</a></li>
-                        <li><a href="{% url 'a_propos' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">À propos</a></li>
-                        <li><a href="{% url 'contact' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">Contact</a></li>
-                        <li><a href="#" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">Communauté</a></li>
+                    <div style="font-family:'Outfit',sans-serif; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; font-size:0.75rem;" class="text-white mb-5">Navigation</div>
+                    <ul class="space-y-3">
+                        <li><a href="{% url 'cours:catalogue' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Nos cours</a></li>
+                        <li><a href="{% url 'blog:liste' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Le blog</a></li>
+                        <li><a href="{% url 'a_propos' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">À propos</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Contact</a></li>
+                        <li><a href="#" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Communauté</a></li>
                     </ul>
                 </div>
 
-                <!-- Colonne 3 : Contact -->
+                <!-- Contact -->
                 <div>
-                    <div class="text-white font-semibold mb-4">Contact</div>
-                    <div class="space-y-2">
+                    <div style="font-family:'Outfit',sans-serif; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; font-size:0.75rem;" class="text-white mb-5">Contact</div>
+                    <div class="space-y-3">
                         <p class="text-blue-300 text-sm flex items-center gap-2">
-                            <span>✉️</span>
-                            <a href="mailto:contact@numeriainstitute.com"
-                               class="hover:text-numeria-or transition-colors">
-                                contact@numeriainstitute.com
-                            </a>
+                            <span class="text-numeria-teal">✉</span>
+                            <a href="mailto:contact@numeriainstitute.com" class="hover:text-numeria-teal transition-colors break-all">contact@numeriainstitute.com</a>
                         </p>
-                        <p class="text-blue-300 text-sm flex items-center gap-2">
-                            <span>📍</span> Lomé, Togo
-                        </p>
-                        <p class="text-blue-300 text-sm flex items-center gap-2">
-                            <span>🌍</span> Afrique de l'Ouest
-                        </p>
+                        <p class="text-blue-300 text-sm flex items-center gap-2"><span class="text-numeria-teal">📍</span> Lomé, Togo</p>
+                        <p class="text-blue-300 text-sm flex items-center gap-2"><span class="text-numeria-teal">🌍</span> Afrique de l'Ouest</p>
                     </div>
-
-                    <!-- Réseaux sociaux -->
-                    <div class="flex gap-3 mt-4">
-                        <a href="#" class="w-8 h-8 bg-blue-800 hover:bg-numeria-or rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-colors text-sm font-bold">
-                            in
-                        </a>
-                        <a href="#" class="w-8 h-8 bg-blue-800 hover:bg-numeria-or rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-colors text-xs font-bold">
-                            YT
-                        </a>
-                        <a href="#" class="w-8 h-8 bg-blue-800 hover:bg-numeria-or rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-colors text-xs font-bold">
-                            FB
-                        </a>
+                    <div class="flex gap-2.5 mt-5">
+                        <a href="#" class="w-9 h-9 bg-white/10 hover:bg-numeria-teal rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-all text-xs font-bold">in</a>
+                        <a href="#" class="w-9 h-9 bg-white/10 hover:bg-numeria-teal rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-all text-xs font-bold">▶</a>
+                        <a href="#" class="w-9 h-9 bg-white/10 hover:bg-numeria-teal rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-all text-xs font-bold">f</a>
                     </div>
                 </div>
 
             </div>
 
-            <!-- Copyright -->
-            <div class="border-t border-blue-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <p class="text-blue-400 text-sm">
-                    © 2025 Numeria Institute, Tous droits réservés
-                </p>
-                <div class="flex gap-4">
-                    <a href="#" class="text-blue-400 hover:text-numeria-or text-xs transition-colors">
-                        Politique de confidentialité
-                    </a>
-                    <a href="#" class="text-blue-400 hover:text-numeria-or text-xs transition-colors">
-                        Conditions d'utilisation
-                    </a>
+            <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p class="text-blue-400 text-sm">© 2025 Numeria Institute — Tous droits réservés</p>
+                <div class="flex gap-5">
+                    <a href="#" class="text-blue-400 hover:text-numeria-teal text-xs transition-colors">Confidentialité</a>
+                    <a href="#" class="text-blue-400 hover:text-numeria-teal text-xs transition-colors">CGU</a>
                 </div>
             </div>
-
         </div>
     </footer>
 
-    <!-- ===== JAVASCRIPT ===== -->
+    <!-- ===== JS ===== -->
     <script>
-        /* ── Menu hamburger ── */
-        const bouton = document.getElementById('bouton-hamburger');
+        const bouton     = document.getElementById('bouton-hamburger');
         const menuMobile = document.getElementById('menu-mobile');
         const barre1 = document.getElementById('barre1');
         const barre2 = document.getElementById('barre2');
@@ -402,23 +317,21 @@
             if (menuOuvert) {
                 menuMobile.classList.add('ouvert');
                 barre1.style.transform = 'translateY(8px) rotate(45deg)';
-                barre2.style.opacity = '0';
+                barre2.style.opacity   = '0';
                 barre3.style.transform = 'translateY(-8px) rotate(-45deg)';
             } else {
                 menuMobile.classList.remove('ouvert');
-                barre1.style.transform = 'none';
+                barre1.style.transform = barre3.style.transform = 'none';
                 barre2.style.opacity = '1';
-                barre3.style.transform = 'none';
             }
         });
 
-        menuMobile.querySelectorAll('a').forEach(function(lien) {
-            lien.addEventListener('click', function() {
+        menuMobile.querySelectorAll('a').forEach(function(l) {
+            l.addEventListener('click', function() {
                 menuMobile.classList.remove('ouvert');
                 menuOuvert = false;
-                barre1.style.transform = 'none';
+                barre1.style.transform = barre3.style.transform = 'none';
                 barre2.style.opacity = '1';
-                barre3.style.transform = 'none';
             });
         });
 
@@ -426,23 +339,15 @@
             if (window.innerWidth >= 1024) {
                 menuMobile.classList.remove('ouvert');
                 menuOuvert = false;
-                barre1.style.transform = 'none';
+                barre1.style.transform = barre3.style.transform = 'none';
                 barre2.style.opacity = '1';
-                barre3.style.transform = 'none';
             }
         });
 
-        /* ── Effet scroll sur le header ── */
         window.addEventListener('scroll', function() {
-            const header = document.getElementById('header-principal');
-            if (window.scrollY > 20) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
+            document.getElementById('header-principal').classList.toggle('scrolled', window.scrollY > 20);
         });
 
-        /* ── Mode sombre ── */
         function basculerMode() {
             const html = document.documentElement;
             if (html.classList.contains('dark')) {
@@ -454,19 +359,12 @@
             }
         }
 
-        /* ── Highlight.js ── */
         document.addEventListener('DOMContentLoaded', function() {
             hljs.highlightAll();
-        });
-
-        /* ── Blocs de code — badge + bouton copier ── */
-        document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('pre code').forEach(function(bloc) {
                 let langage = '';
                 bloc.classList.forEach(function(cls) {
-                    if (cls.startsWith('language-')) {
-                        langage = cls.replace('language-', '');
-                    }
+                    if (cls.startsWith('language-')) langage = cls.replace('language-', '');
                 });
                 const wrapper = document.createElement('div');
                 wrapper.className = 'code-wrapper';
@@ -479,14 +377,14 @@
                     badge.textContent = langage;
                     wrapper.appendChild(badge);
                 }
-                const btnCopier = document.createElement('button');
-                btnCopier.className = 'copy-btn';
-                btnCopier.textContent = '📋 Copier';
-                wrapper.appendChild(btnCopier);
-                btnCopier.addEventListener('click', function() {
+                const btn = document.createElement('button');
+                btn.className = 'copy-btn';
+                btn.textContent = '📋 Copier';
+                wrapper.appendChild(btn);
+                btn.addEventListener('click', function() {
                     navigator.clipboard.writeText(bloc.innerText).then(function() {
-                        btnCopier.textContent = '✅ Copié !';
-                        setTimeout(function() { btnCopier.textContent = '📋 Copier'; }, 2000);
+                        btn.textContent = '✅ Copié !';
+                        setTimeout(function() { btn.textContent = '📋 Copier'; }, 2000);
                     });
                 });
             });
