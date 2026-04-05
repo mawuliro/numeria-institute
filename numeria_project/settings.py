@@ -17,23 +17,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # ── SÉCURITÉ ───────────────────────────────────────────────────────────────
-SECRET_KEY   = config('SECRET_KEY')
-DEBUG        = config('DEBUG', default=False, cast=bool)
+SECRET_KEY    = config('SECRET_KEY')
+DEBUG         = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
 
 
-# ── APPLICATIONS ───────────────────────────────────────────────────────────
+# ── CLOUDINARY (déclaré ici une seule fois, avant INSTALLED_APPS) ──────────
 CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
 
+
+# ── APPLICATIONS ───────────────────────────────────────────────────────────
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',        # ← DOIT être avant staticfiles
+    'cloudinary',
     'django.contrib.staticfiles',
-    'cloudinary_storage',    # ← Avant cloudinary
-    'cloudinary',            # ← Nouveau
     'pages',
     'cours',
     'blog',
@@ -41,13 +43,11 @@ INSTALLED_APPS = [
     'paiements',
 ]
 
-# Cloudinary — ajouté seulement si la variable est définie
-#if CLOUDINARY_URL:
-#    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
 
+# ── MIDDLEWARE ─────────────────────────────────────────────────────────────
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',   # statics servis par whitenoise
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -116,7 +116,6 @@ USE_TZ        = True
 
 
 # ── FICHIERS STATIQUES (CSS, JS) ─────────────────────────────────────────────
-# Servis par WhiteNoise — pas de problème sur Railway
 STATIC_URL       = '/static/'
 STATIC_ROOT      = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = []
@@ -128,25 +127,24 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # En production : Cloudinary (stockage persistant, Railway est éphémère)
 # En développement : stockage local classique
 
-CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
-
 if CLOUDINARY_URL.strip():
+    import cloudinary
+    cloudinary.config(cloudinary_url=CLOUDINARY_URL)
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 else:
     MEDIA_URL  = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+
 # ── AUTHENTIFICATION ─────────────────────────────────────────────────────────
-LOGIN_URL             = '/comptes/connexion/'
-LOGIN_REDIRECT_URL    = '/comptes/tableau-de-bord/'
-LOGOUT_REDIRECT_URL   = '/'
+LOGIN_URL          = '/comptes/connexion/'
+LOGIN_REDIRECT_URL = '/comptes/tableau-de-bord/'
+LOGOUT_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # ── EMAIL ─────────────────────────────────────────────────────────────────────
-# En développement : affiche les emails dans le terminal
-# En production    : configurer EMAIL_HOST, etc. dans les variables Railway
 EMAIL_BACKEND     = config('EMAIL_BACKEND',
                             default='django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST        = config('EMAIL_HOST',        default='smtp.gmail.com')
@@ -160,7 +158,7 @@ CONTACT_EMAIL       = config('CONTACT_EMAIL', default='contact@numeriainstitute.
 
 # ── SÉCURITÉ EN PRODUCTION ───────────────────────────────────────────────────
 if not DEBUG:
-    # Railway gère déjà HTTPS — on désactive la redirection forcée
+    # Railway gère déjà HTTPS — redirection forcée désactivée
     # pour éviter la boucle de redirections
     SECURE_SSL_REDIRECT = False
 
