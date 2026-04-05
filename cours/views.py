@@ -144,27 +144,27 @@ def detail_cours(request, cours_id):
 
 @login_required
 def inscrire_cours(request, cours_id):
-    """S'inscrire à un cours."""
+    """S'inscrire à un cours — gratuit ou payant."""
     cours = get_object_or_404(Cours, id=cours_id, est_publie=True)
 
+    # Vérifier si déjà inscrit
     if InscriptionCours.objects.filter(etudiant=request.user, cours=cours).exists():
-        messages.info(request, f"Tu es déjà inscrit au cours « {cours.titre} » ! 📚")
+        messages.info(request, f"Tu es déjà inscrit au cours '{cours.titre}' ! 📚")
         return redirect('cours:detail', cours_id=cours_id)
 
-    if not cours.est_gratuit:
-        messages.warning(request, "Ce cours est payant. Le système de paiement arrive bientôt. 💳")
+    if cours.est_gratuit:
+        # Cours gratuit — inscription directe
+        InscriptionCours.objects.create(
+            etudiant=request.user,
+            cours=cours,
+            progression=0,
+            est_termine=False
+        )
+        messages.success(request, f"🎉 Bienvenue dans le cours '{cours.titre}' !")
         return redirect('cours:detail', cours_id=cours_id)
-
-    InscriptionCours.objects.create(
-        etudiant=request.user,
-        cours=cours,
-        progression=0,
-        est_termine=False
-    )
-
-    messages.success(request, f"🎉 Bienvenue dans le cours « {cours.titre} » !")
-    return redirect('cours:detail', cours_id=cours_id)
-
+    else:
+        # Cours payant — redirection vers la page de paiement
+        return redirect('paiements:page_paiement', cours_id=cours_id)
 
 @login_required
 def se_desinscrire(request, cours_id):

@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block titre %}Paiement — {{ cours.titre }} — Numeria Institute{% endblock %}
+{% block contenu %}
+
+<section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-12">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-4xl mx-auto">
+
+            <!-- En-tête -->
+            <div class="mb-8">
+                <a href="{% url 'cours:detail' cours.id %}"
+                   class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-or transition-colors text-sm">
+                    ← Retour au cours
+                </a>
+                <h1 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mt-4">
+                    💳 Finaliser l'inscription
+                </h1>
+            </div>
+
+            {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                <div class="p-4 rounded-xl mb-2
+                    {% if message.tags == 'error' %}bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-200
+                    {% elif message.tags == 'warning' %}bg-yellow-50 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-200
+                    {% else %}bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-200{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="flex flex-col lg:flex-row gap-8">
+
+                <!-- PROVIDERS DE PAIEMENT -->
+                <div class="flex-1">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-5">
+                        Choisir un mode de paiement
+                    </h2>
+
+                    <form method="POST" action="{% url 'paiements:initier' cours.id %}">
+                        {% csrf_token %}
+
+                        <div class="flex flex-col gap-3 mb-6">
+                            {% for provider in providers_disponibles %}
+                            <label class="flex items-center gap-4 p-4 rounded-2xl border cursor-pointer transition-all
+                                {% if provider.disponible %}
+                                    border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-numeria-or
+                                {% else %}
+                                    border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 opacity-60 cursor-not-allowed
+                                {% endif %}">
+
+                                <input type="radio"
+                                    name="provider"
+                                    value="{{ provider.id }}"
+                                    {% if not provider.disponible %}disabled{% endif %}
+                                    {% if forloop.first and provider.disponible %}checked{% endif %}
+                                    class="accent-numeria-or">
+
+                                <span class="text-2xl">{{ provider.icone }}</span>
+
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <p class="font-bold text-gray-800 dark:text-gray-100 text-sm">
+                                            {{ provider.nom }}
+                                        </p>
+                                        {% if not provider.disponible %}
+                                        <span class="bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs px-2 py-0.5 rounded-full">
+                                            Bientôt disponible
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">
+                                        {{ provider.description }}
+                                    </p>
+                                </div>
+
+                                {% if provider.disponible %}
+                                <span class="text-green-500 text-xs font-bold">✅ Disponible</span>
+                                {% endif %}
+
+                            </label>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Bouton payer -->
+                        <button type="submit"
+                            class="w-full bg-numeria-or text-numeria-bleu font-bold py-4 rounded-2xl hover:bg-yellow-400 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform text-lg">
+                            Payer {{ cours.prix }} {{ cours.get_devise_display|default:"XOF" }} →
+                        </button>
+
+                        <p class="text-center text-gray-400 dark:text-gray-500 text-xs mt-3">
+                            🔒 Paiement sécurisé — Tes données sont protégées
+                        </p>
+
+                    </form>
+                </div>
+
+                <!-- RÉCAPITULATIF -->
+                <div class="lg:w-80 flex-shrink-0">
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6 sticky top-24">
+
+                        <h3 class="font-bold text-numeria-bleu dark:text-numeria-or text-lg mb-4">
+                            Récapitulatif
+                        </h3>
+
+                        <!-- Cours -->
+                        <div class="flex items-start gap-3 mb-5 pb-5 border-b border-gray-100 dark:border-gray-700">
+                            <div class="w-12 h-12 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0">
+                                <span class="text-numeria-or text-xs font-bold">
+                                    {{ cours.get_matiere_display|first|upper }}
+                                </span>
+                            </div>
+                            <div>
+                                <p class="font-bold text-gray-800 dark:text-gray-100 text-sm">
+                                    {{ cours.titre }}
+                                </p>
+                                <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">
+                                    {{ cours.nombre_lecons }} leçons · {{ cours.get_niveau_display }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Prix -->
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-gray-500 dark:text-gray-400 text-sm">Prix du cours</span>
+                            <span class="font-bold text-gray-800 dark:text-gray-100">{{ cours.prix }} XOF</span>
+                        </div>
+                        <div class="flex items-center justify-between mb-5 pb-5 border-b border-gray-100 dark:border-gray-700">
+                            <span class="text-gray-500 dark:text-gray-400 text-sm">Frais de traitement</span>
+                            <span class="text-green-500 font-bold text-sm">Gratuit</span>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="font-bold text-gray-800 dark:text-gray-100">Total</span>
+                            <span class="text-2xl font-bold text-numeria-bleu dark:text-numeria-or">
+                                {{ cours.prix }} XOF
+                            </span>
+                        </div>
+
+                        <!-- Ce qui est inclus -->
+                        <div class="bg-numeria-blanc dark:bg-gray-700 rounded-xl p-4">
+                            <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+                                Ce qui est inclus
+                            </p>
+                            <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-500">✅</span>
+                                    {{ cours.nombre_lecons }} leçons complètes
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-500">✅</span>
+                                    Accès à vie
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-500">✅</span>
+                                    Certificat officiel
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-500">✅</span>
+                                    Support par email
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
