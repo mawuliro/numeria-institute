@@ -39,14 +39,12 @@ def connexion(request):
             username = formulaire.cleaned_data['username']
             password = formulaire.cleaned_data['password']
 
-            # On vérifie les identifiants
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
                 login(request, user)
                 messages.success(request, f"Bon retour, {user.first_name} ! 👋")
 
-                # Rediriger vers la page demandée avant la connexion
                 next_url = request.GET.get('next', 'comptes:tableau_de_bord')
                 return redirect(next_url)
             else:
@@ -72,26 +70,21 @@ def tableau_de_bord(request):
     from cours.models import Cours, InscriptionCours
     from blog.models import Article
 
-    # Profil de l'étudiant
     profil, cree = Profil.objects.get_or_create(utilisateur=request.user)
 
-    # Inscriptions de l'étudiant
     inscriptions = InscriptionCours.objects.filter(
         etudiant=request.user
     ).select_related('cours')
 
-    # Statistiques
-    total_inscrits = inscriptions.count()
-    total_termines = inscriptions.filter(est_termine=True).count()
-    en_cours = inscriptions.filter(est_termine=False)
+    total_inscrits  = inscriptions.count()
+    total_termines  = inscriptions.filter(est_termine=True).count()
+    en_cours        = inscriptions.filter(est_termine=False)
 
-    # Progression globale moyenne
     if total_inscrits > 0:
         progression_totale = sum(i.progression for i in inscriptions) // total_inscrits
     else:
         progression_totale = 0
 
-    # Cours recommandés — cours publiés auxquels l'étudiant n'est pas inscrit
     ids_inscrits = inscriptions.values_list('cours_id', flat=True)
     cours_recommandes = Cours.objects.filter(
         est_publie=True
@@ -99,7 +92,6 @@ def tableau_de_bord(request):
         id__in=ids_inscrits
     )[:3]
 
-    # Derniers articles du blog
     articles_recents = Article.objects.filter(est_publie=True)[:3]
 
     contexte = {
@@ -114,6 +106,7 @@ def tableau_de_bord(request):
     }
 
     return render(request, 'comptes/tableau_de_bord.html', contexte)
+
 
 @login_required
 def modifier_profil(request):
@@ -138,30 +131,47 @@ def modifier_profil(request):
 
     return render(request, 'comptes/modifier_profil.html', {
         'formulaire': formulaire,
-        'profil': profil,       # ← vérifie que cette ligne existe bien !
+        'profil': profil,
     })
+
 
 @login_required
 def supprimer_photo(request):
-    """Supprimer la photo de profil."""
+    """
+    Supprimer la photo de profil.
+    ⚠️  Railway est éphémère + on utilise Cloudinary :
+        - NE PAS utiliser profil.photo.path (n'existe pas sur Cloudinary)
+        - NE PAS utiliser os.path.isfile / os.remove
+        - Utiliser l'API Cloudinary pour supprimer le fichier distant,
+          puis vider le champ en base de données.
+    """
     if request.method == 'POST':
-        profil, cree = Profil.objects.get_or_create(utilisateur=request.user)
+        profil, _ = Profil.objects.get_or_create(utilisateur=request.user)
+
         if profil.photo:
-            # On supprime le fichier physique du serveur
-            import os
-            if os.path.isfile(profil.photo.path):
-                os.remove(profil.photo.path)
-            # On vide le champ photo dans la base de données
+            # ── Suppression du fichier sur Cloudinary ──────────────
+            try:
+                import cloudinary.uploader
+                # public_id = identifiant Cloudinary du fichier
+                # (ex: "photos_profil/monuser/photo")
+                cloudinary.uploader.destroy(profil.photo.public_id)
+            except Exception:
+                # Si Cloudinary n'est pas configuré en dev, on ignore
+                pass
+
+            # ── Vider le champ en base de données ──────────────────
             profil.photo = None
             profil.save()
             messages.success(request, "Ta photo de profil a été supprimée. ✅")
         else:
-            messages.error(request, "Tu n'as pas de photo de profil à supprimer.")
+            messages.info(request, "Tu n'as pas de photo de profil à supprimer.")
+
     return redirect('comptes:modifier_profil')
+
 
 @login_required
 def profil(request):
-    """Page de profil public de l'étudiant."""
+    """Page de profil de l'étudiant."""
     profil, cree = Profil.objects.get_or_create(utilisateur=request.user)
     return render(request, 'comptes/profil.html', {'profil': profil})
 
@@ -173,7 +183,6 @@ def changer_mot_de_passe(request):
         formulaire = PasswordChangeForm(request.user, request.POST)
         if formulaire.is_valid():
             user = formulaire.save()
-            # Important : mettre à jour la session pour ne pas déconnecter l'utilisateur
             update_session_auth_hash(request, user)
             messages.success(request, "Ton mot de passe a été changé avec succès ! 🔐")
             return redirect('comptes:profil')
@@ -189,18 +198,15 @@ def changer_mot_de_passe(request):
 def supprimer_compte(request):
     """Suppression définitive du compte."""
     if request.method == 'POST':
-        # On vérifie le mot de passe avant de supprimer
         password = request.POST.get('password')
         user = authenticate(request, username=request.user.username, password=password)
 
         if user is not None:
-            # Mot de passe correct — on supprime le compte
             prenom = request.user.first_name
             request.user.delete()
             messages.success(request, f"Ton compte a été supprimé, {prenom}. Nous espérons te revoir ! 👋")
             return redirect('accueil')
         else:
-            # Mot de passe incorrect
             messages.error(request, "Mot de passe incorrect. Ton compte n'a pas été supprimé.")
 
     return render(request, 'comptes/supprimer_compte.html')
