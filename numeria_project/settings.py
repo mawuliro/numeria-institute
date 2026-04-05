@@ -127,18 +127,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # ── FICHIERS MÉDIAS (uploads utilisateurs) ───────────────────────────────────
 # En production : Cloudinary (stockage persistant, Railway est éphémère)
 # En développement : stockage local classique
+
 CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
 
-if CLOUDINARY_URL:
-    # ── PRODUCTION : Cloudinary ──────────────────────────────────────────
-    # Cloudinary lit CLOUDINARY_URL automatiquement depuis l'environnement
+if CLOUDINARY_URL.strip():
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    MEDIA_URL = '/media/'     # Utilisé en fallback local uniquement
 else:
-    # ── DÉVELOPPEMENT : stockage local ───────────────────────────────────
-    MEDIA_URL  = config('MEDIA_URL', default='/media/')
+    MEDIA_URL  = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 # ── AUTHENTIFICATION ─────────────────────────────────────────────────────────
 LOGIN_URL             = '/comptes/connexion/'
