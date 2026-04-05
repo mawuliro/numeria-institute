@@ -11,4 +11,6 @@ urlpatterns = [
     path('lecon/<int:lecon_id>/terminer/', views.terminer_lecon, name='terminer_lecon'),
     path('lecon/<int:lecon_id>/annuler/', views.annuler_lecon, name='annuler_lecon'),
     path('exercice/<int:exercice_id>/soumettre/', views.soumettre_exercice, name='soumettre_exercice'),
+    path('certificat/<int:inscription_id>/', views.telecharger_certificat, name='telecharger_certificat'),
+    path('verifier/<str:code>/', views.verifier_certificat, name='verifier_certificat'),
 ]

@@ -1,5 +1,5 @@
 from django.db import models
-
+import uuid
 
 # =============================================================================
 # FONCTIONS UTILITAIRES VIDÉO
@@ -451,3 +451,43 @@ class TentativeExercice(models.Model):
         verbose_name = 'Tentative'
         verbose_name_plural = 'Tentatives'
         ordering = ['-date_tentative']
+
+class Certificat(models.Model):
+    """
+    Certificat de réussite généré automatiquement quand un étudiant
+    termine un cours payant.
+    """
+
+    inscription = models.OneToOneField(
+        InscriptionCours,
+        on_delete=models.CASCADE,
+        related_name='certificat'
+    )
+
+    # Date de génération du certificat
+    date_emission = models.DateTimeField(auto_now_add=True)
+
+    # Code unique de vérification (pour le QR code)
+    code_verification = models.CharField(
+        max_length=32,
+        unique=True,
+        verbose_name='Code de vérification'
+    )
+
+    def __str__(self):
+        return (
+            f"Certificat — {self.inscription.etudiant.username} "
+            f"— {self.inscription.cours.titre}"
+        )
+
+    def get_nom_fichier(self):
+        """Nom du fichier PDF téléchargeable."""
+        prenom = self.inscription.etudiant.first_name or self.inscription.etudiant.username
+        nom    = self.inscription.etudiant.last_name or ''
+        cours  = self.inscription.cours.titre[:30].replace(' ', '_')
+        return f"Certificat_Numeria_{prenom}_{nom}_{cours}.pdf"
+
+    class Meta:
+        verbose_name = 'Certificat'
+        verbose_name_plural = 'Certificats'
+        ordering = ['-date_emission']

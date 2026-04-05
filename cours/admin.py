@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Cours, InscriptionCours, Lecon, ProgressionLecon, Exercice, TentativeExercice
+from .models import Cours, InscriptionCours, Lecon, ProgressionLecon, Exercice, TentativeExercice, Certificat
+
 
 
 class ExerciceInline(admin.StackedInline):
@@ -105,4 +106,32 @@ admin.site.register(ProgressionLecon)
 
 admin.site.site_header = 'Numeria Institute — Administration'
 admin.site.site_title = 'Numeria Admin'
-admin.site.index_title = 'Tableau de bord'
+
+class CertificatAdmin(admin.ModelAdmin):
+    list_display = [
+        'get_etudiant',
+        'get_cours',
+        'date_emission',
+        'code_verification',
+    ]
+    list_filter  = ['date_emission', 'inscription__cours']
+    search_fields = [
+        'inscription__etudiant__username',
+        'inscription__etudiant__first_name',
+        'inscription__etudiant__last_name',
+        'inscription__cours__titre',
+        'code_verification',
+    ]
+    readonly_fields = ['code_verification', 'date_emission']
+
+    def get_etudiant(self, obj):
+        u = obj.inscription.etudiant
+        return f"{u.first_name} {u.last_name} ({u.username})"
+    get_etudiant.short_description = 'Étudiant'
+
+    def get_cours(self, obj):
+        return obj.inscription.cours.titre
+    get_cours.short_description = 'Cours'
+
+
+admin.site.register(Certificat, CertificatAdmin)

@@ -102,7 +102,7 @@
             <!-- COLONNE PRINCIPALE -->
             <div class="flex-1 min-w-0">
 
-                <!-- MES COURS EN COURS -->
+                <!-- MES COURS -->
                 <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm mb-6">
 
                     <div class="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
@@ -133,6 +133,11 @@
                                                 ✅ Terminé
                                             </span>
                                             {% endif %}
+                                            {% if not inscription.cours.est_gratuit %}
+                                            <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-2 py-0.5 rounded-full">
+                                                Payant
+                                            </span>
+                                            {% endif %}
                                         </div>
                                         <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm truncate">
                                             {{ inscription.cours.titre }}
@@ -143,23 +148,46 @@
                                         </p>
                                     </div>
 
-                                    <!-- Progression + bouton -->
-                                    <div class="sm:w-40 flex flex-col gap-2">
+                                    <!-- Progression + boutons -->
+                                    <div class="sm:w-48 flex flex-col gap-2">
+
                                         <!-- Barre de progression -->
                                         <div class="flex items-center gap-2">
                                             <div class="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                                 <div class="bg-numeria-or rounded-full h-2 transition-all"
-                                                     style="width: {{inscription.progression}}%">
+                                                     style="width: {{ inscription.progression }}%">
                                                 </div>
                                             </div>
                                             <span class="text-xs font-bold text-gray-600 dark:text-gray-300 min-w-8">
                                                 {{ inscription.progression }}%
                                             </span>
                                         </div>
+
+                                        <!-- Bouton Revoir / Continuer -->
                                         <a href="{% url 'cours:detail' inscription.cours.id %}"
                                            class="text-center bg-numeria-bleu text-white text-xs font-bold py-1.5 rounded-lg hover:bg-numeria-bleu-fonce transition-colors">
                                             {% if inscription.est_termine %}Revoir{% else %}Continuer{% endif %}
                                         </a>
+
+                                        <!-- ── BOUTON CERTIFICAT ──────────────────
+                                             Visible uniquement si :
+                                             - Le cours est terminé
+                                             - Le cours est payant
+                                        ──────────────────────────────────────── -->
+                                        {% if inscription.est_termine and not inscription.cours.est_gratuit %}
+                                        <a href="{% url 'cours:telecharger_certificat' inscription.id %}"
+                                           class="flex items-center justify-center gap-1.5 bg-numeria-or text-numeria-bleu font-bold py-1.5 rounded-lg hover:bg-yellow-400 transition-all text-xs">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                 stroke="currentColor" stroke-width="2.5"
+                                                 stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                <polyline points="7 10 12 15 17 10"/>
+                                                <line x1="12" y1="15" x2="12" y2="3"/>
+                                            </svg>
+                                            Certificat PDF
+                                        </a>
+                                        {% endif %}
+
                                     </div>
 
                                 </div>
@@ -338,7 +366,7 @@
                             <span>📝</span> Lire le blog
                         </a>
                         <a href="{% url 'paiements:historique' %}"
-                            class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
+                           class="flex items-center gap-3 text-blue-200 hover:text-numeria-or py-2 transition-colors text-sm">
                             <span>💳</span> Mes paiements
                         </a>
                         <div class="border-t border-blue-800 dark:border-gray-600 my-2"></div>

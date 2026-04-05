@@ -3,6 +3,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.utils import timezone
+from django.http import HttpResponse
+import uuid
 from .models import Cours, InscriptionCours, Lecon, ProgressionLecon
 
 
@@ -340,3 +342,71 @@ def soumettre_exercice(request, exercice_id):
             f'{url_detail}?lecon={lecon.id}&exercice={exercice_id}'
             f'&resultat=incorrect&choisie={reponse_choisie}'
         )
+    
+@login_required
+def telecharger_certificat(request, inscription_id):
+    """
+    Génère et télécharge le certificat PDF d'un cours terminé.
+    Réservé aux cours payants uniquement.
+    """
+    from .models import Certificat
+    from .utils.certificat import generer_certificat_pdf
+
+    inscription = get_object_or_404(
+        InscriptionCours,
+        id=inscription_id,
+        etudiant=request.user,
+        est_termine=True
+    )
+
+    # Vérifier que le cours est payant
+    if inscription.cours.est_gratuit:
+        messages.error(
+            request,
+            "Les certificats sont réservés aux cours payants."
+        )
+        return redirect('comptes:tableau_de_bord')
+
+    # Récupérer ou créer le certificat
+    certificat, cree = Certificat.objects.get_or_create(
+        inscription=inscription,
+        defaults={
+            'code_verification': uuid.uuid4().hex
+        }
+    )
+
+    # Construire l'URL de vérification
+    url_verification = request.build_absolute_uri(
+        reverse('cours:verifier_certificat',
+                kwargs={'code': certificat.code_verification})
+    )
+
+    # Générer le PDF
+    pdf = generer_certificat_pdf(inscription, url_verification)
+
+    # Retourner le PDF en téléchargement
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = (
+        f'attachment; filename="{certificat.get_nom_fichier()}"'
+    )
+    return response
+
+
+def verifier_certificat(request, code):
+    """
+    Page publique de vérification d'un certificat via le QR code.
+    Accessible sans connexion.
+    """
+    from .models import Certificat
+
+    certificat = get_object_or_404(Certificat, code_verification=code)
+    inscription = certificat.inscription
+
+    contexte = {
+        'certificat':  certificat,
+        'inscription': inscription,
+        'etudiant':    inscription.etudiant,
+        'cours':       inscription.cours,
+        'date_emission': certificat.date_emission,
+    }
+    return render(request, 'cours/verifier_certificat.html', contexte)
