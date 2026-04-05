@@ -1,9 +1,11 @@
 """
 Numeria Institute — Générateur de certificats PDF
+Inspiré du style classique de certificat avec bordure ornementale.
 """
 
 import qrcode
 import io
+import math
 from datetime import datetime
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.units import cm
@@ -12,13 +14,132 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 
 
-# ── COULEURS NUMERIA ──────────────────────────────────────────────
-BLEU_MARINE = HexColor('#1A3C6E')
-BLEU_FONCE  = HexColor('#152f58')
-OR_NUMERIA  = HexColor('#E8A020')
-BLANC       = white
-GRIS_TEXTE  = HexColor('#6B7280')
-BLEU_CLAIR  = HexColor('#93b8e8')
+# ── COULEURS ──────────────────────────────────────────────────────
+BLEU_MARINE  = HexColor('#1A3C6E')
+BLEU_FONCE   = HexColor('#0f2847')
+OR_NUMERIA   = HexColor('#C8960C')
+OR_CLAIR     = HexColor('#E8B830')
+OR_PALE      = HexColor('#F5D878')
+BLANC        = white
+GRIS_TEXTE   = HexColor('#444444')
+GRIS_CLAIR   = HexColor('#888888')
+FOND_PARCHEMIN = HexColor('#F5F0E8')
+BLEU_CLAIR   = HexColor('#93b8e8')
+
+
+# ── FONTES DISPONIBLES ────────────────────────────────────────────
+# Helvetica, Helvetica-Bold, Helvetica-Oblique, Helvetica-BoldOblique
+# Times-Roman, Times-Bold, Times-Italic, Times-BoldItalic
+# Courier, Courier-Bold, Courier-Oblique
+
+
+def dessiner_motif_coins(c, largeur, hauteur, marge=0.5*cm):
+    """Dessine des motifs décoratifs dans les 4 coins."""
+    taille = 1.0 * cm
+    coins = [
+        (marge, marge),                          # bas-gauche
+        (largeur - marge - taille, marge),       # bas-droit
+        (marge, hauteur - marge - taille),       # haut-gauche
+        (largeur - marge - taille, hauteur - marge - taille),  # haut-droit
+    ]
+    c.setStrokeColor(OR_NUMERIA)
+    c.setFillColor(OR_NUMERIA)
+    c.setLineWidth(1.5)
+    for (x, y) in coins:
+        cx = x + taille / 2
+        cy = y + taille / 2
+        # petite étoile / croix ornementale
+        for angle_deg in range(0, 360, 45):
+            angle = math.radians(angle_deg)
+            r1 = taille * 0.15
+            r2 = taille * 0.45
+            x1 = cx + r1 * math.cos(angle)
+            y1 = cy + r1 * math.sin(angle)
+            x2 = cx + r2 * math.cos(angle)
+            y2 = cy + r2 * math.sin(angle)
+            c.line(x1, y1, x2, y2)
+        c.circle(cx, cy, taille * 0.12, fill=1, stroke=0)
+
+
+def dessiner_bordure_ornementale(c, largeur, hauteur):
+    """
+    Dessine une bordure ornementale inspirée du certificat classique :
+    - Fond parchemin
+    - Cadre extérieur bleu épais
+    - Cadre intérieur or
+    - Motif de vagues/festons sur les bords
+    """
+
+    # ── Fond parchemin ────────────────────────────────────────────
+    c.setFillColor(FOND_PARCHEMIN)
+    c.rect(0, 0, largeur, hauteur, fill=1, stroke=0)
+
+    # ── Rectangle de fond intérieur légèrement plus clair ─────────
+    marge_fond = 1.1 * cm
+    c.setFillColor(white)
+    c.rect(marge_fond, marge_fond,
+           largeur - 2 * marge_fond, hauteur - 2 * marge_fond,
+           fill=1, stroke=0)
+
+    # ── Bordure externe — bleu épais ──────────────────────────────
+    c.setStrokeColor(BLEU_MARINE)
+    c.setFillColor(BLEU_MARINE)
+    c.setLineWidth(18)
+    ep = 0.45 * cm
+    c.rect(ep, ep, largeur - 2 * ep, hauteur - 2 * ep, fill=0, stroke=1)
+
+    # ── Bordure intermédiaire — or ─────────────────────────────────
+    c.setStrokeColor(OR_NUMERIA)
+    c.setLineWidth(4)
+    ep2 = 0.85 * cm
+    c.rect(ep2, ep2, largeur - 2 * ep2, hauteur - 2 * ep2, fill=0, stroke=1)
+
+    # ── Bordure intérieure — bleu fin ─────────────────────────────
+    c.setStrokeColor(BLEU_MARINE)
+    c.setLineWidth(1.5)
+    ep3 = 1.05 * cm
+    c.rect(ep3, ep3, largeur - 2 * ep3, hauteur - 2 * ep3, fill=0, stroke=1)
+
+    # ── Motif festons (demi-cercles) sur chaque côté ──────────────
+    _dessiner_festons(c, largeur, hauteur, ep2)
+
+    # ── Motifs de coins ───────────────────────────────────────────
+    dessiner_motif_coins(c, largeur, hauteur, marge=0.5 * cm)
+
+
+def _dessiner_festons(c, largeur, hauteur, ep):
+    """
+    Dessine des petits demi-cercles en bleu le long des 4 bords,
+    simulant les festons du certificat classique.
+    """
+    c.setStrokeColor(BLEU_MARINE)
+    c.setFillColor(BLEU_MARINE)
+    c.setLineWidth(0.5)
+    r = 0.28 * cm  # rayon des demi-cercles
+
+    # Côté bas
+    x = ep + r
+    while x < largeur - ep - r:
+        c.circle(x, ep, r, fill=1, stroke=0)
+        x += 2 * r + 0.05 * cm
+
+    # Côté haut
+    x = ep + r
+    while x < largeur - ep - r:
+        c.circle(x, hauteur - ep, r, fill=1, stroke=0)
+        x += 2 * r + 0.05 * cm
+
+    # Côté gauche
+    y = ep + r
+    while y < hauteur - ep - r:
+        c.circle(ep, y, r, fill=1, stroke=0)
+        y += 2 * r + 0.05 * cm
+
+    # Côté droit
+    y = ep + r
+    while y < hauteur - ep - r:
+        c.circle(largeur - ep, y, r, fill=1, stroke=0)
+        y += 2 * r + 0.05 * cm
 
 
 def dessiner_atome(c, cx, cy, rayon_orbite=28, rayon_noyau=7,
@@ -50,10 +171,40 @@ def dessiner_atome(c, cx, cy, rayon_orbite=28, rayon_noyau=7,
     c.ellipse(-rayon_orbite, -rp, rayon_orbite, rp, fill=0, stroke=1)
     c.restoreState()
 
-    c.setFillColor(BLANC)
-    c.circle(cx + rayon_orbite, cy, 3.5, fill=1, stroke=0)
-    c.circle(cx - rayon_orbite * 0.5,  cy + rp * 0.85, 3.5, fill=1, stroke=0)
-    c.circle(cx - rayon_orbite * 0.5,  cy - rp * 0.85, 3.5, fill=1, stroke=0)
+    c.setFillColor(OR_CLAIR)
+    c.circle(cx + rayon_orbite, cy, 3, fill=1, stroke=0)
+    c.circle(cx - rayon_orbite * 0.5,  cy + rp * 0.85, 3, fill=1, stroke=0)
+    c.circle(cx - rayon_orbite * 0.5,  cy - rp * 0.85, 3, fill=1, stroke=0)
+
+
+def dessiner_medaillon_or(c, cx, cy, rayon=1.2*cm):
+    """Dessine un médaillon doré façon sceau officiel."""
+    # Cercle extérieur dentelé (simulé par des rayons)
+    c.setFillColor(OR_NUMERIA)
+    nb_dents = 18
+    for i in range(nb_dents):
+        angle = math.radians(i * 360 / nb_dents)
+        x1 = cx + rayon * 0.82 * math.cos(angle)
+        y1 = cy + rayon * 0.82 * math.sin(angle)
+        x2 = cx + rayon * math.cos(angle)
+        y2 = cy + rayon * math.sin(angle)
+        c.setLineWidth(4)
+        c.setStrokeColor(OR_NUMERIA)
+        c.line(x1, y1, x2, y2)
+
+    c.setFillColor(OR_CLAIR)
+    c.circle(cx, cy, rayon * 0.80, fill=1, stroke=0)
+
+    c.setFillColor(OR_NUMERIA)
+    c.circle(cx, cy, rayon * 0.72, fill=1, stroke=0)
+
+    c.setFillColor(OR_PALE)
+    c.circle(cx, cy, rayon * 0.60, fill=1, stroke=0)
+
+    # Lettre N au centre
+    c.setFillColor(BLEU_FONCE)
+    c.setFont('Times-Bold', 16)
+    c.drawCentredString(cx, cy - 0.22 * cm, 'N')
 
 
 def generer_qr_code(texte):
@@ -82,220 +233,186 @@ def generer_certificat_pdf(inscription, url_verification=None):
     cours     = inscription.cours
     date_fin  = inscription.date_fin or datetime.now()
 
-    prenom     = etudiant.first_name or etudiant.username
-    nom        = etudiant.last_name  or ''
+    prenom      = etudiant.first_name or etudiant.username
+    nom         = etudiant.last_name  or ''
     nom_complet = f"{prenom} {nom}".strip()
 
-    CX = largeur / 2   # centre horizontal = 421 pts
+    CX = largeur / 2   # centre horizontal ≈ 421 pts
 
-    # ══════════════════════════════════════════════════════
-    # FOND BLANC
-    # ══════════════════════════════════════════════════════
-    c.setFillColor(BLANC)
-    c.rect(0, 0, largeur, hauteur, fill=1, stroke=0)
+    # ══════════════════════════════════════════════════════════════
+    # BORDURE ORNEMENTALE (fond + cadres + festons)
+    # ══════════════════════════════════════════════════════════════
+    dessiner_bordure_ornementale(c, largeur, hauteur)
 
-    # ══════════════════════════════════════════════════════
-    # BORDURES LATÉRALES OR (gauche et droite)
-    # ══════════════════════════════════════════════════════
-    c.setFillColor(OR_NUMERIA)
-    c.rect(0, 0, 0.6*cm, hauteur, fill=1, stroke=0)
-    c.rect(largeur - 0.6*cm, 0, 0.6*cm, hauteur, fill=1, stroke=0)
+    # Marges de travail à l'intérieur de la bordure
+    MARGE_H = 1.5 * cm
+    MARGE_V = 1.3 * cm
+    zone_haut = hauteur - MARGE_V
+    zone_bas  = MARGE_V
 
-    # ══════════════════════════════════════════════════════
-    # BANDE HEADER BLEU MARINE (haut)
-    # ══════════════════════════════════════════════════════
-    HEADER_H = 3.8 * cm
-    c.setFillColor(BLEU_MARINE)
-    c.rect(0, hauteur - HEADER_H, largeur, HEADER_H, fill=1, stroke=0)
+    # ══════════════════════════════════════════════════════════════
+    # EN-TÊTE : Logo NUMERIA (gauche) + atome
+    # ══════════════════════════════════════════════════════════════
+    logo_y = zone_haut - 0.9 * cm
 
-    # Barre or sous le header
-    c.setFillColor(OR_NUMERIA)
-    c.rect(0, hauteur - HEADER_H - 0.4*cm, largeur, 0.4*cm, fill=1, stroke=0)
-
-    # ══════════════════════════════════════════════════════
-    # BANDE FOOTER BLEU MARINE (bas)
-    # ══════════════════════════════════════════════════════
-    FOOTER_H = 1.8 * cm
-    c.setFillColor(BLEU_MARINE)
-    c.rect(0, 0, largeur, FOOTER_H, fill=1, stroke=0)
-
-    # Barre or au-dessus du footer
-    c.setFillColor(OR_NUMERIA)
-    c.rect(0, FOOTER_H, largeur, 0.4*cm, fill=1, stroke=0)
-
-    # ══════════════════════════════════════════════════════
-    # LOGO — HEADER GAUCHE
-    # ══════════════════════════════════════════════════════
-    atome_cx = 1.8 * cm
-    atome_cy = hauteur - HEADER_H / 2
+    atome_cx = MARGE_H + 0.9 * cm
+    atome_cy = logo_y - 0.1 * cm
     dessiner_atome(c, atome_cx, atome_cy,
-                   rayon_orbite=22, rayon_noyau=6,
-                   couleur_orbite=OR_NUMERIA, couleur_noyau=OR_NUMERIA)
+                   rayon_orbite=20, rayon_noyau=5,
+                   couleur_orbite=BLEU_MARINE, couleur_noyau=BLEU_MARINE)
 
-    # Texte logo
-    c.setFillColor(OR_NUMERIA)
-    c.setFont('Helvetica-Bold', 17)
-    c.drawString(3.2*cm, hauteur - HEADER_H/2 + 0.3*cm, 'NUMERIA')
+    c.setFillColor(BLEU_MARINE)
+    c.setFont('Helvetica-Bold', 13)
+    c.drawString(MARGE_H + 2.0 * cm, logo_y + 0.1 * cm, 'NUMERIA')
 
-    c.setFillColor(BLEU_CLAIR)
-    c.setFont('Helvetica', 9)
-    c.drawString(3.2*cm, hauteur - HEADER_H/2 - 0.35*cm, 'INSTITUTE')
+    c.setFillColor(GRIS_TEXTE)
+    c.setFont('Helvetica', 8)
+    c.drawString(MARGE_H + 2.0 * cm, logo_y - 0.42 * cm, 'INSTITUTE')
 
+    # Ligne décorative sous le logo
     c.setStrokeColor(OR_NUMERIA)
     c.setLineWidth(1)
-    c.line(3.2*cm, hauteur - HEADER_H/2 - 0.6*cm,
-           8.5*cm, hauteur - HEADER_H/2 - 0.6*cm)
+    c.line(MARGE_H + 2.0 * cm, logo_y - 0.65 * cm,
+           MARGE_H + 6.0 * cm, logo_y - 0.65 * cm)
 
-    # ══════════════════════════════════════════════════════
-    # TITRE — HEADER DROITE
-    # ══════════════════════════════════════════════════════
-    c.setFillColor(BLANC)
-    c.setFont('Helvetica-Bold', 13)
-    c.drawRightString(largeur - 1.4*cm,
-                      hauteur - HEADER_H/2 + 0.3*cm,
-                      'CERTIFICAT DE RÉUSSITE')
-
-    c.setFillColor(BLEU_CLAIR)
-    c.setFont('Helvetica', 8.5)
-    c.drawRightString(largeur - 1.4*cm,
-                      hauteur - HEADER_H/2 - 0.35*cm,
-                      'CALCUL · IA · SOLUTIONS LOCALES')
-
-    # ══════════════════════════════════════════════════════
-    # CORPS — zones de travail
-    # zone_haut : bas du header+barre = hauteur - HEADER_H - 0.4cm
-    # zone_bas  : haut du footer+barre = FOOTER_H + 0.4cm
-    # ══════════════════════════════════════════════════════
-    zone_haut = hauteur - HEADER_H - 0.4*cm   # ≈ 554 pts
-    zone_bas  = FOOTER_H + 0.4*cm             # ≈ 65 pts
-    zone_h    = zone_haut - zone_bas           # ≈ 489 pts
-
-    # On divise la zone en 3 bandes verticales égales
-    # Bande haute  : certifie que + NOM
-    # Bande milieu : cours + infos
-    # Bande basse  : signatures + date + QR
-
-    # ── LIGNE 1 — "Numeria Institute certifie que" ────────
-    y1 = zone_haut - 1.4*cm
-    c.setFillColor(GRIS_TEXTE)
-    c.setFont('Helvetica', 11)
-    c.drawCentredString(CX, y1, 'Numeria Institute certifie que')
-
-    # ── LIGNE 2 — NOM DE L'ÉTUDIANT ──────────────────────
-    y2 = y1 - 1.6*cm
+    # ══════════════════════════════════════════════════════════════
+    # TITRE PRINCIPAL  —  style calligraphique via Times-BoldItalic
+    # ══════════════════════════════════════════════════════════════
+    titre_y = zone_haut - 1.8 * cm
     c.setFillColor(BLEU_MARINE)
-    c.setFont('Helvetica-Bold', 44)
-    c.drawCentredString(CX, y2, nom_complet)
+    c.setFont('Times-BoldItalic', 38)
+    c.drawCentredString(CX, titre_y, 'Certificat de Réussite')
 
-    # Ligne décorative sous le nom
-    nom_largeur = min(len(nom_complet) * 22, 380)
+    # Petite ligne décorative or sous le titre
+    deco_long = 9 * cm
     c.setStrokeColor(OR_NUMERIA)
-    c.setLineWidth(2.5)
-    c.line(CX - nom_largeur/2, y2 - 0.55*cm,
-           CX + nom_largeur/2, y2 - 0.55*cm)
+    c.setLineWidth(2)
+    c.line(CX - deco_long / 2, titre_y - 0.45 * cm,
+           CX + deco_long / 2, titre_y - 0.45 * cm)
 
-    # ── LIGNE 3 — "a complété avec succès le cours" ───────
-    y3 = y2 - 1.6*cm
-    c.setFillColor(GRIS_TEXTE)
-    c.setFont('Helvetica', 11)
-    c.drawCentredString(CX, y3, 'a complété avec succès le cours')
-
-    # ── LIGNE 4 — NOM DU COURS ───────────────────────────
-    y4 = y3 - 1.3*cm
-    taille_titre = 26 if len(cours.titre) < 35 else 20
-    c.setFillColor(BLEU_MARINE)
-    c.setFont('Helvetica-Bold', taille_titre)
-    c.drawCentredString(CX, y4, cours.titre)
-
-    # ── LIGNE 5 — MATIÈRE ET NIVEAU ──────────────────────
-    y5 = y4 - 1.0*cm
-    c.setFillColor(GRIS_TEXTE)
-    c.setFont('Helvetica', 10)
-    info = f"{cours.get_matiere_display()} — Niveau {cours.get_niveau_display()}"
-    c.drawCentredString(CX, y5, info)
-
-    # ── LIGNE 6 — ÉTOILES ────────────────────────────────
-    y6 = y5 - 0.9*cm
-    c.setFillColor(OR_NUMERIA)
-    c.setFont('Helvetica-Bold', 18)
-    c.drawCentredString(CX, y6, '★   ★   ★')
-
-    # ══════════════════════════════════════════════════════
-    # ZONE BASSE — Signatures + Date + QR
-    # On fixe une ligne de base à zone_bas + 2.8cm
-    # ══════════════════════════════════════════════════════
-    SIG_Y = zone_bas + 2.5*cm   # ligne de signature
-
-    # ── SIGNATURE GAUCHE ─────────────────────────────────
-    SIG_G_X1 = 1.4*cm
-    SIG_G_X2 = 10.0*cm
-
-    c.setStrokeColor(BLEU_MARINE)
+    # Filet fin en dessous
     c.setLineWidth(0.8)
-    c.line(SIG_G_X1, SIG_Y, SIG_G_X2, SIG_Y)
+    c.line(CX - deco_long * 0.6 / 2, titre_y - 0.68 * cm,
+           CX + deco_long * 0.6 / 2, titre_y - 0.68 * cm)
 
-    c.setFillColor(BLEU_MARINE)
-    c.setFont('Helvetica-Bold', 10)
-    c.drawString(SIG_G_X1, SIG_Y + 0.35*cm, 'Ounimborbitibou Djabon')
-
+    # ══════════════════════════════════════════════════════════════
+    # SOUS-TITRE  "Ce document certifie que"
+    # ══════════════════════════════════════════════════════════════
+    sub_y = titre_y - 1.35 * cm
     c.setFillColor(GRIS_TEXTE)
-    c.setFont('Helvetica', 9)
-    c.drawString(SIG_G_X1, SIG_Y - 0.55*cm, 'Co-fondateur & Directeur académique')
-    c.drawString(SIG_G_X1, SIG_Y - 1.0*cm,  'Numeria Institute — Lomé, Togo')
+    c.setFont('Times-Italic', 13)
+    c.drawCentredString(CX, sub_y, 'Ce document certifie que')
 
-    # ── DATE — CENTRE ─────────────────────────────────────
+    # ══════════════════════════════════════════════════════════════
+    # NOM DE L'ÉTUDIANT
+    # ══════════════════════════════════════════════════════════════
+    nom_y = sub_y - 1.5 * cm
+    c.setFillColor(BLEU_MARINE)
+    c.setFont('Times-Bold', 40)
+    c.drawCentredString(CX, nom_y, nom_complet)
+
+    # Ligne soulignant le nom
+    longueur_nom = min(len(nom_complet) * 19, 400)
+    c.setStrokeColor(BLEU_MARINE)
+    c.setLineWidth(1.2)
+    c.line(CX - longueur_nom / 2, nom_y - 0.40 * cm,
+           CX + longueur_nom / 2, nom_y - 0.40 * cm)
+
+    # ══════════════════════════════════════════════════════════════
+    # "a complété avec succès"
+    # ══════════════════════════════════════════════════════════════
+    compl_y = nom_y - 1.30 * cm
+    c.setFillColor(GRIS_TEXTE)
+    c.setFont('Times-Italic', 13)
+    c.drawCentredString(CX, compl_y, 'a complété avec succès le cours dispensé par')
+
+    # ══════════════════════════════════════════════════════════════
+    # NOM DE L'INSTITUT (grand, bleu, calligraphique)
+    # ══════════════════════════════════════════════════════════════
+    inst_y = compl_y - 1.2 * cm
+    c.setFillColor(BLEU_MARINE)
+    c.setFont('Times-BoldItalic', 28)
+    c.drawCentredString(CX, inst_y, 'Numeria Institute')
+
+    # ══════════════════════════════════════════════════════════════
+    # NOM DU COURS
+    # ══════════════════════════════════════════════════════════════
+    cours_y = inst_y - 0.95 * cm
+    taille_cours = 20 if len(cours.titre) < 40 else 15
+    c.setFillColor(BLEU_MARINE)
+    c.setFont('Times-Bold', taille_cours)
+    c.drawCentredString(CX, cours_y, cours.titre)
+
+    # ══════════════════════════════════════════════════════════════
+    # DATE — style "le X mois YYYY"
+    # ══════════════════════════════════════════════════════════════
     mois_fr = {
-        1: 'janvier', 2: 'février',  3: 'mars',      4: 'avril',
-        5: 'mai',     6: 'juin',     7: 'juillet',   8: 'août',
+        1: 'janvier', 2: 'février',  3: 'mars',    4: 'avril',
+        5: 'mai',     6: 'juin',     7: 'juillet',  8: 'août',
         9: 'septembre', 10: 'octobre', 11: 'novembre', 12: 'décembre'
     }
-    date_str = f"Lomé, le {date_fin.day} {mois_fr[date_fin.month]} {date_fin.year}"
-    c.setFillColor(GRIS_TEXTE)
-    c.setFont('Helvetica', 10)
-    c.drawCentredString(CX, SIG_Y - 0.2*cm, date_str)
-
-    # ── SIGNATURE DROITE ──────────────────────────────────
-    # On réserve la droite pour la sig droite
-    # QR sera dans le coin bas-droit, donc on recule la sig droite
-    SIG_D_X1 = largeur - 13.5*cm
-    SIG_D_X2 = largeur - 4.5*cm   # on laisse 4.5cm pour le QR
-
-    c.setStrokeColor(BLEU_MARINE)
-    c.setLineWidth(0.8)
-    c.line(SIG_D_X1, SIG_Y, SIG_D_X2, SIG_Y)
-
+    date_str = f"le {date_fin.day} {mois_fr[date_fin.month]} {date_fin.year}"
+    date_y = cours_y - 0.85 * cm
     c.setFillColor(BLEU_MARINE)
-    c.setFont('Helvetica-Bold', 10)
-    c.drawRightString(SIG_D_X2, SIG_Y + 0.35*cm, 'Co-fondateur & Directeur technique')
+    c.setFont('Times-Bold', 13)
+    c.drawCentredString(CX, date_y, date_str)
 
-    c.setFillColor(GRIS_TEXTE)
-    c.setFont('Helvetica', 9)
-    c.drawRightString(SIG_D_X2, SIG_Y - 0.55*cm, 'Numeria Institute')
+    # ══════════════════════════════════════════════════════════════
+    # ZONE BAS : Médaillon (gauche) + Signature (centre-droit) + QR (droit)
+    # ══════════════════════════════════════════════════════════════
+    SIG_Y    = zone_bas + 2.4 * cm   # ligne de la signature
+    MEDAL_CX = MARGE_H + 2.2 * cm   # centre médaillon
 
-    # ── QR CODE — coin bas droit ──────────────────────────
+    # ── Médaillon doré ────────────────────────────────────────────
+    dessiner_medaillon_or(c, MEDAL_CX, SIG_Y - 0.1 * cm, rayon=1.1 * cm)
+
+    # ── Signature unique — centrée légèrement à droite ────────────
+    SIG_CX = CX + 2.5 * cm   # léger décalage droit pour équilibre visuel
+
+    # Nom du signataire
+    c.setFillColor(BLEU_MARINE)
+    c.setFont('Times-BoldItalic', 13)
+    c.drawCentredString(SIG_CX, SIG_Y + 0.45 * cm, 'Ounimborbitibou Djabon')
+
+    # Ligne de signature
+    sig_demi = 4.5 * cm
+    c.setStrokeColor(BLEU_MARINE)
+    c.setLineWidth(1)
+    c.line(SIG_CX - sig_demi, SIG_Y,
+           SIG_CX + sig_demi, SIG_Y)
+
+    # Titre du signataire
+    c.setFillColor(GRIS_CLAIR)
+    c.setFont('Times-Italic', 10)
+    c.drawCentredString(SIG_CX, SIG_Y - 0.50 * cm,
+                        'Co-fondateur & Directeur académique')
+    c.drawCentredString(SIG_CX, SIG_Y - 0.90 * cm,
+                        'Numeria Institute — Lomé, Togo')
+
+    # ── QR Code — coin bas droit ──────────────────────────────────
     if url_verification:
         qr_img    = generer_qr_code(url_verification)
-        qr_taille = 2.8 * cm
-        qr_x      = largeur - 0.6*cm - qr_taille - 0.4*cm
-        qr_y      = zone_bas + 0.2*cm
+        qr_taille = 2.4 * cm
+        qr_x      = largeur - MARGE_H - qr_taille - 0.2 * cm
+        qr_y      = zone_bas + 0.2 * cm
         c.drawImage(qr_img, qr_x, qr_y,
                     width=qr_taille, height=qr_taille)
-        c.setFillColor(GRIS_TEXTE)
-        c.setFont('Helvetica', 7.5)
-        c.drawCentredString(qr_x + qr_taille/2,
-                            qr_y - 0.35*cm,
+        c.setFillColor(GRIS_CLAIR)
+        c.setFont('Helvetica', 7)
+        c.drawCentredString(qr_x + qr_taille / 2,
+                            qr_y - 0.30 * cm,
                             'Vérifier ce certificat')
 
-    # ══════════════════════════════════════════════════════
-    # FOOTER
-    # ══════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
+    # PIED DE PAGE : référence centrée dans la zone basse
+    # ══════════════════════════════════════════════════════════════
     ref = f"Réf : NIM-CERT-{inscription.id:06d}-{date_fin.year}"
-    c.setFillColor(BLEU_CLAIR)
+    c.setFillColor(GRIS_CLAIR)
     c.setFont('Helvetica', 8)
-    c.drawCentredString(CX, FOOTER_H/2 + 0.2*cm, ref)
+    c.drawCentredString(CX, zone_bas + 0.55 * cm, ref)
 
     c.setFont('Helvetica', 7.5)
-    c.drawCentredString(CX, FOOTER_H/2 - 0.3*cm,
+    c.drawCentredString(CX, zone_bas + 0.15 * cm,
                         'Numeria Institute · Lomé, Togo · contact@numeriainstitute.com')
 
     c.save()
