@@ -210,3 +210,15 @@ def supprimer_compte(request):
             messages.error(request, "Mot de passe incorrect. Ton compte n'a pas été supprimé.")
 
     return render(request, 'comptes/supprimer_compte.html')
+
+
+from django.http import HttpResponse
+import os
+
+def debug_env(request):
+    url = os.environ.get('CLOUDINARY_URL', 'NON DÉFINIE')
+    if url != 'NON DÉFINIE':
+        affichage = url[:25] + '...' + url[-10:]
+    else:
+        affichage = 'NON DÉFINIE'
+    return HttpResponse(f"CLOUDINARY_URL = {affichage}")

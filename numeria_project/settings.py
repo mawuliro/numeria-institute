@@ -123,14 +123,14 @@ STATICFILES_DIRS = []
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# ── FICHIERS MÉDIAS (uploads utilisateurs) ───────────────────────────────────
-# En production : Cloudinary (stockage persistant, Railway est éphémère)
-# En développement : stockage local classique
+# ── FICHIERS MÉDIAS ──────────────────────────────────────────
+CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL', '') or config('CLOUDINARY_URL', default='')
 
 if CLOUDINARY_URL.strip():
     import cloudinary
     cloudinary.config(cloudinary_url=CLOUDINARY_URL)
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    CLOUDINARY_STORAGE = {'CLOUDINARY_URL': CLOUDINARY_URL}
 else:
     MEDIA_URL  = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
