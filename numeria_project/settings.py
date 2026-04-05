@@ -23,6 +23,8 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv(
 
 
 # ── APPLICATIONS ───────────────────────────────────────────────────────────
+CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -30,9 +32,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Médias cloud (Cloudinary) — actif seulement si CLOUDINARY_URL est défini
-    'cloudinary_storage',
-    'cloudinary',
     # Nos applications
     'pages',
     'cours',
@@ -40,6 +39,10 @@ INSTALLED_APPS = [
     'comptes',
     'paiements',
 ]
+
+# Cloudinary — ajouté seulement si la variable est définie
+if CLOUDINARY_URL:
+    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
