@@ -142,39 +142,74 @@ def _dessiner_festons(c, largeur, hauteur, ep):
         y += 2 * r + 0.05 * cm
 
 
-def dessiner_atome(c, cx, cy, rayon_orbite=28, rayon_noyau=7,
-                   couleur_orbite=None, couleur_noyau=None):
-    if couleur_orbite is None:
-        couleur_orbite = OR_NUMERIA
-    if couleur_noyau is None:
-        couleur_noyau = OR_NUMERIA
+def dessiner_logo_N(c, cx, cy, taille=40, couleur_trait=None, couleur_noeud=None, couleur_cercle=None):
+    """
+    Dessine le logo officiel Numeria Institute :
+    - Un grand 'N' formé de segments avec des nœuds (cercles) aux extrémités
+    - Un cercle englobant en gris clair
+    - Les nœuds centraux (milieu de la diagonale) en teal/vert
+    Fidèle au logo vectoriel officiel.
+    """
+    if couleur_trait is None:
+        couleur_trait = BLEU_MARINE
+    if couleur_noeud is None:
+        couleur_noeud = HexColor('#2DD4BF')   # teal du logo officiel
+    if couleur_cercle is None:
+        couleur_cercle = HexColor('#CCCCCC')  # gris clair du cercle
 
-    c.setFillColor(couleur_noyau)
-    c.circle(cx, cy, rayon_noyau, fill=1, stroke=0)
+    # ── Dimensions relatives ──────────────────────────────────────
+    r_cercle   = taille * 0.52          # rayon du cercle englobant
+    r_noeud    = taille * 0.085         # nœuds aux coins (ouverts = stroke only)
+    r_noeud_c  = taille * 0.075         # nœuds centraux (pleins, teal)
+    epaisseur  = taille * 0.055         # épaisseur des traits du N
 
-    c.setStrokeColor(couleur_orbite)
-    c.setLineWidth(1.5)
-    rp = rayon_orbite * 0.35
+    # ── Points du N (coordonnées relatives à cx, cy) ──────────────
+    # haut-gauche, bas-gauche, haut-droit, bas-droit
+    margeH = taille * 0.30
+    margeV = taille * 0.38
+    hg = (cx - margeH, cy + margeV)   # haut-gauche
+    bg = (cx - margeH, cy - margeV)   # bas-gauche
+    hd = (cx + margeH, cy + margeV)   # haut-droit
+    bd = (cx + margeH, cy - margeV)   # bas-droit
 
-    c.ellipse(cx - rayon_orbite, cy - rp,
-              cx + rayon_orbite, cy + rp, fill=0, stroke=1)
+    # Milieux de la diagonale (pour les nœuds teal)
+    mid1 = (cx - margeH * 0.15, cy + margeV * 0.15)   # proche haut-gauche
+    mid2 = (cx + margeH * 0.15, cy - margeV * 0.15)   # proche bas-droit
 
+    # ── 1. Cercle englobant ───────────────────────────────────────
     c.saveState()
-    c.translate(cx, cy)
-    c.rotate(60)
-    c.ellipse(-rayon_orbite, -rp, rayon_orbite, rp, fill=0, stroke=1)
+    c.setStrokeColor(couleur_cercle)
+    c.setLineWidth(epaisseur * 0.5)
+    c.circle(cx, cy, r_cercle, fill=0, stroke=1)
     c.restoreState()
 
+    # ── 2. Traits du N ────────────────────────────────────────────
     c.saveState()
-    c.translate(cx, cy)
-    c.rotate(120)
-    c.ellipse(-rayon_orbite, -rp, rayon_orbite, rp, fill=0, stroke=1)
+    c.setStrokeColor(couleur_trait)
+    c.setLineWidth(epaisseur)
+    c.setLineCap(1)   # round caps
+
+    # Jambe gauche (haut-gauche → bas-gauche)
+    c.line(hg[0], hg[1], bg[0], bg[1])
+    # Diagonale (haut-gauche → bas-droit)
+    c.line(hg[0], hg[1], bd[0], bd[1])
+    # Jambe droite (haut-droit → bas-droit)
+    c.line(hd[0], hd[1], bd[0], bd[1])
     c.restoreState()
 
-    c.setFillColor(OR_CLAIR)
-    c.circle(cx + rayon_orbite, cy, 3, fill=1, stroke=0)
-    c.circle(cx - rayon_orbite * 0.5,  cy + rp * 0.85, 3, fill=1, stroke=0)
-    c.circle(cx - rayon_orbite * 0.5,  cy - rp * 0.85, 3, fill=1, stroke=0)
+    # ── 3. Nœuds aux 4 coins — cercles ouverts (fond blanc) ───────
+    for (px, py) in [hg, bg, hd, bd]:
+        # fond blanc pour "trouer" le trait
+        c.setFillColor(FOND_PARCHEMIN)
+        c.setStrokeColor(couleur_trait)
+        c.setLineWidth(epaisseur * 0.7)
+        c.circle(px, py, r_noeud, fill=1, stroke=1)
+
+    # ── 4. Nœuds centraux — pleins, couleur teal ─────────────────
+    c.setFillColor(couleur_noeud)
+    c.setStrokeColor(couleur_noeud)
+    for (px, py) in [mid1, mid2]:
+        c.circle(px, py, r_noeud_c, fill=1, stroke=0)
 
 
 def dessiner_medaillon_or(c, cx, cy, rayon=1.2*cm):
@@ -256,10 +291,12 @@ def generer_certificat_pdf(inscription, url_verification=None):
     logo_y = zone_haut - 0.9 * cm
 
     atome_cx = MARGE_H + 0.9 * cm
-    atome_cy = logo_y - 0.1 * cm
-    dessiner_atome(c, atome_cx, atome_cy,
-                   rayon_orbite=20, rayon_noyau=5,
-                   couleur_orbite=BLEU_MARINE, couleur_noyau=BLEU_MARINE)
+    atome_cy = logo_y - 0.05 * cm
+    dessiner_logo_N(c, atome_cx, atome_cy,
+                    taille=34,
+                    couleur_trait=BLEU_MARINE,
+                    couleur_noeud=HexColor('#2DD4BF'),
+                    couleur_cercle=HexColor('#CCCCCC'))
 
     c.setFillColor(BLEU_MARINE)
     c.setFont('Helvetica-Bold', 13)
