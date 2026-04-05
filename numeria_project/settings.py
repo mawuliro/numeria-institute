@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Nos applications
+    'cloudinary_storage',    # ← Avant cloudinary
+    'cloudinary',            # ← Nouveau
     'pages',
     'cours',
     'blog',
@@ -41,8 +42,8 @@ INSTALLED_APPS = [
 ]
 
 # Cloudinary — ajouté seulement si la variable est définie
-if CLOUDINARY_URL:
-    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
+#if CLOUDINARY_URL:
+#    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
