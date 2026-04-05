@@ -33,16 +33,16 @@ def catalogue(request):
     cours_scolaires = Cours.objects.filter(est_publie=True, type_cours='scolaire').count()
 
     contexte = {
-        'cours':          tous_les_cours,
-        'cours_generaux': cours_generaux,
+        'cours':           tous_les_cours,
+        'cours_generaux':  cours_generaux,
         'cours_scolaires': cours_scolaires,
-        'type_actif':     type_cours,
-        'cycle_actif':    cycle,
-        'classe_active':  classe,
-        'matiere_active': matiere,
-        'cycles':         Cours.CYCLES,
-        'classes':        Cours.CLASSES,
-        'matieres':       Cours.MATIERES,
+        'type_actif':      type_cours,
+        'cycle_actif':     cycle,
+        'classe_active':   classe,
+        'matiere_active':  matiere,
+        'cycles':          Cours.CYCLES,
+        'classes':         Cours.CLASSES,
+        'matieres':        Cours.MATIERES,
     }
     return render(request, 'cours/catalogue.html', contexte)
 
@@ -51,11 +51,11 @@ def detail_cours(request, cours_id):
     """Page détail d'un cours avec ses leçons et exercices."""
     from .models import Exercice, TentativeExercice
 
-    cours = get_object_or_404(Cours, id=cours_id, est_publie=True)
+    cours  = get_object_or_404(Cours, id=cours_id, est_publie=True)
     lecons = cours.lecons.filter(est_publiee=True)
 
-    est_inscrit = False
-    inscription = None
+    est_inscrit          = False
+    inscription          = None
     lecons_terminees_ids = []
 
     if request.user.is_authenticated:
@@ -75,7 +75,7 @@ def detail_cours(request, cours_id):
 
     # Leçon active
     lecon_active_id = request.GET.get('lecon')
-    lecon_active = None
+    lecon_active    = None
     if lecon_active_id and est_inscrit:
         lecon_active = lecons.filter(id=lecon_active_id).first()
     if not lecon_active and lecons.exists():
@@ -83,7 +83,7 @@ def detail_cours(request, cours_id):
 
     # Leçon précédente et suivante
     lecon_precedente = None
-    lecon_suivante = None
+    lecon_suivante   = None
     if lecon_active:
         lecons_list = list(lecons)
         idx = next((i for i, l in enumerate(lecons_list) if l.id == lecon_active.id), None)
@@ -94,16 +94,15 @@ def detail_cours(request, cours_id):
                 lecon_suivante = lecons_list[idx + 1]
 
     # Exercices de la leçon active
-    exercices = []
-    exercices_reussis_ids = []
-    resultat_exercice = None
-    exercice_actif_id = None
-    reponse_choisie = None
+    exercices              = []
+    exercices_reussis_ids  = []
+    resultat_exercice      = None
+    exercice_actif_id      = None
+    reponse_choisie        = None
 
     if lecon_active and est_inscrit:
         exercices = lecon_active.exercices.filter(est_actif=True)
 
-        # IDs des exercices réussis par cet étudiant
         exercices_reussis_ids = list(
             TentativeExercice.objects.filter(
                 etudiant=request.user,
@@ -112,59 +111,58 @@ def detail_cours(request, cours_id):
             ).values_list('exercice_id', flat=True)
         )
 
-        # Résultat de la dernière soumission
         resultat_exercice = request.GET.get('resultat')
         exercice_actif_id = request.GET.get('exercice')
-        reponse_choisie = request.GET.get('choisie', '').upper()
+        reponse_choisie   = request.GET.get('choisie', '').upper()
 
         if exercice_actif_id:
             exercice_actif_id = int(exercice_actif_id)
 
-    total_lecons = lecons.count()
+    total_lecons           = lecons.count()
     lecons_terminees_count = len(lecons_terminees_ids)
 
     contexte = {
-        'cours': cours,
-        'lecons': lecons,
-        'lecon_active': lecon_active,
-        'lecon_precedente': lecon_precedente,
-        'lecon_suivante': lecon_suivante,
-        'est_inscrit': est_inscrit,
-        'inscription': inscription,
-        'lecons_terminees_ids': lecons_terminees_ids,
-        'total_lecons': total_lecons,
+        'cours':                  cours,
+        'lecons':                 lecons,
+        'lecon_active':           lecon_active,
+        'lecon_precedente':       lecon_precedente,
+        'lecon_suivante':         lecon_suivante,
+        'est_inscrit':            est_inscrit,
+        'inscription':            inscription,
+        'lecons_terminees_ids':   lecons_terminees_ids,
+        'total_lecons':           total_lecons,
         'lecons_terminees_count': lecons_terminees_count,
-        'exercices': exercices,
-        'exercices_reussis_ids': exercices_reussis_ids,
-        'resultat_exercice': resultat_exercice,
-        'exercice_actif_id': exercice_actif_id,
-        'reponse_choisie': reponse_choisie,
+        'exercices':              exercices,
+        'exercices_reussis_ids':  exercices_reussis_ids,
+        'resultat_exercice':      resultat_exercice,
+        'exercice_actif_id':      exercice_actif_id,
+        'reponse_choisie':        reponse_choisie,
     }
     return render(request, 'cours/detail.html', contexte)
+
 
 @login_required
 def inscrire_cours(request, cours_id):
     """S'inscrire à un cours — gratuit ou payant."""
     cours = get_object_or_404(Cours, id=cours_id, est_publie=True)
 
-    # Vérifier si déjà inscrit
     if InscriptionCours.objects.filter(etudiant=request.user, cours=cours).exists():
-        messages.info(request, f"Tu es déjà inscrit au cours '{cours.titre}' ! 📚")
+        messages.info(request, f"Tu es déjà inscrit au cours « {cours.titre} » ! 📚")
         return redirect('cours:detail', cours_id=cours_id)
 
     if cours.est_gratuit:
-        # Cours gratuit — inscription directe
         InscriptionCours.objects.create(
             etudiant=request.user,
             cours=cours,
             progression=0,
             est_termine=False
         )
-        messages.success(request, f"🎉 Bienvenue dans le cours '{cours.titre}' !")
+        messages.success(request, f"🎉 Bienvenue dans le cours « {cours.titre} » !")
         return redirect('cours:detail', cours_id=cours_id)
     else:
         # Cours payant — redirection vers la page de paiement
         return redirect('paiements:page_paiement', cours_id=cours_id)
+
 
 @login_required
 def se_desinscrire(request, cours_id):
@@ -209,13 +207,13 @@ def terminer_lecon(request, lecon_id):
     )
 
     if cree:
-        total_lecons      = cours.lecons.filter(est_publiee=True).count()
-        lecons_terminees  = ProgressionLecon.objects.filter(
+        total_lecons     = cours.lecons.filter(est_publiee=True).count()
+        lecons_terminees = ProgressionLecon.objects.filter(
             etudiant=request.user, lecon__cours=cours
         ).count()
 
         if total_lecons > 0:
-            nouveau_pourcentage  = int((lecons_terminees / total_lecons) * 100)
+            nouveau_pourcentage     = int((lecons_terminees / total_lecons) * 100)
             inscription.progression = nouveau_pourcentage
 
             if lecons_terminees >= total_lecons:
@@ -235,7 +233,6 @@ def terminer_lecon(request, lecon_id):
         messages.info(request, "Cette leçon était déjà marquée comme terminée.")
 
     # Rediriger vers la leçon suivante si elle existe
-    # CORRIGÉ : utiliser reverse() au lieu de f-string avec syntaxe template
     lecon_suivante = cours.lecons.filter(
         est_publiee=True, ordre__gt=lecon.ordre
     ).first()
@@ -280,10 +277,11 @@ def annuler_lecon(request, lecon_id):
     messages.info(request, "Leçon marquée comme non terminée.")
     return redirect('cours:detail', cours_id=cours.id)
 
+
 @login_required
 def soumettre_exercice(request, exercice_id):
     """
-    Traite la soumission d'une réponse à un exercice.
+    Traite la soumission d'une réponse à un exercice QCM.
     Vérifie si la réponse est correcte côté serveur.
     Le corrigé n'est JAMAIS envoyé si la réponse est fausse.
     """
@@ -293,8 +291,8 @@ def soumettre_exercice(request, exercice_id):
         return redirect('cours:catalogue')
 
     exercice = get_object_or_404(Exercice, id=exercice_id, est_actif=True)
-    lecon = exercice.lecon
-    cours = lecon.cours
+    lecon    = exercice.lecon
+    cours    = lecon.cours
 
     # Vérifier que l'étudiant est inscrit
     if not InscriptionCours.objects.filter(
@@ -309,9 +307,11 @@ def soumettre_exercice(request, exercice_id):
 
     if reponse_choisie not in ['A', 'B', 'C', 'D']:
         messages.error(request, "Réponse invalide.")
-        return redirect(f"{{% url 'cours:detail' cours.id %}}?lecon={lecon.id}")
+        # CORRIGÉ : reverse() au lieu de syntaxe template dans du Python
+        url_detail = reverse('cours:detail', kwargs={'cours_id': cours.id})
+        return redirect(f'{url_detail}?lecon={lecon.id}')
 
-    # Compter le nombre de tentatives précédentes
+    # Compter les tentatives précédentes
     nb_tentatives = TentativeExercice.objects.filter(
         etudiant=request.user,
         exercice=exercice
@@ -330,11 +330,13 @@ def soumettre_exercice(request, exercice_id):
     )
 
     # Rediriger vers la leçon avec le résultat dans l'URL
+    url_detail = reverse('cours:detail', kwargs={'cours_id': cours.id})
     if est_correcte:
         return redirect(
-            f"/cours/{cours.id}/?lecon={lecon.id}&exercice={exercice_id}&resultat=correct"
+            f'{url_detail}?lecon={lecon.id}&exercice={exercice_id}&resultat=correct'
         )
     else:
         return redirect(
-            f"/cours/{cours.id}/?lecon={lecon.id}&exercice={exercice_id}&resultat=incorrect&choisie={reponse_choisie}"
+            f'{url_detail}?lecon={lecon.id}&exercice={exercice_id}'
+            f'&resultat=incorrect&choisie={reponse_choisie}'
         )

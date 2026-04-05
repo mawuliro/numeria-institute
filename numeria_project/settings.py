@@ -2,9 +2,9 @@
 Django settings for Numeria Institute.
 
 Structure :
-- Les valeurs sensibles viennent du fichier .env
-- En développement : SQLite + DEBUG=True
-- En production : PostgreSQL + DEBUG=False
+- Les valeurs sensibles viennent du fichier .env (dev) ou variables Railway (prod)
+- En développement : SQLite + DEBUG=True + médias locaux
+- En production    : PostgreSQL + DEBUG=False + médias sur Cloudinary
 """
 
 from pathlib import Path
@@ -12,22 +12,17 @@ from decouple import config, Csv
 import dj_database_url
 import os
 
-# ── CHEMINS ────────────────────────────────────────────────────────
+# ── CHEMINS ────────────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# ── SÉCURITÉ ───────────────────────────────────────────────────────
-# Lire depuis .env — jamais en dur dans le code
-SECRET_KEY = config('SECRET_KEY')
-
-# True en développement, False en production
-DEBUG = config('DEBUG', default=False, cast=bool)
-
-# Hôtes autorisés — séparés par des virgules dans .env
+# ── SÉCURITÉ ───────────────────────────────────────────────────────────────
+SECRET_KEY   = config('SECRET_KEY')
+DEBUG        = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
 
 
-# ── APPLICATIONS ───────────────────────────────────────────────────
+# ── APPLICATIONS ───────────────────────────────────────────────────────────
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -35,6 +30,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Médias cloud (Cloudinary) — actif seulement si CLOUDINARY_URL est défini
+    'cloudinary_storage',
+    'cloudinary',
     # Nos applications
     'pages',
     'cours',
@@ -45,7 +43,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',   # statics servis par whitenoise
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -75,7 +73,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'numeria_project.wsgi.application'
 
 
-# ── BASE DE DONNÉES ────────────────────────────────────────────────
+# ── BASE DE DONNÉES ─────────────────────────────────────────────────────────
+# Railway injecte DATABASE_URL automatiquement en production
 DATABASE_URL = os.environ.get('DATABASE_URL') or config('DATABASE_URL', default='')
 
 if DATABASE_URL and not DATABASE_URL.startswith('sqlite'):
@@ -96,7 +95,7 @@ else:
     }
 
 
-# ── VALIDATION DES MOTS DE PASSE ──────────────────────────────────
+# ── VALIDATION DES MOTS DE PASSE ────────────────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -105,59 +104,68 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# ── INTERNATIONALISATION ───────────────────────────────────────────
+# ── INTERNATIONALISATION ─────────────────────────────────────────────────────
 LANGUAGE_CODE = 'fr-fr'
-TIME_ZONE = 'Africa/Abidjan'
-USE_I18N = True
-USE_TZ = True
+TIME_ZONE     = 'Africa/Abidjan'
+USE_I18N      = True
+USE_TZ        = True
 
 
-# ── FICHIERS STATIQUES ─────────────────────────────────────────────
-# ── FICHIERS STATIQUES ─────────────────────────────────────────────
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# ── FICHIERS STATIQUES (CSS, JS) ─────────────────────────────────────────────
+# Servis par WhiteNoise — pas de problème sur Railway
+STATIC_URL       = '/static/'
+STATIC_ROOT      = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = []
 
-# WhiteNoise — compression et cache des fichiers statiques
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# ── FICHIERS MÉDIAS (uploads) ──────────────────────────────────────
-MEDIA_URL = config('MEDIA_URL', default='/media/')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# ── FICHIERS MÉDIAS (uploads utilisateurs) ───────────────────────────────────
+# En production : Cloudinary (stockage persistant, Railway est éphémère)
+# En développement : stockage local classique
+CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
+
+if CLOUDINARY_URL:
+    # ── PRODUCTION : Cloudinary ──────────────────────────────────────────
+    # Cloudinary lit CLOUDINARY_URL automatiquement depuis l'environnement
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    MEDIA_URL = '/media/'     # Utilisé en fallback local uniquement
+else:
+    # ── DÉVELOPPEMENT : stockage local ───────────────────────────────────
+    MEDIA_URL  = config('MEDIA_URL', default='/media/')
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-# ── AUTHENTIFICATION ───────────────────────────────────────────────
-LOGIN_URL = '/comptes/connexion/'
-LOGIN_REDIRECT_URL = '/comptes/tableau-de-bord/'
-LOGOUT_REDIRECT_URL = '/'
+# ── AUTHENTIFICATION ─────────────────────────────────────────────────────────
+LOGIN_URL             = '/comptes/connexion/'
+LOGIN_REDIRECT_URL    = '/comptes/tableau-de-bord/'
+LOGOUT_REDIRECT_URL   = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# ── EMAIL ──────────────────────────────────────────────────────────
-EMAIL_BACKEND = config(
-    'EMAIL_BACKEND',
-    default='django.core.mail.backends.console.EmailBackend'
-)
-EMAIL_HOST = config('EMAIL_HOST', default='localhost')
-EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+# ── EMAIL ─────────────────────────────────────────────────────────────────────
+# En développement : affiche les emails dans le terminal
+# En production    : configurer EMAIL_HOST, etc. dans les variables Railway
+EMAIL_BACKEND     = config('EMAIL_BACKEND',
+                            default='django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST        = config('EMAIL_HOST',        default='smtp.gmail.com')
+EMAIL_PORT        = config('EMAIL_PORT',        default=587, cast=int)
+EMAIL_USE_TLS     = config('EMAIL_USE_TLS',     default=True, cast=bool)
+EMAIL_HOST_USER   = config('EMAIL_HOST_USER',   default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = 'Numeria Institute <contact@numeriainstitute.com>'
-CONTACT_EMAIL = config('CONTACT_EMAIL', default='contact@numeriainstitute.com')
+DEFAULT_FROM_EMAIL  = 'Numeria Institute <contact@numeriainstitute.com>'
+CONTACT_EMAIL       = config('CONTACT_EMAIL', default='contact@numeriainstitute.com')
 
 
-# ── SÉCURITÉ EN PRODUCTION ─────────────────────────────────────────
+# ── SÉCURITÉ EN PRODUCTION ───────────────────────────────────────────────────
 if not DEBUG:
     # Railway gère déjà HTTPS — on désactive la redirection forcée
     # pour éviter la boucle de redirections
     SECURE_SSL_REDIRECT = False
 
-    # Ces paramètres sont OK avec Railway
     SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE    = True
 
     # Faire confiance au proxy de Railway
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
