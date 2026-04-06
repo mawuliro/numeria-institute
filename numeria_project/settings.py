@@ -24,10 +24,6 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv(
 
 
 # ── CLOUDINARY — détection anticipée ──────────────────────────────────────
-# On parse ici pour savoir si Cloudinary est disponible AVANT INSTALLED_APPS.
-# decouple lit d'abord os.environ (Railway), puis le .env (dev local).
-# Format : cloudinary://API_KEY:API_SECRET@CLOUD_NAME
-
 _cloudinary_raw   = config('CLOUDINARY_URL', default='').strip()
 _cloudinary_match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', _cloudinary_raw) if _cloudinary_raw else None
 USE_CLOUDINARY    = bool(_cloudinary_match)
@@ -41,18 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',           # ← NOUVEAU : Doit être avant cloudinary_storage
+    'cloudinary_storage',   # ← NOUVEAU : Doit être avant staticfiles
     'pages',
     'cours',
     'blog',
     'comptes',
     'paiements',
 ]
-
-# cloudinary_storage doit être ajouté SEULEMENT si Cloudinary est configuré,
-# et doit apparaître AVANT staticfiles dans INSTALLED_APPS.
-if USE_CLOUDINARY:
-    INSTALLED_APPS.insert(5, 'cloudinary')           # avant staticfiles
-    INSTALLED_APPS.insert(5, 'cloudinary_storage')   # avant cloudinary
 
 
 # ── MIDDLEWARE ─────────────────────────────────────────────────────────────
@@ -132,39 +124,45 @@ STATICFILES_DIRS = []
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# ... (Ton code existant jusqu'ici est bon)
-
-# ── CLOUDINARY — Stockage des images en production ─────────────────
+# ── CLOUDINARY — Configuration complète ──────────────────────────────────────
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
-# CLOUDINARY_URL contient tout : cloudinary://key:secret@cloud_name
 CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
 
 if CLOUDINARY_URL:
-    # === AJOUTE CES 4 LIGNES CI-DESSOUS ===
-    # On extrait le cloud_name pour le passer à la configuration SDK
-    import re
-    _match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', CLOUDINARY_URL)
-    if _match:
-        api_key, api_secret, cloud_name = _match.groups()
+    # Parse l'URL Cloudinary
+    match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', CLOUDINARY_URL)
+    if match:
+        api_key, api_secret, cloud_name = match.groups()
         cloudinary.config(
             cloud_name=cloud_name,
             api_key=api_key,
             api_secret=api_secret,
             secure=True  # Important pour HTTPS
         )
-    # ======================================
-    
-    # Ton code existant pour CLOUDINARY_STORAGE
-    CLOUDINARY_STORAGE = {'CLOUDINARY_URL': CLOUDINARY_URL}
+        
+        # Configuration pour le stockage
+        CLOUDINARY_STORAGE = {
+            'CLOUDINARY_URL': CLOUDINARY_URL,
+            'CLOUDINARY_API_KEY': api_key,
+            'CLOUDINARY_API_SECRET': api_secret,
+            'CLOUDINARY_CLOUD_NAME': cloud_name,
+        }
 
-# Utiliser Cloudinary pour les fichiers média en production
-if not DEBUG:
+# settings.py - Ajoute ceci
+
+# Cloudinary Storage
+if not DEBUG and USE_CLOUDINARY:
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+else:
+    # En développement, utilise le stockage local
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    MEDIA_ROOT = BASE_DIR / 'media'
+    MEDIA_URL = '/media/'
 
-# ... (Le reste de ton fichier reste identique)
+
 # ── AUTHENTIFICATION ─────────────────────────────────────────────────────────
 LOGIN_URL           = '/comptes/connexion/'
 LOGIN_REDIRECT_URL  = '/comptes/tableau-de-bord/'

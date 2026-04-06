@@ -6,7 +6,7 @@ from .models import Profil
 # Liste complète des pays francophones et africains en priorité
 PAYS_CHOICES = [
     ('', '🌍 Sélectionner votre pays'),
-    # ── Afrique de l\'Ouest (priorité) ──────────────────────────────
+    # ── Afrique de l'Ouest (priorité) ──────────────────────────────
     ('Togo', '🇹🇬 Togo'),
     ('Bénin', '🇧🇯 Bénin'),
     ('Ghana', '🇬🇭 Ghana'),
@@ -34,7 +34,7 @@ PAYS_CHOICES = [
     ('São Tomé-et-Príncipe', '🇸🇹 São Tomé-et-Príncipe'),
     ('Burundi', '🇧🇮 Burundi'),
     ('Rwanda', '🇷🇼 Rwanda'),
-    # ── Afrique de l\'Est ───────────────────────────────────────────
+    # ── Afrique de l'Est ───────────────────────────────────────────
     ('Éthiopie', '🇪🇹 Éthiopie'),
     ('Kenya', '🇰🇪 Kenya'),
     ('Tanzanie', '🇹🇿 Tanzanie'),
@@ -188,15 +188,17 @@ class FormulaireProfil(forms.ModelForm):
             'photo', 'bio', 'pays', 'ville',
             'niveau_etudes', 'domaine', 'linkedin', 'github',
         ]
+        # MODIFIÉ : ClearableFileInput pour Cloudinary
         widgets = {
-            'photo': forms.FileInput(attrs={
+            'photo': forms.ClearableFileInput(attrs={
                 'accept': 'image/*',
-                'class': 'hidden',
+                'class': 'file-input',
                 'id': 'input-photo'
             }),
             'bio': forms.Textarea(attrs={
                 'placeholder': 'Parlez-nous de vous...',
-                'rows': 4
+                'rows': 4,
+                'class': 'textarea-bio'
             }),
             'ville': forms.TextInput(attrs={'placeholder': 'Ex: Lomé'}),
             'domaine': forms.TextInput(attrs={'placeholder': 'Ex: Mathématiques, Physique...'}),

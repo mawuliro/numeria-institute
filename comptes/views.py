@@ -114,9 +114,10 @@ def modifier_profil(request):
     profil, cree = Profil.objects.get_or_create(utilisateur=request.user)
 
     if request.method == 'POST':
+        # request.FILES est crucial pour Cloudinary
         formulaire = FormulaireProfil(
             request.POST,
-            request.FILES,
+            request.FILES,  # ← Important pour l'upload Cloudinary
             instance=profil,
             user=request.user
         )
@@ -125,6 +126,9 @@ def modifier_profil(request):
             messages.success(request, "Ton profil a été mis à jour ! ✅")
             return redirect('comptes:profil')
         else:
+            # Debug en cas d'erreur
+            if request.user.is_superuser:
+                print(formulaire.errors)
             messages.error(request, "Veuillez corriger les erreurs.")
     else:
         formulaire = FormulaireProfil(instance=profil, user=request.user)
@@ -139,27 +143,23 @@ def modifier_profil(request):
 def supprimer_photo(request):
     """
     Supprimer la photo de profil.
-    ⚠️  Railway est éphémère + on utilise Cloudinary :
-        - NE PAS utiliser profil.photo.path (n'existe pas sur Cloudinary)
-        - NE PAS utiliser os.path.isfile / os.remove
-        - Utiliser l'API Cloudinary pour supprimer le fichier distant,
-          puis vider le champ en base de données.
+    Version Cloudinary : suppression via l'API.
     """
     if request.method == 'POST':
         profil, _ = Profil.objects.get_or_create(utilisateur=request.user)
 
         if profil.photo:
-            # ── Suppression du fichier sur Cloudinary ──────────────
+            # Suppression du fichier sur Cloudinary
             try:
                 import cloudinary.uploader
-                # public_id = identifiant Cloudinary du fichier
-                # (ex: "photos_profil/monuser/photo")
-                cloudinary.uploader.destroy(profil.photo.public_id)
-            except Exception:
-                # Si Cloudinary n'est pas configuré en dev, on ignore
-                pass
+                # public_id est automatiquement géré par CloudinaryField
+                if hasattr(profil.photo, 'public_id'):
+                    cloudinary.uploader.destroy(profil.photo.public_id)
+            except Exception as e:
+                # En développement, on ignore les erreurs Cloudinary
+                print(f"Erreur suppression Cloudinary: {e}")
 
-            # ── Vider le champ en base de données ──────────────────
+            # Vider le champ en base de données
             profil.photo = None
             profil.save()
             messages.success(request, "Ta photo de profil a été supprimée. ✅")
@@ -210,4 +210,3 @@ def supprimer_compte(request):
             messages.error(request, "Mot de passe incorrect. Ton compte n'a pas été supprimé.")
 
     return render(request, 'comptes/supprimer_compte.html')
-

@@ -1,17 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-
-def chemin_photo_profil(instance, filename):
-    """
-    Définit le chemin de stockage de la photo.
-    La photo sera stockée dans : media/photos_profil/username/photo.jpg
-    Cela évite les conflits entre utilisateurs.
-    """
-    # On récupère l'extension du fichier original
-    extension = filename.split('.')[-1]
-    # On crée un nom de fichier propre
-    return f'photos_profil/{instance.utilisateur.username}/photo.{extension}'
+from cloudinary.models import CloudinaryField
 
 
 class Profil(models.Model):
@@ -24,14 +13,12 @@ class Profil(models.Model):
     )
 
     # --- PHOTO DE PROFIL ---
-    # ImageField stocke le fichier et sauvegarde le chemin en base de données
-    # blank=True, null=True → la photo est optionnelle
-    # upload_to → utilise notre fonction pour définir le chemin
-    photo = models.ImageField(
-        upload_to=chemin_photo_profil,
+    # CORRIGÉ : CloudinaryField avec les bons paramètres
+    photo = CloudinaryField(
+        'photo',  # Le premier argument est le nom du champ
         blank=True,
         null=True,
-        verbose_name="Photo de profil"
+        folder="photos_profil/"  # Optionnel : organise dans un dossier
     )
 
     # --- INFORMATIONS PERSONNELLES ---
@@ -74,7 +61,6 @@ class Profil(models.Model):
     def get_photo_url(self):
         """
         Retourne l'URL de la photo ou None si pas de photo.
-        On utilisera cette méthode dans les templates.
         """
         if self.photo:
             return self.photo.url
