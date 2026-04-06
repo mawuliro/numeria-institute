@@ -115,6 +115,18 @@
         .nav-pill.actif::after { transform: scaleX(1); }
         /* Legacy compat */
         .nav-lien-actif { color: #2DD4BF !important; border-bottom: 2px solid #2DD4BF; padding-bottom: 3px; }
+        
+        /* Animation pour le bouton flottant */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .bouton-analytics {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .bouton-analytics:hover {
+            animation: none;
+        }
     </style>
 
 </head>
@@ -154,6 +166,12 @@
                     <a href="#" class="nav-pill">Communauté</a>
                     <a href="{% url 'a_propos' %}" class="nav-pill {% if '/a-propos' in request.path %}actif{% endif %}">À propos</a>
                     <a href="{% url 'contact' %}" class="nav-pill {% if '/contact' in request.path %}actif{% endif %}">Contact</a>
+                    <!-- 🔥 LIEN ANALYTICS POUR ADMIN (DESKTOP) -->
+                    {% if user.is_authenticated and user.is_staff %}
+                    <a href="{% url 'analytics:dashboard' %}" class="nav-pill {% if '/analytics' in request.path %}actif{% endif %} flex items-center gap-1">
+                        📊 Analytics
+                    </a>
+                    {% endif %}
                 </nav>
 
                 <!-- BOUTONS + MODE SOMBRE + HAMBURGER -->
@@ -212,6 +230,12 @@
                 <a href="#" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors">Communauté</a>
                 <a href="{% url 'a_propos' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/a-propos' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">À propos</a>
                 <a href="{% url 'contact' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/contact' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Contact</a>
+                <!-- 🔥 LIEN ANALYTICS POUR ADMIN (MOBILE) -->
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'analytics:dashboard' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/analytics' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %} flex items-center gap-2">
+                    📊 Analytics
+                </a>
+                {% endif %}
                 <div class="border-t border-white/10 my-2"></div>
                 {% if user.is_authenticated %}
                     <a href="{% url 'comptes:tableau_de_bord' %}" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-numeria-teal hover:bg-white/10 transition-colors">🎓 Tableau de bord</a>
@@ -302,6 +326,18 @@
             </div>
         </div>
     </footer>
+
+    <!-- ===== BOUTON FLOTTANT ANALYTICS (seulement pour admins) ===== -->
+    {% if user.is_authenticated and user.is_staff %}
+    <a href="{% url 'analytics:dashboard' %}" 
+       class="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-numeria-bleu to-numeria-teal text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 group bouton-analytics"
+       aria-label="Analytics">
+        <span class="text-xl group-hover:rotate-12 transition-transform duration-300">📊</span>
+        <span class="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            📈 Analytics
+        </span>
+    </a>
+    {% endif %}
 
     <!-- ===== JS ===== -->
     <script>

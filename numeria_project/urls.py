@@ -6,6 +6,7 @@ from pages import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('analytics/', include('analytics.urls')),
     path('', views.accueil, name='accueil'),
     path('a-propos/', views.a_propos, name='a_propos'),
     path('contact/', views.contact, name='contact'),
@@ -13,7 +14,6 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('comptes/', include('comptes.urls')),
     path('paiements/', include('paiements.urls')),
-    path('admin/analytics/', include('analytics.urls')),
 ]
 
 if settings.DEBUG:

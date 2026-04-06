@@ -1,13 +1,13 @@
 # analytics/views.py
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
-from django.db.models import Count, Sum, Q, Avg
-from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
+from django.db.models import Count, Sum, Avg
+from django.db.models.functions import TruncDay
 from django.utils import timezone
 from datetime import timedelta
 from cours.models import InscriptionCours, Cours
 from paiements.models import Paiement
-from comptes.models import User
+from django.contrib.auth.models import User
 from blog.models import Article
 import json
 
@@ -52,17 +52,17 @@ def dashboard(request):
     }
     
     # ============================================================
-    # 3. REVENUS (paiements réussis)
+    # 3. REVENUS (paiements réussis) - CORRIGÉ : date_creation au lieu de date_paiement
     # ============================================================
     
     paiements = Paiement.objects.filter(
         statut='réussi',
-        date_paiement__date__gte=last_30_days
+        date_creation__date__gte=last_30_days  # ← CORRIGÉ : date_creation
     )
     
     revenus_par_jour = (
         paiements
-        .annotate(jour=TruncDay('date_paiement'))
+        .annotate(jour=TruncDay('date_creation'))  # ← CORRIGÉ : date_creation
         .values('jour')
         .annotate(total=Sum('montant'))
         .order_by('jour')
@@ -124,8 +124,8 @@ def dashboard(request):
         'doctorat': 0, 'professionnel': 0, 'autre': 0
     }
     
-    for profil in User.objects.filter(profil__isnull=False):
-        niveau = profil.profil.niveau_etudes
+    for user in User.objects.filter(profil__isnull=False):
+        niveau = user.profil.niveau_etudes
         if niveau in niveaux_etudes:
             niveaux_etudes[niveau] += 1
     
