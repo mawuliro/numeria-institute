@@ -3,101 +3,115 @@
 {% block contenu %}
 
 <!-- EN-TÊTE -->
-<section class="bg-numeria-bleu text-white w-full">
-    <div class="w-full px-4 sm:px-8 lg:px-16 py-12">
-        <h1 class="text-3xl sm:text-4xl font-bold mb-3">Nos cours</h1>
-        <p class="text-blue-200 text-lg">
-            {{ cours|length }} cours disponible{{ cours|length|pluralize }}
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <svg width="100%" height="100%" style="opacity:0.05;" xmlns="http://www.w3.org/2000/svg">
+            <defs><pattern id="dots-cat" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#dots-cat)"/>
+        </svg>
+        <div style="position:absolute;top:-80px;right:-60px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.1) 0%,transparent 70%);"></div>
+    </div>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-14 relative">
+        <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-5 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
+            <span class="w-1.5 h-1.5 bg-numeria-teal rounded-full"></span>
+            Catalogue
+        </div>
+        <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl lg:text-5xl text-white mb-3">
+            Tous nos cours
+        </h1>
+        <p class="text-blue-200 text-lg mb-8">
+            <span class="text-numeria-teal font-bold">{{ cours|length }}</span>
+            cours disponible{{ cours|length|pluralize }} · Science, IA & Scolaire
         </p>
 
-        <!-- Onglets Général / Scolaire -->
-        <div class="flex gap-3 mt-6 flex-wrap">
+        <!-- Onglets Tous / Général / Scolaire -->
+        <div class="flex gap-2 flex-wrap">
             <a href="{% url 'cours:catalogue' %}"
-               class="px-5 py-2 rounded-full font-semibold text-sm transition-colors
-               {% if not type_actif %}bg-numeria-or text-numeria-bleu{% else %}bg-blue-800 text-blue-200 hover:bg-blue-700{% endif %}">
+               style="font-family:'Outfit',sans-serif;font-weight:600;"
+               class="px-5 py-2 rounded-full text-sm transition-all {% if not type_actif %}bg-numeria-teal text-numeria-bleu shadow-md{% else %}bg-white/10 text-blue-200 hover:bg-white/20{% endif %}">
                 Tous ({{ cours_generaux|add:cours_scolaires }})
             </a>
             <a href="?type=general"
-               class="px-5 py-2 rounded-full font-semibold text-sm transition-colors
-               {% if type_actif == 'general' %}bg-numeria-or text-numeria-bleu{% else %}bg-blue-800 text-blue-200 hover:bg-blue-700{% endif %}">
-                🎓 Cours généraux ({{ cours_generaux }})
+               style="font-family:'Outfit',sans-serif;font-weight:600;"
+               class="px-5 py-2 rounded-full text-sm transition-all {% if type_actif == 'general' %}bg-numeria-teal text-numeria-bleu shadow-md{% else %}bg-white/10 text-blue-200 hover:bg-white/20{% endif %}">
+                🎓 Général ({{ cours_generaux }})
             </a>
             <a href="?type=scolaire"
-               class="px-5 py-2 rounded-full font-semibold text-sm transition-colors
-               {% if type_actif == 'scolaire' %}bg-numeria-or text-numeria-bleu{% else %}bg-blue-800 text-blue-200 hover:bg-blue-700{% endif %}">
-                🏫 Cours scolaires ({{ cours_scolaires }})
+               style="font-family:'Outfit',sans-serif;font-weight:600;"
+               class="px-5 py-2 rounded-full text-sm transition-all {% if type_actif == 'scolaire' %}bg-numeria-teal text-numeria-bleu shadow-md{% else %}bg-white/10 text-blue-200 hover:bg-white/20{% endif %}">
+                🏫 Scolaire ({{ cours_scolaires }})
             </a>
         </div>
     </div>
 </section>
 
-<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
+<section class="w-full py-10 bg-numeria-blanc dark:bg-gray-900">
     <div class="w-full px-4 sm:px-8 lg:px-16">
         <div class="flex flex-col lg:flex-row gap-8">
 
-            <!-- SIDEBAR FILTRES -->
-            <div class="lg:w-64 flex-shrink-0">
-                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 sticky top-24">
+            <!-- ── SIDEBAR FILTRES ── -->
+            <div class="lg:w-60 flex-shrink-0">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 sticky top-24 shadow-sm">
 
-                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-4 flex items-center gap-2">
-                        🔍 Filtres
+                    <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-sm text-numeria-bleu dark:text-white mb-4 flex items-center gap-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                        Filtres
                     </h3>
 
-                    <!-- Filtre par cycle (scolaire) -->
                     {% if type_actif == 'scolaire' or not type_actif %}
                     <div class="mb-5">
-                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+                        <p style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2.5">
                             Cycle scolaire
                         </p>
                         <div class="flex flex-col gap-1">
+                            {% for code, label, url in forloop.parentloop.0|default:"" %}{% endfor %}
                             <a href="?type=scolaire"
-                               class="text-sm py-1.5 px-3 rounded-lg transition-colors
-                               {% if not cycle_actif and type_actif == 'scolaire' %}bg-numeria-or text-numeria-bleu font-bold{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                               class="text-sm py-2 px-3 rounded-xl transition-colors font-medium
+                               {% if not cycle_actif and type_actif == 'scolaire' %}bg-numeria-teal/15 text-numeria-teal{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
                                 Tous les cycles
                             </a>
                             <a href="?type=scolaire&cycle=primaire"
-                               class="text-sm py-1.5 px-3 rounded-lg transition-colors
-                               {% if cycle_actif == 'primaire' %}bg-numeria-or text-numeria-bleu font-bold{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                               class="text-sm py-2 px-3 rounded-xl transition-colors
+                               {% if cycle_actif == 'primaire' %}bg-numeria-teal/15 text-numeria-teal font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
                                 🏫 Primaire
                             </a>
                             <a href="?type=scolaire&cycle=college"
-                               class="text-sm py-1.5 px-3 rounded-lg transition-colors
-                               {% if cycle_actif == 'college' %}bg-numeria-or text-numeria-bleu font-bold{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                               class="text-sm py-2 px-3 rounded-xl transition-colors
+                               {% if cycle_actif == 'college' %}bg-numeria-teal/15 text-numeria-teal font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
                                 🏫 Collège
                             </a>
                             <a href="?type=scolaire&cycle=lycee"
-                               class="text-sm py-1.5 px-3 rounded-lg transition-colors
-                               {% if cycle_actif == 'lycee' %}bg-numeria-or text-numeria-bleu font-bold{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                               class="text-sm py-2 px-3 rounded-xl transition-colors
+                               {% if cycle_actif == 'lycee' %}bg-numeria-teal/15 text-numeria-teal font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
                                 🎓 Lycée
                             </a>
                         </div>
                     </div>
                     {% endif %}
 
-                    <!-- Filtre par classe -->
                     {% if cycle_actif %}
-                    <div class="mb-5">
-                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+                    <div class="mb-4">
+                        <p style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2.5">
                             Classe
                         </p>
                         <div class="flex flex-col gap-1">
                             {% for code, label in classes %}
                                 {% if cycle_actif == 'primaire' and code in 'CP,CE1,CE2,CM1,CM2' %}
                                 <a href="?type=scolaire&cycle={{ cycle_actif }}&classe={{ code }}"
-                                   class="text-sm py-1.5 px-3 rounded-lg transition-colors
-                                   {% if classe_active == code %}bg-numeria-bleu text-white font-bold{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                                   class="text-sm py-1.5 px-3 rounded-xl transition-colors
+                                   {% if classe_active == code %}bg-numeria-bleu text-white font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
                                     {{ label }}
                                 </a>
                                 {% elif cycle_actif == 'college' and code in '6eme,5eme,4eme,3eme' %}
                                 <a href="?type=scolaire&cycle={{ cycle_actif }}&classe={{ code }}"
-                                   class="text-sm py-1.5 px-3 rounded-lg transition-colors
-                                   {% if classe_active == code %}bg-numeria-bleu text-white font-bold{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                                   class="text-sm py-1.5 px-3 rounded-xl transition-colors
+                                   {% if classe_active == code %}bg-numeria-bleu text-white font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
                                     {{ label }}
                                 </a>
                                 {% elif cycle_actif == 'lycee' and code in '2nde,1ere_A,1ere_C,1ere_D,1ere_E,1ere_F,1ere_G,Tle_A,Tle_C,Tle_D,Tle_E,Tle_F,Tle_G' %}
                                 <a href="?type=scolaire&cycle={{ cycle_actif }}&classe={{ code }}"
-                                   class="text-sm py-1.5 px-3 rounded-lg transition-colors
-                                   {% if classe_active == code %}bg-numeria-bleu text-white font-bold{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                                   class="text-sm py-1.5 px-3 rounded-xl transition-colors
+                                   {% if classe_active == code %}bg-numeria-bleu text-white font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
                                     {{ label }}
                                 </a>
                                 {% endif %}
@@ -106,65 +120,55 @@
                     </div>
                     {% endif %}
 
-                    <!-- Réinitialiser filtres -->
                     <a href="{% url 'cours:catalogue' %}"
-                       class="block text-center text-xs text-gray-400 hover:text-numeria-or transition-colors mt-2">
-                        Réinitialiser les filtres
+                       class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-numeria-teal transition-colors mt-3">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.84"/></svg>
+                        Réinitialiser
                     </a>
                 </div>
             </div>
 
-            <!-- GRILLE DE COURS -->
+            <!-- ── GRILLE DE COURS ── -->
             <div class="flex-1 min-w-0">
-
                 {% if cours %}
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                     {% for un_cours in cours %}
                     <a href="{% url 'cours:detail' un_cours.id %}"
-                       class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                       class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col">
 
-                        <!-- En-tête colorée -->
-                        <div class="bg-numeria-bleu px-5 py-4">
-                            <!-- Badge type -->
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-numeria-or text-xs font-bold tracking-widest uppercase">
+                        <!-- En-tête -->
+                        <div class="bg-numeria-bleu px-5 py-5 relative overflow-hidden flex-shrink-0">
+                            <div style="position:absolute;top:-16px;right:-16px;width:70px;height:70px;border-radius:50%;background:rgba(45,212,191,0.1);"></div>
+                            <div class="flex items-start justify-between mb-2.5">
+                                <span style="font-family:'Outfit',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;" class="text-numeria-teal">
                                     {{ un_cours.get_matiere_display }}
                                 </span>
                                 {% if un_cours.type_cours == 'scolaire' and un_cours.classe %}
-                                <span class="bg-blue-700 text-blue-200 text-xs font-bold px-2 py-0.5 rounded-full">
+                                <span class="bg-white/15 text-blue-100 text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0 ml-2">
                                     {{ un_cours.get_classe_display }}
                                 </span>
                                 {% endif %}
                             </div>
-                            <h3 class="text-white font-bold text-base leading-snug group-hover:text-numeria-or transition-colors">
+                            <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-white text-base leading-snug group-hover:text-numeria-teal transition-colors">
                                 {{ un_cours.titre }}
                             </h3>
                         </div>
 
                         <!-- Corps -->
-                        <div class="p-5">
-                            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-2">
+                        <div class="p-5 flex flex-col flex-1">
+                            <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4 flex-1 line-clamp-2">
                                 {{ un_cours.resume }}
                             </p>
-
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-gray-400 dark:text-gray-500 text-xs">
-                                        📚 {{ un_cours.nombre_lecons }} leçons
-                                    </span>
-                                    <span class="text-gray-300 dark:text-gray-600">·</span>
-                                    <span class="text-gray-400 dark:text-gray-500 text-xs">
-                                        {{ un_cours.get_niveau_display }}
-                                    </span>
+                            <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500">
+                                    <span>📚 {{ un_cours.nombre_lecons }} leçons</span>
+                                    <span>·</span>
+                                    <span>{{ un_cours.get_niveau_display }}</span>
                                 </div>
                                 {% if un_cours.est_gratuit %}
-                                    <span class="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 text-xs font-bold px-3 py-1 rounded-full">
-                                        Gratuit
-                                    </span>
+                                    <span class="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full">Gratuit</span>
                                 {% else %}
-                                    <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full">
-                                        {{ un_cours.prix }} FCFA
-                                    </span>
+                                    <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-3 py-1 rounded-full">{{ un_cours.prix }} FCFA</span>
                                 {% endif %}
                             </div>
                         </div>
@@ -174,21 +178,19 @@
                 </div>
 
                 {% else %}
-                <div class="text-center py-20">
-                    <div class="text-6xl mb-4">📚</div>
-                    <h3 class="text-gray-700 dark:text-gray-200 font-bold text-xl mb-2">
-                        Aucun cours trouvé
-                    </h3>
-                    <p class="text-gray-400 dark:text-gray-500 mb-6">
-                        Essaie d'autres filtres ou reviens bientôt !
-                    </p>
+                <div class="text-center py-24">
+                    <div class="w-20 h-20 bg-numeria-bleu/8 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1A3C6E" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    </div>
+                    <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-gray-700 dark:text-gray-200 text-xl mb-2">Aucun cours trouvé</h3>
+                    <p class="text-gray-400 dark:text-gray-500 mb-6">Essaie d'autres filtres ou reviens bientôt !</p>
                     <a href="{% url 'cours:catalogue' %}"
-                       class="inline-block bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
+                       style="font-family:'Outfit',sans-serif;font-weight:700;"
+                       class="inline-block bg-numeria-teal text-numeria-bleu px-8 py-3 rounded-xl hover:bg-teal-300 transition-colors">
                         Voir tous les cours
                     </a>
                 </div>
                 {% endif %}
-
             </div>
         </div>
     </div>

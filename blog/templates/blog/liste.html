@@ -1,42 +1,66 @@
 {% extends 'base.html' %}
-
 {% block titre %}Blog — Numeria Institute{% endblock %}
-
 {% block contenu %}
 
-<section class="bg-numeria-bleu text-white w-full">
-    <div class="w-full px-4 sm:px-8 lg:px-16 py-12">
-        <h1 class="text-3xl sm:text-4xl font-bold mb-3">Blog scientifique</h1>
+<!-- EN-TÊTE -->
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <svg width="100%" height="100%" style="opacity:0.05;" xmlns="http://www.w3.org/2000/svg">
+            <defs><pattern id="dots-blog" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#dots-blog)"/>
+        </svg>
+        <div style="position:absolute;bottom:-60px;right:-40px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,32,0.08) 0%,transparent 70%);"></div>
+    </div>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-14 relative">
+        <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-5 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
+            <span class="w-1.5 h-1.5 bg-numeria-teal rounded-full"></span>
+            Blog scientifique
+        </div>
+        <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl lg:text-5xl text-white mb-3">
+            Actualités & Savoirs
+        </h1>
         <p class="text-blue-200 text-lg">
-            {{ articles|length }} article{{ articles|length|pluralize }} disponible{{ articles|length|pluralize }}
+            <span class="text-numeria-teal font-bold">{{ articles|length }}</span>
+            article{{ articles|length|pluralize }} · Science, IA & Afrique
         </p>
     </div>
 </section>
 
-<section class="w-full py-16 bg-numeria-blanc dark:bg-gray-900">
+<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
     <div class="w-full px-4 sm:px-8 lg:px-16">
-        <div class="flex flex-col lg:flex-row gap-12">
+        <div class="flex flex-col lg:flex-row gap-10">
 
-            <!-- LISTE DES ARTICLES -->
-            <div class="flex-1">
+            <!-- ARTICLES -->
+            <div class="flex-1 min-w-0">
                 {% if articles %}
-                <div class="flex flex-col gap-8">
+                <div class="flex flex-col gap-6">
                     {% for article in articles %}
-                    <article class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                        <div class="flex flex-col md:flex-row">
+                    <article class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group">
+                        <div class="flex flex-col sm:flex-row">
 
                             {% if article.image_couverture %}
-                            <div class="md:w-64 flex-shrink-0">
+                            <div class="sm:w-56 flex-shrink-0">
                                 <img src="{{ article.image_couverture }}" alt="{{ article.titre }}"
-                                     class="w-full h-48 md:h-full object-cover">
+                                     class="w-full h-44 sm:h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            {% else %}
+                            <!-- Placeholder image -->
+                            <div class="sm:w-56 flex-shrink-0 bg-numeria-bleu flex items-center justify-center h-44 sm:h-auto">
+                                <svg width="40" height="40" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.4;">
+                                    <line x1="13" y1="10" x2="13" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                                    <line x1="13" y1="10" x2="31" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                                    <line x1="31" y1="10" x2="31" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                                    <circle cx="18.5" cy="18" r="3" fill="#2DD4BF"/>
+                                    <circle cx="25.5" cy="26" r="3" fill="#2DD4BF"/>
+                                </svg>
                             </div>
                             {% endif %}
 
                             <div class="p-6 flex flex-col justify-between flex-1">
                                 <div>
-                                    <div class="flex items-center gap-3 mb-3">
+                                    <div class="flex flex-wrap items-center gap-2 mb-3">
                                         {% if article.categorie %}
-                                        <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full">
+                                        <span style="font-family:'Outfit',sans-serif;font-weight:700;" class="bg-numeria-teal/15 text-numeria-teal text-xs px-3 py-1 rounded-full">
                                             {{ article.categorie.nom }}
                                         </span>
                                         {% endif %}
@@ -44,33 +68,30 @@
                                             {{ article.date_creation|date:"d F Y" }}
                                         </span>
                                     </div>
-                                    <h2 class="text-xl font-bold text-numeria-bleu dark:text-numeria-or mb-2">
-                                        <a href="{% url 'blog:detail' article.slug %}"
-                                           class="hover:text-numeria-or dark:hover:text-yellow-300 transition-colors">
-                                            {{ article.titre }}
-                                        </a>
+                                    <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-lg text-numeria-bleu dark:text-white mb-2 group-hover:text-numeria-teal transition-colors">
+                                        <a href="{% url 'blog:detail' article.slug %}">{{ article.titre }}</a>
                                     </h2>
-                                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed line-clamp-2">
                                         {{ article.resume }}
                                     </p>
                                 </div>
 
-                                <div class="flex items-center justify-between">
+                                <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 bg-numeria-bleu rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                        <div class="w-7 h-7 bg-numeria-bleu rounded-full flex items-center justify-center text-numeria-teal font-black text-xs" style="font-family:'Outfit',sans-serif;">
                                             {{ article.auteur.username|first|upper }}
                                         </div>
-                                        <span class="text-gray-500 dark:text-gray-400 text-sm">
-                                            {{ article.auteur.username }}
-                                        </span>
+                                        <span class="text-gray-500 dark:text-gray-400 text-xs font-medium">{{ article.auteur.username }}</span>
                                     </div>
                                     <div class="flex items-center gap-4">
-                                        <span class="text-gray-400 dark:text-gray-500 text-xs">
-                                            👁 {{ article.nombre_vues }} vues
+                                        <span class="text-gray-400 dark:text-gray-500 text-xs flex items-center gap-1">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            {{ article.nombre_vues }}
                                         </span>
                                         <a href="{% url 'blog:detail' article.slug %}"
-                                           class="text-numeria-bleu dark:text-numeria-or font-semibold text-sm hover:opacity-75 transition-opacity">
-                                            Lire →
+                                           style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                           class="text-numeria-teal text-sm hover:opacity-75 transition-opacity flex items-center gap-1">
+                                            Lire <span>→</span>
                                         </a>
                                     </div>
                                 </div>
@@ -81,22 +102,28 @@
                 </div>
                 {% else %}
                 <div class="text-center py-20">
-                    <p class="text-gray-400 dark:text-gray-500 text-xl">Aucun article disponible.</p>
+                    <div class="text-5xl mb-4">📝</div>
+                    <p class="text-gray-400 dark:text-gray-500 text-lg">Aucun article disponible pour le moment.</p>
                 </div>
                 {% endif %}
             </div>
 
             <!-- SIDEBAR -->
-            <div class="lg:w-72 flex flex-col gap-6">
+            <div class="lg:w-72 flex flex-col gap-5 flex-shrink-0">
 
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                    <h3 class="text-numeria-bleu dark:text-numeria-or font-bold text-lg mb-4">Catégories</h3>
-                    <ul class="space-y-2">
+                <!-- Catégories -->
+                {% if categories %}
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+                    <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-base mb-4 flex items-center gap-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        Catégories
+                    </h3>
+                    <ul class="flex flex-col gap-1">
                         {% for categorie in categories %}
                         <li>
-                            <a href="#" class="flex items-center justify-between text-gray-600 dark:text-gray-300 hover:text-numeria-or transition-colors text-sm py-1">
+                            <a href="#" class="flex items-center justify-between py-2 px-3 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-numeria-teal transition-colors group">
                                 <span>{{ categorie.nom }}</span>
-                                <span class="bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-400 text-xs px-2 py-0.5 rounded-full">
+                                <span class="bg-gray-100 dark:bg-gray-700 text-gray-400 text-xs px-2 py-0.5 rounded-full group-hover:bg-numeria-teal/15 group-hover:text-numeria-teal transition-colors">
                                     {{ categorie.articles.count }}
                                 </span>
                             </a>
@@ -104,12 +131,37 @@
                         {% endfor %}
                     </ul>
                 </div>
+                {% endif %}
 
-                <div class="bg-numeria-bleu rounded-xl p-6 text-center">
-                    <h3 class="text-numeria-or font-bold text-lg mb-2">Rejoins Numeria</h3>
-                    <p class="text-blue-200 text-sm mb-4">Accède à tous nos cours scientifiques.</p>
+                <!-- CTA -->
+                <div class="bg-numeria-bleu rounded-2xl p-6 relative overflow-hidden">
+                    <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:rgba(45,212,191,0.12);"></div>
+                    <div class="relative">
+                        <div class="text-2xl mb-3">🎓</div>
+                        <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-teal text-base mb-2">
+                            Commence à apprendre
+                        </h3>
+                        <p class="text-blue-300 text-sm mb-4 leading-relaxed">
+                            Accède à des cours scientifiques de qualité, gratuits et payants.
+                        </p>
+                        <a href="{% url 'cours:catalogue' %}"
+                           style="font-family:'Outfit',sans-serif;font-weight:700;"
+                           class="block text-center bg-numeria-teal text-numeria-bleu py-2.5 rounded-xl hover:bg-teal-300 transition-colors text-sm">
+                            Voir les cours →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Inscription -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm text-center">
+                    <div class="text-2xl mb-3">✨</div>
+                    <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-sm mb-2">
+                        Rejoins Numeria Institute
+                    </h3>
+                    <p class="text-gray-400 dark:text-gray-500 text-xs mb-4">Cours, certificats, communauté.</p>
                     <a href="{% url 'comptes:inscription' %}"
-                       class="block bg-numeria-or text-numeria-bleu font-bold py-2 rounded-lg hover:bg-yellow-400 transition-colors text-sm">
+                       style="font-family:'Outfit',sans-serif;font-weight:700;"
+                       class="block bg-numeria-bleu text-white py-2.5 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-sm">
                         S'inscrire gratuitement
                     </a>
                 </div>
