@@ -2,23 +2,44 @@
 {% block titre %}Créer un compte — Numeria Institute{% endblock %}
 {% block contenu %}
 
-<section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-12">
-    <div class="w-full px-4 sm:px-8 lg:px-16">
+<section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-12 relative overflow-hidden">
+
+    <!-- Décor de fond -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <svg width="100%" height="100%" style="opacity:0.035;" xmlns="http://www.w3.org/2000/svg">
+            <defs><pattern id="dots-ins" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#1A3C6E"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#dots-ins)"/>
+        </svg>
+        <div style="position:absolute;top:-100px;right:-60px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.07) 0%,transparent 70%);"></div>
+        <div style="position:absolute;bottom:-60px;left:-40px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,32,0.05) 0%,transparent 70%);"></div>
+    </div>
+
+    <div class="w-full px-4 relative z-10">
         <div class="max-w-lg mx-auto">
 
-            <!-- En-tête -->
+            <!-- Logo + titre -->
             <div class="text-center mb-8">
+                <a href="/" class="inline-flex flex-col items-center gap-3 group">
+                    <svg width="52" height="52" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="22" cy="22" r="19" stroke="#CBD5E1" stroke-width="1.2" fill="none"/>
+                        <line x1="13" y1="10" x2="13" y2="34" stroke="#1A3C6E" stroke-width="2.8" stroke-linecap="round"/>
+                        <line x1="13" y1="10" x2="31" y2="34" stroke="#1A3C6E" stroke-width="2.8" stroke-linecap="round"/>
+                        <line x1="31" y1="10" x2="31" y2="34" stroke="#1A3C6E" stroke-width="2.8" stroke-linecap="round"/>
+                        <circle cx="13" cy="10" r="3.2" fill="white" stroke="#1A3C6E" stroke-width="2"/>
+                        <circle cx="13" cy="34" r="3.2" fill="white" stroke="#1A3C6E" stroke-width="2"/>
+                        <circle cx="31" cy="10" r="3.2" fill="white" stroke="#1A3C6E" stroke-width="2"/>
+                        <circle cx="31" cy="34" r="3.2" fill="white" stroke="#1A3C6E" stroke-width="2"/>
+                        <circle cx="18.5" cy="18" r="3" fill="#2DD4BF"/>
+                        <circle cx="25.5" cy="26" r="3" fill="#2DD4BF"/>
+                    </svg>
+                    <div class="leading-none">
+                        <div style="font-family:'Outfit',sans-serif;font-weight:800;letter-spacing:0.15em;color:#1A3C6E;font-size:1.1rem;line-height:1;" class="dark:text-white group-hover:text-numeria-teal transition-colors">NUMERIA</div>
+                        <div style="font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:0.28em;color:#2DD4BF;font-size:0.6rem;margin-top:4px;text-transform:uppercase;">Institute</div>
+                    </div>
+                </a>
 
-                <!-- Logo atome -->
-                <div style="position:relative; width:64px; height:64px; display:flex; align-items:center; justify-content:center; margin: 0 auto 1.2rem;">
-                    <div style="position:absolute; width:18px; height:18px; background:#E8A020; border-radius:50%; z-index:10;"></div>
-                    <div style="position:absolute; width:64px; height:26px; border:2px solid #1A3C6E; border-radius:50%;"></div>
-                    <div style="position:absolute; width:64px; height:26px; border:2px solid #1A3C6E; border-radius:50%; transform:rotate(60deg);"></div>
-                    <div style="position:absolute; width:64px; height:26px; border:2px solid #1A3C6E; border-radius:50%; transform:rotate(120deg);"></div>
-                </div>
-
-                <h1 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-2">
-                    Rejoins Numeria Institute
+                <h1 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-2xl text-gray-800 dark:text-white mt-6 mb-1">
+                    Rejoins Numeria 🚀
                 </h1>
                 <p class="text-gray-500 dark:text-gray-400 text-sm">
                     Crée ton compte gratuitement et commence à apprendre
@@ -27,296 +48,252 @@
 
             <!-- Messages -->
             {% if messages %}
-            <div class="mb-6">
+            <div class="mb-5">
                 {% for message in messages %}
-                <div class="p-4 rounded-xl mb-2 flex items-center gap-3
-                    {% if message.tags == 'error' %}
-                        bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-200 border border-red-200
-                    {% else %}
-                        bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-200 border border-green-200
-                    {% endif %}">
+                <div class="p-3.5 rounded-xl text-sm flex items-center gap-2
+                    {% if message.tags == 'error' %}bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700
+                    {% else %}bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700{% endif %}">
                     <span>{% if message.tags == 'error' %}❌{% else %}✅{% endif %}</span>
-                    <span class="text-sm">{{ message }}</span>
+                    {{ message }}
                 </div>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <!-- Formulaire -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <!-- Card formulaire -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <div class="h-1" style="background:linear-gradient(90deg,#1A3C6E,#2DD4BF,#E8A020,#2DD4BF,#1A3C6E);"></div>
 
-                <!-- Barre colorée en haut -->
-                <div class="h-1.5 bg-gradient-to-r from-numeria-bleu via-numeria-or to-numeria-bleu"></div>
-
-                <div class="p-8">
+                <div class="p-7 sm:p-8">
                     <form method="POST" novalidate>
                         {% csrf_token %}
 
                         <!-- Prénom + Nom -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                             <div>
-                                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
                                     Prénom <span class="text-red-400">*</span>
                                 </label>
                                 <div class="relative">
-                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
+                                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
                                     <input type="text" name="first_name"
                                         value="{{ formulaire.first_name.value|default:'' }}"
                                         placeholder="Ton prénom"
-                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
-                                    >
+                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-teal focus:ring-2 focus:ring-numeria-teal/20 transition-all">
                                 </div>
                                 {% if formulaire.first_name.errors %}
-                                <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                                    <span>⚠️</span> {{ formulaire.first_name.errors.0 }}
-                                </p>
+                                <p class="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠️</span> {{ formulaire.first_name.errors.0 }}</p>
                                 {% endif %}
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                                <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
                                     Nom <span class="text-red-400">*</span>
                                 </label>
                                 <div class="relative">
-                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
+                                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
                                     <input type="text" name="last_name"
                                         value="{{ formulaire.last_name.value|default:'' }}"
                                         placeholder="Ton nom"
-                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
-                                    >
+                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-teal focus:ring-2 focus:ring-numeria-teal/20 transition-all">
                                 </div>
                                 {% if formulaire.last_name.errors %}
-                                <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                                    <span>⚠️</span> {{ formulaire.last_name.errors.0 }}
-                                </p>
+                                <p class="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠️</span> {{ formulaire.last_name.errors.0 }}</p>
                                 {% endif %}
                             </div>
                         </div>
 
                         <!-- Email -->
                         <div class="mb-5">
-                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
-                                Adresse email <span class="text-red-400">*</span>
+                            <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
+                                Email <span class="text-red-400">*</span>
                             </label>
                             <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">✉️</span>
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">✉️</span>
                                 <input type="email" name="email"
                                     value="{{ formulaire.email.value|default:'' }}"
                                     placeholder="votre@email.com"
-                                    class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
-                                >
+                                    class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-teal focus:ring-2 focus:ring-numeria-teal/20 transition-all">
                             </div>
                             {% if formulaire.email.errors %}
-                            <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                                <span>⚠️</span> {{ formulaire.email.errors.0 }}
-                            </p>
+                            <p class="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠️</span> {{ formulaire.email.errors.0 }}</p>
                             {% endif %}
                         </div>
 
                         <!-- Nom d'utilisateur -->
                         <div class="mb-5">
-                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                            <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
                                 Nom d'utilisateur <span class="text-red-400">*</span>
                             </label>
                             <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">@</span>
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-bold">@</span>
                                 <input type="text" name="username"
                                     value="{{ formulaire.username.value|default:'' }}"
-                                    placeholder="nom_utilisateur_unique"
-                                    class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
-                                >
+                                    placeholder="nom_unique"
+                                    class="w-full pl-9 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-teal focus:ring-2 focus:ring-numeria-teal/20 transition-all">
                             </div>
                             {% if formulaire.username.errors %}
-                            <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                                <span>⚠️</span> {{ formulaire.username.errors.0 }}
-                            </p>
+                            <p class="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠️</span> {{ formulaire.username.errors.0 }}</p>
                             {% endif %}
-                            <p class="text-gray-400 text-xs mt-1">
-                                Lettres, chiffres et @/./+/-/_ uniquement
-                            </p>
+                            <p class="text-gray-400 text-xs mt-1.5">Lettres, chiffres et @/./+/-/_ uniquement</p>
                         </div>
 
                         <!-- Pays -->
                         <div class="mb-5">
-                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                            <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
                                 Pays
                             </label>
                             <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10">🌍</span>
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 z-10">🌍</span>
                                 <select name="pays"
-                                    class="w-full pl-10 pr-8 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors appearance-none cursor-pointer">
+                                    class="w-full pl-10 pr-8 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-teal focus:ring-2 focus:ring-numeria-teal/20 transition-all appearance-none cursor-pointer">
                                     {% for valeur, label in formulaire.fields.pays.choices %}
-                                    <option value="{{ valeur }}"
-                                        {% if formulaire.pays.value == valeur or valeur == 'Togo' and not formulaire.pays.value %}
-                                            selected
-                                        {% endif %}>
+                                    <option value="{{ valeur }}" {% if formulaire.pays.value == valeur or valeur == 'Togo' and not formulaire.pays.value %}selected{% endif %}>
                                         {{ label }}
                                     </option>
                                     {% endfor %}
                                 </select>
-                                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">▼</span>
+                                <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs">▼</span>
                             </div>
                         </div>
 
                         <!-- Séparateur -->
-                        <div class="flex items-center gap-3 my-5">
+                        <div class="flex items-center gap-3 my-6">
                             <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
-                            <span class="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide">Sécurité</span>
+                            <span style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-gray-400 dark:text-gray-500 text-xs uppercase tracking-widest">Sécurité</span>
                             <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
                         </div>
 
                         <!-- Mot de passe -->
                         <div class="mb-5">
-                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                            <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
                                 Mot de passe <span class="text-red-400">*</span>
                             </label>
                             <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔐</span>
-                                <input type="password" name="password1"
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">🔐</span>
+                                <input type="password" name="password1" id="password1"
                                     placeholder="8 caractères minimum"
-                                    id="password1"
-                                    class="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
-                                >
-                                <!-- Bouton afficher/cacher -->
-                                <button type="button"
-                                    onclick="togglePassword('password1', 'oeil1')"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                                    class="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-teal focus:ring-2 focus:ring-numeria-teal/20 transition-all">
+                                <button type="button" onclick="togglePassword('password1','oeil1')" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
                                     <span id="oeil1">👁️</span>
                                 </button>
                             </div>
                             {% if formulaire.password1.errors %}
-                            <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                                <span>⚠️</span> {{ formulaire.password1.errors.0 }}
-                            </p>
+                            <p class="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠️</span> {{ formulaire.password1.errors.0 }}</p>
                             {% endif %}
-
-                            <!-- Indicateur de force du mot de passe -->
-                            <div class="mt-2">
-                                <div class="flex gap-1">
-                                    <div id="force1" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all"></div>
-                                    <div id="force2" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all"></div>
-                                    <div id="force3" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all"></div>
-                                    <div id="force4" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all"></div>
+                            <!-- Indicateur de force -->
+                            <div class="mt-2.5">
+                                <div class="flex gap-1.5">
+                                    <div id="force1" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all duration-300"></div>
+                                    <div id="force2" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all duration-300"></div>
+                                    <div id="force3" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all duration-300"></div>
+                                    <div id="force4" class="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700 transition-all duration-300"></div>
                                 </div>
-                                <p id="texte-force" class="text-xs text-gray-400 mt-1"></p>
+                                <p id="texte-force" class="text-xs mt-1 text-gray-400"></p>
                             </div>
                         </div>
 
                         <!-- Confirmer mot de passe -->
-                        <div class="mb-6">
-                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
+                        <div class="mb-7">
+                            <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
                                 Confirmer le mot de passe <span class="text-red-400">*</span>
                             </label>
                             <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔐</span>
-                                <input type="password" name="password2"
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">🔐</span>
+                                <input type="password" name="password2" id="password2"
                                     placeholder="Répète ton mot de passe"
-                                    id="password2"
-                                    class="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or focus:ring-1 focus:ring-numeria-or transition-colors"
-                                >
-                                <button type="button"
-                                    onclick="togglePassword('password2', 'oeil2')"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                                    class="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-teal focus:ring-2 focus:ring-numeria-teal/20 transition-all">
+                                <button type="button" onclick="togglePassword('password2','oeil2')" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
                                     <span id="oeil2">👁️</span>
                                 </button>
                             </div>
                             {% if formulaire.password2.errors %}
-                            <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                                <span>⚠️</span> {{ formulaire.password2.errors.0 }}
-                            </p>
+                            <p class="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠️</span> {{ formulaire.password2.errors.0 }}</p>
                             {% endif %}
                         </div>
 
-                        <!-- Bouton inscription -->
+                        <!-- Bouton -->
                         <button type="submit"
-                            class="w-full bg-numeria-or text-numeria-bleu font-bold py-4 rounded-xl hover:bg-yellow-400 transition-all text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform">
+                            style="font-family:'Outfit',sans-serif;font-weight:700;"
+                            class="w-full bg-numeria-teal text-numeria-bleu py-3.5 rounded-xl hover:bg-teal-300 transition-all text-base shadow-md hover:shadow-lg hover:-translate-y-0.5 transform">
                             Créer mon compte gratuitement 🚀
                         </button>
 
                     </form>
 
                     <!-- Lien connexion -->
-                    <div class="text-center mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
-                        <p class="text-gray-500 dark:text-gray-400 text-sm">
-                            Déjà un compte ?
-                            <a href="{% url 'comptes:connexion' %}"
-                               class="text-numeria-bleu dark:text-numeria-or font-bold hover:opacity-75 transition-opacity ml-1">
-                                Se connecter →
-                            </a>
-                        </p>
-                    </div>
-
+                    <p class="text-center text-gray-400 dark:text-gray-500 text-sm mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
+                        Déjà un compte ?
+                        <a href="{% url 'comptes:connexion' %}"
+                           style="font-family:'Outfit',sans-serif;font-weight:700;"
+                           class="text-numeria-bleu dark:text-numeria-teal hover:opacity-75 transition-opacity ml-1">
+                            Se connecter →
+                        </a>
+                    </p>
                 </div>
             </div>
 
-            <!-- Avantages -->
+            <!-- 3 avantages -->
             <div class="mt-6 grid grid-cols-3 gap-3 text-center">
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-3 border border-gray-100 dark:border-gray-700">
-                    <div class="text-2xl mb-1">🎓</div>
+                    <div class="text-xl mb-1">🎓</div>
                     <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">Cours gratuits</p>
                 </div>
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-3 border border-gray-100 dark:border-gray-700">
-                    <div class="text-2xl mb-1">📜</div>
-                    <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">Certificats</p>
+                    <div class="text-xl mb-1">📜</div>
+                    <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">Certificats PDF</p>
                 </div>
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-3 border border-gray-100 dark:border-gray-700">
-                    <div class="text-2xl mb-1">🌍</div>
+                    <div class="text-xl mb-1">🌍</div>
                     <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">Communauté</p>
                 </div>
             </div>
+
+            <!-- Retour accueil -->
+            <p class="text-center mt-5">
+                <a href="/" class="text-gray-400 dark:text-gray-500 text-xs hover:text-numeria-teal transition-colors">
+                    ← Retour à l'accueil
+                </a>
+            </p>
 
         </div>
     </div>
 </section>
 
-<!-- Scripts -->
 <script>
-    /* Afficher/cacher le mot de passe */
-    function togglePassword(inputId, oeilId) {
-        const input = document.getElementById(inputId);
-        const oeil = document.getElementById(oeilId);
-        if (input.type === 'password') {
-            input.type = 'text';
-            oeil.textContent = '🙈';
-        } else {
-            input.type = 'password';
-            oeil.textContent = '👁️';
-        }
-    }
+function togglePassword(inputId, oeilId) {
+    const inp = document.getElementById(inputId);
+    const oeil = document.getElementById(oeilId);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    oeil.textContent = inp.type === 'password' ? '👁️' : '🙈';
+}
 
-    /* Indicateur de force du mot de passe */
-    document.getElementById('password1').addEventListener('input', function() {
-        const mdp = this.value;
-        const barres = [
-            document.getElementById('force1'),
-            document.getElementById('force2'),
-            document.getElementById('force3'),
-            document.getElementById('force4'),
-        ];
-        const texte = document.getElementById('texte-force');
-
-        /* Calcul du score */
-        let score = 0;
-        if (mdp.length >= 8) score++;
-        if (/[A-Z]/.test(mdp)) score++;
-        if (/[0-9]/.test(mdp)) score++;
-        if (/[^A-Za-z0-9]/.test(mdp)) score++;
-
-        /* Couleurs selon le score */
-        const couleurs = ['', 'bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-green-500'];
-        const labels = ['', 'Faible', 'Moyen', 'Bon', 'Excellent'];
-
-        barres.forEach((b, i) => {
-            b.className = 'h-1 flex-1 rounded-full transition-all ' +
-                (i < score ? couleurs[score] : 'bg-gray-200 dark:bg-gray-700');
-        });
-
-        texte.textContent = mdp.length > 0 ? labels[score] : '';
-        texte.className = 'text-xs mt-1 ' + (
-            score <= 1 ? 'text-red-400' :
-            score === 2 ? 'text-orange-400' :
-            score === 3 ? 'text-yellow-500' : 'text-green-500'
-        );
+document.getElementById('password1').addEventListener('input', function() {
+    const mdp = this.value;
+    const barres = [
+        document.getElementById('force1'),
+        document.getElementById('force2'),
+        document.getElementById('force3'),
+        document.getElementById('force4'),
+    ];
+    const texte = document.getElementById('texte-force');
+    let score = 0;
+    if (mdp.length >= 8)          score++;
+    if (/[A-Z]/.test(mdp))        score++;
+    if (/[0-9]/.test(mdp))        score++;
+    if (/[^A-Za-z0-9]/.test(mdp)) score++;
+    const couleurs = ['','bg-red-400','bg-orange-400','bg-yellow-400','bg-green-500'];
+    const labels   = ['','Faible','Moyen','Bon','Excellent 💪'];
+    barres.forEach((b, i) => {
+        b.className = 'h-1 flex-1 rounded-full transition-all duration-300 ' +
+            (i < score ? couleurs[score] : 'bg-gray-200 dark:bg-gray-700');
     });
+    texte.textContent = mdp.length > 0 ? labels[score] : '';
+    texte.className = 'text-xs mt-1 ' + (
+        score <= 1 ? 'text-red-400' :
+        score === 2 ? 'text-orange-400' :
+        score === 3 ? 'text-yellow-500' : 'text-green-500'
+    );
+});
 </script>
 
 {% endblock %}

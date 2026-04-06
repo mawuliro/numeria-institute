@@ -2,85 +2,164 @@
 {% block titre %}Connexion — Numeria Institute{% endblock %}
 {% block contenu %}
 
-<section class="w-full min-h-screen bg-numeria-blanc py-12">
-    <div class="w-full px-4 sm:px-8 lg:px-16">
+<section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 flex items-center justify-center py-12 relative overflow-hidden">
+
+    <!-- Décor de fond — grille de points -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <svg width="100%" height="100%" style="opacity:0.04;" xmlns="http://www.w3.org/2000/svg">
+            <defs><pattern id="dots-cx" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#1A3C6E"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#dots-cx)"/>
+        </svg>
+        <!-- Halo teal -->
+        <div style="position:absolute;top:-120px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 70%);"></div>
+        <div style="position:absolute;bottom:-80px;left:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(26,60,110,0.06) 0%,transparent 70%);"></div>
+    </div>
+
+    <div class="w-full px-4 relative z-10">
         <div class="max-w-md mx-auto">
 
+            <!-- Logo + titre -->
             <div class="text-center mb-8">
-                <div style="position:relative; width:60px; height:60px; display:flex; align-items:center; justify-content:center; margin: 0 auto 1rem;">
-                    <div style="position:absolute; width:16px; height:16px; background:#E8A020; border-radius:50%; z-index:10;"></div>
-                    <div style="position:absolute; width:60px; height:24px; border:2px solid #1A3C6E; border-radius:50%;"></div>
-                    <div style="position:absolute; width:60px; height:24px; border:2px solid #1A3C6E; border-radius:50%; transform:rotate(60deg);"></div>
-                    <div style="position:absolute; width:60px; height:24px; border:2px solid #1A3C6E; border-radius:50%; transform:rotate(120deg);"></div>
-                </div>
-                <h1 class="text-3xl font-bold text-numeria-bleu mb-2">Bon retour !</h1>
-                <p class="text-gray-500">Connecte-toi pour accéder à tes cours</p>
+                <a href="/" class="inline-flex flex-col items-center gap-3 group">
+                    <svg width="56" height="56" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="22" cy="22" r="19" stroke="#CBD5E1" stroke-width="1.2" fill="none"/>
+                        <line x1="13" y1="10" x2="13" y2="34" stroke="#1A3C6E" stroke-width="2.8" stroke-linecap="round"/>
+                        <line x1="13" y1="10" x2="31" y2="34" stroke="#1A3C6E" stroke-width="2.8" stroke-linecap="round"/>
+                        <line x1="31" y1="10" x2="31" y2="34" stroke="#1A3C6E" stroke-width="2.8" stroke-linecap="round"/>
+                        <circle cx="13" cy="10" r="3.2" fill="white" stroke="#1A3C6E" stroke-width="2"/>
+                        <circle cx="13" cy="34" r="3.2" fill="white" stroke="#1A3C6E" stroke-width="2"/>
+                        <circle cx="31" cy="10" r="3.2" fill="white" stroke="#1A3C6E" stroke-width="2"/>
+                        <circle cx="31" cy="34" r="3.2" fill="white" stroke="#1A3C6E" stroke-width="2"/>
+                        <circle cx="18.5" cy="18" r="3" fill="#2DD4BF"/>
+                        <circle cx="25.5" cy="26" r="3" fill="#2DD4BF"/>
+                    </svg>
+                    <div class="leading-none">
+                        <div style="font-family:'Outfit',sans-serif;font-weight:800;letter-spacing:0.15em;color:#1A3C6E;font-size:1.1rem;line-height:1;" class="dark:text-white group-hover:text-numeria-teal transition-colors">NUMERIA</div>
+                        <div style="font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:0.28em;color:#2DD4BF;font-size:0.6rem;margin-top:4px;text-transform:uppercase;">Institute</div>
+                    </div>
+                </a>
+
+                <h1 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-2xl text-gray-800 dark:text-white mt-6 mb-1">
+                    Bon retour 👋
+                </h1>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">
+                    Connecte-toi pour accéder à tes cours
+                </p>
             </div>
 
+            <!-- Messages -->
             {% if messages %}
-            <div class="mb-6">
+            <div class="mb-5">
                 {% for message in messages %}
-                <div class="p-4 rounded-lg mb-2 {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% else %}bg-green-50 text-green-700 border border-green-200{% endif %}">
+                <div class="p-3.5 rounded-xl text-sm flex items-center gap-2
+                    {% if message.tags == 'error' %}bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700
+                    {% else %}bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700{% endif %}">
+                    <span>{% if message.tags == 'error' %}❌{% else %}✅{% endif %}</span>
                     {{ message }}
                 </div>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <div class="bg-white rounded-xl shadow-lg p-8">
-                <form method="POST" novalidate>
-                    {% csrf_token %}
+            <!-- Card formulaire -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <!-- Barre accent -->
+                <div class="h-1" style="background:linear-gradient(90deg,#1A3C6E,#2DD4BF,#1A3C6E);"></div>
 
-                    <div class="mb-4">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">
-                            {{ formulaire.username.label }}
-                        </label>
-                        <input type="text" name="username"
-                            placeholder="Nom d'utilisateur"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-numeria-bleu"
-                            {% if formulaire.username.value %}value="{{ formulaire.username.value }}"{% endif %}>
-                        {% if formulaire.username.errors %}
-                        <p class="text-red-500 text-xs mt-1">{{ formulaire.username.errors.0 }}</p>
-                        {% endif %}
-                    </div>
+                <div class="p-7 sm:p-8">
+                    <form method="POST" novalidate>
+                        {% csrf_token %}
 
-                    <div class="mb-6">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">
-                            {{ formulaire.password.label }}
-                        </label>
-                        <input type="password" name="password"
-                            placeholder="Ton mot de passe"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-numeria-bleu">
-                        {% if formulaire.password.errors %}
-                        <p class="text-red-500 text-xs mt-1">{{ formulaire.password.errors.0 }}</p>
-                        {% endif %}
-                    </div>
+                        <!-- Nom d'utilisateur -->
+                        <div class="mb-5">
+                            <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
+                                Nom d'utilisateur
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-bold">@</span>
+                                <input type="text" name="username"
+                                    placeholder="ton_username"
+                                    value="{{ formulaire.username.value|default:'' }}"
+                                    class="w-full pl-9 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-teal focus:ring-2 focus:ring-numeria-teal/20 transition-all"
+                                    autofocus>
+                            </div>
+                            {% if formulaire.username.errors %}
+                            <p class="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠️</span> {{ formulaire.username.errors.0 }}</p>
+                            {% endif %}
+                        </div>
 
-                    <div class="flex items-center justify-between mb-6">
-                        <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-                            <input type="checkbox" name="remember" class="rounded">
-                            Se souvenir de moi
-                        </label>
-                        <a href="#" class="text-sm text-numeria-bleu hover:text-numeria-or transition-colors">
-                            Mot de passe oublié ?
+                        <!-- Mot de passe -->
+                        <div class="mb-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+                                    Mot de passe
+                                </label>
+                                <a href="#" class="text-xs text-numeria-teal hover:opacity-75 transition-opacity font-medium">
+                                    Mot de passe oublié ?
+                                </a>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">🔐</span>
+                                <input type="password" name="password" id="mdp-cx"
+                                    placeholder="••••••••"
+                                    class="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-teal focus:ring-2 focus:ring-numeria-teal/20 transition-all">
+                                <button type="button" onclick="toggleMdpCx()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                                    <span id="oeil-cx">👁️</span>
+                                </button>
+                            </div>
+                            {% if formulaire.password.errors %}
+                            <p class="text-red-500 text-xs mt-1.5 flex items-center gap-1"><span>⚠️</span> {{ formulaire.password.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Se souvenir -->
+                        <div class="flex items-center gap-2 mb-6">
+                            <input type="checkbox" name="remember" id="remember"
+                                class="w-4 h-4 rounded accent-numeria-teal cursor-pointer">
+                            <label for="remember" class="text-sm text-gray-500 dark:text-gray-400 cursor-pointer select-none">
+                                Se souvenir de moi
+                            </label>
+                        </div>
+
+                        <!-- Bouton -->
+                        <button type="submit"
+                            style="font-family:'Outfit',sans-serif;font-weight:700;"
+                            class="w-full bg-numeria-teal text-numeria-bleu py-3.5 rounded-xl hover:bg-teal-300 transition-all text-base shadow-md hover:shadow-lg hover:-translate-y-0.5 transform">
+                            Se connecter →
+                        </button>
+
+                    </form>
+
+                    <!-- Lien inscription -->
+                    <p class="text-center text-gray-400 dark:text-gray-500 text-sm mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
+                        Pas encore de compte ?
+                        <a href="{% url 'comptes:inscription' %}"
+                           style="font-family:'Outfit',sans-serif;font-weight:700;"
+                           class="text-numeria-bleu dark:text-numeria-teal hover:opacity-75 transition-opacity ml-1">
+                            S'inscrire gratuitement →
                         </a>
-                    </div>
-
-                    <button type="submit"
-                        class="w-full bg-numeria-or text-numeria-bleu font-bold py-3 rounded-lg hover:bg-yellow-400 transition-colors text-lg">
-                        Se connecter →
-                    </button>
-                </form>
-
-                <p class="text-center text-gray-500 text-sm mt-6">
-                    Pas encore de compte ?
-                    <a href="{% url 'comptes:inscription' %}" class="text-numeria-bleu font-semibold hover:text-numeria-or transition-colors">
-                        S'inscrire gratuitement
-                    </a>
-                </p>
+                    </p>
+                </div>
             </div>
+
+            <!-- Retour accueil -->
+            <p class="text-center mt-5">
+                <a href="/" class="text-gray-400 dark:text-gray-500 text-xs hover:text-numeria-teal transition-colors">
+                    ← Retour à l'accueil
+                </a>
+            </p>
+
         </div>
     </div>
 </section>
+
+<script>
+function toggleMdpCx() {
+    const inp = document.getElementById('mdp-cx');
+    const oeil = document.getElementById('oeil-cx');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    oeil.textContent = inp.type === 'password' ? '👁️' : '🙈';
+}
+</script>
 
 {% endblock %}
