@@ -216,9 +216,16 @@ from django.http import HttpResponse
 import os
 
 def debug_env(request):
+    from django.core.files.storage import default_storage
+    import os
+    
     url = os.environ.get('CLOUDINARY_URL', 'NON DÉFINIE')
     if url != 'NON DÉFINIE':
         affichage = url[:25] + '...' + url[-10:]
     else:
         affichage = 'NON DÉFINIE'
-    return HttpResponse(f"CLOUDINARY_URL = {affichage}")
+    
+    return HttpResponse(f"""
+        CLOUDINARY_URL = {affichage}<br>
+        DEFAULT_FILE_STORAGE = {default_storage.__class__.__name__}<br>
+    """)
