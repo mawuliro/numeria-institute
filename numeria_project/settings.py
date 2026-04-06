@@ -132,6 +132,8 @@ STATICFILES_DIRS = []
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
+# ... (Ton code existant jusqu'ici est bon)
+
 # ── CLOUDINARY — Stockage des images en production ─────────────────
 import cloudinary
 import cloudinary.uploader
@@ -141,14 +143,28 @@ import cloudinary.api
 CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
 
 if CLOUDINARY_URL:
-    cloudinary.config(cloudinary_url=CLOUDINARY_URL)
+    # === AJOUTE CES 4 LIGNES CI-DESSOUS ===
+    # On extrait le cloud_name pour le passer à la configuration SDK
+    import re
+    _match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', CLOUDINARY_URL)
+    if _match:
+        api_key, api_secret, cloud_name = _match.groups()
+        cloudinary.config(
+            cloud_name=cloud_name,
+            api_key=api_key,
+            api_secret=api_secret,
+            secure=True  # Important pour HTTPS
+        )
+    # ======================================
+    
+    # Ton code existant pour CLOUDINARY_STORAGE
     CLOUDINARY_STORAGE = {'CLOUDINARY_URL': CLOUDINARY_URL}
 
 # Utiliser Cloudinary pour les fichiers média en production
 if not DEBUG:
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-
+# ... (Le reste de ton fichier reste identique)
 # ── AUTHENTIFICATION ─────────────────────────────────────────────────────────
 LOGIN_URL           = '/comptes/connexion/'
 LOGIN_REDIRECT_URL  = '/comptes/tableau-de-bord/'
