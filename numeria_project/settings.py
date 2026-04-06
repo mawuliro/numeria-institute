@@ -132,33 +132,21 @@ STATICFILES_DIRS = []
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# ── FICHIERS MÉDIAS ──────────────────────────────────────────────────────────
-MEDIA_URL = '/media/'   # Toujours défini (utilisé en fallback et dans les templates)
+# ── CLOUDINARY — Stockage des images en production ─────────────────
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
-if USE_CLOUDINARY:
-    # ── PRODUCTION : Cloudinary ──────────────────────────────────────────
-    _api_key, _api_secret, _cloud_name = _cloudinary_match.groups()
+# CLOUDINARY_URL contient tout : cloudinary://key:secret@cloud_name
+CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
 
-    import cloudinary
-    cloudinary.config(
-        cloud_name = _cloud_name,
-        api_key    = _api_key,
-        api_secret = _api_secret,
-        secure     = True,
-    )
+if CLOUDINARY_URL:
+    cloudinary.config(cloudinary_url=CLOUDINARY_URL)
+    CLOUDINARY_STORAGE = {'CLOUDINARY_URL': CLOUDINARY_URL}
 
-    CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': _cloud_name,
-        'API_KEY':    _api_key,
-        'API_SECRET': _api_secret,
-    }
-
+# Utiliser Cloudinary pour les fichiers média en production
+if not DEBUG:
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    CLOUDINARY_URL       = _cloudinary_raw   # gardé pour compatibilité
-
-else:
-    # ── DÉVELOPPEMENT : stockage local ───────────────────────────────────
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # ── AUTHENTIFICATION ─────────────────────────────────────────────────────────
