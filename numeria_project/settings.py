@@ -124,16 +124,18 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # ── FICHIERS MÉDIAS ──────────────────────────────────────────
-CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL', '') or config('CLOUDINARY_URL', default='')
+import os as _os
+_cloudinary_url = _os.environ.get('CLOUDINARY_URL', '').strip()
 
-if CLOUDINARY_URL.strip():
+if _cloudinary_url:
     import cloudinary
-    cloudinary.config(cloudinary_url=CLOUDINARY_URL)
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    CLOUDINARY_STORAGE = {'CLOUDINARY_URL': CLOUDINARY_URL}
+    cloudinary.config(cloudinary_url=_cloudinary_url)
+    DEFAULT_FILE_STORAGE   = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    CLOUDINARY_STORAGE     = {'CLOUDINARY_URL': _cloudinary_url}
+    CLOUDINARY_URL         = _cloudinary_url
 else:
     MEDIA_URL  = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_ROOT = _os.path.join(BASE_DIR, 'media')
 
 
 # ── AUTHENTIFICATION ─────────────────────────────────────────────────────────
