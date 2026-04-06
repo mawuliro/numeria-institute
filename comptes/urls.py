@@ -13,5 +13,4 @@ urlpatterns = [
     path('profil/supprimer-photo/', views.supprimer_photo, name='supprimer_photo'),  # Nouveau !
     path('profil/changer-mot-de-passe/', views.changer_mot_de_passe, name='changer_mot_de_passe'),
     path('profil/supprimer/', views.supprimer_compte, name='supprimer_compte'),
-    path('debug-env/', views.debug_env, name='debug_env'),
 ]

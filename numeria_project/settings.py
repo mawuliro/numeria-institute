@@ -23,6 +23,16 @@ DEBUG         = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
 
 
+# ── CLOUDINARY — détection anticipée ──────────────────────────────────────
+# On parse ici pour savoir si Cloudinary est disponible AVANT INSTALLED_APPS.
+# decouple lit d'abord os.environ (Railway), puis le .env (dev local).
+# Format : cloudinary://API_KEY:API_SECRET@CLOUD_NAME
+
+_cloudinary_raw   = config('CLOUDINARY_URL', default='').strip()
+_cloudinary_match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', _cloudinary_raw) if _cloudinary_raw else None
+USE_CLOUDINARY    = bool(_cloudinary_match)
+
+
 # ── APPLICATIONS ───────────────────────────────────────────────────────────
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -30,8 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',        # ← DOIT être avant staticfiles
-    'cloudinary',
     'django.contrib.staticfiles',
     'pages',
     'cours',
@@ -39,6 +47,12 @@ INSTALLED_APPS = [
     'comptes',
     'paiements',
 ]
+
+# cloudinary_storage doit être ajouté SEULEMENT si Cloudinary est configuré,
+# et doit apparaître AVANT staticfiles dans INSTALLED_APPS.
+if USE_CLOUDINARY:
+    INSTALLED_APPS.insert(5, 'cloudinary')           # avant staticfiles
+    INSTALLED_APPS.insert(5, 'cloudinary_storage')   # avant cloudinary
 
 
 # ── MIDDLEWARE ─────────────────────────────────────────────────────────────
@@ -119,24 +133,18 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # ── FICHIERS MÉDIAS ──────────────────────────────────────────────────────────
-#
-# On lit CLOUDINARY_URL via decouple : lit le .env en dev ET les variables
-# Railway en prod (decouple cherche d'abord os.environ, puis le .env).
-#
-# Format attendu : cloudinary://API_KEY:API_SECRET@CLOUD_NAME
+MEDIA_URL = '/media/'   # Toujours défini (utilisé en fallback et dans les templates)
 
-_raw   = config('CLOUDINARY_URL', default='').strip()
-_match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', _raw) if _raw else None
-
-if _match:
-    _api_key, _api_secret, _cloud_name = _match.groups()
+if USE_CLOUDINARY:
+    # ── PRODUCTION : Cloudinary ──────────────────────────────────────────
+    _api_key, _api_secret, _cloud_name = _cloudinary_match.groups()
 
     import cloudinary
     cloudinary.config(
-        cloud_name=_cloud_name,
-        api_key=_api_key,
-        api_secret=_api_secret,
-        secure=True,
+        cloud_name = _cloud_name,
+        api_key    = _api_key,
+        api_secret = _api_secret,
+        secure     = True,
     )
 
     CLOUDINARY_STORAGE = {
@@ -146,11 +154,10 @@ if _match:
     }
 
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    CLOUDINARY_URL       = _raw   # gardé pour compatibilité
+    CLOUDINARY_URL       = _cloudinary_raw   # gardé pour compatibilité
 
 else:
-    # Développement local — stockage fichiers classique
-    MEDIA_URL  = '/media/'
+    # ── DÉVELOPPEMENT : stockage local ───────────────────────────────────
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 

@@ -211,19 +211,3 @@ def supprimer_compte(request):
 
     return render(request, 'comptes/supprimer_compte.html')
 
-
-from django.http import HttpResponse
-import os
-
-def debug_env(request):
-    import os
-    from django.conf import settings
-    from django.core.files.storage import default_storage
-
-    url = os.environ.get('CLOUDINARY_URL', 'VIDE')
-
-    return HttpResponse(f"""
-        ENV CLOUDINARY_URL = {url[:30]}<br>
-        settings.DEFAULT_FILE_STORAGE = {getattr(settings, 'DEFAULT_FILE_STORAGE', 'non defini')}<br>
-        default_storage = {default_storage.__class__.__name__}<br>
-    """)
