@@ -11,6 +11,7 @@ from pathlib import Path
 from decouple import config, Csv
 import dj_database_url
 import os
+import re
 
 # ── CHEMINS ────────────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +21,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY    = config('SECRET_KEY')
 DEBUG         = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
-
-
-# ── CLOUDINARY (déclaré ici une seule fois, avant INSTALLED_APPS) ──────────
-CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
 
 
 # ── APPLICATIONS ───────────────────────────────────────────────────────────
@@ -78,7 +75,6 @@ WSGI_APPLICATION = 'numeria_project.wsgi.application'
 
 
 # ── BASE DE DONNÉES ─────────────────────────────────────────────────────────
-# Railway injecte DATABASE_URL automatiquement en production
 DATABASE_URL = os.environ.get('DATABASE_URL') or config('DATABASE_URL', default='')
 
 if DATABASE_URL and not DATABASE_URL.startswith('sqlite'):
@@ -115,44 +111,66 @@ USE_I18N      = True
 USE_TZ        = True
 
 
-# ── FICHIERS STATIQUES (CSS, JS) ─────────────────────────────────────────────
+# ── FICHIERS STATIQUES ───────────────────────────────────────────────────────
 STATIC_URL       = '/static/'
 STATIC_ROOT      = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = []
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# ── FICHIERS MÉDIAS ──────────────────────────────────────────
-import os as _os
-_cloudinary_url = _os.environ.get('CLOUDINARY_URL', '').strip()
+# ── FICHIERS MÉDIAS ──────────────────────────────────────────────────────────
+#
+# On lit CLOUDINARY_URL directement depuis os.environ (pas decouple)
+# pour être sûr d'avoir la valeur injectée par Railway.
+# On parse l'URL manuellement pour configurer Cloudinary avec des clés
+# explicites — évite tout problème de parsing interne.
+#
+# Format attendu : cloudinary://API_KEY:API_SECRET@CLOUD_NAME
 
-if _cloudinary_url:
+_raw   = os.environ.get('CLOUDINARY_URL', '').strip()
+_match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', _raw) if _raw else None
+
+if _match:
+    _api_key, _api_secret, _cloud_name = _match.groups()
+
     import cloudinary
-    cloudinary.config(cloudinary_url=_cloudinary_url)
-    DEFAULT_FILE_STORAGE   = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    CLOUDINARY_STORAGE     = {'CLOUDINARY_URL': _cloudinary_url}
-    CLOUDINARY_URL         = _cloudinary_url
+    cloudinary.config(
+        cloud_name=_cloud_name,
+        api_key=_api_key,
+        api_secret=_api_secret,
+        secure=True,
+    )
+
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': _cloud_name,
+        'API_KEY':    _api_key,
+        'API_SECRET': _api_secret,
+    }
+
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    CLOUDINARY_URL       = _raw   # gardé pour compatibilité
+
 else:
+    # Développement local — stockage fichiers classique
     MEDIA_URL  = '/media/'
-    MEDIA_ROOT = _os.path.join(BASE_DIR, 'media')
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # ── AUTHENTIFICATION ─────────────────────────────────────────────────────────
-LOGIN_URL          = '/comptes/connexion/'
-LOGIN_REDIRECT_URL = '/comptes/tableau-de-bord/'
+LOGIN_URL           = '/comptes/connexion/'
+LOGIN_REDIRECT_URL  = '/comptes/tableau-de-bord/'
 LOGOUT_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # ── EMAIL ─────────────────────────────────────────────────────────────────────
-EMAIL_BACKEND     = config('EMAIL_BACKEND',
-                            default='django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST        = config('EMAIL_HOST',        default='smtp.gmail.com')
-EMAIL_PORT        = config('EMAIL_PORT',        default=587, cast=int)
-EMAIL_USE_TLS     = config('EMAIL_USE_TLS',     default=True, cast=bool)
-EMAIL_HOST_USER   = config('EMAIL_HOST_USER',   default='')
+EMAIL_BACKEND       = config('EMAIL_BACKEND',
+                              default='django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST          = config('EMAIL_HOST',          default='smtp.gmail.com')
+EMAIL_PORT          = config('EMAIL_PORT',          default=587, cast=int)
+EMAIL_USE_TLS       = config('EMAIL_USE_TLS',       default=True, cast=bool)
+EMAIL_HOST_USER     = config('EMAIL_HOST_USER',     default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL  = 'Numeria Institute <contact@numeriainstitute.com>'
 CONTACT_EMAIL       = config('CONTACT_EMAIL', default='contact@numeriainstitute.com')
@@ -160,14 +178,8 @@ CONTACT_EMAIL       = config('CONTACT_EMAIL', default='contact@numeriainstitute.
 
 # ── SÉCURITÉ EN PRODUCTION ───────────────────────────────────────────────────
 if not DEBUG:
-    # Railway gère déjà HTTPS — redirection forcée désactivée
-    # pour éviter la boucle de redirections
-    SECURE_SSL_REDIRECT = False
-
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE    = True
-
-    # Faire confiance au proxy de Railway
+    SECURE_SSL_REDIRECT     = False   # Railway gère HTTPS — évite la boucle
+    SESSION_COOKIE_SECURE   = True
+    CSRF_COOKIE_SECURE      = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-    CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
+    CSRF_TRUSTED_ORIGINS    = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
