@@ -120,14 +120,12 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ── FICHIERS MÉDIAS ──────────────────────────────────────────────────────────
 #
-# On lit CLOUDINARY_URL directement depuis os.environ (pas decouple)
-# pour être sûr d'avoir la valeur injectée par Railway.
-# On parse l'URL manuellement pour configurer Cloudinary avec des clés
-# explicites — évite tout problème de parsing interne.
+# On lit CLOUDINARY_URL via decouple : lit le .env en dev ET les variables
+# Railway en prod (decouple cherche d'abord os.environ, puis le .env).
 #
 # Format attendu : cloudinary://API_KEY:API_SECRET@CLOUD_NAME
 
-_raw   = os.environ.get('CLOUDINARY_URL', '').strip()
+_raw   = config('CLOUDINARY_URL', default='').strip()
 _match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', _raw) if _raw else None
 
 if _match:
