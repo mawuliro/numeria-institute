@@ -2,7 +2,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 import uuid
+
+
+def validate_file_size(value):
+    """Valide que le fichier ne dépasse pas 2MB"""
+    filesize = value.size
+    if filesize > 2 * 1024 * 1024:  # 2MB
+        raise ValidationError("Le fichier ne doit pas dépasser 2 Mo.")
 
 
 class CampagneRecrutement(models.Model):
@@ -121,25 +130,29 @@ class Candidature(models.Model):
     # ─── DOCUMENTS (Cloudinary) ────────────────────────────────────────────
     cv = models.FileField(
         upload_to='candidatures/cv/',
+        validators=[FileExtensionValidator(['pdf']), validate_file_size],
         verbose_name="CV (PDF)",
-        help_text="Format PDF, max 5MB"
+        help_text="Format PDF, max 2MB"
     )
     lettre_motivation = models.FileField(
         upload_to='candidatures/lettres/',
+        validators=[FileExtensionValidator(['pdf']), validate_file_size],
         verbose_name="Lettre de motivation (PDF)",
-        help_text="Format PDF, max 5MB"
+        help_text="Format PDF, max 2MB"
     )
     releves_notes = models.FileField(
         upload_to='candidatures/releves/',
+        validators=[FileExtensionValidator(['pdf']), validate_file_size],
         verbose_name="Relevés de notes (PDF)",
-        help_text="Format PDF, max 5MB"
+        help_text="Format PDF, max 2MB"
     )
     autres_documents = models.FileField(
         upload_to='candidatures/autres/',
         blank=True,
         null=True,
+        validators=[FileExtensionValidator(['pdf']), validate_file_size],
         verbose_name="Autres documents (optionnel)",
-        help_text="Certificats, attestations, etc. (PDF)"
+        help_text="Certificats, attestations, etc. (PDF, max 2MB)"
     )
     
     # ─── QUESTIONS SPÉCIFIQUES ─────────────────────────────────────────────

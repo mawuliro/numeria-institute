@@ -103,6 +103,11 @@ else:
     }
 
 
+# ── TÉLÉCHARGEMENT DE FICHIERS ──────────────────────────────────────────────
+DATA_UPLOAD_MAX_MEMORY_SIZE = 3 * 1024 * 1024  # 3MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 3 * 1024 * 1024  # 3MB
+
+
 # ── VALIDATION DES MOTS DE PASSE ────────────────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
