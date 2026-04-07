@@ -20,19 +20,16 @@
     <title>{% block titre %}Numeria Institute{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}">
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
-    <meta property="og:title" content="{% block titre %}Numeria Institute{% endblock %}">
-    <meta property="og:description" content="{% block meta_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}">
+    <meta property="og:title" content="{% block og_titre %}Numeria Institute{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}">
     <meta property="og:image" content="{% block og_image %}{% static 'images/logo-numeria.png' %}{% endblock %}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{% block twitter_url %}{{ request.build_absolute_uri }}{% endblock %}">
-    <meta property="twitter:title" content="{% block titre %}Numeria Institute{% endblock %}">
-    <meta property="twitter:description" content="{% block meta_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}">
-    <meta property="twitter:image" content="{% block twitter_image %}{% block og_image %}{% static 'images/logo-numeria.png' %}{% endblock %}{% endblock %}">
+    <meta property="twitter:title" content="{% block twitter_titre %}Numeria Institute{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}">
+    <meta property="twitter:image" content="{% block twitter_image %}{% static 'images/logo-numeria.png' %}{% endblock %}">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
