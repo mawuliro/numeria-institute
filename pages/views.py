@@ -1,13 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from cours.models import Cours
 from blog.models import Article
+from .models import HomePage, AboutPage, ContactPage
 
 
 def accueil(request):
     """Vue de la page d'accueil."""
+    homepage = HomePage.objects.first()
     cours_recents = Cours.objects.filter(est_publie=True)[:3]
     articles_recents = Article.objects.filter(est_publie=True)[:3]
     contexte = {
+        'homepage': homepage,
         'cours_recents': cours_recents,
         'articles_recents': articles_recents,
     }
@@ -16,8 +19,25 @@ def accueil(request):
 
 def a_propos(request):
     """Vue de la page À propos."""
+    aboutpage = AboutPage.objects.first()
     # Statistiques dynamiques
     total_cours = Cours.objects.filter(est_publie=True).count()
+    total_etudiants = 0  # TODO: compter les utilisateurs étudiants
+    contexte = {
+        'aboutpage': aboutpage,
+        'total_cours': total_cours,
+        'total_etudiants': total_etudiants,
+    }
+    return render(request, 'pages/a_propos.html', contexte)
+
+
+def contact(request):
+    """Vue de la page Contact."""
+    contactpage = ContactPage.objects.first()
+    contexte = {
+        'contactpage': contactpage,
+    }
+    return render(request, 'pages/contact.html', contexte)
     from django.contrib.auth.models import User
     total_etudiants = User.objects.filter(is_active=True).count()
 

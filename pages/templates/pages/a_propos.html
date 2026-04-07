@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block titre %}À propos — Numeria Institute{% endblock %}
+{% block titre %}{{ aboutpage.meta_title }}{% endblock %}
 {% block contenu %}
 
 <!-- ===== HERO ===== -->
@@ -24,11 +24,10 @@
             </div>
 
             <h1 class="text-4xl sm:text-5xl font-bold mb-6">
-                À propos de
-                <span class="text-numeria-or">Numeria Institute</span>
+                {{ aboutpage.title }}
             </h1>
             <p class="text-blue-200 text-lg sm:text-xl leading-relaxed max-w-3xl mx-auto">
-                Nous formons une nouvelle génération de scientifiques et d'ingénieurs numériques africains, capables de modéliser, analyser et résoudre les problèmes complexes du continent.
+                {{ aboutpage.content }}
             </p>
 
             <!-- Localisation -->

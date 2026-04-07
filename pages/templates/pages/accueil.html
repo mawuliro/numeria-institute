@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block titre %}Accueil — Numeria Institute{% endblock %}
+{% block titre %}{{ homepage.meta_title }}{% endblock %}
 {% block contenu %}
 
 <!-- ===== HERO ===== -->
@@ -24,29 +24,27 @@
                 <!-- Badge -->
                 <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-6 tracking-wide uppercase" style="font-family:'Outfit',sans-serif;">
                     <span class="w-1.5 h-1.5 bg-numeria-teal rounded-full animate-pulse"></span>
-                    Scientific Computing & AI
+                    {{ homepage.hero_badge }}
                 </div>
 
                 <h1 style="font-family:'Outfit',sans-serif; font-weight:800; line-height:1.1;" class="text-4xl sm:text-5xl lg:text-6xl mb-6">
-                    La science<br>
-                    <span style="background: linear-gradient(135deg, #2DD4BF, #E8A020); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">accessible à tous</span><br>
-                    les esprits curieux
+                    {{ homepage.hero_title|linebreaksbr }}
                 </h1>
 
                 <p class="text-blue-200 text-base sm:text-lg leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0">
-                    Des cours scientifiques de qualité, conçus pour les apprenants africains et francophones du monde entier. Du lycée à l'IA avancée.
+                    {{ homepage.hero_description }}
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <a href="{% url 'cours:catalogue' %}"
+                    <a href="{{ homepage.hero_cta_primary_url }}"
                        style="font-family:'Outfit',sans-serif; font-weight:700;"
                        class="bg-numeria-teal text-numeria-bleu px-8 py-3.5 rounded-xl hover:bg-teal-300 transition-colors text-center text-base">
-                        Découvrir les cours →
+                        {{ homepage.hero_cta_primary_text }} →
                     </a>
-                    <a href="{% url 'comptes:inscription' %}"
+                    <a href="{{ homepage.hero_cta_secondary_url }}"
                        style="font-family:'Outfit',sans-serif; font-weight:600;"
                        class="border-2 border-white/25 text-white px-8 py-3.5 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors text-center text-base">
-                        Créer un compte
+                        {{ homepage.hero_cta_secondary_text }}
                     </a>
                 </div>
 
@@ -58,7 +56,7 @@
                             <div class="w-7 h-7 rounded-full bg-numeria-or flex items-center justify-center text-numeria-bleu font-black text-xs border-2 border-numeria-bleu" style="font-family:'Outfit',sans-serif;">K</div>
                             <div class="w-7 h-7 rounded-full bg-blue-400 flex items-center justify-center text-white font-black text-xs border-2 border-numeria-bleu" style="font-family:'Outfit',sans-serif;">F</div>
                         </div>
-                        <span class="text-blue-300 text-sm">12 000+ étudiants</span>
+                        <span class="text-blue-300 text-sm">{{ homepage.stats_students|add:"+" }} étudiants</span>
                     </div>
                     <div class="h-4 w-px bg-white/20"></div>
                     <div class="flex items-center gap-1.5 text-blue-300 text-sm">
@@ -110,17 +108,66 @@
     <div class="w-full px-4 sm:px-8 lg:px-16 py-8">
         <div class="grid grid-cols-3 gap-4 text-center">
             <div class="py-2">
-                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">12 000+</div>
+                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ homepage.stats_students|add:"+" }}</div>
                 <div class="text-blue-300 text-xs sm:text-sm mt-1">Étudiants inscrits</div>
             </div>
             <div class="py-2 border-x border-white/10">
-                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">48</div>
+                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ homepage.stats_courses }}</div>
                 <div class="text-blue-300 text-xs sm:text-sm mt-1">Cours disponibles</div>
             </div>
             <div class="py-2">
-                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">100%</div>
-                <div class="text-blue-300 text-xs sm:text-sm mt-1">Gratuit pour commencer</div>
+                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ homepage.stats_countries }}</div>
+                <div class="text-blue-300 text-xs sm:text-sm mt-1">Pays représentés</div>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FONCTIONNALITÉS ===== -->
+<section class="w-full py-16 md:py-20 bg-gray-50 dark:bg-gray-800">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="text-center mb-12">
+            <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
+                {{ homepage.features_title }}
+            </h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for feature in homepage.features %}
+            <div class="text-center">
+                <div class="w-16 h-16 bg-numeria-teal rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-2xl">{{ feature.icon }}</span>
+                </div>
+                <h3 class="text-xl font-bold text-numeria-bleu dark:text-white mb-2">{{ feature.title }}</h3>
+                <p class="text-gray-600 dark:text-gray-300">{{ feature.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ===== TÉMOIGNAGES ===== -->
+<section class="w-full py-16 md:py-20 bg-white dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="text-center mb-12">
+            <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
+                Ce que disent nos étudiants
+            </h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for testimonial in homepage.testimonials %}
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl">
+                <div class="flex items-center mb-4">
+                    <div class="w-10 h-10 bg-numeria-teal rounded-full flex items-center justify-center text-white font-bold">
+                        {{ testimonial.name|slice:":1" }}
+                    </div>
+                    <div class="ml-3">
+                        <div class="font-bold text-numeria-bleu dark:text-white">{{ testimonial.name }}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ testimonial.role }}</div>
+                    </div>
+                </div>
+                <p class="text-gray-700 dark:text-gray-300 italic">"{{ testimonial.text }}"</p>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
