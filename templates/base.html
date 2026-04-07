@@ -18,6 +18,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block titre %}Numeria Institute{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{% block titre %}Numeria Institute{% endblock %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% block meta_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% static 'images/logo-numeria.png' %}{% endblock %}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{% block twitter_url %}{{ request.build_absolute_uri }}{% endblock %}">
+    <meta property="twitter:title" content="{% block twitter_title %}{% block og_title %}{% block titre %}Numeria Institute{% endblock %}{% endblock %}{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}{% block og_description %}{% block meta_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}{% endblock %}{% endblock %}">
+    <meta property="twitter:image" content="{% block twitter_image %}{% block og_image %}{% static 'images/logo-numeria.png' %}{% endblock %}{% endblock %}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": "Numeria Institute",
+        "url": "{{ request.scheme }}://{{ request.get_host }}",
+        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-numeria.png' %}",
+        "description": "Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA.",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Lomé",
+            "addressCountry": "TG"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+228-XX-XX-XX-XX",
+            "contactType": "customer service",
+            "email": "contact@numeriainstitute.com"
+        }
+    }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
