@@ -1,1 +1,1 @@
-web: python manage.py migrate && gunicorn numeria_project.wsgi --log-file -
+web: gunicorn numeria_project.wsgi --log-file -
