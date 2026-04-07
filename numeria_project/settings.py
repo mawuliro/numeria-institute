@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'paiements',
     'analytics',
     'admissions',
+    'communaute',
 ]
 
 

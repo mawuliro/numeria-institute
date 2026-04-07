@@ -1,0 +1,57 @@
+[
+  {
+    "model": "communaute.categorie",
+    "pk": 1,
+    "fields": {
+      "nom": "Mathématiques",
+      "description": "Questions et discussions sur les mathématiques, algèbre, géométrie, analyse...",
+      "ordre": 1,
+      "est_active": true,
+      "date_creation": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "communaute.categorie",
+    "pk": 2,
+    "fields": {
+      "nom": "Sciences Physiques",
+      "description": "Physique, chimie, mécanique, thermodynamique et autres sciences expérimentales",
+      "ordre": 2,
+      "est_active": true,
+      "date_creation": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "communaute.categorie",
+    "pk": 3,
+    "fields": {
+      "nom": "Informatique & IA",
+      "description": "Programmation, intelligence artificielle, data science, algorithmique",
+      "ordre": 3,
+      "est_active": true,
+      "date_creation": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "communaute.categorie",
+    "pk": 4,
+    "fields": {
+      "nom": "Questions Générales",
+      "description": "Questions diverses sur l'éducation, les études, l'orientation professionnelle",
+      "ordre": 4,
+      "est_active": true,
+      "date_creation": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "communaute.categorie",
+    "pk": 5,
+    "fields": {
+      "nom": "Échanges & Discussions",
+      "description": "Discussions libres, partage d'expériences, actualités scientifiques",
+      "ordre": 5,
+      "est_active": true,
+      "date_creation": "2024-01-01T00:00:00Z"
+    }
+  }
+]

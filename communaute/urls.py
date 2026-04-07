@@ -1,0 +1,15 @@
+from django.urls import path
+from . import views
+
+app_name = 'communaute'
+
+urlpatterns = [
+    path('', views.liste_categories, name='liste_categories'),
+    path('categorie/<int:pk>/', views.detail_categorie, name='categorie_detail'),
+    path('sujet/<int:pk>/', views.detail_sujet, name='sujet_detail'),
+    path('sujet/nouveau/', views.creer_sujet, name='creer_sujet'),
+    path('sujet/<int:pk>/repondre/', views.repondre_sujet, name='repondre_sujet'),
+    path('sujet/<int:pk>/modifier/', views.modifier_sujet, name='modifier_sujet'),
+    path('message/<int:pk>/modifier/', views.modifier_message, name='modifier_message'),
+    path('profil/<str:username>/', views.profil_utilisateur, name='profil_utilisateur'),
+]

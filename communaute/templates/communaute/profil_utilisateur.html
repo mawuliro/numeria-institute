@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block titre %}Profil de {{ utilisateur.username }}{% endblock %}
+{% block meta_description %}Découvrez le profil de {{ utilisateur.username }} dans la communauté Numeria Institute.{% endblock %}
+{% block contenu %}
+
+<!-- ===== HEADER ===== -->
+<section class="bg-numeria-bleu text-white w-full">
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-12">
+        <div class="max-w-4xl mx-auto text-center">
+            <nav class="mb-6">
+                <a href="{% url 'communaute:liste_categories' %}" class="text-blue-200 hover:text-white transition-colors">
+                    ← Retour à la communauté
+                </a>
+            </nav>
+
+            <!-- Avatar -->
+            <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center text-numeria-bleu text-3xl font-bold mx-auto mb-4">
+                {% if profil and profil.avatar %}
+                <img src="{{ profil.avatar.url }}" alt="Avatar de {{ utilisateur.username }}" class="w-full h-full rounded-full object-cover">
+                {% else %}
+                {{ utilisateur.username|first|upper }}
+                {% endif %}
+            </div>
+
+            <h1 class="text-3xl font-bold mb-2">{{ utilisateur.username }}</h1>
+            {% if profil %}
+            <p class="text-blue-200">{{ profil.bio|default:"Membre de la communauté Numeria" }}</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- ===== INFORMATIONS ===== -->
+<section class="py-12 bg-gray-50">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-4xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Statistiques -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Statistiques</h2>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Sujets créés</span>
+                            <span class="font-semibold text-numeria-bleu">{{ nombre_sujets }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Messages postés</span>
+                            <span class="font-semibold text-numeria-bleu">{{ nombre_messages }}</span>
+                        </div>
+                        {% if profil %}
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Membre depuis</span>
+                            <span class="font-semibold text-gray-900">{{ profil.date_inscription|date:"M Y" }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Informations détaillées -->
+                {% if profil %}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Informations</h2>
+                    <div class="space-y-4">
+                        {% if profil.specialisation %}
+                        <div>
+                            <span class="text-gray-600 block text-sm">Spécialisation</span>
+                            <span class="font-medium">{{ profil.specialisation }}</span>
+                        </div>
+                        {% endif %}
+
+                        {% if profil.niveau_etudes %}
+                        <div>
+                            <span class="text-gray-600 block text-sm">Niveau d'études</span>
+                            <span class="font-medium">{{ profil.niveau_etudes }}</span>
+                        </div>
+                        {% endif %}
+
+                        {% if profil.site_web %}
+                        <div>
+                            <span class="text-gray-600 block text-sm">Site web</span>
+                            <a href="{{ profil.site_web }}" target="_blank" rel="noopener noreferrer"
+                               class="text-numeria-bleu hover:text-numeria-teal font-medium">
+                                {{ profil.site_web }}
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== DERNIERS MESSAGES ===== -->
+{% if derniers_messages %}
+<section class="py-12 bg-white">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-8">Dernières activités</h2>
+
+            <div class="space-y-4">
+                {% for message in derniers_messages %}
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-numeria-bleu rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                            {{ message.auteur.username|first|upper }}
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm text-gray-600 mb-2">
+                                Dans <a href="{{ message.sujet.get_absolute_url }}" class="text-numeria-bleu hover:text-numeria-teal font-medium">
+                                    {{ message.sujet.titre }}
+                                </a>
+                                • {{ message.date_creation|date:"d M Y à H:i" }}
+                            </div>
+                            <div class="text-gray-800">
+                                {{ message.contenu|truncatechars:150 }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-8 text-center">
+                <a href="{% url 'communaute:liste_categories' %}"
+                   class="text-numeria-bleu hover:text-numeria-teal font-medium">
+                    Voir tous les sujets →
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

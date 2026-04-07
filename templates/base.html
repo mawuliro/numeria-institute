@@ -207,7 +207,7 @@
                     <a href="{% url 'blog:liste' %}" class="nav-pill {% if '/blog' in request.path %}actif{% endif %}">Blog</a>
                     <!-- 🔥 NOUVEAU LIEN CANDIDATURES -->
                     <a href="{% url 'admissions:liste_campagnes' %}" class="nav-pill {% if '/admissions' in request.path %}actif{% endif %}">Candidatures</a>
-                    <a href="#" class="nav-pill">Communauté</a>
+                    <a href="{% url 'communaute:liste_categories' %}" class="nav-pill {% if '/communaute' in request.path %}actif{% endif %}">Communauté</a>
                     <a href="{% url 'a_propos' %}" class="nav-pill {% if '/a-propos' in request.path %}actif{% endif %}">À propos</a>
                     <a href="{% url 'contact' %}" class="nav-pill {% if '/contact' in request.path %}actif{% endif %}">Contact</a>
                     <!-- LIEN ANALYTICS POUR ADMIN (DESKTOP) -->
@@ -340,7 +340,7 @@
                         <li><a href="{% url 'admissions:liste_campagnes' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Candidatures</a></li>
                         <li><a href="{% url 'a_propos' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">À propos</a></li>
                         <li><a href="{% url 'contact' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Contact</a></li>
-                        <li><a href="#" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Communauté</a></li>
+                        <li><a href="{% url 'communaute:liste_categories' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Communauté</a></li>
                     </ul>
                 </div>
 

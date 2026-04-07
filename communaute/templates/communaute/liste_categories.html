@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block titre %}Communauté{% endblock %}
+{% block meta_description %}Rejoignez la communauté Numeria Institute. Échangez avec d'autres apprenants, posez vos questions et partagez vos connaissances en sciences.{% endblock %}
+{% block contenu %}
+
+<!-- ===== HERO ===== -->
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
+    <!-- Motif de fond décoratif -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div style="position:absolute; top:-80px; right:-80px; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle, rgba(45,212,191,0.08) 0%, transparent 70%);"></div>
+        <div style="position:absolute; bottom:-60px; left:-60px; width:300px; height:300px; border-radius:50%; background:radial-gradient(circle, rgba(232,160,32,0.07) 0%, transparent 70%);"></div>
+        <!-- Grille de points -->
+        <svg width="100%" height="100%" style="opacity:0.04;" xmlns="http://www.w3.org/2000/svg">
+            <defs><pattern id="dots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#dots)"/>
+        </svg>
+    </div>
+
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-16 md:py-24 relative">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 style="font-family:'Outfit',sans-serif; font-weight:800; line-height:1.1;" class="text-4xl sm:text-5xl lg:text-6xl mb-6">
+                Communauté Numeria
+            </h1>
+            <p class="text-blue-200 text-base sm:text-lg leading-relaxed mb-8">
+                Échangez avec d'autres apprenants, posez vos questions et partagez vos connaissances en sciences.
+            </p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'communaute:creer_sujet' %}"
+               style="font-family:'Outfit',sans-serif; font-weight:700;"
+               class="bg-numeria-teal text-numeria-bleu px-8 py-3.5 rounded-xl hover:bg-teal-300 transition-colors inline-block">
+                Créer un nouveau sujet →
+            </a>
+            {% else %}
+            <a href="{% url 'comptes:connexion' %}"
+               style="font-family:'Outfit',sans-serif; font-weight:700;"
+               class="bg-numeria-teal text-numeria-bleu px-8 py-3.5 rounded-xl hover:bg-teal-300 transition-colors inline-block">
+                Se connecter pour participer →
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- ===== CATÉGORIES ===== -->
+<section class="py-16 bg-gray-50">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Forums</h2>
+
+            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {% for categorie in categories %}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                    <div class="flex items-start justify-between mb-4">
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            <a href="{{ categorie.get_absolute_url }}" class="hover:text-numeria-bleu transition-colors">
+                                {{ categorie.nom }}
+                            </a>
+                        </h3>
+                        {% if categorie.nombre_sujets > 0 %}
+                        <span class="bg-numeria-bleu text-white text-xs px-2 py-1 rounded-full">
+                            {{ categorie.nombre_sujets }} sujet{{ categorie.nombre_sujets|pluralize:"s" }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    {% if categorie.description %}
+                    <p class="text-gray-600 mb-4">{{ categorie.description }}</p>
+                    {% endif %}
+
+                    <a href="{{ categorie.get_absolute_url }}"
+                       class="text-numeria-bleu font-medium hover:text-numeria-teal transition-colors">
+                        Voir les sujets →
+                    </a>
+                </div>
+                {% empty %}
+                <div class="col-span-full text-center py-12">
+                    <p class="text-gray-500">Aucune catégorie disponible pour le moment.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== STATISTIQUES ===== -->
+<section class="py-16 bg-white">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Rejoignez notre communauté</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-numeria-bleu mb-2">{{ categories|length }}</div>
+                    <p class="text-gray-600">Catégories</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-numeria-bleu mb-2">
+                        {% widthratio categories|length 1 10 %}
+                    </div>
+                    <p class="text-gray-600">Sujets actifs</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-numeria-bleu mb-2">
+                        {% widthratio categories|length 1 50 %}
+                    </div>
+                    <p class="text-gray-600">Membres</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
