@@ -98,12 +98,12 @@
                     <div class="flex items-center gap-4">
                         {% if user.is_authenticated and user != message.auteur %}
                         <div class="flex items-center gap-2 vote-buttons" data-message-id="{{ message.pk }}">
-                            <button class="vote-btn upvote-btn text-gray-400 hover:text-green-600 transition-colors p-1"
+                            <button class="vote-btn upvote-btn text-gray-400 hover:text-green-600 transition-colors p-1 {% if user_votes|get_item:message.pk == 1 %}text-green-600{% endif %}"
                                     data-valeur="1" title="Utile">
                                 👍
                             </button>
                             <span class="vote-count font-medium text-gray-700">{{ message.nombre_votes }}</span>
-                            <button class="vote-btn downvote-btn text-gray-400 hover:text-red-600 transition-colors p-1"
+                            <button class="vote-btn downvote-btn text-gray-400 hover:text-red-600 transition-colors p-1 {% if user_votes|get_item:message.pk == -1 %}text-red-600{% endif %}"
                                     data-valeur="-1" title="Pas utile">
                                 👎
                             </button>
@@ -177,6 +177,9 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- Token CSRF pour les requêtes AJAX -->
+{% csrf_token %}
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Gestion des votes
@@ -209,16 +212,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 const valeur = parseInt(e.target.dataset.valeur);
 
+                // Utiliser l'URL Django au lieu d'une URL absolue
+                const voteUrl = `/communaute/message/${messageId}/voter/`;
+
+                // Récupérer le token CSRF
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+                const csrfValue = csrfToken ? csrfToken.value : '';
+
                 // Envoi de la requête AJAX
-                fetch(`/communaute/message/${messageId}/voter/`, {
+                fetch(voteUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        'X-CSRFToken': csrfValue
                     },
                     body: `valeur=${valeur}`
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.error) {
                         alert(data.error);
@@ -230,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .catch(error => {
                     console.error('Erreur:', error);
-                    alert('Une erreur est survenue lors du vote.');
+                    alert('Une erreur est survenue lors du vote. Veuillez réessayer.');
                 });
             }
         });

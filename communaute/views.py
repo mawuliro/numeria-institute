@@ -54,9 +54,19 @@ def detail_sujet(request, pk):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    # Récupérer les votes de l'utilisateur actuel pour chaque message
+    user_votes = {}
+    if request.user.is_authenticated:
+        votes = Vote.objects.filter(
+            message__in=[msg.pk for msg in page_obj],
+            utilisateur=request.user
+        ).values('message', 'valeur')
+        user_votes = {vote['message']: vote['valeur'] for vote in votes}
+
     contexte = {
         'sujet': sujet,
         'page_obj': page_obj,
+        'user_votes': user_votes,
         'titre_page': sujet.titre,
     }
     return render(request, 'communaute/detail_sujet.html', contexte)
