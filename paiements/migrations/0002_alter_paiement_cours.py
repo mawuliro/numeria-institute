@@ -6,7 +6,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('paiements', '0001_initial'),
-        ('cours', '0008_certificat'),
+        ('cours', '0001_initial'),
     ]
 
     operations = [
