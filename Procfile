@@ -1,1 +1,1 @@
-web: gunicorn numeria_project.wsgi --log-file -
+web: gunicorn numeria_project.wsgi --worker-class gevent --worker-connections 1000 --log-file - --timeout 120
