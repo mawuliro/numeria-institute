@@ -6,6 +6,7 @@ app_name = 'communaute'
 urlpatterns = [
     path('', views.liste_categories, name='liste_categories'),
     path('categorie/<int:pk>/', views.detail_categorie, name='categorie_detail'),
+    path('categorie/nouvelle/', views.creer_categorie, name='creer_categorie'),
     path('sujet/<int:pk>/', views.detail_sujet, name='sujet_detail'),
     path('sujet/nouveau/', views.creer_sujet, name='creer_sujet'),
     path('sujet/<int:pk>/repondre/', views.repondre_sujet, name='repondre_sujet'),

@@ -1,6 +1,22 @@
 from django import forms
 from .models import Categorie, Sujet, Message, ProfilUtilisateur
 
+class CategorieForm(forms.ModelForm):
+    class Meta:
+        model = Categorie
+        fields = ['nom', 'description', 'ordre', 'est_active']
+        widgets = {
+            'nom': forms.TextInput(attrs={'placeholder': 'Nom de la catégorie', 'class': 'w-full rounded-xl border border-gray-300 px-4 py-3'}),
+            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Description de la catégorie', 'class': 'w-full rounded-xl border border-gray-300 px-4 py-3'}),
+            'ordre': forms.NumberInput(attrs={'class': 'w-full rounded-xl border border-gray-300 px-4 py-3'}),
+        }
+        labels = {
+            'nom': 'Nom de la catégorie',
+            'description': 'Description',
+            'ordre': 'Ordre d’affichage',
+            'est_active': 'Activer la catégorie',
+        }
+
 class SujetForm(forms.ModelForm):
     categorie = forms.ModelChoiceField(
         queryset=Categorie.objects.filter(est_active=True),

@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Count
 from .models import Categorie, Sujet, Message, ProfilUtilisateur
-from .forms import SujetForm, MessageForm, ProfilUtilisateurForm
+from .forms import CategorieForm, SujetForm, MessageForm, ProfilUtilisateurForm
 
 def liste_categories(request):
     """Affiche la liste des catégories de forums."""
@@ -89,6 +90,24 @@ def creer_sujet(request):
         'titre_page': 'Créer un nouveau sujet',
     }
     return render(request, 'communaute/creer_sujet.html', contexte)
+
+@staff_member_required
+def creer_categorie(request):
+    """Permet aux modérateurs de créer une nouvelle catégorie."""
+    if request.method == 'POST':
+        form = CategorieForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'La catégorie a été créée avec succès.')
+            return redirect('communaute:liste_categories')
+    else:
+        form = CategorieForm()
+
+    contexte = {
+        'form': form,
+        'titre_page': 'Créer une catégorie',
+    }
+    return render(request, 'communaute/creer_categorie.html', contexte)
 
 @login_required
 def repondre_sujet(request, pk):
