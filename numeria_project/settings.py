@@ -165,6 +165,11 @@ else:
     MEDIA_URL = '/media/'
 
 
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.railway.app"
+]
+
 # ── AUTHENTIFICATION ─────────────────────────────────────────────────────────
 LOGIN_URL           = '/comptes/connexion/'
 LOGIN_REDIRECT_URL  = '/comptes/tableau-de-bord/'
