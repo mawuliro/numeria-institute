@@ -39,7 +39,6 @@
 
             <!-- Indicateur de progression -->
             <div class="flex items-center gap-2 mb-8">
-                {% for label in "1,2,3,4"|split:"," %}{% endfor %}
                 <div class="flex items-center gap-1 text-xs text-gray-400">
                     <span class="w-6 h-6 rounded-full bg-numeria-teal text-numeria-bleu font-bold flex items-center justify-center text-xs">1</span>
                     <span class="text-numeria-teal font-medium">Infos perso</span>
@@ -168,8 +167,7 @@
                             Formats acceptés : PDF · Max 5 MB par fichier
                         </div>
                         <div class="grid grid-cols-1 gap-5">
-                            {% for field, hint in formulaire.cv,formulaire.lettre_motivation,formulaire.releves_notes,formulaire.autres_documents|zip:"CV (curriculum vitae détaillé),Lettre de motivation,Relevés des 2 dernières années,Certificats et attestations (optionnel)" %}{% endfor %}
-
+                            
                             <div>
                                 <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">CV (PDF) *</label>
                                 {{ formulaire.cv }}
