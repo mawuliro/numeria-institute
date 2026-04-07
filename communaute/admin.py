@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categorie, Sujet, Message, ProfilUtilisateur
+from .models import Categorie, Sujet, Message, Vote, ProfilUtilisateur
 
 @admin.register(Categorie)
 class CategorieAdmin(admin.ModelAdmin):
@@ -18,9 +18,16 @@ class SujetAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ['sujet', 'auteur', 'date_creation', 'est_edite']
+    list_display = ['sujet', 'auteur', 'date_creation', 'est_edite', 'nombre_votes']
     list_filter = ['date_creation', 'est_edite']
     search_fields = ['contenu', 'auteur__username', 'sujet__titre']
+    ordering = ['-date_creation']
+
+@admin.register(Vote)
+class VoteAdmin(admin.ModelAdmin):
+    list_display = ['message', 'utilisateur', 'valeur', 'date_creation']
+    list_filter = ['valeur', 'date_creation']
+    search_fields = ['message__contenu', 'utilisateur__username']
     ordering = ['-date_creation']
 
 @admin.register(ProfilUtilisateur)

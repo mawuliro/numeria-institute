@@ -26,6 +26,14 @@
             {% if profil %}
             <p class="text-blue-200">{{ profil.bio|default:"Membre de la communauté Numeria" }}</p>
             {% endif %}
+
+            {% if user.is_authenticated and user == utilisateur %}
+            <div class="mt-6">
+                <a href="{% url 'communaute:modifier_profil' %}" class="bg-white text-numeria-bleu px-6 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors">
+                    Modifier mon profil
+                </a>
+            </div>
+            {% endif %}
         </div>
     </div>
 </section>

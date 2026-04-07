@@ -70,6 +70,25 @@ class Message(models.Model):
     def get_absolute_url(self):
         return f"{self.sujet.get_absolute_url()}#message-{self.pk}"
 
+    @property
+    def nombre_votes(self):
+        return self.votes.count()
+
+class Vote(models.Model):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='votes')
+    utilisateur = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes_communaute')
+    valeur = models.IntegerField(choices=[(1, 'Like'), (-1, 'Dislike')], default=1)
+    date_creation = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "Vote"
+        verbose_name_plural = "Votes"
+        unique_together = ['message', 'utilisateur']  # Un vote par utilisateur par message
+        ordering = ['-date_creation']
+
+    def __str__(self):
+        return f"Vote de {self.utilisateur} sur message {self.message.pk}"
+
 class ProfilUtilisateur(models.Model):
     utilisateur = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profil_communaute')
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)

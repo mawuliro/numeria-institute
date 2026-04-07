@@ -89,8 +89,42 @@
                 </div>
 
                 <!-- Contenu du message -->
-                <div class="prose prose-gray max-w-none">
+                <div class="prose prose-gray max-w-none mb-4">
                     {{ message.contenu|linebreaks }}
+                </div>
+
+                <!-- Votes et actions -->
+                <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div class="flex items-center gap-4">
+                        {% if user.is_authenticated and user != message.auteur %}
+                        <div class="flex items-center gap-2 vote-buttons" data-message-id="{{ message.pk }}">
+                            <button class="vote-btn upvote-btn text-gray-400 hover:text-green-600 transition-colors p-1"
+                                    data-valeur="1" title="Utile">
+                                👍
+                            </button>
+                            <span class="vote-count font-medium text-gray-700">{{ message.nombre_votes }}</span>
+                            <button class="vote-btn downvote-btn text-gray-400 hover:text-red-600 transition-colors p-1"
+                                    data-valeur="-1" title="Pas utile">
+                                👎
+                            </button>
+                        </div>
+                        {% else %}
+                        <div class="flex items-center gap-2">
+                            <span class="text-gray-400">👍</span>
+                            <span class="vote-count font-medium text-gray-700">{{ message.nombre_votes }}</span>
+                            <span class="text-gray-400">👎</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if user.is_authenticated and user == message.auteur %}
+                    <div class="flex gap-2">
+                        <a href="{% url 'communaute:modifier_message' message.pk %}"
+                           class="text-gray-500 hover:text-numeria-bleu transition-colors text-sm">
+                            ✏️ Modifier
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
@@ -140,4 +174,67 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion des votes
+    document.querySelectorAll('.vote-buttons').forEach(function(voteContainer) {
+        const messageId = voteContainer.dataset.messageId;
+        const upvoteBtn = voteContainer.querySelector('.upvote-btn');
+        const downvoteBtn = voteContainer.querySelector('.downvote-btn');
+        const voteCount = voteContainer.querySelector('.vote-count');
+
+        // Fonction pour mettre à jour l'apparence des boutons
+        function updateVoteButtons(valeurUtilisateur) {
+            upvoteBtn.classList.remove('text-green-600', 'text-gray-400');
+            downvoteBtn.classList.remove('text-red-600', 'text-gray-400');
+
+            if (valeurUtilisateur === 1) {
+                upvoteBtn.classList.add('text-green-600');
+                downvoteBtn.classList.add('text-gray-400');
+            } else if (valeurUtilisateur === -1) {
+                downvoteBtn.classList.add('text-red-600');
+                upvoteBtn.classList.add('text-gray-400');
+            } else {
+                upvoteBtn.classList.add('text-gray-400');
+                downvoteBtn.classList.add('text-gray-400');
+            }
+        }
+
+        // Gestionnaire d'événement pour les boutons de vote
+        voteContainer.addEventListener('click', function(e) {
+            if (e.target.classList.contains('vote-btn')) {
+                e.preventDefault();
+                const valeur = parseInt(e.target.dataset.valeur);
+
+                // Envoi de la requête AJAX
+                fetch(`/communaute/message/${messageId}/voter/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: `valeur=${valeur}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        // Mise à jour du compteur et des boutons
+                        voteCount.textContent = data.nombre_votes;
+                        updateVoteButtons(data.vote_utilisateur);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Une erreur est survenue lors du vote.');
+                });
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

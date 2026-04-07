@@ -4,7 +4,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Count
-from .models import Categorie, Sujet, Message, ProfilUtilisateur
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from .models import Categorie, Sujet, Message, Vote, ProfilUtilisateur
 from .forms import CategorieForm, SujetForm, MessageForm, ProfilUtilisateurForm
 
 def liste_categories(request):
@@ -221,3 +223,69 @@ def profil_utilisateur(request, username):
         'titre_page': f'Profil de {utilisateur.username}',
     }
     return render(request, 'communaute/profil_utilisateur.html', contexte)
+
+@login_required
+@require_POST
+def voter_message(request, pk):
+    """Permet de voter pour ou contre un message."""
+    message = get_object_or_404(Message, pk=pk)
+
+    # Empêcher de voter pour ses propres messages
+    if message.auteur == request.user:
+        return JsonResponse({'error': 'Vous ne pouvez pas voter pour votre propre message.'}, status=400)
+
+    valeur = request.POST.get('valeur')
+    if valeur not in ['1', '-1']:
+        return JsonResponse({'error': 'Valeur de vote invalide.'}, status=400)
+
+    valeur = int(valeur)
+
+    # Vérifier si l'utilisateur a déjà voté
+    vote_existant = Vote.objects.filter(message=message, utilisateur=request.user).first()
+
+    if vote_existant:
+        if vote_existant.valeur == valeur:
+            # Annuler le vote si c'est le même
+            vote_existant.delete()
+            action = 'annule'
+        else:
+            # Changer le vote
+            vote_existant.valeur = valeur
+            vote_existant.save()
+            action = 'change'
+    else:
+        # Créer un nouveau vote
+        Vote.objects.create(message=message, utilisateur=request.user, valeur=valeur)
+        action = 'nouveau'
+
+    # Retourner le nouveau nombre de votes
+    nombre_votes = message.nombre_votes
+
+    return JsonResponse({
+        'action': action,
+        'nombre_votes': nombre_votes,
+        'vote_utilisateur': valeur if action != 'annule' else 0
+    })
+
+@login_required
+def modifier_profil(request):
+    """Permet à l'utilisateur de modifier son profil."""
+    try:
+        profil = request.user.profil_communaute
+    except ProfilUtilisateur.DoesNotExist:
+        profil = ProfilUtilisateur(utilisateur=request.user)
+
+    if request.method == 'POST':
+        form = ProfilUtilisateurForm(request.POST, request.FILES, instance=profil)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Votre profil a été mis à jour.')
+            return redirect('communaute:profil_utilisateur', username=request.user.username)
+    else:
+        form = ProfilUtilisateurForm(instance=profil)
+
+    contexte = {
+        'form': form,
+        'titre_page': 'Modifier mon profil',
+    }
+    return render(request, 'communaute/modifier_profil.html', contexte)
