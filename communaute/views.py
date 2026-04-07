@@ -61,6 +61,7 @@ def detail_sujet(request, pk):
 @login_required
 def creer_sujet(request):
     """Permet de créer un nouveau sujet."""
+    categorie_initial = request.GET.get('categorie')
     if request.method == 'POST':
         form = SujetForm(request.POST)
         if form.is_valid():
@@ -78,7 +79,10 @@ def creer_sujet(request):
             messages.success(request, 'Votre sujet a été créé avec succès.')
             return redirect(sujet.get_absolute_url())
     else:
-        form = SujetForm()
+        form_kwargs = {}
+        if categorie_initial:
+            form_kwargs['categorie_initial'] = categorie_initial
+        form = SujetForm(**form_kwargs)
 
     contexte = {
         'form': form,

@@ -1,7 +1,14 @@
 from django import forms
-from .models import Sujet, Message, ProfilUtilisateur
+from .models import Categorie, Sujet, Message, ProfilUtilisateur
 
 class SujetForm(forms.ModelForm):
+    categorie = forms.ModelChoiceField(
+        queryset=Categorie.objects.filter(est_active=True),
+        empty_label='Sélectionnez une catégorie',
+        widget=forms.Select(attrs={'class': 'w-full rounded-xl border border-gray-300 px-4 py-3'}),
+        label='Catégorie'
+    )
+
     contenu = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 10, 'placeholder': 'Décrivez votre sujet...'}),
         label='Message initial'
@@ -13,6 +20,13 @@ class SujetForm(forms.ModelForm):
         widgets = {
             'titre': forms.TextInput(attrs={'placeholder': 'Titre de votre sujet'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        categorie_initial = kwargs.pop('categorie_initial', None)
+        super().__init__(*args, **kwargs)
+        self.fields['categorie'].queryset = Categorie.objects.filter(est_active=True)
+        if categorie_initial is not None:
+            self.fields['categorie'].initial = categorie_initial
 
 class MessageForm(forms.ModelForm):
     class Meta:
