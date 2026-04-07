@@ -56,7 +56,7 @@ def dashboard(request):
     # ============================================================
     
     paiements = Paiement.objects.filter(
-        statut='réussi',
+        statut='reussi',
         date_creation__date__gte=last_30_days  # ← CORRIGÉ : date_creation
     )
     

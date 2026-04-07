@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titre %}Candidature {{ candidature.reference }} — Numeria Institute{% endblock %}
+
+{% block contenu %}
+<section class="w-full min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        
+        <div class="max-w-4xl mx-auto">
+            
+            <div class="mb-6">
+                <a href="{% url 'admissions:mes_candidatures' %}" class="text-numeria-teal hover:opacity-75">
+                    ← Retour à mes candidatures
+                </a>
+            </div>
+            
+            <!-- En-tête -->
+            <div class="bg-gradient-to-r from-numeria-bleu to-numeria-teal rounded-2xl p-6 text-white mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold">{{ candidature.campagne.nom }}</h1>
+                        <p class="text-white/80">{{ candidature.campagne.filiere }}</p>
+                        <p class="text-white/60 text-sm mt-1">Réf : {{ candidature.reference }}</p>
+                    </div>
+                    <div class="px-4 py-2 bg-white/20 rounded-xl text-center">
+                        <p class="text-sm">Statut</p>
+                        <p class="font-bold">
+                            {{ candidature.get_statut_display }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statut message -->
+            {% if candidature.statut == 'acceptee' %}
+            <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-2xl p-6 mb-6 text-center">
+                <div class="text-4xl mb-2">🎉</div>
+                <h2 class="text-xl font-bold text-green-700 dark:text-green-300">Félicitations !</h2>
+                <p class="text-green-600 dark:text-green-400">
+                    Votre candidature a été acceptée. Vous recevrez prochainement un email avec les prochaines étapes.
+                </p>
+            </div>
+            {% elif candidature.statut == 'liste_attente' %}
+            <div class="bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800 rounded-2xl p-6 mb-6 text-center">
+                <div class="text-4xl mb-2">⏳</div>
+                <p class="text-orange-700 dark:text-orange-300">
+                    Vous êtes sur liste d'attente. Nous vous tiendrons informé dès qu'une place se libère.
+                </p>
+            </div>
+            {% elif candidature.statut == 'refusee' %}
+            <div class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-2xl p-6 mb-6 text-center">
+                <div class="text-4xl mb-2">😔</div>
+                <p class="text-red-700 dark:text-red-300">
+                    Nous sommes désolés, votre candidature n'a pas été retenue cette année.
+                </p>
+            </div>
+            {% endif %}
+            
+            <!-- Informations de la candidature -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 mb-6">
+                <h2 class="text-xl font-bold text-numeria-bleu dark:text-white mb-4">📋 Récapitulatif</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div><span class="text-gray-500">Nom complet :</span> {{ candidature.prenom }} {{ candidature.nom }}</div>
+                    <div><span class="text-gray-500">Date de naissance :</span> {{ candidature.date_naissance|date:"d/m/Y" }}</div>
+                    <div><span class="text-gray-500">Téléphone :</span> {{ candidature.telephone }}</div>
+                    <div><span class="text-gray-500">Email :</span> {{ candidature.email_personnel }}</div>
+                    <div><span class="text-gray-500">Pays :</span> {{ candidature.pays }}, {{ candidature.ville }}</div>
+                    <div><span class="text-gray-500">Dernier établissement :</span> {{ candidature.dernier_etablissement }}</div>
+                    <div><span class="text-gray-500">Niveau d'études :</span> {{ candidature.niveau_etudes }}</div>
+                    {% if candidature.moyenne_generale %}
+                    <div><span class="text-gray-500">Moyenne générale :</span> {{ candidature.moyenne_generale }}/20</div>
+                    {% endif %}
+                    <div class="md:col-span-2"><span class="text-gray-500">Motivation :</span> {{ candidature.motivation|linebreaks }}</div>
+                </div>
+            </div>
+            
+            <!-- Commentaire admin -->
+            {% if candidature.commentaire_admin %}
+            <div class="bg-blue-50 dark:bg-blue-900/30 rounded-2xl p-6">
+                <h3 class="font-bold text-numeria-bleu dark:text-white mb-2">💬 Message de l'équipe Numeria</h3>
+                <p class="text-gray-700 dark:text-gray-300">{{ candidature.commentaire_admin }}</p>
+            </div>
+            {% endif %}
+            
+        </div>
+        
+    </div>
+</section>
+{% endblock %}

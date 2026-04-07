@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% block titre %}{{ campagne.nom }} — Numeria Institute{% endblock %}
+{% block contenu %}
+
+<!-- EN-TÊTE -->
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <svg width="100%" height="100%" style="opacity:0.05;" xmlns="http://www.w3.org/2000/svg">
+            <defs><pattern id="dots-dc" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#dots-dc)"/>
+        </svg>
+    </div>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-14 relative">
+        <a href="{% url 'admissions:liste_campagnes' %}" class="inline-flex items-center gap-1.5 text-numeria-teal hover:opacity-75 transition-opacity text-sm mb-6">
+            ← Retour aux candidatures
+        </a>
+        <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 block w-fit tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
+            {{ campagne.filiere }}
+        </div>
+        <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl text-white mb-2">
+            {{ campagne.nom }}
+        </h1>
+        <p class="text-blue-300 text-sm">Date limite : {{ campagne.date_limite|date:"d F Y" }}</p>
+    </div>
+</section>
+
+<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-5xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Colonne principale -->
+                <div class="lg:col-span-2 flex flex-col gap-6">
+
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-7 shadow-sm">
+                        <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-4 flex items-center gap-2">
+                            <span class="text-numeria-teal">📖</span> Description
+                        </h2>
+                        <div class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm space-y-2">
+                            {{ campagne.description|linebreaks }}
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-7 shadow-sm">
+                        <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-4 flex items-center gap-2">
+                            <span class="text-numeria-teal">📋</span> Prérequis
+                        </h2>
+                        <div class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm space-y-2">
+                            {{ campagne.prerequis|default:"Aucun prérequis spécifique."|linebreaks }}
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Sidebar -->
+                <div class="flex flex-col gap-5">
+
+                    <!-- Informations -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+                        <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-sm mb-4 flex items-center gap-2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            Informations
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                                <span class="text-gray-500">Date limite</span>
+                                <span class="font-semibold text-gray-800 dark:text-gray-200">{{ campagne.date_limite|date:"d F Y" }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                                <span class="text-gray-500">Places</span>
+                                <span class="font-semibold text-gray-800 dark:text-gray-200">{{ campagne.capacite_max }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2">
+                                <span class="text-gray-500">Frais de candidature</span>
+                                {% if campagne.frais_candidature == 0 %}
+                                    <span class="font-bold text-green-500">Gratuit</span>
+                                {% else %}
+                                    <span class="font-bold text-numeria-bleu dark:text-numeria-teal">{{ campagne.frais_candidature }} FCFA</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Zone d'action -->
+                    {% if campagne.est_ouverte %}
+                        {% if user.is_authenticated %}
+
+                            {% if a_candidate %}
+                            <div class="bg-green-50 dark:bg-green-900/30 rounded-2xl p-6 text-center border border-green-200 dark:border-green-800">
+                                <div class="text-4xl mb-3">✅</div>
+                                <p style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-green-700 dark:text-green-300 mb-1">
+                                    Candidature soumise !
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                                    Vous avez déjà candidaté pour cette formation.
+                                </p>
+                                <a href="{% url 'admissions:mes_candidatures' %}"
+                                   style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                   class="inline-block text-numeria-teal text-sm hover:opacity-75 transition-opacity">
+                                    Voir mes candidatures →
+                                </a>
+                            </div>
+
+                            {% elif a_paiement_reussi %}
+                            <div class="bg-blue-50 dark:bg-blue-900/30 rounded-2xl p-6 text-center border border-blue-200 dark:border-blue-800">
+                                <div class="text-4xl mb-3">✅</div>
+                                <p style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-blue-700 dark:text-blue-300 mb-1">
+                                    Paiement confirmé !
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                                    Vous pouvez maintenant remplir votre formulaire.
+                                </p>
+                                <a href="{% url 'admissions:candidature' campagne.id %}"
+                                   style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                   class="block text-center bg-numeria-teal text-numeria-bleu py-3 rounded-xl hover:bg-teal-300 transition-colors">
+                                    📝 Remplir le formulaire
+                                </a>
+                            </div>
+
+                            {% elif a_paiement_attente %}
+                            <div class="bg-yellow-50 dark:bg-yellow-900/30 rounded-2xl p-6 text-center border border-yellow-200 dark:border-yellow-800">
+                                <div class="text-4xl mb-3">💳</div>
+                                <p style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-yellow-700 dark:text-yellow-300 mb-1">
+                                    Paiement en attente
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                                    Finalisez votre paiement avant de postuler.
+                                </p>
+                                <a href="{% url 'admissions:page_paiement_candidature' campagne.id %}"
+                                   style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                   class="block text-center bg-numeria-teal text-numeria-bleu py-3 rounded-xl hover:bg-teal-300 transition-colors">
+                                    Finaliser le paiement →
+                                </a>
+                            </div>
+
+                            {% else %}
+                                {% if campagne.frais_candidature > 0 %}
+                                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 text-center">
+                                        Des frais de <strong class="text-numeria-bleu dark:text-numeria-teal">{{ campagne.frais_candidature }} FCFA</strong> sont requis pour postuler.
+                                    </p>
+                                    <a href="{% url 'admissions:page_paiement_candidature' campagne.id %}"
+                                       style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                       class="block text-center bg-numeria-teal text-numeria-bleu py-3 rounded-xl hover:bg-teal-300 transition-colors">
+                                        💳 Payer les frais ({{ campagne.frais_candidature }} FCFA)
+                                    </a>
+                                </div>
+                                {% else %}
+                                <a href="{% url 'admissions:candidature' campagne.id %}"
+                                   style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                   class="block text-center bg-numeria-teal text-numeria-bleu py-4 rounded-xl hover:bg-teal-300 transition-colors text-lg shadow-md">
+                                    📝 Postuler gratuitement
+                                </a>
+                                {% endif %}
+                            {% endif %}
+
+                        {% else %}
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm text-center">
+                            <div class="text-3xl mb-3">🔐</div>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                                Connectez-vous pour soumettre votre candidature
+                            </p>
+                            <a href="{% url 'comptes:connexion' %}?next={{ request.path }}"
+                               style="font-family:'Outfit',sans-serif;font-weight:700;"
+                               class="block text-center bg-numeria-bleu text-white py-3 rounded-xl hover:bg-numeria-teal transition-colors mb-3">
+                                Se connecter
+                            </a>
+                            <p class="text-xs text-gray-400 dark:text-gray-500">
+                                Pas encore de compte ?
+                                <a href="{% url 'comptes:inscription' %}" class="text-numeria-teal font-semibold hover:opacity-75">S'inscrire</a>
+                            </p>
+                        </div>
+                        {% endif %}
+
+                    {% else %}
+                    <div class="bg-gray-100 dark:bg-gray-700 rounded-2xl p-6 text-center">
+                        <div class="text-3xl mb-2">🔒</div>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Cette campagne est fermée</p>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

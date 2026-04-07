@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% block titre %}Candidature — {{ campagne.nom }}{% endblock %}
+{% block contenu %}
+
+<section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-12">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-3xl mx-auto">
+
+            <a href="{% url 'admissions:detail_campagne' campagne.id %}" class="inline-flex items-center gap-1.5 text-numeria-teal hover:opacity-75 transition-opacity text-sm mb-8">
+                ← Retour à la formation
+            </a>
+
+            <!-- En-tête -->
+            <div class="text-center mb-8">
+                <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl text-numeria-bleu dark:text-white mb-1">
+                    Formulaire de candidature
+                </h1>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">{{ campagne.nom }} · {{ campagne.filiere }}</p>
+                {% if campagne.frais_candidature > 0 %}
+                <div class="inline-flex items-center gap-1.5 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-semibold px-4 py-1.5 rounded-full mt-3 border border-green-200 dark:border-green-700">
+                    ✅ Frais de candidature payés : {{ campagne.frais_candidature }} FCFA
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Messages -->
+            {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                <div class="p-3.5 rounded-xl text-sm flex items-center gap-2 mb-2
+                    {% if message.tags == 'error' %}bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200
+                    {% else %}bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200{% endif %}">
+                    <span>{% if message.tags == 'error' %}❌{% else %}✅{% endif %}</span>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Indicateur de progression -->
+            <div class="flex items-center gap-2 mb-8">
+                {% for label in "1,2,3,4"|split:"," %}{% endfor %}
+                <div class="flex items-center gap-1 text-xs text-gray-400">
+                    <span class="w-6 h-6 rounded-full bg-numeria-teal text-numeria-bleu font-bold flex items-center justify-center text-xs">1</span>
+                    <span class="text-numeria-teal font-medium">Infos perso</span>
+                </div>
+                <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+                <div class="flex items-center gap-1 text-xs text-gray-400">
+                    <span class="w-6 h-6 rounded-full bg-numeria-teal text-numeria-bleu font-bold flex items-center justify-center text-xs">2</span>
+                    <span class="text-numeria-teal font-medium">Académique</span>
+                </div>
+                <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+                <div class="flex items-center gap-1 text-xs text-gray-400">
+                    <span class="w-6 h-6 rounded-full bg-numeria-teal text-numeria-bleu font-bold flex items-center justify-center text-xs">3</span>
+                    <span class="text-numeria-teal font-medium">Documents</span>
+                </div>
+                <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+                <div class="flex items-center gap-1 text-xs text-gray-400">
+                    <span class="w-6 h-6 rounded-full bg-numeria-teal text-numeria-bleu font-bold flex items-center justify-center text-xs">4</span>
+                    <span class="text-numeria-teal font-medium">Questions</span>
+                </div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="flex flex-col gap-6">
+                {% csrf_token %}
+
+                <!-- SECTION 1 : Informations personnelles -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm">
+                    <div class="bg-numeria-bleu/5 dark:bg-numeria-bleu/20 px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+                        <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white flex items-center gap-2">
+                            <span class="w-7 h-7 bg-numeria-teal rounded-lg flex items-center justify-center text-numeria-bleu font-black text-sm">1</span>
+                            Informations personnelles
+                        </h2>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Nom *</label>
+                            {{ formulaire.nom }}
+                            {% if formulaire.nom.errors %}<p class="text-red-500 text-xs mt-1">{{ formulaire.nom.errors.0 }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Prénom *</label>
+                            {{ formulaire.prenom }}
+                            {% if formulaire.prenom.errors %}<p class="text-red-500 text-xs mt-1">{{ formulaire.prenom.errors.0 }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Sexe *</label>
+                            {{ formulaire.sexe }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Date de naissance *</label>
+                            {{ formulaire.date_naissance }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Lieu de naissance *</label>
+                            {{ formulaire.lieu_naissance }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Nationalité *</label>
+                            {{ formulaire.nationalite }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Téléphone *</label>
+                            {{ formulaire.telephone }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Email *</label>
+                            {{ formulaire.email_personnel }}
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Adresse *</label>
+                            {{ formulaire.adresse }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Pays *</label>
+                            {{ formulaire.pays }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Ville *</label>
+                            {{ formulaire.ville }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2 : Parcours académique -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm">
+                    <div class="bg-numeria-bleu/5 dark:bg-numeria-bleu/20 px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+                        <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white flex items-center gap-2">
+                            <span class="w-7 h-7 bg-numeria-teal rounded-lg flex items-center justify-center text-numeria-bleu font-black text-sm">2</span>
+                            Parcours académique
+                        </h2>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Dernier établissement *</label>
+                            {{ formulaire.dernier_etablissement }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Niveau d'études *</label>
+                            {{ formulaire.niveau_etudes }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Diplôme obtenu</label>
+                            {{ formulaire.diplome_obtenu }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Année d'obtention</label>
+                            {{ formulaire.annee_obtention }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Moyenne générale (/20)</label>
+                            {{ formulaire.moyenne_generale }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3 : Documents -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm">
+                    <div class="bg-numeria-bleu/5 dark:bg-numeria-bleu/20 px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+                        <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white flex items-center gap-2">
+                            <span class="w-7 h-7 bg-numeria-teal rounded-lg flex items-center justify-center text-numeria-bleu font-black text-sm">3</span>
+                            Documents
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="inline-flex items-center gap-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-xs px-3 py-1.5 rounded-lg mb-5">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            Formats acceptés : PDF · Max 5 MB par fichier
+                        </div>
+                        <div class="grid grid-cols-1 gap-5">
+                            {% for field, hint in formulaire.cv,formulaire.lettre_motivation,formulaire.releves_notes,formulaire.autres_documents|zip:"CV (curriculum vitae détaillé),Lettre de motivation,Relevés des 2 dernières années,Certificats et attestations (optionnel)" %}{% endfor %}
+
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">CV (PDF) *</label>
+                                {{ formulaire.cv }}
+                                <p class="text-xs text-gray-400 mt-1">Curriculum vitae détaillé</p>
+                                {% if formulaire.cv.errors %}<p class="text-red-500 text-xs mt-1">{{ formulaire.cv.errors.0 }}</p>{% endif %}
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Lettre de motivation (PDF) *</label>
+                                {{ formulaire.lettre_motivation }}
+                                <p class="text-xs text-gray-400 mt-1">Expliquez votre motivation en 1 à 2 pages</p>
+                                {% if formulaire.lettre_motivation.errors %}<p class="text-red-500 text-xs mt-1">{{ formulaire.lettre_motivation.errors.0 }}</p>{% endif %}
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Relevés de notes (PDF) *</label>
+                                {{ formulaire.releves_notes }}
+                                <p class="text-xs text-gray-400 mt-1">Relevés des 2 dernières années scolaires</p>
+                                {% if formulaire.releves_notes.errors %}<p class="text-red-500 text-xs mt-1">{{ formulaire.releves_notes.errors.0 }}</p>{% endif %}
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Autres documents <span class="normal-case font-normal text-gray-400">(optionnel)</span></label>
+                                {{ formulaire.autres_documents }}
+                                <p class="text-xs text-gray-400 mt-1">Certificats, attestations, etc.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 4 : Questions -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm">
+                    <div class="bg-numeria-bleu/5 dark:bg-numeria-bleu/20 px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+                        <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white flex items-center gap-2">
+                            <span class="w-7 h-7 bg-numeria-teal rounded-lg flex items-center justify-center text-numeria-bleu font-black text-sm">4</span>
+                            Questions
+                        </h2>
+                    </div>
+                    <div class="p-6 flex flex-col gap-5">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
+                                Pourquoi souhaitez-vous intégrer cette formation ? *
+                            </label>
+                            {{ formulaire.motivation }}
+                            {% if formulaire.motivation.errors %}<p class="text-red-500 text-xs mt-1">{{ formulaire.motivation.errors.0 }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
+                                Expériences professionnelles ou associatives
+                            </label>
+                            {{ formulaire.experiences }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
+                                Compétences particulières
+                            </label>
+                            {{ formulaire.competences }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
+                                Comment avez-vous connu Numeria ?
+                            </label>
+                            {{ formulaire.source }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <div class="flex justify-end pt-2">
+                    <button type="submit"
+                            style="font-family:'Outfit',sans-serif;font-weight:700;"
+                            class="bg-numeria-teal text-numeria-bleu px-10 py-3.5 rounded-xl hover:bg-teal-300 transition-all text-base shadow-md hover:shadow-lg hover:-translate-y-0.5 transform flex items-center gap-2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        Soumettre ma candidature
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

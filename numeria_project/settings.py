@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'comptes',
     'paiements',
     'analytics',
+    'admissions',
 ]
 
 

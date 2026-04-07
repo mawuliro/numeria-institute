@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titre %}Gestion des candidatures — Admin{% endblock %}
+
+{% block contenu %}
+<section class="w-full min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        
+        <div class="max-w-7xl mx-auto">
+            
+            <h1 class="text-3xl font-bold text-numeria-bleu dark:text-white mb-8">
+                📋 Gestion des candidatures
+            </h1>
+            
+            <!-- Filtres -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 mb-6">
+                <form method="get" class="flex flex-wrap gap-4 items-end">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Statut</label>
+                        <select name="statut" class="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700">
+                            <option value="">Tous</option>
+                            {% for code, label in statuts %}
+                            <option value="{{ code }}" {% if statut_actuel == code %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Campagne</label>
+                        <select name="campagne" class="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700">
+                            <option value="">Toutes</option>
+                            {% for campagne in campagnes %}
+                            <option value="{{ campagne.id }}" {% if campagne_actuelle|stringformat:"s" == campagne.id|stringformat:"s" %}selected{% endif %}>{{ campagne.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" class="bg-numeria-teal text-numeria-bleu font-bold px-6 py-2 rounded-xl hover:bg-teal-300">
+                            Filtrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Tableau -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Réf.</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Candidat</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Campagne</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Date</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Statut</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            {% for candidature in candidatures %}
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                <td class="px-4 py-3 text-sm">{{ candidature.reference }}</td>
+                                <td class="px-4 py-3 text-sm">{{ candidature.prenom }} {{ candidature.nom }}</td>
+                                <td class="px-4 py-3 text-sm">{{ candidature.campagne.nom }}</td>
+                                <td class="px-4 py-3 text-sm">{{ candidature.date_soumission|date:"d/m/Y" }}</td>
+                                <td class="px-4 py-3 text-sm">
+                                    <span class="inline-block px-2 py-1 rounded-full text-xs font-bold
+                                        {% if candidature.statut == 'soumise' %}bg-blue-100 text-blue-700
+                                        {% elif candidature.statut == 'en_revue' %}bg-yellow-100 text-yellow-700
+                                        {% elif candidature.statut == 'acceptee' %}bg-green-100 text-green-700
+                                        {% elif candidature.statut == 'refusee' %}bg-red-100 text-red-700
+                                        {% elif candidature.statut == 'liste_attente' %}bg-orange-100 text-orange-700
+                                        {% else %}bg-gray-100 text-gray-700{% endif %}">
+                                        {{ candidature.get_statut_display }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-sm">
+                                    <button onclick="openModal('{{ candidature.id }}', '{{ candidature.statut }}', '{{ candidature.commentaire_admin|escapejs }}')" 
+                                            class="text-numeria-teal hover:underline">
+                                        Modifier
+                                    </button>
+                                    <a href="#" class="text-gray-500 hover:text-gray-700 ml-3">👁️</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="px-4 py-8 text-center text-gray-500">Aucune candidature trouvée</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            {% if candidatures.has_other_pages %}
+            <div class="flex justify-center mt-6 gap-2">
+                {% if candidatures.has_previous %}
+                <a href="?page={{ candidatures.previous_page_number }}{% if statut_actuel %}&statut={{ statut_actuel }}{% endif %}{% if campagne_actuelle %}&campagne={{ campagne_actuelle }}{% endif %}" 
+                   class="px-3 py-1 bg-white dark:bg-gray-800 rounded-lg">←</a>
+                {% endif %}
+                <span class="px-3 py-1 bg-numeria-teal text-numeria-bleu rounded-lg">
+                    {{ candidatures.number }} / {{ candidatures.paginator.num_pages }}
+                </span>
+                {% if candidatures.has_next %}
+                <a href="?page={{ candidatures.next_page_number }}{% if statut_actuel %}&statut={{ statut_actuel }}{% endif %}{% if campagne_actuelle %}&campagne={{ campagne_actuelle }}{% endif %}" 
+                   class="px-3 py-1 bg-white dark:bg-gray-800 rounded-lg">→</a>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+        </div>
+        
+    </div>
+</section>
+
+<!-- Modal changement statut -->
+<div id="statutModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full mx-4">
+        <h3 class="text-xl font-bold text-numeria-bleu dark:text-white mb-4">Modifier le statut</h3>
+        <form method="post" id="statutForm" action="">
+            {% csrf_token %}
+            <input type="hidden" name="candidature_id" id="modalCandidatureId">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Statut</label>
+                <select name="statut" id="modalStatut" class="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700">
+                    {% for code, label in statuts %}
+                    <option value="{{ code }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Commentaire (optionnel)</label>
+                <textarea name="commentaire" id="modalCommentaire" rows="3" class="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700"></textarea>
+            </div>
+            <div class="flex gap-3 justify-end">
+                <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-50">Annuler</button>
+                <button type="submit" class="px-4 py-2 bg-numeria-teal text-numeria-bleu font-bold rounded-lg hover:bg-teal-300">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const baseUrl = "{% url 'admissions:changer_statut' 999999 %}".replace('999999', '');
+    
+    function openModal(id, statut, commentaire) {
+        document.getElementById('modalCandidatureId').value = id;
+        document.getElementById('modalStatut').value = statut;
+        document.getElementById('modalCommentaire').value = commentaire;
+        document.getElementById('statutModal').classList.remove('hidden');
+        document.getElementById('statutForm').action = baseUrl + id + '/';
+    }
+    
+    function closeModal() {
+        document.getElementById('statutModal').classList.add('hidden');
+    }
+</script>
+{% endblock %}

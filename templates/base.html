@@ -97,6 +97,7 @@
         .dark .text-gray-700 { color: #E5E7EB !important; }
         .dark .text-gray-500 { color: #9CA3AF !important; }
         .dark label { color: #E5E7EB; }
+        
         /* Navigation pills */
         .nav-pill {
             position: relative; padding: 6px 0;
@@ -113,10 +114,11 @@
         .nav-pill:hover::after { transform: scaleX(1); }
         .nav-pill.actif { color: #2DD4BF; }
         .nav-pill.actif::after { transform: scaleX(1); }
+        
         /* Legacy compat */
         .nav-lien-actif { color: #2DD4BF !important; border-bottom: 2px solid #2DD4BF; padding-bottom: 3px; }
         
-        /* Animation pour le bouton flottant */
+        /* Animation pour le bouton flottant Analytics */
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -163,10 +165,12 @@
                     <a href="/" class="nav-pill {% if request.path == '/' %}actif{% endif %}">Accueil</a>
                     <a href="{% url 'cours:catalogue' %}" class="nav-pill {% if '/cours' in request.path %}actif{% endif %}">Cours</a>
                     <a href="{% url 'blog:liste' %}" class="nav-pill {% if '/blog' in request.path %}actif{% endif %}">Blog</a>
+                    <!-- 🔥 NOUVEAU LIEN CANDIDATURES -->
+                    <a href="{% url 'admissions:liste_campagnes' %}" class="nav-pill {% if '/admissions' in request.path %}actif{% endif %}">Candidatures</a>
                     <a href="#" class="nav-pill">Communauté</a>
                     <a href="{% url 'a_propos' %}" class="nav-pill {% if '/a-propos' in request.path %}actif{% endif %}">À propos</a>
                     <a href="{% url 'contact' %}" class="nav-pill {% if '/contact' in request.path %}actif{% endif %}">Contact</a>
-                    <!-- 🔥 LIEN ANALYTICS POUR ADMIN (DESKTOP) -->
+                    <!-- LIEN ANALYTICS POUR ADMIN (DESKTOP) -->
                     {% if user.is_authenticated and user.is_staff %}
                     <a href="{% url 'analytics:dashboard' %}" class="nav-pill {% if '/analytics' in request.path %}actif{% endif %} flex items-center gap-1">
                         📊 Analytics
@@ -227,10 +231,12 @@
                 <a href="/" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if request.path == '/' %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Accueil</a>
                 <a href="{% url 'cours:catalogue' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/cours' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Cours</a>
                 <a href="{% url 'blog:liste' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/blog' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Blog</a>
+                <!-- 🔥 NOUVEAU LIEN CANDIDATURES (MOBILE) -->
+                <a href="{% url 'admissions:liste_campagnes' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/admissions' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">🎓 Candidatures</a>
                 <a href="#" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors">Communauté</a>
                 <a href="{% url 'a_propos' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/a-propos' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">À propos</a>
                 <a href="{% url 'contact' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/contact' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Contact</a>
-                <!-- 🔥 LIEN ANALYTICS POUR ADMIN (MOBILE) -->
+                <!-- LIEN ANALYTICS POUR ADMIN (MOBILE) -->
                 {% if user.is_authenticated and user.is_staff %}
                 <a href="{% url 'analytics:dashboard' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/analytics' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %} flex items-center gap-2">
                     📊 Analytics
@@ -291,6 +297,7 @@
                     <ul class="space-y-3">
                         <li><a href="{% url 'cours:catalogue' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Nos cours</a></li>
                         <li><a href="{% url 'blog:liste' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Le blog</a></li>
+                        <li><a href="{% url 'admissions:liste_campagnes' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Candidatures</a></li>
                         <li><a href="{% url 'a_propos' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">À propos</a></li>
                         <li><a href="{% url 'contact' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Contact</a></li>
                         <li><a href="#" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Communauté</a></li>
@@ -339,7 +346,7 @@
     </a>
     {% endif %}
 
-    <!-- ===== JS ===== -->
+    <!-- ===== JS COMMUN ===== -->
     <script>
         const bouton     = document.getElementById('bouton-hamburger');
         const menuMobile = document.getElementById('menu-mobile');

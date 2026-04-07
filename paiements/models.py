@@ -44,7 +44,9 @@ class Paiement(models.Model):
     )
     cours = models.ForeignKey(
         Cours,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
         related_name='paiements'
     )
 
@@ -99,7 +101,8 @@ class Paiement(models.Model):
     notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.reference_numeria} — {self.etudiant.username} — {self.cours.titre} — {self.statut}"
+        cours_titre = self.cours.titre if self.cours else 'Frais candidature'
+        return f"{self.reference_numeria} — {self.etudiant.username} — {cours_titre} — {self.statut}"
 
     def est_reussi(self):
         return self.statut == 'reussi'
