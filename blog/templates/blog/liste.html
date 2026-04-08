@@ -33,67 +33,57 @@
             <!-- ARTICLES -->
             <div class="flex-1 min-w-0">
                 {% if articles %}
-                <div class="flex flex-col gap-6">
+                <div class="grid gap-6">
                     {% for article in articles %}
-                    <article class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group">
-                        <div class="flex flex-col sm:flex-row">
+                    <article class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 group">
+                        <div class="grid gap-6 sm:grid-cols-[300px_minmax(0,1fr)]">
 
                             {% if article.image_couverture %}
-                            <div class="sm:w-56 flex-shrink-0">
+                            <div class="relative sm:w-full">
                                 <img src="{{ article.image_couverture }}" alt="{{ article.titre }}"
-                                     class="w-full h-44 sm:h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                     class="w-full h-56 sm:h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                                <span class="absolute left-4 bottom-4 bg-black/60 text-white text-xs uppercase tracking-[0.18em] px-3 py-1 rounded-full">
+                                    {{ article.categorie.nom if article.categorie else 'Blog' }}
+                                </span>
                             </div>
                             {% else %}
-                            <!-- Placeholder image -->
-                            <div class="sm:w-56 flex-shrink-0 bg-numeria-bleu flex items-center justify-center h-44 sm:h-auto">
-                                <svg width="40" height="40" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.4;">
-                                    <line x1="13" y1="10" x2="13" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
-                                    <line x1="13" y1="10" x2="31" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
-                                    <line x1="31" y1="10" x2="31" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
-                                    <circle cx="18.5" cy="18" r="3" fill="#2DD4BF"/>
-                                    <circle cx="25.5" cy="26" r="3" fill="#2DD4BF"/>
-                                </svg>
+                            <div class="sm:w-full bg-numeria-bleu flex items-center justify-center h-56 sm:h-full">
+                                <div class="text-white text-4xl opacity-80">📝</div>
                             </div>
                             {% endif %}
 
                             <div class="p-6 flex flex-col justify-between flex-1">
                                 <div>
-                                    <div class="flex flex-wrap items-center gap-2 mb-3">
-                                        {% if article.categorie %}
-                                        <span style="font-family:'Outfit',sans-serif;font-weight:700;" class="bg-numeria-teal/15 text-numeria-teal text-xs px-3 py-1 rounded-full">
-                                            {{ article.categorie.nom }}
-                                        </span>
-                                        {% endif %}
+                                    <div class="flex flex-wrap items-center gap-2 mb-4">
                                         <span class="text-gray-400 dark:text-gray-500 text-xs">
                                             {{ article.date_creation|date:"d F Y" }}
                                         </span>
+                                        <span class="text-gray-400 dark:text-gray-500 text-xs">•</span>
+                                        <span class="text-gray-400 dark:text-gray-500 text-xs">{{ article.nombre_vues }} vues</span>
                                     </div>
-                                    <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-lg text-numeria-bleu dark:text-white mb-2 group-hover:text-numeria-teal transition-colors">
+                                    <h2 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-xl text-numeria-bleu dark:text-white mb-3 group-hover:text-numeria-teal transition-colors leading-tight">
                                         <a href="{% url 'blog:detail' article.slug %}">{{ article.titre }}</a>
                                     </h2>
-                                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed line-clamp-2">
+                                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3 mb-6">
                                         {{ article.resume }}
                                     </p>
                                 </div>
 
-                                <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-7 h-7 bg-numeria-bleu rounded-full flex items-center justify-center text-numeria-teal font-black text-xs" style="font-family:'Outfit',sans-serif;">
+                                <div class="flex items-center justify-between gap-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-9 h-9 bg-numeria-bleu rounded-full flex items-center justify-center text-numeria-teal font-black text-xs">
                                             {{ article.auteur.username|first|upper }}
                                         </div>
-                                        <span class="text-gray-500 dark:text-gray-400 text-xs font-medium">{{ article.auteur.username }}</span>
+                                        <div>
+                                            <p class="text-gray-800 dark:text-white text-sm font-semibold">{{ article.auteur.username }}</p>
+                                            <p class="text-gray-400 dark:text-gray-500 text-xs">Lecture rapide</p>
+                                        </div>
                                     </div>
-                                    <div class="flex items-center gap-4">
-                                        <span class="text-gray-400 dark:text-gray-500 text-xs flex items-center gap-1">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                            {{ article.nombre_vues }}
-                                        </span>
-                                        <a href="{% url 'blog:detail' article.slug %}"
-                                           style="font-family:'Outfit',sans-serif;font-weight:700;"
-                                           class="text-numeria-teal text-sm hover:opacity-75 transition-opacity flex items-center gap-1">
-                                            Lire <span>→</span>
-                                        </a>
-                                    </div>
+                                    <a href="{% url 'blog:detail' article.slug %}"
+                                       class="inline-flex items-center gap-2 rounded-full bg-numeria-teal/10 text-numeria-teal px-3 py-1 text-xs font-semibold hover:bg-numeria-teal/15 transition-colors">
+                                        Lire <span>→</span>
+                                    </a>
                                 </div>
                             </div>
                         </div>

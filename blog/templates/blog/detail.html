@@ -5,68 +5,79 @@
 <!-- EN-TÊTE -->
 <section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
     <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <svg width="100%" height="100%" style="opacity:0.04;" xmlns="http://www.w3.org/2000/svg">
+        <svg width="100%" height="100%" style="opacity:0.05;" xmlns="http://www.w3.org/2000/svg">
             <defs><pattern id="dots-bd" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white"/></pattern></defs>
             <rect width="100%" height="100%" fill="url(#dots-bd)"/>
         </svg>
+        <div class="absolute -right-16 top-12 w-72 h-72 rounded-full bg-numeria-teal/20 blur-3xl"></div>
+        <div class="absolute left-8 bottom-10 w-44 h-44 rounded-full bg-white/10"></div>
     </div>
-    <div class="w-full px-4 sm:px-8 lg:px-16 py-12 relative">
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-16 relative">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col gap-5">
 
-        <!-- Fil d'Ariane -->
-        <div class="flex items-center gap-2 text-blue-300 text-xs mb-5">
-            <a href="/" class="hover:text-numeria-teal transition-colors">Accueil</a>
-            <span>›</span>
-            <a href="{% url 'blog:liste' %}" class="hover:text-numeria-teal transition-colors">Blog</a>
-            <span>›</span>
-            <span class="text-white truncate max-w-xs">{{ article.titre|truncatechars:40 }}</span>
-        </div>
-
-        {% if article.categorie %}
-        <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
-            {{ article.categorie.nom }}
-        </div>
-        {% endif %}
-
-        <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-2xl sm:text-3xl lg:text-4xl text-white mb-5 max-w-3xl leading-snug">
-            {{ article.titre }}
-        </h1>
-
-        <div class="flex flex-wrap items-center gap-5 text-blue-300 text-sm">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu font-black text-xs" style="font-family:'Outfit',sans-serif;">
-                    {{ article.auteur.username|first|upper }}
+                <!-- Fil d'Ariane -->
+                <div class="flex flex-wrap items-center gap-2 text-blue-200 text-xs opacity-90 mb-4">
+                    <a href="/" class="hover:text-numeria-teal transition-colors">Accueil</a>
+                    <span>›</span>
+                    <a href="{% url 'blog:liste' %}" class="hover:text-numeria-teal transition-colors">Blog</a>
+                    <span>›</span>
+                    <span class="truncate max-w-xs">{{ article.titre|truncatechars:40 }}</span>
                 </div>
-                <span>{{ article.auteur.username }}</span>
+
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-wrap items-center gap-3">
+                        {% if article.categorie %}
+                        <span class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-white text-xs font-bold px-4 py-2 rounded-full uppercase tracking-[0.18em]">
+                            {{ article.categorie.nom }}
+                        </span>
+                        {% endif %}
+                        <span class="inline-flex items-center gap-2 text-blue-100 text-xs">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            {{ article.date_creation|date:"d F Y" }}
+                        </span>
+                        <span class="inline-flex items-center gap-2 text-blue-100 text-xs">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            {{ article.nombre_vues }} vues
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col gap-3">
+                        <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl lg:text-5xl text-white leading-tight max-w-4xl">
+                            {{ article.titre }}
+                        </h1>
+                        <div class="flex items-center gap-3 text-sm text-blue-100">
+                            <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-3 py-2">
+                                <span class="w-8 h-8 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu font-black text-xs">
+                                    {{ article.auteur.username|first|upper }}
+                                </span>
+                                <span>{{ article.auteur.username }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <span class="flex items-center gap-1.5">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                {{ article.date_creation|date:"d F Y" }}
-            </span>
-            <span class="flex items-center gap-1.5">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                {{ article.nombre_vues }} vues
-            </span>
         </div>
     </div>
 </section>
 
 <section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
     <div class="w-full px-4 sm:px-8 lg:px-16">
-        <div class="flex flex-col lg:flex-row gap-10">
+        <div class="grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]">
 
             <!-- ARTICLE -->
             <article class="flex-1 min-w-0">
 
                 {% if article.image_couverture %}
-                <div class="mb-8 rounded-2xl overflow-hidden shadow-lg">
+                <div class="mb-10 rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800">
                     <img src="{{ article.image_couverture }}" alt="{{ article.titre }}"
-                         class="w-full h-64 sm:h-80 object-cover">
+                         class="w-full h-72 sm:h-96 object-cover">
                 </div>
                 {% endif %}
 
                 <!-- Résumé mis en avant -->
-                <div class="bg-white dark:bg-gray-800 border-l-4 border-numeria-teal p-6 rounded-r-2xl mb-8 shadow-sm">
-                    <p class="text-gray-700 dark:text-gray-200 text-lg leading-relaxed italic">
+                <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-8 rounded-[2rem] mb-10 shadow-sm">
+                    <p class="text-gray-700 dark:text-gray-200 text-xl leading-relaxed italic tracking-wide">
                         {{ article.resume }}
                     </p>
                 </div>
@@ -76,25 +87,30 @@
                     .contenu-article { color: inherit; }
                     .contenu-article h1, .contenu-article h2, .contenu-article h3 {
                         font-family: 'Outfit', sans-serif; font-weight: 700;
-                        color: #1A3C6E; margin-top: 1.75rem; margin-bottom: 0.75rem;
+                        color: #1A3C6E; margin-top: 2rem; margin-bottom: 1rem;
                     }
-                    .contenu-article h1 { font-size: 1.5rem; }
-                    .contenu-article h2 { font-size: 1.25rem; }
-                    .contenu-article h3 { font-size: 1.1rem; }
-                    .contenu-article p { margin-bottom: 1rem; line-height: 1.85; }
-                    .contenu-article ul, .contenu-article ol { margin-left: 1.5rem; margin-bottom: 1rem; }
-                    .contenu-article li { margin-bottom: 0.4rem; line-height: 1.7; }
+                    .contenu-article h1 { font-size: 2rem; }
+                    .contenu-article h2 { font-size: 1.5rem; }
+                    .contenu-article h3 { font-size: 1.25rem; }
+                    .contenu-article p { margin-bottom: 1.25rem; line-height: 1.9; }
+                    .contenu-article ul, .contenu-article ol { margin-left: 1.5rem; margin-bottom: 1.25rem; }
+                    .contenu-article li { margin-bottom: 0.6rem; line-height: 1.75; }
                     .contenu-article a { color: #2DD4BF; text-decoration: underline; }
                     .contenu-article blockquote {
-                        border-left: 3px solid #2DD4BF; padding-left: 1rem;
+                        border-left: 4px solid #2DD4BF; padding-left: 1rem;
                         color: #6B7280; font-style: italic; margin: 1.5rem 0;
                     }
+                    .contenu-article pre {
+                        overflow-x: auto; background: #F3F4F6; padding: 1rem; border-radius: 1rem;
+                    }
+                    .contenu-article code:not(.hljs) { background: #F3F4F6; color: #2DD4BF; padding: 0.2rem 0.35rem; border-radius: 0.35rem; }
                     .dark .contenu-article { color: #E5E7EB; }
                     .dark .contenu-article h1, .dark .contenu-article h2, .dark .contenu-article h3 { color: #2DD4BF; }
                     .dark .contenu-article a { color: #2DD4BF; }
-                    .dark code:not(.hljs) { background: #374151; color: #2DD4BF; }
+                    .dark .contenu-article pre { background: #111827; }
+                    .dark code:not(.hljs) { background: #1F2937; color: #2DD4BF; }
                 </style>
-                <div class="contenu-article text-gray-700 dark:text-gray-200">
+                <div class="contenu-article text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2rem] p-8 shadow-sm">
                     {{ article.contenu|safe }}
                 </div>
 
