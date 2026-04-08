@@ -240,12 +240,16 @@ def profil_utilisateur(request, username):
     return render(request, 'communaute/profil_utilisateur.html', contexte)
 
 @login_required
-@require_POST
 def voter_message(request, pk):
     """Permet de voter pour ou contre un message."""
     print(f"Vue voter_message appelée pour message {pk} par utilisateur {request.user.username}")
     print(f"Méthode HTTP: {request.method}")
     print(f"Données POST: {request.POST}")
+
+    # Accepter seulement les requêtes POST
+    if request.method != 'POST':
+        print(f"Erreur: Méthode HTTP non supportée: {request.method}")
+        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
 
     message = get_object_or_404(Message, pk=pk)
 
