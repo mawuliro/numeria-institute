@@ -63,15 +63,13 @@ def detail_sujet(request, pk):
         ).values('message', 'valeur')
         user_votes = {vote['message']: vote['valeur'] for vote in votes}
 
-    # Créer une liste d'objets message avec leur vote utilisateur
-    messages_with_votes = []
+    # Ajouter le vote utilisateur aux messages de la page
     for message in page_obj:
         message.user_vote = user_votes.get(message.pk, 0)
-        messages_with_votes.append(message)
 
     contexte = {
         'sujet': sujet,
-        'page_obj': messages_with_votes,
+        'page_obj': page_obj,
         'titre_page': sujet.titre,
     }
     return render(request, 'communaute/detail_sujet.html', contexte)
