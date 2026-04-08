@@ -218,9 +218,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 const valeur = parseInt(e.target.dataset.valeur);
 
-                // Utiliser l'URL Django au lieu d'une URL absolue
-                const voteUrl = `/communaute/message/${messageId}/voter/`;
-                console.log('URL de vote:', voteUrl);
+                // Utiliser l'URL Django générée côté serveur
+                const voteUrl = '{% url "communaute:voter_message" 0 %}'.replace('0', messageId);
+                console.log('URL de vote générée:', voteUrl);
 
                 // Récupérer le token CSRF
                 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
