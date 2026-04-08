@@ -63,8 +63,7 @@
                         <p style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2.5">
                             Cycle scolaire
                         </p>
-                        <div class="flex flex-col gap-1">
-                            {% for code, label, url in forloop.parentloop.0|default:"" %}{% endfor %}
+                        <div class="flex flex-col gap-2">
                             <a href="?type=scolaire"
                                class="text-sm py-2 px-3 rounded-xl transition-colors font-medium
                                {% if not cycle_actif and type_actif == 'scolaire' %}bg-numeria-teal/15 text-numeria-teal{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
@@ -134,42 +133,51 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                     {% for un_cours in cours %}
                     <a href="{% url 'cours:detail' un_cours.id %}"
-                       class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col">
+                       class="group flex flex-col rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
 
-                        <!-- En-tête -->
-                        <div class="bg-numeria-bleu px-5 py-5 relative overflow-hidden flex-shrink-0">
-                            <div style="position:absolute;top:-16px;right:-16px;width:70px;height:70px;border-radius:50%;background:rgba(45,212,191,0.1);"></div>
-                            <div class="flex items-start justify-between mb-2.5">
-                                <span style="font-family:'Outfit',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;" class="text-numeria-teal">
+                        <div class="relative overflow-hidden bg-gradient-to-br from-numeria-bleu to-numeria-teal px-6 py-6">
+                            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.35),_transparent_55%)]"></div>
+                            <div class="relative flex items-start justify-between gap-3">
+                                <span style="font-family:'Outfit',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;" class="text-white">
                                     {{ un_cours.get_matiere_display }}
                                 </span>
                                 {% if un_cours.type_cours == 'scolaire' and un_cours.classe %}
-                                <span class="bg-white/15 text-blue-100 text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0 ml-2">
+                                <span class="bg-white/20 text-white text-xs font-semibold px-2 py-1 rounded-full flex-shrink-0 ml-2">
                                     {{ un_cours.get_classe_display }}
                                 </span>
                                 {% endif %}
                             </div>
-                            <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-white text-base leading-snug group-hover:text-numeria-teal transition-colors">
+                            <h3 style="font-family:'Outfit',sans-serif;font-weight:800;" class="relative text-white text-base leading-snug mt-4 group-hover:text-numeria-or transition-colors">
                                 {{ un_cours.titre }}
                             </h3>
                         </div>
 
-                        <!-- Corps -->
-                        <div class="p-5 flex flex-col flex-1">
-                            <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4 flex-1 line-clamp-2">
+                        <div class="p-6 flex flex-col flex-1">
+                            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6 line-clamp-3">
                                 {{ un_cours.resume }}
                             </p>
-                            <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
-                                <div class="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500">
-                                    <span>📚 {{ un_cours.nombre_lecons }} leçons</span>
-                                    <span>·</span>
-                                    <span>{{ un_cours.get_niveau_display }}</span>
+
+                            <div class="mt-auto flex flex-col gap-4">
+                                <div class="grid grid-cols-2 gap-3 text-xs text-gray-500 dark:text-gray-400">
+                                    <span class="inline-flex items-center gap-2">
+                                        <span class="text-numeria-teal">📚</span>
+                                        {{ un_cours.nombre_lecons }} leçons
+                                    </span>
+                                    <span class="inline-flex items-center gap-2">
+                                        <span class="text-numeria-teal">🎯</span>
+                                        {{ un_cours.get_niveau_display }}
+                                    </span>
                                 </div>
-                                {% if un_cours.est_gratuit %}
-                                    <span class="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full">Gratuit</span>
-                                {% else %}
-                                    <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-3 py-1 rounded-full">{{ un_cours.prix }} FCFA</span>
-                                {% endif %}
+                                <div class="flex items-center justify-between gap-3">
+                                    {% if un_cours.est_gratuit %}
+                                        <span class="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full">Gratuit</span>
+                                    {% else %}
+                                        <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-3 py-1 rounded-full">{{ un_cours.prix }} FCFA</span>
+                                    {% endif %}
+                                    <span class="text-numeria-bleu dark:text-white text-xs font-semibold uppercase tracking-[0.08em]">
+                                        En savoir plus →
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
