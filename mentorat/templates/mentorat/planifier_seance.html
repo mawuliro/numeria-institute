@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titre %}Planifier une séance - Numeria Institute{% endblock %}
+
+{% block contenu %}
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+        <h1 class="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+            Planifier une séance
+        </h1>
+
+        <!-- Informations sur la relation -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                Relation de mentorat
+            </h2>
+            {% if est_mentor %}
+                <p class="text-gray-600 dark:text-gray-300">
+                    Avec <strong>{{ relation.mentee.profil.utilisateur.get_full_name }}</strong>
+                </p>
+            {% else %}
+                <p class="text-gray-600 dark:text-gray-300">
+                    Avec <strong>{{ relation.mentor.profil.utilisateur.get_full_name }}</strong>
+                </p>
+            {% endif %}
+        </div>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Titre -->
+            <div>
+                <label for="{{ form.titre.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.titre.label }}
+                </label>
+                {{ form.titre }}
+                {% if form.titre.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.titre.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.description.label }}
+                </label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.description.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Date et heure -->
+            <div>
+                <label for="{{ form.date_heure.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.date_heure.label }}
+                </label>
+                {{ form.date_heure }}
+                {% if form.date_heure.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.date_heure.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Durée -->
+            <div>
+                <label for="{{ form.duree_minutes.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.duree_minutes.label }}
+                </label>
+                {{ form.duree_minutes }}
+                {% if form.duree_minutes.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.duree_minutes.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Modalité -->
+            <div>
+                <label for="{{ form.modalite.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.modalite.label }}
+                </label>
+                {{ form.modalite }}
+                {% if form.modalite.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.modalite.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Boutons -->
+            <div class="flex space-x-4">
+                <button type="submit" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    Planifier la séance
+                </button>
+                <a href="{% url 'mentorat:detail_relation' relation.pk %}" class="flex-1 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-semibold text-center hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+/* Style pour les inputs */
+input[type="text"], input[type="number"], select, textarea {
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white;
+}
+
+/* Style pour datetime-local */
+input[type="datetime-local"] {
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white;
+}
+</style>
+{% endblock %}
