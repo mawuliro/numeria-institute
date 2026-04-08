@@ -243,44 +243,60 @@ def profil_utilisateur(request, username):
 @require_POST
 def voter_message(request, pk):
     """Permet de voter pour ou contre un message."""
+    print(f"Vue voter_message appelée pour message {pk} par utilisateur {request.user.username}")
+    print(f"Méthode HTTP: {request.method}")
+    print(f"Données POST: {request.POST}")
+
     message = get_object_or_404(Message, pk=pk)
 
     # Empêcher de voter pour ses propres messages
     if message.auteur == request.user:
+        print("Erreur: Tentative de vote sur son propre message")
         return JsonResponse({'error': 'Vous ne pouvez pas voter pour votre propre message.'}, status=400)
 
     valeur = request.POST.get('valeur')
+    print(f"Valeur reçue: {valeur}")
+
     if valeur not in ['1', '-1']:
+        print(f"Erreur: Valeur de vote invalide: {valeur}")
         return JsonResponse({'error': 'Valeur de vote invalide.'}, status=400)
 
     valeur = int(valeur)
 
     # Vérifier si l'utilisateur a déjà voté
     vote_existant = Vote.objects.filter(message=message, utilisateur=request.user).first()
+    print(f"Vote existant: {vote_existant}")
 
     if vote_existant:
         if vote_existant.valeur == valeur:
             # Annuler le vote si c'est le même
             vote_existant.delete()
             action = 'annule'
+            print("Vote annulé")
         else:
             # Changer le vote
             vote_existant.valeur = valeur
             vote_existant.save()
             action = 'change'
+            print("Vote changé")
     else:
         # Créer un nouveau vote
         Vote.objects.create(message=message, utilisateur=request.user, valeur=valeur)
         action = 'nouveau'
+        print("Nouveau vote créé")
 
     # Retourner le nouveau nombre de votes
     nombre_votes = message.nombre_votes
+    print(f"Nombre de votes final: {nombre_votes}")
 
-    return JsonResponse({
+    response_data = {
         'action': action,
         'nombre_votes': nombre_votes,
         'vote_utilisateur': valeur if action != 'annule' else 0
-    })
+    }
+    print(f"Données de réponse: {response_data}")
+
+    return JsonResponse(response_data)
 
 @login_required
 def modifier_profil(request):
