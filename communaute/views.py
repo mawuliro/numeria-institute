@@ -242,34 +242,6 @@ def profil_utilisateur(request, username):
 @login_required
 def voter_message(request, pk):
     """Permet de voter pour ou contre un message."""
-    print(f"Vue voter_message appelée pour message {pk} par utilisateur {request.user.username}")
-    print(f"Méthode HTTP: {request.method}")
-    print(f"Données POST: {request.POST}")
-
-    # Accepter seulement les requêtes POST
-    if request.method != 'POST':
-        print(f"Erreur: Méthode HTTP non supportée: {request.method}")
-        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
-
-    message = get_object_or_404(Message, pk=pk)
-
-    # Empêcher de voter pour ses propres messages
-    if message.auteur == request.user:
-        print("Erreur: Tentative de vote sur son propre message")
-        return JsonResponse({'error': 'Vous ne pouvez pas voter pour votre propre message.'}, status=400)
-
-    valeur = request.POST.get('valeur')
-    print(f"Valeur reçue: {valeur}")
-
-    if valeur not in ['1', '-1']:
-        print(f"Erreur: Valeur de vote invalide: {valeur}")
-        return JsonResponse({'error': 'Valeur de vote invalide.'}, status=400)
-
-    valeur = int(valeur)
-
-@login_required
-def voter_message(request, pk):
-    """Permet de voter pour ou contre un message."""
     if request.method != 'POST':
         return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
 

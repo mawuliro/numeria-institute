@@ -238,6 +238,7 @@ function initVoting() {
                 e.stopPropagation();
 
                 const valeur = parseInt(e.target.dataset.valeur);
+                console.log('Tentative de vote:', { messageId, valeur });
 
                 // Utiliser l'URL Django générée côté serveur
                 const voteUrl = '{% url "communaute:voter_message" 0 %}'.replace('0', messageId);
@@ -247,10 +248,12 @@ function initVoting() {
                 const csrfValue = csrfToken ? csrfToken.value : '';
 
                 if (!csrfValue) {
+                    console.error('Token CSRF manquant');
                     alert('Token CSRF manquant. Veuillez rafraîchir la page.');
                     return;
                 }
 
+                console.log('Envoi requête AJAX vers:', voteUrl);
                 // Envoi de la requête AJAX
                 fetch(voteUrl, {
                     method: 'POST',
@@ -261,19 +264,34 @@ function initVoting() {
                     body: `valeur=${valeur}`
                 })
                 .then(response => {
+                    console.log('Réponse reçue:', response.status, response.statusText);
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                     }
                     return response.json();
                 })
                 .then(data => {
+                    console.log('Données reçues:', data);
                     if (data.error) {
+                        console.error('Erreur serveur:', data.error);
                         alert('Erreur: ' + data.error);
                     } else {
+                        console.log('Mise à jour des compteurs - Likes:', data.nombre_likes, 'Dislikes:', data.nombre_dislikes);
                         // Mise à jour des compteurs séparés
-                        if (upvoteCount) upvoteCount.textContent = data.nombre_likes;
-                        if (downvoteCount) downvoteCount.textContent = data.nombre_dislikes;
+                        if (upvoteCount) {
+                            upvoteCount.textContent = data.nombre_likes;
+                            console.log('Compteur likes mis à jour:', upvoteCount.textContent);
+                        } else {
+                            console.error('Compteur likes non trouvé');
+                        }
+                        if (downvoteCount) {
+                            downvoteCount.textContent = data.nombre_dislikes;
+                            console.log('Compteur dislikes mis à jour:', downvoteCount.textContent);
+                        } else {
+                            console.error('Compteur dislikes non trouvé');
+                        }
                         updateVoteButtons(data.vote_utilisateur);
+                        console.log('Boutons mis à jour avec vote_utilisateur:', data.vote_utilisateur);
                     }
                 })
                 .catch(error => {
