@@ -62,11 +62,11 @@
 </section>
 
 <section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
-    <div class="w-full px-4 sm:px-8 lg:px-16">
-        <div class="grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]">
+    <div class="w-full px-4 sm:px-8 lg:px-16 mx-auto max-w-6xl">
+        <div class="grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(300px,1fr)]">
 
             <!-- ARTICLE -->
-            <article class="flex-1 min-w-0 max-w-4xl mx-auto">
+            <article class="flex-1 min-w-0 mx-auto">
 
                 {% if article.image_couverture %}
                 <div class="mb-10 rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800 mx-auto max-w-3xl">
@@ -101,14 +101,14 @@
                         color: #6B7280; font-style: italic; margin: 1.5rem 0;
                     }
                     .contenu-article pre {
-                        overflow-x: auto; background: #F3F4F6; padding: 1.25rem; border-radius: 1rem; border: 1px solid #E5E7EB; color: #1F2937; font-size: 0.96rem; line-height: 1.8;
+                        overflow-x: auto; background: #F3F4F6; padding: 1.35rem; border-radius: 1rem; border: 1px solid #E5E7EB; color: #1F2937; font-size: 1rem; line-height: 1.9; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
                     }
-                    .contenu-article code:not(.hljs) { background: #F3F4F6; color: #1A3C6E; padding: 0.3rem 0.45rem; border-radius: 0.35rem; font-weight: 500; font-size: 0.95rem; }
+                    .contenu-article code:not(.hljs) { background: #F3F4F6; color: #1A3C6E; padding: 0.35rem 0.55rem; border-radius: 0.35rem; font-weight: 600; font-size: 0.98rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; }
                     .dark .contenu-article { color: #E5E7EB; }
                     .dark .contenu-article h1, .dark .contenu-article h2, .dark .contenu-article h3 { color: #2DD4BF; }
                     .dark .contenu-article a { color: #2DD4BF; }
-                    .dark .contenu-article pre { background: #1F2937; border: 1px solid #374151; color: #E5E7EB; font-size: 0.96rem; line-height: 1.8; }
-                    .dark .contenu-article code:not(.hljs) { background: #374151; color: #FCD34D; padding: 0.3rem 0.45rem; border-radius: 0.25rem; font-weight: 500; font-size: 0.95rem; }
+                    .dark .contenu-article pre { background: #111827; border: 1px solid #374151; color: #E5E7EB; font-size: 1rem; line-height: 1.9; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; }
+                    .dark .contenu-article code:not(.hljs) { background: #374151; color: #FCD34D; padding: 0.35rem 0.55rem; border-radius: 0.25rem; font-weight: 600; font-size: 0.98rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; }
                 </style>
                 <div class="contenu-article text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2rem] p-8 shadow-sm mx-auto max-w-3xl">
                     {{ article.contenu|safe }}
