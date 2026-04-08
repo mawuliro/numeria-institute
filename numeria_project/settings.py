@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'analytics',
     'admissions',
     'communaute',
+    'mentorat',
 ]
 
 

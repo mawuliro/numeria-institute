@@ -60,6 +60,7 @@ urlpatterns = [
     path('comptes/', include('comptes.urls')),
     path('paiements/', include('paiements.urls')),
     path('communaute/', include('communaute.urls')),
+    path('mentorat/', include('mentorat.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
 
