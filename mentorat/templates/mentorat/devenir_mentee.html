@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titre %}Devenir Mentoré - Numeria Institute{% endblock %}
+
+{% block contenu %}
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+        <h1 class="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+            Trouver un Mentor
+        </h1>
+
+        <p class="text-gray-600 dark:text-gray-300 mb-8 text-center">
+            Bénéficiez de conseils personnalisés d'experts dans votre domaine.
+            Remplissez ce formulaire pour vous inscrire en tant que mentoré.
+        </p>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Objectifs -->
+            <div>
+                <label for="{{ form.objectifs.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.objectifs.label }}
+                </label>
+                {{ form.objectifs }}
+                {% if form.objectifs.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.objectifs.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Niveau d'études -->
+            <div>
+                <label for="{{ form.niveau_etudes.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.niveau_etudes.label }}
+                </label>
+                {{ form.niveau_etudes }}
+                {% if form.niveau_etudes.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.niveau_etudes.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Besoins -->
+            <div>
+                <label for="{{ form.besoins.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.besoins.label }}
+                </label>
+                {{ form.besoins }}
+                {% if form.besoins.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.besoins.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Boutons -->
+            <div class="flex space-x-4">
+                <button type="submit" class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                    Trouver un Mentor
+                </button>
+                <a href="{% url 'mentorat:index' %}" class="flex-1 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-semibold text-center hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+/* Style pour les selects */
+select {
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white;
+}
+
+/* Style pour les textareas */
+textarea {
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white;
+}
+</style>
+{% endblock %}

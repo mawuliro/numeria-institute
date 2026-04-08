@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titre %}Tableau de bord Mentor - Numeria Institute{% endblock %}
+
+{% block contenu %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+        Tableau de bord Mentor
+    </h1>
+
+    <!-- Statistiques -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+                {{ mentor.nombre_mentees_actuels }}
+            </div>
+            <div class="text-gray-600 dark:text-gray-300">Mentorés actifs</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <div class="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">
+                {{ mentor.nombre_mentees_total }}
+            </div>
+            <div class="text-gray-600 dark:text-gray-300">Total mentorés</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <div class="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-2">
+                {{ demandes_recues|length }}
+            </div>
+            <div class="text-gray-600 dark:text-gray-300">Demandes en attente</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <div class="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-2">
+                {{ seances_a_venir|length }}
+            </div>
+            <div class="text-gray-600 dark:text-gray-300">Séances à venir</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Demandes reçues -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                Demandes de mentorat
+            </h2>
+
+            {% if demandes_recues %}
+                <div class="space-y-4">
+                    {% for demande in demandes_recues %}
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-medium text-gray-900 dark:text-white">
+                                {{ demande.mentee.profil.utilisateur.get_full_name }}
+                            </h3>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">
+                                {{ demande.date_creation|date:"d/m/Y" }}
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                            {{ demande.message|truncatechars:100 }}
+                        </p>
+                        <div class="flex space-x-2">
+                            <a href="{% url 'mentorat:gerer_demande' demande.pk 'accepter' %}"
+                               class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors">
+                                Accepter
+                            </a>
+                            <a href="{% url 'mentorat:gerer_demande' demande.pk 'refuser' %}"
+                               class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors">
+                                Refuser
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-500 dark:text-gray-400 text-center py-8">
+                    Aucune demande en attente
+                </p>
+            {% endif %}
+        </div>
+
+        <!-- Relations actives -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                Relations actives
+            </h2>
+
+            {% if relations_actives %}
+                <div class="space-y-4">
+                    {% for relation in relations_actives %}
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-medium text-gray-900 dark:text-white">
+                                {{ relation.mentee.profil.utilisateur.get_full_name }}
+                            </h3>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">
+                                Depuis {{ relation.date_debut|date:"M Y" }}
+                            </span>
+                        </div>
+                        {% if relation.objectifs %}
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                            {{ relation.objectifs|truncatechars:80 }}
+                        </p>
+                        {% endif %}
+                        <div class="flex space-x-2">
+                            <a href="{% url 'mentorat:detail_relation' relation.pk %}"
+                               class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                                Voir détails
+                            </a>
+                            <a href="{% url 'mentorat:planifier_seance' relation.pk %}"
+                               class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors">
+                                Planifier séance
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-500 dark:text-gray-400 text-center py-8">
+                    Aucune relation active
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Séances à venir -->
+    {% if seances_a_venir %}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            Prochaines séances
+        </h2>
+
+        <div class="space-y-4">
+            {% for seance in seances_a_venir %}
+            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="font-medium text-gray-900 dark:text-white">
+                        {{ seance.titre }}
+                    </h3>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ seance.date_heure|date:"d/m/Y H:i" }}
+                    </span>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">
+                    Avec {{ seance.relation.mentee.profil.utilisateur.get_full_name }}
+                </p>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-blue-600 dark:text-blue-400">
+                        {{ seance.get_modalite_display }}
+                    </span>
+                    <a href="{% url 'mentorat:terminer_seance' seance.pk %}"
+                       class="bg-orange-600 text-white px-3 py-1 rounded text-sm hover:bg-orange-700 transition-colors">
+                        Terminer
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

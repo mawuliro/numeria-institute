@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titre %}Devenir Mentor - Numeria Institute{% endblock %}
+
+{% block contenu %}
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+        <h1 class="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+            Devenir Mentor
+        </h1>
+
+        <p class="text-gray-600 dark:text-gray-300 mb-8 text-center">
+            Partagez votre expertise et aidez la nouvelle génération à réussir.
+            Remplissez ce formulaire pour vous inscrire en tant que mentor.
+        </p>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Domaine d'expertise -->
+            <div>
+                <label for="{{ form.domaines_expertise.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.domaines_expertise.label }}
+                </label>
+                {{ form.domaines_expertise }}
+                {% if form.domaines_expertise.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.domaines_expertise.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Niveau d'expérience -->
+            <div>
+                <label for="{{ form.niveau_experience.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.niveau_experience.label }}
+                </label>
+                {{ form.niveau_experience }}
+                {% if form.niveau_experience.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.niveau_experience.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Disponibilité -->
+            <div>
+                <label for="{{ form.disponibilite.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.disponibilite.label }}
+                </label>
+                {{ form.disponibilite }}
+                {% if form.disponibilite.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.disponibilite.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Biographie -->
+            <div>
+                <label for="{{ form.bio_mentorat.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ form.bio_mentorat.label }}
+                </label>
+                {{ form.bio_mentorat }}
+                {% if form.bio_mentorat.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ form.bio_mentorat.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Boutons -->
+            <div class="flex space-x-4">
+                <button type="submit" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    Devenir Mentor
+                </button>
+                <a href="{% url 'mentorat:index' %}" class="flex-1 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-semibold text-center hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+/* Style pour les selects */
+select {
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white;
+}
+
+/* Style pour les textareas */
+textarea {
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white;
+}
+</style>
+{% endblock %}

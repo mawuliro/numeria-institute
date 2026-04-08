@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titre %}Mentorat - Numeria Institute{% endblock %}
+
+{% block contenu %}
+<div class="container mx-auto px-4 py-8">
+    <!-- En-tête -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            Programme de Mentorat
+        </h1>
+        <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            Connectez-vous avec des mentors expérimentés pour accélérer votre développement professionnel
+            et bénéficier de conseils personnalisés dans votre domaine d'intérêt.
+        </p>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <div class="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+                {{ mentors_count }}
+            </div>
+            <div class="text-gray-600 dark:text-gray-300">Mentors actifs</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <div class="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
+                {{ mentees_count }}
+            </div>
+            <div class="text-gray-600 dark:text-gray-300">Mentorés inscrits</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <div class="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
+                {{ relations_count }}
+            </div>
+            <div class="text-gray-600 dark:text-gray-300">Relations actives</div>
+        </div>
+    </div>
+
+    <!-- Actions principales -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <!-- Devenir mentor -->
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-8 text-white">
+            <h2 class="text-2xl font-bold mb-4">Devenir Mentor</h2>
+            <p class="mb-6">
+                Partagez votre expertise et aidez la nouvelle génération à réussir.
+                Devenez un mentor et faites la différence dans la vie de quelqu'un.
+            </p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'mentorat:devenir_mentor' %}"
+                   class="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    S'inscrire comme mentor
+                </a>
+            {% else %}
+                <a href="{% url 'comptes:connexion' %}?next={% url 'mentorat:devenir_mentor' %}"
+                   class="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    Se connecter pour devenir mentor
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Devenir mentoré -->
+        <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-8 text-white">
+            <h2 class="text-2xl font-bold mb-4">Trouver un Mentor</h2>
+            <p class="mb-6">
+                Bénéficiez de conseils personnalisés d'experts dans votre domaine.
+                Accélérez votre apprentissage et votre carrière.
+            </p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'mentorat:devenir_mentee' %}"
+                   class="inline-block bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    S'inscrire comme mentoré
+                </a>
+            {% else %}
+                <a href="{% url 'comptes:connexion' %}?next={% url 'mentorat:devenir_mentee' %}"
+                   class="inline-block bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    Se connecter pour trouver un mentor
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Comment ça marche -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mb-12">
+        <h2 class="text-2xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+            Comment ça marche ?
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">1</span>
+                </div>
+                <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Inscrivez-vous</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    Créez votre profil de mentor ou de mentoré selon vos besoins.
+                </p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-2xl font-bold text-green-600 dark:text-green-400">2</span>
+                </div>
+                <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Connectez-vous</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    Les mentors et mentorés sont mis en relation selon leurs profils.
+                </p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-2xl font-bold text-purple-600 dark:text-purple-400">3</span>
+                </div>
+                <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Échangez</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    Planifiez des séances et bénéficiez de conseils personnalisés.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lien vers la liste des mentors -->
+    <div class="text-center">
+        <a href="{% url 'mentorat:liste_mentors' %}"
+           class="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+            Voir tous les mentors disponibles
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titre %}Liste des Mentors - Numeria Institute{% endblock %}
+
+{% block contenu %}
+<div class="container mx-auto px-4 py-8">
+    <!-- En-tête -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            Trouver un Mentor
+        </h1>
+
+        <!-- Filtres et recherche -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+            <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Recherche -->
+                <div>
+                    <label for="q" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Recherche
+                    </label>
+                    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Nom, prénom..."
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                </div>
+
+                <!-- Domaine -->
+                <div>
+                    <label for="domaine" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Domaine
+                    </label>
+                    <select name="domaine" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        <option value="">Tous les domaines</option>
+                        {% for value, label in domaines %}
+                            <option value="{{ value }}" {% if request.GET.domaine == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Niveau -->
+                <div>
+                    <label for="niveau" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Expérience
+                    </label>
+                    <select name="niveau" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        <option value="">Tous niveaux</option>
+                        {% for value, label in niveaux %}
+                            <option value="{{ value }}" {% if request.GET.niveau == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Boutons -->
+                <div class="flex items-end space-x-2">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                        Filtrer
+                    </button>
+                    <a href="{% url 'mentorat:liste_mentors' %}" class="bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
+                        Réinitialiser
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Liste des mentors -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for mentor in mentors %}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <!-- Photo de profil -->
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    {% if mentor.profil.photo %}
+                        <img src="{{ mentor.profil.photo.url }}" alt="Photo de {{ mentor.profil.utilisateur.get_full_name }}"
+                             class="w-16 h-16 rounded-full object-cover mr-4">
+                    {% else %}
+                        <div class="w-16 h-16 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-gray-600 dark:text-gray-300 font-semibold text-lg">
+                                {{ mentor.profil.utilisateur.first_name|first|upper }}{{ mentor.profil.utilisateur.last_name|first|upper }}
+                            </span>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            {{ mentor.profil.utilisateur.get_full_name|default:mentor.profil.utilisateur.username }}
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300">
+                            {{ mentor.get_domaines_expertise_display }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Informations -->
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600 dark:text-gray-300">Expérience:</span>
+                        <span class="font-medium text-gray-900 dark:text-white">{{ mentor.get_niveau_experience_display }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600 dark:text-gray-300">Disponibilité:</span>
+                        <span class="font-medium text-gray-900 dark:text-white">{{ mentor.get_disponibilite_display }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600 dark:text-gray-300">Mentorés actifs:</span>
+                        <span class="font-medium text-gray-900 dark:text-white">{{ mentor.nombre_mentees_actuels }}</span>
+                    </div>
+                </div>
+
+                <!-- Biographie -->
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+                    {{ mentor.bio_mentorat|truncatechars:120 }}
+                </p>
+
+                <!-- Actions -->
+                <div class="flex space-x-2">
+                    <a href="{% url 'mentorat:detail_mentor' mentor.pk %}"
+                       class="flex-1 bg-blue-600 text-white text-center py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+                        Voir le profil
+                    </a>
+                    {% if user.is_authenticated and user.profil.mentorat_mentee and not mentor.profil.mentorat_mentee.a_mentor_actuel %}
+                        <a href="{% url 'mentorat:demander_mentorat' mentor.pk %}"
+                           class="bg-green-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-green-700 transition-colors">
+                            Demander
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-12">
+            <div class="text-gray-500 dark:text-gray-400 text-lg mb-4">
+                Aucun mentor trouvé
+            </div>
+            <p class="text-gray-600 dark:text-gray-300 mb-6">
+                Aucun mentor ne correspond à vos critères de recherche.
+            </p>
+            <a href="{% url 'mentorat:liste_mentors' %}" class="text-blue-600 dark:text-blue-400 hover:underline">
+                Réinitialiser les filtres
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination si nécessaire -->
+    {% if mentors.has_other_pages %}
+    <div class="mt-8 flex justify-center">
+        <nav class="flex items-center space-x-2">
+            {% if mentors.has_previous %}
+                <a href="?page={{ mentors.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                   class="px-3 py-2 rounded-md bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    Précédent
+                </a>
+            {% endif %}
+
+            <span class="px-3 py-2 text-gray-700 dark:text-gray-300">
+                Page {{ mentors.number }} sur {{ mentors.paginator.num_pages }}
+            </span>
+
+            {% if mentors.has_next %}
+                <a href="?page={{ mentors.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                   class="px-3 py-2 rounded-md bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    Suivant
+                </a>
+            {% endif %}
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+{% endblock %}

@@ -4,5 +4,28 @@ from . import views
 app_name = 'mentorat'
 
 urlpatterns = [
-    # Ajoutez vos URLs ici
+    # Pages principales
+    path('', views.index, name='index'),
+    path('mentors/', views.liste_mentors, name='liste_mentors'),
+    path('mentor/<int:pk>/', views.detail_mentor, name='detail_mentor'),
+
+    # Inscription
+    path('devenir-mentor/', views.devenir_mentor, name='devenir_mentor'),
+    path('devenir-mentee/', views.devenir_mentee, name='devenir_mentee'),
+
+    # Demandes de mentorat
+    path('demander/<int:mentor_pk>/', views.demander_mentorat, name='demander_mentorat'),
+    path('demande/<int:demande_pk>/<str:action>/', views.gerer_demande, name='gerer_demande'),
+
+    # Tableaux de bord
+    path('tableau-bord-mentor/', views.tableau_de_bord_mentor, name='tableau_de_bord_mentor'),
+    path('tableau-bord-mentee/', views.tableau_de_bord_mentee, name='tableau_de_bord_mentee'),
+
+    # Gestion des relations
+    path('relation/<int:pk>/', views.detail_relation, name='detail_relation'),
+    path('relation/<int:relation_pk>/planifier-seance/', views.planifier_seance, name='planifier_seance'),
+    path('relation/<int:relation_pk>/terminer/', views.terminer_relation, name='terminer_relation'),
+
+    # Gestion des séances
+    path('seance/<int:seance_pk>/terminer/', views.terminer_seance, name='terminer_seance'),
 ]
