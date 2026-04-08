@@ -208,6 +208,7 @@
                     <!-- 🔥 NOUVEAU LIEN CANDIDATURES -->
                     <a href="{% url 'admissions:liste_campagnes' %}" class="nav-pill {% if '/admissions' in request.path %}actif{% endif %}">Candidatures</a>
                     <a href="{% url 'communaute:liste_categories' %}" class="nav-pill {% if '/communaute' in request.path %}actif{% endif %}">Communauté</a>
+                    <a href="{% url 'mentorat:index' %}" class="nav-pill {% if '/mentorat' in request.path %}actif{% endif %}">Mentorat</a>
                     <a href="{% url 'a_propos' %}" class="nav-pill {% if '/a-propos' in request.path %}actif{% endif %}">À propos</a>
                     <a href="{% url 'contact' %}" class="nav-pill {% if '/contact' in request.path %}actif{% endif %}">Contact</a>
                     <!-- LIEN ANALYTICS POUR ADMIN (DESKTOP) -->
@@ -273,7 +274,8 @@
                 <a href="{% url 'blog:liste' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/blog' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Blog</a>
                 <!-- 🔥 NOUVEAU LIEN CANDIDATURES (MOBILE) -->
                 <a href="{% url 'admissions:liste_campagnes' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/admissions' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">🎓 Candidatures</a>
-                <a href="#" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors">Communauté</a>
+                <a href="{% url 'communaute:liste_categories' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/communaute' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Communauté</a>
+                <a href="{% url 'mentorat:index' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/mentorat' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">🤝 Mentorat</a>
                 <a href="{% url 'a_propos' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/a-propos' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">À propos</a>
                 <a href="{% url 'contact' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/contact' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Contact</a>
                 <!-- LIEN ANALYTICS POUR ADMIN (MOBILE) -->
