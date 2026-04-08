@@ -182,12 +182,16 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('JavaScript de vote chargé');
+
     // Gestion des votes
     document.querySelectorAll('.vote-buttons').forEach(function(voteContainer) {
         const messageId = voteContainer.dataset.messageId;
         const upvoteBtn = voteContainer.querySelector('.upvote-btn');
         const downvoteBtn = voteContainer.querySelector('.downvote-btn');
         const voteCount = voteContainer.querySelector('.vote-count');
+
+        console.log('Container de vote trouvé pour message:', messageId);
 
         // Fonction pour mettre à jour l'apparence des boutons
         function updateVoteButtons(valeurUtilisateur) {
@@ -208,16 +212,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Gestionnaire d'événement pour les boutons de vote
         voteContainer.addEventListener('click', function(e) {
+            console.log('Clic détecté sur container de vote');
             if (e.target.classList.contains('vote-btn')) {
+                console.log('Clic sur bouton de vote:', e.target.dataset.valeur);
                 e.preventDefault();
                 const valeur = parseInt(e.target.dataset.valeur);
 
                 // Utiliser l'URL Django au lieu d'une URL absolue
                 const voteUrl = `/communaute/message/${messageId}/voter/`;
+                console.log('URL de vote:', voteUrl);
 
                 // Récupérer le token CSRF
                 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
                 const csrfValue = csrfToken ? csrfToken.value : '';
+                console.log('Token CSRF trouvé:', csrfValue ? 'Oui' : 'Non');
 
                 // Envoi de la requête AJAX
                 fetch(voteUrl, {
@@ -229,18 +237,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: `valeur=${valeur}`
                 })
                 .then(response => {
+                    console.log('Réponse reçue:', response.status);
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     return response.json();
                 })
                 .then(data => {
+                    console.log('Données reçues:', data);
                     if (data.error) {
                         alert(data.error);
                     } else {
                         // Mise à jour du compteur et des boutons
                         voteCount.textContent = data.nombre_votes;
                         updateVoteButtons(data.vote_utilisateur);
+                        console.log('Vote mis à jour avec succès');
                     }
                 })
                 .catch(error => {
