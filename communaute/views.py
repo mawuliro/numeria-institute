@@ -267,42 +267,49 @@ def voter_message(request, pk):
 
     valeur = int(valeur)
 
+@login_required
+def voter_message(request, pk):
+    """Permet de voter pour ou contre un message."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
+
+    message = get_object_or_404(Message, pk=pk)
+
+    # Empêcher de voter pour ses propres messages
+    if message.auteur == request.user:
+        return JsonResponse({'error': 'Vous ne pouvez pas voter pour votre propre message.'}, status=400)
+
+    valeur = request.POST.get('valeur')
+    if valeur not in ['1', '-1']:
+        return JsonResponse({'error': 'Valeur de vote invalide.'}, status=400)
+
+    valeur = int(valeur)
+
     # Vérifier si l'utilisateur a déjà voté
     vote_existant = Vote.objects.filter(message=message, utilisateur=request.user).first()
-    print(f"Vote existant: {vote_existant}")
 
     if vote_existant:
         if vote_existant.valeur == valeur:
             # Annuler le vote si c'est le même
             vote_existant.delete()
             action = 'annule'
-            print("Vote annulé")
         else:
             # Changer le vote
             vote_existant.valeur = valeur
             vote_existant.save()
             action = 'change'
-            print("Vote changé")
     else:
         # Créer un nouveau vote
         Vote.objects.create(message=message, utilisateur=request.user, valeur=valeur)
         action = 'nouveau'
-        print("Nouveau vote créé")
 
-    # Retourner le nouveau nombre de votes
-    nombre_votes = message.nombre_votes
-    nombre_likes = message.nombre_likes
-    nombre_dislikes = message.nombre_dislikes
-    print(f"Nombre de votes final: {nombre_votes} (likes: {nombre_likes}, dislikes: {nombre_dislikes})")
-
+    # Retourner les compteurs séparés
     response_data = {
         'action': action,
-        'nombre_votes': nombre_votes,
-        'nombre_likes': nombre_likes,
-        'nombre_dislikes': nombre_dislikes,
+        'nombre_likes': message.nombre_likes,
+        'nombre_dislikes': message.nombre_dislikes,
         'vote_utilisateur': valeur if action != 'annule' else 0
     }
-    print(f"Données de réponse: {response_data}")
 
     return JsonResponse(response_data)
 

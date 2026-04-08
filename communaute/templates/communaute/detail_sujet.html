@@ -191,7 +191,7 @@
 {% csrf_token %}
 
 <script>
-console.log('Script de vote chargé au niveau global');
+console.log('Script de vote chargé');
 
 // Attendre que le DOM soit prêt
 if (document.readyState === 'loading') {
@@ -207,23 +207,15 @@ function initVoting() {
     const voteContainers = document.querySelectorAll('.vote-buttons');
     console.log('Nombre de containers de vote trouvés:', voteContainers.length);
 
-    voteContainers.forEach(function(voteContainer, index) {
+    voteContainers.forEach(function(voteContainer) {
         const messageId = voteContainer.dataset.messageId;
         const upvoteBtn = voteContainer.querySelector('.upvote-btn');
         const downvoteBtn = voteContainer.querySelector('.downvote-btn');
         const upvoteCount = voteContainer.querySelector('.upvote-btn').nextElementSibling;
         const downvoteCount = voteContainer.querySelector('.downvote-btn').nextElementSibling;
 
-        console.log(`Container ${index + 1}: message ${messageId}, boutons trouvés:`, {
-            upvote: !!upvoteBtn,
-            downvote: !!downvoteBtn,
-            upvoteCount: !!upvoteCount,
-            downvoteCount: !!downvoteCount
-        });
-
         // Fonction pour mettre à jour l'apparence des boutons
         function updateVoteButtons(valeurUtilisateur) {
-            console.log(`Mise à jour des boutons pour message ${messageId}, valeur:`, valeurUtilisateur);
             upvoteBtn.classList.remove('text-green-600', 'text-gray-400');
             downvoteBtn.classList.remove('text-red-600', 'text-gray-400');
 
@@ -241,26 +233,18 @@ function initVoting() {
 
         // Gestionnaire d'événement pour les boutons de vote
         voteContainer.addEventListener('click', function(e) {
-            console.log('Clic détecté sur container de vote pour message:', messageId);
-            console.log('Target element:', e.target);
-            console.log('Target classes:', e.target.className);
-
             if (e.target.classList.contains('vote-btn')) {
-                console.log('Clic sur bouton de vote:', e.target.dataset.valeur);
                 e.preventDefault();
                 e.stopPropagation();
 
                 const valeur = parseInt(e.target.dataset.valeur);
-                console.log('Valeur du vote:', valeur);
 
                 // Utiliser l'URL Django générée côté serveur
                 const voteUrl = '{% url "communaute:voter_message" 0 %}'.replace('0', messageId);
-                console.log('URL de vote générée:', voteUrl);
 
                 // Récupérer le token CSRF
                 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
                 const csrfValue = csrfToken ? csrfToken.value : '';
-                console.log('Token CSRF trouvé:', csrfValue ? 'Oui (' + csrfValue.substring(0, 10) + '...)' : 'Non');
 
                 if (!csrfValue) {
                     alert('Token CSRF manquant. Veuillez rafraîchir la page.');
@@ -268,7 +252,6 @@ function initVoting() {
                 }
 
                 // Envoi de la requête AJAX
-                console.log('Envoi de la requête AJAX...');
                 fetch(voteUrl, {
                     method: 'POST',
                     headers: {
@@ -278,34 +261,25 @@ function initVoting() {
                     body: `valeur=${valeur}`
                 })
                 .then(response => {
-                    console.log('Réponse HTTP reçue:', response.status, response.statusText);
-                    console.log('Headers de réponse:', Object.fromEntries(response.headers.entries()));
-
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Données JSON reçues:', data);
                     if (data.error) {
-                        console.error('Erreur serveur:', data.error);
                         alert('Erreur: ' + data.error);
                     } else {
-                        console.log('Mise à jour de l\'interface...');
                         // Mise à jour des compteurs séparés
                         if (upvoteCount) upvoteCount.textContent = data.nombre_likes;
                         if (downvoteCount) downvoteCount.textContent = data.nombre_dislikes;
                         updateVoteButtons(data.vote_utilisateur);
-                        console.log('Vote mis à jour avec succès');
                     }
                 })
                 .catch(error => {
                     console.error('Erreur lors du vote:', error);
-                    alert('Une erreur est survenue lors du vote: ' + error.message);
+                    alert('Une erreur est survenue lors du vote. Veuillez réessayer.');
                 });
-            } else {
-                console.log('Clic sur un élément qui n\'est pas un bouton de vote');
             }
         });
     });
