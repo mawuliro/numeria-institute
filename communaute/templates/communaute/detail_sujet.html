@@ -98,21 +98,31 @@
                     <div class="flex items-center gap-4">
                         {% if user.is_authenticated and user != message.auteur %}
                         <div class="flex items-center gap-2 vote-buttons" data-message-id="{{ message.pk }}">
-                            <button type="button" class="vote-btn upvote-btn text-gray-400 hover:text-green-600 transition-colors p-1 {% if message.user_vote == 1 %}text-green-600{% endif %}"
-                                    data-valeur="1" title="Utile">
-                                👍
-                            </button>
-                            <span class="vote-count font-medium text-gray-700">{{ message.nombre_votes }}</span>
-                            <button type="button" class="vote-btn downvote-btn text-gray-400 hover:text-red-600 transition-colors p-1 {% if message.user_vote == -1 %}text-red-600{% endif %}"
-                                    data-valeur="-1" title="Pas utile">
-                                👎
-                            </button>
+                            <div class="flex items-center gap-1">
+                                <button type="button" class="vote-btn upvote-btn text-gray-400 hover:text-green-600 transition-colors p-1 {% if message.user_vote == 1 %}text-green-600{% endif %}"
+                                        data-valeur="1" title="Utile">
+                                    👍
+                                </button>
+                                <span class="text-sm font-medium text-gray-700">{{ message.nombre_likes }}</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button type="button" class="vote-btn downvote-btn text-gray-400 hover:text-red-600 transition-colors p-1 {% if message.user_vote == -1 %}text-red-600{% endif %}"
+                                        data-valeur="-1" title="Pas utile">
+                                    👎
+                                </button>
+                                <span class="text-sm font-medium text-gray-700">{{ message.nombre_dislikes }}</span>
+                            </div>
                         </div>
                         {% else %}
                         <div class="flex items-center gap-2">
-                            <span class="text-gray-400">👍</span>
-                            <span class="vote-count font-medium text-gray-700">{{ message.nombre_votes }}</span>
-                            <span class="text-gray-400">👎</span>
+                            <div class="flex items-center gap-1">
+                                <span class="text-gray-400">👍</span>
+                                <span class="text-sm font-medium text-gray-700">{{ message.nombre_likes }}</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span class="text-gray-400">👎</span>
+                                <span class="text-sm font-medium text-gray-700">{{ message.nombre_dislikes }}</span>
+                            </div>
                         </div>
                         {% endif %}
                     </div>
@@ -201,12 +211,14 @@ function initVoting() {
         const messageId = voteContainer.dataset.messageId;
         const upvoteBtn = voteContainer.querySelector('.upvote-btn');
         const downvoteBtn = voteContainer.querySelector('.downvote-btn');
-        const voteCount = voteContainer.querySelector('.vote-count');
+        const upvoteCount = voteContainer.querySelector('.upvote-btn').nextElementSibling;
+        const downvoteCount = voteContainer.querySelector('.downvote-btn').nextElementSibling;
 
         console.log(`Container ${index + 1}: message ${messageId}, boutons trouvés:`, {
             upvote: !!upvoteBtn,
             downvote: !!downvoteBtn,
-            count: !!voteCount
+            upvoteCount: !!upvoteCount,
+            downvoteCount: !!downvoteCount
         });
 
         // Fonction pour mettre à jour l'apparence des boutons
@@ -281,8 +293,9 @@ function initVoting() {
                         alert('Erreur: ' + data.error);
                     } else {
                         console.log('Mise à jour de l\'interface...');
-                        // Mise à jour du compteur et des boutons
-                        voteCount.textContent = data.nombre_votes;
+                        // Mise à jour des compteurs séparés
+                        if (upvoteCount) upvoteCount.textContent = data.nombre_likes;
+                        if (downvoteCount) downvoteCount.textContent = data.nombre_dislikes;
                         updateVoteButtons(data.vote_utilisateur);
                         console.log('Vote mis à jour avec succès');
                     }

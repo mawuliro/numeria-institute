@@ -291,11 +291,15 @@ def voter_message(request, pk):
 
     # Retourner le nouveau nombre de votes
     nombre_votes = message.nombre_votes
-    print(f"Nombre de votes final: {nombre_votes}")
+    nombre_likes = message.nombre_likes
+    nombre_dislikes = message.nombre_dislikes
+    print(f"Nombre de votes final: {nombre_votes} (likes: {nombre_likes}, dislikes: {nombre_dislikes})")
 
     response_data = {
         'action': action,
         'nombre_votes': nombre_votes,
+        'nombre_likes': nombre_likes,
+        'nombre_dislikes': nombre_dislikes,
         'vote_utilisateur': valeur if action != 'annule' else 0
     }
     print(f"Données de réponse: {response_data}")

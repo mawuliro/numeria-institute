@@ -18,7 +18,7 @@ class SujetAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ['sujet', 'auteur', 'date_creation', 'est_edite', 'nombre_votes']
+    list_display = ['sujet', 'auteur', 'date_creation', 'est_edite', 'nombre_likes', 'nombre_dislikes', 'nombre_votes']
     list_filter = ['date_creation', 'est_edite']
     search_fields = ['contenu', 'auteur__username', 'sujet__titre']
     ordering = ['-date_creation']

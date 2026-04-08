@@ -74,6 +74,14 @@ class Message(models.Model):
     def nombre_votes(self):
         return self.votes.count()
 
+    @property
+    def nombre_likes(self):
+        return self.votes.filter(valeur=1).count()
+
+    @property
+    def nombre_dislikes(self):
+        return self.votes.filter(valeur=-1).count()
+
 class Vote(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='votes')
     utilisateur = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes_communaute')
