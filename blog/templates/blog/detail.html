@@ -66,10 +66,10 @@
         <div class="grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]">
 
             <!-- ARTICLE -->
-            <article class="flex-1 min-w-0">
+            <article class="flex-1 min-w-0 max-w-4xl mx-auto">
 
                 {% if article.image_couverture %}
-                <div class="mb-10 rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800">
+                <div class="mb-10 rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800 mx-auto max-w-3xl">
                     <img src="{{ article.image_couverture }}" alt="{{ article.titre }}"
                          class="w-full h-72 sm:h-96 object-cover">
                 </div>
@@ -101,16 +101,16 @@
                         color: #6B7280; font-style: italic; margin: 1.5rem 0;
                     }
                     .contenu-article pre {
-                        overflow-x: auto; background: #F3F4F6; padding: 1.25rem; border-radius: 1rem; border: 1px solid #E5E7EB; color: #1F2937;
+                        overflow-x: auto; background: #F3F4F6; padding: 1.25rem; border-radius: 1rem; border: 1px solid #E5E7EB; color: #1F2937; font-size: 0.96rem; line-height: 1.8;
                     }
-                    .contenu-article code:not(.hljs) { background: #F3F4F6; color: #1A3C6E; padding: 0.2rem 0.35rem; border-radius: 0.35rem; font-weight: 500; }
+                    .contenu-article code:not(.hljs) { background: #F3F4F6; color: #1A3C6E; padding: 0.3rem 0.45rem; border-radius: 0.35rem; font-weight: 500; font-size: 0.95rem; }
                     .dark .contenu-article { color: #E5E7EB; }
                     .dark .contenu-article h1, .dark .contenu-article h2, .dark .contenu-article h3 { color: #2DD4BF; }
                     .dark .contenu-article a { color: #2DD4BF; }
-                    .dark .contenu-article pre { background: #1F2937; border: 1px solid #374151; color: #E5E7EB; }
-                    .dark .contenu-article code:not(.hljs) { background: #374151; color: #FCD34D; padding: 0.2rem 0.35rem; border-radius: 0.25rem; font-weight: 500; }
+                    .dark .contenu-article pre { background: #1F2937; border: 1px solid #374151; color: #E5E7EB; font-size: 0.96rem; line-height: 1.8; }
+                    .dark .contenu-article code:not(.hljs) { background: #374151; color: #FCD34D; padding: 0.3rem 0.45rem; border-radius: 0.25rem; font-weight: 500; font-size: 0.95rem; }
                 </style>
-                <div class="contenu-article text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2rem] p-8 shadow-sm">
+                <div class="contenu-article text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2rem] p-8 shadow-sm mx-auto max-w-3xl">
                     {{ article.contenu|safe }}
                 </div>
 
