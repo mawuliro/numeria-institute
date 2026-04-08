@@ -101,14 +101,14 @@
                         color: #6B7280; font-style: italic; margin: 1.5rem 0;
                     }
                     .contenu-article pre {
-                        overflow-x: auto; background: #F3F4F6; padding: 1rem; border-radius: 1rem;
+                        overflow-x: auto; background: #F3F4F6; padding: 1.25rem; border-radius: 1rem; border: 1px solid #E5E7EB; color: #1F2937;
                     }
-                    .contenu-article code:not(.hljs) { background: #F3F4F6; color: #2DD4BF; padding: 0.2rem 0.35rem; border-radius: 0.35rem; }
+                    .contenu-article code:not(.hljs) { background: #F3F4F6; color: #1A3C6E; padding: 0.2rem 0.35rem; border-radius: 0.35rem; font-weight: 500; }
                     .dark .contenu-article { color: #E5E7EB; }
                     .dark .contenu-article h1, .dark .contenu-article h2, .dark .contenu-article h3 { color: #2DD4BF; }
                     .dark .contenu-article a { color: #2DD4BF; }
-                    .dark .contenu-article pre { background: #111827; }
-                    .dark code:not(.hljs) { background: #1F2937; color: #2DD4BF; }
+                    .dark .contenu-article pre { background: #1F2937; border: 1px solid #374151; color: #E5E7EB; }
+                    .dark .contenu-article code:not(.hljs) { background: #374151; color: #FCD34D; padding: 0.2rem 0.35rem; border-radius: 0.25rem; font-weight: 500; }
                 </style>
                 <div class="contenu-article text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2rem] p-8 shadow-sm">
                     {{ article.contenu|safe }}
