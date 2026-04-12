@@ -99,37 +99,9 @@ def a_propos(request):
         )
     # Statistiques dynamiques
     total_cours = Cours.objects.filter(est_publie=True).count()
-    total_etudiants = 0  # TODO: compter les utilisateurs étudiants
+    total_etudiants = User.objects.filter(is_active=True).count()
     contexte = {
         'aboutpage': aboutpage,
-        'total_cours': total_cours,
-        'total_etudiants': total_etudiants,
-    }
-    return render(request, 'pages/a_propos.html', contexte)
-
-
-def contact(request):
-    """Vue de la page Contact."""
-    contactpage = ContactPage.objects.first()
-    if not contactpage:
-        contactpage = ContactPage.objects.create(
-            title="Contactez-nous",
-            intro="Une question, une idée de partenariat ou simplement envie d'en savoir plus ? Nous sommes là pour vous.",
-            address="Lomé, Togo",
-            phone="+228 XX XX XX XX",
-            email="contact@numeriainstitute.com",
-            hours="Lundi-Vendredi: 9h-18h",
-            meta_title="Contact - Numeria Institute",
-            meta_description="Contactez Numeria Institute pour toute question ou partenariat."
-        )
-    contexte = {
-        'contactpage': contactpage,
-    }
-    return render(request, 'pages/contact.html', contexte)
-    from django.contrib.auth.models import User
-    total_etudiants = User.objects.filter(is_active=True).count()
-
-    contexte = {
         'total_cours': total_cours,
         'total_etudiants': total_etudiants,
     }
@@ -142,11 +114,23 @@ def contact(request):
     from django.core.mail import send_mail
     from django.conf import settings
 
+    contactpage = ContactPage.objects.first()
+    if not contactpage:
+        contactpage = ContactPage.objects.create(
+            title="Contactez-nous",
+            intro="Une question, une idée de partenariat ou simplement envie d'en savoir plus ? Nous sommes là pour vous.",
+            address="Lomé, Togo",
+            phone="+228 XX XX XX XX",
+            email="contact@numeriainstitute.com",
+            hours="Lundi-Vendredi: 9h-18h",
+            meta_title="Contact - Numeria Institute",
+            meta_description="Contactez Numeria Institute pour toute question ou partenariat."
+        )
+
     if request.method == 'POST':
         formulaire = FormulaireContact(request.POST)
 
         if formulaire.is_valid():
-            # Récupérer les données du formulaire
             nom = formulaire.cleaned_data['nom_complet']
             email = formulaire.cleaned_data['email']
             organisation = formulaire.cleaned_data.get('organisation', '')
@@ -154,7 +138,6 @@ def contact(request):
             message = formulaire.cleaned_data['message']
             est_partenaire = formulaire.cleaned_data.get('est_partenaire', False)
 
-            # Construire le message email
             contenu_email = f"""
 Nouveau message depuis le site Numeria Institute
 ================================================
@@ -170,11 +153,10 @@ Message :
 {message}
 
 ================================================
-Envoyé depuis numeriainsitute.com
+Envoyé depuis numeriainstitute.com
             """
 
             try:
-                # Envoyer l'email (affiché dans le terminal en développement)
                 send_mail(
                     subject=f'[Numeria] Nouveau message : {sujet} — {nom}',
                     message=contenu_email,
@@ -182,9 +164,8 @@ Envoyé depuis numeriainsitute.com
                     recipient_list=[settings.CONTACT_EMAIL],
                     fail_silently=False,
                 )
-                messages_django = True
             except Exception:
-                messages_django = False
+                pass
 
             from django.contrib import messages
             messages.success(
@@ -196,4 +177,4 @@ Envoyé depuis numeriainsitute.com
     else:
         formulaire = FormulaireContact()
 
-    return render(request, 'pages/contact.html', {'formulaire': formulaire})
+    return render(request, 'pages/contact.html', {'formulaire': formulaire, 'contactpage': contactpage})

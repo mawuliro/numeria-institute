@@ -1,98 +1,46 @@
 {% extends 'base.html' %}
-{% block titre %}Profil de {{ utilisateur.username }}{% endblock %}
-{% block meta_description %}Découvrez le profil de {{ utilisateur.username }} dans la communauté Numeria Institute.{% endblock %}
+{% load i18n %}
+{% block titre %}{% blocktrans with username=utilisateur.username %}Profil de {{ username }}{% endblocktrans %} - Numeria{% endblock %}
+{% block meta_description %}{% blocktrans with username=utilisateur.username %}Découvrez le profil de {{ username }} dans la communauté Numeria Institute.{% endblocktrans %}{% endblock %}
+
 {% block contenu %}
 
-<!-- ===== HEADER ===== -->
-<section class="bg-numeria-bleu text-white w-full">
-    <div class="w-full px-4 sm:px-8 lg:px-16 py-12">
-        <div class="max-w-4xl mx-auto text-center">
-            <nav class="mb-6">
-                <a href="{% url 'communaute:liste_categories' %}" class="text-blue-200 hover:text-white transition-colors">
-                    ← Retour à la communauté
-                </a>
-            </nav>
-
+<!-- ===== HERO PROFIL ===== -->
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
+    <div style="position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-14 relative">
+        <nav class="mb-8">
+            <a href="{% url 'communaute:liste_categories' %}" class="text-blue-300 hover:text-numeria-teal transition-colors text-sm">
+                ← {% trans "Retour aux forums" %}
+            </a>
+        </nav>
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <!-- Avatar -->
-            <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center text-numeria-bleu text-3xl font-bold mx-auto mb-4">
+            <div class="w-24 h-24 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu text-4xl font-black flex-shrink-0 shadow-lg">
                 {% if profil and profil.avatar %}
-                <img src="{{ profil.avatar.url }}" alt="Avatar de {{ utilisateur.username }}" class="w-full h-full rounded-full object-cover">
+                <img src="{{ profil.avatar.url }}" alt="{{ utilisateur.username }}" class="w-full h-full rounded-full object-cover">
                 {% else %}
                 {{ utilisateur.username|first|upper }}
                 {% endif %}
             </div>
-
-            <h1 class="text-3xl font-bold mb-2">{{ utilisateur.username }}</h1>
-            {% if profil %}
-            <p class="text-blue-200">{{ profil.bio|default:"Membre de la communauté Numeria" }}</p>
-            {% endif %}
-
-            {% if user.is_authenticated and user == utilisateur %}
-            <div class="mt-6">
-                <a href="{% url 'communaute:modifier_profil' %}" class="bg-white text-numeria-bleu px-6 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors">
-                    Modifier mon profil
-                </a>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-</section>
-
-<!-- ===== INFORMATIONS ===== -->
-<section class="py-12 bg-gray-50">
-    <div class="w-full px-4 sm:px-8 lg:px-16">
-        <div class="max-w-4xl mx-auto">
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Statistiques -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Statistiques</h2>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Sujets créés</span>
-                            <span class="font-semibold text-numeria-bleu">{{ nombre_sujets }}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Messages postés</span>
-                            <span class="font-semibold text-numeria-bleu">{{ nombre_messages }}</span>
-                        </div>
-                        {% if profil %}
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Membre depuis</span>
-                            <span class="font-semibold text-gray-900">{{ profil.date_inscription|date:"M Y" }}</span>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <!-- Informations détaillées -->
-                {% if profil %}
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Informations</h2>
-                    <div class="space-y-4">
-                        {% if profil.specialisation %}
-                        <div>
-                            <span class="text-gray-600 block text-sm">Spécialisation</span>
-                            <span class="font-medium">{{ profil.specialisation }}</span>
-                        </div>
-                        {% endif %}
-
-                        {% if profil.niveau_etudes %}
-                        <div>
-                            <span class="text-gray-600 block text-sm">Niveau d'études</span>
-                            <span class="font-medium">{{ profil.niveau_etudes }}</span>
-                        </div>
-                        {% endif %}
-
-                        {% if profil.site_web %}
-                        <div>
-                            <span class="text-gray-600 block text-sm">Site web</span>
-                            <a href="{{ profil.site_web }}" target="_blank" rel="noopener noreferrer"
-                               class="text-numeria-bleu hover:text-numeria-teal font-medium">
-                                {{ profil.site_web }}
-                            </a>
-                        </div>
-                        {% endif %}
-                    </div>
+            <!-- Infos -->
+            <div class="text-center sm:text-left">
+                <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl mb-1">{{ utilisateur.username }}</h1>
+                {% if utilisateur.get_full_name %}
+                <p class="text-blue-200 text-sm mb-2">{{ utilisateur.get_full_name }}</p>
+                {% endif %}
+                {% if profil and profil.bio %}
+                <p class="text-blue-300 text-sm max-w-md leading-relaxed">{{ profil.bio }}</p>
+                {% else %}
+                <p class="text-blue-400 text-sm italic">{% trans "Membre de la communauté Numeria" %}</p>
+                {% endif %}
+                {% if user.is_authenticated and user == utilisateur %}
+                <div class="mt-5">
+                    <a href="{% url 'communaute:modifier_profil' %}"
+                       style="font-family:'Outfit',sans-serif;font-weight:700;"
+                       class="bg-numeria-teal text-numeria-bleu px-5 py-2 rounded-xl hover:bg-teal-300 transition-colors text-sm inline-block">
+                        ✏️ {% trans "Modifier mon profil" %}
+                    </a>
                 </div>
                 {% endif %}
             </div>
@@ -100,40 +48,119 @@
     </div>
 </section>
 
-<!-- ===== DERNIERS MESSAGES ===== -->
+<!-- ===== STATS + INFOS ===== -->
+<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+
+            <!-- Statistiques -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
+                <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-5 flex items-center gap-2">
+                    <span class="text-xl">📊</span> {% trans "Statistiques" %}
+                </h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between py-2 border-b border-gray-50 dark:border-gray-700">
+                        <span class="text-gray-600 dark:text-gray-300 text-sm">{% trans "Sujets créés" %}</span>
+                        <span style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-numeria-teal text-lg">{{ nombre_sujets }}</span>
+                    </div>
+                    <div class="flex items-center justify-between py-2 border-b border-gray-50 dark:border-gray-700">
+                        <span class="text-gray-600 dark:text-gray-300 text-sm">{% trans "Messages postés" %}</span>
+                        <span style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-numeria-teal text-lg">{{ nombre_messages }}</span>
+                    </div>
+                    {% if profil %}
+                    <div class="flex items-center justify-between py-2">
+                        <span class="text-gray-600 dark:text-gray-300 text-sm">{% trans "Membre depuis" %}</span>
+                        <span class="font-semibold text-gray-700 dark:text-gray-200 text-sm">{{ profil.date_inscription|date:"M Y" }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Informations -->
+            {% if profil %}
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
+                <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-5 flex items-center gap-2">
+                    <span class="text-xl">👤</span> {% trans "Informations" %}
+                </h2>
+                <div class="space-y-4">
+                    {% if profil.specialisation %}
+                    <div class="flex items-start gap-3">
+                        <span class="text-numeria-teal text-base mt-0.5">🎯</span>
+                        <div>
+                            <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block">{% trans "Spécialisation" %}</span>
+                            <span class="font-semibold text-gray-700 dark:text-gray-200 text-sm">{{ profil.specialisation }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if profil.niveau_etudes %}
+                    <div class="flex items-start gap-3">
+                        <span class="text-numeria-teal text-base mt-0.5">🎓</span>
+                        <div>
+                            <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block">{% trans "Niveau d'études" %}</span>
+                            <span class="font-semibold text-gray-700 dark:text-gray-200 text-sm">{{ profil.niveau_etudes }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if profil.site_web %}
+                    <div class="flex items-start gap-3">
+                        <span class="text-numeria-teal text-base mt-0.5">🔗</span>
+                        <div>
+                            <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block">{% trans "Site web" %}</span>
+                            <a href="{{ profil.site_web }}" target="_blank" rel="noopener noreferrer"
+                               class="text-numeria-bleu dark:text-numeria-teal hover:underline text-sm break-all">
+                                {{ profil.site_web }}
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if not profil.specialisation and not profil.niveau_etudes and not profil.site_web %}
+                    <p class="text-gray-400 dark:text-gray-500 text-sm italic">{% trans "Aucune information renseignée." %}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+
+<!-- ===== DERNIÈRES ACTIVITÉS ===== -->
 {% if derniers_messages %}
-<section class="py-12 bg-white">
+<section class="w-full py-12 bg-white dark:bg-gray-800">
     <div class="w-full px-4 sm:px-8 lg:px-16">
         <div class="max-w-4xl mx-auto">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-8">Dernières activités</h2>
-
+            <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-xl mb-6 flex items-center gap-2">
+                <span class="text-xl">🕒</span> {% trans "Dernières activités" %}
+            </h2>
             <div class="space-y-4">
                 {% for message in derniers_messages %}
-                <div class="bg-gray-50 rounded-xl p-6">
+                <div class="bg-numeria-blanc dark:bg-gray-700 rounded-2xl p-5 hover:shadow-sm transition-all border border-gray-100 dark:border-gray-600">
                     <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-numeria-bleu rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                        <div class="w-9 h-9 bg-numeria-bleu rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                             {{ message.auteur.username|first|upper }}
                         </div>
-                        <div class="flex-1">
-                            <div class="text-sm text-gray-600 mb-2">
-                                Dans <a href="{{ message.sujet.get_absolute_url }}" class="text-numeria-bleu hover:text-numeria-teal font-medium">
+                        <div class="flex-1 min-w-0">
+                            <div class="text-xs text-gray-500 dark:text-gray-400 mb-1.5 flex flex-wrap items-center gap-1.5">
+                                <span>{% trans "Dans" %}</span>
+                                <a href="{{ message.sujet.get_absolute_url }}" class="text-numeria-bleu dark:text-numeria-teal font-semibold hover:underline truncate">
                                     {{ message.sujet.titre }}
                                 </a>
-                                • {{ message.date_creation|date:"d M Y à H:i" }}
+                                <span>·</span>
+                                <span>{{ message.date_creation|date:"d M Y, H:i" }}</span>
                             </div>
-                            <div class="text-gray-800">
-                                {{ message.contenu|truncatechars:150 }}
+                            <div class="text-gray-700 dark:text-gray-200 text-sm leading-relaxed">
+                                {{ message.contenu|truncatechars:180 }}
                             </div>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
-
             <div class="mt-8 text-center">
                 <a href="{% url 'communaute:liste_categories' %}"
-                   class="text-numeria-bleu hover:text-numeria-teal font-medium">
-                    Voir tous les sujets →
+                   style="font-family:'Outfit',sans-serif;font-weight:700;"
+                   class="text-numeria-teal hover:text-numeria-bleu dark:hover:text-white transition-colors text-sm">
+                    {% trans "Voir tous les sujets" %} →
                 </a>
             </div>
         </div>

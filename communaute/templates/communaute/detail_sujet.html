@@ -1,94 +1,109 @@
 {% extends 'base.html' %}
-{% block titre %}{{ sujet.titre }}{% endblock %}
-{% block meta_description %}Discussion : {{ sujet.titre }} - Communauté Numeria Institute{% endblock %}
+{% load i18n %}
+{% block titre %}{{ sujet.titre }} - {% trans "Communauté" %} Numeria{% endblock %}
+{% block meta_description %}{% blocktrans with titre=sujet.titre %}Discussion : {{ titre }} dans la communauté Numeria Institute.{% endblocktrans %}{% endblock %}
+
 {% block contenu %}
+
+<!-- CSRF token pour les votes Ajax -->
+{% csrf_token %}
 
 <!-- ===== HEADER ===== -->
 <section class="bg-numeria-bleu text-white w-full">
-    <div class="w-full px-4 sm:px-8 lg:px-16 py-8">
-        <div class="max-w-6xl mx-auto">
-            <nav class="mb-4">
-                <a href="{{ sujet.categorie.get_absolute_url }}" class="text-blue-200 hover:text-white transition-colors">
-                    ← Retour à {{ sujet.categorie.nom }}
-                </a>
-            </nav>
-
-            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                <div class="flex-1">
-                    <div class="flex items-center gap-3 mb-2">
-                        {% if sujet.est_epingle %}
-                        <span class="text-yellow-300" title="Sujet épinglé">📌</span>
-                        {% endif %}
-                        {% if sujet.est_ferme %}
-                        <span class="text-red-300" title="Sujet fermé">🔒</span>
-                        {% endif %}
-                        <h1 class="text-2xl md:text-3xl font-bold">{{ sujet.titre }}</h1>
-                    </div>
-                    <p class="text-blue-200">
-                        Par <a href="{% url 'communaute:profil_utilisateur' sujet.auteur.username %}"
-                               class="hover:text-white font-medium">
-                            {{ sujet.auteur.username }}
-                        </a>
-                        <span class="mx-2">•</span>
-                        {{ sujet.date_creation|date:"l d F Y à H:i" }}
-                        <span class="mx-2">•</span>
-                        {{ sujet.vues }} vue{{ sujet.vues|pluralize:"s" }}
-                    </p>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-10">
+        <nav class="mb-5">
+            <a href="{{ sujet.categorie.get_absolute_url }}" class="text-blue-300 hover:text-numeria-teal transition-colors text-sm flex items-center gap-1.5 w-fit">
+                ← {{ sujet.categorie.nom }}
+            </a>
+        </nav>
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+            <div class="flex-1">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                    {% if sujet.est_epingle %}
+                    <span class="bg-numeria-or/20 text-numeria-or text-xs font-bold px-3 py-1 rounded-full">📌 {% trans "Épinglé" %}</span>
+                    {% endif %}
+                    {% if sujet.est_ferme %}
+                    <span class="bg-red-500/20 text-red-300 text-xs font-bold px-3 py-1 rounded-full">🔒 {% trans "Sujet fermé" %}</span>
+                    {% endif %}
                 </div>
-
-                {% if user.is_authenticated and not sujet.est_ferme %}
-                <a href="{% url 'communaute:repondre_sujet' sujet.pk %}"
-                   class="bg-numeria-teal text-numeria-bleu px-6 py-3 rounded-xl hover:bg-teal-300 transition-colors font-medium inline-block">
-                    Répondre
-                </a>
-                {% endif %}
+                <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-2xl md:text-3xl mb-3">{{ sujet.titre }}</h1>
+                <p class="text-blue-300 text-sm flex flex-wrap items-center gap-2">
+                    <a href="{% url 'communaute:profil_utilisateur' sujet.auteur.username %}" class="font-semibold hover:text-numeria-teal transition-colors">{{ sujet.auteur.username }}</a>
+                    <span>·</span>
+                    <span>{{ sujet.date_creation|date:"d F Y, H:i" }}</span>
+                    <span>·</span>
+                    <span>{{ sujet.vues }} {% trans "vue" %}{{ sujet.vues|pluralize:"s" }}</span>
+                </p>
             </div>
+            {% if user.is_authenticated and not sujet.est_ferme %}
+            <a href="{% url 'communaute:repondre_sujet' sujet.pk %}"
+               style="font-family:'Outfit',sans-serif;font-weight:700;"
+               class="bg-numeria-teal text-numeria-bleu px-6 py-3 rounded-xl hover:bg-teal-300 transition-colors flex-shrink-0 text-sm">
+                {% trans "Répondre" %} →
+            </a>
+            {% endif %}
         </div>
     </div>
 </section>
 
 <!-- ===== QUESTION INITIALE ===== -->
 {% if page_obj %}
-<section class="py-10 bg-white dark:bg-gray-800 border-b-2 border-numeria-bleu">
+<section class="w-full py-10 bg-white dark:bg-gray-800 border-b border-numeria-bleu/20">
     <div class="w-full px-4 sm:px-8 lg:px-16">
         <div class="max-w-4xl mx-auto">
             {% with question=page_obj.0 %}
-            <div class="bg-gradient-to-br from-numeria-bleu/8 to-numeria-teal/5 border-l-4 border-numeria-bleu rounded-xl p-8" id="message-{{ question.pk }}">
+            <div class="bg-gradient-to-br from-numeria-bleu/6 to-numeria-teal/4 dark:from-numeria-bleu/20 dark:to-numeria-teal/10 border border-numeria-bleu/15 dark:border-numeria-bleu/40 rounded-2xl p-8" id="message-{{ question.pk }}">
                 <div class="inline-flex items-center gap-2 bg-numeria-bleu text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-6">
-                    <span>❓</span> Question initiale
+                    ❓ {% trans "Question initiale" %}
                 </div>
-                
-                <!-- En-tête de la question -->
-                <div class="flex items-start justify-between mb-6">
+                <div class="flex items-start justify-between mb-6 gap-4">
                     <div class="flex items-center gap-4">
-                        <div class="w-14 h-14 bg-numeria-bleu rounded-full flex items-center justify-center text-white font-bold text-lg">
+                        <div class="w-12 h-12 bg-numeria-bleu rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
                             {{ question.auteur.username|first|upper }}
                         </div>
                         <div>
                             <a href="{% url 'communaute:profil_utilisateur' question.auteur.username %}"
-                               class="font-bold text-lg text-gray-900 hover:text-numeria-bleu transition-colors">
+                               class="font-bold text-numeria-bleu dark:text-white hover:text-numeria-teal transition-colors">
                                 {{ question.auteur.username }}
                             </a>
-                            <div class="text-sm text-gray-600 mt-1">
-                                {{ question.date_creation|date:"d F Y à H:i" }}
-                                {% if question.est_edite %}
-                                <span class="ml-2 text-xs text-gray-500">(modifié)</span>
-                                {% endif %}
+                            <div class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                                {{ question.date_creation|date:"d F Y, H:i" }}
+                                {% if question.est_edite %}<span class="ml-2 text-xs">({% trans "modifié" %})</span>{% endif %}
                             </div>
                         </div>
                     </div>
-
                     {% if user.is_authenticated and user == question.auteur %}
                     <a href="{% url 'communaute:modifier_message' question.pk %}"
-                       class="text-gray-500 hover:text-numeria-bleu transition-colors text-sm">
-                        ✏️ Modifier
+                       class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-teal transition-colors text-sm flex-shrink-0">
+                        ✏️ {% trans "Modifier" %}
                     </a>
                     {% endif %}
                 </div>
-
-                <!-- Contenu de la question -->
-                <div class="prose prose-gray max-w-none text-gray-700 dark:text-gray-100 leading-relaxed">
+                <div class="prose prose-gray dark:prose-invert max-w-none text-gray-700 dark:text-gray-200 leading-relaxed text-base">
                     {{ question.contenu|linebreaks }}
+                </div>
+                <!-- Votes question initiale -->
+                <div class="flex items-center gap-3 mt-6 pt-5 border-t border-numeria-bleu/10 dark:border-white/10">
+                    <span class="text-xs text-gray-400 font-medium uppercase tracking-wider">{% trans "Utile ?" %}</span>
+                    <div class="flex items-center gap-2" id="votes-{{ question.pk }}">
+                        <button data-message-id="{{ question.pk }}" data-valeur="1"
+                                id="like-btn-{{ question.pk }}"
+                                class="vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all
+                                       {% if question.user_vote == 1 %}bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 ring-1 ring-green-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-green-50 hover:text-green-600{% endif %}"
+                                {% if not user.is_authenticated or user == question.auteur %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
+                            👍 <span id="likes-{{ question.pk }}">{{ question.nombre_likes }}</span>
+                        </button>
+                        <button data-message-id="{{ question.pk }}" data-valeur="-1"
+                                id="dislike-btn-{{ question.pk }}"
+                                class="vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all
+                                       {% if question.user_vote == -1 %}bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 ring-1 ring-red-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-50 hover:text-red-600{% endif %}"
+                                {% if not user.is_authenticated or user == question.auteur %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
+                            👎 <span id="dislikes-{{ question.pk }}">{{ question.nombre_dislikes }}</span>
+                        </button>
+                    </div>
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'comptes:connexion' %}" class="text-xs text-numeria-teal hover:underline">{% trans "Connectez-vous pour voter" %}</a>
+                    {% endif %}
                 </div>
             </div>
             {% endwith %}
@@ -98,102 +113,188 @@
 
 <!-- ===== RÉPONSES ===== -->
 {% if page_obj.paginator.count > 1 %}
-<section class="py-10 bg-gray-50 dark:bg-gray-900">
+<section class="w-full py-10 bg-numeria-blanc dark:bg-gray-900" id="reponses">
     <div class="w-full px-4 sm:px-8 lg:px-16">
         <div class="max-w-4xl mx-auto">
-            <div class="text-xs text-gray-600 dark:text-gray-400 font-bold uppercase tracking-widest mb-8">
-                <span class="text-lg">💬</span> {{ page_obj.paginator.count|add:"-1" }} réponse{{ page_obj.paginator.count|add:"-1"|pluralize }}
+
+            <div class="flex items-center gap-3 mb-8">
+                <span class="text-2xl">💬</span>
+                <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-xl text-numeria-bleu dark:text-white">
+                    {{ page_obj.paginator.count|add:"-1" }} {% trans "réponse" %}{{ page_obj.paginator.count|add:"-1"|pluralize }}
+                </h2>
             </div>
-            
-            {% for message in page_obj %}
-            {% if forloop.counter > 1 %}
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6 hover:shadow-md transition-all" id="message-{{ message.pk }}">
-                <!-- En-tête de la réponse -->
-                <div class="flex items-start justify-between mb-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu font-bold">
-                            {{ message.auteur.username|first|upper }}
-                        </div>
-                        <div>
-                            <a href="{% url 'communaute:profil_utilisateur' message.auteur.username %}"
-                               class="font-semibold text-gray-900 hover:text-numeria-bleu transition-colors">
-                                {{ message.auteur.username }}
-                            </a>
-                            {% if message.auteur == sujet.auteur %}
-                            <span class="ml-2 bg-numeria-teal text-numeria-bleu text-xs px-2 py-0.5 rounded-full font-medium">
-                                ⭐ Auteur
-                            </span>
-                            {% endif %}
-                            <div class="text-sm text-gray-600 mt-1">
-                                {{ message.date_creation|date:"d F Y à H:i" }}
-                                {% if message.est_edite %}
-                                <span class="ml-2 text-xs text-gray-500">(modifié)</span>
-                                {% endif %}
+
+            <div class="space-y-5">
+                {% for message in page_obj %}
+                {% if forloop.counter > 1 %}
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 hover:shadow-md transition-all" id="message-{{ message.pk }}">
+                    <!-- En-tête -->
+                    <div class="flex items-start justify-between mb-5 gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu font-bold flex-shrink-0">
+                                {{ message.auteur.username|first|upper }}
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <a href="{% url 'communaute:profil_utilisateur' message.auteur.username %}"
+                                       class="font-semibold text-numeria-bleu dark:text-white hover:text-numeria-teal transition-colors text-sm">
+                                        {{ message.auteur.username }}
+                                    </a>
+                                    {% if message.auteur == sujet.auteur %}
+                                    <span class="bg-numeria-teal/15 text-numeria-teal text-xs font-bold px-2 py-0.5 rounded-full">⭐ {% trans "Auteur" %}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                                    {{ message.date_creation|date:"d F Y, H:i" }}
+                                    {% if message.est_edite %}<span class="ml-1">({% trans "modifié" %})</span>{% endif %}
+                                </div>
                             </div>
                         </div>
+                        {% if user.is_authenticated and user == message.auteur %}
+                        <a href="{% url 'communaute:modifier_message' message.pk %}"
+                           class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-teal transition-colors text-xs flex-shrink-0">
+                            ✏️ {% trans "Modifier" %}
+                        </a>
+                        {% endif %}
                     </div>
 
-                    {% if user.is_authenticated and user == message.auteur %}
-                    <a href="{% url 'communaute:modifier_message' message.pk %}"
-                       class="text-gray-500 hover:text-numeria-bleu transition-colors text-sm">
-                        ✏️ Modifier
-                    </a>
-                    {% endif %}
-                </div>
+                    <!-- Contenu -->
+                    <div class="prose prose-gray dark:prose-invert max-w-none text-gray-700 dark:text-gray-200 leading-relaxed text-sm">
+                        {{ message.contenu|linebreaks }}
+                    </div>
 
-                <!-- Contenu de la réponse -->
-                <div class="prose prose-gray max-w-none text-gray-700 dark:text-gray-100 leading-relaxed">
-                    {{ message.contenu|linebreaks }}
+                    <!-- Votes -->
+                    <div class="flex items-center gap-3 mt-5 pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center gap-2" id="votes-{{ message.pk }}">
+                            <button data-message-id="{{ message.pk }}" data-valeur="1"
+                                    id="like-btn-{{ message.pk }}"
+                                    class="vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
+                                           {% if message.user_vote == 1 %}bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 ring-1 ring-green-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-green-50 hover:text-green-600{% endif %}"
+                                    {% if not user.is_authenticated or user == message.auteur %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
+                                👍 <span id="likes-{{ message.pk }}">{{ message.nombre_likes }}</span>
+                            </button>
+                            <button data-message-id="{{ message.pk }}" data-valeur="-1"
+                                    id="dislike-btn-{{ message.pk }}"
+                                    class="vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
+                                           {% if message.user_vote == -1 %}bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 ring-1 ring-red-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-50 hover:text-red-600{% endif %}"
+                                    {% if not user.is_authenticated or user == message.auteur %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
+                                👎 <span id="dislikes-{{ message.pk }}">{{ message.nombre_dislikes }}</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
+                {% endif %}
+                {% endfor %}
             </div>
-            {% endif %}
-            {% endfor %}
 
             <!-- Pagination -->
             {% if page_obj.has_other_pages %}
-            <div class="mt-8 flex justify-center">
-                <nav class="flex items-center gap-2">
-                    {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}#messages"
-                       class="px-3 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        ← Précédent
-                    </a>
+            <div class="mt-8 flex justify-center gap-2">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}#reponses"
+                   class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors text-sm">
+                    ← {% trans "Précédent" %}
+                </a>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <span class="px-4 py-2 bg-numeria-bleu text-white rounded-xl text-sm font-bold">{{ num }}</span>
+                    {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+                    <a href="?page={{ num }}#reponses"
+                       class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors text-sm">{{ num }}</a>
                     {% endif %}
-
-                    {% for num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == num %}
-                        <span class="px-3 py-2 bg-numeria-bleu text-white rounded-lg">{{ num }}</span>
-                        {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
-                        <a href="?page={{ num }}#messages"
-                           class="px-3 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                            {{ num }}
-                        </a>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}#messages"
-                       class="px-3 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        Suivant →
-                    </a>
-                    {% endif %}
-                </nav>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}#reponses"
+                   class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors text-sm">
+                    {% trans "Suivant" %} →
+                </a>
+                {% endif %}
             </div>
             {% endif %}
+
         </div>
     </div>
 </section>
 {% endif %}
 {% endif %}
 
-<!-- Bouton répondre en bas -->
+<!-- ===== BOUTON RÉPONDRE EN BAS ===== -->
 {% if user.is_authenticated and not sujet.est_ferme %}
-<div class="mt-8 text-center py-8 bg-numeria-bleu/5">
-    <a href="{% url 'communaute:repondre_sujet' sujet.pk %}"
-       class="bg-numeria-bleu text-white px-8 py-4 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors font-medium inline-block">
-        Répondre à ce sujet
-    </a>
-</div>
+<section class="w-full py-10 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+    <div class="w-full px-4 sm:px-8 lg:px-16 text-center">
+        <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">{% trans "Vous avez une réponse à apporter ?" %}</p>
+        <a href="{% url 'communaute:repondre_sujet' sujet.pk %}"
+           style="font-family:'Outfit',sans-serif;font-weight:700;"
+           class="bg-numeria-bleu text-white px-8 py-3.5 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors inline-block">
+            {% trans "Répondre à ce sujet" %} →
+        </a>
+    </div>
+</section>
+{% elif sujet.est_ferme %}
+<section class="w-full py-8 bg-gray-50 dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+    <div class="w-full px-4 sm:px-8 lg:px-16 text-center">
+        <p class="text-gray-400 text-sm">🔒 {% trans "Ce sujet est fermé. Aucune nouvelle réponse n'est acceptée." %}</p>
+    </div>
+</section>
+{% elif not user.is_authenticated %}
+<section class="w-full py-10 bg-numeria-bleu/5 dark:bg-gray-800 border-t border-numeria-bleu/10 dark:border-gray-700">
+    <div class="w-full px-4 sm:px-8 lg:px-16 text-center">
+        <p class="text-gray-600 dark:text-gray-300 mb-4">{% trans "Connectez-vous pour participer à la discussion." %}</p>
+        <a href="{% url 'comptes:connexion' %}?next={{ request.path }}"
+           style="font-family:'Outfit',sans-serif;font-weight:700;"
+           class="bg-numeria-bleu text-white px-8 py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors inline-block text-sm">
+            {% trans "Se connecter" %} →
+        </a>
+    </div>
+</section>
 {% endif %}
+
+<!-- ===== JAVASCRIPT VOTES ===== -->
+<script>
+(function () {
+    var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    var BASE_LIKE    = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-green-50 hover:text-green-600';
+    var BASE_DISLIKE = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-50 hover:text-red-600';
+    var ACTIVE_LIKE    = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 ring-1 ring-green-300';
+    var ACTIVE_DISLIKE = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 ring-1 ring-red-300';
+
+    function refreshBtns(messageId, voteUtilisateur) {
+        var likeBtn    = document.getElementById('like-btn-'    + messageId);
+        var dislikeBtn = document.getElementById('dislike-btn-' + messageId);
+        if (!likeBtn || !dislikeBtn) return;
+        likeBtn.className    = (voteUtilisateur ===  1) ? ACTIVE_LIKE    : BASE_LIKE;
+        dislikeBtn.className = (voteUtilisateur === -1) ? ACTIVE_DISLIKE : BASE_DISLIKE;
+    }
+
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.vote-btn');
+        if (!btn || btn.disabled) return;
+        var messageId = btn.dataset.messageId;
+        var valeur    = btn.dataset.valeur;
+        if (!messageId || !valeur) return;
+
+        fetch('/communaute/message/' + messageId + '/voter/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'valeur=' + valeur
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.error) return;
+            var likesEl    = document.getElementById('likes-'    + messageId);
+            var dislikesEl = document.getElementById('dislikes-' + messageId);
+            if (likesEl)    likesEl.textContent    = data.nombre_likes;
+            if (dislikesEl) dislikesEl.textContent = data.nombre_dislikes;
+            refreshBtns(messageId, data.vote_utilisateur);
+        })
+        .catch(function () {});
+    });
+}());
+</script>
 
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
@@ -9,15 +10,23 @@ from django.views.decorators.http import require_POST
 from .models import Categorie, Sujet, Message, Vote, ProfilUtilisateur
 from .forms import CategorieForm, SujetForm, MessageForm, ProfilUtilisateurForm
 
+User = get_user_model()
+
 def liste_categories(request):
     """Affiche la liste des catégories de forums."""
     categories = Categorie.objects.filter(est_active=True).annotate(
         nombre_sujets=Count('sujets'),
-        dernier_message=Count('sujets__messages')
     ).order_by('ordre')
+
+    total_sujets = Sujet.objects.count()
+    total_messages = Message.objects.count()
+    total_membres = User.objects.filter(is_active=True).count()
 
     contexte = {
         'categories': categories,
+        'total_sujets': total_sujets,
+        'total_messages': total_messages,
+        'total_membres': total_membres,
         'titre_page': 'Communauté',
     }
     return render(request, 'communaute/liste_categories.html', contexte)

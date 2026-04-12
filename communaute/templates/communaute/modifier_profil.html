@@ -1,108 +1,103 @@
 {% extends 'base.html' %}
-{% block titre %}Modifier mon profil{% endblock %}
-{% block meta_description %}Modifiez votre profil communautaire sur Numeria Institute.{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Modifier mon profil" %} - {% trans "Communauté" %} Numeria{% endblock %}
+{% block meta_description %}{% trans "Personnalisez votre profil communautaire sur Numeria Institute." %}{% endblock %}
+
 {% block contenu %}
 
 <!-- ===== HEADER ===== -->
 <section class="bg-numeria-bleu text-white w-full">
     <div class="w-full px-4 sm:px-8 lg:px-16 py-12">
-        <div class="max-w-4xl mx-auto text-center">
+        <div class="max-w-4xl mx-auto">
             <nav class="mb-6">
-                <a href="{% url 'communaute:profil_utilisateur' request.user.username %}" class="text-blue-200 hover:text-white transition-colors">
-                    ← Retour à mon profil
+                <a href="{% url 'communaute:profil_utilisateur' request.user.username %}" class="text-blue-300 hover:text-numeria-teal transition-colors text-sm">
+                    ← {% trans "Retour à mon profil" %}
                 </a>
             </nav>
-
-            <h1 class="text-3xl font-bold mb-4">Modifier mon profil</h1>
-            <p class="text-blue-200">Personnalisez votre présence dans la communauté</p>
+            <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl mb-2">{% trans "Modifier mon profil" %}</h1>
+            <p class="text-blue-200 text-sm">{% trans "Personnalisez votre présence dans la communauté" %}</p>
         </div>
     </div>
 </section>
 
 <!-- ===== FORMULAIRE ===== -->
-<section class="py-12 bg-gray-50">
+<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
     <div class="w-full px-4 sm:px-8 lg:px-16">
         <div class="max-w-4xl mx-auto">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-                <form method="post" enctype="multipart/form-data" class="space-y-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <div class="h-1 bg-gradient-to-r from-numeria-bleu via-numeria-or to-numeria-teal"></div>
+                <form method="post" enctype="multipart/form-data" class="p-8 space-y-6">
                     {% csrf_token %}
 
                     <!-- Avatar -->
                     <div>
-                        <label for="{{ form.avatar.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                            Photo de profil
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {% trans "Photo de profil" %}
                         </label>
                         {{ form.avatar }}
                         {% if form.avatar.errors %}
-                        <div class="mt-1 text-red-600 text-sm">
-                            {{ form.avatar.errors.0 }}
-                        </div>
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.avatar.errors.0 }}</p>
                         {% endif %}
-                        <p class="mt-1 text-sm text-gray-500">Formats acceptés : JPG, PNG, GIF. Taille maximale : 5MB.</p>
+                        <p class="mt-1.5 text-xs text-gray-400 dark:text-gray-500">{% trans "Formats : JPG, PNG, GIF. Taille max : 5 Mo." %}</p>
                     </div>
 
                     <!-- Bio -->
                     <div>
-                        <label for="{{ form.bio.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                            Biographie
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {% trans "Biographie" %}
                         </label>
                         {{ form.bio }}
                         {% if form.bio.errors %}
-                        <div class="mt-1 text-red-600 text-sm">
-                            {{ form.bio.errors.0 }}
-                        </div>
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.bio.errors.0 }}</p>
                         {% endif %}
-                        <p class="mt-1 text-sm text-gray-500">Présentez-vous en quelques mots (optionnel).</p>
+                        <p class="mt-1.5 text-xs text-gray-400 dark:text-gray-500">{% trans "Présentez-vous en quelques mots (optionnel)." %}</p>
                     </div>
 
                     <!-- Spécialisation -->
                     <div>
-                        <label for="{{ form.specialisation.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                            Spécialisation
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {% trans "Spécialisation" %}
                         </label>
                         {{ form.specialisation }}
                         {% if form.specialisation.errors %}
-                        <div class="mt-1 text-red-600 text-sm">
-                            {{ form.specialisation.errors.0 }}
-                        </div>
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.specialisation.errors.0 }}</p>
                         {% endif %}
-                        <p class="mt-1 text-sm text-gray-500">Votre domaine d'études ou d'intérêt principal.</p>
+                        <p class="mt-1.5 text-xs text-gray-400 dark:text-gray-500">{% trans "Votre domaine d'études ou d'intérêt principal." %}</p>
                     </div>
 
                     <!-- Niveau d'études -->
                     <div>
-                        <label for="{{ form.niveau_etudes.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                            Niveau d'études
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {% trans "Niveau d'études" %}
                         </label>
                         {{ form.niveau_etudes }}
                         {% if form.niveau_etudes.errors %}
-                        <div class="mt-1 text-red-600 text-sm">
-                            {{ form.niveau_etudes.errors.0 }}
-                        </div>
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.niveau_etudes.errors.0 }}</p>
                         {% endif %}
                     </div>
 
                     <!-- Site web -->
                     <div>
-                        <label for="{{ form.site_web.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                            Site web
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {% trans "Site web" %}
                         </label>
                         {{ form.site_web }}
                         {% if form.site_web.errors %}
-                        <div class="mt-1 text-red-600 text-sm">
-                            {{ form.site_web.errors.0 }}
-                        </div>
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.site_web.errors.0 }}</p>
                         {% endif %}
-                        <p class="mt-1 text-sm text-gray-500">Votre site web personnel ou professionnel (optionnel).</p>
+                        <p class="mt-1.5 text-xs text-gray-400 dark:text-gray-500">{% trans "Votre site personnel ou professionnel (optionnel)." %}</p>
                     </div>
 
                     <!-- Boutons -->
-                    <div class="flex gap-4 pt-6">
-                        <button type="submit" class="bg-numeria-bleu text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors">
-                            Enregistrer les modifications
+                    <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <button type="submit"
+                                style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                class="bg-numeria-bleu text-white px-8 py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-sm">
+                            {% trans "Enregistrer les modifications" %} →
                         </button>
-                        <a href="{% url 'communaute:profil_utilisateur' request.user.username %}" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-300 transition-colors">
-                            Annuler
+                        <a href="{% url 'communaute:profil_utilisateur' request.user.username %}"
+                           class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors px-6 py-3 border border-gray-200 dark:border-gray-600 rounded-xl text-center text-sm">
+                            {% trans "Annuler" %}
                         </a>
                     </div>
                 </form>

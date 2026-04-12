@@ -1,68 +1,82 @@
 {% extends 'base.html' %}
-{% block titre %}Créer une catégorie{% endblock %}
-{% block meta_description %}Créer une nouvelle catégorie de forum dans la communauté Numeria Institute.{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Créer une catégorie" %} - {% trans "Communauté" %} Numeria{% endblock %}
+{% block meta_description %}{% trans "Créer une nouvelle catégorie de forum dans la communauté Numeria Institute." %}{% endblock %}
+
 {% block contenu %}
 
 <!-- ===== HEADER ===== -->
 <section class="bg-numeria-bleu text-white w-full">
     <div class="w-full px-4 sm:px-8 lg:px-16 py-12">
-        <div class="max-w-4xl mx-auto text-center">
+        <div class="max-w-4xl mx-auto">
             <nav class="mb-6">
-                <a href="{% url 'communaute:liste_categories' %}" class="text-blue-200 hover:text-white transition-colors">
-                    ← Retour aux forums
+                <a href="{% url 'communaute:liste_categories' %}" class="text-blue-300 hover:text-numeria-teal transition-colors text-sm">
+                    ← {% trans "Retour aux forums" %}
                 </a>
             </nav>
-
-            <h1 class="text-3xl font-bold mb-4">Créer une catégorie</h1>
-            <p class="text-blue-200">Seuls les modérateurs peuvent ajouter de nouvelles catégories de discussion.</p>
+            <div class="inline-flex items-center gap-2 bg-numeria-or/20 text-numeria-or text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-widest">
+                🔧 {% trans "Modérateurs uniquement" %}
+            </div>
+            <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl mb-2">{% trans "Créer une catégorie" %}</h1>
+            <p class="text-blue-200 text-sm">{% trans "Seuls les modérateurs peuvent ajouter de nouvelles catégories de discussion." %}</p>
         </div>
     </div>
 </section>
 
 <!-- ===== FORMULAIRE ===== -->
-<section class="py-12 bg-gray-50">
+<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
     <div class="w-full px-4 sm:px-8 lg:px-16">
         <div class="max-w-4xl mx-auto">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-                <form method="post" class="space-y-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <div class="h-1 bg-gradient-to-r from-numeria-or via-numeria-bleu to-numeria-teal"></div>
+                <form method="post" class="p-8 space-y-6">
                     {% csrf_token %}
 
                     <div>
-                        <label for="{{ form.nom.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Nom de la catégorie *</label>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {% trans "Nom de la catégorie" %} <span class="text-red-400">*</span>
+                        </label>
                         {{ form.nom }}
                         {% if form.nom.errors %}
-                        <div class="mt-1 text-red-600 text-sm">{{ form.nom.errors.0 }}</div>
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.nom.errors.0 }}</p>
                         {% endif %}
                     </div>
 
                     <div>
-                        <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {% trans "Description" %}
+                        </label>
                         {{ form.description }}
                         {% if form.description.errors %}
-                        <div class="mt-1 text-red-600 text-sm">{{ form.description.errors.0 }}</div>
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.description.errors.0 }}</p>
                         {% endif %}
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="{{ form.ordre.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Ordre d’affichage</label>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                                {% trans "Ordre d'affichage" %}
+                            </label>
                             {{ form.ordre }}
                             {% if form.ordre.errors %}
-                            <div class="mt-1 text-red-600 text-sm">{{ form.ordre.errors.0 }}</div>
+                            <p class="mt-1.5 text-red-500 text-xs">{{ form.ordre.errors.0 }}</p>
                             {% endif %}
                         </div>
-                        <div class="flex items-center gap-3 pt-6">
+                        <div class="flex items-center gap-3 pt-7">
                             {{ form.est_active }}
-                            <label for="{{ form.est_active.id_for_label }}" class="text-gray-700">Activer cette catégorie</label>
+                            <label class="text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">{% trans "Activer cette catégorie" %}</label>
                         </div>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
-                        <button type="submit" class="bg-numeria-bleu text-white px-6 py-3 rounded-xl hover:bg-numeria-teal transition-colors font-medium">
-                            Enregistrer la catégorie
+                    <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <button type="submit"
+                                style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                class="bg-numeria-bleu text-white px-8 py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-sm">
+                            {% trans "Enregistrer la catégorie" %} →
                         </button>
-                        <a href="{% url 'communaute:liste_categories' %}" class="text-gray-600 hover:text-gray-800 transition-colors px-6 py-3 border border-gray-300 rounded-xl text-center">
-                            Annuler
+                        <a href="{% url 'communaute:liste_categories' %}"
+                           class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors px-6 py-3 border border-gray-200 dark:border-gray-600 rounded-xl text-center text-sm">
+                            {% trans "Annuler" %}
                         </a>
                     </div>
                 </form>

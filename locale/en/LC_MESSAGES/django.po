@@ -414,3 +414,500 @@ msgstr "Privacy Policy"
 #: templates/base.html:369
 msgid "CGU"
 msgstr "Terms of Service"
+
+# ===== COMMUNAUTÉ =====
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Forum d'entraide"
+msgstr "Community forum"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Communauté Numeria"
+msgstr "Numeria Community"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Échangez avec d'autres apprenants, posez vos questions et partagez vos connaissances en sciences, mathématiques et IA."
+msgstr "Connect with other learners, ask your questions and share your knowledge in science, mathematics and AI."
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Créer un sujet"
+msgstr "Create a topic"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Nouvelle catégorie"
+msgstr "New category"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Se connecter pour participer"
+msgstr "Log in to participate"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Sujets actifs"
+msgstr "Active topics"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Messages"
+msgstr "Messages"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Membres"
+msgstr "Members"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Forums de discussion"
+msgstr "Discussion forums"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Choisissez un forum"
+msgstr "Choose a forum"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Parcourez les catégories et rejoignez la discussion qui vous intéresse."
+msgstr "Browse the categories and join the discussion that interests you."
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "sujet"
+msgstr "topic"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Vide"
+msgstr "Empty"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Voir les sujets"
+msgstr "View topics"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Aucune catégorie disponible pour le moment."
+msgstr "No categories available at the moment."
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Créer la première catégorie"
+msgstr "Create the first category"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Rejoignez la conversation"
+msgstr "Join the conversation"
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Créez un compte gratuit pour poser vos questions, partager vos connaissances et progresser avec la communauté."
+msgstr "Create a free account to ask questions, share knowledge and grow with the community."
+
+#: communaute/templates/communaute/liste_categories.html
+msgid "Créer un compte gratuit"
+msgstr "Create a free account"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Retour aux forums"
+msgstr "Back to forums"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Nouveau sujet"
+msgstr "New topic"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Sujet"
+msgstr "Topic"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Réponses"
+msgstr "Replies"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Dernier message"
+msgstr "Last message"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Épinglé"
+msgstr "Pinned"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Fermé"
+msgstr "Closed"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "vue"
+msgstr "view"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "réponse"
+msgstr "reply"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Précédent"
+msgstr "Previous"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Suivant"
+msgstr "Next"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Aucun sujet dans cette catégorie pour le moment."
+msgstr "No topics in this category yet."
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Créer le premier sujet"
+msgstr "Create the first topic"
+
+#: communaute/templates/communaute/detail_categorie.html
+msgid "Se connecter pour créer un sujet"
+msgstr "Log in to create a topic"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Sujet épinglé"
+msgstr "Pinned topic"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Sujet fermé"
+msgstr "Closed topic"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Répondre"
+msgstr "Reply"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Question initiale"
+msgstr "Original question"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "modifié"
+msgstr "edited"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Modifier"
+msgstr "Edit"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Utile ?"
+msgstr "Helpful?"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Connectez-vous pour voter"
+msgstr "Log in to vote"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Auteur"
+msgstr "Author"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Vous avez une réponse à apporter ?"
+msgstr "Do you have an answer?"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Répondre à ce sujet"
+msgstr "Reply to this topic"
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Ce sujet est fermé. Aucune nouvelle réponse n'est acceptée."
+msgstr "This topic is closed. No new replies are accepted."
+
+#: communaute/templates/communaute/detail_sujet.html
+msgid "Connectez-vous pour participer à la discussion."
+msgstr "Log in to participate in the discussion."
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Créer un nouveau sujet"
+msgstr "Create a new topic"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Partagez vos questions, idées ou découvertes avec la communauté"
+msgstr "Share your questions, ideas or discoveries with the community"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Titre du sujet"
+msgstr "Topic title"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Catégorie"
+msgstr "Category"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Message initial"
+msgstr "Opening message"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Décrivez votre sujet en détail. Vous pourrez ajouter des réponses par la suite."
+msgstr "Describe your topic in detail. You can add replies later."
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Publier le sujet"
+msgstr "Publish topic"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Annuler"
+msgstr "Cancel"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Conseils"
+msgstr "Tips"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Choisissez un titre clair et descriptif"
+msgstr "Choose a clear, descriptive title"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Sélectionnez la catégorie appropriée"
+msgstr "Select the appropriate category"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Fournissez autant de détails que possible"
+msgstr "Provide as much detail as possible"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Respectez les autres membres"
+msgstr "Respect other members"
+
+#: communaute/templates/communaute/creer_sujet.html
+msgid "Utilisez un langage approprié"
+msgstr "Use appropriate language"
+
+#: communaute/templates/communaute/repondre_sujet.html
+msgid "Retour au sujet"
+msgstr "Back to topic"
+
+#: communaute/templates/communaute/repondre_sujet.html
+msgid "Partagez votre réponse avec la communauté"
+msgstr "Share your answer with the community"
+
+#: communaute/templates/communaute/repondre_sujet.html
+msgid "Sujet original"
+msgstr "Original topic"
+
+#: communaute/templates/communaute/repondre_sujet.html
+msgid "Par"
+msgstr "By"
+
+#: communaute/templates/communaute/repondre_sujet.html
+msgid "Voir le sujet complet"
+msgstr "View full topic"
+
+#: communaute/templates/communaute/repondre_sujet.html
+msgid "Votre réponse"
+msgstr "Your reply"
+
+#: communaute/templates/communaute/repondre_sujet.html
+msgid "Soyez clair, précis et respectueux dans vos réponses."
+msgstr "Be clear, precise and respectful in your replies."
+
+#: communaute/templates/communaute/repondre_sujet.html
+msgid "Publier la réponse"
+msgstr "Publish reply"
+
+#: communaute/templates/communaute/modifier_sujet.html
+#: communaute/templates/communaute/modifier_message.html
+msgid "Enregistrer les modifications"
+msgstr "Save changes"
+
+#: communaute/templates/communaute/modifier_sujet.html
+msgid "Modifier le sujet"
+msgstr "Edit topic"
+
+#: communaute/templates/communaute/modifier_sujet.html
+msgid "Contenu"
+msgstr "Content"
+
+#: communaute/templates/communaute/modifier_message.html
+msgid "Modifier le message"
+msgstr "Edit message"
+
+#: communaute/templates/communaute/modifier_message.html
+msgid "Votre message"
+msgstr "Your message"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Membre de la communauté Numeria"
+msgstr "Numeria community member"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Modifier mon profil"
+msgstr "Edit my profile"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Statistiques"
+msgstr "Statistics"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Sujets créés"
+msgstr "Topics created"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Messages postés"
+msgstr "Messages posted"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Membre depuis"
+msgstr "Member since"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Informations"
+msgstr "Information"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Spécialisation"
+msgstr "Specialisation"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Site web"
+msgstr "Website"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Aucune information renseignée."
+msgstr "No information provided."
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Dernières activités"
+msgstr "Recent activity"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Dans"
+msgstr "In"
+
+#: communaute/templates/communaute/profil_utilisateur.html
+msgid "Voir tous les sujets"
+msgstr "View all topics"
+
+#: communaute/templates/communaute/modifier_profil.html
+msgid "Retour à mon profil"
+msgstr "Back to my profile"
+
+#: communaute/templates/communaute/modifier_profil.html
+msgid "Personnalisez votre présence dans la communauté"
+msgstr "Customise your presence in the community"
+
+#: communaute/templates/communaute/modifier_profil.html
+msgid "Formats : JPG, PNG, GIF. Taille max : 5 Mo."
+msgstr "Formats: JPG, PNG, GIF. Max size: 5 MB."
+
+#: communaute/templates/communaute/modifier_profil.html
+msgid "Présentez-vous en quelques mots (optionnel)."
+msgstr "Introduce yourself in a few words (optional)."
+
+#: communaute/templates/communaute/modifier_profil.html
+msgid "Votre domaine d'études ou d'intérêt principal."
+msgstr "Your main field of study or interest."
+
+#: communaute/templates/communaute/modifier_profil.html
+msgid "Votre site personnel ou professionnel (optionnel)."
+msgstr "Your personal or professional website (optional)."
+
+#: communaute/templates/communaute/creer_categorie.html
+msgid "Modérateurs uniquement"
+msgstr "Moderators only"
+
+#: communaute/templates/communaute/creer_categorie.html
+msgid "Seuls les modérateurs peuvent ajouter de nouvelles catégories de discussion."
+msgstr "Only moderators can add new discussion categories."
+
+#: communaute/templates/communaute/creer_categorie.html
+msgid "Nom de la catégorie"
+msgstr "Category name"
+
+#: communaute/templates/communaute/creer_categorie.html
+msgid "Description"
+msgstr "Description"
+
+#: communaute/templates/communaute/creer_categorie.html
+msgid "Ordre d'affichage"
+msgstr "Display order"
+
+#: communaute/templates/communaute/creer_categorie.html
+msgid "Activer cette catégorie"
+msgstr "Activate this category"
+
+#: communaute/templates/communaute/creer_categorie.html
+msgid "Enregistrer la catégorie"
+msgstr "Save category"
+
+# ===== BASE TEMPLATE MENTORAT =====
+
+#: mentorat/templates/mentorat/index.html
+msgid "Programme officiel"
+msgstr "Official programme"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Mentors actifs"
+msgstr "Active mentors"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Mentorés inscrits"
+msgstr "Enrolled mentees"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Relations actives"
+msgstr "Active relationships"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Rejoignez le programme"
+msgstr "Join the programme"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Que vous souhaitiez partager votre expertise ou bénéficier d'un accompagnement, il y a une place pour vous."
+msgstr "Whether you want to share your expertise or benefit from guidance, there is a place for you."
+
+#: mentorat/templates/mentorat/index.html
+msgid "Devenir Mentor"
+msgstr "Become a Mentor"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Partagez votre expertise et aidez la nouvelle génération à réussir. Faites la différence dans la vie d'un apprenant."
+msgstr "Share your expertise and help the next generation succeed. Make a difference in a learner's life."
+
+#: mentorat/templates/mentorat/index.html
+msgid "S'inscrire comme mentor"
+msgstr "Register as a mentor"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Se connecter pour devenir mentor"
+msgstr "Log in to become a mentor"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Trouver un Mentor"
+msgstr "Find a Mentor"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Bénéficiez de conseils personnalisés d'experts dans votre domaine. Accélérez votre apprentissage et votre carrière."
+msgstr "Get personalised advice from experts in your field. Accelerate your learning and career."
+
+#: mentorat/templates/mentorat/index.html
+msgid "S'inscrire comme mentoré"
+msgstr "Register as a mentee"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Se connecter pour trouver un mentor"
+msgstr "Log in to find a mentor"
+
+#: mentorat/templates/mentorat/index.html
+msgid "En 3 étapes"
+msgstr "In 3 steps"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Comment ça marche ?"
+msgstr "How does it work?"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Inscrivez-vous"
+msgstr "Sign up"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Créez votre profil de mentor ou de mentoré selon vos besoins et objectifs."
+msgstr "Create your mentor or mentee profile according to your needs and goals."
+
+#: mentorat/templates/mentorat/index.html
+msgid "Connectez-vous"
+msgstr "Connect"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Les mentors et mentorés sont mis en relation selon leurs profils et domaines."
+msgstr "Mentors and mentees are matched according to their profiles and fields."
+
+#: mentorat/templates/mentorat/index.html
+msgid "Échangez"
+msgstr "Exchange"
+
+#: mentorat/templates/mentorat/index.html
+msgid "Planifiez des séances et bénéficiez de conseils personnalisés sur mesure."
+msgstr "Schedule sessions and benefit from tailored personalised advice."
+
+#: mentorat/templates/mentorat/index.html
+msgid "Voir tous les mentors disponibles"
+msgstr "View all available mentors"
