@@ -1,97 +1,95 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block titre %}Devenir Mentor - Numeria Institute{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Devenir Mentor" %} — Numeria Institute{% endblock %}
+{% block meta_description %}{% trans "Partagez votre expertise et guidez la nouvelle génération sur Numeria Institute." %}{% endblock %}
 
 {% block contenu %}
-<div class="container mx-auto px-4 py-8 max-w-2xl">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
-        <h1 class="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-            Devenir Mentor
-        </h1>
 
-        <p class="text-gray-600 dark:text-gray-300 mb-8 text-center">
-            Partagez votre expertise et aidez la nouvelle génération à réussir.
-            Remplissez ce formulaire pour vous inscrire en tant que mentor.
-        </p>
-
-        <form method="post" class="space-y-6">
-            {% csrf_token %}
-
-            <!-- Domaine d'expertise -->
-            <div>
-                <label for="{{ form.domaines_expertise.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ form.domaines_expertise.label }}
-                </label>
-                {{ form.domaines_expertise }}
-                {% if form.domaines_expertise.errors %}
-                    <div class="mt-1 text-red-600 text-sm">
-                        {{ form.domaines_expertise.errors.0 }}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Niveau d'expérience -->
-            <div>
-                <label for="{{ form.niveau_experience.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ form.niveau_experience.label }}
-                </label>
-                {{ form.niveau_experience }}
-                {% if form.niveau_experience.errors %}
-                    <div class="mt-1 text-red-600 text-sm">
-                        {{ form.niveau_experience.errors.0 }}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Disponibilité -->
-            <div>
-                <label for="{{ form.disponibilite.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ form.disponibilite.label }}
-                </label>
-                {{ form.disponibilite }}
-                {% if form.disponibilite.errors %}
-                    <div class="mt-1 text-red-600 text-sm">
-                        {{ form.disponibilite.errors.0 }}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Biographie -->
-            <div>
-                <label for="{{ form.bio_mentorat.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ form.bio_mentorat.label }}
-                </label>
-                {{ form.bio_mentorat }}
-                {% if form.bio_mentorat.errors %}
-                    <div class="mt-1 text-red-600 text-sm">
-                        {{ form.bio_mentorat.errors.0 }}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Boutons -->
-            <div class="flex space-x-4">
-                <button type="submit" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                    Devenir Mentor
-                </button>
-                <a href="{% url 'mentorat:index' %}" class="flex-1 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-semibold text-center hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
-                    Annuler
-                </a>
-            </div>
-        </form>
+<!-- ===== HEADER ===== -->
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
+    <div style="position:absolute;top:-60px;right:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-14 relative">
+        <nav class="mb-5">
+            <a href="{% url 'mentorat:index' %}" class="text-blue-300 hover:text-numeria-teal transition-colors text-sm flex items-center gap-1.5 w-fit">
+                ← {% trans "Retour au mentorat" %}
+            </a>
+        </nav>
+        <div class="inline-flex items-center gap-2 bg-numeria-teal/15 text-numeria-teal text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-widest" style="font-family:'Outfit',sans-serif;">
+            🎓 {% trans "Mentorat" %}
+        </div>
+        <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl mb-2">{% trans "Devenir Mentor" %}</h1>
+        <p class="text-blue-200 text-sm opacity-85 max-w-xl">{% trans "Partagez votre expertise et aidez la nouvelle génération à réussir." %}</p>
     </div>
-</div>
+</section>
 
-<style>
-/* Style pour les selects */
-select {
-    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white;
-}
+<!-- ===== FORMULAIRE ===== -->
+<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <div class="h-1 bg-gradient-to-r from-numeria-bleu via-numeria-teal to-numeria-or"></div>
+                <form method="post" class="p-8 space-y-6">
+                    {% csrf_token %}
 
-/* Style pour les textareas */
-textarea {
-    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white;
-}
-</style>
+                    <!-- Domaines d'expertise -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {{ form.domaines_expertise.label }}
+                        </label>
+                        {{ form.domaines_expertise }}
+                        {% if form.domaines_expertise.errors %}
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.domaines_expertise.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Niveau d'expérience -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {{ form.niveau_experience.label }}
+                        </label>
+                        {{ form.niveau_experience }}
+                        {% if form.niveau_experience.errors %}
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.niveau_experience.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Disponibilité -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {{ form.disponibilite.label }}
+                        </label>
+                        {{ form.disponibilite }}
+                        {% if form.disponibilite.errors %}
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.disponibilite.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Biographie -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {{ form.bio_mentorat.label }}
+                        </label>
+                        {{ form.bio_mentorat }}
+                        {% if form.bio_mentorat.errors %}
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.bio_mentorat.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <button type="submit"
+                                style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                class="flex-1 bg-numeria-teal text-numeria-bleu px-8 py-3 rounded-xl hover:bg-teal-300 transition-colors text-sm text-center">
+                            🎓 {% trans "Devenir Mentor" %}
+                        </button>
+                        <a href="{% url 'mentorat:index' %}"
+                           class="flex-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors px-6 py-3 border border-gray-200 dark:border-gray-600 rounded-xl text-center text-sm">
+                            {% trans "Annuler" %}
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

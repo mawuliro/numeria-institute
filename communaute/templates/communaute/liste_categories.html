@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block titre %}{% trans "Communauté" %} - Numeria Institute{% endblock %}
+{% block titre %}{% trans "Communauté" %} — Numeria Institute{% endblock %}
 {% block meta_description %}{% trans "Rejoignez la communauté Numeria. Échangez avec d'autres apprenants, posez vos questions et partagez vos connaissances en sciences." %}{% endblock %}
 
 {% block contenu %}
@@ -8,67 +8,80 @@
 <!-- ===== HERO ===== -->
 <section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
     <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div style="position:absolute;top:-80px;right:-80px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 70%);"></div>
-        <div style="position:absolute;bottom:-60px;left:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,32,0.07) 0%,transparent 70%);"></div>
-        <svg width="100%" height="100%" style="opacity:0.04;" xmlns="http://www.w3.org/2000/svg">
-            <defs><pattern id="dots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white"/></pattern></defs>
-            <rect width="100%" height="100%" fill="url(#dots)"/>
+        <svg width="100%" height="100%" style="opacity:0.035;" xmlns="http://www.w3.org/2000/svg">
+            <defs><pattern id="dots-comm" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#dots-comm)"/>
+        </svg>
+        <div style="position:absolute;top:-100px;right:-100px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.10) 0%,transparent 65%);"></div>
+        <div style="position:absolute;bottom:-80px;left:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,32,0.07) 0%,transparent 65%);"></div>
+        <svg width="400" height="300" style="position:absolute;right:0;bottom:0;opacity:0.06;" viewBox="0 0 400 300" fill="none">
+            <circle cx="60" cy="60" r="5" fill="#2DD4BF"/><circle cx="200" cy="40" r="5" fill="#2DD4BF"/>
+            <circle cx="340" cy="80" r="5" fill="#2DD4BF"/><circle cx="120" cy="160" r="5" fill="#2DD4BF"/>
+            <circle cx="280" cy="180" r="5" fill="#2DD4BF"/><circle cx="60" cy="240" r="5" fill="#2DD4BF"/>
+            <circle cx="360" cy="240" r="5" fill="#2DD4BF"/>
+            <line x1="60" y1="60" x2="200" y2="40" stroke="#2DD4BF" stroke-width="1"/>
+            <line x1="200" y1="40" x2="340" y2="80" stroke="#2DD4BF" stroke-width="1"/>
+            <line x1="60" y1="60" x2="120" y2="160" stroke="#2DD4BF" stroke-width="1"/>
+            <line x1="200" y1="40" x2="280" y2="180" stroke="#2DD4BF" stroke-width="1"/>
+            <line x1="340" y1="80" x2="280" y2="180" stroke="#2DD4BF" stroke-width="1"/>
+            <line x1="120" y1="160" x2="280" y2="180" stroke="#2DD4BF" stroke-width="1"/>
+            <line x1="120" y1="160" x2="60" y2="240" stroke="#2DD4BF" stroke-width="1"/>
+            <line x1="280" y1="180" x2="360" y2="240" stroke="#2DD4BF" stroke-width="1"/>
         </svg>
     </div>
-    <div class="w-full px-4 sm:px-8 lg:px-16 py-16 md:py-24 relative">
+
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-20 md:py-28 relative">
         <div class="max-w-4xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-6 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
-                <span class="w-1.5 h-1.5 bg-numeria-teal rounded-full animate-pulse"></span>
+            <div class="inline-flex items-center gap-2 border border-numeria-teal/40 bg-numeria-teal/10 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-6 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
+                <span class="w-2 h-2 bg-numeria-teal rounded-full animate-pulse"></span>
                 {% trans "Forum d'entraide" %}
             </div>
+
             <h1 style="font-family:'Outfit',sans-serif;font-weight:800;line-height:1.1;" class="text-4xl sm:text-5xl lg:text-6xl mb-6">
-                {% trans "Communauté Numeria" %}
+                {% trans "Communauté" %} <span class="text-numeria-teal">Numeria</span>
             </h1>
-            <p class="text-blue-200 text-base sm:text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+            <p class="text-blue-200 text-base sm:text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
                 {% trans "Échangez avec d'autres apprenants, posez vos questions et partagez vos connaissances en sciences, mathématiques et IA." %}
             </p>
+
+            <!-- Stats -->
+            <div class="inline-grid grid-cols-3 gap-0 bg-white/8 border border-white/15 rounded-2xl mb-10 overflow-hidden">
+                <div class="px-8 py-5 text-center">
+                    <div style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-numeria-teal text-3xl">{{ total_sujets }}</div>
+                    <div class="text-blue-300 text-xs mt-1 uppercase tracking-wider">{% trans "Sujets" %}</div>
+                </div>
+                <div class="px-8 py-5 text-center border-x border-white/10">
+                    <div style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-numeria-teal text-3xl">{{ total_messages }}</div>
+                    <div class="text-blue-300 text-xs mt-1 uppercase tracking-wider">{% trans "Messages" %}</div>
+                </div>
+                <div class="px-8 py-5 text-center">
+                    <div style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-numeria-teal text-3xl">{{ total_membres }}</div>
+                    <div class="text-blue-300 text-xs mt-1 uppercase tracking-wider">{% trans "Membres" %}</div>
+                </div>
+            </div>
+
             {% if user.is_authenticated %}
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a href="{% url 'communaute:creer_sujet' %}"
                    style="font-family:'Outfit',sans-serif;font-weight:700;"
                    class="bg-numeria-teal text-numeria-bleu px-8 py-3.5 rounded-xl hover:bg-teal-300 transition-colors inline-block">
-                    {% trans "Créer un sujet" %} →
+                    ✏️ {% trans "Créer un sujet" %}
                 </a>
                 {% if user.is_staff %}
                 <a href="{% url 'communaute:creer_categorie' %}"
                    style="font-family:'Outfit',sans-serif;font-weight:600;"
                    class="border-2 border-white/25 text-white px-8 py-3.5 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors inline-block">
-                    {% trans "Nouvelle catégorie" %}
+                    + {% trans "Nouvelle catégorie" %}
                 </a>
                 {% endif %}
             </div>
             {% else %}
             <a href="{% url 'comptes:connexion' %}"
                style="font-family:'Outfit',sans-serif;font-weight:700;"
-               class="bg-numeria-teal text-numeria-bleu px-8 py-3.5 rounded-xl hover:bg-teal-300 transition-colors inline-block">
+               class="bg-numeria-teal text-numeria-bleu px-10 py-4 rounded-xl hover:bg-teal-300 transition-colors inline-block text-base">
                 {% trans "Se connecter pour participer" %} →
             </a>
             {% endif %}
-        </div>
-    </div>
-</section>
-
-<!-- ===== STATS ===== -->
-<section class="bg-numeria-bleu-fonce w-full border-t border-white/10">
-    <div class="w-full px-4 sm:px-8 lg:px-16 py-8">
-        <div class="grid grid-cols-3 gap-4 text-center">
-            <div class="py-2">
-                <div style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ total_sujets }}</div>
-                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Sujets actifs" %}</div>
-            </div>
-            <div class="py-2 border-x border-white/10">
-                <div style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ total_messages }}</div>
-                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Messages" %}</div>
-            </div>
-            <div class="py-2">
-                <div style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ total_membres }}</div>
-                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Membres" %}</div>
-            </div>
         </div>
     </div>
 </section>
@@ -77,49 +90,82 @@
 <section class="w-full py-16 md:py-20 bg-numeria-blanc dark:bg-gray-900">
     <div class="w-full px-4 sm:px-8 lg:px-16">
 
-        <div class="text-center mb-12">
-            <div class="inline-flex items-center gap-2 bg-numeria-teal/10 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">{% trans "Forums de discussion" %}</div>
+        <div class="text-center mb-14">
+            <div class="inline-flex items-center gap-2 bg-numeria-teal/10 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
+                💬 {% trans "Forums de discussion" %}
+            </div>
             <h2 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
                 {% trans "Choisissez un forum" %}
             </h2>
-            <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+            <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto text-sm">
                 {% trans "Parcourez les catégories et rejoignez la discussion qui vous intéresse." %}
             </p>
         </div>
 
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {% for categorie in categories %}
+            {% cycle 'bg-numeria-bleu' 'bg-purple-600' 'bg-teal-500' 'bg-pink-500' 'bg-amber-500' 'bg-blue-600' as bar_bg silent %}
+            {% cycle 'bg-blue-50 dark:bg-blue-950 text-numeria-bleu dark:text-blue-300' 'bg-purple-50 dark:bg-purple-950 text-purple-700 dark:text-purple-300' 'bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300' 'bg-pink-50 dark:bg-pink-950 text-pink-600 dark:text-pink-300' 'bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300' 'bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300' as icon_cls silent %}
+            {% cycle 'text-numeria-bleu dark:text-blue-300' 'text-purple-700 dark:text-purple-300' 'text-teal-600 dark:text-teal-300' 'text-pink-600 dark:text-pink-300' 'text-amber-600 dark:text-amber-300' 'text-blue-600 dark:text-blue-300' as accent_txt silent %}
+            {% cycle '💡' '🔬' '💻' '🧮' '🌍' '📚' as cat_emoji silent %}
+
             <a href="{{ categorie.get_absolute_url }}"
-               class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 block">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="w-12 h-12 bg-numeria-bleu rounded-xl flex items-center justify-center text-numeria-teal text-xl flex-shrink-0 group-hover:scale-110 transition-transform">
-                        💬
+               class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden border border-gray-100 dark:border-gray-700">
+                <!-- Colored top bar -->
+                <div class="h-1 flex-shrink-0 {{ bar_bg }}"></div>
+
+                <div class="p-7 flex flex-col flex-1">
+                    <!-- Icon + badge -->
+                    <div class="flex items-start justify-between mb-5">
+                        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 group-hover:scale-110 transition-transform duration-300 {{ icon_cls }}">
+                            {{ cat_emoji }}
+                        </div>
+                        {% if categorie.nombre_sujets > 0 %}
+                        <span class="text-xs font-bold px-3 py-1.5 rounded-full mt-1 {{ icon_cls }}">
+                            {{ categorie.nombre_sujets }} {% if categorie.nombre_sujets == 1 %}{% trans "sujet" %}{% else %}{% trans "sujets" %}{% endif %}
+                        </span>
+                        {% else %}
+                        <span class="bg-gray-100 dark:bg-gray-700 text-gray-400 text-xs font-bold px-3 py-1.5 rounded-full mt-1">{% trans "Vide" %}</span>
+                        {% endif %}
                     </div>
-                    {% if categorie.nombre_sujets > 0 %}
-                    <span class="bg-numeria-teal/15 text-numeria-teal text-xs font-bold px-3 py-1 rounded-full" style="font-family:'Outfit',sans-serif;">
-                        {{ categorie.nombre_sujets }} {% trans "sujet" %}{{ categorie.nombre_sujets|pluralize:"s" }}
-                    </span>
+
+                    <!-- Title -->
+                    <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-lg text-numeria-bleu dark:text-white mb-2">
+                        {{ categorie.nom }}
+                    </h3>
+
+                    <!-- Description -->
+                    {% if categorie.description %}
+                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed flex-1 mb-5 line-clamp-2">
+                        {{ categorie.description }}
+                    </p>
                     {% else %}
-                    <span class="bg-gray-100 dark:bg-gray-700 text-gray-400 text-xs font-bold px-3 py-1 rounded-full">{% trans "Vide" %}</span>
+                    <div class="flex-1 mb-5"></div>
                     {% endif %}
-                </div>
-                <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-lg text-numeria-bleu dark:text-white mb-2 group-hover:text-numeria-teal transition-colors">
-                    {{ categorie.nom }}
-                </h3>
-                {% if categorie.description %}
-                <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed line-clamp-2">{{ categorie.description }}</p>
-                {% endif %}
-                <div class="mt-4 text-numeria-teal text-sm font-semibold group-hover:gap-3 flex items-center gap-1.5 transition-all">
-                    {% trans "Voir les sujets" %} →
+
+                    <!-- Footer -->
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <span class="text-xs text-gray-400 dark:text-gray-500">
+                            {% if categorie.nombre_sujets > 0 %}
+                            🗨️ {{ categorie.nombre_sujets }} {% trans "discussion" %}{% if categorie.nombre_sujets > 1 %}s{% endif %}
+                            {% else %}
+                            {% trans "Soyez le premier à poster" %}
+                            {% endif %}
+                        </span>
+                        <span style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-sm group-hover:translate-x-1 transition-transform duration-200 {{ accent_txt }}">
+                            {% trans "Voir" %} →
+                        </span>
+                    </div>
                 </div>
             </a>
             {% empty %}
-            <div class="col-span-full text-center py-16">
-                <div class="text-5xl mb-4">💬</div>
-                <p class="text-gray-500 dark:text-gray-400 mb-4">{% trans "Aucune catégorie disponible pour le moment." %}</p>
+            <div class="col-span-full text-center py-20">
+                <div class="text-6xl mb-5">💬</div>
+                <p class="text-gray-500 dark:text-gray-400 mb-6 text-lg">{% trans "Aucune catégorie disponible pour le moment." %}</p>
                 {% if user.is_staff %}
                 <a href="{% url 'communaute:creer_categorie' %}"
-                   class="bg-numeria-bleu text-white px-6 py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors font-medium inline-block">
+                   style="font-family:'Outfit',sans-serif;font-weight:700;"
+                   class="bg-numeria-bleu text-white px-8 py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors inline-block">
                     {% trans "Créer la première catégorie" %}
                 </a>
                 {% endif %}
@@ -130,26 +176,30 @@
     </div>
 </section>
 
-<!-- ===== REJOINDRE CTA ===== -->
+<!-- ===== CTA ===== -->
 {% if not user.is_authenticated %}
 <section class="w-full py-16 bg-numeria-bleu relative overflow-hidden">
-    <div style="position:absolute;top:-60px;right:10%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.1) 0%,transparent 70%);pointer-events:none;"></div>
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div style="position:absolute;top:-60px;right:8%;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.10) 0%,transparent 70%);"></div>
+        <div style="position:absolute;bottom:-40px;left:5%;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,32,0.08) 0%,transparent 70%);"></div>
+    </div>
     <div class="w-full px-4 sm:px-8 lg:px-16 text-center relative">
+        <div class="text-5xl mb-5">🚀</div>
         <h2 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl text-white mb-4">
             {% trans "Rejoignez la conversation" %}
         </h2>
-        <p class="text-blue-200 mb-8 max-w-xl mx-auto">
+        <p class="text-blue-200 mb-8 max-w-xl mx-auto text-sm leading-relaxed">
             {% trans "Créez un compte gratuit pour poser vos questions, partager vos connaissances et progresser avec la communauté." %}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="{% url 'comptes:inscription' %}"
                style="font-family:'Outfit',sans-serif;font-weight:700;"
-               class="bg-numeria-teal text-numeria-bleu px-8 py-3.5 rounded-xl hover:bg-teal-300 transition-colors">
+               class="bg-numeria-teal text-numeria-bleu px-8 py-4 rounded-xl hover:bg-teal-300 transition-colors">
                 {% trans "Créer un compte gratuit" %} →
             </a>
             <a href="{% url 'comptes:connexion' %}"
                style="font-family:'Outfit',sans-serif;font-weight:600;"
-               class="border-2 border-white/25 text-white px-8 py-3.5 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors">
+               class="border-2 border-white/25 text-white px-8 py-4 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors">
                 {% trans "Se connecter" %}
             </a>
         </div>

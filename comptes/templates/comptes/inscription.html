@@ -40,10 +40,10 @@
                 </a>
 
                 <h1 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-2xl text-gray-800 dark:text-white mt-6 mb-1">
-                    Rejoins Numeria 🚀
+                    {% trans "Rejoins Numeria" %} 🚀
                 </h1>
                 <p class="text-gray-500 dark:text-gray-400 text-sm">
-                    Crée ton compte gratuitement et commence à apprendre
+                    {% trans "Crée ton compte gratuitement et commence à apprendre" %}
                 </p>
             </div>
 
@@ -73,7 +73,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                             <div>
                                 <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
-                                    Prénom <span class="text-red-400">*</span>
+                                    {% trans "Prénom" %} <span class="text-red-400">*</span>
                                 </label>
                                 <div class="relative">
                                     <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
@@ -88,7 +88,7 @@
                             </div>
                             <div>
                                 <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
-                                    Nom <span class="text-red-400">*</span>
+                                    {% trans "Nom" %} <span class="text-red-400">*</span>
                                 </label>
                                 <div class="relative">
                                     <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
@@ -123,7 +123,7 @@
                         <!-- Nom d'utilisateur -->
                         <div class="mb-5">
                             <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
-                                Nom d'utilisateur <span class="text-red-400">*</span>
+                                {% trans "Nom d'utilisateur" %} <span class="text-red-400">*</span>
                             </label>
                             <div class="relative">
                                 <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-bold">@</span>
@@ -167,7 +167,7 @@
                         <!-- Mot de passe -->
                         <div class="mb-5">
                             <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
-                                Mot de passe <span class="text-red-400">*</span>
+                                {% trans "Mot de passe" %} <span class="text-red-400">*</span>
                             </label>
                             <div class="relative">
                                 <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">🔐</span>
@@ -196,7 +196,7 @@
                         <!-- Confirmer mot de passe -->
                         <div class="mb-7">
                             <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
-                                Confirmer le mot de passe <span class="text-red-400">*</span>
+                                {% trans "Confirmer le mot de passe" %} <span class="text-red-400">*</span>
                             </label>
                             <div class="relative">
                                 <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">🔐</span>
@@ -216,18 +216,18 @@
                         <button type="submit"
                             style="font-family:'Outfit',sans-serif;font-weight:700;"
                             class="w-full bg-numeria-teal text-numeria-bleu py-3.5 rounded-xl hover:bg-teal-300 transition-all text-base shadow-md hover:shadow-lg hover:-translate-y-0.5 transform">
-                            Créer mon compte gratuitement 🚀
+                            {% trans "Créer mon compte gratuitement" %} 🚀
                         </button>
 
                     </form>
 
                     <!-- Lien connexion -->
                     <p class="text-center text-gray-400 dark:text-gray-500 text-sm mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
-                        Déjà un compte ?
+                        {% trans "Déjà un compte ?" %}
                         <a href="{% url 'comptes:connexion' %}"
                            style="font-family:'Outfit',sans-serif;font-weight:700;"
                            class="text-numeria-bleu dark:text-numeria-teal hover:opacity-75 transition-opacity ml-1">
-                            Se connecter →
+                            {% trans "Se connecter" %} →
                         </a>
                     </p>
                 </div>
@@ -237,22 +237,22 @@
             <div class="mt-6 grid grid-cols-3 gap-3 text-center">
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-3 border border-gray-100 dark:border-gray-700">
                     <div class="text-xl mb-1">🎓</div>
-                    <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">Cours gratuits</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">{% trans "Cours gratuits" %}</p>
                 </div>
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-3 border border-gray-100 dark:border-gray-700">
                     <div class="text-xl mb-1">📜</div>
-                    <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">Certificats PDF</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">{% trans "Certificats PDF" %}</p>
                 </div>
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-3 border border-gray-100 dark:border-gray-700">
                     <div class="text-xl mb-1">🌍</div>
-                    <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">Communauté</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-xs font-medium">{% trans "Communauté" %}</p>
                 </div>
             </div>
 
             <!-- Retour accueil -->
             <p class="text-center mt-5">
                 <a href="/" class="text-gray-400 dark:text-gray-500 text-xs hover:text-numeria-teal transition-colors">
-                    ← Retour à l'accueil
+                    ← {% trans "Retour à l'accueil" %}
                 </a>
             </p>
 

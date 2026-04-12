@@ -19,10 +19,10 @@
                 {% endif %}
                 <div>
                     <h1 style="font-family:'Outfit',sans-serif;" class="text-2xl font-bold text-numeria-bleu dark:text-white">
-                        Bonjour, {{ user.first_name }} 👋
+                        {% blocktrans with name=user.first_name %}Bonjour, {{ name }}{% endblocktrans %} 👋
                     </h1>
                     <p class="text-gray-500 dark:text-gray-400 text-sm mt-0.5">
-                        {% if profil.pays %}📍 {{ profil.pays }} · {% endif %}Membre depuis {{ user.date_joined|date:"F Y" }}
+                        {% if profil.pays %}📍 {{ profil.pays }} · {% endif %}{% trans "Membre depuis" %} {{ user.date_joined|date:"F Y" }}
                     </p>
                 </div>
             </div>
@@ -30,11 +30,11 @@
                 <a href="{% url 'cours:catalogue' %}"
                    class="flex items-center gap-2 bg-numeria-teal text-numeria-bleu font-bold px-5 py-2.5 rounded-xl hover:bg-teal-300 transition-colors text-sm" style="font-family:'Outfit',sans-serif;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    Nouveau cours
+                    {% trans "Nouveau cours" %}
                 </a>
                 <a href="{% url 'comptes:profil' %}"
                    class="border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold px-5 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm">
-                    Mon profil
+                    {% trans "Mon profil" %}
                 </a>
             </div>
         </div>
@@ -50,7 +50,7 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A3C6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dark:stroke-blue-300"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                     </div>
                     <div style="font-family:'Outfit',sans-serif;" class="text-3xl font-black text-numeria-bleu dark:text-white mb-0.5">{{ total_inscrits }}</div>
-                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Cours inscrits</p>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">{% trans "Cours inscrits" %}</p>
                 </div>
             </div>
 
@@ -62,7 +62,7 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8A020" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                     </div>
                     <div style="font-family:'Outfit',sans-serif;" class="text-3xl font-black text-numeria-bleu dark:text-white mb-0.5">{{ en_cours|length }}</div>
-                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">En cours</p>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">{% trans "En cours" %}</p>
                 </div>
             </div>
 
@@ -74,7 +74,7 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
                     <div style="font-family:'Outfit',sans-serif;" class="text-3xl font-black text-numeria-bleu dark:text-white mb-0.5">{{ total_termines }}</div>
-                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Terminés</p>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs font-medium">{% trans "Terminés" %}</p>
                 </div>
             </div>
 
@@ -86,7 +86,7 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                     </div>
                     <div style="font-family:'Outfit',sans-serif;" class="text-3xl font-black text-white mb-0.5">{{ progression_totale }}%</div>
-                    <p class="text-white/80 text-xs font-medium">Progression globale</p>
+                    <p class="text-white/80 text-xs font-medium">{% trans "Progression globale" %}</p>
                     <!-- Mini barre de progression -->
                     <div class="mt-3 bg-white/20 rounded-full h-1.5">
                         <div class="bg-white rounded-full h-1.5 transition-all duration-700" style="width:{{ progression_totale }}%"></div>
@@ -107,10 +107,10 @@
                     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700">
                         <h2 style="font-family:'Outfit',sans-serif;" class="text-base font-bold text-numeria-bleu dark:text-white flex items-center gap-2">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-numeria-teal"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                            Mes cours
+                            {% trans "Mes cours" %}
                         </h2>
                         <a href="{% url 'cours:catalogue' %}" class="text-numeria-teal text-sm font-semibold hover:opacity-75 transition-opacity flex items-center gap-1">
-                            Voir tout <span>→</span>
+                            {% trans "Voir tout" %} <span>→</span>
                         </a>
                     </div>
 
@@ -130,10 +130,10 @@
                                         <div class="flex flex-wrap items-center gap-1.5 mb-1">
                                             <span class="text-numeria-teal text-xs font-bold uppercase tracking-wide">{{ inscription.cours.get_matiere_display }}</span>
                                             {% if inscription.est_termine %}
-                                                <span class="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 text-xs font-bold px-2 py-0.5 rounded-full">✓ Terminé</span>
+                                                <span class="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 text-xs font-bold px-2 py-0.5 rounded-full">✓ {% trans "Terminé" %}</span>
                                             {% endif %}
                                             {% if not inscription.cours.est_gratuit %}
-                                                <span class="bg-numeria-or/20 text-numeria-or text-xs font-bold px-2 py-0.5 rounded-full">Payant</span>
+                                                <span class="bg-numeria-or/20 text-numeria-or text-xs font-bold px-2 py-0.5 rounded-full">{% trans "Payant" %}</span>
                                             {% endif %}
                                         </div>
                                         <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm truncate group-hover:text-numeria-bleu dark:group-hover:text-numeria-teal transition-colors">
@@ -156,7 +156,7 @@
                                         </div>
                                         <a href="{% url 'cours:detail' inscription.cours.id %}"
                                            class="text-center bg-numeria-bleu text-white text-xs font-bold py-1.5 rounded-lg hover:bg-numeria-bleu-fonce transition-colors">
-                                            {% if inscription.est_termine %}Revoir{% else %}Continuer →{% endif %}
+                                            {% if inscription.est_termine %}{% trans "Revoir" %}{% else %}{% trans "Continuer" %} →{% endif %}
                                         </a>
                                         {% if inscription.est_termine and not inscription.cours.est_gratuit %}
                                         <a href="{% url 'cours:telecharger_certificat' inscription.id %}"
@@ -174,8 +174,8 @@
                                 <div class="w-16 h-16 bg-numeria-bleu/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A3C6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                                 </div>
-                                <h3 style="font-family:'Outfit',sans-serif;" class="text-gray-700 dark:text-gray-200 font-bold text-lg mb-2">Tu n'es inscrit à aucun cours</h3>
-                                <p class="text-gray-400 dark:text-gray-500 text-sm mb-6">Découvre notre catalogue et commence à apprendre dès aujourd'hui !</p>
+                                <h3 style="font-family:'Outfit',sans-serif;" class="text-gray-700 dark:text-gray-200 font-bold text-lg mb-2">{% trans "Tu n'es inscrit à aucun cours" %}</h3>
+                                <p class="text-gray-400 dark:text-gray-500 text-sm mb-6">{% trans "Découvre notre catalogue et commence à apprendre dès aujourd'hui !" %}</p>
                                 <a href="{% url 'cours:catalogue' %}"
                                    class="inline-block bg-numeria-teal text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-teal-300 transition-colors text-sm" style="font-family:'Outfit',sans-serif;">
                                     Explorer les cours →

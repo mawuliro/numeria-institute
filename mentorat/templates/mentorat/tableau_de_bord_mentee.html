@@ -1,160 +1,182 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block titre %}Tableau de bord Mentoré - Numeria Institute{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Tableau de bord Mentoré" %} — Numeria Institute{% endblock %}
+{% block meta_description %}{% trans "Suivez vos demandes de mentorat, vos mentors et vos séances sur Numeria Institute." %}{% endblock %}
 
 {% block contenu %}
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-        Tableau de bord Mentoré
-    </h1>
 
-    <!-- Statistiques -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
-            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-                {{ demandes_envoyees|length }}
+<!-- ===== HEADER ===== -->
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
+    <div style="position:absolute;top:-60px;right:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-12 relative">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <div class="inline-flex items-center gap-2 bg-numeria-teal/15 text-numeria-teal text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-widest" style="font-family:'Outfit',sans-serif;">
+                    🌱 {% trans "Espace Mentoré" %}
+                </div>
+                <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl">{% trans "Tableau de bord Mentoré" %}</h1>
             </div>
-            <div class="text-gray-600 dark:text-gray-300">Demandes envoyées</div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
-            <div class="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">
-                {{ relations_actives|length }}
-            </div>
-            <div class="text-gray-600 dark:text-gray-300">Relations actives</div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
-            <div class="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-2">
-                {{ seances_a_venir|length }}
-            </div>
-            <div class="text-gray-600 dark:text-gray-300">Séances à venir</div>
+            <a href="{% url 'mentorat:liste_mentors' %}"
+               style="font-family:'Outfit',sans-serif;font-weight:700;"
+               class="bg-numeria-teal text-numeria-bleu px-6 py-3 rounded-xl hover:bg-teal-300 transition-colors text-sm flex-shrink-0 w-fit">
+                🔍 {% trans "Trouver un mentor" %}
+            </a>
         </div>
     </div>
+</section>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Demandes envoyées -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Mes demandes
-            </h2>
+<!-- ===== STATS ===== -->
+<section class="w-full bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-6">
+        <div class="grid grid-cols-3 gap-4 max-w-xl">
+            <div class="text-center p-4 bg-numeria-bleu/5 dark:bg-numeria-bleu/20 rounded-2xl">
+                <div style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-2xl text-numeria-bleu dark:text-blue-300">{{ demandes_envoyees|length }}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">{% trans "Demandes envoyées" %}</div>
+            </div>
+            <div class="text-center p-4 bg-teal-50 dark:bg-teal-900/20 rounded-2xl">
+                <div style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-2xl text-numeria-teal">{{ relations_actives|length }}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">{% trans "Relations actives" %}</div>
+            </div>
+            <div class="text-center p-4 bg-amber-50 dark:bg-amber-900/20 rounded-2xl">
+                <div style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-2xl text-numeria-or">{{ seances_a_venir|length }}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">{% trans "Séances à venir" %}</div>
+            </div>
+        </div>
+    </div>
+</section>
 
-            {% if demandes_envoyees %}
-                <div class="space-y-4">
-                    {% for demande in demandes_envoyees %}
-                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="font-medium text-gray-900 dark:text-white">
-                                {{ demande.mentor.profil.utilisateur.get_full_name }}
-                            </h3>
-                            <span class="px-2 py-1 rounded text-xs font-medium
-                                {% if demande.statut == 'en_attente' %}bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200{% endif %}
-                                {% if demande.statut == 'acceptee' %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200{% endif %}
-                                {% if demande.statut == 'refusee' %}bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200{% endif %}
-                                {% if demande.statut == 'terminee' %}bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200{% endif %}">
-                                {{ demande.get_statut_display }}
-                            </span>
+<!-- ===== CONTENU PRINCIPAL ===== -->
+<section class="w-full py-10 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+
+        <div class="grid lg:grid-cols-2 gap-6">
+
+            <!-- Demandes envoyées -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <div class="h-1 bg-gradient-to-r from-numeria-bleu to-purple-500"></div>
+                <div class="p-6">
+                    <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-4">
+                        ✉️ {% trans "Mes demandes" %}
+                    </h2>
+
+                    {% if demandes_envoyees %}
+                    <div class="space-y-3">
+                        {% for demande in demandes_envoyees %}
+                        <div class="border border-gray-100 dark:border-gray-700 rounded-xl p-4">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <h3 class="font-semibold text-gray-800 dark:text-white text-sm">
+                                    {{ demande.mentor.profil.utilisateur.get_full_name }}
+                                </h3>
+                                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full
+                                    {% if demande.statut == 'en_attente' %}bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400
+                                    {% elif demande.statut == 'acceptee' %}bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400
+                                    {% elif demande.statut == 'refusee' %}bg-red-100 dark:bg-red-900/30 text-red-500 dark:text-red-400
+                                    {% else %}bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400{% endif %}">
+                                    {{ demande.get_statut_display }}
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 line-clamp-2">{{ demande.message|truncatechars:100 }}</p>
+                            <div class="text-xs text-gray-400 dark:text-gray-500">
+                                {% trans "Envoyée le" %} {{ demande.date_creation|date:"d M Y" }}
+                                {% if demande.date_reponse %}
+                                · {% trans "Réponse le" %} {{ demande.date_reponse|date:"d M Y" }}
+                                {% endif %}
+                            </div>
                         </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">
-                            {{ demande.message|truncatechars:100 }}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-10 text-gray-400 dark:text-gray-500">
+                        <div class="text-3xl mb-2">📭</div>
+                        <p class="text-sm mb-4">{% trans "Aucune demande envoyée" %}</p>
+                        <a href="{% url 'mentorat:liste_mentors' %}"
+                           class="text-numeria-teal hover:underline text-sm font-semibold">
+                            {% trans "Trouver un mentor" %} →
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Mes mentors -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <div class="h-1 bg-gradient-to-r from-numeria-teal to-numeria-bleu"></div>
+                <div class="p-6">
+                    <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-4">
+                        🎓 {% trans "Mes mentors" %}
+                    </h2>
+
+                    {% if relations_actives %}
+                    <div class="space-y-3">
+                        {% for relation in relations_actives %}
+                        <div class="border border-gray-100 dark:border-gray-700 rounded-xl p-4">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <h3 class="font-semibold text-gray-800 dark:text-white text-sm">
+                                    {{ relation.mentor.profil.utilisateur.get_full_name }}
+                                </h3>
+                                <span class="text-xs text-gray-400">{% trans "Depuis" %} {{ relation.date_debut|date:"M Y" }}</span>
+                            </div>
+                            <p class="text-xs text-numeria-teal font-semibold mb-3">{{ relation.mentor.get_domaines_expertise_display }}</p>
+                            <div class="flex gap-2">
+                                <a href="{% url 'mentorat:detail_relation' relation.pk %}"
+                                   class="bg-numeria-bleu/8 dark:bg-numeria-bleu/20 text-numeria-bleu dark:text-blue-300 px-4 py-1.5 rounded-lg text-xs hover:bg-numeria-bleu hover:text-white transition-colors font-semibold">
+                                    {% trans "Voir détails" %}
+                                </a>
+                                <a href="{% url 'mentorat:planifier_seance' relation.pk %}"
+                                   class="bg-numeria-teal/15 text-numeria-teal px-4 py-1.5 rounded-lg text-xs hover:bg-numeria-teal hover:text-numeria-bleu transition-colors font-semibold">
+                                    + {% trans "Séance" %}
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-10 text-gray-400 dark:text-gray-500">
+                        <div class="text-3xl mb-2">🎓</div>
+                        <p class="text-sm mb-4">{% trans "Aucun mentor actif" %}</p>
+                        <a href="{% url 'mentorat:liste_mentors' %}"
+                           style="font-family:'Outfit',sans-serif;font-weight:700;"
+                           class="bg-numeria-teal text-numeria-bleu px-5 py-2 rounded-xl hover:bg-teal-300 transition-colors text-sm inline-block">
+                            {% trans "Trouver un mentor" %}
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Séances à venir -->
+        {% if seances_a_venir %}
+        <div class="mt-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div class="h-1 bg-gradient-to-r from-numeria-or to-amber-400"></div>
+            <div class="p-6">
+                <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-4 flex items-center gap-2">
+                    📅 {% trans "Prochaines séances" %}
+                    <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-2 py-0.5 rounded-full">{{ seances_a_venir|length }}</span>
+                </h2>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {% for seance in seances_a_venir %}
+                    <div class="border border-gray-100 dark:border-gray-700 rounded-xl p-4">
+                        <h3 class="font-semibold text-gray-800 dark:text-white text-sm truncate mb-1">{{ seance.titre }}</h3>
+                        <p class="text-xs text-numeria-bleu dark:text-blue-300 font-semibold mb-1">{{ seance.date_heure|date:"d M Y, H:i" }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                            {% trans "Avec" %} {{ seance.relation.mentor.profil.utilisateur.get_full_name }}
+                            · {{ seance.get_modalite_display }}
                         </p>
-                        <div class="text-xs text-gray-500 dark:text-gray-400">
-                            Envoyée le {{ demande.date_creation|date:"d/m/Y" }}
-                            {% if demande.date_reponse %}
-                            • Réponse le {{ demande.date_reponse|date:"d/m/Y" }}
-                            {% endif %}
-                        </div>
+                        <a href="{% url 'mentorat:terminer_seance' seance.pk %}"
+                           class="bg-numeria-or/15 text-numeria-or hover:bg-numeria-or hover:text-white px-4 py-1.5 rounded-lg text-xs transition-colors font-semibold">
+                            ✅ {% trans "Terminer" %}
+                        </a>
                     </div>
                     {% endfor %}
                 </div>
-            {% else %}
-                <p class="text-gray-500 dark:text-gray-400 text-center py-8">
-                    Aucune demande envoyée
-                </p>
-            {% endif %}
-        </div>
-
-        <!-- Relations actives -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Mes mentors
-            </h2>
-
-            {% if relations_actives %}
-                <div class="space-y-4">
-                    {% for relation in relations_actives %}
-                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="font-medium text-gray-900 dark:text-white">
-                                {{ relation.mentor.profil.utilisateur.get_full_name }}
-                            </h3>
-                            <span class="text-sm text-gray-500 dark:text-gray-400">
-                                Depuis {{ relation.date_debut|date:"M Y" }}
-                            </span>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                            {{ relation.mentor.get_domaines_expertise_display }}
-                        </p>
-                        <div class="flex space-x-2">
-                            <a href="{% url 'mentorat:detail_relation' relation.pk %}"
-                               class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
-                                Voir détails
-                            </a>
-                            <a href="{% url 'mentorat:planifier_seance' relation.pk %}"
-                               class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors">
-                                Planifier séance
-                            </a>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class="text-gray-500 dark:text-gray-400 text-center py-8">
-                    Aucun mentor actif
-                </p>
-                <div class="text-center">
-                    <a href="{% url 'mentorat:liste_mentors' %}"
-                       class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
-                        Trouver un mentor
-                    </a>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Séances à venir -->
-    {% if seances_a_venir %}
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Prochaines séances
-        </h2>
-
-        <div class="space-y-4">
-            {% for seance in seances_a_venir %}
-            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-medium text-gray-900 dark:text-white">
-                        {{ seance.titre }}
-                    </h3>
-                    <span class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ seance.date_heure|date:"d/m/Y H:i" }}
-                    </span>
-                </div>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">
-                    Avec {{ seance.relation.mentor.profil.utilisateur.get_full_name }}
-                </p>
-                <div class="flex items-center justify-between">
-                    <span class="text-sm text-blue-600 dark:text-blue-400">
-                        {{ seance.get_modalite_display }}
-                    </span>
-                    <a href="{% url 'mentorat:terminer_seance' seance.pk %}"
-                       class="bg-orange-600 text-white px-3 py-1 rounded text-sm hover:bg-orange-700 transition-colors">
-                        Terminer
-                    </a>
-                </div>
             </div>
-            {% endfor %}
         </div>
+        {% endif %}
+
     </div>
-    {% endif %}
-</div>
+</section>
+
 {% endblock %}

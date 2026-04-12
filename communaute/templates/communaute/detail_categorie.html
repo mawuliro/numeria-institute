@@ -1,38 +1,42 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block titre %}{{ categorie.nom }} - {% trans "Communauté" %} Numeria{% endblock %}
+{% block titre %}{{ categorie.nom }} — {% trans "Communauté" %} Numeria{% endblock %}
 {% block meta_description %}{% blocktrans with nom=categorie.nom %}Sujets de discussion dans la catégorie {{ nom }} de la communauté Numeria Institute.{% endblocktrans %}{% endblock %}
 
 {% block contenu %}
 
 <!-- ===== HEADER ===== -->
-<section class="bg-numeria-bleu text-white w-full">
-    <div class="w-full px-4 sm:px-8 lg:px-16 py-12">
-        <nav class="mb-6">
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
+    <div style="position:absolute;top:-60px;right:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-12 relative">
+        <nav class="mb-5">
             <a href="{% url 'communaute:liste_categories' %}" class="text-blue-300 hover:text-numeria-teal transition-colors text-sm flex items-center gap-1.5 w-fit">
                 ← {% trans "Retour aux forums" %}
             </a>
         </nav>
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
+                <div class="inline-flex items-center gap-2 bg-numeria-teal/15 text-numeria-teal text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-widest" style="font-family:'Outfit',sans-serif;">
+                    💬 {% trans "Catégorie" %}
+                </div>
                 <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl mb-2">{{ categorie.nom }}</h1>
                 {% if categorie.description %}
-                <p class="text-blue-200 text-sm leading-relaxed max-w-2xl">{{ categorie.description }}</p>
+                <p class="text-blue-200 text-sm leading-relaxed max-w-2xl opacity-90">{{ categorie.description }}</p>
                 {% endif %}
             </div>
             <div class="flex flex-wrap gap-3 flex-shrink-0">
                 {% if user.is_authenticated %}
                 <a href="{% url 'communaute:creer_sujet' %}?categorie={{ categorie.pk }}"
                    style="font-family:'Outfit',sans-serif;font-weight:700;"
-                   class="bg-numeria-teal text-numeria-bleu px-6 py-3 rounded-xl hover:bg-teal-300 transition-colors inline-block text-sm">
-                    {% trans "Nouveau sujet" %} →
+                   class="bg-numeria-teal text-numeria-bleu px-6 py-3 rounded-xl hover:bg-teal-300 transition-colors text-sm">
+                    ✏️ {% trans "Nouveau sujet" %}
                 </a>
                 {% endif %}
                 {% if user.is_staff %}
                 <a href="{% url 'communaute:creer_categorie' %}"
                    style="font-family:'Outfit',sans-serif;font-weight:600;"
-                   class="border border-white/25 text-white px-6 py-3 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors inline-block text-sm">
-                    {% trans "Nouvelle catégorie" %}
+                   class="border border-white/25 text-white px-6 py-3 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors text-sm">
+                    + {% trans "Nouvelle catégorie" %}
                 </a>
                 {% endif %}
             </div>
@@ -41,77 +45,112 @@
 </section>
 
 <!-- ===== LISTE DES SUJETS ===== -->
-<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
+<section class="w-full py-10 bg-numeria-blanc dark:bg-gray-900">
     <div class="w-full px-4 sm:px-8 lg:px-16">
 
         {% if page_obj %}
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
 
-            <!-- En-têtes -->
-            <div class="bg-numeria-bleu/5 dark:bg-numeria-bleu/20 px-6 py-4 border-b border-gray-100 dark:border-gray-700 hidden md:grid grid-cols-12 gap-4">
-                <div class="col-span-7 text-xs font-bold text-numeria-bleu dark:text-numeria-teal uppercase tracking-wider">{% trans "Sujet" %}</div>
-                <div class="col-span-2 text-center text-xs font-bold text-numeria-bleu dark:text-numeria-teal uppercase tracking-wider">{% trans "Réponses" %}</div>
-                <div class="col-span-3 text-center text-xs font-bold text-numeria-bleu dark:text-numeria-teal uppercase tracking-wider">{% trans "Dernier message" %}</div>
-            </div>
+        <!-- Column headers (desktop) -->
+        <div class="hidden md:flex items-center px-5 pb-3 mb-1 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+            <div class="flex-1">{% trans "Sujet" %}</div>
+            <div class="w-24 text-center">{% trans "Réponses" %}</div>
+            <div class="w-36 text-center">{% trans "Activité" %}</div>
+        </div>
 
-            <!-- Sujets -->
+        <div class="space-y-3">
             {% for sujet in page_obj %}
-            <div class="border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-numeria-bleu/3 dark:hover:bg-white/3 transition-colors group">
-                <div class="p-5 md:grid md:grid-cols-12 md:gap-4 md:items-center">
+            {% cycle 'bg-numeria-bleu' 'bg-purple-600' 'bg-teal-500' 'bg-pink-500' 'bg-amber-500' 'bg-blue-600' as avatar_bg silent %}
 
-                    <!-- Infos sujet -->
-                    <div class="md:col-span-7 flex items-start gap-3 mb-3 md:mb-0">
-                        <div class="w-10 h-10 bg-numeria-teal/15 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
-                            {% if sujet.est_ferme %}
-                            <span class="text-lg">🔒</span>
-                            {% elif sujet.est_epingle %}
-                            <span class="text-lg">📌</span>
-                            {% else %}
-                            <span class="text-lg">💬</span>
-                            {% endif %}
+            <div class="group bg-white dark:bg-gray-800 rounded-2xl border transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5
+                {% if sujet.est_epingle %}border-numeria-or/40 dark:border-numeria-or/30{% elif sujet.est_ferme %}border-gray-200 dark:border-gray-700 opacity-80{% else %}border-gray-100 dark:border-gray-700{% endif %}
+                relative overflow-hidden">
+
+                <!-- Pinned highlight -->
+                {% if sujet.est_epingle %}
+                <div class="absolute top-0 left-0 w-1 h-full bg-numeria-or rounded-l-2xl"></div>
+                {% elif not sujet.est_ferme %}
+                <div class="absolute top-0 left-0 w-1 h-full bg-numeria-teal/40 group-hover:bg-numeria-teal rounded-l-2xl transition-colors"></div>
+                {% endif %}
+
+                <div class="flex flex-col md:flex-row md:items-center gap-4 p-5 pl-6">
+
+                    <!-- Avatar + info -->
+                    <div class="flex items-start gap-4 flex-1 min-w-0">
+                        <!-- Author avatar -->
+                        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white font-black text-base flex-shrink-0 {{ avatar_bg }}">
+                            {{ sujet.auteur.username|first|upper }}
                         </div>
+
                         <div class="flex-1 min-w-0">
-                            <div class="flex flex-wrap items-center gap-2 mb-1">
+                            <!-- Tags row -->
+                            {% if sujet.est_epingle or sujet.est_ferme %}
+                            <div class="flex flex-wrap gap-1.5 mb-1.5">
                                 {% if sujet.est_epingle %}
-                                <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-2 py-0.5 rounded-full">{% trans "Épinglé" %}</span>
+                                <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-2 py-0.5 rounded-full">📌 {% trans "Épinglé" %}</span>
                                 {% endif %}
                                 {% if sujet.est_ferme %}
-                                <span class="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold px-2 py-0.5 rounded-full">{% trans "Fermé" %}</span>
+                                <span class="bg-red-100 dark:bg-red-900/30 text-red-500 dark:text-red-400 text-xs font-bold px-2 py-0.5 rounded-full">🔒 {% trans "Fermé" %}</span>
                                 {% endif %}
                             </div>
-                            <h3 style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-numeria-bleu dark:text-white group-hover:text-numeria-teal transition-colors truncate">
+                            {% endif %}
+
+                            <!-- Title -->
+                            <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white group-hover:text-numeria-teal dark:group-hover:text-numeria-teal transition-colors text-base leading-snug truncate">
                                 <a href="{{ sujet.get_absolute_url }}">{{ sujet.titre }}</a>
                             </h3>
-                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-2 flex-wrap">
-                                <a href="{% url 'communaute:profil_utilisateur' sujet.auteur.username %}" class="font-medium hover:text-numeria-teal transition-colors">{{ sujet.auteur.username }}</a>
+
+                            <!-- Preview from first message -->
+                            {% with preview=sujet.messages.first %}
+                            {% if preview and preview.contenu %}
+                            <p class="text-gray-500 dark:text-gray-400 text-xs mt-1 line-clamp-1">
+                                {{ preview.contenu|truncatechars:110 }}
+                            </p>
+                            {% endif %}
+                            {% endwith %}
+
+                            <!-- Meta -->
+                            <div class="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-gray-400 dark:text-gray-500">
+                                <a href="{% url 'communaute:profil_utilisateur' sujet.auteur.username %}"
+                                   class="font-semibold hover:text-numeria-teal transition-colors">
+                                    {{ sujet.auteur.username }}
+                                </a>
                                 <span>·</span>
                                 <span>{{ sujet.date_creation|date:"d M Y" }}</span>
                                 {% if sujet.vues > 0 %}
                                 <span>·</span>
-                                <span>{{ sujet.vues }} {% trans "vue" %}{{ sujet.vues|pluralize:"s" }}</span>
+                                <span>👁 {{ sujet.vues }}</span>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
 
-                    <!-- Réponses -->
-                    <div class="md:col-span-2 flex md:flex-col items-center md:justify-center gap-3 md:gap-1 text-sm">
-                        <span style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-numeria-teal text-lg">{{ sujet.nombre_reponses }}</span>
-                        <span class="text-xs text-gray-400">{% trans "réponse" %}{{ sujet.nombre_reponses|pluralize:"s" }}</span>
+                    <!-- Reply count bubble -->
+                    <div class="flex md:flex-col items-center gap-3 md:gap-1 flex-shrink-0 md:w-24 md:justify-center">
+                        <div class="flex items-center gap-1.5 md:flex-col">
+                            <span style="font-family:'Outfit',sans-serif;font-weight:800;"
+                                  class="text-xl md:text-2xl {% if sujet.nombre_reponses > 10 %}text-numeria-teal{% elif sujet.nombre_reponses > 0 %}text-numeria-bleu dark:text-blue-300{% else %}text-gray-300 dark:text-gray-600{% endif %}">
+                                {{ sujet.nombre_reponses }}
+                            </span>
+                            <span class="text-xs text-gray-400">{% trans "rép." %}</span>
+                        </div>
                     </div>
 
-                    <!-- Dernier message -->
-                    <div class="md:col-span-3 text-xs text-gray-500 dark:text-gray-400 md:text-center">
+                    <!-- Last activity -->
+                    <div class="md:w-36 text-xs text-gray-400 dark:text-gray-500 md:text-center flex-shrink-0">
                         {% if sujet.dernier_message %}
-                        <a href="{% url 'communaute:profil_utilisateur' sujet.dernier_message.auteur.username %}" class="font-medium text-numeria-bleu dark:text-numeria-teal hover:underline block">{{ sujet.dernier_message.auteur.username }}</a>
-                        <span>{{ sujet.dernier_message.date_creation|date:"d M Y, H:i" }}</span>
+                        <a href="{% url 'communaute:profil_utilisateur' sujet.dernier_message.auteur.username %}"
+                           class="font-semibold text-numeria-bleu dark:text-numeria-teal hover:underline block truncate">
+                            {{ sujet.dernier_message.auteur.username }}
+                        </a>
+                        <span class="block">{{ sujet.dernier_message.date_creation|date:"d M, H:i" }}</span>
+                        {% else %}
+                        <span>—</span>
                         {% endif %}
                     </div>
 
                 </div>
             </div>
             {% endfor %}
-
         </div>
 
         <!-- Pagination -->
@@ -141,14 +180,20 @@
         {% endif %}
 
         {% else %}
-        <div class="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700">
-            <div class="text-5xl mb-4">📭</div>
-            <p class="text-gray-500 dark:text-gray-400 mb-6 text-lg">{% trans "Aucun sujet dans cette catégorie pour le moment." %}</p>
+        <!-- Empty state -->
+        <div class="text-center py-24 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+            <div class="w-20 h-20 bg-numeria-bleu/8 dark:bg-numeria-bleu/20 rounded-full flex items-center justify-center mx-auto mb-5">
+                <span class="text-4xl">📭</span>
+            </div>
+            <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-xl mb-2">
+                {% trans "Aucun sujet pour le moment" %}
+            </h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-8 text-sm">{% trans "Soyez le premier à lancer une discussion !" %}</p>
             {% if user.is_authenticated %}
             <a href="{% url 'communaute:creer_sujet' %}?categorie={{ categorie.pk }}"
                style="font-family:'Outfit',sans-serif;font-weight:700;"
-               class="bg-numeria-bleu text-white px-8 py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors inline-block">
-                {% trans "Créer le premier sujet" %} →
+               class="bg-numeria-teal text-numeria-bleu px-8 py-3 rounded-xl hover:bg-teal-300 transition-colors inline-block">
+                ✏️ {% trans "Créer le premier sujet" %}
             </a>
             {% else %}
             <a href="{% url 'comptes:connexion' %}"

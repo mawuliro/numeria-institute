@@ -1,99 +1,104 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block titre %}Demander un mentorat - Numeria Institute{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Demander un mentorat" %} — Numeria Institute{% endblock %}
+{% block meta_description %}{% trans "Envoyez une demande de mentorat à un expert sur Numeria Institute." %}{% endblock %}
 
 {% block contenu %}
-<div class="container mx-auto px-4 py-8 max-w-2xl">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
-        <h1 class="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-            Demander un mentorat
-        </h1>
 
-        <!-- Informations sur le mentor -->
-        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Mentor demandé
-            </h2>
-            <div class="flex items-center">
-                {% if mentor.profil.photo %}
-                    <img src="{{ mentor.profil.photo.url }}" alt="Photo de {{ mentor.profil.utilisateur.get_full_name }}"
-                         class="w-16 h-16 rounded-full object-cover mr-4">
-                {% else %}
-                    <div class="w-16 h-16 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center mr-4">
-                        <span class="text-gray-600 dark:text-gray-300 font-semibold text-lg">
+<!-- ===== HEADER ===== -->
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
+    <div style="position:absolute;top:-60px;right:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-14 relative">
+        <nav class="mb-5">
+            <a href="{% url 'mentorat:detail_mentor' mentor.pk %}" class="text-blue-300 hover:text-numeria-teal transition-colors text-sm flex items-center gap-1.5 w-fit">
+                ← {% trans "Retour au profil du mentor" %}
+            </a>
+        </nav>
+        <div class="inline-flex items-center gap-2 bg-numeria-teal/15 text-numeria-teal text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-widest" style="font-family:'Outfit',sans-serif;">
+            ✉️ {% trans "Demande de mentorat" %}
+        </div>
+        <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl mb-2">{% trans "Demander un mentorat" %}</h1>
+        <p class="text-blue-200 text-sm opacity-85">{% trans "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor." %}</p>
+    </div>
+</section>
+
+<!-- ===== FORMULAIRE ===== -->
+<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-2xl mx-auto space-y-6">
+
+            <!-- Aperçu du mentor -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-numeria-teal/30 dark:border-numeria-teal/20 overflow-hidden">
+                <div class="h-1 bg-numeria-teal"></div>
+                <div class="p-6 flex items-center gap-4">
+                    {% if mentor.profil.photo %}
+                    <img src="{{ mentor.profil.photo.url }}" alt="{{ mentor.profil.utilisateur.get_full_name }}"
+                         class="w-16 h-16 rounded-xl object-cover flex-shrink-0">
+                    {% else %}
+                    <div class="w-16 h-16 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0">
+                        <span class="text-white font-black text-xl">
                             {{ mentor.profil.utilisateur.first_name|first|upper }}{{ mentor.profil.utilisateur.last_name|first|upper }}
                         </span>
                     </div>
-                {% endif %}
-                <div>
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">
-                        {{ mentor.profil.utilisateur.get_full_name|default:mentor.profil.utilisateur.username }}
-                    </h3>
-                    <p class="text-blue-600 dark:text-blue-400">
-                        {{ mentor.get_domaines_expertise_display }}
-                    </p>
-                    <p class="text-sm text-gray-600 dark:text-gray-300">
-                        {{ mentor.get_niveau_experience_display }} • {{ mentor.get_disponibilite_display }}
-                    </p>
+                    {% endif %}
+                    <div>
+                        <p class="text-xs font-bold text-numeria-teal uppercase tracking-wider mb-1">{% trans "Mentor demandé" %}</p>
+                        <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-lg">
+                            {{ mentor.profil.utilisateur.get_full_name|default:mentor.profil.utilisateur.username }}
+                        </h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ mentor.get_domaines_expertise_display }} · {{ mentor.get_niveau_experience_display }}
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <p class="text-gray-600 dark:text-gray-300 mb-8 text-center">
-            Présentez-vous et expliquez pourquoi vous souhaitez ce mentor.
-            Soyez spécifique sur vos objectifs et attentes.
-        </p>
+            <!-- Formulaire -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <div class="h-1 bg-gradient-to-r from-numeria-bleu via-numeria-teal to-numeria-or"></div>
+                <form method="post" class="p-8 space-y-6">
+                    {% csrf_token %}
 
-        <form method="post" class="space-y-6">
-            {% csrf_token %}
-
-            <!-- Message -->
-            <div>
-                <label for="{{ form.message.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ form.message.label }}
-                </label>
-                {{ form.message }}
-                {% if form.message.errors %}
-                    <div class="mt-1 text-red-600 text-sm">
-                        {{ form.message.errors.0 }}
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                            {{ form.message.label }}
+                        </label>
+                        {{ form.message }}
+                        {% if form.message.errors %}
+                        <p class="mt-1.5 text-red-500 text-xs">{{ form.message.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                            {% trans "Décrivez votre parcours, vos objectifs et pourquoi ce mentor vous intéresse." %}
+                        </p>
                     </div>
-                {% endif %}
-                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                    Décrivez brièvement votre parcours, vos objectifs, et pourquoi ce mentor vous intéresse.
-                </p>
+
+                    <!-- Info processus -->
+                    <div class="bg-numeria-or/8 dark:bg-numeria-or/10 border border-numeria-or/25 rounded-xl p-4">
+                        <p class="text-xs font-bold text-numeria-or mb-2">ℹ️ {% trans "À propos du processus" %}</p>
+                        <ul class="text-xs text-gray-600 dark:text-gray-300 space-y-1">
+                            <li>· {% trans "Le mentor recevra votre demande et pourra l'accepter ou la refuser" %}</li>
+                            <li>· {% trans "Vous serez notifié de la réponse" %}</li>
+                            <li>· {% trans "Une fois acceptée, vous pourrez planifier des séances de mentorat" %}</li>
+                            <li>· {% trans "Le mentorat est gratuit et basé sur le volontariat" %}</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <button type="submit"
+                                style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                class="flex-1 bg-numeria-teal text-numeria-bleu px-8 py-3 rounded-xl hover:bg-teal-300 transition-colors text-sm text-center">
+                            ✉️ {% trans "Envoyer la demande" %}
+                        </button>
+                        <a href="{% url 'mentorat:detail_mentor' mentor.pk %}"
+                           class="flex-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors px-6 py-3 border border-gray-200 dark:border-gray-600 rounded-xl text-center text-sm">
+                            {% trans "Annuler" %}
+                        </a>
+                    </div>
+                </form>
             </div>
 
-            <!-- Boutons -->
-            <div class="flex space-x-4">
-                <button type="submit" class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors">
-                    Envoyer la demande
-                </button>
-                <a href="{% url 'mentorat:detail_mentor' mentor.pk %}" class="flex-1 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-semibold text-center hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
-                    Annuler
-                </a>
-            </div>
-        </form>
-
-        <!-- Informations importantes -->
-        <div class="mt-8 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-            <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-2">
-                ℹ️ À propos du processus
-            </h3>
-            <ul class="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                <li>• Le mentor recevra votre demande et pourra l'accepter ou la refuser</li>
-                <li>• Vous serez notifié par email de la réponse</li>
-                <li>• Une fois acceptée, vous pourrez planifier des séances de mentorat</li>
-                <li>• Le mentorat est gratuit et basé sur le volontariat</li>
-            </ul>
         </div>
     </div>
-</div>
+</section>
 
-<style>
-/* Style pour les textareas */
-textarea {
-    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white;
-}
-</style>
 {% endblock %}

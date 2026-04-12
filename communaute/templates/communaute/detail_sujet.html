@@ -1,45 +1,49 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block titre %}{{ sujet.titre }} - {% trans "Communauté" %} Numeria{% endblock %}
+{% block titre %}{{ sujet.titre }} — {% trans "Communauté" %} Numeria{% endblock %}
 {% block meta_description %}{% blocktrans with titre=sujet.titre %}Discussion : {{ titre }} dans la communauté Numeria Institute.{% endblocktrans %}{% endblock %}
 
 {% block contenu %}
-
-<!-- CSRF token pour les votes Ajax -->
 {% csrf_token %}
 
 <!-- ===== HEADER ===== -->
-<section class="bg-numeria-bleu text-white w-full">
-    <div class="w-full px-4 sm:px-8 lg:px-16 py-10">
-        <nav class="mb-5">
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
+    <div style="position:absolute;top:-60px;right:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-10 relative">
+        <nav class="mb-4">
             <a href="{{ sujet.categorie.get_absolute_url }}" class="text-blue-300 hover:text-numeria-teal transition-colors text-sm flex items-center gap-1.5 w-fit">
                 ← {{ sujet.categorie.nom }}
             </a>
         </nav>
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div class="flex-1">
+                <!-- Status badges -->
                 <div class="flex flex-wrap items-center gap-2 mb-3">
                     {% if sujet.est_epingle %}
                     <span class="bg-numeria-or/20 text-numeria-or text-xs font-bold px-3 py-1 rounded-full">📌 {% trans "Épinglé" %}</span>
                     {% endif %}
                     {% if sujet.est_ferme %}
-                    <span class="bg-red-500/20 text-red-300 text-xs font-bold px-3 py-1 rounded-full">🔒 {% trans "Sujet fermé" %}</span>
+                    <span class="bg-red-500/20 text-red-300 text-xs font-bold px-3 py-1 rounded-full">🔒 {% trans "Fermé" %}</span>
                     {% endif %}
                 </div>
-                <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-2xl md:text-3xl mb-3">{{ sujet.titre }}</h1>
+                <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-2xl md:text-3xl mb-3 leading-tight">{{ sujet.titre }}</h1>
                 <p class="text-blue-300 text-sm flex flex-wrap items-center gap-2">
                     <a href="{% url 'communaute:profil_utilisateur' sujet.auteur.username %}" class="font-semibold hover:text-numeria-teal transition-colors">{{ sujet.auteur.username }}</a>
-                    <span>·</span>
+                    <span class="text-blue-500">·</span>
                     <span>{{ sujet.date_creation|date:"d F Y, H:i" }}</span>
-                    <span>·</span>
-                    <span>{{ sujet.vues }} {% trans "vue" %}{{ sujet.vues|pluralize:"s" }}</span>
+                    <span class="text-blue-500">·</span>
+                    <span>👁 {{ sujet.vues }} {% trans "vue" %}{{ sujet.vues|pluralize:"s" }}</span>
+                    {% if page_obj %}
+                    <span class="text-blue-500">·</span>
+                    <span>💬 {{ page_obj.paginator.count|add:"-1" }} {% trans "réponse" %}{{ page_obj.paginator.count|add:"-1"|pluralize }}</span>
+                    {% endif %}
                 </p>
             </div>
             {% if user.is_authenticated and not sujet.est_ferme %}
             <a href="{% url 'communaute:repondre_sujet' sujet.pk %}"
                style="font-family:'Outfit',sans-serif;font-weight:700;"
                class="bg-numeria-teal text-numeria-bleu px-6 py-3 rounded-xl hover:bg-teal-300 transition-colors flex-shrink-0 text-sm">
-                {% trans "Répondre" %} →
+                💬 {% trans "Répondre" %}
             </a>
             {% endif %}
         </div>
@@ -48,62 +52,74 @@
 
 <!-- ===== QUESTION INITIALE ===== -->
 {% if page_obj %}
-<section class="w-full py-10 bg-white dark:bg-gray-800 border-b border-numeria-bleu/20">
+<section class="w-full py-10 bg-white dark:bg-gray-800">
     <div class="w-full px-4 sm:px-8 lg:px-16">
         <div class="max-w-4xl mx-auto">
             {% with question=page_obj.0 %}
-            <div class="bg-gradient-to-br from-numeria-bleu/6 to-numeria-teal/4 dark:from-numeria-bleu/20 dark:to-numeria-teal/10 border border-numeria-bleu/15 dark:border-numeria-bleu/40 rounded-2xl p-8" id="message-{{ question.pk }}">
-                <div class="inline-flex items-center gap-2 bg-numeria-bleu text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-6">
-                    ❓ {% trans "Question initiale" %}
-                </div>
-                <div class="flex items-start justify-between mb-6 gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-numeria-bleu rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-                            {{ question.auteur.username|first|upper }}
-                        </div>
-                        <div>
-                            <a href="{% url 'communaute:profil_utilisateur' question.auteur.username %}"
-                               class="font-bold text-numeria-bleu dark:text-white hover:text-numeria-teal transition-colors">
-                                {{ question.auteur.username }}
-                            </a>
-                            <div class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                                {{ question.date_creation|date:"d F Y, H:i" }}
-                                {% if question.est_edite %}<span class="ml-2 text-xs">({% trans "modifié" %})</span>{% endif %}
+            <div class="relative rounded-2xl overflow-hidden border-2 border-numeria-bleu/20 dark:border-numeria-bleu/40" id="message-{{ question.pk }}">
+                <!-- Accent bar -->
+                <div class="h-1.5 bg-gradient-to-r from-numeria-bleu via-numeria-teal to-numeria-or"></div>
+                <div class="bg-gradient-to-br from-numeria-bleu/5 to-numeria-teal/3 dark:from-numeria-bleu/15 dark:to-numeria-teal/8 p-8">
+
+                    <!-- "Original question" label -->
+                    <div class="inline-flex items-center gap-2 bg-numeria-bleu text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-widest mb-6">
+                        ❓ {% trans "Question initiale" %}
+                    </div>
+
+                    <!-- Author row -->
+                    <div class="flex items-start justify-between mb-6 gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-numeria-bleu rounded-2xl flex items-center justify-center text-white font-black text-xl flex-shrink-0 shadow-lg">
+                                {{ question.auteur.username|first|upper }}
+                            </div>
+                            <div>
+                                <a href="{% url 'communaute:profil_utilisateur' question.auteur.username %}"
+                                   style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                   class="text-numeria-bleu dark:text-white hover:text-numeria-teal transition-colors text-base block">
+                                    {{ question.auteur.username }}
+                                </a>
+                                <div class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                                    {{ question.date_creation|date:"d F Y, H:i" }}
+                                    {% if question.est_edite %}<span class="ml-2 text-xs opacity-70">({% trans "modifié" %})</span>{% endif %}
+                                </div>
                             </div>
                         </div>
+                        {% if user.is_authenticated and user == question.auteur %}
+                        <a href="{% url 'communaute:modifier_message' question.pk %}"
+                           class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-teal transition-colors text-sm flex items-center gap-1 flex-shrink-0">
+                            ✏️ {% trans "Modifier" %}
+                        </a>
+                        {% endif %}
                     </div>
-                    {% if user.is_authenticated and user == question.auteur %}
-                    <a href="{% url 'communaute:modifier_message' question.pk %}"
-                       class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-teal transition-colors text-sm flex-shrink-0">
-                        ✏️ {% trans "Modifier" %}
-                    </a>
-                    {% endif %}
-                </div>
-                <div class="prose prose-gray dark:prose-invert max-w-none text-gray-700 dark:text-gray-200 leading-relaxed text-base">
-                    {{ question.contenu|linebreaks }}
-                </div>
-                <!-- Votes question initiale -->
-                <div class="flex items-center gap-3 mt-6 pt-5 border-t border-numeria-bleu/10 dark:border-white/10">
-                    <span class="text-xs text-gray-400 font-medium uppercase tracking-wider">{% trans "Utile ?" %}</span>
-                    <div class="flex items-center gap-2" id="votes-{{ question.pk }}">
-                        <button data-message-id="{{ question.pk }}" data-valeur="1"
-                                id="like-btn-{{ question.pk }}"
-                                class="vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all
-                                       {% if question.user_vote == 1 %}bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 ring-1 ring-green-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-green-50 hover:text-green-600{% endif %}"
-                                {% if not user.is_authenticated or user == question.auteur %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
-                            👍 <span id="likes-{{ question.pk }}">{{ question.nombre_likes }}</span>
-                        </button>
-                        <button data-message-id="{{ question.pk }}" data-valeur="-1"
-                                id="dislike-btn-{{ question.pk }}"
-                                class="vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all
-                                       {% if question.user_vote == -1 %}bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 ring-1 ring-red-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-50 hover:text-red-600{% endif %}"
-                                {% if not user.is_authenticated or user == question.auteur %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
-                            👎 <span id="dislikes-{{ question.pk }}">{{ question.nombre_dislikes }}</span>
-                        </button>
+
+                    <!-- Content -->
+                    <div class="text-gray-700 dark:text-gray-200 leading-relaxed text-base">
+                        {{ question.contenu|linebreaks }}
                     </div>
-                    {% if not user.is_authenticated %}
-                    <a href="{% url 'comptes:connexion' %}" class="text-xs text-numeria-teal hover:underline">{% trans "Connectez-vous pour voter" %}</a>
-                    {% endif %}
+
+                    <!-- Vote bar -->
+                    <div class="flex items-center gap-4 mt-7 pt-6 border-t border-numeria-bleu/10 dark:border-white/10">
+                        <span class="text-xs text-gray-400 font-bold uppercase tracking-wider">{% trans "Utile ?" %}</span>
+                        <div class="flex items-center gap-2" id="votes-{{ question.pk }}">
+                            <button data-message-id="{{ question.pk }}" data-valeur="1"
+                                    id="like-btn-{{ question.pk }}"
+                                    class="vote-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all
+                                           {% if question.user_vote == 1 %}bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 ring-2 ring-green-300 dark:ring-green-700{% else %}bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-600 hover:bg-green-50 hover:text-green-600 hover:border-green-200{% endif %}"
+                                    {% if not user.is_authenticated or user == question.auteur %}disabled style="opacity:0.45;cursor:not-allowed;"{% endif %}>
+                                👍 <span id="likes-{{ question.pk }}">{{ question.nombre_likes }}</span>
+                            </button>
+                            <button data-message-id="{{ question.pk }}" data-valeur="-1"
+                                    id="dislike-btn-{{ question.pk }}"
+                                    class="vote-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all
+                                           {% if question.user_vote == -1 %}bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-300 ring-2 ring-red-300 dark:ring-red-700{% else %}bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-200{% endif %}"
+                                    {% if not user.is_authenticated or user == question.auteur %}disabled style="opacity:0.45;cursor:not-allowed;"{% endif %}>
+                                👎 <span id="dislikes-{{ question.pk }}">{{ question.nombre_dislikes }}</span>
+                            </button>
+                        </div>
+                        {% if not user.is_authenticated %}
+                        <a href="{% url 'comptes:connexion' %}" class="text-xs text-numeria-teal hover:underline">{% trans "Connectez-vous pour voter" %}</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             {% endwith %}
@@ -111,85 +127,113 @@
     </div>
 </section>
 
-<!-- ===== RÉPONSES ===== -->
+<!-- ===== RÉPONSES (timeline) ===== -->
 {% if page_obj.paginator.count > 1 %}
-<section class="w-full py-10 bg-numeria-blanc dark:bg-gray-900" id="reponses">
+<section class="w-full pb-10 bg-numeria-blanc dark:bg-gray-900" id="reponses">
     <div class="w-full px-4 sm:px-8 lg:px-16">
         <div class="max-w-4xl mx-auto">
 
-            <div class="flex items-center gap-3 mb-8">
-                <span class="text-2xl">💬</span>
-                <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-xl text-numeria-bleu dark:text-white">
-                    {{ page_obj.paginator.count|add:"-1" }} {% trans "réponse" %}{{ page_obj.paginator.count|add:"-1"|pluralize }}
-                </h2>
+            <!-- Replies count header -->
+            <div class="flex items-center gap-3 py-8">
+                <div class="h-px flex-1 bg-gray-200 dark:bg-gray-700"></div>
+                <div class="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-2">
+                    <span class="text-lg">💬</span>
+                    <span style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-sm text-numeria-bleu dark:text-white">
+                        {{ page_obj.paginator.count|add:"-1" }} {% trans "réponse" %}{{ page_obj.paginator.count|add:"-1"|pluralize }}
+                    </span>
+                </div>
+                <div class="h-px flex-1 bg-gray-200 dark:bg-gray-700"></div>
             </div>
 
-            <div class="space-y-5">
-                {% for message in page_obj %}
-                {% if forloop.counter > 1 %}
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 hover:shadow-md transition-all" id="message-{{ message.pk }}">
-                    <!-- En-tête -->
-                    <div class="flex items-start justify-between mb-5 gap-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu font-bold flex-shrink-0">
-                                {{ message.auteur.username|first|upper }}
+            <!-- Timeline replies -->
+            <div class="relative">
+                <!-- Vertical timeline line -->
+                <div class="absolute top-0 bottom-0 left-7 w-0.5 bg-gray-200 dark:bg-gray-700 hidden md:block"></div>
+
+                <div class="space-y-5">
+                    {% for message in page_obj %}
+                    {% if forloop.counter > 1 %}
+                    {% cycle 'bg-numeria-teal' 'bg-purple-500' 'bg-pink-500' 'bg-amber-500' 'bg-blue-500' 'bg-emerald-500' as reply_avatar_bg silent %}
+
+                    <div class="relative md:pl-16" id="message-{{ message.pk }}">
+                        <!-- Timeline dot -->
+                        <div class="hidden md:flex absolute left-4 top-5 w-6 h-6 rounded-full {{ reply_avatar_bg }} items-center justify-center text-white text-xs font-black ring-4 ring-numeria-blanc dark:ring-gray-900 z-10">
+                            {{ message.auteur.username|first|upper }}
+                        </div>
+
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all p-6">
+                            <!-- Header -->
+                            <div class="flex items-start justify-between mb-4 gap-4">
+                                <div class="flex items-center gap-3">
+                                    <!-- Mobile avatar -->
+                                    <div class="md:hidden w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-sm flex-shrink-0 {{ reply_avatar_bg }}">
+                                        {{ message.auteur.username|first|upper }}
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <a href="{% url 'communaute:profil_utilisateur' message.auteur.username %}"
+                                               style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                               class="text-numeria-bleu dark:text-white hover:text-numeria-teal transition-colors text-sm">
+                                                {{ message.auteur.username }}
+                                            </a>
+                                            {% if message.auteur == sujet.auteur %}
+                                            <span class="bg-numeria-teal/15 text-numeria-teal text-xs font-bold px-2 py-0.5 rounded-full">⭐ {% trans "Auteur" %}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                                            {{ message.date_creation|date:"d F Y, H:i" }}
+                                            {% if message.est_edite %}<span class="ml-1 opacity-70">({% trans "modifié" %})</span>{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if user.is_authenticated and user == message.auteur %}
+                                <a href="{% url 'communaute:modifier_message' message.pk %}"
+                                   class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-teal transition-colors text-xs flex items-center gap-1 flex-shrink-0">
+                                    ✏️ {% trans "Modifier" %}
+                                </a>
+                                {% endif %}
                             </div>
-                            <div>
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <a href="{% url 'communaute:profil_utilisateur' message.auteur.username %}"
-                                       class="font-semibold text-numeria-bleu dark:text-white hover:text-numeria-teal transition-colors text-sm">
-                                        {{ message.auteur.username }}
-                                    </a>
-                                    {% if message.auteur == sujet.auteur %}
-                                    <span class="bg-numeria-teal/15 text-numeria-teal text-xs font-bold px-2 py-0.5 rounded-full">⭐ {% trans "Auteur" %}</span>
-                                    {% endif %}
+
+                            <!-- Content -->
+                            <div class="text-gray-700 dark:text-gray-200 leading-relaxed text-sm">
+                                {{ message.contenu|linebreaks }}
+                            </div>
+
+                            <!-- Vote bar -->
+                            <div class="flex items-center gap-2 mt-5 pt-4 border-t border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center gap-2" id="votes-{{ message.pk }}">
+                                    <button data-message-id="{{ message.pk }}" data-valeur="1"
+                                            id="like-btn-{{ message.pk }}"
+                                            class="vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
+                                                   {% if message.user_vote == 1 %}bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 ring-1 ring-green-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-green-50 hover:text-green-600{% endif %}"
+                                            {% if not user.is_authenticated or user == message.auteur %}disabled style="opacity:0.45;cursor:not-allowed;"{% endif %}>
+                                        👍 <span id="likes-{{ message.pk }}">{{ message.nombre_likes }}</span>
+                                    </button>
+                                    <button data-message-id="{{ message.pk }}" data-valeur="-1"
+                                            id="dislike-btn-{{ message.pk }}"
+                                            class="vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
+                                                   {% if message.user_vote == -1 %}bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-300 ring-1 ring-red-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-50 hover:text-red-600{% endif %}"
+                                            {% if not user.is_authenticated or user == message.auteur %}disabled style="opacity:0.45;cursor:not-allowed;"{% endif %}>
+                                        👎 <span id="dislikes-{{ message.pk }}">{{ message.nombre_dislikes }}</span>
+                                    </button>
                                 </div>
-                                <div class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                                    {{ message.date_creation|date:"d F Y, H:i" }}
-                                    {% if message.est_edite %}<span class="ml-1">({% trans "modifié" %})</span>{% endif %}
-                                </div>
+                                <!-- Helpful badge -->
+                                {% if message.nombre_likes >= 3 %}
+                                <span class="ml-auto text-xs bg-numeria-or/10 text-numeria-or font-bold px-2 py-1 rounded-full">
+                                    ✨ {% trans "Utile" %}
+                                </span>
+                                {% endif %}
                             </div>
                         </div>
-                        {% if user.is_authenticated and user == message.auteur %}
-                        <a href="{% url 'communaute:modifier_message' message.pk %}"
-                           class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-teal transition-colors text-xs flex-shrink-0">
-                            ✏️ {% trans "Modifier" %}
-                        </a>
-                        {% endif %}
                     </div>
-
-                    <!-- Contenu -->
-                    <div class="prose prose-gray dark:prose-invert max-w-none text-gray-700 dark:text-gray-200 leading-relaxed text-sm">
-                        {{ message.contenu|linebreaks }}
-                    </div>
-
-                    <!-- Votes -->
-                    <div class="flex items-center gap-3 mt-5 pt-4 border-t border-gray-100 dark:border-gray-700">
-                        <div class="flex items-center gap-2" id="votes-{{ message.pk }}">
-                            <button data-message-id="{{ message.pk }}" data-valeur="1"
-                                    id="like-btn-{{ message.pk }}"
-                                    class="vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
-                                           {% if message.user_vote == 1 %}bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 ring-1 ring-green-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-green-50 hover:text-green-600{% endif %}"
-                                    {% if not user.is_authenticated or user == message.auteur %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
-                                👍 <span id="likes-{{ message.pk }}">{{ message.nombre_likes }}</span>
-                            </button>
-                            <button data-message-id="{{ message.pk }}" data-valeur="-1"
-                                    id="dislike-btn-{{ message.pk }}"
-                                    class="vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
-                                           {% if message.user_vote == -1 %}bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 ring-1 ring-red-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-50 hover:text-red-600{% endif %}"
-                                    {% if not user.is_authenticated or user == message.auteur %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
-                                👎 <span id="dislikes-{{ message.pk }}">{{ message.nombre_dislikes }}</span>
-                            </button>
-                        </div>
-                    </div>
+                    {% endif %}
+                    {% endfor %}
                 </div>
-                {% endif %}
-                {% endfor %}
             </div>
 
             <!-- Pagination -->
             {% if page_obj.has_other_pages %}
-            <div class="mt-8 flex justify-center gap-2">
+            <div class="mt-10 flex justify-center gap-2">
                 {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}#reponses"
                    class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors text-sm">
@@ -219,7 +263,7 @@
 {% endif %}
 {% endif %}
 
-<!-- ===== BOUTON RÉPONDRE EN BAS ===== -->
+<!-- ===== CTA RÉPONDRE ===== -->
 {% if user.is_authenticated and not sujet.est_ferme %}
 <section class="w-full py-10 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
     <div class="w-full px-4 sm:px-8 lg:px-16 text-center">
@@ -227,7 +271,7 @@
         <a href="{% url 'communaute:repondre_sujet' sujet.pk %}"
            style="font-family:'Outfit',sans-serif;font-weight:700;"
            class="bg-numeria-bleu text-white px-8 py-3.5 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors inline-block">
-            {% trans "Répondre à ce sujet" %} →
+            💬 {% trans "Répondre à ce sujet" %}
         </a>
     </div>
 </section>
@@ -240,7 +284,7 @@
 {% elif not user.is_authenticated %}
 <section class="w-full py-10 bg-numeria-bleu/5 dark:bg-gray-800 border-t border-numeria-bleu/10 dark:border-gray-700">
     <div class="w-full px-4 sm:px-8 lg:px-16 text-center">
-        <p class="text-gray-600 dark:text-gray-300 mb-4">{% trans "Connectez-vous pour participer à la discussion." %}</p>
+        <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm">{% trans "Connectez-vous pour participer à la discussion." %}</p>
         <a href="{% url 'comptes:connexion' %}?next={{ request.path }}"
            style="font-family:'Outfit',sans-serif;font-weight:700;"
            class="bg-numeria-bleu text-white px-8 py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors inline-block text-sm">
@@ -255,17 +299,27 @@
 (function () {
     var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-    var BASE_LIKE    = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-green-50 hover:text-green-600';
-    var BASE_DISLIKE = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-50 hover:text-red-600';
-    var ACTIVE_LIKE    = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 ring-1 ring-green-300';
-    var ACTIVE_DISLIKE = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 ring-1 ring-red-300';
+    var BASE_LIKE    = 'vote-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-600 hover:bg-green-50 hover:text-green-600 hover:border-green-200';
+    var BASE_DISLIKE = 'vote-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-200';
+    var ACTIVE_LIKE    = 'vote-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 ring-2 ring-green-300 dark:ring-green-700';
+    var ACTIVE_DISLIKE = 'vote-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-300 ring-2 ring-red-300 dark:ring-red-700';
+
+    var BASE_LIKE_SM    = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-green-50 hover:text-green-600';
+    var BASE_DISLIKE_SM = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-50 hover:text-red-600';
+    var ACTIVE_LIKE_SM    = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 ring-1 ring-green-300';
+    var ACTIVE_DISLIKE_SM = 'vote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-300 ring-1 ring-red-300';
+
+    function isLargeBtn(btn) {
+        return btn.className.indexOf('px-4') !== -1;
+    }
 
     function refreshBtns(messageId, voteUtilisateur) {
         var likeBtn    = document.getElementById('like-btn-'    + messageId);
         var dislikeBtn = document.getElementById('dislike-btn-' + messageId);
         if (!likeBtn || !dislikeBtn) return;
-        likeBtn.className    = (voteUtilisateur ===  1) ? ACTIVE_LIKE    : BASE_LIKE;
-        dislikeBtn.className = (voteUtilisateur === -1) ? ACTIVE_DISLIKE : BASE_DISLIKE;
+        var large = isLargeBtn(likeBtn);
+        likeBtn.className    = (voteUtilisateur ===  1) ? (large ? ACTIVE_LIKE    : ACTIVE_LIKE_SM)    : (large ? BASE_LIKE    : BASE_LIKE_SM);
+        dislikeBtn.className = (voteUtilisateur === -1) ? (large ? ACTIVE_DISLIKE : ACTIVE_DISLIKE_SM) : (large ? BASE_DISLIKE : BASE_DISLIKE_SM);
     }
 
     document.addEventListener('click', function (e) {
@@ -277,10 +331,7 @@
 
         fetch('/communaute/message/' + messageId + '/voter/', {
             method: 'POST',
-            headers: {
-                'X-CSRFToken': csrfToken,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
+            headers: {'X-CSRFToken': csrfToken, 'Content-Type': 'application/x-www-form-urlencoded'},
             body: 'valeur=' + valeur
         })
         .then(function (r) { return r.json(); })

@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
-"Report-Msgid-Bugs-To: contact@numeriainstitute.com\n"
-"POT-Creation-Date: 2026-04-12 14:14+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-12 21:50+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -15,11 +15,753 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: admissions/templates/admissions/candidature.html:3
+#, fuzzy
+#| msgid "Candidatures"
+msgid "Candidature"
+msgstr "Applications"
+
+#: admissions/templates/admissions/candidature.html:11
+#, fuzzy
+#| msgid "Retour aux forums"
+msgid "Retour à la formation"
+msgstr "Back to forums"
+
+#: admissions/templates/admissions/candidature.html:17
+msgid "Formulaire de candidature"
+msgstr "Application form"
+
+#: admissions/templates/admissions/candidature.html:22
+#, python-format
+msgid "Frais de candidature payés : %(montant)s FCFA"
+msgstr "Application fee paid: %(montant)s FCFA"
+
+#: admissions/templates/admissions/candidature.html:72
+#, fuzzy
+#| msgid "Informations"
+msgid "Informations personnelles"
+msgstr "Information"
+
+#: admissions/templates/admissions/candidature.html:130
+msgid "Parcours académique"
+msgstr "Academic background"
+
+#: admissions/templates/admissions/candidature.html:162
+msgid "Documents"
+msgstr "Documents"
+
+#: admissions/templates/admissions/candidature.html:204
+#, fuzzy
+#| msgid "Question initiale"
+msgid "Questions"
+msgstr "Original question"
+
+#: admissions/templates/admissions/candidature.html:242
+msgid "Soumettre ma candidature"
+msgstr "Submit my application"
+
+#: admissions/templates/admissions/detail_candidature.html:14
+msgid "Retour à mes candidatures"
+msgstr "Back to my applications"
+
+#: admissions/templates/admissions/detail_candidature.html:27
+msgid "Statut"
+msgstr "Status"
+
+#: admissions/templates/admissions/detail_candidature.html:39
+msgid "Félicitations !"
+msgstr "Congratulations!"
+
+#: admissions/templates/admissions/detail_candidature.html:41
+msgid ""
+"Votre candidature a été acceptée. Vous recevrez prochainement un email avec "
+"les prochaines étapes."
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:48
+msgid ""
+"Vous êtes sur liste d'attente. Nous vous tiendrons informé dès qu'une place "
+"se libère."
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:55
+msgid "Nous sommes désolés, votre candidature n'a pas été retenue cette année."
+msgstr "We are sorry, your application was not selected this year."
+
+#: admissions/templates/admissions/detail_candidature.html:62
+msgid "Récapitulatif"
+msgstr "Summary"
+
+#: admissions/templates/admissions/detail_candidature.html:65
+msgid "Nom complet"
+msgstr "Full name"
+
+#: admissions/templates/admissions/detail_candidature.html:66
+#, fuzzy
+#| msgid "Mot de passe"
+msgid "Date de naissance"
+msgstr "Password"
+
+#: admissions/templates/admissions/detail_candidature.html:67
+msgid "Téléphone"
+msgstr "Phone"
+
+#: admissions/templates/admissions/detail_candidature.html:69
+#: comptes/forms.py:114 comptes/forms.py:212
+#: mentorat/templates/mentorat/detail_mentor.html:127
+msgid "Pays"
+msgstr "Country"
+
+#: admissions/templates/admissions/detail_candidature.html:70
+msgid "Dernier établissement"
+msgstr "Last institution attended"
+
+#: admissions/templates/admissions/detail_candidature.html:71
+#: communaute/templates/communaute/modifier_profil.html:71
+#: communaute/templates/communaute/profil_utilisateur.html:99
+#: comptes/forms.py:214
+msgid "Niveau d'études"
+msgstr "Education level"
+
+#: admissions/templates/admissions/detail_candidature.html:73
+msgid "Moyenne générale"
+msgstr "Overall average"
+
+#: admissions/templates/admissions/detail_candidature.html:75
+#, fuzzy
+#| msgid "Navigation"
+msgid "Motivation"
+msgstr "Navigation"
+
+#: admissions/templates/admissions/detail_candidature.html:82
+#, fuzzy
+#| msgid "Membre de la communauté Numeria"
+msgid "Message de l'équipe Numeria"
+msgstr "Numeria community member"
+
+#: admissions/templates/admissions/mes_candidatures.html:3
+#: admissions/templates/admissions/mes_candidatures.html:12
+#, fuzzy
+#| msgid "Candidatures"
+msgid "Mes candidatures"
+msgstr "Applications"
+
+#: admissions/templates/admissions/mes_candidatures.html:17
+#, fuzzy
+#| msgid "Nouvelle catégorie"
+msgid "Nouvelle candidature"
+msgstr "New category"
+
+#: admissions/templates/admissions/mes_candidatures.html:33
+msgid "Soumise le"
+msgstr "Submitted on"
+
+#: admissions/templates/admissions/mes_candidatures.html:52
+#, fuzzy
+#| msgid "Voir les sujets"
+msgid "Voir le détail"
+msgstr "View topics"
+
+#: admissions/templates/admissions/mes_candidatures.html:66
+msgid "Aucune candidature soumise"
+msgstr "No application submitted"
+
+#: admissions/templates/admissions/mes_candidatures.html:69
+msgid "Vous n'avez encore soumis aucune candidature."
+msgstr "You haven't submitted any application yet."
+
+#: admissions/templates/admissions/mes_candidatures.html:74
+#, fuzzy
+#| msgid "Voir tous les mentors disponibles"
+msgid "Voir les formations disponibles"
+msgstr "View all available mentors"
+
+#: communaute/templates/communaute/creer_categorie.html:3
+#: communaute/templates/communaute/creer_categorie.html:20
+#, fuzzy
+#| msgid "Créer la première catégorie"
+msgid "Créer une catégorie"
+msgstr "Create the first category"
+
+#: communaute/templates/communaute/creer_categorie.html:3
+#: communaute/templates/communaute/creer_sujet.html:3
+#: communaute/templates/communaute/detail_categorie.html:3
+#: communaute/templates/communaute/detail_sujet.html:3
+#: communaute/templates/communaute/liste_categories.html:3
+#: communaute/templates/communaute/liste_categories.html:41
+#: communaute/templates/communaute/modifier_message.html:3
+#: communaute/templates/communaute/modifier_profil.html:3
+#: comptes/templates/comptes/inscription.html:248 templates/base.html:211
+#: templates/base.html:292 templates/base.html:373
+msgid "Communauté"
+msgstr "Community"
+
+#: communaute/templates/communaute/creer_categorie.html:4
+msgid ""
+"Créer une nouvelle catégorie de forum dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:14
+#: communaute/templates/communaute/creer_sujet.html:14
+#: communaute/templates/communaute/detail_categorie.html:14
+#: communaute/templates/communaute/profil_utilisateur.html:14
+msgid "Retour aux forums"
+msgstr "Back to forums"
+
+#: communaute/templates/communaute/creer_categorie.html:18
+msgid "Modérateurs uniquement"
+msgstr "Moderators only"
+
+#: communaute/templates/communaute/creer_categorie.html:21
+msgid ""
+"Seuls les modérateurs peuvent ajouter de nouvelles catégories de discussion."
+msgstr "Only moderators can add new discussion categories."
+
+#: communaute/templates/communaute/creer_categorie.html:37
+msgid "Nom de la catégorie"
+msgstr "Category name"
+
+#: communaute/templates/communaute/creer_categorie.html:47
+#: mentorat/templates/mentorat/planifier_seance.html:52
+msgid "Description"
+msgstr "Description"
+
+#: communaute/templates/communaute/creer_categorie.html:58
+msgid "Ordre d'affichage"
+msgstr "Display order"
+
+#: communaute/templates/communaute/creer_categorie.html:67
+msgid "Activer cette catégorie"
+msgstr "Activate this category"
+
+#: communaute/templates/communaute/creer_categorie.html:75
+msgid "Enregistrer la catégorie"
+msgstr "Save category"
+
+#: communaute/templates/communaute/creer_categorie.html:79
+#: communaute/templates/communaute/creer_sujet.html:78
+#: communaute/templates/communaute/modifier_message.html:50
+#: communaute/templates/communaute/modifier_profil.html:100
+#: communaute/templates/communaute/modifier_sujet.html:70
+#: communaute/templates/communaute/repondre_sujet.html:71
+#: mentorat/templates/mentorat/demander_mentorat.html:94
+#: mentorat/templates/mentorat/devenir_mentee.html:75
+#: mentorat/templates/mentorat/devenir_mentor.html:86
+#: mentorat/templates/mentorat/planifier_seance.html:99
+#: mentorat/templates/mentorat/terminer_relation.html:79
+#: mentorat/templates/mentorat/terminer_seance.html:66
+msgid "Annuler"
+msgstr "Cancel"
+
+#: communaute/templates/communaute/creer_sujet.html:3
+#: communaute/templates/communaute/liste_categories.html:68
+msgid "Créer un sujet"
+msgstr "Create a topic"
+
+#: communaute/templates/communaute/creer_sujet.html:4
+msgid ""
+"Créez un nouveau sujet de discussion dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:17
+msgid "Créer un nouveau sujet"
+msgstr "Create a new topic"
+
+#: communaute/templates/communaute/creer_sujet.html:18
+msgid "Partagez vos questions, idées ou découvertes avec la communauté"
+msgstr "Share your questions, ideas or discoveries with the community"
+
+#: communaute/templates/communaute/creer_sujet.html:38
+#: communaute/templates/communaute/modifier_sujet.html:34
+msgid "Titre du sujet"
+msgstr "Topic title"
+
+#: communaute/templates/communaute/creer_sujet.html:49
+#: communaute/templates/communaute/detail_categorie.html:20
+#: communaute/templates/communaute/modifier_sujet.html:44
+msgid "Catégorie"
+msgstr "Category"
+
+#: communaute/templates/communaute/creer_sujet.html:60
+msgid "Message initial"
+msgstr "Opening message"
+
+#: communaute/templates/communaute/creer_sujet.html:66
+msgid ""
+"Décrivez votre sujet en détail. Vous pourrez ajouter des réponses par la "
+"suite."
+msgstr "Describe your topic in detail. You can add replies later."
+
+#: communaute/templates/communaute/creer_sujet.html:74
+msgid "Publier le sujet"
+msgstr "Publish topic"
+
+#: communaute/templates/communaute/creer_sujet.html:90
+msgid "Conseils"
+msgstr "Tips"
+
+#: communaute/templates/communaute/creer_sujet.html:93
+msgid "Choisissez un titre clair et descriptif"
+msgstr "Choose a clear, descriptive title"
+
+#: communaute/templates/communaute/creer_sujet.html:94
+msgid "Sélectionnez la catégorie appropriée"
+msgstr "Select the appropriate category"
+
+#: communaute/templates/communaute/creer_sujet.html:95
+msgid "Fournissez autant de détails que possible"
+msgstr "Provide as much detail as possible"
+
+#: communaute/templates/communaute/creer_sujet.html:96
+msgid "Respectez les autres membres"
+msgstr "Respect other members"
+
+#: communaute/templates/communaute/creer_sujet.html:97
+msgid "Utilisez un langage approprié"
+msgstr "Use appropriate language"
+
+#: communaute/templates/communaute/detail_categorie.html:4
+#, python-format
+msgid ""
+"Sujets de discussion dans la catégorie %(nom)s de la communauté Numeria "
+"Institute."
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:32
+msgid "Nouveau sujet"
+msgstr "New topic"
+
+#: communaute/templates/communaute/detail_categorie.html:39
+#: communaute/templates/communaute/liste_categories.html:74
+msgid "Nouvelle catégorie"
+msgstr "New category"
+
+#: communaute/templates/communaute/detail_categorie.html:55
+msgid "Sujet"
+msgstr "Topic"
+
+#: communaute/templates/communaute/detail_categorie.html:56
+msgid "Réponses"
+msgstr "Replies"
+
+#: communaute/templates/communaute/detail_categorie.html:57
+msgid "Activité"
+msgstr "Activity"
+
+#: communaute/templates/communaute/detail_categorie.html:89
+#: communaute/templates/communaute/detail_sujet.html:23
+msgid "Épinglé"
+msgstr "Pinned"
+
+#: communaute/templates/communaute/detail_categorie.html:92
+#: communaute/templates/communaute/detail_sujet.html:26
+msgid "Fermé"
+msgstr "Closed"
+
+#: communaute/templates/communaute/detail_categorie.html:134
+msgid "rép."
+msgstr "repl."
+
+#: communaute/templates/communaute/detail_categorie.html:162
+#: communaute/templates/communaute/detail_sujet.html:240
+#: mentorat/templates/mentorat/liste_mentors.html:166
+msgid "Précédent"
+msgstr "Previous"
+
+#: communaute/templates/communaute/detail_categorie.html:176
+#: communaute/templates/communaute/detail_sujet.html:254
+#: mentorat/templates/mentorat/liste_mentors.html:175
+msgid "Suivant"
+msgstr "Next"
+
+#: communaute/templates/communaute/detail_categorie.html:189
+#, fuzzy
+#| msgid "Aucun cours disponible pour le moment."
+msgid "Aucun sujet pour le moment"
+msgstr "No courses available at the moment."
+
+#: communaute/templates/communaute/detail_categorie.html:191
+msgid "Soyez le premier à lancer une discussion !"
+msgstr "Be the first to start a discussion!"
+
+#: communaute/templates/communaute/detail_categorie.html:196
+msgid "Créer le premier sujet"
+msgstr "Create the first topic"
+
+#: communaute/templates/communaute/detail_categorie.html:202
+msgid "Se connecter pour créer un sujet"
+msgstr "Log in to create a topic"
+
+#: communaute/templates/communaute/detail_sujet.html:4
+#, python-format
+msgid "Discussion : %(titre)s dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:35
+msgid "vue"
+msgstr "view"
+
+#: communaute/templates/communaute/detail_sujet.html:38
+#: communaute/templates/communaute/detail_sujet.html:142
+msgid "réponse"
+msgstr "reply"
+
+#: communaute/templates/communaute/detail_sujet.html:46
+#: communaute/templates/communaute/repondre_sujet.html:3
+#: communaute/templates/communaute/repondre_sujet.html:17
+msgid "Répondre"
+msgstr "Reply"
+
+#: communaute/templates/communaute/detail_sujet.html:66
+msgid "Question initiale"
+msgstr "Original question"
+
+#: communaute/templates/communaute/detail_sujet.html:83
+#: communaute/templates/communaute/detail_sujet.html:185
+msgid "modifié"
+msgstr "edited"
+
+#: communaute/templates/communaute/detail_sujet.html:90
+#: communaute/templates/communaute/detail_sujet.html:192
+#: communaute/templates/communaute/modifier_sujet.html:3
+msgid "Modifier"
+msgstr "Edit"
+
+#: communaute/templates/communaute/detail_sujet.html:102
+msgid "Utile ?"
+msgstr "Helpful?"
+
+#: communaute/templates/communaute/detail_sujet.html:120
+msgid "Connectez-vous pour voter"
+msgstr "Log in to vote"
+
+#: communaute/templates/communaute/detail_sujet.html:180
+msgid "Auteur"
+msgstr "Author"
+
+#: communaute/templates/communaute/detail_sujet.html:223
+#, fuzzy
+#| msgid "Utile ?"
+msgid "Utile"
+msgstr "Helpful?"
+
+#: communaute/templates/communaute/detail_sujet.html:270
+msgid "Vous avez une réponse à apporter ?"
+msgstr "Do you have an answer?"
+
+#: communaute/templates/communaute/detail_sujet.html:274
+msgid "Répondre à ce sujet"
+msgstr "Reply to this topic"
+
+#: communaute/templates/communaute/detail_sujet.html:281
+msgid "Ce sujet est fermé. Aucune nouvelle réponse n'est acceptée."
+msgstr "This topic is closed. No new replies are accepted."
+
+#: communaute/templates/communaute/detail_sujet.html:287
+msgid "Connectez-vous pour participer à la discussion."
+msgstr "Log in to participate in the discussion."
+
+#: communaute/templates/communaute/detail_sujet.html:291
+#: communaute/templates/communaute/liste_categories.html:203
+#: comptes/templates/comptes/connexion.html:129
+#: comptes/templates/comptes/inscription.html:230 templates/base.html:321
+msgid "Se connecter"
+msgstr "Log in"
+
+#: communaute/templates/communaute/liste_categories.html:4
+#, fuzzy
+#| msgid ""
+#| "Échangez avec d'autres apprenants, posez vos questions et partagez vos "
+#| "connaissances en sciences, mathématiques et IA."
+msgid ""
+"Rejoignez la communauté Numeria. Échangez avec d'autres apprenants, posez "
+"vos questions et partagez vos connaissances en sciences."
+msgstr ""
+"Connect with other learners, ask your questions and share your knowledge in "
+"science, mathematics and AI."
+
+# ===== COMMUNAUTÉ =====
+#: communaute/templates/communaute/liste_categories.html:37
+msgid "Forum d'entraide"
+msgstr "Community forum"
+
+#: communaute/templates/communaute/liste_categories.html:44
+msgid ""
+"Échangez avec d'autres apprenants, posez vos questions et partagez vos "
+"connaissances en sciences, mathématiques et IA."
+msgstr ""
+"Connect with other learners, ask your questions and share your knowledge in "
+"science, mathematics and AI."
+
+#: communaute/templates/communaute/liste_categories.html:51
+#, fuzzy
+#| msgid "Sujet"
+msgid "Sujets"
+msgstr "Topic"
+
+#: communaute/templates/communaute/liste_categories.html:55
+#: env/lib/python3.12/site-packages/django/contrib/messages/apps.py:16
+msgid "Messages"
+msgstr "Messages"
+
+#: communaute/templates/communaute/liste_categories.html:59
+msgid "Membres"
+msgstr "Members"
+
+#: communaute/templates/communaute/liste_categories.html:82
+msgid "Se connecter pour participer"
+msgstr "Log in to participate"
+
+#: communaute/templates/communaute/liste_categories.html:95
+msgid "Forums de discussion"
+msgstr "Discussion forums"
+
+#: communaute/templates/communaute/liste_categories.html:98
+msgid "Choisissez un forum"
+msgstr "Choose a forum"
+
+#: communaute/templates/communaute/liste_categories.html:101
+msgid "Parcourez les catégories et rejoignez la discussion qui vous intéresse."
+msgstr "Browse the categories and join the discussion that interests you."
+
+#: communaute/templates/communaute/liste_categories.html:125
+msgid "sujet"
+msgstr "topic"
+
+#: communaute/templates/communaute/liste_categories.html:125
+#, fuzzy
+#| msgid "sujet"
+msgid "sujets"
+msgstr "topic"
+
+#: communaute/templates/communaute/liste_categories.html:128
+msgid "Vide"
+msgstr "Empty"
+
+#: communaute/templates/communaute/liste_categories.html:150
+#, fuzzy
+#| msgid "Forums de discussion"
+msgid "discussion"
+msgstr "Discussion forums"
+
+#: communaute/templates/communaute/liste_categories.html:152
+#, fuzzy
+#| msgid "Créer le premier sujet"
+msgid "Soyez le premier à poster"
+msgstr "Create the first topic"
+
+#: communaute/templates/communaute/liste_categories.html:156
+msgid "Voir"
+msgstr "View"
+
+#: communaute/templates/communaute/liste_categories.html:164
+msgid "Aucune catégorie disponible pour le moment."
+msgstr "No categories available at the moment."
+
+#: communaute/templates/communaute/liste_categories.html:169
+msgid "Créer la première catégorie"
+msgstr "Create the first category"
+
+#: communaute/templates/communaute/liste_categories.html:189
+msgid "Rejoignez la conversation"
+msgstr "Join the conversation"
+
+#: communaute/templates/communaute/liste_categories.html:192
+msgid ""
+"Créez un compte gratuit pour poser vos questions, partager vos connaissances "
+"et progresser avec la communauté."
+msgstr ""
+"Create a free account to ask questions, share knowledge and grow with the "
+"community."
+
+#: communaute/templates/communaute/liste_categories.html:198
+msgid "Créer un compte gratuit"
+msgstr "Create a free account"
+
+#: communaute/templates/communaute/modifier_message.html:3
+#: communaute/templates/communaute/modifier_message.html:17
+msgid "Modifier le message"
+msgstr "Edit message"
+
+#: communaute/templates/communaute/modifier_message.html:4
+#, fuzzy
+#| msgid "Membre de la communauté Numeria"
+msgid "Modifier votre message dans la communauté Numeria Institute."
+msgstr "Numeria community member"
+
+#: communaute/templates/communaute/modifier_message.html:14
+#: communaute/templates/communaute/modifier_sujet.html:14
+#: communaute/templates/communaute/repondre_sujet.html:14
+msgid "Retour au sujet"
+msgstr "Back to topic"
+
+#: communaute/templates/communaute/modifier_message.html:34
+msgid "Votre message"
+msgstr "Your message"
+
+#: communaute/templates/communaute/modifier_message.html:46
+#: communaute/templates/communaute/modifier_profil.html:96
+#: communaute/templates/communaute/modifier_sujet.html:66
+msgid "Enregistrer les modifications"
+msgstr "Save changes"
+
+#: communaute/templates/communaute/modifier_profil.html:3
+#: communaute/templates/communaute/modifier_profil.html:17
+#: communaute/templates/communaute/profil_utilisateur.html:42
+msgid "Modifier mon profil"
+msgstr "Edit my profile"
+
+#: communaute/templates/communaute/modifier_profil.html:4
+msgid "Personnalisez votre profil communautaire sur Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:14
+msgid "Retour à mon profil"
+msgstr "Back to my profile"
+
+#: communaute/templates/communaute/modifier_profil.html:18
+msgid "Personnalisez votre présence dans la communauté"
+msgstr "Customise your presence in the community"
+
+#: communaute/templates/communaute/modifier_profil.html:35 comptes/forms.py:210
+msgid "Photo de profil"
+msgstr "Profile photo"
+
+#: communaute/templates/communaute/modifier_profil.html:41
+msgid "Formats : JPG, PNG, GIF. Taille max : 5 Mo."
+msgstr "Formats: JPG, PNG, GIF. Max size: 5 MB."
+
+#: communaute/templates/communaute/modifier_profil.html:47 comptes/forms.py:211
+msgid "Biographie"
+msgstr "Biography"
+
+#: communaute/templates/communaute/modifier_profil.html:53
+msgid "Présentez-vous en quelques mots (optionnel)."
+msgstr "Introduce yourself in a few words (optional)."
+
+#: communaute/templates/communaute/modifier_profil.html:59
+#: communaute/templates/communaute/profil_utilisateur.html:90
+msgid "Spécialisation"
+msgstr "Specialisation"
+
+#: communaute/templates/communaute/modifier_profil.html:65
+msgid "Votre domaine d'études ou d'intérêt principal."
+msgstr "Your main field of study or interest."
+
+#: communaute/templates/communaute/modifier_profil.html:82
+#: communaute/templates/communaute/profil_utilisateur.html:108
+msgid "Site web"
+msgstr "Website"
+
+#: communaute/templates/communaute/modifier_profil.html:88
+msgid "Votre site personnel ou professionnel (optionnel)."
+msgstr "Your personal or professional website (optional)."
+
+#: communaute/templates/communaute/modifier_sujet.html:4
+#, python-format
+msgid "Modifier le sujet \"%(titre)s\" dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/modifier_sujet.html:17
+msgid "Modifier le sujet"
+msgstr "Edit topic"
+
+#: communaute/templates/communaute/modifier_sujet.html:54
+msgid "Contenu"
+msgstr "Content"
+
+#: communaute/templates/communaute/profil_utilisateur.html:3
+#, python-format
+msgid "Profil de %(username)s"
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:4
+#, python-format
+msgid ""
+"Découvrez le profil de %(username)s dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:35
+msgid "Membre de la communauté Numeria"
+msgstr "Numeria community member"
+
+#: communaute/templates/communaute/profil_utilisateur.html:59
+msgid "Statistiques"
+msgstr "Statistics"
+
+#: communaute/templates/communaute/profil_utilisateur.html:63
+msgid "Sujets créés"
+msgstr "Topics created"
+
+#: communaute/templates/communaute/profil_utilisateur.html:67
+msgid "Messages postés"
+msgstr "Messages posted"
+
+#: communaute/templates/communaute/profil_utilisateur.html:72
+#: comptes/templates/comptes/tableau_de_bord.html:25
+#: mentorat/templates/mentorat/detail_mentor.html:95
+msgid "Membre depuis"
+msgstr "Member since"
+
+#: communaute/templates/communaute/profil_utilisateur.html:83
+#: mentorat/templates/mentorat/detail_mentor.html:122
+msgid "Informations"
+msgstr "Information"
+
+#: communaute/templates/communaute/profil_utilisateur.html:117
+msgid "Aucune information renseignée."
+msgstr "No information provided."
+
+#: communaute/templates/communaute/profil_utilisateur.html:133
+msgid "Dernières activités"
+msgstr "Recent activity"
+
+#: communaute/templates/communaute/profil_utilisateur.html:144
+msgid "Dans"
+msgstr "In"
+
+#: communaute/templates/communaute/profil_utilisateur.html:163
+msgid "Voir tous les sujets"
+msgstr "View all topics"
+
+#: communaute/templates/communaute/repondre_sujet.html:4
+#, python-format
+msgid "Répondre au sujet \"%(titre)s\" dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/repondre_sujet.html:18
+msgid "Partagez votre réponse avec la communauté"
+msgstr "Share your answer with the community"
+
+#: communaute/templates/communaute/repondre_sujet.html:28
+msgid "Sujet original"
+msgstr "Original topic"
+
+#: communaute/templates/communaute/repondre_sujet.html:30
+msgid "Par"
+msgstr "By"
+
+#: communaute/templates/communaute/repondre_sujet.html:36
+msgid "Voir le sujet complet"
+msgstr "View full topic"
+
+#: communaute/templates/communaute/repondre_sujet.html:54
+msgid "Votre réponse"
+msgstr "Your reply"
+
+#: communaute/templates/communaute/repondre_sujet.html:60
+msgid "Soyez clair, précis et respectueux dans vos réponses."
+msgstr "Be clear, precise and respectful in your replies."
+
+#: communaute/templates/communaute/repondre_sujet.html:67
+msgid "Publier la réponse"
+msgstr "Publish reply"
+
 #: comptes/forms.py:97
 msgid "Adresse email"
 msgstr "Email address"
 
-#: comptes/forms.py:102
+#: comptes/forms.py:102 comptes/templates/comptes/inscription.html:76
 msgid "Prénom"
 msgstr "First name"
 
@@ -35,12 +777,9 @@ msgstr "Last name"
 msgid "Votre nom"
 msgstr "Your last name"
 
-#: comptes/forms.py:114 comptes/forms.py:212
-msgid "Pays"
-msgstr "Country"
-
 #: comptes/forms.py:124 comptes/forms.py:151 comptes/forms.py:152
 #: comptes/templates/comptes/connexion.html:77
+#: comptes/templates/comptes/inscription.html:126
 msgid "Nom d'utilisateur"
 msgstr "Username"
 
@@ -54,6 +793,7 @@ msgstr "Unique username"
 
 #: comptes/forms.py:127 comptes/forms.py:155
 #: comptes/templates/comptes/connexion.html:96
+#: comptes/templates/comptes/inscription.html:170
 msgid "Mot de passe"
 msgstr "Password"
 
@@ -61,7 +801,7 @@ msgstr "Password"
 msgid "8 caractères minimum"
 msgstr "8 characters minimum"
 
-#: comptes/forms.py:130
+#: comptes/forms.py:130 comptes/templates/comptes/inscription.html:199
 msgid "Confirmer le mot de passe"
 msgstr "Confirm password"
 
@@ -73,21 +813,9 @@ msgstr "Repeat your password"
 msgid "Ton mot de passe"
 msgstr "Your password"
 
-#: comptes/forms.py:210
-msgid "Photo de profil"
-msgstr "Profile photo"
-
-#: comptes/forms.py:211
-msgid "Biographie"
-msgstr "Biography"
-
-#: comptes/forms.py:213
+#: comptes/forms.py:213 mentorat/templates/mentorat/detail_mentor.html:134
 msgid "Ville"
 msgstr "City"
-
-#: comptes/forms.py:214
-msgid "Niveau d'études"
-msgstr "Education level"
 
 #: comptes/forms.py:215
 msgid "Domaine d'études"
@@ -125,7 +853,7 @@ msgstr "Profile"
 msgid "Profils"
 msgstr "Profiles"
 
-#: comptes/templates/comptes/connexion.html:3 templates/base.html:248
+#: comptes/templates/comptes/connexion.html:3 templates/base.html:266
 msgid "Connexion"
 msgstr "Login"
 
@@ -145,61 +873,2086 @@ msgstr "Forgot your password?"
 msgid "Se souvenir de moi"
 msgstr "Remember me"
 
-#: comptes/templates/comptes/connexion.html:129 templates/base.html:289
-msgid "Se connecter"
-msgstr "Log in"
-
 #: comptes/templates/comptes/connexion.html:136
 msgid "Pas encore de compte ?"
 msgstr "Don't have an account?"
 
-#: comptes/templates/comptes/connexion.html:140 templates/base.html:290
+#: comptes/templates/comptes/connexion.html:140 templates/base.html:322
 msgid "S'inscrire gratuitement"
 msgstr "Sign up for free"
 
+#: comptes/templates/comptes/connexion.html:149
+#: comptes/templates/comptes/inscription.html:255
+#, fuzzy
+#| msgid "Retour à mon profil"
+msgid "Retour à l'accueil"
+msgstr "Back to my profile"
+
+#: comptes/templates/comptes/inscription.html:43
+msgid "Rejoins Numeria"
+msgstr "Join Numeria"
+
+#: comptes/templates/comptes/inscription.html:46
+#, fuzzy
+#| msgid "Créer mon compte gratuitement"
+msgid "Crée ton compte gratuitement et commence à apprendre"
+msgstr "Create my account for free"
+
+#: comptes/templates/comptes/inscription.html:91
+msgid "Nom"
+msgstr "Last name"
+
+#: comptes/templates/comptes/inscription.html:219
+#: pages/templates/pages/accueil.html:356
+msgid "Créer mon compte gratuitement"
+msgstr "Create my account for free"
+
+#: comptes/templates/comptes/inscription.html:226
+#, fuzzy
+#| msgid "Créer un compte gratuit"
+msgid "Déjà un compte ?"
+msgstr "Create a free account"
+
+#: comptes/templates/comptes/inscription.html:240
+#, fuzzy
+#| msgid "Cours populaires"
+msgid "Cours gratuits"
+msgstr "Popular courses"
+
+#: comptes/templates/comptes/inscription.html:244
+#, fuzzy
+#| msgid "Certificats officiels"
+msgid "Certificats PDF"
+msgstr "Official certificates"
+
+#: comptes/templates/comptes/tableau_de_bord.html:22
+#, python-format
+msgid "Bonjour, %(name)s"
+msgstr "Hello, %(name)s"
+
+#: comptes/templates/comptes/tableau_de_bord.html:33
+#, fuzzy
+#| msgid "Nos cours"
+msgid "Nouveau cours"
+msgstr "Our courses"
+
+#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:318
+msgid "Mon profil"
+msgstr "My profile"
+
+#: comptes/templates/comptes/tableau_de_bord.html:53
+#, fuzzy
+#| msgid "Mentorés inscrits"
+msgid "Cours inscrits"
+msgstr "Enrolled mentees"
+
+#: comptes/templates/comptes/tableau_de_bord.html:65
+#, fuzzy
+#| msgid "Nos cours"
+msgid "En cours"
+msgstr "Our courses"
+
+#: comptes/templates/comptes/tableau_de_bord.html:77
+msgid "Terminés"
+msgstr "Completed"
+
+#: comptes/templates/comptes/tableau_de_bord.html:89
+#, fuzzy
+#| msgid "Professionnel"
+msgid "Progression globale"
+msgstr "Professional"
+
+#: comptes/templates/comptes/tableau_de_bord.html:110
+#, fuzzy
+#| msgid "Nos cours"
+msgid "Mes cours"
+msgstr "Our courses"
+
+#: comptes/templates/comptes/tableau_de_bord.html:113
+#, fuzzy
+#| msgid "Voir le cours"
+msgid "Voir tout"
+msgstr "View course"
+
+#: comptes/templates/comptes/tableau_de_bord.html:133
+msgid "Terminé"
+msgstr "Completed"
+
+#: comptes/templates/comptes/tableau_de_bord.html:136
+msgid "Payant"
+msgstr "Paid"
+
+#: comptes/templates/comptes/tableau_de_bord.html:159
+msgid "Revoir"
+msgstr "Review"
+
+#: comptes/templates/comptes/tableau_de_bord.html:159
+#, fuzzy
+#| msgid "Contenu"
+msgid "Continuer"
+msgstr "Content"
+
+#: comptes/templates/comptes/tableau_de_bord.html:177
+msgid "Tu n'es inscrit à aucun cours"
+msgstr "You are not enrolled in any course"
+
+#: comptes/templates/comptes/tableau_de_bord.html:178
+#, fuzzy
+#| msgid "Commence à apprendre aujourd'hui"
+msgid "Découvre notre catalogue et commence à apprendre dès aujourd'hui !"
+msgstr "Start learning today"
+
 #: cours/templates/cours/catalogue.html:3
+#: cours/templates/cours/catalogue.html:5
 msgid "Catalogue des cours"
 msgstr "Course catalogue"
 
-#: cours/templates/cours/catalogue.html:18
+#: cours/templates/cours/catalogue.html:21
 msgid "Catalogue"
 msgstr "Catalogue"
 
-#: cours/templates/cours/catalogue.html:21
+#: cours/templates/cours/catalogue.html:24
 msgid "Tous nos cours"
 msgstr "All our courses"
 
-#: cours/templates/cours/catalogue.html:71
+#: cours/templates/cours/catalogue.html:74
 msgid "Tous les cycles"
 msgstr "All levels"
 
-#: cours/templates/cours/catalogue.html:174
+#: cours/templates/cours/catalogue.html:177
 #: pages/templates/pages/accueil.html:231
 msgid "Gratuit"
 msgstr "Free"
 
-#: cours/templates/cours/catalogue.html:179
+#: cours/templates/cours/catalogue.html:182
 msgid "En savoir plus"
 msgstr "Learn more"
 
-#: cours/templates/cours/catalogue.html:194
+#: cours/templates/cours/catalogue.html:197
 msgid "Aucun cours trouvé"
 msgstr "No courses found"
 
-#: cours/templates/cours/catalogue.html:195
+#: cours/templates/cours/catalogue.html:198
 msgid "Essaie d'autres filtres ou reviens bientôt !"
 msgstr "Try other filters or check back soon!"
 
-#: cours/templates/cours/catalogue.html:199
+#: cours/templates/cours/catalogue.html:202
 #: pages/templates/pages/accueil.html:254
 msgid "Voir tous les cours"
 msgstr "View all courses"
 
-#: numeria_project/settings.py:128
+#: env/lib/python3.12/site-packages/cloudinary/forms.py:55
+#: env/lib/python3.12/site-packages/cloudinary/forms.py:124
+msgid "No file selected!"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
+msgid "Site Maps"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/contrib/staticfiles/apps.py:9
+#, fuzzy
+#| msgid "Statistiques"
+msgid "Static Files"
+msgstr "Statistics"
+
+#: env/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
+msgid "Syndication"
+msgstr ""
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: env/lib/python3.12/site-packages/django/core/paginator.py:33
+msgid "…"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/paginator.py:35
+msgid "That page number is not an integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/paginator.py:36
+msgid "That page number is less than 1"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/paginator.py:37
+msgid "That page contains no results"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:22
+msgid "Enter a valid value."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:70
+msgid "Enter a valid domain name."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:153
+#: env/lib/python3.12/site-packages/django/forms/fields.py:773
+msgid "Enter a valid URL."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:200
+msgid "Enter a valid integer."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:211
+msgid "Enter a valid email address."
+msgstr ""
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: env/lib/python3.12/site-packages/django/core/validators.py:289
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:297
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:309
+#: env/lib/python3.12/site-packages/django/core/validators.py:318
+#: env/lib/python3.12/site-packages/django/core/validators.py:332
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2220
+#, python-format
+msgid "Enter a valid %(protocol)s address."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:311
+msgid "IPv4"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:320
+#: env/lib/python3.12/site-packages/django/utils/ipv6.py:43
+msgid "IPv6"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:334
+msgid "IPv4 or IPv6"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:375
+msgid "Enter only digits separated by commas."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:381
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:416
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:425
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:434
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:441
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:473
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:491
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:514
+#: env/lib/python3.12/site-packages/django/forms/fields.py:364
+#: env/lib/python3.12/site-packages/django/forms/fields.py:403
+msgid "Enter a number."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:516
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:521
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:526
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:597
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/core/validators.py:659
+msgid "Null characters are not allowed."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/base.py:1633
+#: env/lib/python3.12/site-packages/django/forms/models.py:932
+msgid "and"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/base.py:1635
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/constraints.py:20
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:135
+msgid "This field cannot be null."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:136
+msgid "This field cannot be blank."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr ""
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1161
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1162
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1164
+msgid "Boolean (Either True or False)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1214
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1216
+msgid "String (unlimited)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1325
+msgid "Comma-separated integers"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1426
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1430
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1565
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1434
+msgid "Date (without time)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1561
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ] format."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1569
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1574
+msgid "Date (with time)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1701
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1703
+msgid "Decimal number"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1864
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] "
+"[[HH:]MM:]ss[.uuuuuu] format."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1868
+#, fuzzy
+#| msgid "Description"
+msgid "Duration"
+msgstr "Description"
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
+msgid "Email address"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1945
+msgid "File path"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2023
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2025
+msgid "Floating point number"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2065
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2067
+msgid "Integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2163
+msgid "Big (8 byte) integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2180
+msgid "Small integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2188
+msgid "IPv4 address"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2219
+msgid "IP address"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2310
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2311
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2313
+msgid "Boolean (Either True, False or None)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2364
+msgid "Positive big integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2379
+msgid "Positive integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2394
+msgid "Positive small integer"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2410
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2446
+msgid "Text"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2526
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2530
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2534
+msgid "Time"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2642
+msgid "URL"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2666
+msgid "Raw binary data"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2731
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2733
+msgid "Universally unique identifier"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/files.py:244
+msgid "File"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/files.py:420
+msgid "Image"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/json.py:24
+msgid "A JSON object"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/json.py:26
+msgid "Value must be valid JSON."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:978
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:981
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1275
+msgid "One-to-one relationship"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1332
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1334
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1382
+msgid "Many-to-many relationship"
+msgstr ""
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to
+#. the label
+#: env/lib/python3.12/site-packages/django/forms/boundfield.py:188
+msgid ":?.!"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:91
+msgid "This field is required."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:313
+msgid "Enter a whole number."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:484
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1241
+msgid "Enter a valid date."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:507
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1242
+msgid "Enter a valid time."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:534
+msgid "Enter a valid date/time."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:568
+msgid "Enter a valid duration."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:569
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:638
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:639
+msgid "No file was submitted."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:640
+msgid "The submitted file is empty."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:642
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:647
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:715
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:862
+#: env/lib/python3.12/site-packages/django/forms/fields.py:949
+#: env/lib/python3.12/site-packages/django/forms/models.py:1621
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:951
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1070
+#: env/lib/python3.12/site-packages/django/forms/models.py:1619
+msgid "Enter a list of values."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1071
+msgid "Enter a complete value."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1313
+msgid "Enter a valid UUID."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/fields.py:1343
+msgid "Enter a valid JSON."
+msgstr ""
+
+#. Translators: This is the default suffix added to form field labels
+#: env/lib/python3.12/site-packages/django/forms/forms.py:97
+msgid ":"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/forms.py:239
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:484
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/formsets.py:499
+msgid "Delete"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:925
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:930
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:937
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:946
+msgid "Please correct the duplicate values below."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:1383
+msgid "The inline value did not match the parent instance."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:1474
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/models.py:1623
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/utils.py:229
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:528
+msgid "Clear"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:529
+msgid "Currently"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:530
+#, fuzzy
+#| msgid "Échangez"
+msgid "Change"
+msgstr "Exchange"
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:869
+msgid "Unknown"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:870
+msgid "Yes"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/forms/widgets.py:871
+msgid "No"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/tasks/base.py:34
+msgctxt "Task"
+msgid "Ready"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/tasks/base.py:36
+msgctxt "Task"
+msgid "Running"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/tasks/base.py:38
+msgctxt "Task"
+msgid "Failed"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/tasks/base.py:40
+msgctxt "Task"
+msgid "Successful"
+msgstr ""
+
+#. Translators: Please do not add spaces around commas.
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:878
+msgid "yes,no,maybe"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:908
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:925
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:927
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:929
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:931
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:933
+#, python-format
+msgid "%s TB"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:935
+#, python-format
+msgid "%s PB"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:74
+msgid "p.m."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:75
+msgid "a.m."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:80
+msgid "PM"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:81
+msgid "AM"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:153
+msgid "midnight"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dateformat.py:155
+msgid "noon"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:7
+msgid "Monday"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:8
+msgid "Tuesday"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:9
+msgid "Wednesday"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:10
+msgid "Thursday"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:11
+msgid "Friday"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:12
+msgid "Saturday"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:13
+msgid "Sunday"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:16
+msgid "Mon"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:17
+#, fuzzy
+#| msgid "vue"
+msgid "Tue"
+msgstr "view"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:18
+msgid "Wed"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:19
+msgid "Thu"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:20
+msgid "Fri"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:21
+#, fuzzy
+#| msgid "Suivant"
+msgid "Sat"
+msgstr "Next"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:22
+#, fuzzy
+#| msgid "Suivant"
+msgid "Sun"
+msgstr "Next"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:25
+msgid "January"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:26
+msgid "February"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:27
+msgid "March"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:28
+msgid "April"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:29
+msgid "May"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:30
+msgid "June"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:31
+msgid "July"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:32
+msgid "August"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:33
+msgid "September"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:34
+msgid "October"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:35
+msgid "November"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:36
+msgid "December"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:39
+msgid "jan"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:40
+msgid "feb"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:41
+#, fuzzy
+#| msgid "Par"
+msgid "mar"
+msgstr "By"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:42
+#, fuzzy
+#| msgid "Par"
+msgid "apr"
+msgstr "By"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:43
+msgid "may"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:44
+msgid "jun"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:45
+msgid "jul"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:46
+msgid "aug"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:47
+msgid "sep"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:48
+#, fuzzy
+#| msgid "Contact"
+msgid "oct"
+msgstr "Contact"
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:49
+msgid "nov"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:50
+msgid "dec"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:77
+msgctxt "alt. month"
+msgid "November"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/dates.py:78
+msgctxt "alt. month"
+msgid "December"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/ipv6.py:20
+msgid "This is not a valid IPv6 address."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/text.py:76
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/text.py:282
+msgid "or"
+msgstr ""
+
+#. Translators: This string is used as a separator between list elements
+#: env/lib/python3.12/site-packages/django/utils/text.py:301
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:135
+msgid ", "
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/utils/timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:29
+msgid "Forbidden"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:30
+msgid "CSRF verification failed. Request aborted."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:44
+msgid "No year specified"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:64
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:115
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:214
+msgid "Date out of range"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:94
+msgid "No month specified"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:147
+msgid "No day specified"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:194
+msgid "No week specified"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:353
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:384
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:680
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because "
+"%(class_name)s.allow_future is False."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/dates.py:720
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/generic/list.py:173
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/static.py:68
+#: env/lib/python3.12/site-packages/django/views/templates/directory_index.html:8
+#: env/lib/python3.12/site-packages/django/views/templates/directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:7
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:217
+msgid "Django Documentation"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:227
+msgid "Get started with Django"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:235
+msgid "Django Community"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr ""
+
+#: env/lib/python3.12/site-packages/httplib2/__init__.py:407
+#, python-format
+msgid "Content purported to be compressed with %s but failed to decompress."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/httplib2/__init__.py:571
+#, python-format
+msgid "Unsupported value for qop: %s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/httplib2/__init__.py:575
+#: env/lib/python3.12/site-packages/httplib2/__init__.py:653
+#, python-format
+msgid "Unsupported value for algorithm: %s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/httplib2/__init__.py:648
+msgid "The challenge doesn't contain a server nonce, or this one is empty."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/httplib2/__init__.py:658
+#, python-format
+msgid "Unsupported value for pw-algorithm: %s."
+msgstr ""
+
+#: env/lib/python3.12/site-packages/httplib2/__init__.py:1471
+msgid "Redirected but the response is missing a Location: header."
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:3
+#: mentorat/templates/mentorat/demander_mentorat.html:20
+msgid "Demander un mentorat"
+msgstr "Request mentoring"
+
+#: mentorat/templates/mentorat/demander_mentorat.html:4
+msgid "Envoyez une demande de mentorat à un expert sur Numeria Institute."
+msgstr "Send a mentoring request to an expert on Numeria Institute."
+
+#: mentorat/templates/mentorat/demander_mentorat.html:14
+#, fuzzy
+#| msgid "Retour au sujet"
+msgid "Retour au profil du mentor"
+msgstr "Back to topic"
+
+#: mentorat/templates/mentorat/demander_mentorat.html:18
+msgid "Demande de mentorat"
+msgstr "Mentoring request"
+
+#: mentorat/templates/mentorat/demander_mentorat.html:21
+msgid "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor."
+msgstr "Introduce yourself and explain why you want this mentor."
+
+#: mentorat/templates/mentorat/demander_mentorat.html:45
+#, fuzzy
+#| msgid "Mentorat"
+msgid "Mentor demandé"
+msgstr "Mentorship"
+
+#: mentorat/templates/mentorat/demander_mentorat.html:71
+msgid ""
+"Décrivez votre parcours, vos objectifs et pourquoi ce mentor vous intéresse."
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:77
+msgid "À propos du processus"
+msgstr "About the process"
+
+#: mentorat/templates/mentorat/demander_mentorat.html:79
+msgid "Le mentor recevra votre demande et pourra l'accepter ou la refuser"
+msgstr "The mentor will receive your request and can accept or decline it"
+
+#: mentorat/templates/mentorat/demander_mentorat.html:80
+msgid "Vous serez notifié de la réponse"
+msgstr "You will be notified of the response"
+
+#: mentorat/templates/mentorat/demander_mentorat.html:81
+msgid "Une fois acceptée, vous pourrez planifier des séances de mentorat"
+msgstr "Once accepted, you will be able to schedule mentoring sessions"
+
+#: mentorat/templates/mentorat/demander_mentorat.html:82
+msgid "Le mentorat est gratuit et basé sur le volontariat"
+msgstr "Mentoring is free and volunteer-based"
+
+#: mentorat/templates/mentorat/demander_mentorat.html:90
+msgid "Envoyer la demande"
+msgstr "Send the request"
+
+#: mentorat/templates/mentorat/detail_mentor.html:3
+#: mentorat/templates/mentorat/detail_relation.html:44
+#: mentorat/templates/mentorat/detail_relation.html:127
+#: mentorat/templates/mentorat/terminer_relation.html:52
+#, fuzzy
+#| msgid "Mentorat"
+msgid "Mentor"
+msgstr "Mentorship"
+
+#: mentorat/templates/mentorat/detail_mentor.html:4
+#, python-format
+msgid "Profil du mentor %(name)s sur Numeria Institute."
+msgstr "Mentor profile of %(name)s on Numeria Institute."
+
+#: mentorat/templates/mentorat/detail_mentor.html:14
+#, fuzzy
+#| msgid "Retour au sujet"
+msgid "Retour à la liste"
+msgstr "Back to topic"
+
+#: mentorat/templates/mentorat/detail_mentor.html:47
+msgid "mentoré(s)"
+msgstr "mentee(s)"
+
+#: mentorat/templates/mentorat/detail_mentor.html:59
+msgid "Faire une demande"
+msgstr "Send a request"
+
+#: mentorat/templates/mentorat/detail_mentor.html:64
+msgid "Vous avez déjà un mentor actif"
+msgstr "You already have an active mentor"
+
+#: mentorat/templates/mentorat/detail_mentor.html:66
+msgid "Demande déjà envoyée ou en cours"
+msgstr "Request already sent or in progress"
+
+#: mentorat/templates/mentorat/detail_mentor.html:83
+#, fuzzy
+#| msgid "Mentors actifs"
+msgid "Mentorés accompagnés"
+msgstr "Active mentors"
+
+#: mentorat/templates/mentorat/detail_mentor.html:89
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:25
+#, fuzzy
+#| msgid "Mentors actifs"
+msgid "Mentorés actifs"
+msgstr "Active mentors"
+
+#: mentorat/templates/mentorat/detail_mentor.html:111
+#, fuzzy, python-format
+#| msgid "À propos"
+msgid "À propos de %(name)s"
+msgstr "About"
+
+#: mentorat/templates/mentorat/detail_mentor.html:141
+#: mentorat/templates/mentorat/detail_relation.html:131
+#: mentorat/templates/mentorat/liste_mentors.html:39
+msgid "Domaine"
+msgstr "Field"
+
+#: mentorat/templates/mentorat/detail_mentor.html:150
+#: mentorat/templates/mentorat/detail_mentor.html:158
+#: mentorat/templates/mentorat/liste_mentors.html:133
+#, fuzzy
+#| msgid "Photo de profil"
+msgid "Voir le profil"
+msgstr "Profile photo"
+
+#: mentorat/templates/mentorat/detail_relation.html:3
+#: mentorat/templates/mentorat/detail_relation.html:29
+msgid "Relation de mentorat"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:4
+msgid "Détail de votre relation de mentorat sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:15
+#, fuzzy
+#| msgid "Tableau de bord"
+msgid "Tableau de bord mentor"
+msgstr "Dashboard"
+
+#: mentorat/templates/mentorat/detail_relation.html:19
+#, fuzzy
+#| msgid "Tableau de bord"
+msgid "Tableau de bord mentoré"
+msgstr "Dashboard"
+
+#: mentorat/templates/mentorat/detail_relation.html:25
+#, fuzzy
+#| msgid "Relations actives"
+msgid "Relation active"
+msgstr "Active relationships"
+
+#: mentorat/templates/mentorat/detail_relation.html:64
+#: mentorat/templates/mentorat/terminer_relation.html:58
+#, fuzzy
+#| msgid "Mentorat"
+msgid "Mentoré"
+msgstr "Mentorship"
+
+#: mentorat/templates/mentorat/detail_relation.html:82
+#: mentorat/templates/mentorat/detail_relation.html:149
+msgid "Séances"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:86
+#: mentorat/templates/mentorat/terminer_relation.html:64
+msgid "Début"
+msgstr "Start"
+
+#: mentorat/templates/mentorat/detail_relation.html:94
+#: mentorat/templates/mentorat/planifier_seance.html:3
+#: mentorat/templates/mentorat/planifier_seance.html:17
+msgid "Planifier une séance"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:99
+msgid "Confirmer la fin de cette relation ?"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:100
+#: mentorat/templates/mentorat/terminer_relation.html:17
+#, fuzzy
+#| msgid "Rejoignez la conversation"
+msgid "Terminer la relation"
+msgstr "Join the conversation"
+
+#: mentorat/templates/mentorat/detail_relation.html:118
+#, fuzzy
+#| msgid "Sujets actifs"
+msgid "Objectifs"
+msgstr "Active topics"
+
+#: mentorat/templates/mentorat/detail_relation.html:135
+#: mentorat/templates/mentorat/liste_mentors.html:50
+msgid "Expérience"
+msgstr "Experience"
+
+#: mentorat/templates/mentorat/detail_relation.html:139
+#, fuzzy
+#| msgid "Confidentialité"
+msgid "Disponibilité"
+msgstr "Privacy Policy"
+
+#: mentorat/templates/mentorat/detail_relation.html:170
+msgid "min"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:197
+#: mentorat/templates/mentorat/terminer_seance.html:39
+#, fuzzy
+#| msgid "Trouver un Mentor"
+msgid "Notes du mentor"
+msgstr "Find a Mentor"
+
+#: mentorat/templates/mentorat/detail_relation.html:203
+#: mentorat/templates/mentorat/terminer_seance.html:50
+msgid "Notes du mentoré"
+msgstr "Mentee notes"
+
+#: mentorat/templates/mentorat/detail_relation.html:215
+#: mentorat/templates/mentorat/terminer_seance.html:62
+msgid "Marquer comme terminée"
+msgstr "Mark as completed"
+
+#: mentorat/templates/mentorat/detail_relation.html:227
+msgid "Aucune séance planifiée"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:229
+msgid "Planifiez votre première séance pour commencer."
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:233
+#, fuzzy
+#| msgid "Créer la première catégorie"
+msgid "Planifier la première séance"
+msgstr "Create the first category"
+
+#: mentorat/templates/mentorat/devenir_mentee.html:3
+#: mentorat/templates/mentorat/devenir_mentee.html:20
+#: mentorat/templates/mentorat/liste_mentors.html:3
+#: mentorat/templates/mentorat/liste_mentors.html:21
+msgid "Trouver un Mentor"
+msgstr "Find a Mentor"
+
+#: mentorat/templates/mentorat/devenir_mentee.html:4
+#, fuzzy
+#| msgid ""
+#| "Bénéficiez de conseils personnalisés d'experts dans votre domaine. "
+#| "Accélérez votre apprentissage et votre carrière."
+msgid "Bénéficiez de conseils personnalisés d'experts sur Numeria Institute."
+msgstr ""
+"Get personalised advice from experts in your field. Accelerate your learning "
+"and career."
+
+#: mentorat/templates/mentorat/devenir_mentee.html:14
+#: mentorat/templates/mentorat/devenir_mentor.html:14
+#: mentorat/templates/mentorat/liste_mentors.html:15
+#, fuzzy
+#| msgid "Retour au sujet"
+msgid "Retour au mentorat"
+msgstr "Back to topic"
+
+#: mentorat/templates/mentorat/devenir_mentee.html:18
+#: mentorat/templates/mentorat/devenir_mentor.html:18 templates/base.html:212
+#: templates/base.html:293
+msgid "Mentorat"
+msgstr "Mentorship"
+
+#: mentorat/templates/mentorat/devenir_mentee.html:21
+#, fuzzy
+#| msgid ""
+#| "Bénéficiez de conseils personnalisés d'experts dans votre domaine. "
+#| "Accélérez votre apprentissage et votre carrière."
+msgid "Bénéficiez de conseils personnalisés d'experts dans votre domaine."
+msgstr "Get personalised advice from experts in your field."
+"Get personalised advice from experts in your field. Accelerate your learning "
+"and career."
+
+#: mentorat/templates/mentorat/devenir_mentee.html:71
+#, fuzzy
+#| msgid "S'inscrire comme mentoré"
+msgid "S'inscrire en tant que mentoré"
+msgstr "Register as a mentee"
+
+#: mentorat/templates/mentorat/devenir_mentor.html:3
+#: mentorat/templates/mentorat/devenir_mentor.html:20
+#: mentorat/templates/mentorat/devenir_mentor.html:82
+msgid "Devenir Mentor"
+msgstr "Become a Mentor"
+
+#: mentorat/templates/mentorat/devenir_mentor.html:4
+#, fuzzy
+#| msgid ""
+#| "Partagez votre expertise et aidez la nouvelle génération à réussir. "
+#| "Faites la différence dans la vie d'un apprenant."
+msgid ""
+"Partagez votre expertise et guidez la nouvelle génération sur Numeria "
+"Institute."
+msgstr ""
+"Share your expertise and help the next generation succeed. Make a difference "
+"in a learner's life."
+
+#: mentorat/templates/mentorat/devenir_mentor.html:21
+#, fuzzy
+#| msgid ""
+#| "Partagez votre expertise et aidez la nouvelle génération à réussir. "
+#| "Faites la différence dans la vie d'un apprenant."
+msgid "Partagez votre expertise et aidez la nouvelle génération à réussir."
+msgstr "Share your expertise and help the next generation succeed."
+"Share your expertise and help the next generation succeed. Make a difference "
+"in a learner's life."
+
+#: mentorat/templates/mentorat/liste_mentors.html:4
+msgid ""
+"Découvrez nos mentors experts et trouvez celui qui correspond à vos "
+"objectifs sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:19
+#, fuzzy
+#| msgid "Cours disponibles"
+msgid "Mentors disponibles"
+msgstr "Available courses"
+
+#: mentorat/templates/mentorat/liste_mentors.html:22
+msgid "Parcourez nos mentors et demandez un accompagnement personnalisé."
+msgstr "Browse our mentors and request personalised support."
+
+#: mentorat/templates/mentorat/liste_mentors.html:32
+msgid "Recherche"
+msgstr "Search"
+
+#: mentorat/templates/mentorat/liste_mentors.html:34
+#, fuzzy
+#| msgid "Votre prénom"
+msgid "Nom, prénom..."
+msgstr "Your first name"
+
+#: mentorat/templates/mentorat/liste_mentors.html:42
+#, fuzzy
+#| msgid "Tous les cycles"
+msgid "Tous les domaines"
+msgstr "All levels"
+
+#: mentorat/templates/mentorat/liste_mentors.html:53
+msgid "Tous niveaux"
+msgstr "All levels"
+
+#: mentorat/templates/mentorat/liste_mentors.html:64
+msgid "Filtrer"
+msgstr "Filter"
+
+#: mentorat/templates/mentorat/liste_mentors.html:68
+msgid "Réinitialiser"
+msgstr "Reset"
+
+#: mentorat/templates/mentorat/liste_mentors.html:124
+msgid "actif(s)"
+msgstr "active"
+
+#: mentorat/templates/mentorat/liste_mentors.html:125
+msgid "total"
+msgstr "total"
+
+#: mentorat/templates/mentorat/liste_mentors.html:138
+msgid "Demander"
+msgstr "Request"
+
+#: mentorat/templates/mentorat/liste_mentors.html:149
+#, fuzzy
+#| msgid "Aucun cours trouvé"
+msgid "Aucun mentor trouvé"
+msgstr "No courses found"
+
+#: mentorat/templates/mentorat/liste_mentors.html:151
+#, fuzzy
+#| msgid "Essaie d'autres filtres ou reviens bientôt !"
+msgid "Essayez d'autres critères de recherche."
+msgstr "Try other filters or check back soon!"
+
+#: mentorat/templates/mentorat/liste_mentors.html:154
+msgid "Réinitialiser les filtres"
+msgstr "Reset filters"
+
+#: mentorat/templates/mentorat/liste_mentors.html:170
+#, python-format
+msgid "Page %(page)s / %(pages)s"
+msgstr "Page %(page)s / %(pages)s"
+
+#: mentorat/templates/mentorat/planifier_seance.html:4
+msgid "Planifiez une séance de mentorat sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/planifier_seance.html:14
+#: mentorat/templates/mentorat/terminer_relation.html:14
+#: mentorat/templates/mentorat/terminer_seance.html:14
+#, fuzzy
+#| msgid "Retour à mon profil"
+msgid "Retour à la relation"
+msgstr "Back to my profile"
+
+#: mentorat/templates/mentorat/planifier_seance.html:20
+#: mentorat/templates/mentorat/planifier_seance.html:22
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:165
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:162
+msgid "Avec"
+msgstr "With"
+
+#: mentorat/templates/mentorat/planifier_seance.html:41
+#, fuzzy
+#| msgid "Titre du sujet"
+msgid "Titre de la séance"
+msgstr "Topic title"
+
+#: mentorat/templates/mentorat/planifier_seance.html:64
+msgid "Date et heure"
+msgstr ""
+
+#: mentorat/templates/mentorat/planifier_seance.html:73
+msgid "Durée (minutes)"
+msgstr ""
+
+#: mentorat/templates/mentorat/planifier_seance.html:82
+#, fuzzy
+#| msgid "Confidentialité"
+msgid "Modalité"
+msgstr "Privacy Policy"
+
+#: mentorat/templates/mentorat/planifier_seance.html:95
+#, fuzzy
+#| msgid "Publier la réponse"
+msgid "Planifier la séance"
+msgstr "Publish reply"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:3
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:17
+#, fuzzy
+#| msgid "Tableau de bord"
+msgid "Tableau de bord Mentoré"
+msgstr "Dashboard"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:4
+msgid ""
+"Suivez vos demandes de mentorat, vos mentors et vos séances sur Numeria "
+"Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:15
+msgid "Espace Mentoré"
+msgstr "Mentee Space"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:22
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:94
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:140
+#, fuzzy
+#| msgid "Trouver un Mentor"
+msgid "Trouver un mentor"
+msgstr "Find a Mentor"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:34
+msgid "Demandes envoyées"
+msgstr "Sent requests"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:38
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:101
+msgid "Relations actives"
+msgstr "Active relationships"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:42
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:37
+msgid "Séances à venir"
+msgstr "Upcoming sessions"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:59
+msgid "Mes demandes"
+msgstr "My requests"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:80
+msgid "Envoyée le"
+msgstr "Sent on"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:82
+#, fuzzy
+#| msgid "Réponses"
+msgid "Réponse le"
+msgstr "Replies"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:91
+msgid "Aucune demande envoyée"
+msgstr "No request sent"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:106
+#, fuzzy
+#| msgid "Mentorat"
+msgid "Mes mentors"
+msgstr "Mentorship"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:117
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:115
+msgid "Depuis"
+msgstr "Since"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:123
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:123
+msgid "Voir détails"
+msgstr "View details"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:127
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:127
+msgid "Séance"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:136
+#, fuzzy
+#| msgid "Mentors actifs"
+msgid "Aucun mentor actif"
+msgstr "Active mentors"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:155
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:150
+msgid "Prochaines séances"
+msgstr "Upcoming sessions"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:170
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:167
+msgid "Terminer"
+msgstr "End session"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:3
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:15
+#, fuzzy
+#| msgid "Tableau de bord"
+msgid "Tableau de bord Mentor"
+msgstr "Dashboard"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:4
+msgid ""
+"Gérez vos relations de mentorat, demandes et séances sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:13
+msgid "Espace Mentor"
+msgstr "Mentor Space"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:29
+msgid "Total mentorés"
+msgstr "Total mentees"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:33
+msgid "Demandes en attente"
+msgstr "Pending requests"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:54
+msgid "Demandes de mentorat"
+msgstr "Mentoring requests"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:77
+msgid "Accepter"
+msgstr "Accept"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:81
+msgid "Refuser"
+msgstr "Decline"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:90
+msgid "Aucune demande en attente"
+msgstr "No pending requests"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:136
+#, fuzzy
+#| msgid "Relations actives"
+msgid "Aucune relation active"
+msgstr "Active relationships"
+
+#: mentorat/templates/mentorat/terminer_relation.html:3
+msgid "Terminer la relation de mentorat"
+msgstr "End the mentoring relationship"
+
+#: mentorat/templates/mentorat/terminer_relation.html:4
+msgid "Confirmez la fin de votre relation de mentorat sur Numeria Institute."
+msgstr "Confirm the end of your mentoring relationship on Numeria Institute."
+
+#: mentorat/templates/mentorat/terminer_relation.html:40
+#, fuzzy
+#| msgid "Confirmer le mot de passe"
+msgid "Confirmer la fin de la relation"
+msgstr "Confirm password"
+
+#: mentorat/templates/mentorat/terminer_relation.html:43
+msgid ""
+"Cette action est irréversible. La relation de mentorat sera marquée comme "
+"terminée et les statistiques mises à jour."
+msgstr ""
+
+#: mentorat/templates/mentorat/terminer_relation.html:75
+msgid "Confirmer et terminer la relation"
+msgstr "Confirm and end the relationship"
+
+#: mentorat/templates/mentorat/terminer_seance.html:3
+#: mentorat/templates/mentorat/terminer_seance.html:17
+msgid "Terminer la séance"
+msgstr "End the session"
+
+#: mentorat/templates/mentorat/terminer_seance.html:4
+msgid "Marquez une séance de mentorat comme terminée sur Numeria Institute."
+msgstr "Mark a mentoring session as completed on Numeria Institute."
+
+#: mentorat/templates/mentorat/terminer_seance.html:33
+msgid "Ajoutez vos notes sur cette séance avant de la marquer comme terminée."
+msgstr "Add your notes on this session before marking it as completed."
+
+#: numeria_project/settings.py:130
 msgid "Français"
 msgstr "French"
 
-#: numeria_project/settings.py:129
+#: numeria_project/settings.py:131
 msgid "English"
 msgstr "English"
 
@@ -235,8 +2988,7 @@ msgstr "Start learning today"
 msgid ""
 "Mathématiques, sciences, IA — des contenus rigoureux accessibles à tous "
 "niveaux."
-msgstr ""
-"Mathematics, science, AI — rigorous content accessible to all levels."
+msgstr "Mathematics, science, AI — rigorous content accessible to all levels."
 
 #: pages/templates/pages/accueil.html:239
 msgid "Voir le cours"
@@ -254,660 +3006,209 @@ msgstr "Why choose Numeria?"
 msgid "Une plateforme conçue pour les apprenants africains"
 msgstr "A platform designed for African learners"
 
-#: pages/templates/pages/accueil.html:280
+#: pages/templates/pages/accueil.html:279
 msgid "Cours de qualité"
 msgstr "Quality courses"
 
-#: pages/templates/pages/accueil.html:281
+#: pages/templates/pages/accueil.html:280
 msgid ""
 "Contenus scientifiques rigoureux avec formules LaTeX et exercices corrigés."
-msgstr ""
-"Rigorous scientific content with LaTeX formulas and worked exercises."
+msgstr "Rigorous scientific content with LaTeX formulas and worked exercises."
 
-#: pages/templates/pages/accueil.html:288
+#: pages/templates/pages/accueil.html:287
 msgid "Ancrage africain"
 msgstr "African roots"
 
-#: pages/templates/pages/accueil.html:289
+#: pages/templates/pages/accueil.html:288
 msgid ""
 "Des exemples et projets ancrés dans les réalités africaines et togolaises."
-msgstr ""
-"Examples and projects rooted in African and Togolese realities."
+msgstr "Examples and projects rooted in African and Togolese realities."
 
-#: pages/templates/pages/accueil.html:296
+#: pages/templates/pages/accueil.html:295
 #, python-format
 msgid "100%% responsive"
 msgstr "100%% responsive"
 
-#: pages/templates/pages/accueil.html:297
+#: pages/templates/pages/accueil.html:296
 msgid "Apprends depuis ton téléphone, ta tablette ou ton ordinateur."
 msgstr "Learn from your phone, tablet or computer."
 
-#: pages/templates/pages/accueil.html:304
+#: pages/templates/pages/accueil.html:303
 msgid "Certificats officiels"
 msgstr "Official certificates"
 
-#: pages/templates/pages/accueil.html:305
+#: pages/templates/pages/accueil.html:304
 msgid ""
 "Reçois un certificat PDF vérifiable à la fin de chaque cours payant complété."
-msgstr ""
-"Receive a verifiable PDF certificate upon completing each paid course."
+msgstr "Receive a verifiable PDF certificate upon completing each paid course."
 
-#: pages/templates/pages/accueil.html:312
+#: pages/templates/pages/accueil.html:311
 msgid "Exercices interactifs"
 msgstr "Interactive exercises"
 
-#: pages/templates/pages/accueil.html:313
+#: pages/templates/pages/accueil.html:312
 msgid "Des QCM avec corrigés détaillés visibles seulement après réussite."
-msgstr "Multiple-choice questions with detailed solutions revealed only after success."
+msgstr ""
+"Multiple-choice questions with detailed solutions revealed only after "
+"success."
 
-#: pages/templates/pages/accueil.html:320
+#: pages/templates/pages/accueil.html:319
 msgid "Accessible à tous"
 msgstr "Accessible to all"
 
-#: pages/templates/pages/accueil.html:321
+#: pages/templates/pages/accueil.html:320
 msgid "La majorité des cours sont gratuits. Paiement Mobile Money disponible."
 msgstr "Most courses are free. Mobile Money payment available."
 
-#: pages/templates/pages/accueil.html:338
+#: pages/templates/pages/accueil.html:337
 msgid "Rejoins-nous"
 msgstr "Join us"
 
-#: pages/templates/pages/accueil.html:341
+#: pages/templates/pages/accueil.html:340
 msgid "Prêt à commencer ton voyage scientifique ?"
 msgstr "Ready to start your scientific journey?"
 
-#: pages/templates/pages/accueil.html:344
+#: pages/templates/pages/accueil.html:343
 msgid ""
 "Rejoins des milliers d'apprenants qui transforment leur avenir grâce à la "
 "science."
-msgstr ""
-"Join thousands of learners transforming their future through science."
+msgstr "Join thousands of learners transforming their future through science."
 
-#: pages/templates/pages/accueil.html:350
+#: pages/templates/pages/accueil.html:349
 msgid "Aller à mon tableau de bord"
 msgstr "Go to my dashboard"
 
-#: pages/templates/pages/accueil.html:352
+#: pages/templates/pages/accueil.html:351
 msgid "Passe en revue tes cours et continue ton apprentissage."
 msgstr "Review your courses and continue your learning."
 
-#: pages/templates/pages/accueil.html:357
-msgid "Créer mon compte gratuitement"
-msgstr "Create my account for free"
-
-#: pages/templates/pages/accueil.html:359
+#: pages/templates/pages/accueil.html:358
 msgid ""
 "Aucune carte bancaire requise · Cours gratuits disponibles immédiatement"
-msgstr ""
-"No credit card required · Free courses available immediately"
+msgstr "No credit card required · Free courses available immediately"
 
-#: templates/base.html:205 templates/base.html:270
+#: templates/base.html:207 templates/base.html:288
 msgid "Accueil"
 msgstr "Home"
 
-#: templates/base.html:206 templates/base.html:271
+#: templates/base.html:208 templates/base.html:289
 msgid "Cours"
 msgstr "Courses"
 
-#: templates/base.html:207 templates/base.html:272
+#: templates/base.html:209 templates/base.html:290
 msgid "Blog"
 msgstr "Blog"
 
-#: templates/base.html:208 templates/base.html:273 templates/base.html:338
+#: templates/base.html:210 templates/base.html:291 templates/base.html:370
 msgid "Candidatures"
 msgstr "Applications"
 
-#: templates/base.html:209 templates/base.html:274 templates/base.html:341
-msgid "Communauté"
-msgstr "Community"
-
-#: templates/base.html:210 templates/base.html:275
-msgid "Mentorat"
-msgstr "Mentorship"
-
-#: templates/base.html:211 templates/base.html:276 templates/base.html:339
+#: templates/base.html:213 templates/base.html:294 templates/base.html:371
 msgid "À propos"
 msgstr "About"
 
-#: templates/base.html:212 templates/base.html:277 templates/base.html:340
-#: templates/base.html:347
+#: templates/base.html:214 templates/base.html:295 templates/base.html:372
+#: templates/base.html:379
 msgid "Contact"
 msgstr "Contact"
 
-#: templates/base.html:232 templates/base.html:285
+#: templates/base.html:250 templates/base.html:317
 msgid "Tableau de bord"
 msgstr "Dashboard"
 
-#: templates/base.html:252
+#: templates/base.html:270
 msgid "S'inscrire"
 msgstr "Sign up"
 
-#: templates/base.html:286
-msgid "Mon profil"
-msgstr "My profile"
-
-#: templates/base.html:287
+#: templates/base.html:319
 msgid "Se déconnecter"
 msgstr "Log out"
 
-#: templates/base.html:334
+#: templates/base.html:366
 msgid "Navigation"
 msgstr "Navigation"
 
-#: templates/base.html:336
+#: templates/base.html:368
 msgid "Nos cours"
 msgstr "Our courses"
 
-#: templates/base.html:337
+#: templates/base.html:369
 msgid "Le blog"
 msgstr "The blog"
 
-#: templates/base.html:366
+#: templates/base.html:398
 msgid "Tous droits réservés"
 msgstr "All rights reserved"
 
-#: templates/base.html:368
+#: templates/base.html:400
 msgid "Confidentialité"
 msgstr "Privacy Policy"
 
-#: templates/base.html:369
+#: templates/base.html:401
 msgid "CGU"
 msgstr "Terms of Service"
 
-# ===== COMMUNAUTÉ =====
+#~ msgid "Communauté Numeria"
+#~ msgstr "Numeria Community"
 
-#: communaute/templates/communaute/liste_categories.html
-msgid "Forum d'entraide"
-msgstr "Community forum"
+#~ msgid "Dernier message"
+#~ msgstr "Last message"
 
-#: communaute/templates/communaute/liste_categories.html
-msgid "Communauté Numeria"
-msgstr "Numeria Community"
+#~ msgid "Aucun sujet dans cette catégorie pour le moment."
+#~ msgstr "No topics in this category yet."
 
-#: communaute/templates/communaute/liste_categories.html
-msgid "Échangez avec d'autres apprenants, posez vos questions et partagez vos connaissances en sciences, mathématiques et IA."
-msgstr "Connect with other learners, ask your questions and share your knowledge in science, mathematics and AI."
+#~ msgid "Sujet épinglé"
+#~ msgstr "Pinned topic"
 
-#: communaute/templates/communaute/liste_categories.html
-msgid "Créer un sujet"
-msgstr "Create a topic"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Nouvelle catégorie"
-msgstr "New category"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Se connecter pour participer"
-msgstr "Log in to participate"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Sujets actifs"
-msgstr "Active topics"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Messages"
-msgstr "Messages"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Membres"
-msgstr "Members"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Forums de discussion"
-msgstr "Discussion forums"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Choisissez un forum"
-msgstr "Choose a forum"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Parcourez les catégories et rejoignez la discussion qui vous intéresse."
-msgstr "Browse the categories and join the discussion that interests you."
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "sujet"
-msgstr "topic"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Vide"
-msgstr "Empty"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Voir les sujets"
-msgstr "View topics"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Aucune catégorie disponible pour le moment."
-msgstr "No categories available at the moment."
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Créer la première catégorie"
-msgstr "Create the first category"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Rejoignez la conversation"
-msgstr "Join the conversation"
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Créez un compte gratuit pour poser vos questions, partager vos connaissances et progresser avec la communauté."
-msgstr "Create a free account to ask questions, share knowledge and grow with the community."
-
-#: communaute/templates/communaute/liste_categories.html
-msgid "Créer un compte gratuit"
-msgstr "Create a free account"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Retour aux forums"
-msgstr "Back to forums"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Nouveau sujet"
-msgstr "New topic"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Sujet"
-msgstr "Topic"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Réponses"
-msgstr "Replies"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Dernier message"
-msgstr "Last message"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Épinglé"
-msgstr "Pinned"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Fermé"
-msgstr "Closed"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "vue"
-msgstr "view"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "réponse"
-msgstr "reply"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Précédent"
-msgstr "Previous"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Suivant"
-msgstr "Next"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Aucun sujet dans cette catégorie pour le moment."
-msgstr "No topics in this category yet."
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Créer le premier sujet"
-msgstr "Create the first topic"
-
-#: communaute/templates/communaute/detail_categorie.html
-msgid "Se connecter pour créer un sujet"
-msgstr "Log in to create a topic"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Sujet épinglé"
-msgstr "Pinned topic"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Sujet fermé"
-msgstr "Closed topic"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Répondre"
-msgstr "Reply"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Question initiale"
-msgstr "Original question"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "modifié"
-msgstr "edited"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Modifier"
-msgstr "Edit"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Utile ?"
-msgstr "Helpful?"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Connectez-vous pour voter"
-msgstr "Log in to vote"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Auteur"
-msgstr "Author"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Vous avez une réponse à apporter ?"
-msgstr "Do you have an answer?"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Répondre à ce sujet"
-msgstr "Reply to this topic"
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Ce sujet est fermé. Aucune nouvelle réponse n'est acceptée."
-msgstr "This topic is closed. No new replies are accepted."
-
-#: communaute/templates/communaute/detail_sujet.html
-msgid "Connectez-vous pour participer à la discussion."
-msgstr "Log in to participate in the discussion."
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Créer un nouveau sujet"
-msgstr "Create a new topic"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Partagez vos questions, idées ou découvertes avec la communauté"
-msgstr "Share your questions, ideas or discoveries with the community"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Titre du sujet"
-msgstr "Topic title"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Catégorie"
-msgstr "Category"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Message initial"
-msgstr "Opening message"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Décrivez votre sujet en détail. Vous pourrez ajouter des réponses par la suite."
-msgstr "Describe your topic in detail. You can add replies later."
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Publier le sujet"
-msgstr "Publish topic"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Annuler"
-msgstr "Cancel"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Conseils"
-msgstr "Tips"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Choisissez un titre clair et descriptif"
-msgstr "Choose a clear, descriptive title"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Sélectionnez la catégorie appropriée"
-msgstr "Select the appropriate category"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Fournissez autant de détails que possible"
-msgstr "Provide as much detail as possible"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Respectez les autres membres"
-msgstr "Respect other members"
-
-#: communaute/templates/communaute/creer_sujet.html
-msgid "Utilisez un langage approprié"
-msgstr "Use appropriate language"
-
-#: communaute/templates/communaute/repondre_sujet.html
-msgid "Retour au sujet"
-msgstr "Back to topic"
-
-#: communaute/templates/communaute/repondre_sujet.html
-msgid "Partagez votre réponse avec la communauté"
-msgstr "Share your answer with the community"
-
-#: communaute/templates/communaute/repondre_sujet.html
-msgid "Sujet original"
-msgstr "Original topic"
-
-#: communaute/templates/communaute/repondre_sujet.html
-msgid "Par"
-msgstr "By"
-
-#: communaute/templates/communaute/repondre_sujet.html
-msgid "Voir le sujet complet"
-msgstr "View full topic"
-
-#: communaute/templates/communaute/repondre_sujet.html
-msgid "Votre réponse"
-msgstr "Your reply"
-
-#: communaute/templates/communaute/repondre_sujet.html
-msgid "Soyez clair, précis et respectueux dans vos réponses."
-msgstr "Be clear, precise and respectful in your replies."
-
-#: communaute/templates/communaute/repondre_sujet.html
-msgid "Publier la réponse"
-msgstr "Publish reply"
-
-#: communaute/templates/communaute/modifier_sujet.html
-#: communaute/templates/communaute/modifier_message.html
-msgid "Enregistrer les modifications"
-msgstr "Save changes"
-
-#: communaute/templates/communaute/modifier_sujet.html
-msgid "Modifier le sujet"
-msgstr "Edit topic"
-
-#: communaute/templates/communaute/modifier_sujet.html
-msgid "Contenu"
-msgstr "Content"
-
-#: communaute/templates/communaute/modifier_message.html
-msgid "Modifier le message"
-msgstr "Edit message"
-
-#: communaute/templates/communaute/modifier_message.html
-msgid "Votre message"
-msgstr "Your message"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Membre de la communauté Numeria"
-msgstr "Numeria community member"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Modifier mon profil"
-msgstr "Edit my profile"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Statistiques"
-msgstr "Statistics"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Sujets créés"
-msgstr "Topics created"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Messages postés"
-msgstr "Messages posted"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Membre depuis"
-msgstr "Member since"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Informations"
-msgstr "Information"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Spécialisation"
-msgstr "Specialisation"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Site web"
-msgstr "Website"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Aucune information renseignée."
-msgstr "No information provided."
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Dernières activités"
-msgstr "Recent activity"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Dans"
-msgstr "In"
-
-#: communaute/templates/communaute/profil_utilisateur.html
-msgid "Voir tous les sujets"
-msgstr "View all topics"
-
-#: communaute/templates/communaute/modifier_profil.html
-msgid "Retour à mon profil"
-msgstr "Back to my profile"
-
-#: communaute/templates/communaute/modifier_profil.html
-msgid "Personnalisez votre présence dans la communauté"
-msgstr "Customise your presence in the community"
-
-#: communaute/templates/communaute/modifier_profil.html
-msgid "Formats : JPG, PNG, GIF. Taille max : 5 Mo."
-msgstr "Formats: JPG, PNG, GIF. Max size: 5 MB."
-
-#: communaute/templates/communaute/modifier_profil.html
-msgid "Présentez-vous en quelques mots (optionnel)."
-msgstr "Introduce yourself in a few words (optional)."
-
-#: communaute/templates/communaute/modifier_profil.html
-msgid "Votre domaine d'études ou d'intérêt principal."
-msgstr "Your main field of study or interest."
-
-#: communaute/templates/communaute/modifier_profil.html
-msgid "Votre site personnel ou professionnel (optionnel)."
-msgstr "Your personal or professional website (optional)."
-
-#: communaute/templates/communaute/creer_categorie.html
-msgid "Modérateurs uniquement"
-msgstr "Moderators only"
-
-#: communaute/templates/communaute/creer_categorie.html
-msgid "Seuls les modérateurs peuvent ajouter de nouvelles catégories de discussion."
-msgstr "Only moderators can add new discussion categories."
-
-#: communaute/templates/communaute/creer_categorie.html
-msgid "Nom de la catégorie"
-msgstr "Category name"
-
-#: communaute/templates/communaute/creer_categorie.html
-msgid "Description"
-msgstr "Description"
-
-#: communaute/templates/communaute/creer_categorie.html
-msgid "Ordre d'affichage"
-msgstr "Display order"
-
-#: communaute/templates/communaute/creer_categorie.html
-msgid "Activer cette catégorie"
-msgstr "Activate this category"
-
-#: communaute/templates/communaute/creer_categorie.html
-msgid "Enregistrer la catégorie"
-msgstr "Save category"
+#~ msgid "Sujet fermé"
+#~ msgstr "Closed topic"
 
 # ===== BASE TEMPLATE MENTORAT =====
+#~ msgid "Programme officiel"
+#~ msgstr "Official programme"
 
-#: mentorat/templates/mentorat/index.html
-msgid "Programme officiel"
-msgstr "Official programme"
+#~ msgid "Rejoignez le programme"
+#~ msgstr "Join the programme"
 
-#: mentorat/templates/mentorat/index.html
-msgid "Mentors actifs"
-msgstr "Active mentors"
+#~ msgid ""
+#~ "Que vous souhaitiez partager votre expertise ou bénéficier d'un "
+#~ "accompagnement, il y a une place pour vous."
+#~ msgstr ""
+#~ "Whether you want to share your expertise or benefit from guidance, there "
+#~ "is a place for you."
 
-#: mentorat/templates/mentorat/index.html
-msgid "Mentorés inscrits"
-msgstr "Enrolled mentees"
+#~ msgid "S'inscrire comme mentor"
+#~ msgstr "Register as a mentor"
 
-#: mentorat/templates/mentorat/index.html
-msgid "Relations actives"
-msgstr "Active relationships"
+#~ msgid "Se connecter pour devenir mentor"
+#~ msgstr "Log in to become a mentor"
 
-#: mentorat/templates/mentorat/index.html
-msgid "Rejoignez le programme"
-msgstr "Join the programme"
+#~ msgid "Se connecter pour trouver un mentor"
+#~ msgstr "Log in to find a mentor"
 
-#: mentorat/templates/mentorat/index.html
-msgid "Que vous souhaitiez partager votre expertise ou bénéficier d'un accompagnement, il y a une place pour vous."
-msgstr "Whether you want to share your expertise or benefit from guidance, there is a place for you."
+#~ msgid "En 3 étapes"
+#~ msgstr "In 3 steps"
 
-#: mentorat/templates/mentorat/index.html
-msgid "Devenir Mentor"
-msgstr "Become a Mentor"
+#~ msgid "Comment ça marche ?"
+#~ msgstr "How does it work?"
 
-#: mentorat/templates/mentorat/index.html
-msgid "Partagez votre expertise et aidez la nouvelle génération à réussir. Faites la différence dans la vie d'un apprenant."
-msgstr "Share your expertise and help the next generation succeed. Make a difference in a learner's life."
+#~ msgid "Inscrivez-vous"
+#~ msgstr "Sign up"
 
-#: mentorat/templates/mentorat/index.html
-msgid "S'inscrire comme mentor"
-msgstr "Register as a mentor"
+#~ msgid ""
+#~ "Créez votre profil de mentor ou de mentoré selon vos besoins et objectifs."
+#~ msgstr ""
+#~ "Create your mentor or mentee profile according to your needs and goals."
 
-#: mentorat/templates/mentorat/index.html
-msgid "Se connecter pour devenir mentor"
-msgstr "Log in to become a mentor"
+#~ msgid "Connectez-vous"
+#~ msgstr "Connect"
 
-#: mentorat/templates/mentorat/index.html
-msgid "Trouver un Mentor"
-msgstr "Find a Mentor"
+#~ msgid ""
+#~ "Les mentors et mentorés sont mis en relation selon leurs profils et "
+#~ "domaines."
+#~ msgstr ""
+#~ "Mentors and mentees are matched according to their profiles and fields."
 
-#: mentorat/templates/mentorat/index.html
-msgid "Bénéficiez de conseils personnalisés d'experts dans votre domaine. Accélérez votre apprentissage et votre carrière."
-msgstr "Get personalised advice from experts in your field. Accelerate your learning and career."
-
-#: mentorat/templates/mentorat/index.html
-msgid "S'inscrire comme mentoré"
-msgstr "Register as a mentee"
-
-#: mentorat/templates/mentorat/index.html
-msgid "Se connecter pour trouver un mentor"
-msgstr "Log in to find a mentor"
-
-#: mentorat/templates/mentorat/index.html
-msgid "En 3 étapes"
-msgstr "In 3 steps"
-
-#: mentorat/templates/mentorat/index.html
-msgid "Comment ça marche ?"
-msgstr "How does it work?"
-
-#: mentorat/templates/mentorat/index.html
-msgid "Inscrivez-vous"
-msgstr "Sign up"
-
-#: mentorat/templates/mentorat/index.html
-msgid "Créez votre profil de mentor ou de mentoré selon vos besoins et objectifs."
-msgstr "Create your mentor or mentee profile according to your needs and goals."
-
-#: mentorat/templates/mentorat/index.html
-msgid "Connectez-vous"
-msgstr "Connect"
-
-#: mentorat/templates/mentorat/index.html
-msgid "Les mentors et mentorés sont mis en relation selon leurs profils et domaines."
-msgstr "Mentors and mentees are matched according to their profiles and fields."
-
-#: mentorat/templates/mentorat/index.html
-msgid "Échangez"
-msgstr "Exchange"
-
-#: mentorat/templates/mentorat/index.html
-msgid "Planifiez des séances et bénéficiez de conseils personnalisés sur mesure."
-msgstr "Schedule sessions and benefit from tailored personalised advice."
-
-#: mentorat/templates/mentorat/index.html
-msgid "Voir tous les mentors disponibles"
-msgstr "View all available mentors"
+#~ msgid ""
+#~ "Planifiez des séances et bénéficiez de conseils personnalisés sur mesure."
+#~ msgstr "Schedule sessions and benefit from tailored personalised advice."
