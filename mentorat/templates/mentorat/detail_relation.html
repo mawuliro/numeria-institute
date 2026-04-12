@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block titre %}{% trans "Relation de mentorat" %} - Numeria{% endblock %}
+{% block meta_description %}{% trans "Détail de votre relation de mentorat sur Numeria Institute." %}{% endblock %}
+
+{% block contenu %}
+
+<!-- ===== HEADER ===== -->
+<section class="bg-numeria-bleu text-white w-full relative overflow-hidden">
+    <div style="position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-12 relative">
+        <nav class="mb-6">
+            {% if est_mentor %}
+            <a href="{% url 'mentorat:tableau_de_bord_mentor' %}" class="text-blue-300 hover:text-numeria-teal transition-colors text-sm">
+                ← {% trans "Tableau de bord mentor" %}
+            </a>
+            {% else %}
+            <a href="{% url 'mentorat:tableau_de_bord_mentee' %}" class="text-blue-300 hover:text-numeria-teal transition-colors text-sm">
+                ← {% trans "Tableau de bord mentoré" %}
+            </a>
+            {% endif %}
+        </nav>
+
+        <div class="inline-flex items-center gap-2 bg-numeria-teal/20 text-numeria-teal text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-widest">
+            🤝 {% trans "Relation active" %}
+        </div>
+
+        <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl mb-4">
+            {% trans "Relation de mentorat" %}
+        </h1>
+
+        <!-- Participants -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 mt-4">
+            <!-- Mentor -->
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-numeria-or rounded-full flex items-center justify-center text-numeria-bleu text-lg font-black flex-shrink-0">
+                    {% if relation.mentor.profil.avatar %}
+                    <img src="{{ relation.mentor.profil.avatar.url }}" alt="" class="w-full h-full rounded-full object-cover">
+                    {% else %}
+                    {{ relation.mentor.profil.utilisateur.username|first|upper }}
+                    {% endif %}
+                </div>
+                <div>
+                    <div class="text-xs text-numeria-or font-bold uppercase tracking-wider">{% trans "Mentor" %}</div>
+                    <div style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-white text-base">
+                        {{ relation.mentor.profil.utilisateur.get_full_name|default:relation.mentor.profil.utilisateur.username }}
+                    </div>
+                    <div class="text-blue-300 text-xs">{{ relation.mentor.get_domaines_expertise_display }}</div>
+                </div>
+            </div>
+
+            <div class="text-numeria-teal text-2xl font-bold hidden sm:block">↔</div>
+
+            <!-- Mentoré -->
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu text-lg font-black flex-shrink-0">
+                    {% if relation.mentee.profil.avatar %}
+                    <img src="{{ relation.mentee.profil.avatar.url }}" alt="" class="w-full h-full rounded-full object-cover">
+                    {% else %}
+                    {{ relation.mentee.profil.utilisateur.username|first|upper }}
+                    {% endif %}
+                </div>
+                <div>
+                    <div class="text-xs text-numeria-teal font-bold uppercase tracking-wider">{% trans "Mentoré" %}</div>
+                    <div style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-white text-base">
+                        {{ relation.mentee.profil.utilisateur.get_full_name|default:relation.mentee.profil.utilisateur.username }}
+                    </div>
+                    <div class="text-blue-300 text-xs">{{ relation.mentee.get_objectifs_display }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== STATS + INFOS ===== -->
+<section class="w-full bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+    <div class="w-full px-4 sm:px-8 lg:px-16 py-6">
+        <div class="max-w-5xl mx-auto flex flex-wrap gap-8 items-center justify-between">
+            <div class="flex flex-wrap gap-8">
+                <div class="text-center">
+                    <div style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-2xl text-numeria-bleu dark:text-numeria-teal">{{ seances.count }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">{% trans "Séances" %}</div>
+                </div>
+                <div class="text-center">
+                    <div style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-2xl text-numeria-bleu dark:text-numeria-teal">{{ relation.date_debut|date:"M Y" }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">{% trans "Début" %}</div>
+                </div>
+            </div>
+            <!-- Actions -->
+            <div class="flex flex-wrap gap-3">
+                <a href="{% url 'mentorat:planifier_seance' relation.pk %}"
+                   style="font-family:'Outfit',sans-serif;font-weight:700;"
+                   class="bg-numeria-teal text-numeria-bleu px-5 py-2.5 rounded-xl hover:bg-teal-300 transition-colors text-sm">
+                    📅 {% trans "Planifier une séance" %}
+                </a>
+                {% if est_mentor %}
+                <a href="{% url 'mentorat:terminer_relation' relation.pk %}"
+                   class="text-red-400 hover:text-red-600 border border-red-200 dark:border-red-800 px-5 py-2.5 rounded-xl transition-colors text-sm"
+                   onclick="return confirm('{% trans "Confirmer la fin de cette relation ?" %}')">
+                    🔚 {% trans "Terminer la relation" %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CONTENU PRINCIPAL ===== -->
+<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
+
+            <!-- Objectifs (sidebar) -->
+            <div class="md:col-span-1 space-y-6">
+                {% if relation.objectifs %}
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
+                    <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-base mb-4 flex items-center gap-2">
+                        <span>🎯</span> {% trans "Objectifs" %}
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{{ relation.objectifs }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Infos mentor -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
+                    <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-base mb-4 flex items-center gap-2">
+                        <span>👤</span> {% trans "Mentor" %}
+                    </h2>
+                    <div class="space-y-2 text-sm">
+                        <div>
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block">{% trans "Domaine" %}</span>
+                            <span class="text-gray-700 dark:text-gray-200">{{ relation.mentor.get_domaines_expertise_display }}</span>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block">{% trans "Expérience" %}</span>
+                            <span class="text-gray-700 dark:text-gray-200">{{ relation.mentor.get_niveau_experience_display }}</span>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block">{% trans "Disponibilité" %}</span>
+                            <span class="text-gray-700 dark:text-gray-200">{{ relation.mentor.get_disponibilite_display }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liste des séances -->
+            <div class="md:col-span-2">
+                <h2 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-xl mb-6 flex items-center gap-2">
+                    <span>📅</span> {% trans "Séances" %}
+                </h2>
+
+                {% if seances %}
+                <div class="space-y-4">
+                    {% for seance in seances %}
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+                        <div class="h-1
+                            {% if seance.statut == 'planifiee' %}bg-numeria-teal
+                            {% elif seance.statut == 'terminee' %}bg-numeria-or
+                            {% elif seance.statut == 'annulee' %}bg-red-400
+                            {% else %}bg-numeria-bleu{% endif %}">
+                        </div>
+                        <div class="p-5">
+                            <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
+                                <div>
+                                    <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-gray-800 dark:text-white text-base mb-1">
+                                        {{ seance.titre }}
+                                    </h3>
+                                    <div class="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+                                        <span>📆 {{ seance.date_heure|date:"d M Y, H:i" }}</span>
+                                        <span>⏱ {{ seance.duree_minutes }} {% trans "min" %}</span>
+                                        <span>
+                                            {% if seance.modalite == 'visio' %}🎥
+                                            {% elif seance.modalite == 'presentiel' %}🏢
+                                            {% elif seance.modalite == 'telephone' %}📞
+                                            {% else %}✉️{% endif %}
+                                            {{ seance.get_modalite_display }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-bold px-3 py-1 rounded-full
+                                    {% if seance.statut == 'planifiee' %}bg-numeria-teal/10 text-teal-700 dark:text-numeria-teal
+                                    {% elif seance.statut == 'terminee' %}bg-numeria-or/10 text-yellow-700 dark:text-numeria-or
+                                    {% elif seance.statut == 'annulee' %}bg-red-100 text-red-600 dark:bg-red-900/20 dark:text-red-400
+                                    {% else %}bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-numeria-teal{% endif %}">
+                                    {{ seance.get_statut_display }}
+                                </span>
+                            </div>
+
+                            {% if seance.description %}
+                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-3">{{ seance.description }}</p>
+                            {% endif %}
+
+                            {% if seance.statut == 'terminee' %}
+                            <div class="grid sm:grid-cols-2 gap-4 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                                {% if seance.notes_mentor %}
+                                <div>
+                                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{% trans "Notes du mentor" %}</div>
+                                    <p class="text-gray-600 dark:text-gray-300 text-sm">{{ seance.notes_mentor }}</p>
+                                </div>
+                                {% endif %}
+                                {% if seance.notes_mentee %}
+                                <div>
+                                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{% trans "Notes du mentoré" %}</div>
+                                    <p class="text-gray-600 dark:text-gray-300 text-sm">{{ seance.notes_mentee }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+                            {% if seance.statut == 'planifiee' %}
+                            <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                                <a href="{% url 'mentorat:terminer_seance' seance.pk %}"
+                                   style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                   class="bg-numeria-or/10 text-numeria-or hover:bg-numeria-or hover:text-white px-4 py-2 rounded-xl transition-colors text-xs">
+                                    ✅ {% trans "Marquer comme terminée" %}
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-10 text-center">
+                    <div class="text-5xl mb-4">📅</div>
+                    <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-2">
+                        {% trans "Aucune séance planifiée" %}
+                    </h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">{% trans "Planifiez votre première séance pour commencer." %}</p>
+                    <a href="{% url 'mentorat:planifier_seance' relation.pk %}"
+                       style="font-family:'Outfit',sans-serif;font-weight:700;"
+                       class="bg-numeria-teal text-numeria-bleu px-6 py-3 rounded-xl hover:bg-teal-300 transition-colors text-sm inline-block">
+                        📅 {% trans "Planifier la première séance" %}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}
