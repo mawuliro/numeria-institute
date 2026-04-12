@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load video_tags %}
-{% block titre %}{{ cours.titre }} Numeria Institute{% endblock %}
+{% block titre %}{{ cours.titre }} — Numeria Institute{% endblock %}
+{% block meta_description %}{{ cours.resume|truncatechars:160 }}{% endblock %}
+{% block og_titre %}{{ cours.titre }} — Numeria Institute{% endblock %}
+{% block og_description %}{{ cours.resume|truncatechars:160 }}{% endblock %}
+{% block og_type %}course{% endblock %}
 
 {% block contenu %}
 

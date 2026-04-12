@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import get_user_model
 from cours.models import Cours
 from blog.models import Article
 from .models import HomePage, AboutPage, ContactPage
+
+User = get_user_model()
 
 
 def accueil(request):
@@ -13,9 +16,9 @@ def accueil(request):
             hero_title="La science accessible à tous les esprits curieux",
             hero_description="Des cours scientifiques de qualité, conçus pour les apprenants africains et francophones du monde entier. Du lycée à l'IA avancée.",
             hero_cta_primary_text="Découvrir les cours",
-            hero_cta_primary_url="{% url 'cours:catalogue' %}",
+            hero_cta_primary_url="/cours/",
             hero_cta_secondary_text="Créer un compte",
-            hero_cta_secondary_url="{% url 'comptes:inscription' %}",
+            hero_cta_secondary_url="/comptes/inscription/",
             stats_students=1500,
             stats_courses=25,
             stats_countries=15,
@@ -34,12 +37,47 @@ def accueil(request):
         )
     cours_recents = Cours.objects.filter(est_publie=True)[:3]
     articles_recents = Article.objects.filter(est_publie=True)[:3]
+
+    # Statistiques dynamiques depuis la base de données
+    nb_etudiants = User.objects.filter(is_active=True).count()
+    nb_cours = Cours.objects.filter(est_publie=True).count()
+
     contexte = {
         'homepage': homepage,
         'cours_recents': cours_recents,
         'articles_recents': articles_recents,
+        'nb_etudiants': nb_etudiants,
+        'nb_cours': nb_cours,
+        'nb_pays': 5,  # Valeur statique honnête — suivi géographique non implémenté
     }
     return render(request, 'pages/accueil.html', contexte)
+
+
+def robots_txt(request):
+    """robots.txt dynamique."""
+    from django.http import HttpResponse
+    base_url = f"{request.scheme}://{request.get_host()}"
+    content = f"""User-agent: *
+Allow: /
+
+Sitemap: {base_url}/sitemap.xml
+
+Disallow: /admin/
+Disallow: /analytics/
+Disallow: /comptes/profil/supprimer/
+Disallow: /comptes/profil/changer-mot-de-passe/
+"""
+    return HttpResponse(content, content_type='text/plain')
+
+
+def confidentialite(request):
+    """Politique de confidentialité."""
+    return render(request, 'pages/confidentialite.html')
+
+
+def cgu(request):
+    """Conditions Générales d'Utilisation."""
+    return render(request, 'pages/cgu.html')
 
 
 def a_propos(request):

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 from cloudinary.models import CloudinaryField
 
 
@@ -32,12 +33,12 @@ class Profil(models.Model):
     ville = models.CharField(max_length=100, blank=True, null=True)
 
     NIVEAUX_ETUDES = [
-        ('lycee', 'Lycée'),
-        ('licence', 'Licence'),
-        ('master', 'Master'),
-        ('doctorat', 'Doctorat'),
-        ('professionnel', 'Professionnel'),
-        ('autre', 'Autre'),
+        ('lycee', _('Lycée')),
+        ('licence', _('Licence')),
+        ('master', _('Master')),
+        ('doctorat', _('Doctorat')),
+        ('professionnel', _('Professionnel')),
+        ('autre', _('Autre')),
     ]
     niveau_etudes = models.CharField(
         max_length=20,
@@ -67,6 +68,6 @@ class Profil(models.Model):
         return None
 
     class Meta:
-        verbose_name = 'Profil'
-        verbose_name_plural = 'Profils'
+        verbose_name = _('Profil')
+        verbose_name_plural = _('Profils')
         ordering = ['-date_inscription']

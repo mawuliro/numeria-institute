@@ -2,7 +2,7 @@
 <html lang="fr">
 
 <head>
-    {% load static %}
+    {% load static i18n %}
     <!-- ⚡ Mode sombre — EN PREMIER pour éviter le flash -->
     <script>
         const modeSombre = localStorage.getItem('mode-sombre');
@@ -24,6 +24,8 @@
     <meta property="og:title" content="{% block og_titre %}Numeria Institute{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}">
     <meta property="og:image" content="{% block og_image %}{% static 'images/logo-numeria.png' %}{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -202,16 +204,14 @@
 
                 <!-- NAVIGATION DESKTOP -->
                 <nav class="hidden lg:flex items-center gap-7 xl:gap-9">
-                    <a href="/" class="nav-pill {% if request.path == '/' %}actif{% endif %}">Accueil</a>
-                    <a href="{% url 'cours:catalogue' %}" class="nav-pill {% if '/cours' in request.path %}actif{% endif %}">Cours</a>
-                    <a href="{% url 'blog:liste' %}" class="nav-pill {% if '/blog' in request.path %}actif{% endif %}">Blog</a>
-                    <!-- 🔥 NOUVEAU LIEN CANDIDATURES -->
-                    <a href="{% url 'admissions:liste_campagnes' %}" class="nav-pill {% if '/admissions' in request.path %}actif{% endif %}">Candidatures</a>
-                    <a href="{% url 'communaute:liste_categories' %}" class="nav-pill {% if '/communaute' in request.path %}actif{% endif %}">Communauté</a>
-                    <a href="{% url 'mentorat:index' %}" class="nav-pill {% if '/mentorat' in request.path %}actif{% endif %}">Mentorat</a>
-                    <a href="{% url 'a_propos' %}" class="nav-pill {% if '/a-propos' in request.path %}actif{% endif %}">À propos</a>
-                    <a href="{% url 'contact' %}" class="nav-pill {% if '/contact' in request.path %}actif{% endif %}">Contact</a>
-                    <!-- LIEN ANALYTICS POUR ADMIN (DESKTOP) -->
+                    <a href="/" class="nav-pill {% if request.path == '/' %}actif{% endif %}">{% trans "Accueil" %}</a>
+                    <a href="{% url 'cours:catalogue' %}" class="nav-pill {% if '/cours' in request.path %}actif{% endif %}">{% trans "Cours" %}</a>
+                    <a href="{% url 'blog:liste' %}" class="nav-pill {% if '/blog' in request.path %}actif{% endif %}">{% trans "Blog" %}</a>
+                    <a href="{% url 'admissions:liste_campagnes' %}" class="nav-pill {% if '/admissions' in request.path %}actif{% endif %}">{% trans "Candidatures" %}</a>
+                    <a href="{% url 'communaute:liste_categories' %}" class="nav-pill {% if '/communaute' in request.path %}actif{% endif %}">{% trans "Communauté" %}</a>
+                    <a href="{% url 'mentorat:index' %}" class="nav-pill {% if '/mentorat' in request.path %}actif{% endif %}">{% trans "Mentorat" %}</a>
+                    <a href="{% url 'a_propos' %}" class="nav-pill {% if '/a-propos' in request.path %}actif{% endif %}">{% trans "À propos" %}</a>
+                    <a href="{% url 'contact' %}" class="nav-pill {% if '/contact' in request.path %}actif{% endif %}">{% trans "Contact" %}</a>
                     {% if user.is_authenticated and user.is_staff %}
                     <a href="{% url 'analytics:dashboard' %}" class="nav-pill {% if '/analytics' in request.path %}actif{% endif %} flex items-center gap-1">
                         📊 Analytics
@@ -221,6 +221,22 @@
 
                 <!-- BOUTONS + MODE SOMBRE + HAMBURGER -->
                 <div class="flex items-center gap-2">
+                    <!-- SÉLECTEUR DE LANGUE -->
+                    <form action="{% url 'set_language' %}" method="post" style="display:inline-flex;align-items:center;gap:2px;" class="hidden sm:inline-flex">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                        <button type="submit" name="language" value="fr"
+                            title="Français"
+                            class="w-8 h-8 rounded-lg flex items-center justify-center text-sm hover:bg-white/10 transition-colors {% if LANGUAGE_CODE == 'fr' %}bg-white/15 text-white{% else %}text-blue-300{% endif %}">
+                            🇫🇷
+                        </button>
+                        <button type="submit" name="language" value="en"
+                            title="English"
+                            class="w-8 h-8 rounded-lg flex items-center justify-center text-sm hover:bg-white/10 transition-colors {% if LANGUAGE_CODE == 'en' %}bg-white/15 text-white{% else %}text-blue-300{% endif %}">
+                            🇬🇧
+                        </button>
+                    </form>
+
                     <button onclick="basculerMode()"
                         class="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors"
                         aria-label="Mode sombre">
@@ -231,7 +247,7 @@
                     {% if user.is_authenticated %}
                         <a href="{% url 'comptes:tableau_de_bord' %}"
                            class="hidden sm:block text-blue-200 hover:text-numeria-teal text-sm font-medium transition-colors">
-                            Tableau de bord
+                            {% trans "Tableau de bord" %}
                         </a>
                         <a href="{% url 'comptes:profil' %}"
                            class="hidden sm:flex items-center gap-2 bg-numeria-teal text-numeria-bleu font-bold text-sm px-4 py-2 rounded-xl hover:bg-teal-300 transition-colors">
@@ -247,11 +263,11 @@
                     {% else %}
                         <a href="{% url 'comptes:connexion' %}"
                            class="hidden sm:block border border-white/25 text-white font-semibold text-sm px-4 py-2 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors duration-200">
-                            Connexion
+                            {% trans "Connexion" %}
                         </a>
                         <a href="{% url 'comptes:inscription' %}"
                            class="hidden sm:block bg-numeria-teal text-numeria-bleu font-bold text-sm px-4 py-2 rounded-xl hover:bg-teal-300 transition-colors duration-200">
-                            S'inscrire
+                            {% trans "S'inscrire" %}
                         </a>
                     {% endif %}
 
@@ -269,29 +285,41 @@
         <!-- MENU MOBILE -->
         <div id="menu-mobile" class="lg:hidden bg-numeria-bleu-fonce border-t border-white/10 w-full">
             <div class="w-full px-4 sm:px-8 py-4 flex flex-col gap-1">
-                <a href="/" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if request.path == '/' %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Accueil</a>
-                <a href="{% url 'cours:catalogue' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/cours' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Cours</a>
-                <a href="{% url 'blog:liste' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/blog' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Blog</a>
-                <!-- 🔥 NOUVEAU LIEN CANDIDATURES (MOBILE) -->
-                <a href="{% url 'admissions:liste_campagnes' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/admissions' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">🎓 Candidatures</a>
-                <a href="{% url 'communaute:liste_categories' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/communaute' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Communauté</a>
-                <a href="{% url 'mentorat:index' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/mentorat' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">🤝 Mentorat</a>
-                <a href="{% url 'a_propos' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/a-propos' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">À propos</a>
-                <a href="{% url 'contact' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/contact' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">Contact</a>
-                <!-- LIEN ANALYTICS POUR ADMIN (MOBILE) -->
+                <a href="/" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if request.path == '/' %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "Accueil" %}</a>
+                <a href="{% url 'cours:catalogue' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/cours' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "Cours" %}</a>
+                <a href="{% url 'blog:liste' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/blog' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "Blog" %}</a>
+                <a href="{% url 'admissions:liste_campagnes' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/admissions' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">🎓 {% trans "Candidatures" %}</a>
+                <a href="{% url 'communaute:liste_categories' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/communaute' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "Communauté" %}</a>
+                <a href="{% url 'mentorat:index' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/mentorat' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">🤝 {% trans "Mentorat" %}</a>
+                <a href="{% url 'a_propos' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/a-propos' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "À propos" %}</a>
+                <a href="{% url 'contact' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/contact' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "Contact" %}</a>
                 {% if user.is_authenticated and user.is_staff %}
                 <a href="{% url 'analytics:dashboard' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/analytics' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %} flex items-center gap-2">
                     📊 Analytics
                 </a>
                 {% endif %}
                 <div class="border-t border-white/10 my-2"></div>
+                <!-- Sélecteur de langue mobile -->
+                <form action="{% url 'set_language' %}" method="post" class="flex gap-2 px-4 py-2">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                    <button type="submit" name="language" value="fr"
+                        class="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl transition-colors {% if LANGUAGE_CODE == 'fr' %}bg-numeria-teal text-numeria-bleu{% else %}text-blue-200 hover:bg-white/10{% endif %}">
+                        🇫🇷 Français
+                    </button>
+                    <button type="submit" name="language" value="en"
+                        class="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl transition-colors {% if LANGUAGE_CODE == 'en' %}bg-numeria-teal text-numeria-bleu{% else %}text-blue-200 hover:bg-white/10{% endif %}">
+                        🇬🇧 English
+                    </button>
+                </form>
+                <div class="border-t border-white/10 my-2"></div>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'comptes:tableau_de_bord' %}" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-numeria-teal hover:bg-white/10 transition-colors">🎓 Tableau de bord</a>
-                    <a href="{% url 'comptes:profil' %}" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-numeria-teal hover:bg-white/10 transition-colors">👤 Mon profil</a>
-                    <a href="{% url 'comptes:deconnexion' %}" class="border border-white/20 text-gray-300 font-semibold text-sm px-4 py-3 rounded-xl text-center hover:bg-white/10 transition-colors">👋 Se déconnecter</a>
+                    <a href="{% url 'comptes:tableau_de_bord' %}" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-numeria-teal hover:bg-white/10 transition-colors">🎓 {% trans "Tableau de bord" %}</a>
+                    <a href="{% url 'comptes:profil' %}" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-numeria-teal hover:bg-white/10 transition-colors">👤 {% trans "Mon profil" %}</a>
+                    <a href="{% url 'comptes:deconnexion' %}" class="border border-white/20 text-gray-300 font-semibold text-sm px-4 py-3 rounded-xl text-center hover:bg-white/10 transition-colors">👋 {% trans "Se déconnecter" %}</a>
                 {% else %}
-                    <a href="{% url 'comptes:connexion' %}" class="border border-white/25 text-white font-semibold text-sm px-4 py-3 rounded-xl text-center hover:border-numeria-teal hover:text-numeria-teal transition-colors">Se connecter</a>
-                    <a href="{% url 'comptes:inscription' %}" class="bg-numeria-teal text-numeria-bleu font-bold text-sm px-4 py-3 rounded-xl text-center hover:bg-teal-300 transition-colors">S'inscrire gratuitement</a>
+                    <a href="{% url 'comptes:connexion' %}" class="border border-white/25 text-white font-semibold text-sm px-4 py-3 rounded-xl text-center hover:border-numeria-teal hover:text-numeria-teal transition-colors">{% trans "Se connecter" %}</a>
+                    <a href="{% url 'comptes:inscription' %}" class="bg-numeria-teal text-numeria-bleu font-bold text-sm px-4 py-3 rounded-xl text-center hover:bg-teal-300 transition-colors">{% trans "S'inscrire gratuitement" %}</a>
                 {% endif %}
             </div>
         </div>
@@ -335,20 +363,20 @@
 
                 <!-- Navigation -->
                 <div>
-                    <div style="font-family:'Outfit',sans-serif; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; font-size:0.75rem;" class="text-white mb-5">Navigation</div>
+                    <div style="font-family:'Outfit',sans-serif; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; font-size:0.75rem;" class="text-white mb-5">{% trans "Navigation" %}</div>
                     <ul class="space-y-3">
-                        <li><a href="{% url 'cours:catalogue' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Nos cours</a></li>
-                        <li><a href="{% url 'blog:liste' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Le blog</a></li>
-                        <li><a href="{% url 'admissions:liste_campagnes' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Candidatures</a></li>
-                        <li><a href="{% url 'a_propos' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">À propos</a></li>
-                        <li><a href="{% url 'contact' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Contact</a></li>
-                        <li><a href="{% url 'communaute:liste_categories' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">Communauté</a></li>
+                        <li><a href="{% url 'cours:catalogue' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "Nos cours" %}</a></li>
+                        <li><a href="{% url 'blog:liste' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "Le blog" %}</a></li>
+                        <li><a href="{% url 'admissions:liste_campagnes' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "Candidatures" %}</a></li>
+                        <li><a href="{% url 'a_propos' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "À propos" %}</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "Contact" %}</a></li>
+                        <li><a href="{% url 'communaute:liste_categories' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "Communauté" %}</a></li>
                     </ul>
                 </div>
 
                 <!-- Contact -->
                 <div>
-                    <div style="font-family:'Outfit',sans-serif; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; font-size:0.75rem;" class="text-white mb-5">Contact</div>
+                    <div style="font-family:'Outfit',sans-serif; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; font-size:0.75rem;" class="text-white mb-5">{% trans "Contact" %}</div>
                     <div class="space-y-3">
                         <p class="text-blue-300 text-sm flex items-center gap-2">
                             <span class="text-numeria-teal">✉</span>
@@ -358,19 +386,19 @@
                         <p class="text-blue-300 text-sm flex items-center gap-2"><span class="text-numeria-teal">🌍</span> Afrique de l'Ouest</p>
                     </div>
                     <div class="flex gap-2.5 mt-5">
-                        <a href="#" class="w-9 h-9 bg-white/10 hover:bg-numeria-teal rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-all text-xs font-bold">in</a>
-                        <a href="#" class="w-9 h-9 bg-white/10 hover:bg-numeria-teal rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-all text-xs font-bold">▶</a>
-                        <a href="#" class="w-9 h-9 bg-white/10 hover:bg-numeria-teal rounded-lg flex items-center justify-center text-blue-300 hover:text-numeria-bleu transition-all text-xs font-bold">f</a>
+                        <span class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center text-blue-300 text-xs font-bold cursor-default" title="LinkedIn — bientôt disponible">in</span>
+                        <span class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center text-blue-300 text-xs font-bold cursor-default" title="YouTube — bientôt disponible">▶</span>
+                        <span class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center text-blue-300 text-xs font-bold cursor-default" title="Facebook — bientôt disponible">f</span>
                     </div>
                 </div>
 
             </div>
 
             <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <p class="text-blue-400 text-sm">© 2025 Numeria Institute Tous droits réservés</p>
+                <p class="text-blue-400 text-sm">© 2026 Numeria Institute — {% trans "Tous droits réservés" %}</p>
                 <div class="flex gap-5">
-                    <a href="#" class="text-blue-400 hover:text-numeria-teal text-xs transition-colors">Confidentialité</a>
-                    <a href="#" class="text-blue-400 hover:text-numeria-teal text-xs transition-colors">CGU</a>
+                    <a href="{% url 'confidentialite' %}" class="text-blue-400 hover:text-numeria-teal text-xs transition-colors">{% trans "Confidentialité" %}</a>
+                    <a href="{% url 'cgu' %}" class="text-blue-400 hover:text-numeria-teal text-xs transition-colors">{% trans "CGU" %}</a>
                 </div>
             </div>
         </div>

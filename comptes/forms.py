@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.utils.translation import gettext_lazy as _
 from .models import Profil
 
 # Liste complète des pays francophones et africains en priorité
@@ -93,24 +94,24 @@ class FormulaireInscription(UserCreationForm):
 
     email = forms.EmailField(
         required=True,
-        label="Adresse email",
+        label=_("Adresse email"),
         widget=forms.EmailInput(attrs={'placeholder': 'votre@email.com'})
     )
     first_name = forms.CharField(
         required=True,
-        label="Prénom",
+        label=_("Prénom"),
         max_length=50,
-        widget=forms.TextInput(attrs={'placeholder': 'Votre prénom'})
+        widget=forms.TextInput(attrs={'placeholder': _('Votre prénom')})
     )
     last_name = forms.CharField(
         required=True,
-        label="Nom de famille",
+        label=_("Nom de famille"),
         max_length=50,
-        widget=forms.TextInput(attrs={'placeholder': 'Votre nom'})
+        widget=forms.TextInput(attrs={'placeholder': _('Votre nom')})
     )
     pays = forms.ChoiceField(
         required=False,
-        label="Pays",
+        label=_("Pays"),
         choices=PAYS_CHOICES,
     )
 
@@ -120,15 +121,15 @@ class FormulaireInscription(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].label = "Nom d'utilisateur"
-        self.fields['username'].help_text = "Lettres, chiffres et @/./+/-/_ uniquement."
-        self.fields['username'].widget.attrs['placeholder'] = "Nom d'utilisateur unique"
-        self.fields['password1'].label = "Mot de passe"
+        self.fields['username'].label = _("Nom d'utilisateur")
+        self.fields['username'].help_text = _("Lettres, chiffres et @/./+/-/_ uniquement.")
+        self.fields['username'].widget.attrs['placeholder'] = _("Nom d'utilisateur unique")
+        self.fields['password1'].label = _("Mot de passe")
         self.fields['password1'].help_text = ""
-        self.fields['password1'].widget.attrs['placeholder'] = "8 caractères minimum"
-        self.fields['password2'].label = "Confirmer le mot de passe"
+        self.fields['password1'].widget.attrs['placeholder'] = _("8 caractères minimum")
+        self.fields['password2'].label = _("Confirmer le mot de passe")
         self.fields['password2'].help_text = ""
-        self.fields['password2'].widget.attrs['placeholder'] = "Répète ton mot de passe"
+        self.fields['password2'].widget.attrs['placeholder'] = _("Répète ton mot de passe")
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -147,12 +148,12 @@ class FormulaireInscription(UserCreationForm):
 class FormulaireConnexion(forms.Form):
     """Formulaire de connexion."""
     username = forms.CharField(
-        label="Nom d'utilisateur",
-        widget=forms.TextInput(attrs={'placeholder': "Nom d'utilisateur"})
+        label=_("Nom d'utilisateur"),
+        widget=forms.TextInput(attrs={'placeholder': _("Nom d'utilisateur")})
     )
     password = forms.CharField(
-        label="Mot de passe",
-        widget=forms.PasswordInput(attrs={'placeholder': "Ton mot de passe"})
+        label=_("Mot de passe"),
+        widget=forms.PasswordInput(attrs={'placeholder': _("Ton mot de passe")})
     )
 
 
@@ -206,12 +207,12 @@ class FormulaireProfil(forms.ModelForm):
             'github': forms.URLInput(attrs={'placeholder': 'https://github.com/...'}),
         }
         labels = {
-            'photo': 'Photo de profil',
-            'bio': 'Biographie',
-            'pays': 'Pays',
-            'ville': 'Ville',
-            'niveau_etudes': "Niveau d'études",
-            'domaine': "Domaine d'études",
+            'photo': _('Photo de profil'),
+            'bio': _('Biographie'),
+            'pays': _('Pays'),
+            'ville': _('Ville'),
+            'niveau_etudes': _("Niveau d'études"),
+            'domaine': _("Domaine d'études"),
             'linkedin': 'LinkedIn',
             'github': 'GitHub',
         }

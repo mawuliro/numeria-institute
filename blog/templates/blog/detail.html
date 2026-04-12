@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
-{% block titre %}{{ article.titre }} Numeria Institute{% endblock %}
+{% load i18n %}
+{% block titre %}{{ article.titre }} — Numeria Institute{% endblock %}
+{% block meta_description %}{{ article.resume|truncatechars:160 }}{% endblock %}
+{% block og_titre %}{{ article.titre }} — Numeria Institute{% endblock %}
+{% block og_description %}{{ article.resume|truncatechars:160 }}{% endblock %}
+{% block og_type %}article{% endblock %}
 {% block contenu %}
 
 <!-- EN-TÊTE -->

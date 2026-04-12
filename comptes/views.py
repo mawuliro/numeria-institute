@@ -4,6 +4,7 @@ from django.contrib.auth import login, logout, authenticate, update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
+from django.utils.translation import gettext as _
 from .forms import FormulaireInscription, FormulaireConnexion, FormulaireProfil
 from .models import Profil
 

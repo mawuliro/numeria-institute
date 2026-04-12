@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block titre %}Connexion — Numeria Institute{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Connexion" %} — Numeria Institute{% endblock %}
 {% block contenu %}
 
 <section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 flex items-center justify-center py-12 relative overflow-hidden">
@@ -40,10 +41,10 @@
                 </a>
 
                 <h1 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-2xl text-gray-800 dark:text-white mt-6 mb-1">
-                    Bon retour 👋
+                    {% trans "Bon retour" %} 👋
                 </h1>
                 <p class="text-gray-500 dark:text-gray-400 text-sm">
-                    Connecte-toi pour accéder à tes cours
+                    {% trans "Connecte-toi pour accéder à tes cours" %}
                 </p>
             </div>
 
@@ -73,7 +74,7 @@
                         <!-- Nom d'utilisateur -->
                         <div class="mb-5">
                             <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
-                                Nom d'utilisateur
+                                {% trans "Nom d'utilisateur" %}
                             </label>
                             <div class="relative">
                                 <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-bold">@</span>
@@ -92,10 +93,10 @@
                         <div class="mb-5">
                             <div class="flex items-center justify-between mb-2">
                                 <label style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest">
-                                    Mot de passe
+                                    {% trans "Mot de passe" %}
                                 </label>
                                 <a href="#" class="text-xs text-numeria-teal hover:opacity-75 transition-opacity font-medium">
-                                    Mot de passe oublié ?
+                                    {% trans "Mot de passe oublié ?" %}
                                 </a>
                             </div>
                             <div class="relative">
@@ -117,7 +118,7 @@
                             <input type="checkbox" name="remember" id="remember"
                                 class="w-4 h-4 rounded accent-numeria-teal cursor-pointer">
                             <label for="remember" class="text-sm text-gray-500 dark:text-gray-400 cursor-pointer select-none">
-                                Se souvenir de moi
+                                {% trans "Se souvenir de moi" %}
                             </label>
                         </div>
 
@@ -125,18 +126,18 @@
                         <button type="submit"
                             style="font-family:'Outfit',sans-serif;font-weight:700;"
                             class="w-full bg-numeria-teal text-numeria-bleu py-3.5 rounded-xl hover:bg-teal-300 transition-all text-base shadow-md hover:shadow-lg hover:-translate-y-0.5 transform">
-                            Se connecter →
+                            {% trans "Se connecter" %} →
                         </button>
 
                     </form>
 
                     <!-- Lien inscription -->
                     <p class="text-center text-gray-400 dark:text-gray-500 text-sm mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
-                        Pas encore de compte ?
+                        {% trans "Pas encore de compte ?" %}
                         <a href="{% url 'comptes:inscription' %}"
                            style="font-family:'Outfit',sans-serif;font-weight:700;"
                            class="text-numeria-bleu dark:text-numeria-teal hover:opacity-75 transition-opacity ml-1">
-                            S'inscrire gratuitement →
+                            {% trans "S'inscrire gratuitement" %} →
                         </a>
                     </p>
                 </div>

@@ -1,0 +1,416 @@
+# English translations for Numeria Institute
+# Copyright (C) 2026 Numeria Institute
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Numeria Institute\n"
+"Report-Msgid-Bugs-To: contact@numeriainstitute.com\n"
+"POT-Creation-Date: 2026-04-12 14:14+0000\n"
+"PO-Revision-Date: 2026-04-12 14:14+0000\n"
+"Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
+"Language-Team: English <contact@numeriainstitute.com>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: comptes/forms.py:97
+msgid "Adresse email"
+msgstr "Email address"
+
+#: comptes/forms.py:102
+msgid "Prénom"
+msgstr "First name"
+
+#: comptes/forms.py:104
+msgid "Votre prénom"
+msgstr "Your first name"
+
+#: comptes/forms.py:108
+msgid "Nom de famille"
+msgstr "Last name"
+
+#: comptes/forms.py:110
+msgid "Votre nom"
+msgstr "Your last name"
+
+#: comptes/forms.py:114 comptes/forms.py:212
+msgid "Pays"
+msgstr "Country"
+
+#: comptes/forms.py:124 comptes/forms.py:151 comptes/forms.py:152
+#: comptes/templates/comptes/connexion.html:77
+msgid "Nom d'utilisateur"
+msgstr "Username"
+
+#: comptes/forms.py:125
+msgid "Lettres, chiffres et @/./+/-/_ uniquement."
+msgstr "Letters, digits and @/./+/-/_ only."
+
+#: comptes/forms.py:126
+msgid "Nom d'utilisateur unique"
+msgstr "Unique username"
+
+#: comptes/forms.py:127 comptes/forms.py:155
+#: comptes/templates/comptes/connexion.html:96
+msgid "Mot de passe"
+msgstr "Password"
+
+#: comptes/forms.py:129
+msgid "8 caractères minimum"
+msgstr "8 characters minimum"
+
+#: comptes/forms.py:130
+msgid "Confirmer le mot de passe"
+msgstr "Confirm password"
+
+#: comptes/forms.py:132
+msgid "Répète ton mot de passe"
+msgstr "Repeat your password"
+
+#: comptes/forms.py:156
+msgid "Ton mot de passe"
+msgstr "Your password"
+
+#: comptes/forms.py:210
+msgid "Photo de profil"
+msgstr "Profile photo"
+
+#: comptes/forms.py:211
+msgid "Biographie"
+msgstr "Biography"
+
+#: comptes/forms.py:213
+msgid "Ville"
+msgstr "City"
+
+#: comptes/forms.py:214
+msgid "Niveau d'études"
+msgstr "Education level"
+
+#: comptes/forms.py:215
+msgid "Domaine d'études"
+msgstr "Field of study"
+
+#: comptes/models.py:36
+msgid "Lycée"
+msgstr "High school"
+
+#: comptes/models.py:37
+msgid "Licence"
+msgstr "Bachelor's degree"
+
+#: comptes/models.py:38
+msgid "Master"
+msgstr "Master's degree"
+
+#: comptes/models.py:39
+msgid "Doctorat"
+msgstr "PhD"
+
+#: comptes/models.py:40
+msgid "Professionnel"
+msgstr "Professional"
+
+#: comptes/models.py:41
+msgid "Autre"
+msgstr "Other"
+
+#: comptes/models.py:71
+msgid "Profil"
+msgstr "Profile"
+
+#: comptes/models.py:72
+msgid "Profils"
+msgstr "Profiles"
+
+#: comptes/templates/comptes/connexion.html:3 templates/base.html:248
+msgid "Connexion"
+msgstr "Login"
+
+#: comptes/templates/comptes/connexion.html:44
+msgid "Bon retour"
+msgstr "Welcome back"
+
+#: comptes/templates/comptes/connexion.html:47
+msgid "Connecte-toi pour accéder à tes cours"
+msgstr "Log in to access your courses"
+
+#: comptes/templates/comptes/connexion.html:99
+msgid "Mot de passe oublié ?"
+msgstr "Forgot your password?"
+
+#: comptes/templates/comptes/connexion.html:121
+msgid "Se souvenir de moi"
+msgstr "Remember me"
+
+#: comptes/templates/comptes/connexion.html:129 templates/base.html:289
+msgid "Se connecter"
+msgstr "Log in"
+
+#: comptes/templates/comptes/connexion.html:136
+msgid "Pas encore de compte ?"
+msgstr "Don't have an account?"
+
+#: comptes/templates/comptes/connexion.html:140 templates/base.html:290
+msgid "S'inscrire gratuitement"
+msgstr "Sign up for free"
+
+#: cours/templates/cours/catalogue.html:3
+msgid "Catalogue des cours"
+msgstr "Course catalogue"
+
+#: cours/templates/cours/catalogue.html:18
+msgid "Catalogue"
+msgstr "Catalogue"
+
+#: cours/templates/cours/catalogue.html:21
+msgid "Tous nos cours"
+msgstr "All our courses"
+
+#: cours/templates/cours/catalogue.html:71
+msgid "Tous les cycles"
+msgstr "All levels"
+
+#: cours/templates/cours/catalogue.html:174
+#: pages/templates/pages/accueil.html:231
+msgid "Gratuit"
+msgstr "Free"
+
+#: cours/templates/cours/catalogue.html:179
+msgid "En savoir plus"
+msgstr "Learn more"
+
+#: cours/templates/cours/catalogue.html:194
+msgid "Aucun cours trouvé"
+msgstr "No courses found"
+
+#: cours/templates/cours/catalogue.html:195
+msgid "Essaie d'autres filtres ou reviens bientôt !"
+msgstr "Try other filters or check back soon!"
+
+#: cours/templates/cours/catalogue.html:199
+#: pages/templates/pages/accueil.html:254
+msgid "Voir tous les cours"
+msgstr "View all courses"
+
+#: numeria_project/settings.py:128
+msgid "Français"
+msgstr "French"
+
+#: numeria_project/settings.py:129
+msgid "English"
+msgstr "English"
+
+#: pages/templates/pages/accueil.html:78
+msgid "étudiants"
+msgstr "students"
+
+#: pages/templates/pages/accueil.html:131
+msgid "Étudiants inscrits"
+msgstr "Enrolled students"
+
+#: pages/templates/pages/accueil.html:135
+msgid "Cours disponibles"
+msgstr "Available courses"
+
+#: pages/templates/pages/accueil.html:139
+msgid "Pays représentés"
+msgstr "Countries represented"
+
+#: pages/templates/pages/accueil.html:172
+msgid "Ce que disent nos étudiants"
+msgstr "What our students say"
+
+#: pages/templates/pages/accueil.html:199
+msgid "Cours populaires"
+msgstr "Popular courses"
+
+#: pages/templates/pages/accueil.html:201
+msgid "Commence à apprendre aujourd'hui"
+msgstr "Start learning today"
+
+#: pages/templates/pages/accueil.html:204
+msgid ""
+"Mathématiques, sciences, IA — des contenus rigoureux accessibles à tous "
+"niveaux."
+msgstr ""
+"Mathematics, science, AI — rigorous content accessible to all levels."
+
+#: pages/templates/pages/accueil.html:239
+msgid "Voir le cours"
+msgstr "View course"
+
+#: pages/templates/pages/accueil.html:245
+msgid "Aucun cours disponible pour le moment."
+msgstr "No courses available at the moment."
+
+#: pages/templates/pages/accueil.html:269
+msgid "Pourquoi choisir Numeria ?"
+msgstr "Why choose Numeria?"
+
+#: pages/templates/pages/accueil.html:271
+msgid "Une plateforme conçue pour les apprenants africains"
+msgstr "A platform designed for African learners"
+
+#: pages/templates/pages/accueil.html:280
+msgid "Cours de qualité"
+msgstr "Quality courses"
+
+#: pages/templates/pages/accueil.html:281
+msgid ""
+"Contenus scientifiques rigoureux avec formules LaTeX et exercices corrigés."
+msgstr ""
+"Rigorous scientific content with LaTeX formulas and worked exercises."
+
+#: pages/templates/pages/accueil.html:288
+msgid "Ancrage africain"
+msgstr "African roots"
+
+#: pages/templates/pages/accueil.html:289
+msgid ""
+"Des exemples et projets ancrés dans les réalités africaines et togolaises."
+msgstr ""
+"Examples and projects rooted in African and Togolese realities."
+
+#: pages/templates/pages/accueil.html:296
+#, python-format
+msgid "100%% responsive"
+msgstr "100%% responsive"
+
+#: pages/templates/pages/accueil.html:297
+msgid "Apprends depuis ton téléphone, ta tablette ou ton ordinateur."
+msgstr "Learn from your phone, tablet or computer."
+
+#: pages/templates/pages/accueil.html:304
+msgid "Certificats officiels"
+msgstr "Official certificates"
+
+#: pages/templates/pages/accueil.html:305
+msgid ""
+"Reçois un certificat PDF vérifiable à la fin de chaque cours payant complété."
+msgstr ""
+"Receive a verifiable PDF certificate upon completing each paid course."
+
+#: pages/templates/pages/accueil.html:312
+msgid "Exercices interactifs"
+msgstr "Interactive exercises"
+
+#: pages/templates/pages/accueil.html:313
+msgid "Des QCM avec corrigés détaillés visibles seulement après réussite."
+msgstr "Multiple-choice questions with detailed solutions revealed only after success."
+
+#: pages/templates/pages/accueil.html:320
+msgid "Accessible à tous"
+msgstr "Accessible to all"
+
+#: pages/templates/pages/accueil.html:321
+msgid "La majorité des cours sont gratuits. Paiement Mobile Money disponible."
+msgstr "Most courses are free. Mobile Money payment available."
+
+#: pages/templates/pages/accueil.html:338
+msgid "Rejoins-nous"
+msgstr "Join us"
+
+#: pages/templates/pages/accueil.html:341
+msgid "Prêt à commencer ton voyage scientifique ?"
+msgstr "Ready to start your scientific journey?"
+
+#: pages/templates/pages/accueil.html:344
+msgid ""
+"Rejoins des milliers d'apprenants qui transforment leur avenir grâce à la "
+"science."
+msgstr ""
+"Join thousands of learners transforming their future through science."
+
+#: pages/templates/pages/accueil.html:350
+msgid "Aller à mon tableau de bord"
+msgstr "Go to my dashboard"
+
+#: pages/templates/pages/accueil.html:352
+msgid "Passe en revue tes cours et continue ton apprentissage."
+msgstr "Review your courses and continue your learning."
+
+#: pages/templates/pages/accueil.html:357
+msgid "Créer mon compte gratuitement"
+msgstr "Create my account for free"
+
+#: pages/templates/pages/accueil.html:359
+msgid ""
+"Aucune carte bancaire requise · Cours gratuits disponibles immédiatement"
+msgstr ""
+"No credit card required · Free courses available immediately"
+
+#: templates/base.html:205 templates/base.html:270
+msgid "Accueil"
+msgstr "Home"
+
+#: templates/base.html:206 templates/base.html:271
+msgid "Cours"
+msgstr "Courses"
+
+#: templates/base.html:207 templates/base.html:272
+msgid "Blog"
+msgstr "Blog"
+
+#: templates/base.html:208 templates/base.html:273 templates/base.html:338
+msgid "Candidatures"
+msgstr "Applications"
+
+#: templates/base.html:209 templates/base.html:274 templates/base.html:341
+msgid "Communauté"
+msgstr "Community"
+
+#: templates/base.html:210 templates/base.html:275
+msgid "Mentorat"
+msgstr "Mentorship"
+
+#: templates/base.html:211 templates/base.html:276 templates/base.html:339
+msgid "À propos"
+msgstr "About"
+
+#: templates/base.html:212 templates/base.html:277 templates/base.html:340
+#: templates/base.html:347
+msgid "Contact"
+msgstr "Contact"
+
+#: templates/base.html:232 templates/base.html:285
+msgid "Tableau de bord"
+msgstr "Dashboard"
+
+#: templates/base.html:252
+msgid "S'inscrire"
+msgstr "Sign up"
+
+#: templates/base.html:286
+msgid "Mon profil"
+msgstr "My profile"
+
+#: templates/base.html:287
+msgid "Se déconnecter"
+msgstr "Log out"
+
+#: templates/base.html:334
+msgid "Navigation"
+msgstr "Navigation"
+
+#: templates/base.html:336
+msgid "Nos cours"
+msgstr "Our courses"
+
+#: templates/base.html:337
+msgid "Le blog"
+msgstr "The blog"
+
+#: templates/base.html:366
+msgid "Tous droits réservés"
+msgstr "All rights reserved"
+
+#: templates/base.html:368
+msgid "Confidentialité"
+msgstr "Privacy Policy"
+
+#: templates/base.html:369
+msgid "CGU"
+msgstr "Terms of Service"

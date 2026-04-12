@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block titre %}Politique de confidentialité — Numeria Institute{% endblock %}
+{% block meta_description %}Politique de confidentialité de Numeria Institute : données collectées, utilisation, cookies et droits des utilisateurs.{% endblock %}
+
+{% block contenu %}
+<section class="w-full py-16 md:py-20 bg-numeria-blanc dark:bg-gray-900 min-h-screen">
+    <div class="w-full px-4 sm:px-8 lg:px-16 max-w-4xl mx-auto">
+
+        <div class="mb-10">
+            <div class="inline-flex items-center gap-2 bg-numeria-teal/10 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">Légal</div>
+            <h1 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
+                Politique de confidentialité
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Dernière mise à jour : janvier 2026</p>
+        </div>
+
+        <div class="prose prose-lg dark:prose-invert max-w-none space-y-10 text-gray-700 dark:text-gray-300">
+
+            <!-- Intro -->
+            <p>
+                Numeria Institute (<strong>contact@numeriainstitute.com</strong>) s'engage à protéger la vie privée de ses utilisateurs. La présente politique décrit quelles données nous collectons, pourquoi nous les collectons et comment vous pouvez exercer vos droits.
+            </p>
+
+            <!-- 1. Données collectées -->
+            <div>
+                <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
+                    1. Données collectées
+                </h2>
+                <p class="mb-3">Lors de votre inscription et utilisation de la plateforme, nous collectons les informations suivantes :</p>
+                <ul class="list-disc list-inside space-y-2 pl-2">
+                    <li><strong>Identité :</strong> nom, prénom, adresse e-mail.</li>
+                    <li><strong>Profil :</strong> pays, ville, niveau d'études, domaine d'intérêt.</li>
+                    <li><strong>Progression pédagogique :</strong> cours suivis, leçons terminées, exercices soumis, certificats obtenus.</li>
+                    <li><strong>Données de candidature :</strong> CV, lettre de motivation, relevés de notes (pour les dossiers d'admission uniquement).</li>
+                    <li><strong>Données de paiement :</strong> référence de transaction (nous ne stockons pas les numéros de carte bancaire).</li>
+                    <li><strong>Données techniques :</strong> adresse IP, type de navigateur, pages visitées (via journaux serveur).</li>
+                </ul>
+            </div>
+
+            <!-- 2. Utilisation des données -->
+            <div>
+                <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
+                    2. Utilisation des données
+                </h2>
+                <p class="mb-3">Vos données sont utilisées exclusivement pour :</p>
+                <ul class="list-disc list-inside space-y-2 pl-2">
+                    <li>Gérer votre compte et vous authentifier sur la plateforme.</li>
+                    <li>Suivre et afficher votre progression dans les cours.</li>
+                    <li>Générer et délivrer vos certificats de réussite.</li>
+                    <li>Traiter vos dossiers de candidature aux programmes d'admission.</li>
+                    <li>Améliorer le contenu et les fonctionnalités de la plateforme.</li>
+                    <li>Vous envoyer des notifications liées à votre activité (réponse à candidature, confirmation de paiement).</li>
+                </ul>
+                <p class="mt-3">Nous ne vendons, ne louons ni ne partageons vos données personnelles avec des tiers à des fins commerciales.</p>
+            </div>
+
+            <!-- 3. Cookies -->
+            <div>
+                <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
+                    3. Cookies
+                </h2>
+                <p class="mb-3">Numeria Institute utilise des cookies techniques strictement nécessaires au bon fonctionnement du site :</p>
+                <ul class="list-disc list-inside space-y-2 pl-2">
+                    <li><strong>Session Django :</strong> maintient votre connexion entre les pages.</li>
+                    <li><strong>CSRF token :</strong> protège les formulaires contre les attaques de type falsification de requêtes.</li>
+                    <li><strong>Préférence d'affichage :</strong> mémorise votre choix de mode clair/sombre (stocké dans <code>localStorage</code>, pas un cookie).</li>
+                </ul>
+                <p class="mt-3">Nous n'utilisons pas de cookies publicitaires ni de traceurs tiers (Google Analytics, Facebook Pixel, etc.).</p>
+            </div>
+
+            <!-- 4. Droits de l'utilisateur -->
+            <div>
+                <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
+                    4. Vos droits
+                </h2>
+                <p class="mb-3">Conformément aux principes généraux de protection des données, vous disposez des droits suivants :</p>
+                <ul class="list-disc list-inside space-y-2 pl-2">
+                    <li><strong>Droit d'accès :</strong> obtenir une copie des données vous concernant.</li>
+                    <li><strong>Droit de rectification :</strong> corriger des informations inexactes ou incomplètes.</li>
+                    <li><strong>Droit à l'effacement :</strong> demander la suppression de votre compte et de vos données.</li>
+                    <li><strong>Droit à la portabilité :</strong> recevoir vos données dans un format structuré.</li>
+                    <li><strong>Droit d'opposition :</strong> vous opposer à certains traitements de vos données.</li>
+                </ul>
+                <p class="mt-3">
+                    Vous pouvez exercer ces droits directement depuis votre profil (section <strong>Supprimer mon compte</strong>) ou en nous contactant.
+                </p>
+            </div>
+
+            <!-- 5. Conservation -->
+            <div>
+                <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
+                    5. Conservation des données
+                </h2>
+                <p>Vos données sont conservées aussi longtemps que votre compte est actif. En cas de suppression de compte, vos données personnelles sont effacées dans un délai de 30 jours. Les données de transaction sont conservées 5 ans à des fins comptables et légales.</p>
+            </div>
+
+            <!-- 6. Contact -->
+            <div>
+                <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
+                    6. Contact
+                </h2>
+                <p>
+                    Pour toute question relative à vos données personnelles, contactez-nous à :
+                    <a href="mailto:contact@numeriainstitute.com" class="text-numeria-teal hover:underline font-medium">contact@numeriainstitute.com</a>
+                </p>
+            </div>
+
+        </div>
+
+        <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="/" class="text-numeria-teal hover:underline text-sm font-medium">← Retour à l'accueil</a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
