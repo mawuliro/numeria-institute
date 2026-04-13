@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load static i18n %}
 
-{% block titre %}Mentorat - Numeria Institute{% endblock %}
-{% block meta_description %}Programme de mentorat de Numeria Institute : connectez-vous avec des experts en sciences et IA pour accélérer votre développement.{% endblock %}
+{% block titre %}{% trans "Mentorat" %} - Numeria Institute{% endblock %}
+{% block meta_description %}{% trans "Programme de mentorat de Numeria Institute : connectez-vous avec des experts en sciences et IA pour accélérer votre développement." %}{% endblock %}
 
 {% block contenu %}
 
@@ -16,13 +16,13 @@
         <div class="max-w-3xl mx-auto text-center">
             <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-6 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
                 <span class="w-1.5 h-1.5 bg-numeria-teal rounded-full animate-pulse"></span>
-                Programme officiel
+                {% trans "Programme officiel" %}
             </div>
             <h1 style="font-family:'Outfit',sans-serif; font-weight:800; line-height:1.1;" class="text-4xl sm:text-5xl mb-6">
-                Programme de Mentorat
+                {% trans "Programme de Mentorat" %}
             </h1>
             <p class="text-blue-200 text-lg leading-relaxed">
-                Connectez-vous avec des experts en sciences computationnelles et IA pour accélérer votre développement professionnel et bénéficier de conseils personnalisés.
+                {% trans "Connectez-vous avec des experts en sciences computationnelles et IA pour accélérer votre développement professionnel et bénéficier de conseils personnalisés." %}
             </p>
         </div>
     </div>
@@ -34,15 +34,15 @@
         <div class="grid grid-cols-3 gap-4 text-center">
             <div class="py-2">
                 <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ mentors_count }}</div>
-                <div class="text-blue-300 text-xs sm:text-sm mt-1">Mentors actifs</div>
+                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Mentors actifs" %}</div>
             </div>
             <div class="py-2 border-x border-white/10">
                 <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ mentees_count }}</div>
-                <div class="text-blue-300 text-xs sm:text-sm mt-1">Mentorés inscrits</div>
+                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Mentorés inscrits" %}</div>
             </div>
             <div class="py-2">
                 <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ relations_count }}</div>
-                <div class="text-blue-300 text-xs sm:text-sm mt-1">Relations actives</div>
+                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Relations actives" %}</div>
             </div>
         </div>
     </div>
@@ -54,10 +54,10 @@
 
         <div class="text-center mb-12">
             <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
-                Rejoignez le programme
+                {% trans "Rejoignez le programme" %}
             </h2>
             <p class="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
-                Que vous souhaitiez partager votre expertise ou bénéficier d'un accompagnement, il y a une place pour vous.
+                {% trans "Que vous souhaitiez partager votre expertise ou bénéficier d'un accompagnement, il y a une place pour vous." %}
             </p>
         </div>
 
@@ -69,33 +69,33 @@
                 <div class="text-4xl mb-4">🧑‍🏫</div>
                 {% if est_mentor %}
                     <div class="inline-flex items-center gap-1.5 bg-numeria-teal/20 border border-numeria-teal/40 text-numeria-teal text-xs font-bold px-3 py-1 rounded-full mb-3 tracking-wide uppercase" style="font-family:'Outfit',sans-serif;">
-                        <span class="w-1.5 h-1.5 bg-numeria-teal rounded-full"></span> Mentor actif
+                        <span class="w-1.5 h-1.5 bg-numeria-teal rounded-full"></span> {% trans "Mentor actif" %}
                     </div>
-                    <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-2xl text-numeria-or mb-3">Mon Espace Mentor</h2>
+                    <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-2xl text-numeria-or mb-3">{% trans "Mon Espace Mentor" %}</h2>
                     <p class="text-blue-200 text-sm leading-relaxed mb-6">
-                        Bienvenue ! Gérez vos mentorés, planifiez des séances et suivez vos revenus depuis votre tableau de bord.
+                        {% trans "Gérez vos mentorés, planifiez des séances et suivez vos revenus depuis votre tableau de bord." %}
                     </p>
                     <a href="{% url 'mentorat:tableau_de_bord_mentor' %}"
                        style="font-family:'Outfit',sans-serif; font-weight:700;"
                        class="inline-block bg-numeria-teal text-numeria-bleu px-6 py-3 rounded-xl hover:bg-teal-300 transition-colors text-sm">
-                        Mon tableau de bord →
+                        {% trans "Mon tableau de bord" %} →
                     </a>
                 {% else %}
-                    <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-2xl text-numeria-or mb-3">Devenir Mentor</h2>
+                    <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-2xl text-numeria-or mb-3">{% trans "Devenir Mentor" %}</h2>
                     <p class="text-blue-200 text-sm leading-relaxed mb-6">
-                        Partagez votre expertise et aidez la nouvelle génération à réussir. Faites la différence dans la vie d'un apprenant.
+                        {% trans "Partagez votre expertise et aidez la nouvelle génération à réussir. Faites la différence dans la vie d'un apprenant." %}
                     </p>
                     {% if user.is_authenticated %}
                         <a href="{% url 'mentorat:devenir_mentor' %}"
                            style="font-family:'Outfit',sans-serif; font-weight:700;"
                            class="inline-block bg-numeria-teal text-numeria-bleu px-6 py-3 rounded-xl hover:bg-teal-300 transition-colors text-sm">
-                            S'inscrire comme mentor →
+                            {% trans "S'inscrire comme mentor" %} →
                         </a>
                     {% else %}
                         <a href="{% url 'comptes:connexion' %}?next={% url 'mentorat:devenir_mentor' %}"
                            style="font-family:'Outfit',sans-serif; font-weight:700;"
                            class="inline-block bg-numeria-teal text-numeria-bleu px-6 py-3 rounded-xl hover:bg-teal-300 transition-colors text-sm">
-                            Se connecter pour devenir mentor →
+                            {% trans "Se connecter pour devenir mentor" %} →
                         </a>
                     {% endif %}
                 {% endif %}
@@ -107,33 +107,33 @@
                 <div class="text-4xl mb-4">🎓</div>
                 {% if est_mentee %}
                     <div class="inline-flex items-center gap-1.5 bg-numeria-bleu/10 border border-numeria-bleu/20 text-numeria-bleu dark:text-numeria-teal text-xs font-bold px-3 py-1 rounded-full mb-3 tracking-wide uppercase" style="font-family:'Outfit',sans-serif;">
-                        <span class="w-1.5 h-1.5 bg-numeria-bleu dark:bg-numeria-teal rounded-full"></span> Mentoré inscrit
+                        <span class="w-1.5 h-1.5 bg-numeria-bleu dark:bg-numeria-teal rounded-full"></span> {% trans "Mentoré inscrit" %}
                     </div>
-                    <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-2xl text-numeria-bleu dark:text-white mb-3">Mon Espace Mentoré</h2>
+                    <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-2xl text-numeria-bleu dark:text-white mb-3">{% trans "Mon Espace Mentoré" %}</h2>
                     <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6">
-                        Retrouvez vos séances planifiées, vos mentors et l'avancement de votre parcours d'apprentissage.
+                        {% trans "Retrouvez vos séances planifiées, vos mentors et l'avancement de votre parcours d'apprentissage." %}
                     </p>
                     <a href="{% url 'mentorat:tableau_de_bord_mentee' %}"
                        style="font-family:'Outfit',sans-serif; font-weight:700;"
                        class="inline-block bg-numeria-bleu text-white px-6 py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-sm">
-                        Mon tableau de bord →
+                        {% trans "Mon tableau de bord" %} →
                     </a>
                 {% else %}
-                    <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-2xl text-numeria-bleu dark:text-white mb-3">Trouver un Mentor</h2>
+                    <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-2xl text-numeria-bleu dark:text-white mb-3">{% trans "Trouver un Mentor" %}</h2>
                     <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6">
-                        Bénéficiez de conseils personnalisés d'experts dans votre domaine. Accélérez votre apprentissage et votre carrière.
+                        {% trans "Bénéficiez de conseils personnalisés d'experts dans votre domaine. Accélérez votre apprentissage et votre carrière." %}
                     </p>
                     {% if user.is_authenticated %}
                         <a href="{% url 'mentorat:devenir_mentee' %}"
                            style="font-family:'Outfit',sans-serif; font-weight:700;"
                            class="inline-block bg-numeria-bleu text-white px-6 py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-sm">
-                            S'inscrire comme mentoré →
+                            {% trans "S'inscrire comme mentoré" %} →
                         </a>
                     {% else %}
                         <a href="{% url 'comptes:connexion' %}?next={% url 'mentorat:devenir_mentee' %}"
                            style="font-family:'Outfit',sans-serif; font-weight:700;"
                            class="inline-block bg-numeria-bleu text-white px-6 py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-sm">
-                            Se connecter pour trouver un mentor →
+                            {% trans "Se connecter pour trouver un mentor" %} →
                         </a>
                     {% endif %}
                 {% endif %}
@@ -148,9 +148,9 @@
     <div class="w-full px-4 sm:px-8 lg:px-16">
 
         <div class="text-center mb-12">
-            <div class="inline-flex items-center gap-2 bg-numeria-bleu/8 text-numeria-bleu dark:text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">En 3 étapes</div>
+            <div class="inline-flex items-center gap-2 bg-numeria-bleu/8 text-numeria-bleu dark:text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">{% trans "En 3 étapes" %}</div>
             <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
-                Comment ça marche ?
+                {% trans "Comment ça marche ?" %}
             </h2>
         </div>
 
@@ -160,9 +160,9 @@
                 <div class="w-16 h-16 bg-numeria-bleu rounded-full flex items-center justify-center mx-auto mb-4">
                     <span style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-xl">1</span>
                 </div>
-                <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-2">Inscrivez-vous</h3>
+                <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-2">{% trans "Inscrivez-vous" %}</h3>
                 <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                    Créez votre profil de mentor ou de mentoré selon vos besoins et objectifs.
+                    {% trans "Créez votre profil de mentor ou de mentoré selon vos besoins et objectifs." %}
                 </p>
             </div>
 
@@ -170,9 +170,9 @@
                 <div class="w-16 h-16 bg-numeria-or rounded-full flex items-center justify-center mx-auto mb-4">
                     <span style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-bleu text-xl">2</span>
                 </div>
-                <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-2">Connectez-vous</h3>
+                <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-2">{% trans "Connectez-vous" %}</h3>
                 <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                    Les mentors et mentorés sont mis en relation selon leurs profils et domaines.
+                    {% trans "Les mentors et mentorés sont mis en relation selon leurs profils et domaines." %}
                 </p>
             </div>
 
@@ -180,9 +180,9 @@
                 <div class="w-16 h-16 bg-numeria-teal rounded-full flex items-center justify-center mx-auto mb-4">
                     <span style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-bleu text-xl">3</span>
                 </div>
-                <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-2">Échangez</h3>
+                <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white text-lg mb-2">{% trans "Échangez" %}</h3>
                 <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                    Planifiez des séances et bénéficiez de conseils personnalisés sur mesure.
+                    {% trans "Planifiez des séances et bénéficiez de conseils personnalisés sur mesure." %}
                 </p>
             </div>
 
@@ -196,7 +196,7 @@
         <a href="{% url 'mentorat:liste_mentors' %}"
            style="font-family:'Outfit',sans-serif; font-weight:700;"
            class="inline-flex items-center gap-2 bg-numeria-bleu text-white px-10 py-4 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-base shadow-lg">
-            Voir tous les mentors disponibles →
+            {% trans "Voir tous les mentors disponibles" %} →
         </a>
     </div>
 </section>

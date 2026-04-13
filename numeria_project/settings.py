@@ -215,5 +215,8 @@ if not DEBUG:
     SECURE_SSL_REDIRECT     = False   # Railway gère HTTPS — évite la boucle
     SESSION_COOKIE_SECURE   = True
     CSRF_COOKIE_SECURE      = True
+    LANGUAGE_COOKIE_SAMESITE = 'Lax'
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    CSRF_TRUSTED_ORIGINS    = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
+    _extra_csrf = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
+    if _extra_csrf:
+        CSRF_TRUSTED_ORIGINS = _extra_csrf

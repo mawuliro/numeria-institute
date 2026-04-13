@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-12 21:50+0000\n"
+"POT-Creation-Date: 2026-04-13 06:02+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -108,7 +108,7 @@ msgstr "Phone"
 
 #: admissions/templates/admissions/detail_candidature.html:69
 #: comptes/forms.py:114 comptes/forms.py:212
-#: mentorat/templates/mentorat/detail_mentor.html:127
+#: mentorat/templates/mentorat/detail_mentor.html:136
 msgid "Pays"
 msgstr "Country"
 
@@ -192,7 +192,7 @@ msgstr "Create the first category"
 #: communaute/templates/communaute/modifier_message.html:3
 #: communaute/templates/communaute/modifier_profil.html:3
 #: comptes/templates/comptes/inscription.html:248 templates/base.html:211
-#: templates/base.html:292 templates/base.html:373
+#: templates/base.html:294 templates/base.html:373
 msgid "Communauté"
 msgstr "Community"
 
@@ -364,13 +364,13 @@ msgstr "repl."
 
 #: communaute/templates/communaute/detail_categorie.html:162
 #: communaute/templates/communaute/detail_sujet.html:240
-#: mentorat/templates/mentorat/liste_mentors.html:166
+#: mentorat/templates/mentorat/liste_mentors.html:175
 msgid "Précédent"
 msgstr "Previous"
 
 #: communaute/templates/communaute/detail_categorie.html:176
 #: communaute/templates/communaute/detail_sujet.html:254
-#: mentorat/templates/mentorat/liste_mentors.html:175
+#: mentorat/templates/mentorat/liste_mentors.html:184
 msgid "Suivant"
 msgstr "Next"
 
@@ -699,12 +699,12 @@ msgstr "Messages posted"
 
 #: communaute/templates/communaute/profil_utilisateur.html:72
 #: comptes/templates/comptes/tableau_de_bord.html:25
-#: mentorat/templates/mentorat/detail_mentor.html:95
+#: mentorat/templates/mentorat/detail_mentor.html:104
 msgid "Membre depuis"
 msgstr "Member since"
 
 #: communaute/templates/communaute/profil_utilisateur.html:83
-#: mentorat/templates/mentorat/detail_mentor.html:122
+#: mentorat/templates/mentorat/detail_mentor.html:131
 msgid "Informations"
 msgstr "Information"
 
@@ -813,7 +813,7 @@ msgstr "Repeat your password"
 msgid "Ton mot de passe"
 msgstr "Your password"
 
-#: comptes/forms.py:213 mentorat/templates/mentorat/detail_mentor.html:134
+#: comptes/forms.py:213 mentorat/templates/mentorat/detail_mentor.html:143
 msgid "Ville"
 msgstr "City"
 
@@ -853,7 +853,7 @@ msgstr "Profile"
 msgid "Profils"
 msgstr "Profiles"
 
-#: comptes/templates/comptes/connexion.html:3 templates/base.html:266
+#: comptes/templates/comptes/connexion.html:3 templates/base.html:268
 msgid "Connexion"
 msgstr "Login"
 
@@ -2416,46 +2416,46 @@ msgstr "Back to topic"
 msgid "mentoré(s)"
 msgstr "mentee(s)"
 
-#: mentorat/templates/mentorat/detail_mentor.html:59
+#: mentorat/templates/mentorat/detail_mentor.html:68
 msgid "Faire une demande"
 msgstr "Send a request"
 
-#: mentorat/templates/mentorat/detail_mentor.html:64
+#: mentorat/templates/mentorat/detail_mentor.html:73
 msgid "Vous avez déjà un mentor actif"
 msgstr "You already have an active mentor"
 
-#: mentorat/templates/mentorat/detail_mentor.html:66
+#: mentorat/templates/mentorat/detail_mentor.html:75
 msgid "Demande déjà envoyée ou en cours"
 msgstr "Request already sent or in progress"
 
-#: mentorat/templates/mentorat/detail_mentor.html:83
+#: mentorat/templates/mentorat/detail_mentor.html:92
 #, fuzzy
 #| msgid "Mentors actifs"
 msgid "Mentorés accompagnés"
 msgstr "Active mentors"
 
-#: mentorat/templates/mentorat/detail_mentor.html:89
+#: mentorat/templates/mentorat/detail_mentor.html:98
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:25
 #, fuzzy
 #| msgid "Mentors actifs"
 msgid "Mentorés actifs"
 msgstr "Active mentors"
 
-#: mentorat/templates/mentorat/detail_mentor.html:111
+#: mentorat/templates/mentorat/detail_mentor.html:120
 #, fuzzy, python-format
 #| msgid "À propos"
 msgid "À propos de %(name)s"
 msgstr "About"
 
-#: mentorat/templates/mentorat/detail_mentor.html:141
+#: mentorat/templates/mentorat/detail_mentor.html:150
 #: mentorat/templates/mentorat/detail_relation.html:131
 #: mentorat/templates/mentorat/liste_mentors.html:39
 msgid "Domaine"
 msgstr "Field"
 
-#: mentorat/templates/mentorat/detail_mentor.html:150
-#: mentorat/templates/mentorat/detail_mentor.html:158
-#: mentorat/templates/mentorat/liste_mentors.html:133
+#: mentorat/templates/mentorat/detail_mentor.html:159
+#: mentorat/templates/mentorat/detail_mentor.html:167
+#: mentorat/templates/mentorat/liste_mentors.html:142
 #, fuzzy
 #| msgid "Photo de profil"
 msgid "Voir le profil"
@@ -2576,6 +2576,7 @@ msgstr "Create the first category"
 
 #: mentorat/templates/mentorat/devenir_mentee.html:3
 #: mentorat/templates/mentorat/devenir_mentee.html:20
+#: mentorat/templates/mentorat/index.html:122
 #: mentorat/templates/mentorat/liste_mentors.html:3
 #: mentorat/templates/mentorat/liste_mentors.html:21
 msgid "Trouver un Mentor"
@@ -2600,8 +2601,9 @@ msgid "Retour au mentorat"
 msgstr "Back to topic"
 
 #: mentorat/templates/mentorat/devenir_mentee.html:18
-#: mentorat/templates/mentorat/devenir_mentor.html:18 templates/base.html:212
-#: templates/base.html:293
+#: mentorat/templates/mentorat/devenir_mentor.html:18
+#: mentorat/templates/mentorat/index.html:4 templates/base.html:212
+#: templates/base.html:295
 msgid "Mentorat"
 msgstr "Mentorship"
 
@@ -2611,9 +2613,9 @@ msgstr "Mentorship"
 #| "Bénéficiez de conseils personnalisés d'experts dans votre domaine. "
 #| "Accélérez votre apprentissage et votre carrière."
 msgid "Bénéficiez de conseils personnalisés d'experts dans votre domaine."
-msgstr "Get personalised advice from experts in your field."
-"Get personalised advice from experts in your field. Accelerate your learning "
-"and career."
+msgstr ""
+"Get personalised advice from experts in your field.Get personalised advice "
+"from experts in your field. Accelerate your learning and career."
 
 #: mentorat/templates/mentorat/devenir_mentee.html:71
 #, fuzzy
@@ -2624,6 +2626,7 @@ msgstr "Register as a mentee"
 #: mentorat/templates/mentorat/devenir_mentor.html:3
 #: mentorat/templates/mentorat/devenir_mentor.html:20
 #: mentorat/templates/mentorat/devenir_mentor.html:82
+#: mentorat/templates/mentorat/index.html:84
 msgid "Devenir Mentor"
 msgstr "Become a Mentor"
 
@@ -2645,9 +2648,174 @@ msgstr ""
 #| "Partagez votre expertise et aidez la nouvelle génération à réussir. "
 #| "Faites la différence dans la vie d'un apprenant."
 msgid "Partagez votre expertise et aidez la nouvelle génération à réussir."
-msgstr "Share your expertise and help the next generation succeed."
+msgstr ""
+"Share your expertise and help the next generation succeed.Share your "
+"expertise and help the next generation succeed. Make a difference in a "
+"learner's life."
+
+#: mentorat/templates/mentorat/index.html:5
+msgid ""
+"Programme de mentorat de Numeria Institute : connectez-vous avec des experts "
+"en sciences et IA pour accélérer votre développement."
+msgstr ""
+
+# ===== BASE TEMPLATE MENTORAT =====
+#: mentorat/templates/mentorat/index.html:19
+msgid "Programme officiel"
+msgstr "Official programme"
+
+#: mentorat/templates/mentorat/index.html:22
+msgid "Programme de Mentorat"
+msgstr "Mentoring Programme"
+
+#: mentorat/templates/mentorat/index.html:25
+msgid ""
+"Connectez-vous avec des experts en sciences computationnelles et IA pour "
+"accélérer votre développement professionnel et bénéficier de conseils "
+"personnalisés."
+msgstr ""
+"Connect with experts in computational sciences and AI to accelerate your "
+"professional development and benefit from personalised guidance."
+
+#: mentorat/templates/mentorat/index.html:37
+msgid "Mentors actifs"
+msgstr "Active mentors"
+
+#: mentorat/templates/mentorat/index.html:41
+msgid "Mentorés inscrits"
+msgstr "Registered mentees"
+
+#: mentorat/templates/mentorat/index.html:45
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:38
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:128
+msgid "Relations actives"
+msgstr "Active relationships"
+
+#: mentorat/templates/mentorat/index.html:57
+msgid "Rejoignez le programme"
+msgstr "Join the programme"
+
+#: mentorat/templates/mentorat/index.html:60
+msgid ""
+"Que vous souhaitiez partager votre expertise ou bénéficier d'un "
+"accompagnement, il y a une place pour vous."
+msgstr ""
+"Whether you want to share your expertise or benefit from guidance, there is "
+"a place for you."
+
+#: mentorat/templates/mentorat/index.html:72
+msgid "Mentor actif"
+msgstr "Active mentor"
+
+#: mentorat/templates/mentorat/index.html:74
+msgid "Mon Espace Mentor"
+msgstr "My Mentor Space"
+
+#: mentorat/templates/mentorat/index.html:76
+msgid ""
+"Gérez vos mentorés, planifiez des séances et suivez vos revenus depuis votre "
+"tableau de bord."
+msgstr ""
+"Manage your mentees, schedule sessions and track your earnings from your "
+"dashboard."
+
+#: mentorat/templates/mentorat/index.html:81
+#: mentorat/templates/mentorat/index.html:119
+msgid "Mon tableau de bord"
+msgstr "My dashboard"
+
+#: mentorat/templates/mentorat/index.html:86
+msgid ""
+"Partagez votre expertise et aidez la nouvelle génération à réussir. Faites "
+"la différence dans la vie d'un apprenant."
+msgstr ""
 "Share your expertise and help the next generation succeed. Make a difference "
 "in a learner's life."
+
+#: mentorat/templates/mentorat/index.html:92
+msgid "S'inscrire comme mentor"
+msgstr "Register as a mentor"
+
+#: mentorat/templates/mentorat/index.html:98
+msgid "Se connecter pour devenir mentor"
+msgstr "Log in to become a mentor"
+
+#: mentorat/templates/mentorat/index.html:110
+msgid "Mentoré inscrit"
+msgstr "Registered mentee"
+
+#: mentorat/templates/mentorat/index.html:112
+msgid "Mon Espace Mentoré"
+msgstr "My Mentee Space"
+
+#: mentorat/templates/mentorat/index.html:114
+msgid ""
+"Retrouvez vos séances planifiées, vos mentors et l'avancement de votre "
+"parcours d'apprentissage."
+msgstr ""
+"Find your scheduled sessions, your mentors and the progress of your "
+"learning journey."
+
+#: mentorat/templates/mentorat/index.html:124
+msgid ""
+"Bénéficiez de conseils personnalisés d'experts dans votre domaine. Accélérez "
+"votre apprentissage et votre carrière."
+msgstr ""
+"Get personalised advice from experts in your field. Accelerate your "
+"learning and career."
+
+#: mentorat/templates/mentorat/index.html:130
+msgid "S'inscrire comme mentoré"
+msgstr "Register as a mentee"
+
+#: mentorat/templates/mentorat/index.html:136
+msgid "Se connecter pour trouver un mentor"
+msgstr "Log in to find a mentor"
+
+#: mentorat/templates/mentorat/index.html:151
+msgid "En 3 étapes"
+msgstr "In 3 steps"
+
+#: mentorat/templates/mentorat/index.html:153
+msgid "Comment ça marche ?"
+msgstr "How does it work?"
+
+#: mentorat/templates/mentorat/index.html:163
+msgid "Inscrivez-vous"
+msgstr "Sign up"
+
+#: mentorat/templates/mentorat/index.html:165
+msgid ""
+"Créez votre profil de mentor ou de mentoré selon vos besoins et objectifs."
+msgstr ""
+"Create your mentor or mentee profile according to your needs and goals."
+
+#: mentorat/templates/mentorat/index.html:173
+msgid "Connectez-vous"
+msgstr "Connect"
+
+#: mentorat/templates/mentorat/index.html:175
+msgid ""
+"Les mentors et mentorés sont mis en relation selon leurs profils et domaines."
+msgstr ""
+"Mentors and mentees are matched according to their profiles and fields."
+
+#: mentorat/templates/mentorat/index.html:183
+#, fuzzy
+#| msgid "Échangez"
+msgid "Échangez"
+msgstr "Exchange"
+
+#: mentorat/templates/mentorat/index.html:185
+msgid ""
+"Planifiez des séances et bénéficiez de conseils personnalisés sur mesure."
+msgstr "Schedule sessions and benefit from tailored personalised advice."
+
+#: mentorat/templates/mentorat/index.html:199
+#, fuzzy
+#| msgid "Voir tous les mentors disponibles"
+msgid "Voir tous les mentors disponibles"
+msgstr "View all available mentors"
 
 #: mentorat/templates/mentorat/liste_mentors.html:4
 msgid ""
@@ -2656,10 +2824,8 @@ msgid ""
 msgstr ""
 
 #: mentorat/templates/mentorat/liste_mentors.html:19
-#, fuzzy
-#| msgid "Cours disponibles"
 msgid "Mentors disponibles"
-msgstr "Available courses"
+msgstr "Available mentors"
 
 #: mentorat/templates/mentorat/liste_mentors.html:22
 msgid "Parcourez nos mentors et demandez un accompagnement personnalisé."
@@ -2701,27 +2867,27 @@ msgstr "active"
 msgid "total"
 msgstr "total"
 
-#: mentorat/templates/mentorat/liste_mentors.html:138
+#: mentorat/templates/mentorat/liste_mentors.html:147
 msgid "Demander"
 msgstr "Request"
 
-#: mentorat/templates/mentorat/liste_mentors.html:149
+#: mentorat/templates/mentorat/liste_mentors.html:158
 #, fuzzy
 #| msgid "Aucun cours trouvé"
 msgid "Aucun mentor trouvé"
 msgstr "No courses found"
 
-#: mentorat/templates/mentorat/liste_mentors.html:151
+#: mentorat/templates/mentorat/liste_mentors.html:160
 #, fuzzy
 #| msgid "Essaie d'autres filtres ou reviens bientôt !"
 msgid "Essayez d'autres critères de recherche."
 msgstr "Try other filters or check back soon!"
 
-#: mentorat/templates/mentorat/liste_mentors.html:154
+#: mentorat/templates/mentorat/liste_mentors.html:163
 msgid "Réinitialiser les filtres"
 msgstr "Reset filters"
 
-#: mentorat/templates/mentorat/liste_mentors.html:170
+#: mentorat/templates/mentorat/liste_mentors.html:179
 #, python-format
 msgid "Page %(page)s / %(pages)s"
 msgstr "Page %(page)s / %(pages)s"
@@ -2741,7 +2907,7 @@ msgstr "Back to my profile"
 #: mentorat/templates/mentorat/planifier_seance.html:20
 #: mentorat/templates/mentorat/planifier_seance.html:22
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:165
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:162
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:189
 msgid "Avec"
 msgstr "With"
 
@@ -2800,11 +2966,6 @@ msgstr "Find a Mentor"
 msgid "Demandes envoyées"
 msgstr "Sent requests"
 
-#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:38
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:101
-msgid "Relations actives"
-msgstr "Active relationships"
-
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:42
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:37
 msgid "Séances à venir"
@@ -2835,17 +2996,17 @@ msgid "Mes mentors"
 msgstr "Mentorship"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:117
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:115
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:142
 msgid "Depuis"
 msgstr "Since"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:123
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:123
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:150
 msgid "Voir détails"
 msgstr "View details"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:127
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:127
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:154
 msgid "Séance"
 msgstr ""
 
@@ -2856,12 +3017,12 @@ msgid "Aucun mentor actif"
 msgstr "Active mentors"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:155
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:150
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:177
 msgid "Prochaines séances"
 msgstr "Upcoming sessions"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:170
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:167
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:194
 msgid "Terminer"
 msgstr "End session"
 
@@ -2889,23 +3050,37 @@ msgstr "Total mentees"
 msgid "Demandes en attente"
 msgstr "Pending requests"
 
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:54
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:48
+msgid "Revenus confirmés"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:55
+msgid "En attente de confirmation"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:62
+#, fuzzy
+#| msgid "Séances à venir"
+msgid "Séances payées"
+msgstr "Upcoming sessions"
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:81
 msgid "Demandes de mentorat"
 msgstr "Mentoring requests"
 
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:77
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:104
 msgid "Accepter"
 msgstr "Accept"
 
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:81
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:108
 msgid "Refuser"
 msgstr "Decline"
 
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:90
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:117
 msgid "Aucune demande en attente"
 msgstr "No pending requests"
 
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:136
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:163
 #, fuzzy
 #| msgid "Relations actives"
 msgid "Aucune relation active"
@@ -3087,36 +3262,36 @@ msgid ""
 "Aucune carte bancaire requise · Cours gratuits disponibles immédiatement"
 msgstr "No credit card required · Free courses available immediately"
 
-#: templates/base.html:207 templates/base.html:288
+#: templates/base.html:207 templates/base.html:290
 msgid "Accueil"
 msgstr "Home"
 
-#: templates/base.html:208 templates/base.html:289
+#: templates/base.html:208 templates/base.html:291
 msgid "Cours"
 msgstr "Courses"
 
-#: templates/base.html:209 templates/base.html:290
+#: templates/base.html:209 templates/base.html:292
 msgid "Blog"
 msgstr "Blog"
 
-#: templates/base.html:210 templates/base.html:291 templates/base.html:370
+#: templates/base.html:210 templates/base.html:293 templates/base.html:370
 msgid "Candidatures"
 msgstr "Applications"
 
-#: templates/base.html:213 templates/base.html:294 templates/base.html:371
+#: templates/base.html:213 templates/base.html:296 templates/base.html:371
 msgid "À propos"
 msgstr "About"
 
-#: templates/base.html:214 templates/base.html:295 templates/base.html:372
+#: templates/base.html:214 templates/base.html:297 templates/base.html:372
 #: templates/base.html:379
 msgid "Contact"
 msgstr "Contact"
 
-#: templates/base.html:250 templates/base.html:317
+#: templates/base.html:252 templates/base.html:317
 msgid "Tableau de bord"
 msgstr "Dashboard"
 
-#: templates/base.html:270
+#: templates/base.html:272
 msgid "S'inscrire"
 msgstr "Sign up"
 
@@ -3162,53 +3337,3 @@ msgstr "Terms of Service"
 
 #~ msgid "Sujet fermé"
 #~ msgstr "Closed topic"
-
-# ===== BASE TEMPLATE MENTORAT =====
-#~ msgid "Programme officiel"
-#~ msgstr "Official programme"
-
-#~ msgid "Rejoignez le programme"
-#~ msgstr "Join the programme"
-
-#~ msgid ""
-#~ "Que vous souhaitiez partager votre expertise ou bénéficier d'un "
-#~ "accompagnement, il y a une place pour vous."
-#~ msgstr ""
-#~ "Whether you want to share your expertise or benefit from guidance, there "
-#~ "is a place for you."
-
-#~ msgid "S'inscrire comme mentor"
-#~ msgstr "Register as a mentor"
-
-#~ msgid "Se connecter pour devenir mentor"
-#~ msgstr "Log in to become a mentor"
-
-#~ msgid "Se connecter pour trouver un mentor"
-#~ msgstr "Log in to find a mentor"
-
-#~ msgid "En 3 étapes"
-#~ msgstr "In 3 steps"
-
-#~ msgid "Comment ça marche ?"
-#~ msgstr "How does it work?"
-
-#~ msgid "Inscrivez-vous"
-#~ msgstr "Sign up"
-
-#~ msgid ""
-#~ "Créez votre profil de mentor ou de mentoré selon vos besoins et objectifs."
-#~ msgstr ""
-#~ "Create your mentor or mentee profile according to your needs and goals."
-
-#~ msgid "Connectez-vous"
-#~ msgstr "Connect"
-
-#~ msgid ""
-#~ "Les mentors et mentorés sont mis en relation selon leurs profils et "
-#~ "domaines."
-#~ msgstr ""
-#~ "Mentors and mentees are matched according to their profiles and fields."
-
-#~ msgid ""
-#~ "Planifiez des séances et bénéficiez de conseils personnalisés sur mesure."
-#~ msgstr "Schedule sessions and benefit from tailored personalised advice."

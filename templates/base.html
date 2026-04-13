@@ -222,19 +222,21 @@
                 <!-- BOUTONS + MODE SOMBRE + HAMBURGER -->
                 <div class="flex items-center gap-2">
                     <!-- SÉLECTEUR DE LANGUE -->
-                    <form action="{% url 'set_language' %}" method="post" style="display:inline-flex;align-items:center;gap:2px;" class="hidden sm:inline-flex">
-                        {% csrf_token %}
-                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                        <button type="submit" name="language" value="fr"
-                            title="Français"
+                    <div style="display:inline-flex;align-items:center;gap:2px;" class="hidden sm:inline-flex">
+                        <button type="button" onclick="switchLang('fr')" title="Français"
                             class="w-8 h-8 rounded-lg flex items-center justify-center text-sm hover:bg-white/10 transition-colors {% if LANGUAGE_CODE == 'fr' %}bg-white/15 text-white{% else %}text-blue-300{% endif %}">
                             🇫🇷
                         </button>
-                        <button type="submit" name="language" value="en"
-                            title="English"
+                        <button type="button" onclick="switchLang('en')" title="English"
                             class="w-8 h-8 rounded-lg flex items-center justify-center text-sm hover:bg-white/10 transition-colors {% if LANGUAGE_CODE == 'en' %}bg-white/15 text-white{% else %}text-blue-300{% endif %}">
                             🇬🇧
                         </button>
+                    </div>
+                    <!-- Formulaire caché partagé pour le changement de langue -->
+                    <form id="lang-switch-form" action="{% url 'set_language' %}" method="post" style="display:none;">
+                        {% csrf_token %}
+                        <input id="lang-switch-next" name="next" type="hidden" value="">
+                        <input id="lang-switch-code" name="language" type="hidden" value="">
                     </form>
 
                     <button onclick="basculerMode()"
@@ -300,18 +302,16 @@
                 {% endif %}
                 <div class="border-t border-white/10 my-2"></div>
                 <!-- Sélecteur de langue mobile -->
-                <form action="{% url 'set_language' %}" method="post" class="flex gap-2 px-4 py-2">
-                    {% csrf_token %}
-                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                    <button type="submit" name="language" value="fr"
+                <div class="flex gap-2 px-4 py-2">
+                    <button type="button" onclick="switchLang('fr')"
                         class="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl transition-colors {% if LANGUAGE_CODE == 'fr' %}bg-numeria-teal text-numeria-bleu{% else %}text-blue-200 hover:bg-white/10{% endif %}">
                         🇫🇷 Français
                     </button>
-                    <button type="submit" name="language" value="en"
+                    <button type="button" onclick="switchLang('en')"
                         class="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl transition-colors {% if LANGUAGE_CODE == 'en' %}bg-numeria-teal text-numeria-bleu{% else %}text-blue-200 hover:bg-white/10{% endif %}">
                         🇬🇧 English
                     </button>
-                </form>
+                </div>
                 <div class="border-t border-white/10 my-2"></div>
                 {% if user.is_authenticated %}
                     <a href="{% url 'comptes:tableau_de_bord' %}" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-numeria-teal hover:bg-white/10 transition-colors">🎓 {% trans "Tableau de bord" %}</a>
@@ -460,6 +460,22 @@
         window.addEventListener('scroll', function() {
             document.getElementById('header-principal').classList.toggle('scrolled', window.scrollY > 20);
         });
+
+        function switchLang(lang) {
+            let path = window.location.pathname;
+            // Avec prefix_default_language=False : FR = pas de préfixe, EN = /en/
+            if (lang === 'fr') {
+                if (path.startsWith('/en/')) path = path.slice(3);
+                else if (path === '/en') path = '/';
+            } else {
+                if (!path.startsWith('/en/') && path !== '/en') {
+                    path = '/en' + (path.startsWith('/') ? path : '/' + path);
+                }
+            }
+            document.getElementById('lang-switch-next').value = path + window.location.search;
+            document.getElementById('lang-switch-code').value = lang;
+            document.getElementById('lang-switch-form').submit();
+        }
 
         function basculerMode() {
             const html = document.documentElement;
