@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block titre %}Paiement {{ cours.titre }} Numeria Institute{% endblock %}
+{% block titre %}{% trans "Paiement" %} {{ cours.titre }} — Numeria Institute{% endblock %}
 {% block contenu %}
 
 <section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-12">
@@ -11,10 +11,10 @@
             <div class="mb-8">
                 <a href="{% url 'cours:detail' cours.id %}"
                    class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-or transition-colors text-sm">
-                    ← Retour au cours
+                    ← {% trans "Retour au cours" %}
                 </a>
                 <h1 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mt-4">
-                    💳 Finaliser l'inscription
+                    💳 {% trans "Finaliser l'inscription" %}
                 </h1>
             </div>
 
@@ -36,7 +36,7 @@
                 <!-- PROVIDERS DE PAIEMENT -->
                 <div class="flex-1">
                     <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-5">
-                        Choisir un mode de paiement
+                        {% trans "Choisir un mode de paiement" %}
                     </h2>
 
                     <form method="POST" action="{% url 'paiements:initier' cours.id %}">
@@ -67,7 +67,7 @@
                                         </p>
                                         {% if not provider.disponible %}
                                         <span class="bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs px-2 py-0.5 rounded-full">
-                                            Bientôt disponible
+                                            {% trans "Bientôt disponible" %}
                                         </span>
                                         {% endif %}
                                     </div>
@@ -77,7 +77,7 @@
                                 </div>
 
                                 {% if provider.disponible %}
-                                <span class="text-green-500 text-xs font-bold">✅ Disponible</span>
+                                <span class="text-green-500 text-xs font-bold">✅ {% trans "Disponible" %}</span>
                                 {% endif %}
 
                             </label>
@@ -87,11 +87,11 @@
                         <!-- Bouton payer -->
                         <button type="submit"
                             class="w-full bg-numeria-or text-numeria-bleu font-bold py-4 rounded-2xl hover:bg-yellow-400 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform text-lg">
-                            Payer {{ cours.prix }} {{ cours.get_devise_display|default:"XOF" }} →
+                            {% blocktrans with prix=cours.prix devise=cours.get_devise_display %}Payer {{ prix }} {{ devise }} →{% endblocktrans %}
                         </button>
 
                         <p class="text-center text-gray-400 dark:text-gray-500 text-xs mt-3">
-                            🔒 Paiement sécurisé Tes données sont protégées
+                            🔒 {% trans "Paiement sécurisé — vos données sont protégées" %}
                         </p>
 
                     </form>
@@ -102,7 +102,7 @@
                     <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6 sticky top-24">
 
                         <h3 class="font-bold text-numeria-bleu dark:text-numeria-or text-lg mb-4">
-                            Récapitulatif
+                            {% trans "Récapitulatif" %}
                         </h3>
 
                         <!-- Cours -->
@@ -117,24 +117,24 @@
                                     {{ cours.titre }}
                                 </p>
                                 <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">
-                                    {{ cours.nombre_lecons }} leçons · {{ cours.get_niveau_display }}
+                                    {% blocktrans with n=cours.nombre_lecons niveau=cours.get_niveau_display %}{{ n }} leçons · {{ niveau }}{% endblocktrans %}
                                 </p>
                             </div>
                         </div>
 
                         <!-- Prix -->
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-gray-500 dark:text-gray-400 text-sm">Prix du cours</span>
+                            <span class="text-gray-500 dark:text-gray-400 text-sm">{% trans "Prix du cours" %}</span>
                             <span class="font-bold text-gray-800 dark:text-gray-100">{{ cours.prix }} XOF</span>
                         </div>
                         <div class="flex items-center justify-between mb-5 pb-5 border-b border-gray-100 dark:border-gray-700">
-                            <span class="text-gray-500 dark:text-gray-400 text-sm">Frais de traitement</span>
-                            <span class="text-green-500 font-bold text-sm">Gratuit</span>
+                            <span class="text-gray-500 dark:text-gray-400 text-sm">{% trans "Frais de traitement" %}</span>
+                            <span class="text-green-500 font-bold text-sm">{% trans "Gratuit" %}</span>
                         </div>
 
                         <!-- Total -->
                         <div class="flex items-center justify-between mb-5">
-                            <span class="font-bold text-gray-800 dark:text-gray-100">Total</span>
+                            <span class="font-bold text-gray-800 dark:text-gray-100">{% trans "Total" %}</span>
                             <span class="text-2xl font-bold text-numeria-bleu dark:text-numeria-or">
                                 {{ cours.prix }} XOF
                             </span>
@@ -143,24 +143,24 @@
                         <!-- Ce qui est inclus -->
                         <div class="bg-numeria-blanc dark:bg-gray-700 rounded-xl p-4">
                             <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
-                                Ce qui est inclus
+                                {% trans "Ce qui est inclus" %}
                             </p>
                             <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-300">
                                 <li class="flex items-center gap-2">
                                     <span class="text-green-500">✅</span>
-                                    {{ cours.nombre_lecons }} leçons complètes
+                                    {% blocktrans with n=cours.nombre_lecons %}{{ n }} leçons complètes{% endblocktrans %}
                                 </li>
                                 <li class="flex items-center gap-2">
                                     <span class="text-green-500">✅</span>
-                                    Accès à vie
+                                    {% trans "Accès à vie" %}
                                 </li>
                                 <li class="flex items-center gap-2">
                                     <span class="text-green-500">✅</span>
-                                    Certificat officiel
+                                    {% trans "Certificat officiel" %}
                                 </li>
                                 <li class="flex items-center gap-2">
                                     <span class="text-green-500">✅</span>
-                                    Support par email
+                                    {% trans "Support par email" %}
                                 </li>
                             </ul>
                         </div>

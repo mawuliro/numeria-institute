@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 06:02+0000\n"
+"POT-Creation-Date: 2026-04-13 08:17+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -22,10 +22,9 @@ msgid "Candidature"
 msgstr "Applications"
 
 #: admissions/templates/admissions/candidature.html:11
-#, fuzzy
-#| msgid "Retour aux forums"
+#: admissions/templates/admissions/paiement_candidature.html:11
 msgid "Retour à la formation"
-msgstr "Back to forums"
+msgstr "Back to the programme"
 
 #: admissions/templates/admissions/candidature.html:17
 msgid "Formulaire de candidature"
@@ -60,6 +59,53 @@ msgstr "Original question"
 msgid "Soumettre ma candidature"
 msgstr "Submit my application"
 
+#: admissions/templates/admissions/confirmation_paiement.html:3
+msgid "Paiement confirmé"
+msgstr "Payment confirmed"
+
+#: admissions/templates/admissions/confirmation_paiement.html:16
+msgid "Paiement réussi !"
+msgstr "Payment successful!"
+
+#: admissions/templates/admissions/confirmation_paiement.html:19
+msgid ""
+"Vos frais de candidature ont été confirmés. Vous pouvez maintenant remplir "
+"votre formulaire."
+msgstr ""
+"Your application fees have been confirmed. You can now fill in your "
+"application form."
+
+#: admissions/templates/admissions/confirmation_paiement.html:25
+#: admissions/templates/admissions/detail_candidature.html:62
+#: admissions/templates/admissions/paiement_candidature.html:40
+#: paiements/templates/paiements/page_paiement.html:105
+msgid "Récapitulatif"
+msgstr "Summary"
+
+#: admissions/templates/admissions/confirmation_paiement.html:29
+#: admissions/templates/admissions/paiement_candidature.html:43
+#, fuzzy
+#| msgid "Informations"
+msgid "Formation"
+msgstr "Programme"
+
+#: admissions/templates/admissions/confirmation_paiement.html:33
+msgid "Montant payé"
+msgstr "Amount paid"
+
+#: admissions/templates/admissions/confirmation_paiement.html:37
+#: cours/templates/cours/verifier_certificat.html:112
+msgid "Référence"
+msgstr "Reference"
+
+#: admissions/templates/admissions/confirmation_paiement.html:46
+msgid "Remplir mon formulaire de candidature"
+msgstr "Fill in my application form"
+
+#: admissions/templates/admissions/confirmation_paiement.html:51
+msgid "Voir mes candidatures"
+msgstr "View my applications"
+
 #: admissions/templates/admissions/detail_candidature.html:14
 msgid "Retour à mes candidatures"
 msgstr "Back to my applications"
@@ -87,10 +133,6 @@ msgstr ""
 #: admissions/templates/admissions/detail_candidature.html:55
 msgid "Nous sommes désolés, votre candidature n'a pas été retenue cette année."
 msgstr "We are sorry, your application was not selected this year."
-
-#: admissions/templates/admissions/detail_candidature.html:62
-msgid "Récapitulatif"
-msgstr "Summary"
 
 #: admissions/templates/admissions/detail_candidature.html:65
 msgid "Nom complet"
@@ -175,6 +217,35 @@ msgstr "You haven't submitted any application yet."
 #| msgid "Voir tous les mentors disponibles"
 msgid "Voir les formations disponibles"
 msgstr "View all available mentors"
+
+#: admissions/templates/admissions/paiement_candidature.html:3
+#: admissions/templates/admissions/paiement_candidature.html:18
+#, fuzzy
+#| msgid "Formulaire de candidature"
+msgid "Frais de candidature"
+msgstr "Application form"
+
+#: admissions/templates/admissions/paiement_candidature.html:47
+#: mentorat/templates/mentorat/paiement_seance.html:59
+msgid "Total à payer"
+msgstr "Total to pay"
+
+#: admissions/templates/admissions/paiement_candidature.html:57
+msgid "Moyen de paiement"
+msgstr "Payment method"
+
+#: admissions/templates/admissions/paiement_candidature.html:78
+msgid "Bientôt"
+msgstr "Soon"
+
+#: admissions/templates/admissions/paiement_candidature.html:89
+#, python-format
+msgid "Payer %(montant)s FCFA →"
+msgstr "Pay %(montant)s FCFA →"
+
+#: admissions/templates/admissions/paiement_candidature.html:95
+msgid "Paiement sécurisé · Mode test (sandbox)"
+msgstr "Secure payment · Test mode (sandbox)"
 
 #: communaute/templates/communaute/creer_categorie.html:3
 #: communaute/templates/communaute/creer_categorie.html:20
@@ -1021,6 +1092,7 @@ msgstr "All levels"
 
 #: cours/templates/cours/catalogue.html:177
 #: pages/templates/pages/accueil.html:231
+#: paiements/templates/paiements/page_paiement.html:132
 msgid "Gratuit"
 msgstr "Free"
 
@@ -1040,6 +1112,46 @@ msgstr "Try other filters or check back soon!"
 #: pages/templates/pages/accueil.html:254
 msgid "Voir tous les cours"
 msgstr "View all courses"
+
+#: cours/templates/cours/verifier_certificat.html:3
+msgid "Vérification du certificat"
+msgstr "Certificate verification"
+
+#: cours/templates/cours/verifier_certificat.html:22
+msgid "Certificat authentique"
+msgstr "Authentic certificate"
+
+#: cours/templates/cours/verifier_certificat.html:25
+msgid "Ce certificat a été émis par Numeria Institute et est authentifié."
+msgstr "This certificate was issued by Numeria Institute and is authenticated."
+
+#: cours/templates/cours/verifier_certificat.html:59
+msgid "CERTIFICAT DE RÉUSSITE"
+msgstr "CERTIFICATE OF ACHIEVEMENT"
+
+#: cours/templates/cours/verifier_certificat.html:73
+msgid "Numeria Institute certifie que"
+msgstr "Numeria Institute certifies that"
+
+#: cours/templates/cours/verifier_certificat.html:85
+msgid "a complété avec succès le cours"
+msgstr "has successfully completed the course"
+
+#: cours/templates/cours/verifier_certificat.html:94
+msgid "Niveau"
+msgstr "Level"
+
+#: cours/templates/cours/verifier_certificat.html:104
+msgid "Date d'émission"
+msgstr "Issue date"
+
+#: cours/templates/cours/verifier_certificat.html:125
+msgid "Code de vérification"
+msgstr "Verification code"
+
+#: cours/templates/cours/verifier_certificat.html:151
+msgid "Découvrir nos cours"
+msgstr "Discover our courses"
 
 #: env/lib/python3.12/site-packages/cloudinary/forms.py:55
 #: env/lib/python3.12/site-packages/cloudinary/forms.py:124
@@ -2468,7 +2580,7 @@ msgstr ""
 
 #: mentorat/templates/mentorat/detail_relation.html:4
 msgid "Détail de votre relation de mentorat sur Numeria Institute."
-msgstr ""
+msgstr "Details of your mentoring relationship on Numeria Institute."
 
 #: mentorat/templates/mentorat/detail_relation.html:15
 #, fuzzy
@@ -2513,7 +2625,7 @@ msgstr ""
 
 #: mentorat/templates/mentorat/detail_relation.html:99
 msgid "Confirmer la fin de cette relation ?"
-msgstr ""
+msgstr "Confirm ending this relationship?"
 
 #: mentorat/templates/mentorat/detail_relation.html:100
 #: mentorat/templates/mentorat/terminer_relation.html:17
@@ -2566,7 +2678,7 @@ msgstr ""
 
 #: mentorat/templates/mentorat/detail_relation.html:229
 msgid "Planifiez votre première séance pour commencer."
-msgstr ""
+msgstr "Schedule your first session to get started."
 
 #: mentorat/templates/mentorat/detail_relation.html:233
 #, fuzzy
@@ -2753,16 +2865,16 @@ msgid ""
 "Retrouvez vos séances planifiées, vos mentors et l'avancement de votre "
 "parcours d'apprentissage."
 msgstr ""
-"Find your scheduled sessions, your mentors and the progress of your "
-"learning journey."
+"Find your scheduled sessions, your mentors and the progress of your learning "
+"journey."
 
 #: mentorat/templates/mentorat/index.html:124
 msgid ""
 "Bénéficiez de conseils personnalisés d'experts dans votre domaine. Accélérez "
 "votre apprentissage et votre carrière."
 msgstr ""
-"Get personalised advice from experts in your field. Accelerate your "
-"learning and career."
+"Get personalised advice from experts in your field. Accelerate your learning "
+"and career."
 
 #: mentorat/templates/mentorat/index.html:130
 msgid "S'inscrire comme mentoré"
@@ -2892,17 +3004,117 @@ msgstr "Reset filters"
 msgid "Page %(page)s / %(pages)s"
 msgstr "Page %(page)s / %(pages)s"
 
+#: mentorat/templates/mentorat/paiement_seance.html:4
+#, fuzzy
+#| msgid "Titre du sujet"
+msgid "Paiement de la séance"
+msgstr "Topic title"
+
+#: mentorat/templates/mentorat/paiement_seance.html:17
+msgid "Paiement requis"
+msgstr "Payment required"
+
+#: mentorat/templates/mentorat/paiement_seance.html:23
+#, fuzzy
+#| msgid "Séances à venir"
+msgid "Séance avec"
+msgstr "Session with"
+
+#: mentorat/templates/mentorat/paiement_seance.html:40
+msgid "Récapitulatif du paiement"
+msgstr "Payment summary"
+
+#: mentorat/templates/mentorat/paiement_seance.html:45
+msgid "Tarif de la séance"
+msgstr "Session fee"
+
+#: mentorat/templates/mentorat/paiement_seance.html:51
+#, python-format
+msgid "Commission Numeria (20%%)"
+msgstr "Numeria commission (20%%)"
+
+#: mentorat/templates/mentorat/paiement_seance.html:55
+msgid "Part reversée au mentor"
+msgstr "Amount paid to mentor"
+
+#: mentorat/templates/mentorat/paiement_seance.html:72
+msgid "Preuve soumise — en attente de confirmation"
+msgstr "Proof submitted — awaiting confirmation"
+
+#: mentorat/templates/mentorat/paiement_seance.html:73
+msgid ""
+"Notre équipe vérifiera votre paiement dans les 24h ouvrées. Vous pouvez "
+"soumettre une nouvelle preuve si nécessaire."
+msgstr ""
+"Our team will verify your payment within 24 business hours. You can "
+"submit new proof if necessary."
+
+#: mentorat/templates/mentorat/paiement_seance.html:82
+msgid "Comment payer"
+msgstr "How to pay"
+
+#: mentorat/templates/mentorat/paiement_seance.html:87
+msgid ""
+"Effectuez un virement mobile money vers l'un des numéros ci-dessous en "
+"mentionnant votre nom et le titre de la séance."
+msgstr ""
+"Make a mobile money transfer to one of the numbers below, mentioning "
+"your name and the session title."
+
+#: mentorat/templates/mentorat/paiement_seance.html:103
+msgid "Important"
+msgstr "Important"
+
+#: mentorat/templates/mentorat/paiement_seance.html:103
+msgid ""
+"conservez la capture d'écran de confirmation de votre transaction. Vous en "
+"aurez besoin pour soumettre la preuve ci-dessous."
+msgstr ""
+"keep the confirmation screenshot of your transaction. You will need it "
+"to submit proof below."
+
+#: mentorat/templates/mentorat/paiement_seance.html:112
+msgid "Soumettre ma preuve de paiement"
+msgstr "Submit my payment proof"
+
+#: mentorat/templates/mentorat/paiement_seance.html:124
+msgid "Référence de la transaction"
+msgstr "Transaction reference"
+
+#: mentorat/templates/mentorat/paiement_seance.html:130
+msgid "Numéro de transaction fourni par votre opérateur mobile money"
+msgstr "Transaction number provided by your mobile money operator"
+
+#: mentorat/templates/mentorat/paiement_seance.html:138
+msgid "Capture d'écran du paiement"
+msgstr "Payment screenshot"
+
+#: mentorat/templates/mentorat/paiement_seance.html:142
+msgid "Preuve actuelle"
+msgstr "Current proof"
+
+#: mentorat/templates/mentorat/paiement_seance.html:144
+msgid ""
+"Preuve actuellement enregistrée — vous pouvez en soumettre une nouvelle."
+msgstr "Currently saved proof — you can submit a new one."
+
+#: mentorat/templates/mentorat/paiement_seance.html:156
+msgid "Envoyer ma preuve de paiement"
+msgstr "Send my payment proof"
+
+#: mentorat/templates/mentorat/paiement_seance.html:166
+msgid "Retour à la relation de mentorat"
+msgstr "Back to the mentoring relationship"
+
 #: mentorat/templates/mentorat/planifier_seance.html:4
 msgid "Planifiez une séance de mentorat sur Numeria Institute."
-msgstr ""
+msgstr "Schedule a mentoring session on Numeria Institute."
 
 #: mentorat/templates/mentorat/planifier_seance.html:14
 #: mentorat/templates/mentorat/terminer_relation.html:14
 #: mentorat/templates/mentorat/terminer_seance.html:14
-#, fuzzy
-#| msgid "Retour à mon profil"
 msgid "Retour à la relation"
-msgstr "Back to my profile"
+msgstr "Back to the relationship"
 
 #: mentorat/templates/mentorat/planifier_seance.html:20
 #: mentorat/templates/mentorat/planifier_seance.html:22
@@ -2912,30 +3124,24 @@ msgid "Avec"
 msgstr "With"
 
 #: mentorat/templates/mentorat/planifier_seance.html:41
-#, fuzzy
-#| msgid "Titre du sujet"
 msgid "Titre de la séance"
-msgstr "Topic title"
+msgstr "Session title"
 
 #: mentorat/templates/mentorat/planifier_seance.html:64
 msgid "Date et heure"
-msgstr ""
+msgstr "Date and time"
 
 #: mentorat/templates/mentorat/planifier_seance.html:73
 msgid "Durée (minutes)"
-msgstr ""
+msgstr "Duration (minutes)"
 
 #: mentorat/templates/mentorat/planifier_seance.html:82
-#, fuzzy
-#| msgid "Confidentialité"
 msgid "Modalité"
-msgstr "Privacy Policy"
+msgstr "Format"
 
 #: mentorat/templates/mentorat/planifier_seance.html:95
-#, fuzzy
-#| msgid "Publier la réponse"
 msgid "Planifier la séance"
-msgstr "Publish reply"
+msgstr "Schedule the session"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:3
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:17
@@ -3261,6 +3467,79 @@ msgstr "Review your courses and continue your learning."
 msgid ""
 "Aucune carte bancaire requise · Cours gratuits disponibles immédiatement"
 msgstr "No credit card required · Free courses available immediately"
+
+#: paiements/templates/paiements/page_paiement.html:3
+msgid "Paiement"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:14
+#, fuzzy
+#| msgid "Retour aux forums"
+msgid "Retour au cours"
+msgstr "Back to forums"
+
+#: paiements/templates/paiements/page_paiement.html:17
+msgid "Finaliser l'inscription"
+msgstr "Complete registration"
+
+#: paiements/templates/paiements/page_paiement.html:39
+msgid "Choisir un mode de paiement"
+msgstr "Choose a payment method"
+
+#: paiements/templates/paiements/page_paiement.html:70
+msgid "Bientôt disponible"
+msgstr "Coming soon"
+
+#: paiements/templates/paiements/page_paiement.html:80
+msgid "Disponible"
+msgstr "Available"
+
+#: paiements/templates/paiements/page_paiement.html:90
+#, python-format
+msgid "Payer %(prix)s %(devise)s →"
+msgstr "Pay %(prix)s %(devise)s →"
+
+#: paiements/templates/paiements/page_paiement.html:94
+msgid "Paiement sécurisé — vos données sont protégées"
+msgstr "Secure payment — your data is protected"
+
+#: paiements/templates/paiements/page_paiement.html:120
+#, python-format
+msgid "%(n)s leçons · %(niveau)s"
+msgstr "%(n)s lessons · %(niveau)s"
+
+#: paiements/templates/paiements/page_paiement.html:127
+msgid "Prix du cours"
+msgstr "Course price"
+
+#: paiements/templates/paiements/page_paiement.html:131
+msgid "Frais de traitement"
+msgstr "Processing fee"
+
+#: paiements/templates/paiements/page_paiement.html:137
+msgid "Total"
+msgstr "Total"
+
+#: paiements/templates/paiements/page_paiement.html:146
+msgid "Ce qui est inclus"
+msgstr "What's included"
+
+#: paiements/templates/paiements/page_paiement.html:151
+#, python-format
+msgid "%(n)s leçons complètes"
+msgstr "%(n)s complete lessons"
+
+#: paiements/templates/paiements/page_paiement.html:155
+msgid "Accès à vie"
+msgstr "Lifetime access"
+
+#: paiements/templates/paiements/page_paiement.html:159
+msgid "Certificat officiel"
+msgstr "Official certificate"
+
+#: paiements/templates/paiements/page_paiement.html:163
+msgid "Support par email"
+msgstr "Email support"
 
 #: templates/base.html:207 templates/base.html:290
 msgid "Accueil"

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static i18n %}
 
-{% block titre %}Paiement de la séance - Numeria Institute{% endblock %}
+{% block titre %}{% trans "Paiement de la séance" %} - Numeria Institute{% endblock %}
 
 {% block contenu %}
 
@@ -14,13 +14,13 @@
     <div class="w-full px-4 sm:px-8 lg:px-16 py-12 md:py-16 relative">
         <div class="max-w-2xl mx-auto text-center">
             <div class="inline-flex items-center gap-2 bg-numeria-or/20 border border-numeria-or/40 text-numeria-or text-xs font-bold px-4 py-1.5 rounded-full mb-5 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
-                Paiement requis
+                {% trans "Paiement requis" %}
             </div>
             <h1 style="font-family:'Outfit',sans-serif; font-weight:800; line-height:1.1;" class="text-3xl sm:text-4xl mb-4">
                 {{ seance.titre }}
             </h1>
             <p class="text-blue-200 text-sm">
-                Séance avec
+                {% trans "Séance avec" %}
                 <strong class="text-white">{{ seance.relation.mentor.profil.utilisateur.get_full_name|default:seance.relation.mentor.profil.utilisateur.username }}</strong>
                 · {{ seance.date_heure|date:"d/m/Y à H:i" }}
             </p>
@@ -37,26 +37,26 @@
             <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
                 <div class="bg-numeria-bleu px-6 py-4">
                     <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-white text-lg">
-                        Récapitulatif du paiement
+                        {% trans "Récapitulatif du paiement" %}
                     </h2>
                 </div>
                 <div class="px-6 py-5 space-y-3">
                     <div class="flex justify-between items-center text-sm">
-                        <span class="text-gray-500 dark:text-gray-400">Tarif de la séance</span>
+                        <span class="text-gray-500 dark:text-gray-400">{% trans "Tarif de la séance" %}</span>
                         <span style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white text-base">
                             {{ paiement.montant_total|floatformat:0 }} FCFA
                         </span>
                     </div>
                     <div class="flex justify-between items-center text-sm border-t border-gray-100 dark:border-gray-700 pt-3">
-                        <span class="text-gray-400 dark:text-gray-500 text-xs">Commission Numeria (20%)</span>
+                        <span class="text-gray-400 dark:text-gray-500 text-xs">{% trans "Commission Numeria (20%)" %}</span>
                         <span class="text-gray-400 dark:text-gray-500 text-xs">{{ paiement.commission_numeria|floatformat:0 }} FCFA</span>
                     </div>
                     <div class="flex justify-between items-center text-sm border-t border-gray-100 dark:border-gray-700 pt-3">
-                        <span class="text-gray-400 dark:text-gray-500 text-xs">Part reversée au mentor</span>
+                        <span class="text-gray-400 dark:text-gray-500 text-xs">{% trans "Part reversée au mentor" %}</span>
                         <span class="text-gray-400 dark:text-gray-500 text-xs">{{ paiement.montant_mentor|floatformat:0 }} FCFA</span>
                     </div>
                     <div class="bg-numeria-bleu/5 dark:bg-numeria-bleu/20 rounded-xl p-4 mt-2 flex justify-between items-center">
-                        <span style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-numeria-teal text-sm">Total à payer</span>
+                        <span style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-numeria-teal text-sm">{% trans "Total à payer" %}</span>
                         <span style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-bleu dark:text-numeria-teal text-xl">
                             {{ paiement.montant_total|floatformat:0 }} FCFA
                         </span>
@@ -69,8 +69,8 @@
             <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-2xl px-6 py-4 flex items-start gap-3">
                 <span class="text-yellow-500 text-xl mt-0.5">⏳</span>
                 <div>
-                    <p style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-yellow-800 dark:text-yellow-300 text-sm">Preuve soumise — en attente de confirmation</p>
-                    <p class="text-yellow-700 dark:text-yellow-400 text-xs mt-1">Notre équipe vérifiera votre paiement dans les 24h ouvrées. Vous pouvez soumettre une nouvelle preuve si nécessaire.</p>
+                    <p style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-yellow-800 dark:text-yellow-300 text-sm">{% trans "Preuve soumise — en attente de confirmation" %}</p>
+                    <p class="text-yellow-700 dark:text-yellow-400 text-xs mt-1">{% trans "Notre équipe vérifiera votre paiement dans les 24h ouvrées. Vous pouvez soumettre une nouvelle preuve si nécessaire." %}</p>
                 </div>
             </div>
             {% endif %}
@@ -79,12 +79,12 @@
             <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
                     <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white text-lg">
-                        Comment payer
+                        {% trans "Comment payer" %}
                     </h2>
                 </div>
                 <div class="px-6 py-5 space-y-4">
                     <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                        Effectuez un virement mobile money vers l'un des numéros ci-dessous en mentionnant votre nom et le titre de la séance.
+                        {% trans "Effectuez un virement mobile money vers l'un des numéros ci-dessous en mentionnant votre nom et le titre de la séance." %}
                     </p>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl px-4 py-3 text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
-                        <strong>Important :</strong> conservez la capture d'écran de confirmation de votre transaction. Vous en aurez besoin pour soumettre la preuve ci-dessous.
+                        <strong>{% trans "Important" %} :</strong> {% trans "conservez la capture d'écran de confirmation de votre transaction. Vous en aurez besoin pour soumettre la preuve ci-dessous." %}
                     </div>
                 </div>
             </div>
@@ -109,7 +109,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
                     <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white text-lg">
-                        Soumettre ma preuve de paiement
+                        {% trans "Soumettre ma preuve de paiement" %}
                     </h2>
                 </div>
                 <div class="px-6 py-5">
@@ -121,13 +121,13 @@
                             <label for="{{ form.reference_mobile_money.id_for_label }}"
                                    style="font-family:'Outfit',sans-serif; font-weight:600;"
                                    class="block text-numeria-bleu dark:text-gray-200 text-sm mb-1.5">
-                                Référence de la transaction
+                                {% trans "Référence de la transaction" %}
                             </label>
                             {{ form.reference_mobile_money }}
                             {% if form.reference_mobile_money.errors %}
                                 <p class="text-red-500 text-xs mt-1">{{ form.reference_mobile_money.errors|join:", " }}</p>
                             {% endif %}
-                            <p class="text-gray-400 text-xs mt-1">Numéro de transaction fourni par votre opérateur mobile money</p>
+                            <p class="text-gray-400 text-xs mt-1">{% trans "Numéro de transaction fourni par votre opérateur mobile money" %}</p>
                         </div>
 
                         <!-- Capture d'écran -->
@@ -135,13 +135,13 @@
                             <label for="{{ form.preuve_paiement.id_for_label }}"
                                    style="font-family:'Outfit',sans-serif; font-weight:600;"
                                    class="block text-numeria-bleu dark:text-gray-200 text-sm mb-1.5">
-                                Capture d'écran du paiement
+                                {% trans "Capture d'écran du paiement" %}
                             </label>
                             {% if paiement.preuve_paiement %}
                             <div class="mb-2">
-                                <img src="{{ paiement.preuve_paiement.url }}" alt="Preuve actuelle"
+                                <img src="{{ paiement.preuve_paiement.url }}" alt="{% trans 'Preuve actuelle' %}"
                                      class="max-h-40 rounded-xl border border-gray-200 dark:border-gray-600 object-contain">
-                                <p class="text-gray-400 text-xs mt-1">Preuve actuellement enregistrée — vous pouvez en soumettre une nouvelle.</p>
+                                <p class="text-gray-400 text-xs mt-1">{% trans "Preuve actuellement enregistrée — vous pouvez en soumettre une nouvelle." %}</p>
                             </div>
                             {% endif %}
                             {{ form.preuve_paiement }}
@@ -153,7 +153,7 @@
                         <button type="submit"
                                 style="font-family:'Outfit',sans-serif; font-weight:700;"
                                 class="w-full bg-numeria-bleu text-white py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-sm">
-                            Envoyer ma preuve de paiement
+                            {% trans "Envoyer ma preuve de paiement" %}
                         </button>
                     </form>
                 </div>
@@ -163,7 +163,7 @@
             <div class="text-center">
                 <a href="{% url 'mentorat:detail_relation' pk=seance.relation.pk %}"
                    class="text-gray-400 dark:text-gray-500 hover:text-numeria-bleu dark:hover:text-numeria-teal text-sm transition-colors">
-                    ← Retour à la relation de mentorat
+                    ← {% trans "Retour à la relation de mentorat" %}
                 </a>
             </div>
 

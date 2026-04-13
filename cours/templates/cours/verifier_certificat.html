@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block titre %}Vérification du certificat — Numeria Institute{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Vérification du certificat" %} — Numeria Institute{% endblock %}
 
 {% block contenu %}
 <section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-16">
@@ -18,10 +19,10 @@
                     </svg>
                 </div>
                 <h1 class="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
-                    Certificat authentique
+                    {% trans "Certificat authentique" %}
                 </h1>
                 <p class="text-gray-500 dark:text-gray-400">
-                    Ce certificat a été émis par Numeria Institute et est authentifié.
+                    {% trans "Ce certificat a été émis par Numeria Institute et est authentifié." %}
                 </p>
             </div>
 
@@ -38,37 +39,25 @@
                                     display:flex; align-items:center;
                                     justify-content:center; flex-shrink:0;">
                             <div style="position:absolute; width:12px; height:12px;
-                                        background:#E8A020; border-radius:50%; z-index:10;">
-                            </div>
+                                        background:#E8A020; border-radius:50%; z-index:10;"></div>
                             <div style="position:absolute; width:44px; height:17px;
-                                        border:2px solid #E8A020; border-radius:50%;">
-                            </div>
+                                        border:2px solid #E8A020; border-radius:50%;"></div>
                             <div style="position:absolute; width:44px; height:17px;
                                         border:2px solid #E8A020; border-radius:50%;
-                                        transform:rotate(60deg);">
-                            </div>
+                                        transform:rotate(60deg);"></div>
                             <div style="position:absolute; width:44px; height:17px;
                                         border:2px solid #E8A020; border-radius:50%;
-                                        transform:rotate(120deg);">
-                            </div>
+                                        transform:rotate(120deg);"></div>
                         </div>
 
                         <div>
-                            <div class="text-numeria-or font-bold tracking-widest text-lg">
-                                NUMERIA
-                            </div>
-                            <div class="text-blue-300 text-xs tracking-widest">
-                                INSTITUTE
-                            </div>
+                            <div class="text-numeria-or font-bold tracking-widest text-lg">NUMERIA</div>
+                            <div class="text-blue-300 text-xs tracking-widest">INSTITUTE</div>
                         </div>
 
                         <div class="ml-auto text-right">
-                            <div class="text-white font-bold text-sm">
-                                CERTIFICAT DE RÉUSSITE
-                            </div>
-                            <div class="text-blue-300 text-xs mt-1">
-                                CALCUL · IA · SOLUTIONS LOCALES
-                            </div>
+                            <div class="text-white font-bold text-sm">{% trans "CERTIFICAT DE RÉUSSITE" %}</div>
+                            <div class="text-blue-300 text-xs mt-1">CALCUL · IA · SOLUTIONS LOCALES</div>
                         </div>
 
                     </div>
@@ -81,7 +70,7 @@
                 <div class="px-8 py-8 text-center">
 
                     <p class="text-gray-400 dark:text-gray-500 text-sm mb-3">
-                        Numeria Institute certifie que
+                        {% trans "Numeria Institute certifie que" %}
                     </p>
 
                     <!-- Nom étudiant -->
@@ -93,7 +82,7 @@
                     <div class="w-48 h-0.5 bg-numeria-or mx-auto mb-4"></div>
 
                     <p class="text-gray-400 dark:text-gray-500 text-sm mb-3">
-                        a complété avec succès le cours
+                        {% trans "a complété avec succès le cours" %}
                     </p>
 
                     <!-- Nom du cours -->
@@ -102,7 +91,7 @@
                     </h3>
 
                     <p class="text-gray-400 dark:text-gray-500 text-sm mb-6">
-                        {{ cours.get_matiere_display }} — Niveau {{ cours.get_niveau_display }}
+                        {{ cours.get_matiere_display }} — {% trans "Niveau" %} {{ cours.get_niveau_display }}
                     </p>
 
                     <!-- Étoiles -->
@@ -112,7 +101,7 @@
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
                             <p class="text-gray-400 dark:text-gray-500 text-xs mb-1">
-                                Date d'émission
+                                {% trans "Date d'émission" %}
                             </p>
                             <p class="font-bold text-gray-800 dark:text-gray-100 text-sm">
                                 {{ date_emission|date:"d/m/Y" }}
@@ -120,7 +109,7 @@
                         </div>
                         <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
                             <p class="text-gray-400 dark:text-gray-500 text-xs mb-1">
-                                Référence
+                                {% trans "Référence" %}
                             </p>
                             <p class="font-bold text-gray-800 dark:text-gray-100 text-sm">
                                 NIM-CERT-{{ certificat.id|stringformat:"06d" }}-{{ date_emission|date:"Y" }}
@@ -133,10 +122,9 @@
                                 dark:border-green-700 rounded-xl p-4">
                         <p class="text-green-600 dark:text-green-400 text-xs font-bold
                                   uppercase tracking-wide mb-1">
-                            Code de vérification
+                            {% trans "Code de vérification" %}
                         </p>
-                        <p class="font-mono text-green-700 dark:text-green-300 text-sm
-                                  break-all">
+                        <p class="font-mono text-green-700 dark:text-green-300 text-sm break-all">
                             {{ certificat.code_verification }}
                         </p>
                     </div>
@@ -160,7 +148,7 @@
                 <a href="{% url 'cours:catalogue' %}"
                    class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-or
                           transition-colors text-sm">
-                    ← Découvrir nos cours
+                    ← {% trans "Découvrir nos cours" %}
                 </a>
             </div>
 
