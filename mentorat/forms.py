@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
-from .models import Mentor, Mentee, DemandeMentorat, SeanceMentorat
+from .models import Mentor, Mentee, DemandeMentorat, SeanceMentorat, PaiementSeance
 
 
 class InscriptionMentorForm(forms.ModelForm):
@@ -13,12 +12,34 @@ class InscriptionMentorForm(forms.ModelForm):
             'domaines_expertise',
             'niveau_experience',
             'disponibilite',
-            'bio_mentorat'
+            'tarif_par_seance',
+            'bio_mentorat',
         ]
         widgets = {
             'bio_mentorat': forms.Textarea(attrs={
                 'rows': 5,
                 'placeholder': 'Décrivez votre parcours, vos expériences, et vos motivations à devenir mentor...'
+            }),
+            'tarif_par_seance': forms.NumberInput(attrs={
+                'min': 0,
+                'placeholder': '0',
+            }),
+        }
+        help_texts = {
+            'tarif_par_seance': 'Laissez 0 si votre mentorat est gratuit. Numeria prélève 20% de commission sur chaque séance payante.',
+        }
+
+
+class PaiementSeanceForm(forms.ModelForm):
+    """
+    Soumission de preuve de paiement mobile money.
+    """
+    class Meta:
+        model = PaiementSeance
+        fields = ['reference_mobile_money', 'preuve_paiement']
+        widgets = {
+            'reference_mobile_money': forms.TextInput(attrs={
+                'placeholder': 'Ex: TM2504120001...',
             }),
         }
 

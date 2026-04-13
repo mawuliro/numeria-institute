@@ -2,10 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.utils import timezone
-from .models import Mentor, Mentee, DemandeMentorat, RelationMentorat, SeanceMentorat
-from .forms import InscriptionMentorForm, InscriptionMenteeForm, DemandeMentoratForm, SeanceMentoratForm, TerminerSeanceForm
+from .models import Mentor, Mentee, DemandeMentorat, RelationMentorat, SeanceMentorat, PaiementSeance
+from .forms import InscriptionMentorForm, InscriptionMenteeForm, DemandeMentoratForm, SeanceMentoratForm, TerminerSeanceForm, PaiementSeanceForm
 
 
 def index(request):
@@ -16,10 +16,18 @@ def index(request):
     mentees_count = Mentee.objects.filter(est_actif=True).count()
     relations_count = RelationMentorat.objects.filter(est_active=True).count()
 
+    est_mentor = False
+    est_mentee = False
+    if request.user.is_authenticated and hasattr(request.user, 'profil'):
+        est_mentor = hasattr(request.user.profil, 'mentorat_mentor')
+        est_mentee = hasattr(request.user.profil, 'mentorat_mentee')
+
     context = {
         'mentors_count': mentors_count,
         'mentees_count': mentees_count,
         'relations_count': relations_count,
+        'est_mentor': est_mentor,
+        'est_mentee': est_mentee,
     }
     return render(request, 'mentorat/index.html', context)
 
@@ -212,11 +220,26 @@ def tableau_de_bord_mentor(request):
         statut='planifiee'
     ).select_related('relation__mentee__profil__utilisateur').order_by('date_heure')[:5]
 
+    # Revenus du mentor
+    paiements_confirmes = PaiementSeance.objects.filter(
+        seance__relation__mentor=mentor,
+        statut='confirme'
+    )
+    paiements_en_attente = PaiementSeance.objects.filter(
+        seance__relation__mentor=mentor,
+        statut='preuve_soumise'
+    )
+    revenus_confirmes = paiements_confirmes.aggregate(total=Sum('montant_mentor'))['total'] or 0
+    revenus_en_attente = paiements_en_attente.aggregate(total=Sum('montant_mentor'))['total'] or 0
+
     context = {
         'mentor': mentor,
         'demandes_recues': demandes_recues,
         'relations_actives': relations_actives,
         'seances_a_venir': seances_a_venir,
+        'revenus_confirmes': revenus_confirmes,
+        'revenus_en_attente': revenus_en_attente,
+        'nb_paiements_confirmes': paiements_confirmes.count(),
     }
     return render(request, 'mentorat/tableau_de_bord_mentor.html', context)
 
@@ -304,6 +327,11 @@ def planifier_seance(request, relation_pk):
             seance = form.save(commit=False)
             seance.relation = relation
             seance.save()
+            # Si le mentor est payant, créer un paiement et rediriger vers le paiement
+            if seance.est_payante():
+                paiement = PaiementSeance.creer_pour_seance(seance)
+                messages.info(request, "Séance planifiée. Veuillez procéder au paiement pour la confirmer.")
+                return redirect('mentorat:paiement_seance', seance_pk=seance.pk)
             messages.success(request, "Séance planifiée avec succès !")
             return redirect('mentorat:detail_relation', pk=relation_pk)
     else:
@@ -311,7 +339,8 @@ def planifier_seance(request, relation_pk):
 
     return render(request, 'mentorat/planifier_seance.html', {
         'form': form,
-        'relation': relation
+        'relation': relation,
+        'tarif': relation.mentor.tarif_par_seance,
     })
 
 
@@ -407,3 +436,56 @@ def terminer_relation(request, relation_pk):
             return redirect('mentorat:tableau_de_bord_mentee')
 
     return render(request, 'mentorat/terminer_relation.html', {'relation': relation})
+
+
+@login_required
+def paiement_seance(request, seance_pk):
+    """
+    Page de paiement mobile money pour une séance payante.
+    Accessible uniquement par le mentee de la relation.
+    """
+    seance = get_object_or_404(SeanceMentorat, pk=seance_pk)
+
+    # Seul le mentee doit payer
+    user_profil = request.user.profil
+    if not (hasattr(user_profil, 'mentorat_mentee') and seance.relation.mentee == user_profil.mentorat_mentee):
+        messages.error(request, "Accès non autorisé.")
+        return redirect('mentorat:index')
+
+    # Récupérer ou créer le paiement associé
+    paiement, _ = PaiementSeance.objects.get_or_create(
+        seance=seance,
+        defaults={
+            'montant_total': seance.relation.mentor.tarif_par_seance,
+            'commission_numeria': round(seance.relation.mentor.tarif_par_seance * PaiementSeance.TAUX_COMMISSION / 100),
+            'montant_mentor': round(seance.relation.mentor.tarif_par_seance * (100 - PaiementSeance.TAUX_COMMISSION) / 100),
+        }
+    )
+
+    if paiement.statut == 'confirme':
+        messages.info(request, "Ce paiement est déjà confirmé.")
+        return redirect('mentorat:detail_relation', pk=seance.relation.pk)
+
+    if request.method == 'POST':
+        form = PaiementSeanceForm(request.POST, request.FILES, instance=paiement)
+        if form.is_valid():
+            p = form.save(commit=False)
+            p.statut = 'preuve_soumise'
+            p.save()
+            messages.success(request, "Preuve de paiement envoyée. Votre séance sera confirmée après vérification.")
+            return redirect('mentorat:detail_relation', pk=seance.relation.pk)
+    else:
+        form = PaiementSeanceForm(instance=paiement)
+
+    # Numéros mobile money Numeria (à configurer selon votre pays)
+    numeros_paiement = [
+        {'operateur': 'TMoney', 'numero': '+228 93 00 00 00', 'emoji': '📱'},
+        {'operateur': 'Flooz', 'numero': '+228 95 00 00 00', 'emoji': '📱'},
+    ]
+
+    return render(request, 'mentorat/paiement_seance.html', {
+        'seance': seance,
+        'paiement': paiement,
+        'form': form,
+        'numeros_paiement': numeros_paiement,
+    })

@@ -66,6 +66,14 @@ class Mentor(models.Model):
         help_text='Décrivez votre parcours, vos motivations à devenir mentor...'
     )
 
+    # Tarification
+    TAUX_COMMISSION = 20  # Numeria prélève 20% sur chaque séance payante
+    tarif_par_seance = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Tarif par séance (FCFA)',
+        help_text='0 = mentorat gratuit. Numeria prélevé 20% de commission.'
+    )
+
     # Statut
     est_actif = models.BooleanField(default=True, verbose_name='Actif comme mentor')
     date_inscription = models.DateTimeField(auto_now_add=True)
@@ -350,9 +358,86 @@ class SeanceMentorat(models.Model):
     def __str__(self):
         return f"Séance: {self.titre} ({self.date_heure.strftime('%d/%m/%Y %H:%M')})"
 
+    def tarif(self):
+        """Retourne le tarif de la séance (selon le mentor)."""
+        return self.relation.mentor.tarif_par_seance
+
+    def est_payante(self):
+        return self.tarif() > 0
+
     def terminer_seance(self, notes_mentor='', notes_mentee=''):
         """Termine la séance avec des notes."""
         self.statut = 'terminee'
         self.notes_mentor = notes_mentor
         self.notes_mentee = notes_mentee
+        self.save()
+
+
+class PaiementSeance(models.Model):
+    """
+    Paiement d'une séance de mentorat.
+    Numeria prélève TAUX_COMMISSION% du montant comme commission de mise en relation.
+    """
+    TAUX_COMMISSION = 20  # %
+
+    seance = models.OneToOneField(
+        SeanceMentorat,
+        on_delete=models.CASCADE,
+        related_name='paiement'
+    )
+
+    # Montants
+    montant_total = models.PositiveIntegerField(verbose_name='Montant total (FCFA)')
+    commission_numeria = models.PositiveIntegerField(verbose_name='Commission Numeria (FCFA)')
+    montant_mentor = models.PositiveIntegerField(verbose_name='Part mentor (FCFA)')
+
+    # Statut
+    STATUTS = [
+        ('en_attente', 'En attente de paiement'),
+        ('preuve_soumise', 'Preuve soumise'),
+        ('confirme', 'Confirmé'),
+        ('echec', 'Échec / Annulé'),
+    ]
+    statut = models.CharField(max_length=20, choices=STATUTS, default='en_attente')
+
+    # Preuve de paiement (capture mobile money)
+    reference_mobile_money = models.CharField(
+        max_length=100, blank=True,
+        verbose_name='Référence mobile money',
+        help_text='Numéro de transaction TMoney / Flooz / autre'
+    )
+    preuve_paiement = models.ImageField(
+        upload_to='paiements_mentorat/',
+        blank=True, null=True,
+        verbose_name='Capture d\'écran du paiement'
+    )
+
+    # Dates
+    date_creation = models.DateTimeField(auto_now_add=True)
+    date_confirmation = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Paiement de séance'
+        verbose_name_plural = 'Paiements de séances'
+        ordering = ['-date_creation']
+
+    def __str__(self):
+        return f"Paiement {self.montant_total} FCFA — {self.seance}"
+
+    @classmethod
+    def creer_pour_seance(cls, seance):
+        """Crée automatiquement un paiement pour une séance payante."""
+        tarif = seance.relation.mentor.tarif_par_seance
+        commission = round(tarif * cls.TAUX_COMMISSION / 100)
+        return cls.objects.create(
+            seance=seance,
+            montant_total=tarif,
+            commission_numeria=commission,
+            montant_mentor=tarif - commission,
+        )
+
+    def confirmer(self):
+        """Admin confirme le paiement."""
+        self.statut = 'confirme'
+        self.date_confirmation = timezone.now()
         self.save()

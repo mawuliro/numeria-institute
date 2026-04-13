@@ -119,10 +119,19 @@
                         {{ mentor.bio_mentorat|truncatechars:120 }}
                     </p>
 
-                    <!-- Stats -->
-                    <div class="flex items-center gap-4 text-xs text-gray-400 dark:text-gray-500 mb-4 border-t border-gray-100 dark:border-gray-700 pt-3">
+                    <!-- Stats + tarif -->
+                    <div class="flex items-center gap-3 flex-wrap text-xs text-gray-400 dark:text-gray-500 mb-4 border-t border-gray-100 dark:border-gray-700 pt-3">
                         <span>👥 {{ mentor.nombre_mentees_actuels }} {% trans "actif(s)" %}</span>
                         <span>🏆 {{ mentor.nombre_mentees_total }} {% trans "total" %}</span>
+                        {% if mentor.tarif_par_seance %}
+                        <span class="ml-auto bg-numeria-or/15 text-numeria-or font-bold px-2.5 py-0.5 rounded-full" style="font-family:'Outfit',sans-serif;">
+                            {{ mentor.tarif_par_seance|floatformat:0 }} FCFA/séance
+                        </span>
+                        {% else %}
+                        <span class="ml-auto bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-bold px-2.5 py-0.5 rounded-full" style="font-family:'Outfit',sans-serif;">
+                            Gratuit
+                        </span>
+                        {% endif %}
                     </div>
 
                     <!-- Actions -->

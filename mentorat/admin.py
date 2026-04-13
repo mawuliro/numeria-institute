@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Mentor, Mentee, DemandeMentorat, RelationMentorat, SeanceMentorat
+from .models import Mentor, Mentee, DemandeMentorat, RelationMentorat, SeanceMentorat, PaiementSeance
 
 
 @admin.register(Mentor)
@@ -53,3 +53,20 @@ class SeanceMentoratAdmin(admin.ModelAdmin):
     list_filter = ['statut', 'modalite', 'date_heure']
     search_fields = ['relation__mentor__profil__utilisateur__username', 'relation__mentee__profil__utilisateur__username', 'titre']
     readonly_fields = ['date_creation', 'date_modification']
+
+
+@admin.register(PaiementSeance)
+class PaiementSeanceAdmin(admin.ModelAdmin):
+    list_display = ['seance', 'montant_total', 'commission_numeria', 'montant_mentor', 'statut', 'date_creation']
+    list_filter = ['statut', 'date_creation']
+    search_fields = ['seance__relation__mentor__profil__utilisateur__username', 'seance__relation__mentee__profil__utilisateur__username', 'reference_mobile_money']
+    readonly_fields = ['montant_total', 'commission_numeria', 'montant_mentor', 'date_creation', 'date_confirmation']
+    actions = ['confirmer_paiements']
+
+    def confirmer_paiements(self, request, queryset):
+        count = 0
+        for p in queryset.filter(statut='preuve_soumise'):
+            p.confirmer()
+            count += 1
+        self.message_user(request, f"{count} paiement(s) confirmé(s).")
+    confirmer_paiements.short_description = "Confirmer les paiements sélectionnés"
