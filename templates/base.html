@@ -157,6 +157,74 @@
         .nav-pill.actif { color: #2DD4BF; }
         .nav-pill.actif::after { transform: scaleX(1); }
         
+        /* Mobile-specific optimizations */
+        @media (max-width: 640px) {
+            /* Prevent zoom on input focus (iOS) */
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            input[type="number"],
+            textarea,
+            select {
+                font-size: 16px !important;
+            }
+            
+            /* Improve button tap targets */
+            button, a[role="button"], [role="button"] {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            /* Optimize touch feedback */
+            button, a {
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+            }
+            
+            /* Smooth scrolling */
+            html {
+                scroll-behavior: smooth;
+            }
+            
+            /* Optimize images for mobile */
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+            }
+            
+            /* Prevent layout shift from scrollbar */
+            body {
+                overflow-y: scroll;
+            }
+            
+            /* Better form spacing on mobile */
+            form {
+                width: 100%;
+            }
+            
+            form input,
+            form textarea,
+            form select {
+                width: 100%;
+            }
+        }
+        
+        /* Landscape mode on mobile */
+        @media (max-width: 640px) and (orientation: landscape) {
+            #header-principal {
+                height: 48px;
+            }
+            
+            .py-16 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+        }
+        
+        /* Tablet optimizations */
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .grid-cols-3 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        
         /* Legacy compat */
         .nav-lien-actif { color: #2DD4BF !important; border-bottom: 2px solid #2DD4BF; padding-bottom: 3px; }
         
