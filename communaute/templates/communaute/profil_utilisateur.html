@@ -16,9 +16,9 @@
         </nav>
         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <!-- Avatar -->
-            <div class="w-24 h-24 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu text-4xl font-black flex-shrink-0 shadow-lg">
-                {% if profil and profil.avatar %}
-                <img src="{{ profil.avatar.url }}" alt="{{ utilisateur.username }}" class="w-full h-full rounded-full object-cover">
+            <div class="w-24 h-24 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu text-4xl font-black flex-shrink-0 shadow-lg overflow-hidden">
+                {% if profil and profil.photo %}
+                <img src="{{ profil.photo.url }}" alt="Photo de {{ utilisateur.username }}" class="w-full h-full rounded-full object-cover">
                 {% else %}
                 {{ utilisateur.username|first|upper }}
                 {% endif %}
@@ -136,8 +136,12 @@
                 {% for message in derniers_messages %}
                 <div class="bg-numeria-blanc dark:bg-gray-700 rounded-2xl p-5 hover:shadow-sm transition-all border border-gray-100 dark:border-gray-600">
                     <div class="flex items-start gap-4">
-                        <div class="w-9 h-9 bg-numeria-bleu rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                            {{ message.auteur.username|first|upper }}
+                        <div class="w-9 h-9 bg-numeria-bleu rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 overflow-hidden">
+                            {% if message.auteur.profil.photo %}
+                                <img src="{{ message.auteur.profil.photo.url }}" alt="Photo de {{ message.auteur.username }}" class="w-full h-full rounded-full object-cover">
+                            {% else %}
+                                {{ message.auteur.username|first|upper }}
+                            {% endif %}
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="text-xs text-gray-500 dark:text-gray-400 mb-1.5 flex flex-wrap items-center gap-1.5">

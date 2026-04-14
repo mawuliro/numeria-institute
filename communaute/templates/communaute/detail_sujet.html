@@ -69,8 +69,14 @@
                     <!-- Author row -->
                     <div class="flex items-start justify-between mb-6 gap-4">
                         <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 bg-numeria-bleu rounded-2xl flex items-center justify-center text-white font-black text-xl flex-shrink-0 shadow-lg">
-                                {{ question.auteur.username|first|upper }}
+                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black text-xl flex-shrink-0 shadow-lg overflow-hidden">
+                                {% if question.auteur.profil.photo %}
+                                    <img src="{{ question.auteur.profil.photo.url }}" alt="Photo de {{ question.auteur.username }}" class="w-full h-full object-cover">
+                                {% else %}
+                                    <div class="w-full h-full bg-numeria-bleu flex items-center justify-center">
+                                        {{ question.auteur.username|first|upper }}
+                                    </div>
+                                {% endif %}
                             </div>
                             <div>
                                 <a href="{% url 'communaute:profil_utilisateur' question.auteur.username %}"
@@ -157,8 +163,12 @@
 
                     <div class="relative md:pl-16" id="message-{{ message.pk }}">
                         <!-- Timeline dot -->
-                        <div class="hidden md:flex absolute left-4 top-5 w-6 h-6 rounded-full {{ reply_avatar_bg }} items-center justify-center text-white text-xs font-black ring-4 ring-numeria-blanc dark:ring-gray-900 z-10">
-                            {{ message.auteur.username|first|upper }}
+                        <div class="hidden md:flex absolute left-4 top-5 w-6 h-6 rounded-full {{ reply_avatar_bg }} items-center justify-center text-white text-xs font-black ring-4 ring-numeria-blanc dark:ring-gray-900 z-10 overflow-hidden">
+                            {% if message.auteur.profil.photo %}
+                                <img src="{{ message.auteur.profil.photo.url }}" alt="Photo de {{ message.auteur.username }}" class="w-full h-full object-cover rounded-full">
+                            {% else %}
+                                {{ message.auteur.username|first|upper }}
+                            {% endif %}
                         </div>
 
                         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all p-6">
@@ -166,8 +176,14 @@
                             <div class="flex items-start justify-between mb-4 gap-4">
                                 <div class="flex items-center gap-3">
                                     <!-- Mobile avatar -->
-                                    <div class="md:hidden w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-sm flex-shrink-0 {{ reply_avatar_bg }}">
-                                        {{ message.auteur.username|first|upper }}
+                                    <div class="md:hidden w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-sm flex-shrink-0 overflow-hidden">
+                                        {% if message.auteur.profil.photo %}
+                                            <img src="{{ message.auteur.profil.photo.url }}" alt="Photo de {{ message.auteur.username }}" class="w-full h-full object-cover rounded-xl">
+                                        {% else %}
+                                            <div class="w-full h-full {{ reply_avatar_bg }} flex items-center justify-center">
+                                                {{ message.auteur.username|first|upper }}
+                                            </div>
+                                        {% endif %}
                                     </div>
                                     <div>
                                         <div class="flex items-center gap-2 flex-wrap">

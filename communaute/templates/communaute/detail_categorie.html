@@ -77,8 +77,14 @@
                     <!-- Avatar + info -->
                     <div class="flex items-start gap-4 flex-1 min-w-0">
                         <!-- Author avatar -->
-                        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white font-black text-base flex-shrink-0 {{ avatar_bg }}">
-                            {{ sujet.auteur.username|first|upper }}
+                        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white font-black text-base flex-shrink-0 overflow-hidden">
+                            {% if sujet.auteur.profil.photo %}
+                                <img src="{{ sujet.auteur.profil.photo.url }}" alt="Photo de {{ sujet.auteur.username }}" class="w-full h-full rounded-xl object-cover">
+                            {% else %}
+                                <div class="w-full h-full {{ avatar_bg }} flex items-center justify-center">
+                                    {{ sujet.auteur.username|first|upper }}
+                                </div>
+                            {% endif %}
                         </div>
 
                         <div class="flex-1 min-w-0">

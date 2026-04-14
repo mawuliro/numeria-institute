@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-14 01:07+0000\n"
+"POT-Creation-Date: 2026-04-14 22:06+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: French <contact@numeriainstitute.com>\n"
@@ -266,8 +266,8 @@ msgstr ""
 #: communaute/templates/communaute/liste_categories.html:41
 #: communaute/templates/communaute/modifier_message.html:3
 #: communaute/templates/communaute/modifier_profil.html:3
-#: comptes/templates/comptes/inscription.html:248 templates/base.html:211
-#: templates/base.html:294 templates/base.html:373
+#: comptes/templates/comptes/inscription.html:248 templates/base.html:279
+#: templates/base.html:362 templates/base.html:441
 msgid "Communauté"
 msgstr ""
 
@@ -535,7 +535,7 @@ msgstr ""
 #: communaute/templates/communaute/detail_sujet.html:291
 #: communaute/templates/communaute/liste_categories.html:203
 #: comptes/templates/comptes/connexion.html:129
-#: comptes/templates/comptes/inscription.html:230 templates/base.html:321
+#: comptes/templates/comptes/inscription.html:230 templates/base.html:389
 msgid "Se connecter"
 msgstr ""
 
@@ -894,15 +894,15 @@ msgstr ""
 msgid "Autre"
 msgstr ""
 
-#: comptes/models.py:71
+#: comptes/models.py:100
 msgid "Profil"
 msgstr ""
 
-#: comptes/models.py:72
+#: comptes/models.py:101
 msgid "Profils"
 msgstr ""
 
-#: comptes/templates/comptes/connexion.html:3 templates/base.html:268
+#: comptes/templates/comptes/connexion.html:3 templates/base.html:336
 msgid "Connexion"
 msgstr ""
 
@@ -926,7 +926,7 @@ msgstr ""
 msgid "Pas encore de compte ?"
 msgstr ""
 
-#: comptes/templates/comptes/connexion.html:140 templates/base.html:322
+#: comptes/templates/comptes/connexion.html:140 templates/base.html:390
 msgid "S'inscrire gratuitement"
 msgstr ""
 
@@ -977,7 +977,7 @@ msgstr ""
 msgid "Nouveau cours"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:318
+#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:386
 msgid "Mon profil"
 msgstr ""
 
@@ -1050,34 +1050,34 @@ msgstr ""
 msgid "Tous les cycles"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:177
+#: cours/templates/cours/catalogue.html:206
 #: pages/templates/pages/accueil.html:231
 #: paiements/templates/paiements/page_paiement.html:132
 msgid "Gratuit"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:182
+#: cours/templates/cours/catalogue.html:211
 msgid "En savoir plus"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:197
+#: cours/templates/cours/catalogue.html:226
 msgid "Aucun cours trouvé"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:198
+#: cours/templates/cours/catalogue.html:227
 msgid "Essaie d'autres filtres ou reviens bientôt !"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:202
+#: cours/templates/cours/catalogue.html:231
 #: pages/templates/pages/accueil.html:254
 msgid "Voir tous les cours"
 msgstr ""
 
-#: cours/templates/cours/detail.html:166
+#: cours/templates/cours/detail.html:220
 msgid "Inscris-toi pour accéder aux leçons"
 msgstr ""
 
-#: cours/templates/cours/detail.html:237
+#: cours/templates/cours/detail.html:291
 msgid "Inscris-toi gratuitement pour accéder à tout le contenu."
 msgstr ""
 
@@ -1348,8 +1348,8 @@ msgstr ""
 
 #: mentorat/templates/mentorat/devenir_mentee.html:18
 #: mentorat/templates/mentorat/devenir_mentor.html:18
-#: mentorat/templates/mentorat/index.html:4 templates/base.html:212
-#: templates/base.html:295
+#: mentorat/templates/mentorat/index.html:4 templates/base.html:280
+#: templates/base.html:363
 msgid "Mentorat"
 msgstr ""
 
@@ -1887,11 +1887,11 @@ msgstr ""
 msgid "Ajoutez vos notes sur cette séance avant de la marquer comme terminée."
 msgstr ""
 
-#: numeria_project/settings.py:130
+#: numeria_project/settings.py:131
 msgid "Français"
 msgstr ""
 
-#: numeria_project/settings.py:131
+#: numeria_project/settings.py:132
 msgid "English"
 msgstr ""
 
@@ -2126,69 +2126,69 @@ msgid ""
 "sciences et IA."
 msgstr ""
 
-#: templates/base.html:207 templates/base.html:290
+#: templates/base.html:275 templates/base.html:358
 msgid "Accueil"
 msgstr ""
 
-#: templates/base.html:208 templates/base.html:291
+#: templates/base.html:276 templates/base.html:359
 msgid "Cours"
 msgstr ""
 
-#: templates/base.html:209 templates/base.html:292
+#: templates/base.html:277 templates/base.html:360
 msgid "Blog"
 msgstr ""
 
-#: templates/base.html:210 templates/base.html:293 templates/base.html:370
+#: templates/base.html:278 templates/base.html:361 templates/base.html:438
 msgid "Candidatures"
 msgstr ""
 
-#: templates/base.html:213 templates/base.html:296 templates/base.html:371
+#: templates/base.html:281 templates/base.html:364 templates/base.html:439
 msgid "À propos"
 msgstr ""
 
-#: templates/base.html:214 templates/base.html:297 templates/base.html:372
-#: templates/base.html:379
+#: templates/base.html:282 templates/base.html:365 templates/base.html:440
+#: templates/base.html:447
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:252 templates/base.html:317
+#: templates/base.html:320 templates/base.html:385
 msgid "Tableau de bord"
 msgstr ""
 
-#: templates/base.html:272
+#: templates/base.html:340
 msgid "S'inscrire"
 msgstr ""
 
-#: templates/base.html:319
+#: templates/base.html:387
 msgid "Se déconnecter"
 msgstr ""
 
-#: templates/base.html:359
+#: templates/base.html:427
 msgid ""
 "L'éducation scientifique accessible, engageante et gratuite pour tous les "
 "apprenants africains et francophones du monde entier."
 msgstr ""
 
-#: templates/base.html:366
+#: templates/base.html:434
 msgid "Navigation"
 msgstr ""
 
-#: templates/base.html:368
+#: templates/base.html:436
 msgid "Nos cours"
 msgstr ""
 
-#: templates/base.html:369
+#: templates/base.html:437
 msgid "Le blog"
 msgstr ""
 
-#: templates/base.html:398
+#: templates/base.html:466
 msgid "Tous droits réservés"
 msgstr ""
 
-#: templates/base.html:400
+#: templates/base.html:468
 msgid "Confidentialité"
 msgstr ""
 
-#: templates/base.html:401
+#: templates/base.html:469
 msgid "CGU"
 msgstr ""

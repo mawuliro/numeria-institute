@@ -33,9 +33,9 @@
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 mt-4">
             <!-- Mentor -->
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-numeria-or rounded-full flex items-center justify-center text-numeria-bleu text-lg font-black flex-shrink-0">
-                    {% if relation.mentor.profil.avatar %}
-                    <img src="{{ relation.mentor.profil.avatar.url }}" alt="" class="w-full h-full rounded-full object-cover">
+                <div class="w-12 h-12 bg-numeria-or rounded-full flex items-center justify-center text-numeria-bleu text-lg font-black flex-shrink-0 overflow-hidden">
+                    {% if relation.mentor.profil.photo %}
+                    <img src="{{ relation.mentor.profil.photo.url }}" alt="Photo de {{ relation.mentor.profil.utilisateur.username }}" class="w-full h-full rounded-full object-cover">
                     {% else %}
                     {{ relation.mentor.profil.utilisateur.username|first|upper }}
                     {% endif %}
@@ -53,9 +53,9 @@
 
             <!-- Mentoré -->
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu text-lg font-black flex-shrink-0">
-                    {% if relation.mentee.profil.avatar %}
-                    <img src="{{ relation.mentee.profil.avatar.url }}" alt="" class="w-full h-full rounded-full object-cover">
+                <div class="w-12 h-12 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu text-lg font-black flex-shrink-0 overflow-hidden">
+                    {% if relation.mentee.profil.photo %}
+                    <img src="{{ relation.mentee.profil.photo.url }}" alt="Photo de {{ relation.mentee.profil.utilisateur.username }}" class="w-full h-full rounded-full object-cover">
                     {% else %}
                     {{ relation.mentee.profil.utilisateur.username|first|upper }}
                     {% endif %}

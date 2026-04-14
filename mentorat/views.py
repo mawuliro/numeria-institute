@@ -37,8 +37,13 @@ def devenir_mentor(request):
     """
     Inscription en tant que mentor.
     """
+    # Vérifier que l'utilisateur a un profil
+    if not hasattr(request.user, 'profil'):
+        messages.error(request, "Votre profil n'est pas configuré. Veuillez contacter l'administrateur.")
+        return redirect('mentorat:index')
+
     # Vérifier si l'utilisateur a déjà un profil mentor
-    if hasattr(request.user, 'profil') and hasattr(request.user.profil, 'mentorat_mentor'):
+    if hasattr(request.user.profil, 'mentorat_mentor'):
         messages.info(request, "Vous êtes déjà inscrit en tant que mentor.")
         return redirect('mentorat:tableau_de_bord_mentor')
 
@@ -61,8 +66,13 @@ def devenir_mentee(request):
     """
     Inscription en tant que mentoré.
     """
+    # Vérifier que l'utilisateur a un profil
+    if not hasattr(request.user, 'profil'):
+        messages.error(request, "Votre profil n'est pas configuré. Veuillez contacter l'administrateur.")
+        return redirect('mentorat:index')
+
     # Vérifier si l'utilisateur a déjà un profil mentee
-    if hasattr(request.user, 'profil') and hasattr(request.user.profil, 'mentorat_mentee'):
+    if hasattr(request.user.profil, 'mentorat_mentee'):
         messages.info(request, "Vous êtes déjà inscrit en tant que mentoré.")
         return redirect('mentorat:tableau_de_bord_mentee')
 

@@ -53,9 +53,13 @@
                         </h1>
                         <div class="flex items-center gap-3 text-sm text-blue-100">
                             <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-3 py-2">
-                                <span class="w-8 h-8 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu font-black text-xs">
-                                    {{ article.auteur.username|first|upper }}
-                                </span>
+                                {% if article.auteur.profil.photo %}
+                                    <img src="{{ article.auteur.profil.photo.url }}" alt="Photo de {{ article.auteur.username }}" class="w-8 h-8 rounded-full object-cover">
+                                {% else %}
+                                    <span class="w-8 h-8 bg-numeria-teal rounded-full flex items-center justify-center text-numeria-bleu font-black text-xs">
+                                        {{ article.auteur.username|first|upper }}
+                                    </span>
+                                {% endif %}
                                 <span>{{ article.auteur.username }}</span>
                             </div>
                         </div>
