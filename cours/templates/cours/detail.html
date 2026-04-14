@@ -602,12 +602,70 @@
                                 <!-- Sélection des stars -->
                                 <div class="flex gap-2 mb-6" id="rating-stars">
                                     {% for i in "12345" %}
-                                    <label class="cursor-pointer text-4xl transition-transform hover:scale-110">
+                                    <label class="cursor-pointer text-4xl transition-transform hover:scale-110" data-rating="{{ i }}">
                                         <input type="radio" name="note" value="{{ i }}" class="hidden" id="star-{{ i }}">
                                         <span class="text-gray-300">★</span>
                                     </label>
                                     {% endfor %}
                                 </div>
+
+                                <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const ratingStars = document.getElementById('rating-stars');
+                                    if (ratingStars) {
+                                        const labels = ratingStars.querySelectorAll('label');
+                                        const spans = ratingStars.querySelectorAll('span');
+
+                                        labels.forEach((label, index) => {
+                                            label.addEventListener('click', function() {
+                                                const rating = parseInt(this.dataset.rating);
+
+                                                // Mettre à jour l'apparence des étoiles
+                                                spans.forEach((span, spanIndex) => {
+                                                    if (spanIndex < rating) {
+                                                        span.classList.remove('text-gray-300');
+                                                        span.classList.add('text-yellow-400');
+                                                    } else {
+                                                        span.classList.remove('text-yellow-400');
+                                                        span.classList.add('text-gray-300');
+                                                    }
+                                                });
+
+                                                // Cocher le bon input radio
+                                                const radio = document.getElementById(`star-${rating}`);
+                                                if (radio) {
+                                                    radio.checked = true;
+                                                }
+                                            });
+
+                                            // Effet hover pour prévisualiser
+                                            label.addEventListener('mouseenter', function() {
+                                                const rating = parseInt(this.dataset.rating);
+                                                spans.forEach((span, spanIndex) => {
+                                                    if (spanIndex < rating) {
+                                                        span.classList.remove('text-gray-300');
+                                                        span.classList.add('text-yellow-400');
+                                                    } else {
+                                                        span.classList.remove('text-yellow-400');
+                                                        span.classList.add('text-gray-300');
+                                                    }
+                                                });
+                                            });
+
+                                            // Réinitialiser au mouseleave si aucune étoile n'est sélectionnée
+                                            label.addEventListener('mouseleave', function() {
+                                                const checkedRadio = ratingStars.querySelector('input[type="radio"]:checked');
+                                                if (!checkedRadio) {
+                                                    spans.forEach(span => {
+                                                        span.classList.remove('text-yellow-400');
+                                                        span.classList.add('text-gray-300');
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
+                                </script>
                                 
                                 <!-- Commentaire -->
                                 <textarea name="commentaire" placeholder="Partagez votre avis..." 
