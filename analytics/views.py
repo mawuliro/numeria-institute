@@ -64,7 +64,7 @@ def dashboard(request):
         paiements
         .annotate(jour=TruncDay('date_creation'))  # ← CORRIGÉ : date_creation
         .values('jour')
-        .annotate(total=Sum('montant'))
+        .annotate(total=Sum('montant_final'))
         .order_by('jour')
     )
     
@@ -73,7 +73,7 @@ def dashboard(request):
         'values': [float(item['total']) for item in revenus_par_jour]
     }
     
-    revenus_totaux = paiements.aggregate(total=Sum('montant'))['total'] or 0
+    revenus_totaux = paiements.aggregate(total=Sum('montant_final'))['total'] or 0
     nombre_paiements = paiements.count()
     
     # ============================================================
