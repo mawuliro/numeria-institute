@@ -52,6 +52,35 @@ class Profil(models.Model):
     linkedin = models.URLField(blank=True, null=True)
     github = models.URLField(blank=True, null=True)
 
+    # --- MÉTADONNÉES SOCIALES ---
+    nombre_abonnes = models.IntegerField(default=0, verbose_name='Nombre d\'abonnés')
+    nombre_abonnements = models.IntegerField(default=0, verbose_name='Nombre d\'abonnements')
+    nombre_messages_prives = models.IntegerField(default=0)
+    est_verifiee = models.BooleanField(default=False, verbose_name='Compte vérifié')
+    est_menteur = models.BooleanField(
+        default=False,
+        verbose_name='Accès mentor activé',
+        help_text='Peut répondre aux questions des étudiants'
+    )
+    
+    # --- PRÉFÉRENCES ---
+    notifications_activees = models.BooleanField(
+        default=True,
+        verbose_name='Notifications activées'
+    )
+    theme_preference = models.CharField(
+        max_length=10,
+        choices=[('light', 'Clair'), ('dark', 'Sombre'), ('auto', 'Auto')],
+        default='auto',
+        verbose_name='Préférence thème'
+    )
+    langue_preference = models.CharField(
+        max_length=10,
+        choices=[('fr', 'Français'), ('en', 'English')],
+        default='fr',
+        verbose_name='Langue préférée'
+    )
+
     # --- MÉTADONNÉES ---
     date_inscription = models.DateTimeField(auto_now_add=True)
     est_actif = models.BooleanField(default=True)

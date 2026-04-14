@@ -113,6 +113,22 @@ def convertir_url_youtube(url):
 # MODÈLES
 # =============================================================================
 
+class Tag(models.Model):
+    """Tags pour catégoriser les cours."""
+    nom = models.CharField(max_length=50, unique=True, verbose_name='Nom du tag')
+    slug = models.SlugField(unique=True)
+    description = models.TextField(blank=True)
+    couleur = models.CharField(max_length=7, default='#2DD4BF', verbose_name='Couleur (hex)')
+    
+    def __str__(self):
+        return self.nom
+    
+    class Meta:
+        verbose_name = 'Tag'
+        verbose_name_plural = 'Tags'
+        ordering = ['nom']
+
+
 class Cours(models.Model):
     """
     Représente un cours sur Numeria Institute.
@@ -245,9 +261,91 @@ class Cours(models.Model):
     # La conversion se fait à l'affichage dans video_tags.py.
     # Cela évite le double-encodage et le bug d'extraire_id_youtube.
 
+    # ── PRÉALABLES ET PROGRESSION ──────────────────────────────────────
+    cours_prerequises = models.ManyToManyField(
+        'self', blank=True, symmetrical=False,
+        related_name='cours_suivants',
+        verbose_name='Cours préalables'
+    )
+    
+    # ── TAGS ET MÉTADONNÉES AVANCÉES ──────────────────────────────────────
+    tags = models.ManyToManyField(
+        Tag, blank=True,
+        related_name='cours',
+        verbose_name='Tags'
+    )
+    
+    duree_estimee_heures = models.IntegerField(
+        default=10, verbose_name='Durée estimée (heures)'
+    )
+    
+    competences_visees = models.TextField(
+        blank=True, verbose_name='Compétences visées',
+        help_text='Listez les compétences que les étudiants acquerront (séparées par des virgules)'
+    )
+    
+    ressources_externes = models.TextField(
+        blank=True, verbose_name='Ressources externes',
+        help_text='Liens vers des ressources complémentaires (un par ligne)'
+    )
+    
+    langue = models.CharField(
+        max_length=10, default='fr',
+        choices=[('fr', 'Français'), ('en', 'English'), ('other', 'Autre')],
+        verbose_name='Langue'
+    )
+    
+    # ── STATISTIQUES ───────────────────────────────────────────────────────
+    nombre_etudiants_inscrits = models.IntegerField(default=0, editable=False)
+    note_moyenne = models.DecimalField(
+        max_digits=3, decimal_places=2, default=0, editable=False,
+        verbose_name='Note moyenne'
+    )
+    taux_completion = models.IntegerField(
+        default=0, editable=False,
+        verbose_name='Taux de complétion (%)'
+    )
+    
+    # ── INFORMATIONS SEO ───────────────────────────────────────────────────
+    slug = models.SlugField(
+        unique=True, blank=True,
+        verbose_name='URL slug'
+    )
+    meta_keywords = models.CharField(
+        max_length=200, blank=True,
+        verbose_name='Mots-clés SEO'
+    )
+
     def get_video_embed_url(self):
         """Retourne l'URL embed prête pour l'<iframe>."""
         return convertir_url_youtube(self.video_youtube)
+    
+    def get_note_moyenne(self):
+        """Calcule la note moyenne du cours."""
+        evals = self.evaluations.all()
+        if evals.exists():
+            return sum(e.note for e in evals) / evals.count()
+        return 0
+    
+    def get_taux_completion(self):
+        """Calcule le taux de complétion moyen."""
+        inscriptions = self.inscriptions.all()
+        if inscriptions.exists():
+            termines = inscriptions.filter(est_termine=True).count()
+            return (termines / inscriptions.count()) * 100
+        return 0
+    
+    def save(self, *args, **kwargs):
+        """Génère automatiquement le slug et met à jour les stats."""
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.titre)
+        
+        self.nombre_etudiants_inscrits = self.inscriptions.count()
+        self.note_moyenne = self.get_note_moyenne()
+        self.taux_completion = int(self.get_taux_completion())
+        
+        super().save(*args, **kwargs)
 
     def __str__(self):
         if self.type_cours == 'scolaire' and self.classe:
@@ -258,6 +356,10 @@ class Cours(models.Model):
         verbose_name = 'Cours'
         verbose_name_plural = 'Cours'
         ordering = ['-date_creation']
+        indexes = [
+            models.Index(fields=['slug']),
+            models.Index(fields=['est_publie', '-date_creation']),
+        ]
 
 
 class Lecon(models.Model):
@@ -339,6 +441,99 @@ class InscriptionCours(models.Model):
         verbose_name_plural = 'Inscriptions'
         ordering = ['-date_inscription']
         unique_together = ['etudiant', 'cours']
+
+class EvaluationCours(models.Model):
+    """Évaluations et notes des cours par les étudiants."""
+    
+    etudiant = models.ForeignKey(
+        'auth.User', on_delete=models.CASCADE,
+        related_name='evaluations_cours'
+    )
+    cours = models.ForeignKey(
+        Cours, on_delete=models.CASCADE,
+        related_name='evaluations'
+    )
+    note = models.IntegerField(
+        choices=[(i, f'{i}/5 ⭐') for i in range(1, 6)],
+        verbose_name='Note'
+    )
+    commentaire = models.TextField(blank=True, max_length=500, verbose_name='Commentaire')
+    date_creation = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f'{self.etudiant.username} → {self.cours.titre} ({self.note}/5)'
+    
+    class Meta:
+        verbose_name = 'Évaluation'
+        verbose_name_plural = 'Évaluations'
+        unique_together = ['etudiant', 'cours']
+        ordering = ['-date_creation']
+
+
+class CertificatCours(models.Model):
+    """Certificat d'achèvement pour un cours."""
+    
+    STATUTS = [
+        ('en_cours', 'En cours'),
+        ('gagne', 'Gagné'),
+        ('expire', 'Expiré'),
+    ]
+    
+    etudiant = models.ForeignKey(
+        'auth.User', on_delete=models.CASCADE,
+        related_name='certificats'
+    )
+    cours = models.ForeignKey(
+        Cours, on_delete=models.CASCADE,
+        related_name='certificats'
+    )
+    date_obtention = models.DateTimeField(auto_now_add=True)
+    date_expiration = models.DateTimeField(blank=True, null=True, verbose_name='Date d\'expiration')
+    statut = models.CharField(
+        max_length=20, choices=STATUTS, default='gagne',
+        verbose_name='Statut'
+    )
+    numero_certificat = models.CharField(
+        max_length=50, unique=True,
+        verbose_name='Numéro de certificat'
+    )
+    score_final = models.IntegerField(default=100, verbose_name='Score final (%)')
+    
+    def __str__(self):
+        return f'Certificat {self.numero_certificat} - {self.etudiant.username}'
+    
+    class Meta:
+        verbose_name = 'Certificat'
+        verbose_name_plural = 'Certificats'
+        ordering = ['-date_obtention']
+        unique_together = ['etudiant', 'cours']
+
+
+class QuestionFAQ(models.Model):
+    """Questions fréquemment posées par les étudiants dans un cours."""
+    
+    cours = models.ForeignKey(
+        Cours, on_delete=models.CASCADE,
+        related_name='faq'
+    )
+    auteur = models.ForeignKey(
+        'auth.User', on_delete=models.SET_NULL,
+        null=True, related_name='questions_faq'
+    )
+    question = models.CharField(max_length=300, verbose_name='Question')
+    reponse = models.TextField(verbose_name='Réponse')
+    date_creation = models.DateTimeField(auto_now_add=True)
+    approuvee_par_admin = models.BooleanField(default=False)
+    votes_positifs = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f'{self.cours.titre} - {self.question[:50]}...'
+    
+    class Meta:
+        verbose_name = 'Question FAQ'
+        verbose_name_plural = 'Questions FAQ'
+        ordering = ['-votes_positifs', '-date_creation']
+
 
 class Exercice(models.Model):
     """

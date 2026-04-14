@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.gzip.GZipMiddleware',  # Compress responses
 ]
 
 ROOT_URLCONF = 'numeria_project.urls'
@@ -232,6 +233,37 @@ ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@numeriainstitute.com')
 # Email configuration for production
 if not DEBUG:
     EMAIL_TIMEOUT = 10  # Timeout for email connections
+
+
+# ── SÉCURITÉ AVANCÉE ─────────────────────────────────────────────────────────
+# Rate limiting and DDoS protection
+RATELIMIT_ENABLE = True
+RATELIMIT_USE_CACHE = 'default'
+
+# Content Security Policy
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "cdn.jsdelivr.net", "unpkg.com", "*.google.com", "*.gstatic.com")
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "unpkg.com")
+CSP_IMG_SRC = ("'self'", "data:", "https:")
+CSP_FONT_SRC = ("'self'", "data:", "cdn.jsdelivr.net")
+CSP_CONNECT_SRC = ("'self'", "cloudinary.com", "res.cloudinary.com")
+
+# Security headers in production
+if not DEBUG:
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_SECURITY_POLICY = {
+        'default-src': ("'self'",),
+        'script-src': ("'self'", "cdn.jsdelivr.net", "unpkg.com"),
+        'style-src': ("'self'", "'unsafe-inline'", "cdn.jsdelivr.net"),
+        'img-src': ("'self'", "data:", "https:"),
+    }
+    
+    # Prevent clickjacking
+    X_FRAME_OPTIONS = 'DENY'
+    
+    # Force HTTPS
+    SECURE_SSL_REDIRECT = False  # Railway handles HTTPS
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # ── SÉCURITÉ EN PRODUCTION ───────────────────────────────────────────────────

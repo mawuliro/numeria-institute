@@ -7,7 +7,7 @@ class PaiementAdmin(admin.ModelAdmin):
         'reference_numeria',
         'etudiant',
         'cours',
-        'montant',
+        'montant_initial',
         'devise',
         'provider',
         'statut',
@@ -31,7 +31,7 @@ class PaiementAdmin(admin.ModelAdmin):
         ('Informations principales', {
             'fields': [
                 'etudiant', 'cours',
-                'montant', 'devise',
+                'montant_initial', 'montant_final', 'frais_plateforme', 'devise',
                 'statut',
             ]
         }),
