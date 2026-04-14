@@ -10,8 +10,12 @@ User = get_user_model()
 
 def accueil(request):
     """Vue de la page d'accueil."""
+    from django.utils.translation import get_language
+    current_lang = get_language()
+    
     homepage = HomePage.objects.first()
     if not homepage:
+        # Contenu par défaut en français
         homepage = HomePage.objects.create(
             hero_badge="Scientific Computing & AI",
             hero_title="La science accessible à tous les esprits curieux",
@@ -36,6 +40,27 @@ def accueil(request):
             meta_title="Accueil - Numeria Institute",
             meta_description=_("Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.")
         )
+    
+    # Traduire le contenu dynamiquement selon la langue
+    if current_lang == 'en':
+        homepage.hero_badge = "Scientific Computing & AI"
+        homepage.hero_title = "Science accessible to all curious minds"
+        homepage.hero_description = "Quality scientific courses designed for African and French-speaking learners worldwide. From high school to advanced AI."
+        homepage.hero_cta_primary_text = "Discover courses"
+        homepage.hero_cta_secondary_text = "Create account"
+        homepage.features_title = "Why choose Numeria?"
+        homepage.features = [
+            {"icon": "🎓", "title": "Quality courses", "description": "Rigorous content validated by African experts."},
+            {"icon": "🌍", "title": "Accessible everywhere", "description": "Learn wherever and whenever you want."},
+            {"icon": "💰", "title": "Free to start", "description": "Discover our courses without commitment."}
+        ]
+        homepage.testimonials = [
+            {"name": "Marie K.", "role": "Master's student", "text": "The courses are excellent and adapted to our African context."},
+            {"name": "Jean T.", "role": "Professor", "text": "Finally a platform that understands our educational needs."}
+        ]
+        homepage.meta_title = "Home - Numeria Institute"
+        homepage.meta_description = _("Accessible scientific education in Africa. Mathematics, science and AI courses for African and French-speaking learners.")
+    
     cours_recents = Cours.objects.filter(est_publie=True)[:3]
     articles_recents = Article.objects.filter(est_publie=True)[:3]
 
@@ -83,6 +108,9 @@ def cgu(request):
 
 def a_propos(request):
     """Vue de la page À propos."""
+    from django.utils.translation import get_language
+    current_lang = get_language()
+    
     aboutpage = AboutPage.objects.first()
     if not aboutpage:
         aboutpage = AboutPage.objects.create(
@@ -98,6 +126,21 @@ def a_propos(request):
             meta_title="À propos - Numeria Institute",
             meta_description=_("Découvrez Numeria Institute, notre mission et notre équipe pour l'éducation scientifique en Afrique.")
         )
+    
+    # Traduire le contenu dynamiquement selon la langue
+    if current_lang == 'en':
+        aboutpage.title = "About Numeria Institute"
+        aboutpage.content = "Numeria Institute was born from a simple observation: Sub-Saharan Africa is undergoing accelerated digital transformation, with a large and ambitious youth, but a glaring lack of practical training in computational sciences and artificial intelligence."
+        aboutpage.mission_title = "Our Mission"
+        aboutpage.mission_content = "To train a new generation of African digital scientists and engineers, capable of modeling, analyzing and solving the complex problems of the continent."
+        aboutpage.vision_title = "Our Vision"
+        aboutpage.vision_content = "To become the reference hub for applied tech training for the entire ECOWAS region."
+        aboutpage.team = [
+            {"name": "Dr. Roland M.", "role": "Founder & Director", "bio": "Expert in AI and computational sciences."}
+        ]
+        aboutpage.meta_title = "About - Numeria Institute"
+        aboutpage.meta_description = _("Discover Numeria Institute, our mission and team for scientific education in Africa.")
+    
     # Statistiques dynamiques
     total_cours = Cours.objects.filter(est_publie=True).count()
     total_etudiants = User.objects.filter(is_active=True).count()

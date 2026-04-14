@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-14 00:51+0000\n"
+"POT-Creation-Date: 2026-04-14 01:07+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -2230,7 +2230,7 @@ msgid ""
 "Aucune carte bancaire requise · Cours gratuits disponibles immédiatement"
 msgstr "No credit card required · Free courses available immediately"
 
-#: pages/views.py:37 templates/base.html:22 templates/base.html:25
+#: pages/views.py:41 templates/base.html:22 templates/base.html:25
 #: templates/base.html:34
 msgid ""
 "Éducation scientifique accessible en Afrique. Cours de mathématiques, "
@@ -2239,10 +2239,28 @@ msgstr ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses for African and French-speaking learners."
 
-#: pages/views.py:99
+#: pages/views.py:62
+msgid ""
+"Accessible scientific education in Africa. Mathematics, science and AI "
+"courses for African and French-speaking learners."
+msgstr ""
+
+#: pages/views.py:127
 msgid ""
 "Découvrez Numeria Institute, notre mission et notre équipe pour l'éducation "
 "scientifique en Afrique."
+msgstr ""
+"Discover Numeria Institute, our mission and team for scientific education in "
+"Africa."
+
+#: pages/views.py:142
+#, fuzzy
+#| msgid ""
+#| "Découvrez Numeria Institute, notre mission et notre équipe pour "
+#| "l'éducation scientifique en Afrique."
+msgid ""
+"Discover Numeria Institute, our mission and team for scientific education in "
+"Africa."
 msgstr ""
 "Discover Numeria Institute, our mission and team for scientific education in "
 "Africa."

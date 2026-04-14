@@ -63,8 +63,7 @@ urlpatterns = [
     path('robots.txt', views.robots_txt, name='robots_txt'),
 ]
 
-# Routes traduites — prefix_default_language=False : le français garde /cours/,
-# l'anglais devient /en/cours/ sans casser les redirections d'authentification existantes.
+# Routes traduites — le français garde /, l'anglais devient /en/
 urlpatterns += i18n_patterns(
     path('analytics/', include('analytics.urls')),
     path('admissions/', include('admissions.urls')),
@@ -79,7 +78,6 @@ urlpatterns += i18n_patterns(
     path('paiements/', include('paiements.urls')),
     path('communaute/', include('communaute.urls')),
     path('mentorat/', include('mentorat.urls')),
-    prefix_default_language=False,
 )
 
 if settings.DEBUG:

@@ -463,13 +463,18 @@
 
         function switchLang(lang) {
             let path = window.location.pathname;
-            // Avec prefix_default_language=False : FR = pas de préfixe, EN = /en/
+            // Standard Django i18n: both languages have prefixes /fr/ and /en/
             if (lang === 'fr') {
-                if (path.startsWith('/en/')) path = path.slice(3);
-                else if (path === '/en') path = '/';
+                if (path.startsWith('/en/')) {
+                    path = '/fr' + path.slice(3);
+                } else if (!path.startsWith('/fr/')) {
+                    path = '/fr' + path;
+                }
             } else {
-                if (!path.startsWith('/en/') && path !== '/en') {
-                    path = '/en' + (path.startsWith('/') ? path : '/' + path);
+                if (path.startsWith('/fr/')) {
+                    path = '/en' + path.slice(3);
+                } else if (!path.startsWith('/en/')) {
+                    path = '/en' + path;
                 }
             }
             document.getElementById('lang-switch-next').value = path + window.location.search;
