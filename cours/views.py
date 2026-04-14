@@ -51,7 +51,7 @@ def catalogue(request):
 
 def detail_cours(request, cours_id):
     """Page détail d'un cours avec ses leçons et exercices."""
-    from .models import Exercice, TentativeExercice
+    from .models import Exercice, TentativeExercice, EvaluationCours, CertificatCours
 
     cours  = get_object_or_404(Cours, id=cours_id, est_publie=True)
     lecons = cours.lecons.filter(est_publiee=True)
@@ -59,6 +59,8 @@ def detail_cours(request, cours_id):
     est_inscrit          = False
     inscription          = None
     lecons_terminees_ids = []
+    evaluation_utilisateur = None
+    certificat_utilisateur = None
 
     if request.user.is_authenticated:
         inscription = InscriptionCours.objects.filter(
@@ -74,6 +76,20 @@ def detail_cours(request, cours_id):
                     lecon__cours=cours
                 ).values_list('lecon_id', flat=True)
             )
+            
+            # Get user's evaluation if exists
+            evaluation_utilisateur = EvaluationCours.objects.filter(
+                etudiant=request.user,
+                cours=cours
+            ).first()
+            
+            # Get user's certificate if the course is completed
+            if inscription.est_termine:
+                certificat_utilisateur = CertificatCours.objects.filter(
+                    etudiant=request.user,
+                    cours=cours,
+                    statut__in=['gagne', 'en_cours']
+                ).first()
 
     # Leçon active
     lecon_active_id = request.GET.get('lecon')
@@ -139,6 +155,8 @@ def detail_cours(request, cours_id):
         'resultat_exercice':      resultat_exercice,
         'exercice_actif_id':      exercice_actif_id,
         'reponse_choisie':        reponse_choisie,
+        'evaluation_utilisateur': evaluation_utilisateur,
+        'certificat_utilisateur': certificat_utilisateur,
     }
     return render(request, 'cours/detail.html', contexte)
 
@@ -410,3 +428,87 @@ def verifier_certificat(request, code):
         'date_emission': certificat.date_emission,
     }
     return render(request, 'cours/verifier_certificat.html', contexte)
+
+
+@login_required
+def evaluer_cours(request, cours_id):
+    """Poster une évaluation pour un cours complété."""
+    from .models import EvaluationCours
+    
+    cours = get_object_or_404(Cours, id=cours_id, est_publie=True)
+    inscription = InscriptionCours.objects.filter(
+        etudiant=request.user,
+        cours=cours,
+        est_termine=True
+    ).first()
+    
+    if not inscription:
+        messages.error(request, "Vous devez terminer le cours avant de le noter.")
+        return redirect('cours:detail', cours_id=cours_id)
+    
+    if request.method == 'POST':
+        try:
+            note = int(request.POST.get('note', 0))
+            if note < 1 or note > 5:
+                messages.error(request, "La note doit être entre 1 et 5.")
+                return redirect('cours:detail', cours_id=cours_id)
+            
+            commentaire = request.POST.get('commentaire', '').strip()
+            
+            # Créer ou mettre à jour l'évaluation
+            evaluation, created = EvaluationCours.objects.update_or_create(
+                etudiant=request.user,
+                cours=cours,
+                defaults={
+                    'note': note,
+                    'commentaire': commentaire,
+                }
+            )
+            
+            messages.success(request, "✅ Merci pour votre évaluation !")
+        except Exception as e:
+            messages.error(request, f"Erreur lors de l'évaluation : {str(e)}")
+        
+        return redirect('cours:detail', cours_id=cours_id)
+    
+    return redirect('cours:detail', cours_id=cours_id)
+
+
+@login_required
+def poser_question(request, cours_id):
+    """Poser une question sur un cours."""
+    from .models import QuestionFAQ
+    
+    cours = get_object_or_404(Cours, id=cours_id, est_publie=True)
+    inscription = InscriptionCours.objects.filter(
+        etudiant=request.user,
+        cours=cours
+    ).first()
+    
+    if not inscription:
+        messages.error(request, "Vous devez être inscrit au cours pour poser une question.")
+        return redirect('cours:detail', cours_id=cours_id)
+    
+    if request.method == 'POST':
+        try:
+            question = request.POST.get('question', '').strip()
+            if not question or len(question) < 5:
+                messages.error(request, "La question doit contenir au moins 5 caractères.")
+                return redirect('cours:detail', cours_id=cours_id)
+            
+            # Créer la question (en attente de modération)
+            QuestionFAQ.objects.create(
+                cours=cours,
+                auteur=request.user,
+                question=question,
+                reponse="",  # Will be filled by admin
+                approuvee_par_admin=False
+            )
+            
+            messages.success(request, "✅ Votre question a été soumise et sera modérée par un admin.")
+        except Exception as e:
+            messages.error(request, f"Erreur lors de la soumission : {str(e)}")
+        
+        return redirect('cours:detail', cours_id=cours_id)
+    
+    return redirect('cours:detail', cours_id=cours_id)

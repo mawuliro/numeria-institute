@@ -97,7 +97,61 @@
                 <p class="text-gray-400 dark:text-gray-500 text-xs mt-1">
                     {{ cours.get_niveau_display }} · {{ total_lecons }} leçons
                 </p>
+                
+                <!-- TAGS -->
+                {% if cours.tags.all %}
+                <div class="flex flex-wrap gap-1 mt-3">
+                    {% for tag in cours.tags.all %}
+                    <span class="text-xs font-semibold px-2 py-1 rounded-full text-white"
+                          style="background-color: {{ tag.couleur }}">
+                        {{ tag.nom }}
+                    </span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- ÉVALUATION MOYENNE -->
+                {% if cours.note_moyenne %}
+                <div class="mt-3 p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-numeria-or">
+                            ★ {{ cours.note_moyenne|floatformat:1 }}/5
+                        </span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">
+                            ({{ cours.evaluations.count }} avis)
+                        </span>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- CERTIFICAT -->
+                {% if user.is_authenticated and certificat_utilisateur %}
+                <div class="mt-3 p-2 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg">
+                    <p class="text-xs font-bold text-green-600 dark:text-green-400">
+                        ✅ Certificat obtenu
+                    </p>
+                    <p class="text-xs text-green-600 dark:text-green-400">
+                        {{ certificat_utilisateur.numero_certificat }}
+                    </p>
+                </div>
+                {% endif %}
             </div>
+            
+            <!-- PRÉREQUIS -->
+            {% if cours.cours_prerequises.all %}
+            <div class="p-5 border-t border-gray-100 dark:border-gray-700 bg-blue-50 dark:bg-blue-900">
+                <p class="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide mb-2">
+                    📋 Prérequis
+                </p>
+                <div class="space-y-2">
+                    {% for prereq in cours.cours_prerequises.all %}
+                    <div class="text-xs text-gray-700 dark:text-gray-200">
+                        • {{ prereq.titre }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
 
             <!-- Liste des leçons -->
             <div class="p-3">
@@ -511,6 +565,119 @@
 
                     </div>
                     {% endif %}
+                    
+                    <!-- ===== ÉVALUATION DU COURS ===== -->
+                    {% if est_inscrit and inscription.est_termine %}
+                    <div class="max-w-4xl mx-auto px-4 sm:px-8 py-12 border-t border-gray-200 dark:border-gray-700">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-6 flex items-center gap-3">
+                            <span>⭐</span> Évaluer ce cours
+                        </h2>
+                        
+                        <!-- Évaluation existante -->
+                        {% if evaluation_utilisateur %}
+                        <div class="bg-green-50 dark:bg-green-900 p-6 rounded-2xl border border-green-200 dark:border-green-700">
+                            <p class="text-green-600 dark:text-green-400 font-bold mb-3">
+                                Votre évaluation
+                            </p>
+                            <div class="text-2xl mb-3">
+                                {% for i in "12345" %}
+                                    {% if i|add:0 <= evaluation_utilisateur.note %}<span class="text-yellow-400">★</span>{% else %}<span class="text-gray-300">★</span>{% endif %}
+                                {% endfor %}
+                            </div>
+                            {% if evaluation_utilisateur.commentaire %}
+                            <p class="text-gray-700 dark:text-gray-200 italic">
+                                "{{ evaluation_utilisateur.commentaire }}"
+                            </p>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <!-- Formulaire d'évaluation -->
+                        <form method="POST" action="{% url 'cours:evaluer' cours.id %}" class="max-w-2xl">
+                            {% csrf_token %}
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700">
+                                <p class="text-gray-700 dark:text-gray-300 font-semibold mb-4">
+                                    Qu'avez-vous pensé de ce cours ?
+                                </p>
+                                
+                                <!-- Sélection des stars -->
+                                <div class="flex gap-2 mb-6" id="rating-stars">
+                                    {% for i in "12345" %}
+                                    <label class="cursor-pointer text-4xl transition-transform hover:scale-110">
+                                        <input type="radio" name="note" value="{{ i }}" class="hidden" id="star-{{ i }}">
+                                        <span class="text-gray-300">★</span>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                                
+                                <!-- Commentaire -->
+                                <textarea name="commentaire" placeholder="Partagez votre avis..." 
+                                          class="w-full p-4 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm mb-4 resize-none" 
+                                          rows="4" maxlength="500"></textarea>
+                                
+                                <button type="submit"
+                                    class="bg-numeria-or text-numeria-bleu font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
+                                    Soumettre mon évaluation
+                                </button>
+                            </div>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- ===== QUESTIONS FRÉQUENTES ===== -->
+                    <div class="max-w-4xl mx-auto px-4 sm:px-8 py-12 border-t border-gray-200 dark:border-gray-700">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-6 flex items-center gap-3">
+                            <span>❓</span> Questions fréquentes
+                        </h2>
+                        
+                        {% if cours.faq.all %}
+                        <div class="space-y-3">
+                            {% for question in cours.faq.all %}
+                            {% if question.approuvee_par_admin or question.auteur == user %}
+                            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                                <div class="p-5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" onclick="this.parentElement.classList.toggle('active')">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-gray-800 dark:text-gray-100">
+                                                {{ question.question }}
+                                            </p>
+                                            <p class="text-xs text-gray-400 mt-1">
+                                                Par {{ question.auteur.first_name or question.auteur.username }}
+                                                · {{ question.votes_positifs }} 👍
+                                            </p>
+                                        </div>
+                                        <span class="text-gray-400 flex-shrink-0">▼</span>
+                                    </div>
+                                </div>
+                                <div class="hidden px-5 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+                                    <div class="prose dark:prose-invert max-w-none text-sm">
+                                        {{ question.reponse|safe }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Formulaire pour poser une question -->
+                        {% if est_inscrit %}
+                        <div class="mt-8 bg-blue-50 dark:bg-blue-900 p-6 rounded-2xl border border-blue-200 dark:border-blue-700">
+                            <p class="font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                                Vous avez une question ?
+                            </p>
+                            <form method="POST" action="{% url 'cours:poser_question' cours.id %}" class="space-y-4">
+                                {% csrf_token %}
+                                <input type="text" name="question" placeholder="Votre question..." required
+                                       class="w-full p-3 rounded-lg border border-blue-300 dark:border-blue-600 dark:bg-gray-800 dark:text-white text-sm" maxlength="300">
+                                <button type="submit"
+                                    class="bg-numeria-bleu text-white font-bold px-6 py-2.5 rounded-xl hover:bg-numeria-bleu-fonce transition-colors text-sm">
+                                    Poser la question
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
 
                 </div>
 

@@ -157,9 +157,38 @@
                         </div>
 
                         <div class="p-6 flex flex-col flex-1">
-                            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6 line-clamp-3">
+                            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3">
                                 {{ un_cours.resume }}
                             </p>
+                            
+                            <!-- TAGS -->
+                            {% if un_cours.tags.all %}
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                {% for tag in un_cours.tags.all|slice:":3" %}
+                                <span class="text-xs font-semibold px-2 py-1 rounded-full text-white"
+                                      style="background-color: {{ tag.couleur }}">
+                                    {{ tag.nom }}
+                                </span>
+                                {% endfor %}
+                                {% if un_cours.tags.all|length > 3 %}
+                                <span class="text-xs text-gray-400 px-2 py-1">
+                                    +{{ un_cours.tags.all|length|add:"-3" }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            
+                            <!-- RATING -->
+                            {% if un_cours.note_moyenne %}
+                            <div class="flex items-center gap-2 mb-4 text-sm">
+                                <span class="text-numeria-or font-bold">
+                                    ★ {{ un_cours.note_moyenne|floatformat:1 }}/5
+                                </span>
+                                <span class="text-xs text-gray-400">
+                                    ({{ un_cours.evaluations.count }})
+                                </span>
+                            </div>
+                            {% endif %}
 
                             <div class="mt-auto flex flex-col gap-4">
                                 <div class="grid grid-cols-2 gap-3 text-xs text-gray-500 dark:text-gray-400">
