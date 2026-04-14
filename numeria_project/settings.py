@@ -199,15 +199,39 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # ── EMAIL ─────────────────────────────────────────────────────────────────────
-EMAIL_BACKEND       = config('EMAIL_BACKEND',
-                              default='django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST          = config('EMAIL_HOST',          default='smtp.gmail.com')
-EMAIL_PORT          = config('EMAIL_PORT',          default=587, cast=int)
-EMAIL_USE_TLS       = config('EMAIL_USE_TLS',       default=True, cast=bool)
-EMAIL_HOST_USER     = config('EMAIL_HOST_USER',     default='')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL  = 'Numeria Institute <contact@numeriainstitute.com>'
-CONTACT_EMAIL       = config('CONTACT_EMAIL', default='contact@numeriainstitute.com')
+# Email backend selection: 'smtp' (SMTP), 'gmail' (Gmail), 'mailgun', or 'console' (dev)
+_email_service = config('EMAIL_SERVICE', default='smtp').lower()
+
+if _email_service == 'mailgun':
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.mailgun.org'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = config('MAILGUN_SMTP_USER', default='')
+    EMAIL_HOST_PASSWORD = config('MAILGUN_SMTP_PASSWORD', default='')
+elif _email_service == 'gmail':
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = config('GMAIL_EMAIL', default='')
+    EMAIL_HOST_PASSWORD = config('GMAIL_APP_PASSWORD', default='')
+else:  # default SMTP
+    EMAIL_BACKEND = config('EMAIL_BACKEND',
+                            default='django.core.mail.backends.console.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend')
+    EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Numeria Institute <contact@numeriainstitute.com>')
+CONTACT_EMAIL = config('CONTACT_EMAIL', default='contact@numeriainstitute.com')
+ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@numeriainstitute.com')
+
+# Email configuration for production
+if not DEBUG:
+    EMAIL_TIMEOUT = 10  # Timeout for email connections
 
 
 # ── SÉCURITÉ EN PRODUCTION ───────────────────────────────────────────────────

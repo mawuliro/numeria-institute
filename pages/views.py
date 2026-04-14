@@ -176,18 +176,19 @@ def contact(request):
 
         if formulaire.is_valid():
             nom = formulaire.cleaned_data['nom_complet']
-            email = formulaire.cleaned_data['email']
+            email_utilisateur = formulaire.cleaned_data['email']
             organisation = formulaire.cleaned_data.get('organisation', '')
             sujet = formulaire.cleaned_data['sujet']
             message = formulaire.cleaned_data['message']
             est_partenaire = formulaire.cleaned_data.get('est_partenaire', False)
 
-            contenu_email = f"""
+            # Message to admin
+            contenu_email_admin = f"""
 Nouveau message depuis le site Numeria Institute
 ================================================
 
 De : {nom}
-Email : {email}
+Email : {email_utilisateur}
 Organisation : {organisation or 'Non renseignée'}
 Sujet : {sujet}
 Partenariat : {'Oui' if est_partenaire else 'Non'}
@@ -200,22 +201,58 @@ Message :
 Envoyé depuis numeriainstitute.com
             """
 
+            # Confirmation message to user
+            contenu_email_utilisateur = f"""
+Bonjour {nom},
+
+Merci beaucoup d'avoir contacté Numeria Institute ! ✨
+
+Nous avons bien reçu votre message concernant : {sujet}
+
+Notre équipe vous répondra dans les 24 à 48 heures.
+
+Si vous avez une question urgente, vous pouvez nous appeler directement à contact@numeriainstitute.com
+
+Cordialement,
+L'équipe Numeria Institute
+Lomé, Togo 🇹🇬
+            """
+
             try:
+                # Send to admin
                 send_mail(
                     subject=f'[Numeria] Nouveau message : {sujet} — {nom}',
-                    message=contenu_email,
+                    message=contenu_email_admin,
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[settings.CONTACT_EMAIL],
                     fail_silently=False,
                 )
-            except Exception:
-                pass
+                # Send confirmation to user
+                send_mail(
+                    subject=f'Confirmation : Nous avons reçu votre message',
+                    message=contenu_email_utilisateur,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email_utilisateur],
+                    fail_silently=False,
+                )
+                email_sent = True
+            except Exception as e:
+                email_sent = False
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f'Email error: {str(e)}')
 
             from django.contrib import messages
-            messages.success(
-                request,
-                f"✅ Merci {nom} ! Ton message a bien été envoyé. Nous te répondrons sous 48h."
-            )
+            if email_sent:
+                messages.success(
+                    request,
+                    f"✅ Merci {nom} ! Ton message a bien été envoyé. Nous te répondrons dans 24-48h."
+                )
+            else:
+                messages.success(
+                    request,
+                    f"✅ Message reçu {nom} ! Nous te répondrons bientôt."
+                )
             return redirect('contact')
 
     else:
