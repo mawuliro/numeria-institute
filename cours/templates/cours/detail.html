@@ -642,7 +642,7 @@
                                                 {{ question.question }}
                                             </p>
                                             <p class="text-xs text-gray-400 mt-1">
-                                                Par {{ question.auteur.first_name or question.auteur.username }}
+                                                Par {% if question.auteur.first_name %}{{ question.auteur.first_name }}{% else %}{{ question.auteur.username }}{% endif %}
                                                 · {{ question.votes_positifs }} 👍
                                             </p>
                                         </div>
