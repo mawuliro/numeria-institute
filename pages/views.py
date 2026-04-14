@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext as _
 from cours.models import Cours
 from blog.models import Article
 from .models import HomePage, AboutPage, ContactPage
@@ -33,7 +34,7 @@ def accueil(request):
                 {"name": "Jean T.", "role": "Professeur", "text": "Enfin une plateforme qui comprend nos besoins éducatifs."}
             ],
             meta_title="Accueil - Numeria Institute",
-            meta_description="Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones."
+            meta_description=_("Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.")
         )
     cours_recents = Cours.objects.filter(est_publie=True)[:3]
     articles_recents = Article.objects.filter(est_publie=True)[:3]
@@ -95,7 +96,7 @@ def a_propos(request):
                 {"name": "Dr. Roland M.", "role": "Fondateur & Directeur", "bio": "Expert en IA et sciences computationnelles."}
             ],
             meta_title="À propos - Numeria Institute",
-            meta_description="Découvrez Numeria Institute, notre mission et notre équipe pour l'éducation scientifique en Afrique."
+            meta_description=_("Découvrez Numeria Institute, notre mission et notre équipe pour l'éducation scientifique en Afrique.")
         )
     # Statistiques dynamiques
     total_cours = Cours.objects.filter(est_publie=True).count()

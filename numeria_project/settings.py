@@ -138,6 +138,11 @@ USE_TZ     = True
 
 LOCALE_PATHS = [BASE_DIR / 'locale']
 
+# URL prefixes for languages
+from django.conf import settings
+if not hasattr(settings, 'PREFIX_DEFAULT_LANGUAGE'):
+    PREFIX_DEFAULT_LANGUAGE = False
+
 
 # ── FICHIERS STATIQUES ───────────────────────────────────────────────────────
 STATIC_URL       = '/static/'

@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
-"Report-Msgid-Bugs-To: contact@numeriainstitute.com\n"
-"POT-Creation-Date: 2026-04-12 14:14+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-14 00:51+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: French <contact@numeriainstitute.com>\n"
@@ -14,11 +14,803 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: admissions/templates/admissions/candidature.html:3
+msgid "Candidature"
+msgstr ""
+
+#: admissions/templates/admissions/candidature.html:11
+#: admissions/templates/admissions/paiement_candidature.html:11
+msgid "Retour à la formation"
+msgstr ""
+
+#: admissions/templates/admissions/candidature.html:17
+msgid "Formulaire de candidature"
+msgstr ""
+
+#: admissions/templates/admissions/candidature.html:22
+#, python-format
+msgid "Frais de candidature payés : %(montant)s FCFA"
+msgstr ""
+
+#: admissions/templates/admissions/candidature.html:72
+msgid "Informations personnelles"
+msgstr ""
+
+#: admissions/templates/admissions/candidature.html:130
+msgid "Parcours académique"
+msgstr ""
+
+#: admissions/templates/admissions/candidature.html:162
+msgid "Documents"
+msgstr ""
+
+#: admissions/templates/admissions/candidature.html:204
+msgid "Questions"
+msgstr ""
+
+#: admissions/templates/admissions/candidature.html:242
+msgid "Soumettre ma candidature"
+msgstr ""
+
+#: admissions/templates/admissions/confirmation_paiement.html:3
+msgid "Paiement confirmé"
+msgstr ""
+
+#: admissions/templates/admissions/confirmation_paiement.html:16
+msgid "Paiement réussi !"
+msgstr ""
+
+#: admissions/templates/admissions/confirmation_paiement.html:19
+msgid ""
+"Vos frais de candidature ont été confirmés. Vous pouvez maintenant remplir "
+"votre formulaire."
+msgstr ""
+
+#: admissions/templates/admissions/confirmation_paiement.html:25
+#: admissions/templates/admissions/detail_candidature.html:62
+#: admissions/templates/admissions/paiement_candidature.html:40
+#: paiements/templates/paiements/page_paiement.html:105
+msgid "Récapitulatif"
+msgstr ""
+
+#: admissions/templates/admissions/confirmation_paiement.html:29
+#: admissions/templates/admissions/paiement_candidature.html:43
+msgid "Formation"
+msgstr ""
+
+#: admissions/templates/admissions/confirmation_paiement.html:33
+msgid "Montant payé"
+msgstr ""
+
+#: admissions/templates/admissions/confirmation_paiement.html:37
+#: cours/templates/cours/verifier_certificat.html:112
+msgid "Référence"
+msgstr ""
+
+#: admissions/templates/admissions/confirmation_paiement.html:46
+msgid "Remplir mon formulaire de candidature"
+msgstr ""
+
+#: admissions/templates/admissions/confirmation_paiement.html:51
+msgid "Voir mes candidatures"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:14
+msgid "Retour à mes candidatures"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:27
+msgid "Statut"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:39
+msgid "Félicitations !"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:41
+msgid ""
+"Votre candidature a été acceptée. Vous recevrez prochainement un email avec "
+"les prochaines étapes."
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:48
+msgid ""
+"Vous êtes sur liste d'attente. Nous vous tiendrons informé dès qu'une place "
+"se libère."
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:55
+msgid "Nous sommes désolés, votre candidature n'a pas été retenue cette année."
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:65
+msgid "Nom complet"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:66
+msgid "Date de naissance"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:67
+msgid "Téléphone"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:69
+#: comptes/forms.py:114 comptes/forms.py:212
+#: mentorat/templates/mentorat/detail_mentor.html:136
+msgid "Pays"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:70
+msgid "Dernier établissement"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:71
+#: communaute/templates/communaute/modifier_profil.html:71
+#: communaute/templates/communaute/profil_utilisateur.html:99
+#: comptes/forms.py:214
+msgid "Niveau d'études"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:73
+msgid "Moyenne générale"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:75
+msgid "Motivation"
+msgstr ""
+
+#: admissions/templates/admissions/detail_candidature.html:82
+msgid "Message de l'équipe Numeria"
+msgstr ""
+
+#: admissions/templates/admissions/mes_candidatures.html:3
+#: admissions/templates/admissions/mes_candidatures.html:12
+msgid "Mes candidatures"
+msgstr ""
+
+#: admissions/templates/admissions/mes_candidatures.html:17
+msgid "Nouvelle candidature"
+msgstr ""
+
+#: admissions/templates/admissions/mes_candidatures.html:33
+msgid "Soumise le"
+msgstr ""
+
+#: admissions/templates/admissions/mes_candidatures.html:52
+msgid "Voir le détail"
+msgstr ""
+
+#: admissions/templates/admissions/mes_candidatures.html:66
+msgid "Aucune candidature soumise"
+msgstr ""
+
+#: admissions/templates/admissions/mes_candidatures.html:69
+msgid "Vous n'avez encore soumis aucune candidature."
+msgstr ""
+
+#: admissions/templates/admissions/mes_candidatures.html:74
+msgid "Voir les formations disponibles"
+msgstr ""
+
+#: admissions/templates/admissions/paiement_candidature.html:3
+#: admissions/templates/admissions/paiement_candidature.html:18
+msgid "Frais de candidature"
+msgstr ""
+
+#: admissions/templates/admissions/paiement_candidature.html:47
+#: mentorat/templates/mentorat/paiement_seance.html:59
+msgid "Total à payer"
+msgstr ""
+
+#: admissions/templates/admissions/paiement_candidature.html:57
+msgid "Moyen de paiement"
+msgstr ""
+
+#: admissions/templates/admissions/paiement_candidature.html:78
+msgid "Bientôt"
+msgstr ""
+
+#: admissions/templates/admissions/paiement_candidature.html:89
+#, python-format
+msgid "Payer %(montant)s FCFA →"
+msgstr ""
+
+#: admissions/templates/admissions/paiement_candidature.html:95
+msgid "Paiement sécurisé · Mode test (sandbox)"
+msgstr ""
+
+#: analytics/templates/analytics/dashboard.html:136
+msgid "Aucune donnée pour le moment"
+msgstr ""
+
+#: analytics/templates/analytics/dashboard.html:137
+msgid "Les cours populaires apparaîtront ici"
+msgstr ""
+
+#: analytics/templates/analytics/dashboard.html:176
+msgid "Prochaine étape"
+msgstr ""
+
+#: analytics/templates/analytics/dashboard.html:177
+msgid "Ajoute plus de cours pour augmenter l'engagement"
+msgstr ""
+
+#: analytics/templates/analytics/dashboard.html:180
+msgid "Taux de conversion"
+msgstr ""
+
+#: analytics/templates/analytics/dashboard.html:181
+msgid "Connecte Google Analytics pour des données avancées"
+msgstr ""
+
+#: analytics/templates/analytics/dashboard.html:184
+msgid "Newsletter"
+msgstr ""
+
+#: analytics/templates/analytics/dashboard.html:185
+msgid "Active la newsletter pour fidéliser les utilisateurs"
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:3
+#: communaute/templates/communaute/creer_categorie.html:20
+msgid "Créer une catégorie"
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:3
+#: communaute/templates/communaute/creer_sujet.html:3
+#: communaute/templates/communaute/detail_categorie.html:3
+#: communaute/templates/communaute/detail_sujet.html:3
+#: communaute/templates/communaute/liste_categories.html:3
+#: communaute/templates/communaute/liste_categories.html:41
+#: communaute/templates/communaute/modifier_message.html:3
+#: communaute/templates/communaute/modifier_profil.html:3
+#: comptes/templates/comptes/inscription.html:248 templates/base.html:211
+#: templates/base.html:294 templates/base.html:373
+msgid "Communauté"
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:4
+msgid ""
+"Créer une nouvelle catégorie de forum dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:14
+#: communaute/templates/communaute/creer_sujet.html:14
+#: communaute/templates/communaute/detail_categorie.html:14
+#: communaute/templates/communaute/profil_utilisateur.html:14
+msgid "Retour aux forums"
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:18
+msgid "Modérateurs uniquement"
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:21
+msgid ""
+"Seuls les modérateurs peuvent ajouter de nouvelles catégories de discussion."
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:37
+msgid "Nom de la catégorie"
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:47
+#: mentorat/templates/mentorat/planifier_seance.html:52
+msgid "Description"
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:58
+msgid "Ordre d'affichage"
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:67
+msgid "Activer cette catégorie"
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:75
+msgid "Enregistrer la catégorie"
+msgstr ""
+
+#: communaute/templates/communaute/creer_categorie.html:79
+#: communaute/templates/communaute/creer_sujet.html:78
+#: communaute/templates/communaute/modifier_message.html:50
+#: communaute/templates/communaute/modifier_profil.html:100
+#: communaute/templates/communaute/modifier_sujet.html:70
+#: communaute/templates/communaute/repondre_sujet.html:71
+#: mentorat/templates/mentorat/demander_mentorat.html:94
+#: mentorat/templates/mentorat/devenir_mentee.html:75
+#: mentorat/templates/mentorat/devenir_mentor.html:86
+#: mentorat/templates/mentorat/planifier_seance.html:99
+#: mentorat/templates/mentorat/terminer_relation.html:79
+#: mentorat/templates/mentorat/terminer_seance.html:66
+msgid "Annuler"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:3
+#: communaute/templates/communaute/liste_categories.html:68
+msgid "Créer un sujet"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:4
+msgid ""
+"Créez un nouveau sujet de discussion dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:17
+msgid "Créer un nouveau sujet"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:18
+msgid "Partagez vos questions, idées ou découvertes avec la communauté"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:38
+#: communaute/templates/communaute/modifier_sujet.html:34
+msgid "Titre du sujet"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:49
+#: communaute/templates/communaute/detail_categorie.html:20
+#: communaute/templates/communaute/modifier_sujet.html:44
+msgid "Catégorie"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:60
+msgid "Message initial"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:66
+msgid ""
+"Décrivez votre sujet en détail. Vous pourrez ajouter des réponses par la "
+"suite."
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:74
+msgid "Publier le sujet"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:90
+msgid "Conseils"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:93
+msgid "Choisissez un titre clair et descriptif"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:94
+msgid "Sélectionnez la catégorie appropriée"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:95
+msgid "Fournissez autant de détails que possible"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:96
+msgid "Respectez les autres membres"
+msgstr ""
+
+#: communaute/templates/communaute/creer_sujet.html:97
+msgid "Utilisez un langage approprié"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:4
+#, python-format
+msgid ""
+"Sujets de discussion dans la catégorie %(nom)s de la communauté Numeria "
+"Institute."
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:32
+msgid "Nouveau sujet"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:39
+#: communaute/templates/communaute/liste_categories.html:74
+msgid "Nouvelle catégorie"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:55
+msgid "Sujet"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:56
+msgid "Réponses"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:57
+msgid "Activité"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:89
+#: communaute/templates/communaute/detail_sujet.html:23
+msgid "Épinglé"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:92
+#: communaute/templates/communaute/detail_sujet.html:26
+msgid "Fermé"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:134
+msgid "rép."
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:162
+#: communaute/templates/communaute/detail_sujet.html:240
+#: mentorat/templates/mentorat/liste_mentors.html:175
+msgid "Précédent"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:176
+#: communaute/templates/communaute/detail_sujet.html:254
+#: mentorat/templates/mentorat/liste_mentors.html:184
+msgid "Suivant"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:189
+msgid "Aucun sujet pour le moment"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:191
+msgid "Soyez le premier à lancer une discussion !"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:196
+msgid "Créer le premier sujet"
+msgstr ""
+
+#: communaute/templates/communaute/detail_categorie.html:202
+msgid "Se connecter pour créer un sujet"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:4
+#, python-format
+msgid "Discussion : %(titre)s dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:35
+msgid "vue"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:38
+#: communaute/templates/communaute/detail_sujet.html:142
+msgid "réponse"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:46
+#: communaute/templates/communaute/repondre_sujet.html:3
+#: communaute/templates/communaute/repondre_sujet.html:17
+msgid "Répondre"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:66
+msgid "Question initiale"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:83
+#: communaute/templates/communaute/detail_sujet.html:185
+msgid "modifié"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:90
+#: communaute/templates/communaute/detail_sujet.html:192
+#: communaute/templates/communaute/modifier_sujet.html:3
+msgid "Modifier"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:102
+msgid "Utile ?"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:120
+msgid "Connectez-vous pour voter"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:180
+msgid "Auteur"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:223
+msgid "Utile"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:270
+msgid "Vous avez une réponse à apporter ?"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:274
+msgid "Répondre à ce sujet"
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:281
+msgid "Ce sujet est fermé. Aucune nouvelle réponse n'est acceptée."
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:287
+msgid "Connectez-vous pour participer à la discussion."
+msgstr ""
+
+#: communaute/templates/communaute/detail_sujet.html:291
+#: communaute/templates/communaute/liste_categories.html:203
+#: comptes/templates/comptes/connexion.html:129
+#: comptes/templates/comptes/inscription.html:230 templates/base.html:321
+msgid "Se connecter"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:4
+msgid ""
+"Rejoignez la communauté Numeria. Échangez avec d'autres apprenants, posez "
+"vos questions et partagez vos connaissances en sciences."
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:37
+msgid "Forum d'entraide"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:44
+msgid ""
+"Échangez avec d'autres apprenants, posez vos questions et partagez vos "
+"connaissances en sciences, mathématiques et IA."
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:51
+msgid "Sujets"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:55
+msgid "Messages"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:59
+msgid "Membres"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:82
+msgid "Se connecter pour participer"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:95
+msgid "Forums de discussion"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:98
+msgid "Choisissez un forum"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:101
+msgid "Parcourez les catégories et rejoignez la discussion qui vous intéresse."
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:125
+msgid "sujet"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:125
+msgid "sujets"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:128
+msgid "Vide"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:150
+msgid "discussion"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:152
+msgid "Soyez le premier à poster"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:156
+msgid "Voir"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:164
+msgid "Aucune catégorie disponible pour le moment."
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:169
+msgid "Créer la première catégorie"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:189
+msgid "Rejoignez la conversation"
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:192
+msgid ""
+"Créez un compte gratuit pour poser vos questions, partager vos connaissances "
+"et progresser avec la communauté."
+msgstr ""
+
+#: communaute/templates/communaute/liste_categories.html:198
+msgid "Créer un compte gratuit"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_message.html:3
+#: communaute/templates/communaute/modifier_message.html:17
+msgid "Modifier le message"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_message.html:4
+msgid "Modifier votre message dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/modifier_message.html:14
+#: communaute/templates/communaute/modifier_sujet.html:14
+#: communaute/templates/communaute/repondre_sujet.html:14
+msgid "Retour au sujet"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_message.html:34
+msgid "Votre message"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_message.html:46
+#: communaute/templates/communaute/modifier_profil.html:96
+#: communaute/templates/communaute/modifier_sujet.html:66
+msgid "Enregistrer les modifications"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:3
+#: communaute/templates/communaute/modifier_profil.html:17
+#: communaute/templates/communaute/profil_utilisateur.html:42
+msgid "Modifier mon profil"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:4
+msgid "Personnalisez votre profil communautaire sur Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:14
+msgid "Retour à mon profil"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:18
+msgid "Personnalisez votre présence dans la communauté"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:35 comptes/forms.py:210
+msgid "Photo de profil"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:41
+msgid "Formats : JPG, PNG, GIF. Taille max : 5 Mo."
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:47 comptes/forms.py:211
+msgid "Biographie"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:53
+msgid "Présentez-vous en quelques mots (optionnel)."
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:59
+#: communaute/templates/communaute/profil_utilisateur.html:90
+msgid "Spécialisation"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:65
+msgid "Votre domaine d'études ou d'intérêt principal."
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:82
+#: communaute/templates/communaute/profil_utilisateur.html:108
+msgid "Site web"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_profil.html:88
+msgid "Votre site personnel ou professionnel (optionnel)."
+msgstr ""
+
+#: communaute/templates/communaute/modifier_sujet.html:4
+#, python-format
+msgid "Modifier le sujet \"%(titre)s\" dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/modifier_sujet.html:17
+msgid "Modifier le sujet"
+msgstr ""
+
+#: communaute/templates/communaute/modifier_sujet.html:54
+msgid "Contenu"
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:3
+#, python-format
+msgid "Profil de %(username)s"
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:4
+#, python-format
+msgid ""
+"Découvrez le profil de %(username)s dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:35
+msgid "Membre de la communauté Numeria"
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:59
+msgid "Statistiques"
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:63
+msgid "Sujets créés"
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:67
+msgid "Messages postés"
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:72
+#: comptes/templates/comptes/tableau_de_bord.html:25
+#: mentorat/templates/mentorat/detail_mentor.html:104
+msgid "Membre depuis"
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:83
+#: mentorat/templates/mentorat/detail_mentor.html:131
+msgid "Informations"
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:117
+msgid "Aucune information renseignée."
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:133
+msgid "Dernières activités"
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:144
+msgid "Dans"
+msgstr ""
+
+#: communaute/templates/communaute/profil_utilisateur.html:163
+msgid "Voir tous les sujets"
+msgstr ""
+
+#: communaute/templates/communaute/repondre_sujet.html:4
+#, python-format
+msgid "Répondre au sujet \"%(titre)s\" dans la communauté Numeria Institute."
+msgstr ""
+
+#: communaute/templates/communaute/repondre_sujet.html:18
+msgid "Partagez votre réponse avec la communauté"
+msgstr ""
+
+#: communaute/templates/communaute/repondre_sujet.html:28
+msgid "Sujet original"
+msgstr ""
+
+#: communaute/templates/communaute/repondre_sujet.html:30
+msgid "Par"
+msgstr ""
+
+#: communaute/templates/communaute/repondre_sujet.html:36
+msgid "Voir le sujet complet"
+msgstr ""
+
+#: communaute/templates/communaute/repondre_sujet.html:54
+msgid "Votre réponse"
+msgstr ""
+
+#: communaute/templates/communaute/repondre_sujet.html:60
+msgid "Soyez clair, précis et respectueux dans vos réponses."
+msgstr ""
+
+#: communaute/templates/communaute/repondre_sujet.html:67
+msgid "Publier la réponse"
+msgstr ""
+
 #: comptes/forms.py:97
 msgid "Adresse email"
 msgstr ""
 
-#: comptes/forms.py:102
+#: comptes/forms.py:102 comptes/templates/comptes/inscription.html:76
 msgid "Prénom"
 msgstr ""
 
@@ -34,12 +826,9 @@ msgstr ""
 msgid "Votre nom"
 msgstr ""
 
-#: comptes/forms.py:114 comptes/forms.py:212
-msgid "Pays"
-msgstr ""
-
 #: comptes/forms.py:124 comptes/forms.py:151 comptes/forms.py:152
 #: comptes/templates/comptes/connexion.html:77
+#: comptes/templates/comptes/inscription.html:126
 msgid "Nom d'utilisateur"
 msgstr ""
 
@@ -53,6 +842,7 @@ msgstr ""
 
 #: comptes/forms.py:127 comptes/forms.py:155
 #: comptes/templates/comptes/connexion.html:96
+#: comptes/templates/comptes/inscription.html:170
 msgid "Mot de passe"
 msgstr ""
 
@@ -60,7 +850,7 @@ msgstr ""
 msgid "8 caractères minimum"
 msgstr ""
 
-#: comptes/forms.py:130
+#: comptes/forms.py:130 comptes/templates/comptes/inscription.html:199
 msgid "Confirmer le mot de passe"
 msgstr ""
 
@@ -72,20 +862,8 @@ msgstr ""
 msgid "Ton mot de passe"
 msgstr ""
 
-#: comptes/forms.py:210
-msgid "Photo de profil"
-msgstr ""
-
-#: comptes/forms.py:211
-msgid "Biographie"
-msgstr ""
-
-#: comptes/forms.py:213
+#: comptes/forms.py:213 mentorat/templates/mentorat/detail_mentor.html:143
 msgid "Ville"
-msgstr ""
-
-#: comptes/forms.py:214
-msgid "Niveau d'études"
 msgstr ""
 
 #: comptes/forms.py:215
@@ -124,7 +902,7 @@ msgstr ""
 msgid "Profils"
 msgstr ""
 
-#: comptes/templates/comptes/connexion.html:3 templates/base.html:248
+#: comptes/templates/comptes/connexion.html:3 templates/base.html:268
 msgid "Connexion"
 msgstr ""
 
@@ -144,61 +922,976 @@ msgstr ""
 msgid "Se souvenir de moi"
 msgstr ""
 
-#: comptes/templates/comptes/connexion.html:129 templates/base.html:289
-msgid "Se connecter"
-msgstr ""
-
 #: comptes/templates/comptes/connexion.html:136
 msgid "Pas encore de compte ?"
 msgstr ""
 
-#: comptes/templates/comptes/connexion.html:140 templates/base.html:290
+#: comptes/templates/comptes/connexion.html:140 templates/base.html:322
 msgid "S'inscrire gratuitement"
 msgstr ""
 
+#: comptes/templates/comptes/connexion.html:149
+#: comptes/templates/comptes/inscription.html:255
+msgid "Retour à l'accueil"
+msgstr ""
+
+#: comptes/templates/comptes/inscription.html:43
+msgid "Rejoins Numeria"
+msgstr ""
+
+#: comptes/templates/comptes/inscription.html:46
+msgid "Crée ton compte gratuitement et commence à apprendre"
+msgstr ""
+
+#: comptes/templates/comptes/inscription.html:91
+msgid "Nom"
+msgstr ""
+
+#: comptes/templates/comptes/inscription.html:219
+#: pages/templates/pages/accueil.html:356
+msgid "Créer mon compte gratuitement"
+msgstr ""
+
+#: comptes/templates/comptes/inscription.html:226
+msgid "Déjà un compte ?"
+msgstr ""
+
+#: comptes/templates/comptes/inscription.html:240
+msgid "Cours gratuits"
+msgstr ""
+
+#: comptes/templates/comptes/inscription.html:244
+msgid "Certificats PDF"
+msgstr ""
+
+#: comptes/templates/comptes/supprimer_compte.html:44
+msgid "Pour confirmer la suppression, entre ton mot de passe actuel :"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:22
+#, python-format
+msgid "Bonjour, %(name)s"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:33
+msgid "Nouveau cours"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:318
+msgid "Mon profil"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:53
+msgid "Cours inscrits"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:65
+msgid "En cours"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:77
+msgid "Terminés"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:89
+msgid "Progression globale"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:110
+msgid "Mes cours"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:113
+msgid "Voir tout"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:133
+msgid "Terminé"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:136
+msgid "Payant"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:159
+msgid "Revoir"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:159
+msgid "Continuer"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:177
+msgid "Tu n'es inscrit à aucun cours"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:178
+msgid "Découvre notre catalogue et commence à apprendre dès aujourd'hui !"
+msgstr ""
+
+#: comptes/templates/comptes/tableau_de_bord.html:262
+msgid "Pour toi"
+msgstr ""
+
 #: cours/templates/cours/catalogue.html:3
+#: cours/templates/cours/catalogue.html:5
 msgid "Catalogue des cours"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:18
+#: cours/templates/cours/catalogue.html:21
 msgid "Catalogue"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:21
+#: cours/templates/cours/catalogue.html:24
 msgid "Tous nos cours"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:71
+#: cours/templates/cours/catalogue.html:74
 msgid "Tous les cycles"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:174
+#: cours/templates/cours/catalogue.html:177
 #: pages/templates/pages/accueil.html:231
+#: paiements/templates/paiements/page_paiement.html:132
 msgid "Gratuit"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:179
+#: cours/templates/cours/catalogue.html:182
 msgid "En savoir plus"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:194
+#: cours/templates/cours/catalogue.html:197
 msgid "Aucun cours trouvé"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:195
+#: cours/templates/cours/catalogue.html:198
 msgid "Essaie d'autres filtres ou reviens bientôt !"
 msgstr ""
 
-#: cours/templates/cours/catalogue.html:199
+#: cours/templates/cours/catalogue.html:202
 #: pages/templates/pages/accueil.html:254
 msgid "Voir tous les cours"
 msgstr ""
 
-#: numeria_project/settings.py:128
+#: cours/templates/cours/detail.html:166
+msgid "Inscris-toi pour accéder aux leçons"
+msgstr ""
+
+#: cours/templates/cours/detail.html:237
+msgid "Inscris-toi gratuitement pour accéder à tout le contenu."
+msgstr ""
+
+#: cours/templates/cours/verifier_certificat.html:3
+msgid "Vérification du certificat"
+msgstr ""
+
+#: cours/templates/cours/verifier_certificat.html:22
+msgid "Certificat authentique"
+msgstr ""
+
+#: cours/templates/cours/verifier_certificat.html:25
+msgid "Ce certificat a été émis par Numeria Institute et est authentifié."
+msgstr ""
+
+#: cours/templates/cours/verifier_certificat.html:59
+msgid "CERTIFICAT DE RÉUSSITE"
+msgstr ""
+
+#: cours/templates/cours/verifier_certificat.html:73
+msgid "Numeria Institute certifie que"
+msgstr ""
+
+#: cours/templates/cours/verifier_certificat.html:85
+msgid "a complété avec succès le cours"
+msgstr ""
+
+#: cours/templates/cours/verifier_certificat.html:94
+msgid "Niveau"
+msgstr ""
+
+#: cours/templates/cours/verifier_certificat.html:104
+msgid "Date d'émission"
+msgstr ""
+
+#: cours/templates/cours/verifier_certificat.html:125
+msgid "Code de vérification"
+msgstr ""
+
+#: cours/templates/cours/verifier_certificat.html:151
+msgid "Découvrir nos cours"
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:3
+#: mentorat/templates/mentorat/demander_mentorat.html:20
+msgid "Demander un mentorat"
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:4
+msgid "Envoyez une demande de mentorat à un expert sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:14
+msgid "Retour au profil du mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:18
+msgid "Demande de mentorat"
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:21
+msgid "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor."
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:45
+msgid "Mentor demandé"
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:71
+msgid ""
+"Décrivez votre parcours, vos objectifs et pourquoi ce mentor vous intéresse."
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:77
+msgid "À propos du processus"
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:79
+msgid "Le mentor recevra votre demande et pourra l'accepter ou la refuser"
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:80
+msgid "Vous serez notifié de la réponse"
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:81
+msgid "Une fois acceptée, vous pourrez planifier des séances de mentorat"
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:82
+msgid "Le mentorat est gratuit et basé sur le volontariat"
+msgstr ""
+
+#: mentorat/templates/mentorat/demander_mentorat.html:90
+msgid "Envoyer la demande"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:3
+#: mentorat/templates/mentorat/detail_relation.html:44
+#: mentorat/templates/mentorat/detail_relation.html:127
+#: mentorat/templates/mentorat/terminer_relation.html:52
+msgid "Mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:4
+#, python-format
+msgid "Profil du mentor %(name)s sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:14
+msgid "Retour à la liste"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:47
+msgid "mentoré(s)"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:68
+msgid "Faire une demande"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:73
+msgid "Vous avez déjà un mentor actif"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:75
+msgid "Demande déjà envoyée ou en cours"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:92
+msgid "Mentorés accompagnés"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:98
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:25
+msgid "Mentorés actifs"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:120
+#, python-format
+msgid "À propos de %(name)s"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:150
+#: mentorat/templates/mentorat/detail_relation.html:131
+#: mentorat/templates/mentorat/liste_mentors.html:39
+msgid "Domaine"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_mentor.html:159
+#: mentorat/templates/mentorat/detail_mentor.html:167
+#: mentorat/templates/mentorat/liste_mentors.html:142
+msgid "Voir le profil"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:3
+#: mentorat/templates/mentorat/detail_relation.html:29
+msgid "Relation de mentorat"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:4
+msgid "Détail de votre relation de mentorat sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:15
+msgid "Tableau de bord mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:19
+msgid "Tableau de bord mentoré"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:25
+msgid "Relation active"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:64
+#: mentorat/templates/mentorat/terminer_relation.html:58
+msgid "Mentoré"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:82
+#: mentorat/templates/mentorat/detail_relation.html:149
+msgid "Séances"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:86
+#: mentorat/templates/mentorat/terminer_relation.html:64
+msgid "Début"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:94
+#: mentorat/templates/mentorat/planifier_seance.html:3
+#: mentorat/templates/mentorat/planifier_seance.html:17
+msgid "Planifier une séance"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:99
+msgid "Confirmer la fin de cette relation ?"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:100
+#: mentorat/templates/mentorat/terminer_relation.html:17
+msgid "Terminer la relation"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:118
+msgid "Objectifs"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:135
+#: mentorat/templates/mentorat/liste_mentors.html:50
+msgid "Expérience"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:139
+msgid "Disponibilité"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:170
+msgid "min"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:197
+#: mentorat/templates/mentorat/terminer_seance.html:39
+msgid "Notes du mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:203
+#: mentorat/templates/mentorat/terminer_seance.html:50
+msgid "Notes du mentoré"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:215
+#: mentorat/templates/mentorat/terminer_seance.html:62
+msgid "Marquer comme terminée"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:227
+msgid "Aucune séance planifiée"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:229
+msgid "Planifiez votre première séance pour commencer."
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:233
+msgid "Planifier la première séance"
+msgstr ""
+
+#: mentorat/templates/mentorat/devenir_mentee.html:3
+#: mentorat/templates/mentorat/devenir_mentee.html:20
+#: mentorat/templates/mentorat/index.html:122
+#: mentorat/templates/mentorat/liste_mentors.html:3
+#: mentorat/templates/mentorat/liste_mentors.html:21
+msgid "Trouver un Mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/devenir_mentee.html:4
+msgid "Bénéficiez de conseils personnalisés d'experts sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/devenir_mentee.html:14
+#: mentorat/templates/mentorat/devenir_mentor.html:14
+#: mentorat/templates/mentorat/liste_mentors.html:15
+msgid "Retour au mentorat"
+msgstr ""
+
+#: mentorat/templates/mentorat/devenir_mentee.html:18
+#: mentorat/templates/mentorat/devenir_mentor.html:18
+#: mentorat/templates/mentorat/index.html:4 templates/base.html:212
+#: templates/base.html:295
+msgid "Mentorat"
+msgstr ""
+
+#: mentorat/templates/mentorat/devenir_mentee.html:21
+msgid "Bénéficiez de conseils personnalisés d'experts dans votre domaine."
+msgstr ""
+
+#: mentorat/templates/mentorat/devenir_mentee.html:71
+msgid "S'inscrire en tant que mentoré"
+msgstr ""
+
+#: mentorat/templates/mentorat/devenir_mentor.html:3
+#: mentorat/templates/mentorat/devenir_mentor.html:20
+#: mentorat/templates/mentorat/devenir_mentor.html:82
+#: mentorat/templates/mentorat/index.html:84
+msgid "Devenir Mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/devenir_mentor.html:4
+msgid ""
+"Partagez votre expertise et guidez la nouvelle génération sur Numeria "
+"Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/devenir_mentor.html:21
+msgid "Partagez votre expertise et aidez la nouvelle génération à réussir."
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:5
+msgid ""
+"Programme de mentorat de Numeria Institute : connectez-vous avec des experts "
+"en sciences et IA pour accélérer votre développement."
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:19
+msgid "Programme officiel"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:22
+msgid "Programme de Mentorat"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:25
+msgid ""
+"Connectez-vous avec des experts en sciences computationnelles et IA pour "
+"accélérer votre développement professionnel et bénéficier de conseils "
+"personnalisés."
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:37
+msgid "Mentors actifs"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:41
+msgid "Mentorés inscrits"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:45
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:38
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:128
+msgid "Relations actives"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:57
+msgid "Rejoignez le programme"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:60
+msgid ""
+"Que vous souhaitiez partager votre expertise ou bénéficier d'un "
+"accompagnement, il y a une place pour vous."
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:72
+msgid "Mentor actif"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:74
+msgid "Mon Espace Mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:76
+msgid ""
+"Gérez vos mentorés, planifiez des séances et suivez vos revenus depuis votre "
+"tableau de bord."
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:81
+#: mentorat/templates/mentorat/index.html:119
+msgid "Mon tableau de bord"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:86
+msgid ""
+"Partagez votre expertise et aidez la nouvelle génération à réussir. Faites "
+"la différence dans la vie d'un apprenant."
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:92
+msgid "S'inscrire comme mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:98
+msgid "Se connecter pour devenir mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:110
+msgid "Mentoré inscrit"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:112
+msgid "Mon Espace Mentoré"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:114
+msgid ""
+"Retrouvez vos séances planifiées, vos mentors et l'avancement de votre "
+"parcours d'apprentissage."
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:124
+msgid ""
+"Bénéficiez de conseils personnalisés d'experts dans votre domaine. Accélérez "
+"votre apprentissage et votre carrière."
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:130
+msgid "S'inscrire comme mentoré"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:136
+msgid "Se connecter pour trouver un mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:151
+msgid "En 3 étapes"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:153
+msgid "Comment ça marche ?"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:163
+msgid "Inscrivez-vous"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:165
+msgid ""
+"Créez votre profil de mentor ou de mentoré selon vos besoins et objectifs."
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:173
+msgid "Connectez-vous"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:175
+msgid ""
+"Les mentors et mentorés sont mis en relation selon leurs profils et domaines."
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:183
+msgid "Échangez"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:185
+msgid ""
+"Planifiez des séances et bénéficiez de conseils personnalisés sur mesure."
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:199
+msgid "Voir tous les mentors disponibles"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:4
+msgid ""
+"Découvrez nos mentors experts et trouvez celui qui correspond à vos "
+"objectifs sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:19
+msgid "Mentors disponibles"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:22
+msgid "Parcourez nos mentors et demandez un accompagnement personnalisé."
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:32
+msgid "Recherche"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:34
+msgid "Nom, prénom..."
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:42
+msgid "Tous les domaines"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:53
+msgid "Tous niveaux"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:64
+msgid "Filtrer"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:68
+msgid "Réinitialiser"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:124
+msgid "actif(s)"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:125
+msgid "total"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:147
+msgid "Demander"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:158
+msgid "Aucun mentor trouvé"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:160
+msgid "Essayez d'autres critères de recherche."
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:163
+msgid "Réinitialiser les filtres"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:179
+#, python-format
+msgid "Page %(page)s / %(pages)s"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:4
+msgid "Paiement de la séance"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:17
+msgid "Paiement requis"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:23
+msgid "Séance avec"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:40
+msgid "Récapitulatif du paiement"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:45
+msgid "Tarif de la séance"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:51
+#, python-format
+msgid "Commission Numeria (20%%)"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:55
+msgid "Part reversée au mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:72
+msgid "Preuve soumise — en attente de confirmation"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:73
+msgid ""
+"Notre équipe vérifiera votre paiement dans les 24h ouvrées. Vous pouvez "
+"soumettre une nouvelle preuve si nécessaire."
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:82
+msgid "Comment payer"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:87
+msgid ""
+"Effectuez un virement mobile money vers l'un des numéros ci-dessous en "
+"mentionnant votre nom et le titre de la séance."
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:103
+msgid "Important"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:103
+msgid ""
+"conservez la capture d'écran de confirmation de votre transaction. Vous en "
+"aurez besoin pour soumettre la preuve ci-dessous."
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:112
+msgid "Soumettre ma preuve de paiement"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:124
+msgid "Référence de la transaction"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:130
+msgid "Numéro de transaction fourni par votre opérateur mobile money"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:138
+msgid "Capture d'écran du paiement"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:142
+msgid "Preuve actuelle"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:144
+msgid ""
+"Preuve actuellement enregistrée — vous pouvez en soumettre une nouvelle."
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:156
+msgid "Envoyer ma preuve de paiement"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:166
+msgid "Retour à la relation de mentorat"
+msgstr ""
+
+#: mentorat/templates/mentorat/planifier_seance.html:4
+msgid "Planifiez une séance de mentorat sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/planifier_seance.html:14
+#: mentorat/templates/mentorat/terminer_relation.html:14
+#: mentorat/templates/mentorat/terminer_seance.html:14
+msgid "Retour à la relation"
+msgstr ""
+
+#: mentorat/templates/mentorat/planifier_seance.html:20
+#: mentorat/templates/mentorat/planifier_seance.html:22
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:165
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:189
+msgid "Avec"
+msgstr ""
+
+#: mentorat/templates/mentorat/planifier_seance.html:41
+msgid "Titre de la séance"
+msgstr ""
+
+#: mentorat/templates/mentorat/planifier_seance.html:64
+msgid "Date et heure"
+msgstr ""
+
+#: mentorat/templates/mentorat/planifier_seance.html:73
+msgid "Durée (minutes)"
+msgstr ""
+
+#: mentorat/templates/mentorat/planifier_seance.html:82
+msgid "Modalité"
+msgstr ""
+
+#: mentorat/templates/mentorat/planifier_seance.html:95
+msgid "Planifier la séance"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:3
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:17
+msgid "Tableau de bord Mentoré"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:4
+msgid ""
+"Suivez vos demandes de mentorat, vos mentors et vos séances sur Numeria "
+"Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:15
+msgid "Espace Mentoré"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:22
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:94
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:140
+msgid "Trouver un mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:34
+msgid "Demandes envoyées"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:42
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:37
+msgid "Séances à venir"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:59
+msgid "Mes demandes"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:80
+msgid "Envoyée le"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:82
+msgid "Réponse le"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:91
+msgid "Aucune demande envoyée"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:106
+msgid "Mes mentors"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:117
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:142
+msgid "Depuis"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:123
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:150
+msgid "Voir détails"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:127
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:154
+msgid "Séance"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:136
+msgid "Aucun mentor actif"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:155
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:177
+msgid "Prochaines séances"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:170
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:194
+msgid "Terminer"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:3
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:15
+msgid "Tableau de bord Mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:4
+msgid ""
+"Gérez vos relations de mentorat, demandes et séances sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:13
+msgid "Espace Mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:29
+msgid "Total mentorés"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:33
+msgid "Demandes en attente"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:48
+msgid "Revenus confirmés"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:55
+msgid "En attente de confirmation"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:62
+msgid "Séances payées"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:81
+msgid "Demandes de mentorat"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:104
+msgid "Accepter"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:108
+msgid "Refuser"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:117
+msgid "Aucune demande en attente"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:163
+msgid "Aucune relation active"
+msgstr ""
+
+#: mentorat/templates/mentorat/terminer_relation.html:3
+msgid "Terminer la relation de mentorat"
+msgstr ""
+
+#: mentorat/templates/mentorat/terminer_relation.html:4
+msgid "Confirmez la fin de votre relation de mentorat sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/terminer_relation.html:40
+msgid "Confirmer la fin de la relation"
+msgstr ""
+
+#: mentorat/templates/mentorat/terminer_relation.html:43
+msgid ""
+"Cette action est irréversible. La relation de mentorat sera marquée comme "
+"terminée et les statistiques mises à jour."
+msgstr ""
+
+#: mentorat/templates/mentorat/terminer_relation.html:75
+msgid "Confirmer et terminer la relation"
+msgstr ""
+
+#: mentorat/templates/mentorat/terminer_seance.html:3
+#: mentorat/templates/mentorat/terminer_seance.html:17
+msgid "Terminer la séance"
+msgstr ""
+
+#: mentorat/templates/mentorat/terminer_seance.html:4
+msgid "Marquez une séance de mentorat comme terminée sur Numeria Institute."
+msgstr ""
+
+#: mentorat/templates/mentorat/terminer_seance.html:33
+msgid "Ajoutez vos notes sur cette séance avant de la marquer comme terminée."
+msgstr ""
+
+#: numeria_project/settings.py:130
 msgid "Français"
 msgstr ""
 
-#: numeria_project/settings.py:129
+#: numeria_project/settings.py:131
 msgid "English"
 msgstr ""
 
@@ -252,158 +1945,238 @@ msgstr ""
 msgid "Une plateforme conçue pour les apprenants africains"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:280
+#: pages/templates/pages/accueil.html:279
 msgid "Cours de qualité"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:281
+#: pages/templates/pages/accueil.html:280
 msgid ""
 "Contenus scientifiques rigoureux avec formules LaTeX et exercices corrigés."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:288
+#: pages/templates/pages/accueil.html:287
 msgid "Ancrage africain"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:289
+#: pages/templates/pages/accueil.html:288
 msgid ""
 "Des exemples et projets ancrés dans les réalités africaines et togolaises."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:296
+#: pages/templates/pages/accueil.html:295
 #, python-format
 msgid "100%% responsive"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:297
+#: pages/templates/pages/accueil.html:296
 msgid "Apprends depuis ton téléphone, ta tablette ou ton ordinateur."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:304
+#: pages/templates/pages/accueil.html:303
 msgid "Certificats officiels"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:305
+#: pages/templates/pages/accueil.html:304
 msgid ""
 "Reçois un certificat PDF vérifiable à la fin de chaque cours payant complété."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:312
+#: pages/templates/pages/accueil.html:311
 msgid "Exercices interactifs"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:313
+#: pages/templates/pages/accueil.html:312
 msgid "Des QCM avec corrigés détaillés visibles seulement après réussite."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:320
+#: pages/templates/pages/accueil.html:319
 msgid "Accessible à tous"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:321
+#: pages/templates/pages/accueil.html:320
 msgid "La majorité des cours sont gratuits. Paiement Mobile Money disponible."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:338
+#: pages/templates/pages/accueil.html:337
 msgid "Rejoins-nous"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:341
+#: pages/templates/pages/accueil.html:340
 msgid "Prêt à commencer ton voyage scientifique ?"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:344
+#: pages/templates/pages/accueil.html:343
 msgid ""
 "Rejoins des milliers d'apprenants qui transforment leur avenir grâce à la "
 "science."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:350
+#: pages/templates/pages/accueil.html:349
 msgid "Aller à mon tableau de bord"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:352
+#: pages/templates/pages/accueil.html:351
 msgid "Passe en revue tes cours et continue ton apprentissage."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:357
-msgid "Créer mon compte gratuitement"
-msgstr ""
-
-#: pages/templates/pages/accueil.html:359
+#: pages/templates/pages/accueil.html:358
 msgid ""
 "Aucune carte bancaire requise · Cours gratuits disponibles immédiatement"
 msgstr ""
 
-#: templates/base.html:205 templates/base.html:270
+#: pages/views.py:37 templates/base.html:22 templates/base.html:25
+#: templates/base.html:34
+msgid ""
+"Éducation scientifique accessible en Afrique. Cours de mathématiques, "
+"sciences et IA pour apprenants africains et francophones."
+msgstr ""
+
+#: pages/views.py:99
+msgid ""
+"Découvrez Numeria Institute, notre mission et notre équipe pour l'éducation "
+"scientifique en Afrique."
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:3
+msgid "Paiement"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:14
+msgid "Retour au cours"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:17
+msgid "Finaliser l'inscription"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:39
+msgid "Choisir un mode de paiement"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:70
+msgid "Bientôt disponible"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:80
+msgid "Disponible"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:90
+#, python-format
+msgid "Payer %(prix)s %(devise)s →"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:94
+msgid "Paiement sécurisé — vos données sont protégées"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:120
+#, python-format
+msgid "%(n)s leçons · %(niveau)s"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:127
+msgid "Prix du cours"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:131
+msgid "Frais de traitement"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:137
+msgid "Total"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:146
+msgid "Ce qui est inclus"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:151
+#, python-format
+msgid "%(n)s leçons complètes"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:155
+msgid "Accès à vie"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:159
+msgid "Certificat officiel"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:163
+msgid "Support par email"
+msgstr ""
+
+#: templates/base.html:49
+msgid ""
+"Éducation scientifique accessible en Afrique. Cours de mathématiques, "
+"sciences et IA."
+msgstr ""
+
+#: templates/base.html:207 templates/base.html:290
 msgid "Accueil"
 msgstr ""
 
-#: templates/base.html:206 templates/base.html:271
+#: templates/base.html:208 templates/base.html:291
 msgid "Cours"
 msgstr ""
 
-#: templates/base.html:207 templates/base.html:272
+#: templates/base.html:209 templates/base.html:292
 msgid "Blog"
 msgstr ""
 
-#: templates/base.html:208 templates/base.html:273 templates/base.html:338
+#: templates/base.html:210 templates/base.html:293 templates/base.html:370
 msgid "Candidatures"
 msgstr ""
 
-#: templates/base.html:209 templates/base.html:274 templates/base.html:341
-msgid "Communauté"
-msgstr ""
-
-#: templates/base.html:210 templates/base.html:275
-msgid "Mentorat"
-msgstr ""
-
-#: templates/base.html:211 templates/base.html:276 templates/base.html:339
+#: templates/base.html:213 templates/base.html:296 templates/base.html:371
 msgid "À propos"
 msgstr ""
 
-#: templates/base.html:212 templates/base.html:277 templates/base.html:340
-#: templates/base.html:347
+#: templates/base.html:214 templates/base.html:297 templates/base.html:372
+#: templates/base.html:379
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:232 templates/base.html:285
+#: templates/base.html:252 templates/base.html:317
 msgid "Tableau de bord"
 msgstr ""
 
-#: templates/base.html:252
+#: templates/base.html:272
 msgid "S'inscrire"
 msgstr ""
 
-#: templates/base.html:286
-msgid "Mon profil"
-msgstr ""
-
-#: templates/base.html:287
+#: templates/base.html:319
 msgid "Se déconnecter"
 msgstr ""
 
-#: templates/base.html:334
-msgid "Navigation"
-msgstr ""
-
-#: templates/base.html:336
-msgid "Nos cours"
-msgstr ""
-
-#: templates/base.html:337
-msgid "Le blog"
+#: templates/base.html:359
+msgid ""
+"L'éducation scientifique accessible, engageante et gratuite pour tous les "
+"apprenants africains et francophones du monde entier."
 msgstr ""
 
 #: templates/base.html:366
-msgid "Tous droits réservés"
+msgid "Navigation"
 msgstr ""
 
 #: templates/base.html:368
-msgid "Confidentialité"
+msgid "Nos cours"
 msgstr ""
 
 #: templates/base.html:369
+msgid "Le blog"
+msgstr ""
+
+#: templates/base.html:398
+msgid "Tous droits réservés"
+msgstr ""
+
+#: templates/base.html:400
+msgid "Confidentialité"
+msgstr ""
+
+#: templates/base.html:401
 msgid "CGU"
 msgstr ""

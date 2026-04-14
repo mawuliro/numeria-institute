@@ -19,10 +19,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block titre %}Numeria Institute{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% trans "Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones." %}{% endblock %}">
 
     <meta property="og:title" content="{% block og_titre %}Numeria Institute{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% trans "Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones." %}{% endblock %}">
     <meta property="og:image" content="{% block og_image %}{% static 'images/logo-numeria.png' %}{% endblock %}">
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
@@ -31,7 +31,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{% block twitter_url %}{{ request.build_absolute_uri }}{% endblock %}">
     <meta property="twitter:title" content="{% block twitter_titre %}Numeria Institute{% endblock %}">
-    <meta property="twitter:description" content="{% block twitter_description %}Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones.{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}{% trans "Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones." %}{% endblock %}">
     <meta property="twitter:image" content="{% block twitter_image %}{% static 'images/logo-numeria.png' %}{% endblock %}">
 
     <!-- Favicon -->
@@ -46,7 +46,7 @@
         "name": "Numeria Institute",
         "url": "{{ request.scheme }}://{{ request.get_host }}",
         "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo-numeria.png' %}",
-        "description": "Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA.",
+        "description": "{% trans "Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA." %}",
         "address": {
             "@type": "PostalAddress",
             "addressLocality": "Lomé",
@@ -356,7 +356,7 @@
                         </div>
                     </div>
                     <p class="text-blue-300 text-sm leading-relaxed mb-4 max-w-xs">
-                        L'éducation scientifique accessible, engageante et gratuite pour tous les apprenants africains et francophones du monde entier.
+                        {% trans "L'éducation scientifique accessible, engageante et gratuite pour tous les apprenants africains et francophones du monde entier." %}
                     </p>
                     <p class="text-blue-400 text-xs">📍 Lomé, Togo · Rayonnement CEDEAO</p>
                 </div>
