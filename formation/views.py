@@ -109,6 +109,36 @@ def inscrire_formation(request, session_id):
 
 
 @login_required
+def voir_paiement(request, inscription_id):
+    """Page de paiement pour une inscription."""
+    inscription = get_object_or_404(
+        InscriptionFormation,
+        id=inscription_id,
+        etudiant=request.user
+    )
+    
+    # Vérifier que l'inscription est en attente de paiement
+    if inscription.statut != 'en_attente':
+        messages.warning(request, "Cette inscription a déjà été traitée.")
+        return redirect('formation:mes_formations')
+    
+    # Simuler la confirmation du paiement
+    if request.method == 'POST':
+        # En production, cela serait intégré avec un système de paiement réel
+        inscription.statut = 'confirmee'
+        inscription.date_paiement = timezone.now()
+        inscription.save()
+        messages.success(request, "Paiement confirmé! Bienvenue dans le cours.")
+        return redirect('formation:mes_formations')
+    
+    context = {
+        'inscription': inscription,
+        'montant': inscription.prix_paye_fcfa,
+    }
+    return render(request, 'formation/paiement.html', context)
+
+
+@login_required
 def mes_formations(request):
     """Mes formations en cours et passées."""
     inscriptions = InscriptionFormation.objects.filter(

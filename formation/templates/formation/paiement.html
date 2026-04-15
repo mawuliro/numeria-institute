@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load i18n humanize %}
+
+{% block title %}{% trans "Paiement de l'inscription" %}{% endblock %}
+
+{% block contenu %}
+<!-- Hero Section -->
+<div class="bg-gradient-to-br from-numeria-teal to-numeria-blue text-white">
+  <div class="container mx-auto px-4 py-12">
+    <div class="text-center">
+      <h1 class="text-3xl md:text-4xl font-bold mb-4">
+        <i class="fas fa-credit-card mr-4"></i>
+        {% trans "Finaliser votre paiement" %}
+      </h1>
+      <p class="text-lg opacity-90">
+        {% trans "Complétez votre inscription en effectuant le paiement" %}
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="container mx-auto px-4 py-12">
+  <div class="max-w-2xl mx-auto">
+    <!-- Résumé de l'inscription -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8">
+      <div class="bg-gradient-to-r from-numeria-teal to-numeria-blue p-6">
+        <h2 class="text-xl font-bold text-white">
+          {% trans "Détails de l'inscription" %}
+        </h2>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <!-- Formation -->
+        <div class="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">{% trans "Formation" %}</p>
+            <p class="font-semibold text-gray-900 dark:text-white">
+              {{ inscription.session.formation.titre }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Session -->
+        <div class="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">{% trans "Session" %}</p>
+            <p class="font-semibold text-gray-900 dark:text-white">
+              {{ inscription.session.nom }}
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              {{ inscription.session.date_debut|date:"d M Y" }} - {{ inscription.session.date_fin|date:"d M Y" }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Participant -->
+        <div class="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">{% trans "Participant" %}</p>
+            <p class="font-semibold text-gray-900 dark:text-white">
+              {{ inscription.etudiant.get_full_name }}
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              {{ inscription.etudiant.email }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Montant -->
+        <div class="flex justify-between items-center pt-4">
+          <span class="text-lg font-semibold text-gray-900 dark:text-white">
+            {% trans "Montant à payer:" %}
+          </span>
+          <span class="text-2xl font-bold text-numeria-teal">
+            {{ montant|floatformat:0|intcomma }} FCFA
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulaire de paiement -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+      <div class="bg-gradient-to-r from-green-500 to-green-600 p-6">
+        <h2 class="text-xl font-bold text-white">
+          {% trans "Méthode de paiement" %}
+        </h2>
+      </div>
+
+      <div class="p-8">
+        <form method="post" class="space-y-6">
+          {% csrf_token %}
+
+          <!-- Options de paiement -->
+          <div class="space-y-4">
+            <label class="flex items-center p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-numeria-teal hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
+              <input type="radio" name="payment_method" value="card" checked class="w-4 h-4 text-numeria-teal">
+              <div class="ml-4">
+                <p class="font-semibold text-gray-900 dark:text-white">
+                  <i class="fas fa-credit-card mr-2 text-numeria-teal"></i>
+                  {% trans "Carte bancaire" %}
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  {% trans "Visa, Mastercard, etc." %}
+                </p>
+              </div>
+            </label>
+
+            <label class="flex items-center p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-numeria-teal hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
+              <input type="radio" name="payment_method" value="mobile" class="w-4 h-4 text-numeria-teal">
+              <div class="ml-4">
+                <p class="font-semibold text-gray-900 dark:text-white">
+                  <i class="fas fa-mobile-alt mr-2 text-numeria-teal"></i>
+                  {% trans "Paiement mobile" %}
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  {% trans "Orange Money, MTN Money, etc." %}
+                </p>
+              </div>
+            </label>
+
+            <label class="flex items-center p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-numeria-teal hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
+              <input type="radio" name="payment_method" value="bank" class="w-4 h-4 text-numeria-teal">
+              <div class="ml-4">
+                <p class="font-semibold text-gray-900 dark:text-white">
+                  <i class="fas fa-university mr-2 text-numeria-teal"></i>
+                  {% trans "Virement bancaire" %}
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  {% trans "Transférez directement depuis votre banque" %}
+                </p>
+              </div>
+            </label>
+          </div>
+
+          <!-- Conditions -->
+          <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <label class="flex items-start cursor-pointer">
+              <input type="checkbox" name="accept_terms" required class="w-4 h-4 mt-1 text-numeria-teal rounded">
+              <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">
+                {% trans "J'accepte les conditions d'utilisation et je confirme que je vais procéder au paiement pour cette inscription." %}
+              </span>
+            </label>
+          </div>
+
+          <!-- Boutons d'action -->
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="{% url 'formation:session_detail' inscription.session.id %}" 
+               class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 text-center">
+              <i class="fas fa-arrow-left mr-2"></i>
+              {% trans "Retour" %}
+            </a>
+
+            <button type="submit" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
+              <i class="fas fa-check mr-2"></i>
+              {% trans "Confirmer et payer" %}
+            </button>
+          </div>
+
+          <!-- Note de sécurité -->
+          <div class="text-center text-sm text-gray-600 dark:text-gray-400">
+            <i class="fas fa-lock mr-1 text-green-500"></i>
+            {% trans "Vos données de paiement sont sécurisées" %}
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Besoin d'aide -->
+    <div class="mt-8 bg-gray-50 dark:bg-gray-800 rounded-xl p-6 text-center">
+      <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
+        {% trans "Besoin d'aide?" %}
+      </h3>
+      <p class="text-gray-600 dark:text-gray-400 mb-4">
+        {% trans "Contactez notre support si vous avez des questions sur le paiement." %}
+      </p>
+      <a href="mailto:contact@numeriainstitute.com" class="text-numeria-teal hover:text-numeria-teal/80 font-semibold">
+        contact@numeriainstitute.com
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

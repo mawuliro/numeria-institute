@@ -13,6 +13,7 @@ urlpatterns = [
     
     # Inscriptions
     path('session/<int:session_id>/inscrire/', views.inscrire_formation, name='inscrire'),
+    path('inscription/<int:inscription_id>/paiement/', views.voir_paiement, name='voir_paiement'),
     
     # Accès au contenu
     path('mes-formations/', views.mes_formations, name='mes_formations'),
