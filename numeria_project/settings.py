@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'admissions',
     'communaute',
     'mentorat',
+    'formation',  # ← NOUVEAU: Formations payantes
 ]
 
 

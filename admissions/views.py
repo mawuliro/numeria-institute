@@ -5,6 +5,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from .models import CampagneRecrutement, Candidature
 from .forms import FormulaireCandidature
 from paiements.models import Paiement
@@ -66,12 +67,12 @@ def page_paiement_candidature(request, campagne_id):
     
     # Vérifier si la campagne est ouverte
     if not campagne.est_ouverte():
-        messages.error(request, "❌ Cette campagne de recrutement est fermée.")
+        messages.error(request, _("❌ Cette campagne de recrutement est fermée."))
         return redirect('admissions:liste_campagnes')
     
     # Vérifier si l'utilisateur a déjà candidaté
     if Candidature.objects.filter(utilisateur=request.user, campagne=campagne).exists():
-        messages.warning(request, "⚠️ Vous avez déjà candidaté pour cette formation.")
+        messages.warning(request, _("⚠️ Vous avez déjà candidaté pour cette formation."))
         return redirect('admissions:detail_campagne', campagne_id=campagne.id)
     
     # Vérifier si un paiement est déjà réussi
@@ -82,7 +83,7 @@ def page_paiement_candidature(request, campagne_id):
     ).first()
     
     if paiement_reussi:
-        messages.success(request, "✅ Vous avez déjà payé les frais de candidature. Vous pouvez maintenant postuler.")
+        messages.success(request, _("✅ Vous avez déjà payé les frais de candidature. Vous pouvez maintenant postuler."))
         return redirect('admissions:candidature', campagne_id=campagne.id)
     
     # Vérifier si un paiement est en attente
@@ -117,14 +118,14 @@ def page_paiement_candidature(request, campagne_id):
             
             messages.success(
                 request, 
-                f"✅ Paiement de {campagne.frais_candidature} FCFA réussi ! Vous pouvez maintenant remplir votre formulaire de candidature."
+                _("✅ Paiement de {montant} FCFA réussi ! Vous pouvez maintenant remplir votre formulaire de candidature.").format(montant=campagne.frais_candidature)
             )
             return redirect('admissions:candidature', campagne_id=campagne.id)
         
         else:
             messages.warning(
                 request, 
-                "⚠️ Seul le mode sandbox est disponible pour le moment. Les autres moyens de paiement arrivent bientôt."
+                _("⚠️ Seul le mode sandbox est disponible pour le moment. Les autres moyens de paiement arrivent bientôt.")
             )
     
     # Créer un paiement en attente si nécessaire
@@ -183,7 +184,7 @@ def confirmation_paiement_candidature(request, campagne_id):
     ).first()
     
     if not paiement:
-        messages.warning(request, "Aucun paiement trouvé. Veuillez effectuer le paiement.")
+        messages.warning(request, _("Aucun paiement trouvé. Veuillez effectuer le paiement."))
         return redirect('admissions:page_paiement_candidature', campagne_id=campagne.id)
     
     return render(request, 'admissions/confirmation_paiement.html', {

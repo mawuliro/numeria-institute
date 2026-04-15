@@ -99,7 +99,7 @@
                     </a>
                     <a href="{% url 'comptes:changer_mot_de_passe' %}"
                        class="block border border-numeria-bleu text-numeria-bleu font-semibold py-3 px-4 rounded-lg hover:bg-numeria-bleu hover:text-white transition-colors text-center">
-                        🔐 Changer le mot de passe
+                        🔐 {% trans "Changer le mot de passe" %}
                     </a>
                     <a href="{% url 'comptes:deconnexion' %}"
                        class="block border border-gray-300 text-gray-500 font-semibold py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors text-center">
@@ -107,7 +107,7 @@
                     </a>
                     <a href="{% url 'comptes:supprimer_compte' %}"
                        class="block border border-red-300 text-red-500 font-semibold py-3 px-4 rounded-lg hover:bg-red-50 transition-colors text-center text-sm">
-                        ⚠️ Supprimer mon compte
+                        ⚠️ {% trans "Supprimer mon compte" %}
                     </a>
                 </div>
 

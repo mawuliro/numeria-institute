@@ -9,11 +9,11 @@
 
             <div class="mb-6">
                 <a href="{% url 'comptes:profil' %}" class="text-gray-400 hover:text-numeria-bleu transition-colors">
-                    ← Retour au profil
+                    ← {% trans "Retour au profil" %}
                 </a>
             </div>
 
-            <h1 class="text-3xl font-bold text-numeria-bleu mb-8">🔐 Changer le mot de passe</h1>
+            <h1 class="text-3xl font-bold text-numeria-bleu mb-8">🔐 {% trans "Changer le mot de passe" %}</h1>
 
             {% if messages %}
             <div class="mb-6">
@@ -48,7 +48,7 @@
 
                     <button type="submit"
                         class="w-full bg-numeria-or text-numeria-bleu font-bold py-3 rounded-lg hover:bg-yellow-400 transition-colors mt-2">
-                        Changer le mot de passe 🔐
+                        {% trans "Changer le mot de passe" %} 🔐
                     </button>
                 </form>
             </div>

@@ -412,6 +412,46 @@ class PaiementSeance(models.Model):
         verbose_name='Capture d\'écran du paiement'
     )
 
+    # ── ESCROW ET SÉCURITÉ ────────────────────────────────────────
+    est_suspect = models.BooleanField(
+        default=False,
+        verbose_name='Paiement flaggé comme suspect',
+        help_text='En escrow pour vérification admin'
+    )
+    raisons_suspect = models.TextField(
+        blank=True,
+        verbose_name='Raisons du flagging',
+        help_text='Séparées par |'
+    )
+    date_deblocage = models.DateTimeField(
+        blank=True, null=True,
+        verbose_name='Date de déblocage (escrow)',
+        help_text='Après cette date, si pas de contestation, débloquer'
+    )
+    date_submission = models.DateTimeField(
+        blank=True, null=True,
+        verbose_name='Date de soumission de preuve'
+    )
+    raison_echec = models.TextField(
+        blank=True,
+        verbose_name='Raison de l\'échec/contestation'
+    )
+    signature_mentoré = models.CharField(
+        max_length=64, blank=True,
+        verbose_name='Signature HMAC du mentoré',
+        help_text='Empêche modification du montant'
+    )
+
+    # ── AUDIT ──────────────────────────────────────────────────────
+    adresse_ip_mentoré = models.GenericIPAddressField(
+        blank=True, null=True,
+        verbose_name='IP du mentoré (audit)'
+    )
+    user_agent = models.CharField(
+        max_length=255, blank=True,
+        verbose_name='User-Agent (audit)'
+    )
+
     # Dates
     date_creation = models.DateTimeField(auto_now_add=True)
     date_confirmation = models.DateTimeField(blank=True, null=True)
@@ -420,12 +460,17 @@ class PaiementSeance(models.Model):
         verbose_name = 'Paiement de séance'
         verbose_name_plural = 'Paiements de séances'
         ordering = ['-date_creation']
+        indexes = [
+            models.Index(fields=['statut', 'date_creation']),
+            models.Index(fields=['est_suspect']),
+            models.Index(fields=['reference_mobile_money']),
+        ]
 
     def __str__(self):
         return f"Paiement {self.montant_total} FCFA — {self.seance}"
 
     @classmethod
-    def creer_pour_seance(cls, seance):
+    def creer_pour_seance(cls, seance, ip_mentoré=None, user_agent=None):
         """Crée automatiquement un paiement pour une séance payante."""
         tarif = seance.relation.mentor.tarif_par_seance
         commission = round(tarif * cls.TAUX_COMMISSION / 100)
@@ -434,6 +479,8 @@ class PaiementSeance(models.Model):
             montant_total=tarif,
             commission_numeria=commission,
             montant_mentor=tarif - commission,
+            adresse_ip_mentoré=ip_mentoré,
+            user_agent=user_agent,
         )
 
     def confirmer(self):
@@ -441,3 +488,9 @@ class PaiementSeance(models.Model):
         self.statut = 'confirme'
         self.date_confirmation = timezone.now()
         self.save()
+    
+    def est_pas_encore_débloqué(self):
+        """Retourne True si toujours en escrow."""
+        if not self.date_deblocage:
+            return False
+        return timezone.now() < self.date_deblocage

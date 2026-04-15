@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Mes formations" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h1 class="mb-4">{% trans "Mes formations" %}</h1>
+
+  {% if not inscriptions %}
+    <div class="alert alert-info">
+      <p>{% trans "Vous n'êtes pas encore inscrit à une formation." %}</p>
+      <a href="{% url 'formation:liste' %}" class="btn btn-primary">
+        {% trans "Découvrir les formations" %}
+      </a>
+    </div>
+  {% else %}
+    <div class="row">
+      <!-- Formations en cours -->
+      <div class="col-md-6 mb-4">
+        <h3>{% trans "En cours" %}</h3>
+        {% with en_cours=inscriptions|dictsort:"session_formation.date_debut" %}
+          {% for inscription in en_cours %}
+            {% if inscription.session_formation.statut == "en_cours" %}
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                      <h5 class="card-title">
+                        {{ inscription.session_formation.formation.titre }}
+                      </h5>
+                      <p class="small text-muted">
+                        {{ inscription.session_formation.date_debut|date:"d M Y" }} → 
+                        {{ inscription.session_formation.date_fin|date:"d M Y" }}
+                      </p>
+                    </div>
+                    <span class="badge bg-success">{% trans "En cours" %}</span>
+                  </div>
+
+                  <!-- Progression -->
+                  <div class="mb-3">
+                    <div class="d-flex justify-content-between small mb-2">
+                      <span>{% trans "Progression" %}</span>
+                      <strong>{{ inscription.progression_pct }}%</strong>
+                    </div>
+                    <div class="progress" style="height: 25px;">
+                      <div class="progress-bar bg-success" role="progressbar" 
+                           style="width: {{ inscription.progression_pct }}%">
+                        {% if inscription.progression_pct > 20 %}
+                          {{ inscription.progression_pct }}%
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Statut paiement -->
+                  {% if inscription.statut == "confirmee" %}
+                    <p class="small text-success mb-3">
+                      ✅ {% trans "Paiement confirmé" %}
+                    </p>
+                  {% else %}
+                    <p class="small text-warning mb-3">
+                      ⏳ {% trans "Paiement en attente de validation" %}
+                    </p>
+                  {% endif %}
+
+                  <!-- CTA -->
+                  {% if inscription.a_acces %}
+                    <a href="{% url 'formation:voir_lecon' inscription.prochaine_lecon.id %}" class="btn btn-primary btn-sm w-100">
+                      {% trans "Continuer" %}
+                    </a>
+                  {% else %}
+                    <p class="text-muted small">
+                      {% trans "Accès déblocage après validation du paiement" %}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endwith %}
+      </div>
+
+      <!-- Formations terminées -->
+      <div class="col-md-6 mb-4">
+        <h3>{% trans "Terminées" %}</h3>
+        {% with terminees=inscriptions %}
+          {% for inscription in terminees %}
+            {% if inscription.session_formation.statut == "terminee" or inscription.progression_pct == 100 %}
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title">
+                      {{ inscription.session_formation.formation.titre }}
+                    </h5>
+                    <span class="badge bg-success">100%</span>
+                  </div>
+
+                  <p class="small text-muted mb-3">
+                    {% trans "Complétée le" %} {{ inscription.date_completion|default:inscription.date_fin|date:"d M Y" }}
+                  </p>
+
+                  <!-- Voie certificat -->
+                  {% if inscription.certificat %}
+                    <a href="{% url 'formation:certificat_detail' inscription.certificat.id %}" class="btn btn-success btn-sm me-2">
+                      🎓 {% trans "Certificat" %}
+                    </a>
+                  {% endif %}
+
+                  <!-- Partager -->
+                  <button class="btn btn-outline-primary btn-sm" onclick="shareToLinkedIn('{{ inscription.certificat.token_verification }}')">
+                    <i class="fab fa-linkedin"></i> {% trans "Partager" %}
+                  </button>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endwith %}
+      </div>
+    </div>
+
+    <!-- Formations pas encore commencées -->
+    <div class="row">
+      <div class="col-12">
+        <h3>{% trans "À venir" %}</h3>
+        <div class="row g-3">
+          {% for inscription in inscriptions %}
+            {% if inscription.session_formation.statut == "planifiee" %}
+              <div class="col-md-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      {{ inscription.session_formation.formation.titre }}
+                    </h5>
+                    <p class="card-text small text-muted">
+                      {% trans "Commence le" %} {{ inscription.session_formation.date_debut|date:"d M Y" }}
+                    </p>
+                    <span class="badge bg-info">{% trans "À venir" %}</span>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Bouton retour -->
+  <div class="mt-5">
+    <a href="{% url 'formation:liste' %}" class="btn btn-outline-secondary">
+      ← {% trans "Découvrir d'autres formations" %}
+    </a>
+  </div>
+</div>
+
+<script>
+function shareToLinkedIn(certificateToken) {
+  const url = window.location.origin + "{% url 'formation:certificat_verifier' 'TOKEN' %}".replace('TOKEN', certificateToken);
+  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+  window.open(linkedInUrl, '_blank');
+}
+</script>
+{% endblock %}

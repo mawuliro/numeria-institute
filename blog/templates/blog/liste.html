@@ -16,10 +16,10 @@
         <div class="max-w-4xl mx-auto text-center">
             <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-5 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
                 <span class="w-1.5 h-1.5 bg-numeria-teal rounded-full"></span>
-                Blog scientifique
+                {% trans "Blog scientifique" %}
             </div>
             <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl lg:text-5xl text-white mb-3">
-                Actualités & Savoirs
+                {% trans "Actualités & Savoirs" %}
             </h1>
             <p class="text-blue-200 text-lg">
                 <span class="text-numeria-teal font-bold">{{ articles|length }}</span>
@@ -136,15 +136,15 @@
                     <div class="relative">
                         <div class="text-2xl mb-3">🎓</div>
                         <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-teal text-base mb-2">
-                            Commence à apprendre
+                            {% trans "Commence à apprendre" %}
                         </h3>
                         <p class="text-blue-300 text-sm mb-4 leading-relaxed">
-                            Accède à des cours scientifiques de qualité, gratuits et payants.
+                            {% trans "Accède à des cours scientifiques de qualité, gratuits et payants." %}
                         </p>
                         <a href="{% url 'cours:catalogue' %}"
                            style="font-family:'Outfit',sans-serif;font-weight:700;"
                            class="block text-center bg-numeria-teal text-numeria-bleu py-2.5 rounded-xl hover:bg-teal-300 transition-colors text-sm">
-                            Voir les cours →
+                            {% trans "Voir les cours →" %}
                         </a>
                     </div>
                 </div>
@@ -153,9 +153,9 @@
                 <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm text-center">
                     <div class="text-2xl mb-3">✨</div>
                     <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-sm mb-2">
-                        Rejoins Numeria Institute
+                        {% trans "Rejoins Numeria Institute" %}
                     </h3>
-                    <p class="text-gray-400 dark:text-gray-500 text-xs mb-4">Cours, certificats, communauté.</p>
+                    <p class="text-gray-400 dark:text-gray-500 text-xs mb-4">{% trans "Cours, certificats, communauté." %}</p>
                     <a href="{% url 'comptes:inscription' %}"
                        style="font-family:'Outfit',sans-serif;font-weight:700;"
                        class="block bg-numeria-bleu text-white py-2.5 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-sm">

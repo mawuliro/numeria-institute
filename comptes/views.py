@@ -19,10 +19,10 @@ def inscription(request):
         if formulaire.is_valid():
             user = formulaire.save()
             login(request, user)
-            messages.success(request, f"Bienvenue sur Numeria, {user.first_name} ! 🎓")
+            messages.success(request, _("Bienvenue sur Numeria, {first_name} ! 🎓").format(first_name=user.first_name))
             return redirect('comptes:tableau_de_bord')
         else:
-            messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
+            messages.error(request, _("Veuillez corriger les erreurs ci-dessous."))
     else:
         formulaire = FormulaireInscription()
 
@@ -44,12 +44,12 @@ def connexion(request):
 
             if user is not None:
                 login(request, user)
-                messages.success(request, f"Bon retour, {user.first_name} ! 👋")
+                messages.success(request, _("Bon retour, {first_name} ! 👋").format(first_name=user.first_name))
 
                 next_url = request.GET.get('next', 'comptes:tableau_de_bord')
                 return redirect(next_url)
             else:
-                messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
+                messages.error(request, _("Nom d'utilisateur ou mot de passe incorrect."))
     else:
         formulaire = FormulaireConnexion()
 
@@ -61,7 +61,7 @@ def deconnexion(request):
     """Déconnexion de l'utilisateur."""
     prenom = request.user.first_name
     logout(request)
-    messages.success(request, f"À bientôt, {prenom} ! 👋")
+    messages.success(request, _("À bientôt, {prenom} ! 👋").format(prenom=prenom))
     return redirect('accueil')
 
 
@@ -124,13 +124,13 @@ def modifier_profil(request):
         )
         if formulaire.is_valid():
             formulaire.save()
-            messages.success(request, "Ton profil a été mis à jour ! ✅")
+            messages.success(request, _("Ton profil a été mis à jour ! ✅"))
             return redirect('comptes:profil')
         else:
             # Debug en cas d'erreur
             if request.user.is_superuser:
                 print(formulaire.errors)
-            messages.error(request, "Veuillez corriger les erreurs.")
+            messages.error(request, _("Veuillez corriger les erreurs."))
     else:
         formulaire = FormulaireProfil(instance=profil, user=request.user)
 
@@ -163,9 +163,9 @@ def supprimer_photo(request):
             # Vider le champ en base de données
             profil.photo = None
             profil.save()
-            messages.success(request, "Ta photo de profil a été supprimée. ✅")
+            messages.success(request, _("Ta photo de profil a été supprimée. ✅"))
         else:
-            messages.info(request, "Tu n'as pas de photo de profil à supprimer.")
+            messages.info(request, _("Tu n'as pas de photo de profil à supprimer."))
 
     return redirect('comptes:modifier_profil')
 
@@ -205,9 +205,9 @@ def supprimer_compte(request):
         if user is not None:
             prenom = request.user.first_name
             request.user.delete()
-            messages.success(request, f"Ton compte a été supprimé, {prenom}. Nous espérons te revoir ! 👋")
+            messages.success(request, _("Ton compte a été supprimé, {prenom}. Nous espérons te revoir ! 👋").format(prenom=prenom))
             return redirect('accueil')
         else:
-            messages.error(request, "Mot de passe incorrect. Ton compte n'a pas été supprimé.")
+            messages.error(request, _("Mot de passe incorrect. Ton compte n'a pas été supprimé."))
 
     return render(request, 'comptes/supprimer_compte.html')

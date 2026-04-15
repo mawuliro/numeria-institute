@@ -246,12 +246,12 @@ Lomé, Togo 🇹🇬
             if email_sent:
                 messages.success(
                     request,
-                    f"✅ Merci {nom} ! Ton message a bien été envoyé. Nous te répondrons dans 24-48h."
+                    _("✅ Merci {nom} ! Ton message a bien été envoyé. Nous te répondrons dans 24-48h.").format(nom=nom)
                 )
             else:
                 messages.success(
                     request,
-                    f"✅ Message reçu {nom} ! Nous te répondrons bientôt."
+                    _("✅ Message reçu {nom} ! Nous te répondrons bientôt.").format(nom=nom)
                 )
             return redirect('contact')
 

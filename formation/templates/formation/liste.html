@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Formations" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row mb-5">
+    <div class="col-12">
+      <h1 class="display-4">{% trans "Nos Formations" %}</h1>
+      <p class="lead text-muted">{% trans "Apprenez auprès des meilleurs experts du continent" %}</p>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <form method="get" class="card p-3">
+        <h5>{% trans "Filtres" %}</h5>
+        
+        <div class="mb-3">
+          <label>{% trans "Type" %}</label>
+          <select name="type" class="form-select">
+            <option value="">{% trans "Tous" %}</option>
+            <option value="Bootcamp" {% if request.GET.type == 'Bootcamp' %}selected{% endif %}>Bootcamp</option>
+            <option value="Masterclass" {% if request.GET.type == 'Masterclass' %}selected{% endif %}>Masterclass</option>
+            <option value="Certification" {% if request.GET.type == 'Certification' %}selected{% endif %}>{% trans "Certification" %}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label>{% trans "Niveau" %}</label>
+          <select name="niveau" class="form-select">
+            <option value="">{% trans "Tous" %}</option>
+            <option value="Débutant" {% if request.GET.niveau == 'Débutant' %}selected{% endif %}>{% trans "Débutant" %}</option>
+            <option value="Intermédiaire" {% if request.GET.niveau == 'Intermédiaire' %}selected{% endif %}>{% trans "Intermédiaire" %}</option>
+            <option value="Avancé" {% if request.GET.niveau == 'Avancé' %}selected{% endif %}>{% trans "Avancé" %}</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">{% trans "Filtrer" %}</button>
+      </form>
+    </div>
+
+    <!-- Liste formations -->
+    <div class="col-md-9">
+      <div class="row g-4">
+        {% for formation in formations %}
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+              <!-- Header -->
+              <div class="card-header bg-primary text-white">
+                <span class="badge bg-light text-dark">{{ formation.get_type_display }}</span>
+                <span class="badge bg-warning text-dark float-end">{{ formation.niveau }}</span>
+              </div>
+
+              <!-- Body -->
+              <div class="card-body">
+                <h5 class="card-title">{{ formation.titre }}</h5>
+                <p class="card-text text-muted">{{ formation.description|truncatewords:15 }}</p>
+
+                <p class="small mb-2">
+                  <i class="fas fa-clock"></i> {{ formation.duree }} heures
+                </p>
+
+                <!-- Stats -->
+                <p class="small text-muted">
+                  {{ formation.nombre_etudiants }} {% trans "étudiants" %} | 
+                  {{ formation.certifications_delivrees }} 🎓
+                </p>
+
+                <!-- Prochaine session -->
+                {% with session=formation.prochaine_session %}
+                  {% if session %}
+                    <div class="alert alert-info small mb-3">
+                      <strong>Prochaine:</strong> 
+                      <br/>{{ session.date_debut|date:"d M Y" }}
+                      <br/>
+                      {% if session.places_disponibles > 0 %}
+                        <span class="text-success">
+                          {{ session.places_disponibles }}/{{ session.places_totales }} places
+                        </span>
+                      {% else %}
+                        <span class="text-danger">{% trans "Complet" %}</span>
+                      {% endif %}
+                    </div>
+
+                    {% if session.places_disponibles > 0 %}
+                      <a href="{% url 'formation:session_detail' session.id %}" class="btn btn-primary btn-sm w-100">
+                        {% trans "Voir & s'inscrire" %}
+                      </a>
+                    {% else %}
+                      <button class="btn btn-secondary btn-sm w-100" disabled>
+                        {% trans "Complet" %}
+                      </button>
+                    {% endif %}
+                  {% else %}
+                    <p class="text-muted small">
+                      <i class="fas fa-info-circle"></i> 
+                      {% trans "Aucune session à venir" %}
+                    </p>
+                  {% endif %}
+                {% endwith %}
+              </div>
+
+              <!-- Footer -->
+              <div class="card-footer bg-light">
+                <a href="{% url 'formation:detail' formation.slug %}" class="btn btn-link btn-sm">
+                  {% trans "Voir le programme" %} →
+                </a>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="col-12">
+            <div class="alert alert-warning">
+              {% trans "Aucune formation ne correspond à vos critères" %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  }
+</style>
+{% endblock %}

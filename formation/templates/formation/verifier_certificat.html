@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Vérifier certificat" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body text-center">
+          {% if certificat %}
+            <!-- Certificat valide -->
+            <div class="alert alert-success mb-4">
+              <h4 class="alert-heading">✅ {% trans "Certificat authentique" %}</h4>
+              <p>{% trans "Ce certificat a été délivré par Numeria et est valide." %}</p>
+            </div>
+
+            <div class="certificate-preview">
+              <h3>{{ certificat.inscription.session_formation.formation.titre }}</h3>
+              
+              <div class="row mt-4">
+                <div class="col-md-6">
+                  <p><strong>{% trans "Délivré à:" %}</strong></p>
+                  <h4>{{ certificat.inscription.etudiant.get_full_name }}</h4>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>{% trans "Date de délivrance:" %}</strong></p>
+                  <h4>{{ certificat.date_delivrance|date:"d/m/Y" }}</h4>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <p><strong>{% trans "Session:" %}</strong></p>
+                  <p>{{ certificat.inscription.session_formation.date_debut|date:"d M Y" }} → {{ certificat.inscription.session_formation.date_fin|date:"d M Y" }}</p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>{% trans "Note finale:" %}</strong></p>
+                  <p>{{ certificat.note_finale|default:"N/A" }}/100</p>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <a href="{% url 'formation:certificat_detail' certificat.id %}" class="btn btn-primary">
+                  {% trans "Voir le certificat complet" %}
+                </a>
+              </div>
+            </div>
+          {% else %}
+            <!-- Certificat invalide -->
+            <div class="alert alert-danger">
+              <h4 class="alert-heading">❌ {% trans "Certificat invalide" %}</h4>
+              <p>{% trans "Ce code de vérification ne correspond à aucun certificat valide." %}</p>
+              <p class="mb-0">{% trans "Vérifiez que le code est correct ou contactez le support." %}</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Informations générales -->
+      <div class="card mt-4">
+        <div class="card-body">
+          <h5>{% trans "À propos de la vérification" %}</h5>
+          <p class="small text-muted">
+            {% trans "Tous les certificats délivrés par Numeria possèdent un code de vérification unique qui permet de confirmer leur authenticité. Cette vérification est publique et peut être partagée sur les réseaux sociaux professionnels." %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.certificate-preview {
+  background: #f8f9fa;
+  padding: 30px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.certificate-preview h3 {
+  color: #28a745;
+  margin-bottom: 20px;
+}
+</style>
+{% endblock %}

@@ -23,9 +23,9 @@
 
                 <!-- Fil d'Ariane -->
                 <div class="flex flex-wrap items-center gap-2 text-blue-200 text-xs opacity-90 mb-4">
-                    <a href="/" class="hover:text-numeria-teal transition-colors">Accueil</a>
+                    <a href="/" class="hover:text-numeria-teal transition-colors">{% trans "Accueil" %}</a>
                     <span>›</span>
-                    <a href="{% url 'blog:liste' %}" class="hover:text-numeria-teal transition-colors">Blog</a>
+                    <a href="{% url 'blog:liste' %}" class="hover:text-numeria-teal transition-colors">{% trans "Blog" %}</a>
                     <span>›</span>
                     <span class="truncate max-w-xs">{{ article.titre|truncatechars:40 }}</span>
                 </div>
@@ -131,7 +131,7 @@
                     </span>
                     {% endif %}
                     <a href="{% url 'blog:liste' %}" class="text-gray-400 dark:text-gray-500 text-sm hover:text-numeria-teal transition-colors flex items-center gap-1">
-                        ← Retour au blog
+                        ← {% trans "Retour au blog" %}
                     </a>
                 </div>
 

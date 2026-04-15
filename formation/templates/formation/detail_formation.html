@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ formation.titre }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <!-- Hero section -->
+  <div class="row mb-5 pb-5 border-bottom">
+    <div class="col-md-8">
+      <h1 class="display-5 mb-3">{{ formation.titre }}</h1>
+      <p class="lead text-muted">{{ formation.description }}</p>
+
+      <div class="row mt-4">
+        <div class="col-auto">
+          <span class="badge bg-primary">{{ formation.get_type_display }}</span>
+        </div>
+        <div class="col-auto">
+          <span class="badge bg-info">{{ formation.niveau }}</span>
+        </div>
+        <div class="col-auto">
+          <i class="fas fa-clock text-muted"></i>
+          <span class="ms-2">{{ formation.duree }} heures</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card bg-light">
+        <div class="card-body">
+          <h5 class="card-title">{% trans "À propos" %}</h5>
+          <p class="small mb-2">
+            <strong>👥</strong> {{ formation.nombre_etudiants }} {% trans "étudiants" %}
+          </p>
+          <p class="small mb-2">
+            <strong>⭐</strong> {{ formation.note_moyenne|default:"N/A" }}/5
+          </p>
+          <p class="small">
+            <strong>🎓</strong> {{ formation.certifications_delivrees }} {% trans "certificats" %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructeurs -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h3>{% trans "Instructeurs" %}</h3>
+      <div class="row g-3">
+        {% for instr in formation.instructeurs.all %}
+          <div class="col-md-4">
+            <div class="text-center">
+              {% if instr.photo %}
+                <img src="{{ instr.photo.url }}" alt="{{ instr.prenom }} {{ instr.nom }}" class="rounded-circle mb-3" width="100" height="100">
+              {% else %}
+                <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px; font-size: 40px;">
+                  {{ instr.prenom|first }}
+                </div>
+              {% endif %}
+              <h5>{{ instr.prenom }} {{ instr.nom }}</h5>
+              <p class="small text-muted">{{ instr.specialite|default:"Expert" }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Sessions disponibles -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h3 class="mb-4">{% trans "Sessions" %}</h3>
+      
+      {% if sessions %}
+        <div class="row g-4">
+          {% for session in sessions %}
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <!-- Dates -->
+                  <h5 class="card-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    {{ session.date_debut|date:"d M Y" }} → {{ session.date_fin|date:"d M Y" }}
+                  </h5>
+
+                  <!-- Format -->
+                  <p class="card-text">
+                    <span class="badge bg-secondary">{{ session.get_format_display }}</span>
+                  </p>
+
+                  <!-- Dates inscriptions -->
+                  <p class="small text-muted">
+                    {% trans "Inscriptions:" %}
+                    {{ session.date_debut_inscriptions|date:"d M" }} - {{ session.date_fin_inscriptions|date:"d M Y" }}
+                  </p>
+
+                  <!-- Places -->
+                  <div class="mb-3">
+                    <p class="mb-2">
+                      <strong>{% trans "Places disponibles:" %}</strong>
+                      <span class="{% if session.places_disponibles > 0 %}text-success{% else %}text-danger{% endif %}">
+                        {{ session.places_disponibles }}/{{ session.places_totales }}
+                      </span>
+                    </p>
+                    <div class="progress">
+                      <div class="progress-bar" role="progressbar" 
+                           style="width: {{ session.places_occupees|multiply:100|divide:session.places_totales }}%">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Prix -->
+                  <div class="mb-3">
+                    <h5>
+                      {{ session.prix_fcfa|floatformat:0|intcomma }} FCFA
+                      {% if session.prix_reduit_fcfa %}
+                        <small class="text-muted">
+                          <s>{{ session.prix_fcfa|floatformat:0|intcomma }}</s>
+                        </small>
+                      {% endif %}
+                    </h5>
+                  </div>
+
+                  <!-- CTA -->
+                  {% if session.est_ouverte_aux_inscriptions %}
+                    {% if session.places_disponibles > 0 %}
+                      <a href="{% url 'formation:inscrire' %}" 
+                         class="btn btn-primary w-100"
+                         data-session-id="{{ session.id }}">
+                        {% trans "S'inscrire" %}
+                      </a>
+                    {% else %}
+                      <button class="btn btn-secondary w-100" disabled>
+                        {% trans "Complet" %}
+                      </button>
+                    {% endif %}
+                  {% else %}
+                    <div class="alert alert-danger small mb-0">
+                      {% trans "Les inscriptions pour cette session sont fermées" %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="alert alert-warning">
+          {% trans "Aucune session à venir" %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Contenu du cours -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h3 class="mb-4">{% trans "Contenu du cours" %}</h3>
+      <div class="list-group">
+        {% for lecon in formation.leconformation_set.all|dictsort:"numero" %}
+          <div class="list-group-item">
+            <div class="row g-3">
+              <div class="col-auto">
+                <div class="bg-primary text-white rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                  <strong>{{ forloop.counter }}</strong>
+                </div>
+              </div>
+              <div class="col">
+                <h5 class="mb-1">{{ lecon.titre }}</h5>
+                {% if lecon.duree_estimee %}
+                  <p class="small text-muted mb-0">
+                    <i class="fas fa-clock"></i> {{ lecon.duree_estimee }} min
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <p class="text-muted">{% trans "Aucune leçon" %}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Prérequis -->
+  {% if formation.formation_prerequises.all %}
+    <div class="row mb-5">
+      <div class="col-12">
+        <h3>{% trans "Prérequis" %}</h3>
+        <ul class="list-unstyled">
+          {% for prereq in formation.formation_prerequises.all %}
+            <li>
+              <i class="fas fa-check-circle text-success"></i>
+              <a href="{% url 'formation:detail' prereq.slug %}">{{ prereq.titre }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .progress-bar {
+    background: linear-gradient(90deg, #28a745, #20c997);
+  }
+</style>
+{% endblock %}
