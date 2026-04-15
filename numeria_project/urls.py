@@ -73,6 +73,7 @@ urlpatterns += i18n_patterns(
     path('confidentialite/', views.confidentialite, name='confidentialite'),
     path('cgu/', views.cgu, name='cgu'),
     path('cours/', include('cours.urls')),
+    path('formations/', include('formation.urls', namespace='formation')),
     path('blog/', include('blog.urls')),
     path('comptes/', include('comptes.urls')),
     path('paiements/', include('paiements.urls')),
