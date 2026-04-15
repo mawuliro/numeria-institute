@@ -51,7 +51,7 @@
                         <a href="{% url 'cours:catalogue' %}"
                            style="font-family:'Outfit',sans-serif; font-weight:600;"
                            class="border-2 border-white/25 text-white px-8 py-3.5 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors text-center text-base">
-                            Voir les cours
+                            {% trans "Voir les cours" %}
                         </a>
                     {% else %}
                         <a href="{% url 'cours:catalogue' %}"

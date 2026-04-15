@@ -274,6 +274,7 @@
                 <nav class="hidden lg:flex items-center gap-7 xl:gap-9">
                     <a href="/" class="nav-pill {% if request.path == '/' %}actif{% endif %}">{% trans "Accueil" %}</a>
                     <a href="{% url 'cours:catalogue' %}" class="nav-pill {% if '/cours' in request.path %}actif{% endif %}">{% trans "Cours" %}</a>
+                    <a href="{% url 'formation:liste' %}" class="nav-pill {% if '/formations' in request.path %}actif{% endif %}">{% trans "Formations" %}</a>
                     <a href="{% url 'blog:liste' %}" class="nav-pill {% if '/blog' in request.path %}actif{% endif %}">{% trans "Blog" %}</a>
                     <a href="{% url 'admissions:liste_campagnes' %}" class="nav-pill {% if '/admissions' in request.path %}actif{% endif %}">{% trans "Candidatures" %}</a>
                     <a href="{% url 'communaute:liste_categories' %}" class="nav-pill {% if '/communaute' in request.path %}actif{% endif %}">{% trans "Communauté" %}</a>

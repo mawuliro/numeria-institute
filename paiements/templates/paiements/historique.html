@@ -74,11 +74,11 @@
                     Aucun paiement pour le moment
                 </h3>
                 <p class="text-gray-400 dark:text-gray-500 mb-6">
-                    Inscris-toi à un cours payant pour voir ton historique ici.
+                    {% trans "Inscris-toi à un cours payant pour voir ton historique ici." %}
                 </p>
                 <a href="{% url 'cours:catalogue' %}"
                    class="inline-block bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
-                    Voir les cours →
+                    {% trans "Voir les cours →" %}
                 </a>
             </div>
             {% endif %}

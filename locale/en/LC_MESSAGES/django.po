@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-14 23:44+0000\n"
+"POT-Creation-Date: 2026-04-15 00:59+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -60,6 +60,7 @@ msgid "Soumettre ma candidature"
 msgstr "Submit my application"
 
 #: admissions/templates/admissions/confirmation_paiement.html:3
+#: formation/templates/formation/mes_formations.html:59
 msgid "Paiement confirmé"
 msgstr "Payment confirmed"
 
@@ -272,8 +273,7 @@ msgstr "⚠️ You have already applied for this program."
 msgid ""
 "✅ Vous avez déjà payé les frais de candidature. Vous pouvez maintenant "
 "postuler."
-msgstr ""
-"✅ You have already paid the application fees. You can now apply."
+msgstr "✅ You have already paid the application fees. You can now apply."
 
 #: admissions/views.py:121
 #, fuzzy, python-brace-format
@@ -336,18 +336,23 @@ msgid "Active la newsletter pour fidéliser les utilisateurs"
 msgstr ""
 
 #: blog/templates/blog/detail.html:26 templates/base.html:275
-#: templates/base.html:358
+#: templates/base.html:359
 msgid "Accueil"
 msgstr "Home"
 
-#: blog/templates/blog/detail.html:28 templates/base.html:277
-#: templates/base.html:360
+#: blog/templates/blog/detail.html:28 templates/base.html:278
+#: templates/base.html:361
 msgid "Blog"
 msgstr "Blog"
 
 #: blog/templates/blog/detail.html:134
 msgid "Retour au blog"
 msgstr "Back to blog"
+
+#: blog/templates/blog/detail.html:184 blog/templates/blog/liste.html:147
+#: paiements/templates/paiements/historique.html:81
+msgid "Voir les cours →"
+msgstr "View courses →"
 
 #: blog/templates/blog/liste.html:19
 msgid "Blog scientifique"
@@ -364,10 +369,6 @@ msgstr "Start learning"
 #: blog/templates/blog/liste.html:142
 msgid "Accède à des cours scientifiques de qualité, gratuits et payants."
 msgstr "Access quality scientific courses, free and paid."
-
-#: blog/templates/blog/liste.html:147
-msgid "Voir les cours →"
-msgstr "View courses →"
 
 #: blog/templates/blog/liste.html:156
 msgid "Rejoins Numeria Institute"
@@ -392,8 +393,8 @@ msgstr "Create the first category"
 #: communaute/templates/communaute/liste_categories.html:41
 #: communaute/templates/communaute/modifier_message.html:3
 #: communaute/templates/communaute/modifier_profil.html:3
-#: comptes/templates/comptes/inscription.html:248 templates/base.html:279
-#: templates/base.html:362 templates/base.html:441
+#: comptes/templates/comptes/inscription.html:248 templates/base.html:280
+#: templates/base.html:363 templates/base.html:442
 msgid "Communauté"
 msgstr "Community"
 
@@ -566,12 +567,14 @@ msgstr "repl."
 
 #: communaute/templates/communaute/detail_categorie.html:168
 #: communaute/templates/communaute/detail_sujet.html:256
+#: formation/templates/formation/voir_lecon.html:137
 #: mentorat/templates/mentorat/liste_mentors.html:175
 msgid "Précédent"
 msgstr "Previous"
 
 #: communaute/templates/communaute/detail_categorie.html:182
 #: communaute/templates/communaute/detail_sujet.html:270
+#: formation/templates/formation/voir_lecon.html:144
 #: mentorat/templates/mentorat/liste_mentors.html:184
 msgid "Suivant"
 msgstr "Next"
@@ -666,7 +669,7 @@ msgstr "Log in to participate in the discussion."
 #: communaute/templates/communaute/detail_sujet.html:307
 #: communaute/templates/communaute/liste_categories.html:203
 #: comptes/templates/comptes/connexion.html:129
-#: comptes/templates/comptes/inscription.html:230 templates/base.html:389
+#: comptes/templates/comptes/inscription.html:230 templates/base.html:390
 msgid "Se connecter"
 msgstr "Log in"
 
@@ -1067,7 +1070,7 @@ msgstr "Back to profile"
 msgid "Changer le mot de passe"
 msgstr "Change password"
 
-#: comptes/templates/comptes/connexion.html:3 templates/base.html:336
+#: comptes/templates/comptes/connexion.html:3 templates/base.html:337
 msgid "Connexion"
 msgstr "Login"
 
@@ -1091,7 +1094,7 @@ msgstr "Remember me"
 msgid "Pas encore de compte ?"
 msgstr "Don't have an account?"
 
-#: comptes/templates/comptes/connexion.html:140 templates/base.html:390
+#: comptes/templates/comptes/connexion.html:140 templates/base.html:391
 msgid "S'inscrire gratuitement"
 msgstr "Sign up for free"
 
@@ -1159,7 +1162,7 @@ msgstr "Hello, %(name)s"
 msgid "Nouveau cours"
 msgstr "Our courses"
 
-#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:386
+#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:387
 msgid "Mon profil"
 msgstr "My profile"
 
@@ -1170,6 +1173,8 @@ msgid "Cours inscrits"
 msgstr "Enrolled mentees"
 
 #: comptes/templates/comptes/tableau_de_bord.html:65
+#: formation/templates/formation/mes_formations.html:21
+#: formation/templates/formation/mes_formations.html:37
 #, fuzzy
 #| msgid "Nos cours"
 msgid "En cours"
@@ -1210,6 +1215,7 @@ msgid "Revoir"
 msgstr "Review"
 
 #: comptes/templates/comptes/tableau_de_bord.html:159
+#: formation/templates/formation/mes_formations.html:70
 #, fuzzy
 #| msgid "Contenu"
 msgid "Continuer"
@@ -1336,6 +1342,7 @@ msgid "Vérification du certificat"
 msgstr "Certificate verification"
 
 #: cours/templates/cours/verifier_certificat.html:22
+#: formation/templates/formation/verifier_certificat.html:15
 msgid "Certificat authentique"
 msgstr "Authentic certificate"
 
@@ -1356,6 +1363,7 @@ msgid "a complété avec succès le cours"
 msgstr "has successfully completed the course"
 
 #: cours/templates/cours/verifier_certificat.html:94
+#: formation/templates/formation/liste.html:32
 msgid "Niveau"
 msgstr "Level"
 
@@ -2676,6 +2684,325 @@ msgstr ""
 msgid "Redirected but the response is missing a Location: header."
 msgstr ""
 
+#: formation/templates/formation/detail_formation.html:31
+#: templates/base.html:282 templates/base.html:365 templates/base.html:440
+msgid "À propos"
+msgstr "About"
+
+#: formation/templates/formation/detail_formation.html:33
+#: formation/templates/formation/liste.html:68
+#: pages/templates/pages/accueil.html:78
+msgid "étudiants"
+msgstr "students"
+
+#: formation/templates/formation/detail_formation.html:39
+#, fuzzy
+#| msgid "Certificats officiels"
+msgid "certificats"
+msgstr "Official certificates"
+
+#: formation/templates/formation/detail_formation.html:49
+msgid "Instructeurs"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:73
+#, fuzzy
+#| msgid "Question initiale"
+msgid "Sessions"
+msgstr "Original question"
+
+#: formation/templates/formation/detail_formation.html:94
+#, fuzzy
+#| msgid "Description"
+msgid "Inscriptions:"
+msgstr "Description"
+
+#: formation/templates/formation/detail_formation.html:101
+#, fuzzy
+#| msgid "Mentors disponibles"
+msgid "Places disponibles:"
+msgstr "Available mentors"
+
+#: formation/templates/formation/detail_formation.html:131
+#: templates/base.html:341
+msgid "S'inscrire"
+msgstr "Sign up"
+
+#: formation/templates/formation/detail_formation.html:135
+#: formation/templates/formation/liste.html:84
+#: formation/templates/formation/liste.html:94
+#, fuzzy
+#| msgid "Nom complet"
+msgid "Complet"
+msgstr "Full name"
+
+#: formation/templates/formation/detail_formation.html:140
+msgid "Les inscriptions pour cette session sont fermées"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:150
+#: formation/templates/formation/liste.html:100
+#, fuzzy
+#| msgid "Relations actives"
+msgid "Aucune session à venir"
+msgstr "Active relationships"
+
+#: formation/templates/formation/detail_formation.html:159
+#, fuzzy
+#| msgid "Retour aux forums"
+msgid "Contenu du cours"
+msgstr "Back to forums"
+
+#: formation/templates/formation/detail_formation.html:180
+msgid "Aucune leçon"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:190
+msgid "Prérequis"
+msgstr ""
+
+#: formation/templates/formation/liste.html:4 templates/base.html:277
+#, fuzzy
+#| msgid "Informations"
+msgid "Formations"
+msgstr "Programme"
+
+#: formation/templates/formation/liste.html:10
+#, fuzzy
+#| msgid "Informations"
+msgid "Nos Formations"
+msgstr "Programme"
+
+#: formation/templates/formation/liste.html:11
+msgid "Apprenez auprès des meilleurs experts du continent"
+msgstr ""
+
+#: formation/templates/formation/liste.html:19
+#, fuzzy
+#| msgid "Filtrer"
+msgid "Filtres"
+msgstr "Filter"
+
+#: formation/templates/formation/liste.html:22
+msgid "Type"
+msgstr ""
+
+#: formation/templates/formation/liste.html:24
+#: formation/templates/formation/liste.html:34
+msgid "Tous"
+msgstr ""
+
+#: formation/templates/formation/liste.html:27
+#, fuzzy
+#| msgid "Certificats officiels"
+msgid "Certification"
+msgstr "Official certificates"
+
+#: formation/templates/formation/liste.html:35
+#, fuzzy
+#| msgid "Début"
+msgid "Débutant"
+msgstr "Start"
+
+#: formation/templates/formation/liste.html:36
+msgid "Intermédiaire"
+msgstr ""
+
+#: formation/templates/formation/liste.html:37
+msgid "Avancé"
+msgstr ""
+
+#: formation/templates/formation/liste.html:41
+#: mentorat/templates/mentorat/liste_mentors.html:64
+msgid "Filtrer"
+msgstr "Filter"
+
+#: formation/templates/formation/liste.html:90
+#, fuzzy
+#| msgid "S'inscrire"
+msgid "Voir & s'inscrire"
+msgstr "Sign up"
+
+#: formation/templates/formation/liste.html:109
+#, fuzzy
+#| msgid "Rejoignez le programme"
+msgid "Voir le programme"
+msgstr "Join the programme"
+
+#: formation/templates/formation/liste.html:117
+#, fuzzy
+#| msgid "Aucune information renseignée."
+msgid "Aucune formation ne correspond à vos critères"
+msgstr "No information provided."
+
+#: formation/templates/formation/mes_formations.html:4
+#: formation/templates/formation/mes_formations.html:8
+#, fuzzy
+#| msgid "Informations"
+msgid "Mes formations"
+msgstr "Information"
+
+#: formation/templates/formation/mes_formations.html:12
+msgid "Vous n'êtes pas encore inscrit à une formation."
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:14
+#, fuzzy
+#| msgid "Découvrir nos cours"
+msgid "Découvrir les formations"
+msgstr "Discover our courses"
+
+#: formation/templates/formation/mes_formations.html:43
+#: formation/templates/formation/voir_lecon.html:13
+#, fuzzy
+#| msgid "Professionnel"
+msgid "Progression"
+msgstr "Professional"
+
+#: formation/templates/formation/mes_formations.html:63
+#, fuzzy
+#| msgid "Preuve soumise — en attente de confirmation"
+msgid "Paiement en attente de validation"
+msgstr "Proof submitted — awaiting confirmation"
+
+#: formation/templates/formation/mes_formations.html:74
+msgid "Accès déblocage après validation du paiement"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:86
+#, fuzzy
+#| msgid "Terminés"
+msgid "Terminées"
+msgstr "Completed"
+
+#: formation/templates/formation/mes_formations.html:100
+msgid "Complétée le"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:106
+#, fuzzy
+#| msgid "Certificats officiels"
+msgid "Certificat"
+msgstr "Official certificates"
+
+#: formation/templates/formation/mes_formations.html:112
+msgid "Partager"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:125
+#: formation/templates/formation/mes_formations.html:138
+msgid "À venir"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:136
+#, fuzzy
+#| msgid "Comment payer"
+msgid "Commence le"
+msgstr "How to pay"
+
+#: formation/templates/formation/mes_formations.html:152
+#, fuzzy
+#| msgid "Découvrir nos cours"
+msgid "Découvrir d'autres formations"
+msgstr "Discover our courses"
+
+#: formation/templates/formation/verifier_certificat.html:4
+#, fuzzy
+#| msgid "Vérification du certificat"
+msgid "Vérifier certificat"
+msgstr "Certificate verification"
+
+#: formation/templates/formation/verifier_certificat.html:16
+#, fuzzy
+#| msgid "Ce certificat a été émis par Numeria Institute et est authentifié."
+msgid "Ce certificat a été délivré par Numeria et est valide."
+msgstr "This certificate was issued by Numeria Institute and is authenticated."
+
+#: formation/templates/formation/verifier_certificat.html:24
+msgid "Délivré à:"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:28
+#, fuzzy
+#| msgid "Mot de passe"
+msgid "Date de délivrance:"
+msgstr "Password"
+
+#: formation/templates/formation/verifier_certificat.html:35
+msgid "Session:"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:39
+msgid "Note finale:"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:46
+#, fuzzy
+#| msgid "Voir le sujet complet"
+msgid "Voir le certificat complet"
+msgstr "View full topic"
+
+#: formation/templates/formation/verifier_certificat.html:53
+#, fuzzy
+#| msgid "Certificat officiel"
+msgid "Certificat invalide"
+msgstr "Official certificate"
+
+#: formation/templates/formation/verifier_certificat.html:54
+msgid "Ce code de vérification ne correspond à aucun certificat valide."
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:55
+msgid "Vérifiez que le code est correct ou contactez le support."
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:64
+#, fuzzy
+#| msgid "Code de vérification"
+msgid "À propos de la vérification"
+msgstr "Verification code"
+
+#: formation/templates/formation/verifier_certificat.html:66
+msgid ""
+"Tous les certificats délivrés par Numeria possèdent un code de vérification "
+"unique qui permet de confirmer leur authenticité. Cette vérification est "
+"publique et peut être partagée sur les réseaux sociaux professionnels."
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:50
+msgid "Leçon"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:68
+msgid "Vidéo pédagogique"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:101
+msgid "Ressources"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:121
+msgid "Exercice"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:126
+msgid "Démarrer l'exercice"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:150
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:170
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:194
+msgid "Terminer"
+msgstr "End session"
+
+#: formation/templates/formation/voir_lecon.html:162
+msgid "Marquer cette leçon complétée"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:167
+msgid "Vous avez complété cette leçon le"
+msgstr ""
+
 #: mentorat/templates/mentorat/demander_mentorat.html:3
 #: mentorat/templates/mentorat/demander_mentorat.html:20
 msgid "Demander un mentorat"
@@ -2944,8 +3271,8 @@ msgstr "Back to topic"
 
 #: mentorat/templates/mentorat/devenir_mentee.html:18
 #: mentorat/templates/mentorat/devenir_mentor.html:18
-#: mentorat/templates/mentorat/index.html:4 templates/base.html:280
-#: templates/base.html:363
+#: mentorat/templates/mentorat/index.html:4 templates/base.html:281
+#: templates/base.html:364
 msgid "Mentorat"
 msgstr "Mentorship"
 
@@ -3203,10 +3530,6 @@ msgstr "All levels"
 #: mentorat/templates/mentorat/liste_mentors.html:53
 msgid "Tous niveaux"
 msgstr "All levels"
-
-#: mentorat/templates/mentorat/liste_mentors.html:64
-msgid "Filtrer"
-msgstr "Filter"
 
 #: mentorat/templates/mentorat/liste_mentors.html:68
 msgid "Réinitialiser"
@@ -3468,11 +3791,6 @@ msgstr "Active mentors"
 msgid "Prochaines séances"
 msgstr "Upcoming sessions"
 
-#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:170
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:194
-msgid "Terminer"
-msgstr "End session"
-
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:3
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:15
 #, fuzzy
@@ -3570,17 +3888,19 @@ msgstr "Mark a mentoring session as completed on Numeria Institute."
 msgid "Ajoutez vos notes sur cette séance avant de la marquer comme terminée."
 msgstr "Add your notes on this session before marking it as completed."
 
-#: numeria_project/settings.py:131
+#: numeria_project/settings.py:132
 msgid "Français"
 msgstr "French"
 
-#: numeria_project/settings.py:132
+#: numeria_project/settings.py:133
 msgid "English"
 msgstr "English"
 
-#: pages/templates/pages/accueil.html:78
-msgid "étudiants"
-msgstr "students"
+#: pages/templates/pages/accueil.html:54
+#, fuzzy
+#| msgid "Voir le cours"
+msgid "Voir les cours"
+msgstr "View courses"
 
 #: pages/templates/pages/accueil.html:131
 msgid "Étudiants inscrits"
@@ -3770,6 +4090,10 @@ msgstr ""
 msgid "✅ Message reçu {nom} ! Nous te répondrons bientôt."
 msgstr "✅ Message received {nom}! We'll reply soon."
 
+#: paiements/templates/paiements/historique.html:77
+msgid "Inscris-toi à un cours payant pour voir ton historique ici."
+msgstr "Sign up for a paid course to see your history here."
+
 #: paiements/templates/paiements/page_paiement.html:3
 msgid "Paiement"
 msgstr ""
@@ -3851,36 +4175,28 @@ msgstr ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses."
 
-#: templates/base.html:276 templates/base.html:359
+#: templates/base.html:276 templates/base.html:360
 msgid "Cours"
 msgstr "Courses"
 
-#: templates/base.html:278 templates/base.html:361 templates/base.html:438
+#: templates/base.html:279 templates/base.html:362 templates/base.html:439
 msgid "Candidatures"
 msgstr "Applications"
 
-#: templates/base.html:281 templates/base.html:364 templates/base.html:439
-msgid "À propos"
-msgstr "About"
-
-#: templates/base.html:282 templates/base.html:365 templates/base.html:440
-#: templates/base.html:447
+#: templates/base.html:283 templates/base.html:366 templates/base.html:441
+#: templates/base.html:448
 msgid "Contact"
 msgstr "Contact"
 
-#: templates/base.html:320 templates/base.html:385
+#: templates/base.html:321 templates/base.html:386
 msgid "Tableau de bord"
 msgstr "Dashboard"
 
-#: templates/base.html:340
-msgid "S'inscrire"
-msgstr "Sign up"
-
-#: templates/base.html:387
+#: templates/base.html:388
 msgid "Se déconnecter"
 msgstr "Log out"
 
-#: templates/base.html:427
+#: templates/base.html:428
 msgid ""
 "L'éducation scientifique accessible, engageante et gratuite pour tous les "
 "apprenants africains et francophones du monde entier."
@@ -3888,27 +4204,27 @@ msgstr ""
 "Accessible, engaging and free scientific education for all African and "
 "French-speaking learners worldwide."
 
-#: templates/base.html:434
+#: templates/base.html:435
 msgid "Navigation"
 msgstr "Navigation"
 
-#: templates/base.html:436
+#: templates/base.html:437
 msgid "Nos cours"
 msgstr "Our courses"
 
-#: templates/base.html:437
+#: templates/base.html:438
 msgid "Le blog"
 msgstr "The blog"
 
-#: templates/base.html:466
+#: templates/base.html:467
 msgid "Tous droits réservés"
 msgstr "All rights reserved"
 
-#: templates/base.html:468
+#: templates/base.html:469
 msgid "Confidentialité"
 msgstr "Privacy Policy"
 
-#: templates/base.html:469
+#: templates/base.html:470
 msgid "CGU"
 msgstr "Terms of Service"
 
