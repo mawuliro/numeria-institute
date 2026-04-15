@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block titre %}{% trans "Paiement" %} {{ cours.titre }} — Numeria Institute{% endblock %}
+{% block titre %}{% trans "Paiement" %} {% if objet_type == 'cours' %}{{ objet.titre }}{% else %}{{ objet.session.formation.titre }} — {{ objet.session.nom }}{% endif %} — Numeria Institute{% endblock %}
 {% block contenu %}
 
 <section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-12">
@@ -9,10 +9,17 @@
 
             <!-- En-tête -->
             <div class="mb-8">
-                <a href="{% url 'cours:detail' cours.id %}"
+                {% if objet_type == 'cours' %}
+                <a href="{% url 'cours:detail' objet.id %}"
                    class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-or transition-colors text-sm">
                     ← {% trans "Retour au cours" %}
                 </a>
+                {% else %}
+                <a href="{% url 'formation:session_detail' objet.session.id %}"
+                   class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-or transition-colors text-sm">
+                    ← {% trans "Retour à la session" %}
+                </a>
+                {% endif %}
                 <h1 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mt-4">
                     💳 {% trans "Finaliser l'inscription" %}
                 </h1>
@@ -39,7 +46,7 @@
                         {% trans "Choisir un mode de paiement" %}
                     </h2>
 
-                    <form method="POST" action="{% url 'paiements:initier' cours.id %}">
+                    <form method="POST" action="{{ action_url }}">
                         {% csrf_token %}
 
                         <div class="flex flex-col gap-3 mb-6">
@@ -87,7 +94,11 @@
                         <!-- Bouton payer -->
                         <button type="submit"
                             class="w-full bg-numeria-or text-numeria-bleu font-bold py-4 rounded-2xl hover:bg-yellow-400 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform text-lg">
-                            {% blocktrans with prix=cours.prix devise=cours.get_devise_display %}Payer {{ prix }} {{ devise }} →{% endblocktrans %}
+                            {% if objet_type == 'cours' %}
+                                {% blocktrans with prix=objet.prix devise=objet.get_devise_display %}Payer {{ prix }} {{ devise }} →{% endblocktrans %}
+                            {% else %}
+                                {% blocktrans with prix=objet.prix_paye_fcfa %}Payer {{ prix }} FCFA →{% endblocktrans %}
+                            {% endif %}
                         </button>
 
                         <p class="text-center text-gray-400 dark:text-gray-500 text-xs mt-3">
@@ -105,27 +116,43 @@
                             {% trans "Récapitulatif" %}
                         </h3>
 
-                        <!-- Cours -->
+                        <!-- Récapitulatif -->
                         <div class="flex items-start gap-3 mb-5 pb-5 border-b border-gray-100 dark:border-gray-700">
                             <div class="w-12 h-12 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0">
                                 <span class="text-numeria-or text-xs font-bold">
-                                    {{ cours.get_matiere_display|first|upper }}
+                                    {% if objet_type == 'cours' %}
+                                        {{ objet.get_matiere_display|first|upper }}
+                                    {% else %}
+                                        {{ objet.session.formation.get_type_display|first|upper }}
+                                    {% endif %}
                                 </span>
                             </div>
                             <div>
                                 <p class="font-bold text-gray-800 dark:text-gray-100 text-sm">
-                                    {{ cours.titre }}
+                                    {% if objet_type == 'cours' %}
+                                        {{ objet.titre }}
+                                    {% else %}
+                                        {{ objet.session.formation.titre }} — {{ objet.session.nom }}
+                                    {% endif %}
                                 </p>
                                 <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">
-                                    {% blocktrans with n=cours.nombre_lecons niveau=cours.get_niveau_display %}{{ n }} leçons · {{ niveau }}{% endblocktrans %}
+                                    {% if objet_type == 'cours' %}
+                                        {% blocktrans with n=objet.nombre_lecons niveau=objet.get_niveau_display %}{{ n }} leçons · {{ niveau }}{% endblocktrans %}
+                                    {% else %}
+                                        {% trans "Session de formation" %}
+                                    {% endif %}
                                 </p>
                             </div>
                         </div>
 
                         <!-- Prix -->
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-gray-500 dark:text-gray-400 text-sm">{% trans "Prix du cours" %}</span>
-                            <span class="font-bold text-gray-800 dark:text-gray-100">{{ cours.prix }} XOF</span>
+                            <span class="text-gray-500 dark:text-gray-400 text-sm">
+                                {% if objet_type == 'cours' %}{% trans "Prix du cours" %}{% else %}{% trans "Prix de la session" %}{% endif %}
+                            </span>
+                            <span class="font-bold text-gray-800 dark:text-gray-100">
+                                {% if objet_type == 'cours' %}{{ objet.prix }} XOF{% else %}{{ objet.prix_paye_fcfa }} XOF{% endif %}
+                            </span>
                         </div>
                         <div class="flex items-center justify-between mb-5 pb-5 border-b border-gray-100 dark:border-gray-700">
                             <span class="text-gray-500 dark:text-gray-400 text-sm">{% trans "Frais de traitement" %}</span>
@@ -136,7 +163,7 @@
                         <div class="flex items-center justify-between mb-5">
                             <span class="font-bold text-gray-800 dark:text-gray-100">{% trans "Total" %}</span>
                             <span class="text-2xl font-bold text-numeria-bleu dark:text-numeria-or">
-                                {{ cours.prix }} XOF
+                                {% if objet_type == 'cours' %}{{ objet.prix }} XOF{% else %}{{ objet.prix_paye_fcfa }} XOF{% endif %}
                             </span>
                         </div>
 
@@ -148,7 +175,11 @@
                             <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-300">
                                 <li class="flex items-center gap-2">
                                     <span class="text-green-500">✅</span>
-                                    {% blocktrans with n=cours.nombre_lecons %}{{ n }} leçons complètes{% endblocktrans %}
+                                    {% if objet_type == 'cours' %}
+                                        {% blocktrans with n=objet.nombre_lecons %}{{ n }} leçons complètes{% endblocktrans %}
+                                    {% else %}
+                                        {% trans "Accès à toutes les leçons de la session" %}
+                                    {% endif %}
                                 </li>
                                 <li class="flex items-center gap-2">
                                     <span class="text-green-500">✅</span>

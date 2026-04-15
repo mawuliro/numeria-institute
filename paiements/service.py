@@ -11,6 +11,7 @@ import uuid
 from django.utils import timezone
 from .models import Paiement
 from cours.models import InscriptionCours
+from formation.models import InscriptionFormation
 
 
 def generer_reference():
@@ -23,26 +24,39 @@ def generer_reference():
     return f"NIM-{annee}-{code}"
 
 
-def creer_paiement(etudiant, cours, provider='sandbox'):
+def creer_paiement(etudiant, cours=None, formation_inscription=None, provider='sandbox'):
     """
     Crée un enregistrement de paiement en attente.
     Appelé quand l'étudiant clique sur "Payer".
     """
+    if not cours and not formation_inscription:
+        raise ValueError('Un paiement doit être associé à un cours ou une inscription de formation.')
+
+    if cours and formation_inscription:
+        raise ValueError('Un paiement ne peut pas être lié à la fois à un cours et à une inscription de formation.')
+
+    if formation_inscription and formation_inscription.etudiant != etudiant:
+        raise ValueError('L’inscription de formation doit appartenir à l’étudiant en cours.')
+
     # Vérifier qu'il n'y a pas déjà un paiement réussi
     paiement_existant = Paiement.objects.filter(
         etudiant=etudiant,
         cours=cours,
+        formation_inscription=formation_inscription,
         statut='reussi'
     ).first()
 
     if paiement_existant:
         return paiement_existant, False  # False = déjà existant
 
-    # Créer le nouveau paiement
+    montant = cours.prix if cours else formation_inscription.prix_paye_fcfa
+
     paiement = Paiement.objects.create(
         etudiant=etudiant,
         cours=cours,
-        montant=cours.prix,
+        formation_inscription=formation_inscription,
+        montant_initial=montant,
+        montant_final=montant,
         devise='XOF',
         statut='en_attente',
         provider=provider,
@@ -61,6 +75,14 @@ def confirmer_paiement(paiement, reference_provider=None):
     paiement.statut = 'reussi'
     paiement.reference_provider = reference_provider or 'SANDBOX'
     paiement.save()
+
+    if paiement.formation_inscription:
+        inscription = paiement.formation_inscription
+        inscription.statut = 'confirmee'
+        inscription.prix_paye_fcfa = paiement.montant_final
+        inscription.date_confirmation_paiement = timezone.now()
+        inscription.save()
+        return inscription
 
     # Inscrire automatiquement l'étudiant au cours
     inscription, cree = InscriptionCours.objects.get_or_create(
@@ -96,6 +118,17 @@ def verifier_acces_cours(etudiant, cours):
     return Paiement.objects.filter(
         etudiant=etudiant,
         cours=cours,
+        statut='reussi'
+    ).exists()
+
+
+def verifier_acces_formation(etudiant, session):
+    """
+    Vérifie si un étudiant a accès à une session payante de formation.
+    """
+    return Paiement.objects.filter(
+        etudiant=etudiant,
+        formation_inscription__session=session,
         statut='reussi'
     ).exists()
 

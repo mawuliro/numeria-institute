@@ -11,7 +11,6 @@ from .models import (
     Formation, SessionFormation, InscriptionFormation,
     LeconFormation, ProgressionLecon, CertificatFormation
 )
-from .forms import FormulairInscriptionFormation
 
 
 def liste_formations(request):
@@ -99,12 +98,14 @@ def inscrire_formation(request, session_id):
         messages.error(request, "Cette session n'est plus ouverte aux inscriptions.")
         return redirect('formation:session_detail', session_id=session.id)
     
-    # Vérifier doublon inscription
-    if InscriptionFormation.objects.filter(session=session, etudiant=request.user).exists():
+    inscription = InscriptionFormation.objects.filter(session=session, etudiant=request.user).first()
+    if inscription:
+        if inscription.statut == 'en_attente':
+            return redirect('paiements:page_paiement_formation', inscription_id=inscription.id)
         messages.warning(request, "Vous êtes déjà inscrit à cette session.")
         return redirect('formation:mes_formations')
-    
-    # Créer inscription
+
+    # Créer inscription en attente de paiement
     inscription = InscriptionFormation.objects.create(
         session=session,
         etudiant=request.user,
@@ -113,37 +114,25 @@ def inscrire_formation(request, session_id):
     )
     
     messages.success(request, "Inscription créée. Veuillez effectuer le paiement.")
-    return redirect('formation:voir_paiement', inscription_id=inscription.id)
+    return redirect('paiements:page_paiement_formation', inscription_id=inscription.id)
 
 
 @login_required
 def voir_paiement(request, inscription_id):
-    """Page de paiement pour une inscription."""
+    """Redirection vers la page de paiement centralisée."""
+    if not request.user.is_authenticated:
+        language = get_language() or 'fr'
+        login_url = reverse('comptes:connexion')
+        if not login_url.startswith(f'/{language}/'):
+            login_url = f'/{language}{login_url}'
+        return redirect(f'{login_url}?next={request.path}')
+
     inscription = get_object_or_404(
         InscriptionFormation,
         id=inscription_id,
         etudiant=request.user
     )
-    
-    # Vérifier que l'inscription est en attente de paiement
-    if inscription.statut != 'en_attente':
-        messages.warning(request, "Cette inscription a déjà été traitée.")
-        return redirect('formation:mes_formations')
-    
-    # Simuler la confirmation du paiement
-    if request.method == 'POST':
-        # En production, cela serait intégré avec un système de paiement réel
-        inscription.statut = 'confirmee'
-        inscription.date_paiement = timezone.now()
-        inscription.save()
-        messages.success(request, "Paiement confirmé! Bienvenue dans le cours.")
-        return redirect('formation:mes_formations')
-    
-    context = {
-        'inscription': inscription,
-        'montant': inscription.prix_paye_fcfa,
-    }
-    return render(request, 'formation/paiement.html', context)
+    return redirect('paiements:page_paiement_formation', inscription_id=inscription.id)
 
 
 @login_required

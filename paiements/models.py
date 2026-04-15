@@ -50,6 +50,13 @@ class Paiement(models.Model):
         blank=True,
         related_name='paiements'
     )
+    formation_inscription = models.ForeignKey(
+        'formation.InscriptionFormation',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='paiements'
+    )
     
     # ── MONTANT ────────────────────┬────────────────────────────────
     devise = models.CharField(
@@ -109,8 +116,29 @@ class Paiement(models.Model):
     user_agent = models.TextField(blank=True)
 
     def __str__(self):
-        cours_titre = self.cours.titre if self.cours else 'Frais candidature'
-        return f"{self.reference_numeria} — {self.etudiant.username} — {cours_titre} — {self.statut}"
+        if self.cours:
+            item_titre = self.cours.titre
+        elif self.formation_inscription:
+            item_titre = f"{self.formation_inscription.session.formation.titre} — {self.formation_inscription.session.nom}"
+        else:
+            item_titre = 'Paiement'
+        return f"{self.reference_numeria} — {self.etudiant.username} — {item_titre} — {self.statut}"
+
+    @property
+    def montant(self):
+        return self.montant_final
+
+    @property
+    def objet(self):
+        return self.cours or self.formation_inscription
+
+    @property
+    def objet_type(self):
+        if self.cours:
+            return 'cours'
+        if self.formation_inscription:
+            return 'formation'
+        return None
 
     def est_reussi(self):
         return self.statut == 'reussi'

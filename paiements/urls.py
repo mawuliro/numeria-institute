@@ -6,6 +6,8 @@ app_name = 'paiements'
 urlpatterns = [
     path('cours/<int:cours_id>/', views.page_paiement, name='page_paiement'),
     path('cours/<int:cours_id>/initier/', views.initier_paiement, name='initier'),
+    path('formation/inscription/<int:inscription_id>/', views.page_paiement_formation, name='page_paiement_formation'),
+    path('formation/inscription/<int:inscription_id>/initier/', views.initier_paiement_formation, name='initier_formation'),
     path('confirmation/<int:paiement_id>/', views.confirmation_paiement, name='confirmation'),
     path('historique/', views.historique_paiements, name='historique'),
 ]

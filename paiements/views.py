@@ -1,9 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.urls import reverse
 from cours.models import Cours
+from formation.models import InscriptionFormation
 from .models import Paiement
-from .service import creer_paiement, traiter_paiement, verifier_acces_cours
+from .service import (
+    creer_paiement,
+    traiter_paiement,
+    verifier_acces_cours,
+    verifier_acces_formation
+)
 
 
 @login_required
@@ -25,7 +32,9 @@ def page_paiement(request, cours_id):
         return redirect('cours:detail', cours_id=cours_id)
 
     contexte = {
-        'cours': cours,
+        'objet': cours,
+        'objet_type': 'cours',
+        'action_url': reverse('paiements:initier', args=[cours.id]),
         # On ajoutera les vrais providers ici plus tard
         'providers_disponibles': [
             {
@@ -67,6 +76,108 @@ def page_paiement(request, cours_id):
     }
 
     return render(request, 'paiements/page_paiement.html', contexte)
+
+
+@login_required
+def page_paiement_formation(request, inscription_id):
+    """
+    Page de paiement pour une inscription de formation.
+    """
+    inscription = get_object_or_404(InscriptionFormation, id=inscription_id, etudiant=request.user)
+
+    if inscription.statut == 'confirmee' or verifier_acces_formation(request.user, inscription.session):
+        messages.info(request, "Cette inscription a déjà été payée.")
+        return redirect('formation:session_detail', session_id=inscription.session.id)
+
+    contexte = {
+        'objet': inscription,
+        'objet_type': 'formation',
+        'providers_disponibles': [
+            {
+                'id': 'sandbox',
+                'nom': '🧪 Paiement test (sandbox)',
+                'description': 'Mode test — aucun argent réel',
+                'icone': '🧪',
+                'disponible': True,
+            },
+            {
+                'id': 'fedapay',
+                'nom': 'FedaPay',
+                'description': 'Mobile Money, carte bancaire (Togo/Bénin)',
+                'icone': '📱',
+                'disponible': False,
+            },
+            {
+                'id': 'cinetpay',
+                'nom': 'CinetPay',
+                'description': 'Mobile Money, carte Visa (Afrique de l\'Ouest)',
+                'icone': '💳',
+                'disponible': False,
+            },
+            {
+                'id': 'mixx',
+                'nom': 'Mixx by YAS',
+                'description': 'Wave, Flooz, T-Money (Togo)',
+                'icone': '📲',
+                'disponible': False,
+            },
+            {
+                'id': 'stripe',
+                'nom': 'Stripe',
+                'description': 'Carte bancaire internationale (Visa, Mastercard)',
+                'icone': '🌍',
+                'disponible': False,
+            },
+        ],
+        'action_url': reverse('paiements:initier_formation', args=[inscription.id]),
+    }
+
+    return render(request, 'paiements/page_paiement.html', contexte)
+
+
+@login_required
+def initier_paiement_formation(request, inscription_id):
+    """
+    Initie le paiement pour une inscription de formation.
+    """
+    if request.method != 'POST':
+        return redirect('paiements:page_paiement_formation', inscription_id=inscription_id)
+
+    inscription = get_object_or_404(InscriptionFormation, id=inscription_id, etudiant=request.user)
+
+    if inscription.statut == 'confirmee':
+        messages.info(request, "Cette inscription a déjà été payée.")
+        return redirect('formation:session_detail', session_id=inscription.session.id)
+
+    provider = request.POST.get('provider', 'sandbox')
+    paiement, nouveau = creer_paiement(
+        etudiant=request.user,
+        formation_inscription=inscription,
+        provider=provider
+    )
+
+    if not nouveau and paiement.statut == 'reussi':
+        messages.info(request, "Tu as déjà payé cette formation.")
+        return redirect('formation:session_detail', session_id=inscription.session.id)
+
+    try:
+        traiter_paiement(paiement, provider)
+        messages.success(
+            request,
+            f"✅ Paiement réussi ! Tu es maintenant inscrit à la session '{inscription.session.nom}'."
+        )
+        return redirect('paiements:confirmation', paiement_id=paiement.id)
+
+    except NotImplementedError:
+        messages.warning(
+            request,
+            f"⚠️ Le provider '{provider}' n'est pas encore disponible. Contactez-nous à contact@numeriainstitute.com"
+        )
+        return redirect('paiements:page_paiement_formation', inscription_id=inscription.id)
+
+    except Exception as e:
+        messages.error(request, f"❌ Erreur lors du paiement : {str(e)}")
+        return redirect('paiements:page_paiement_formation', inscription_id=inscription.id)
 
 
 @login_required
