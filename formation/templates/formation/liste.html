@@ -57,16 +57,16 @@
               <!-- Body -->
               <div class="card-body">
                 <h5 class="card-title">{{ formation.titre }}</h5>
-                <p class="card-text text-muted">{{ formation.description|truncatewords:15 }}</p>
+                <p class="card-text text-muted">{{ formation.description_courte|truncatewords:15 }}</p>
 
                 <p class="small mb-2">
-                  <i class="fas fa-clock"></i> {{ formation.duree }} heures
+                  <i class="fas fa-clock"></i> {{ formation.duree_heures }} heures
                 </p>
 
                 <!-- Stats -->
                 <p class="small text-muted">
-                  {{ formation.nombre_etudiants }} {% trans "étudiants" %} | 
-                  {{ formation.certifications_delivrees }} 🎓
+                  {{ formation.nombre_etudiants_total }} {% trans "étudiants" %} | 
+                  {{ formation.nombre_certifies }} 🎓
                 </p>
 
                 <!-- Prochaine session -->
@@ -114,7 +114,7 @@
         {% empty %}
           <div class="col-12">
             <div class="alert alert-warning">
-              {% trans "Aucune formation ne correspond à vos critères" %}
+              {% trans "Aucune formation publiée n'est disponible pour le moment." %}
             </div>
           </div>
         {% endfor %}
