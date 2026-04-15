@@ -81,5 +81,5 @@ urlpatterns += i18n_patterns(
     path('mentorat/', include('mentorat.urls')),
 )
 
-if settings.DEBUG:
+if settings.DEBUG or not settings.USE_CLOUDINARY:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

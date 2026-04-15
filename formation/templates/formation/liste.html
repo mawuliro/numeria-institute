@@ -165,7 +165,7 @@
                 <!-- Action Buttons -->
                 <div class="space-y-2">
                   {% with session=formation.prochaine_session %}
-                    {% if session and session.places_disponibles > 0 %}
+                    {% if session and session.est_ouverte_aux_inscriptions %}
                       <a href="{% url 'formation:session_detail' session.id %}"
                          class="block w-full bg-numeria-teal hover:bg-teal-600 text-white text-center py-2 px-4 rounded-lg font-semibold transition duration-300">
                         <i class="fas fa-plus mr-2"></i>

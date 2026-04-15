@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load i18n humanize %}
+
+{% block title %}{% trans "Détails de la session" %} - {{ session.nom }}{% endblock %}
+
+{% block contenu %}
+<section class="bg-gradient-to-br from-numeria-bleu via-numeria-teal to-numeria-bleu text-white py-16">
+  <div class="container mx-auto px-4">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid lg:grid-cols-3 gap-8 items-center">
+        <div class="lg:col-span-2">
+          <p class="text-sm uppercase tracking-wide text-white/80 mb-3">{{ formation.get_type_display }}</p>
+          <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ session.nom }}</h1>
+          <p class="text-lg text-blue-100 leading-relaxed mb-6">{{ formation.description_courte }}</p>
+
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-white/10 rounded-xl p-5">
+              <p class="text-xs uppercase tracking-wide text-white/70 mb-2">{% trans "Dates" %}</p>
+              <p class="text-white font-semibold">{{ session.date_debut|date:"d M Y" }} - {{ session.date_fin|date:"d M Y" }}</p>
+            </div>
+            <div class="bg-white/10 rounded-xl p-5">
+              <p class="text-xs uppercase tracking-wide text-white/70 mb-2">{% trans "Format" %}</p>
+              <p class="text-white font-semibold">{{ session.get_modalite_display }}</p>
+            </div>
+            <div class="bg-white/10 rounded-xl p-5">
+              <p class="text-xs uppercase tracking-wide text-white/70 mb-2">{% trans "Places restantes" %}</p>
+              <p class="text-white font-semibold">{{ session.places_disponibles }}/{{ session.places_totales }}</p>
+            </div>
+            <div class="bg-white/10 rounded-xl p-5">
+              <p class="text-xs uppercase tracking-wide text-white/70 mb-2">{% trans "Prix" %}</p>
+              <p class="text-white font-semibold">
+                {{ session.prix_fcfa|floatformat:0|intcomma }} FCFA
+                {% if session.prix_reduit_fcfa %}
+                  <span class="text-sm text-blue-100 line-through ml-2">{{ session.prix_fcfa|floatformat:0|intcomma }} FCFA</span>
+                {% endif %}
+              </p>
+            </div>
+          </div>
+
+          <p class="text-sm text-blue-100 mb-6">{% trans "Inscriptions ouvertes" %}: {{ session.date_debut_inscriptions|date:"d M Y" }} - {{ session.date_fin_inscriptions|date:"d M Y" }}</p>
+
+          <div class="flex flex-col sm:flex-row gap-4">
+            {% if peut_inscrire %}
+              <a href="{% url 'formation:inscrire' session.id %}" class="bg-white text-numeria-teal hover:bg-gray-100 font-bold py-4 px-8 rounded-xl transition duration-300 text-center">
+                <i class="fas fa-plus mr-2"></i>
+                {% trans "S'inscrire" %}
+              </a>
+            {% else %}
+              <button class="bg-gray-300 text-gray-700 font-semibold py-4 px-8 rounded-xl cursor-not-allowed text-center" disabled>
+                <i class="fas fa-times mr-2"></i>
+                {% trans "Inscription indisponible" %}
+              </button>
+            {% endif %}
+            <a href="{% url 'formation:detail' formation.slug %}" class="bg-white/10 border border-white/20 text-white hover:bg-white hover:text-numeria-teal font-semibold py-4 px-8 rounded-xl transition duration-300 text-center">
+              <i class="fas fa-arrow-left mr-2"></i>
+              {% trans "Retour à la formation" %}
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-1">
+          {% if formation.image_couverture %}
+            <img src="{{ formation.image_couverture.url }}" alt="{{ formation.titre }}" class="w-full rounded-3xl shadow-2xl mb-6 object-cover">
+          {% else %}
+            <div class="bg-white/10 rounded-3xl p-10 text-center mb-6">
+              <i class="fas fa-graduation-cap text-6xl text-white/70 mb-4"></i>
+              <p class="text-white/70">{% trans "Image à venir" %}</p>
+            </div>
+          {% endif %}
+
+          <div class="bg-white/10 rounded-3xl p-6">
+            <h2 class="text-xl font-bold text-white mb-4">{% trans "Formation" %}</h2>
+            <p class="text-white/90 font-semibold mb-2">{{ formation.titre }}</p>
+            <p class="text-sm text-blue-100">{{ formation.description_courte }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

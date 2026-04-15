@@ -63,7 +63,7 @@
 
           <!-- Quick CTA -->
           {% with session=formation.prochaine_session %}
-            {% if session and session.places_disponibles > 0 %}
+            {% if session and session.est_ouverte_aux_inscriptions %}
               <a href="{% url 'formation:inscrire' session.id %}"
                  class="block w-full bg-numeria-teal hover:bg-teal-600 text-white text-center py-4 px-6 rounded-xl font-bold text-lg transition duration-300 transform hover:scale-105 shadow-lg">
                 <i class="fas fa-plus mr-2"></i>
@@ -270,7 +270,7 @@
     </p>
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
       {% with session=formation.prochaine_session %}
-        {% if session and session.places_disponibles > 0 %}
+        {% if session and session.est_ouverte_aux_inscriptions %}
           <a href="{% url 'formation:inscrire' session.id %}" class="bg-white text-numeria-teal hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105">
             <i class="fas fa-plus mr-2"></i>
             {% trans "S'inscrire maintenant" %}

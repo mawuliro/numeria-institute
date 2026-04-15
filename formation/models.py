@@ -144,15 +144,16 @@ class Formation(models.Model):
     def sessions_actives(self):
         """Sessions ouvertes aux inscriptions."""
         return self.sessions.filter(
-            statut='ouverture',
-            date_fin_inscriptions__gte=timezone.now()
+            statut__in=['ouverture', 'en_cours'],
+            date_debut_inscriptions__lte=timezone.now().date(),
+            date_fin_inscriptions__gte=timezone.now().date()
         )
     
     def prochaine_session(self):
-        """La prochaine session à démarrer."""
+        """La prochaine session à démarrer ou ouverte."""
         return self.sessions.filter(
             statut__in=['ouverture', 'en_cours'],
-            date_debut__gte=timezone.now()
+            date_fin_inscriptions__gte=timezone.now().date()
         ).order_by('date_debut').first()
 
 
@@ -287,7 +288,7 @@ class SessionFormation(models.Model):
         """Session accepte des inscriptions."""
         now = timezone.now().date()
         return (
-            self.statut in ['ouverture', 'fermee', 'en_cours'] and
+            self.statut in ['ouverture', 'en_cours'] and
             now >= self.date_debut_inscriptions and
             now <= self.date_fin_inscriptions and
             self.places_disponibles() > 0
