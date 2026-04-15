@@ -14,10 +14,15 @@ from .forms import FormulairInscriptionFormation
 
 def liste_formations(request):
     """Page d'accueil des formations."""
-    formations = Formation.objects.filter(
-        est_publiee=True,
-        est_archivee=False
-    ).prefetch_related('sessions')
+    if request.user.is_authenticated and request.user.is_staff:
+        # Les administrateurs voient toutes les formations non archivées,
+        # même si elles ne sont pas encore publiées.
+        formations = Formation.objects.filter(est_archivee=False).prefetch_related('sessions')
+    else:
+        formations = Formation.objects.filter(
+            est_publiee=True,
+            est_archivee=False
+        ).prefetch_related('sessions')
     
     # Filtres optionnels
     type_filtre = request.GET.get('type')
