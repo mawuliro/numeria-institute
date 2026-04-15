@@ -4,150 +4,287 @@
 {% block title %}{{ formation.titre }}{% endblock %}
 
 {% block contenu %}
-<div class="container my-5">
-  <!-- Hero section -->
-  <div class="row mb-5 pb-5 border-bottom">
-    <div class="col-md-8">
-      <h1 class="display-5 mb-3">{{ formation.titre }}</h1>
-      <p class="lead text-muted">{{ formation.description_longue }}</p>
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-numeria-bleu via-numeria-bleu-fonce to-numeria-bleu text-white py-16">
+  <div class="container mx-auto px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid lg:grid-cols-3 gap-8 items-center">
 
-      <div class="row mt-4">
-        <div class="col-auto">
-          <span class="badge bg-primary">{{ formation.get_type_display }}</span>
-        </div>
-        <div class="col-auto">
-          <span class="badge bg-info">{{ formation.niveau }}</span>
-        </div>
-        <div class="col-auto">
-          <i class="fas fa-clock text-muted"></i>
-          <span class="ms-2">{{ formation.duree }} heures</span>
-        </div>
-      </div>
-    </div>
+        <!-- Main Content -->
+        <div class="lg:col-span-2">
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium">
+              {{ formation.get_type_display }}
+            </span>
+            <span class="bg-teal-500/80 rounded-full px-4 py-2 text-sm font-medium">
+              {{ formation.get_niveau_display }}
+            </span>
+            <span class="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
+              <i class="fas fa-clock mr-2"></i>{{ formation.duree_heures }}h
+            </span>
+          </div>
 
-    <div class="col-md-4">
-      <div class="card bg-light">
-        <div class="card-body">
-          <h5 class="card-title">{% trans "À propos" %}</h5>
-          <p class="small mb-2">
-            <strong>👥</strong> {{ formation.nombre_etudiants }} {% trans "étudiants" %}
-          </p>
-          <p class="small mb-2">
-            <strong>⭐</strong> {{ formation.note_moyenne|default:"N/A" }}/5
-          </p>
-          <p class="small">
-            <strong>🎓</strong> {{ formation.certifications_delivrees }} {% trans "certificats" %}
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+          <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+            {{ formation.titre }}
+          </h1>
 
-  <!-- Instructeurs -->
-  <div class="row mb-5">
-    <div class="col-12">
-      <h3>{% trans "Instructeurs" %}</h3>
-      <div class="row g-3">
-        {% for instr in formation.instructeurs.all %}
-          <div class="col-md-4">
+          <p class="text-xl text-blue-100 mb-8 leading-relaxed">
+            {{ formation.description_longue }}
+          </p>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-6 mb-8">
             <div class="text-center">
-              {% if instr.photo %}
-                <img src="{{ instr.photo.url }}" alt="{{ instr.prenom }} {{ instr.nom }}" class="rounded-circle mb-3" width="100" height="100">
-              {% else %}
-                <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px; font-size: 40px;">
-                  {{ instr.prenom|first }}
-                </div>
-              {% endif %}
-              <h5>{{ instr.prenom }} {{ instr.nom }}</h5>
-              <p class="small text-muted">{{ instr.specialite|default:"Expert" }}</p>
+              <div class="text-3xl font-bold mb-1">{{ formation.nombre_etudiants_total }}</div>
+              <div class="text-blue-200 text-sm">{% trans "Étudiants" %}</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold mb-1">{{ formation.nombre_certifies }}</div>
+              <div class="text-blue-200 text-sm">{% trans "Certifiés" %}</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold mb-1">{{ formation.note_moyenne|default:"-" }}</div>
+              <div class="text-blue-200 text-sm">{% trans "Note" %}</div>
             </div>
           </div>
-        {% endfor %}
+        </div>
+
+        <!-- Image/CTA -->
+        <div class="lg:col-span-1">
+          {% if formation.image_couverture %}
+            <img src="{{ formation.image_couverture.url }}" alt="{{ formation.titre }}"
+                 class="w-full rounded-xl shadow-2xl mb-6">
+          {% else %}
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center mb-6">
+              <i class="fas fa-graduation-cap text-6xl text-white/70 mb-4"></i>
+              <p class="text-white/70">{% trans "Image à venir" %}</p>
+            </div>
+          {% endif %}
+
+          <!-- Quick CTA -->
+          {% with session=formation.prochaine_session %}
+            {% if session and session.places_disponibles > 0 %}
+              <a href="{% url 'formation:inscrire' session.id %}"
+                 class="block w-full bg-numeria-teal hover:bg-teal-600 text-white text-center py-4 px-6 rounded-xl font-bold text-lg transition duration-300 transform hover:scale-105 shadow-lg">
+                <i class="fas fa-plus mr-2"></i>
+                {% trans "S'inscrire maintenant" %}
+              </a>
+            {% endif %}
+          {% endwith %}
+        </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Sessions disponibles -->
-  <div class="row mb-5">
-    <div class="col-12">
-      <h3 class="mb-4">{% trans "Sessions" %}</h3>
-      
-      {% if sessions %}
-        <div class="row g-4">
-          {% for session in sessions %}
-            <div class="col-md-6">
-              <div class="card">
-                <div class="card-body">
-                  <!-- Dates -->
-                  <h5 class="card-title">
-                    <i class="fas fa-calendar-alt"></i>
-                    {{ session.date_debut|date:"d M Y" }} → {{ session.date_fin|date:"d M Y" }}
-                  </h5>
+<!-- Content Sections -->
+<section class="py-16 bg-gray-50 dark:bg-gray-900">
+  <div class="container mx-auto px-4">
+    <div class="max-w-6xl mx-auto">
 
-                  <!-- Format -->
-                  <p class="card-text">
-                    <span class="badge bg-secondary">{{ session.get_format_display }}</span>
+      <!-- Instructeurs -->
+      {% if formation.instructeurs.exists %}
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+            <i class="fas fa-users mr-3 text-numeria-teal"></i>
+            {% trans "Instructeurs" %}
+          </h2>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for instr in formation.instructeurs.all %}
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition duration-300">
+                {% if instr.profile.photo %}
+                  <img src="{{ instr.profile.photo.url }}" alt="{{ instr.get_full_name }}"
+                       class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
+                {% else %}
+                  <div class="w-24 h-24 bg-numeria-teal rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                    {{ instr.first_name|first }}
+                  </div>
+                {% endif %}
+
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  {{ instr.get_full_name }}
+                </h3>
+
+                {% if instr.profile.specialite %}
+                  <p class="text-gray-600 dark:text-gray-300">
+                    {{ instr.profile.specialite }}
                   </p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
 
-                  <!-- Dates inscriptions -->
-                  <p class="small text-muted">
-                    {% trans "Inscriptions:" %}
-                    {{ session.date_debut_inscriptions|date:"d M" }} - {{ session.date_fin_inscriptions|date:"d M Y" }}
-                  </p>
+      <!-- Sessions -->
+      <div class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+          <i class="fas fa-calendar-alt mr-3 text-numeria-teal"></i>
+          {% trans "Sessions disponibles" %}
+        </h2>
 
-                  <!-- Places -->
-                  <div class="mb-3">
-                    <p class="mb-2">
-                      <strong>{% trans "Places disponibles:" %}</strong>
-                      <span class="{% if session.places_disponibles > 0 %}text-success{% else %}text-danger{% endif %}">
+        {% if sessions %}
+          <div class="grid lg:grid-cols-2 gap-8">
+            {% for session in sessions %}
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300">
+
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-numeria-teal to-numeria-bleu text-white p-6">
+                  <h3 class="text-xl font-bold mb-2">
+                    {{ session.nom }}
+                  </h3>
+                  <div class="flex items-center text-sm">
+                    <i class="fas fa-calendar mr-2"></i>
+                    {{ session.date_debut|date:"d M Y" }} - {{ session.date_fin|date:"d M Y" }}
+                  </div>
+                </div>
+
+                <!-- Body -->
+                <div class="p-6">
+                  <!-- Format & Places -->
+                  <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                      <span class="text-sm text-gray-500 dark:text-gray-400">{% trans "Format" %}</span>
+                      <div class="font-semibold text-gray-900 dark:text-white">
+                        {{ session.get_modalite_display }}
+                      </div>
+                    </div>
+                    <div>
+                      <span class="text-sm text-gray-500 dark:text-gray-400">{% trans "Places" %}</span>
+                      <div class="font-semibold {% if session.places_disponibles > 0 %}text-green-600{% else %}text-red-600{% endif %}">
                         {{ session.places_disponibles }}/{{ session.places_totales }}
-                      </span>
-                    </p>
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar" 
-                           style="width: {{ session.taux_remplissage }}%">
                       </div>
                     </div>
                   </div>
 
+                  <!-- Progress Bar -->
+                  <div class="mb-6">
+                    <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
+                      <span>{% trans "Remplissage" %}</span>
+                      <span>{{ session.taux_remplissage }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <div class="bg-numeria-teal h-2 rounded-full transition-all duration-300"
+                           style="width: {{ session.taux_remplissage }}%"></div>
+                    </div>
+                  </div>
+
                   <!-- Prix -->
-                  <div class="mb-3">
-                    <h5>
+                  <div class="mb-6">
+                    <div class="text-2xl font-bold text-gray-900 dark:text-white">
                       {{ session.prix_fcfa|floatformat:0|intcomma }} FCFA
                       {% if session.prix_reduit_fcfa %}
-                        <small class="text-muted">
-                          <s>{{ session.prix_fcfa|floatformat:0|intcomma }}</s>
-                        </small>
+                        <span class="text-lg text-gray-500 dark:text-gray-400 line-through ml-2">
+                          {{ session.prix_fcfa|floatformat:0|intcomma }} FCFA
+                        </span>
                       {% endif %}
-                    </h5>
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-300">
+                      {% trans "Inscriptions:" %} {{ session.date_debut_inscriptions|date:"d M" }} - {{ session.date_fin_inscriptions|date:"d M Y" }}
+                    </div>
                   </div>
 
                   <!-- CTA -->
                   {% if session.est_ouverte_aux_inscriptions %}
                     {% if session.places_disponibles > 0 %}
-                      <a href="{% url 'formation:inscrire' session.id %}" 
-                         class="btn btn-primary w-100"
-                         data-session-id="{{ session.id }}">
+                      <a href="{% url 'formation:inscrire' session.id %}"
+                         class="block w-full bg-numeria-teal hover:bg-teal-600 text-white text-center py-3 px-4 rounded-lg font-semibold transition duration-300">
+                        <i class="fas fa-plus mr-2"></i>
                         {% trans "S'inscrire" %}
                       </a>
                     {% else %}
-                      <button class="btn btn-secondary w-100" disabled>
-                        {% trans "Complet" %}
+                      <button class="w-full bg-gray-300 text-gray-500 py-3 px-4 rounded-lg cursor-not-allowed" disabled>
+                        <i class="fas fa-times mr-2"></i>
+                        {% trans "Session complète" %}
                       </button>
                     {% endif %}
                   {% else %}
-                    <div class="alert alert-danger small mb-0">
-                      {% trans "Les inscriptions pour cette session sont fermées" %}
+                    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                      <p class="text-red-800 dark:text-red-200 text-sm font-medium">
+                        {% trans "Inscriptions fermées" %}
+                      </p>
                     </div>
                   {% endif %}
                 </div>
               </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center">
+            <i class="fas fa-calendar-times text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              {% trans "Aucune session à venir" %}
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300">
+              {% trans "Les sessions pour cette formation seront bientôt annoncées." %}
+            </p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Programme -->
+      {% if formation.competences_visees %}
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+            <i class="fas fa-target mr-3 text-numeria-teal"></i>
+            {% trans "Compétences visées" %}
+          </h2>
+
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+            <div class="prose dark:prose-invert max-w-none">
+              {{ formation.competences_visees|linebreaks }}
             </div>
-          {% endfor %}
+          </div>
         </div>
-      {% else %}
-        <div class="alert alert-warning">
-          {% trans "Aucune session à venir" %}
+      {% endif %}
+
+      <!-- Prérequis -->
+      {% if formation.prerequis %}
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+            <i class="fas fa-clipboard-check mr-3 text-numeria-teal"></i>
+            {% trans "Prérequis" %}
+          </h2>
+
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+            <div class="prose dark:prose-invert max-w-none">
+              {{ formation.prerequis|linebreaks }}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="bg-numeria-teal py-16">
+  <div class="container mx-auto px-4 text-center">
+    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+      {% trans "Prêt à commencer ?" %}
+    </h2>
+    <p class="text-xl text-teal-100 mb-8 max-w-2xl mx-auto">
+      {% trans "Rejoignez cette formation et développez vos compétences avec les meilleurs experts." %}
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      {% with session=formation.prochaine_session %}
+        {% if session and session.places_disponibles > 0 %}
+          <a href="{% url 'formation:inscrire' session.id %}" class="bg-white text-numeria-teal hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105">
+            <i class="fas fa-plus mr-2"></i>
+            {% trans "S'inscrire maintenant" %}
+          </a>
+        {% endif %}
+      {% endwith %}
+      <a href="{% url 'formation:liste' %}" class="border-2 border-white text-white hover:bg-white hover:text-numeria-teal font-bold py-3 px-8 rounded-lg transition duration-300">
+        <i class="fas fa-arrow-left mr-2"></i>
+        {% trans "Voir toutes les formations" %}
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}
         </div>
       {% endif %}
     </div>

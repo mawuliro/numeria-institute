@@ -4,84 +4,175 @@
 {% block title %}{% trans "Vérifier certificat" %}{% endblock %}
 
 {% block contenu %}
-<div class="container my-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-body text-center">
-          {% if certificat %}
-            <!-- Certificat valide -->
-            <div class="alert alert-success mb-4">
-              <h4 class="alert-heading">✅ {% trans "Certificat authentique" %}</h4>
-              <p>{% trans "Ce certificat a été délivré par Numeria et est valide." %}</p>
-            </div>
+<!-- Hero Section -->
+<div class="bg-gradient-to-br from-numeria-teal to-numeria-blue text-white">
+  <div class="container mx-auto px-4 py-16">
+    <div class="text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        <i class="fas fa-certificate mr-4"></i>
+        {% trans "Vérification de certificat" %}
+      </h1>
+      <p class="text-xl opacity-90 max-w-2xl mx-auto">
+        {% trans "Vérifiez l'authenticité d'un certificat Numeria" %}
+      </p>
+    </div>
+  </div>
+</div>
 
-            <div class="certificate-preview">
-              <h3>{{ certificat.inscription.session_formation.formation.titre }}</h3>
-              
-              <div class="row mt-4">
-                <div class="col-md-6">
-                  <p><strong>{% trans "Délivré à:" %}</strong></p>
-                  <h4>{{ certificat.inscription.etudiant.get_full_name }}</h4>
-                </div>
-                <div class="col-md-6">
-                  <p><strong>{% trans "Date de délivrance:" %}</strong></p>
-                  <h4>{{ certificat.date_delivrance|date:"d/m/Y" }}</h4>
-                </div>
-              </div>
-
-              <div class="row mt-3">
-                <div class="col-md-6">
-                  <p><strong>{% trans "Session:" %}</strong></p>
-                  <p>{{ certificat.inscription.session_formation.date_debut|date:"d M Y" }} → {{ certificat.inscription.session_formation.date_fin|date:"d M Y" }}</p>
-                </div>
-                <div class="col-md-6">
-                  <p><strong>{% trans "Note finale:" %}</strong></p>
-                  <p>{{ certificat.note_finale|default:"N/A" }}/100</p>
-                </div>
-              </div>
-
-              <div class="mt-4">
-                <a href="{% url 'formation:certificat_detail' certificat.inscription.id %}" class="btn btn-primary">
-                  {% trans "Voir le certificat complet" %}
-                </a>
-              </div>
-            </div>
-          {% else %}
-            <!-- Certificat invalide -->
-            <div class="alert alert-danger">
-              <h4 class="alert-heading">❌ {% trans "Certificat invalide" %}</h4>
-              <p>{% trans "Ce code de vérification ne correspond à aucun certificat valide." %}</p>
-              <p class="mb-0">{% trans "Vérifiez que le code est correct ou contactez le support." %}</p>
-            </div>
-          {% endif %}
+<div class="container mx-auto px-4 py-12">
+  <div class="max-w-4xl mx-auto">
+    {% if certificat %}
+      <!-- Certificat valide -->
+      <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-8 mb-8">
+        <div class="text-center mb-6">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-green-500 rounded-full mb-4">
+            <i class="fas fa-check-circle text-2xl text-white"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-green-800 dark:text-green-200 mb-2">
+            {% trans "Certificat authentique" %}
+          </h2>
+          <p class="text-green-700 dark:text-green-300">
+            {% trans "Ce certificat a été délivré par Numeria et est valide." %}
+          </p>
         </div>
       </div>
 
-      <!-- Informations générales -->
-      <div class="card mt-4">
-        <div class="card-body">
-          <h5>{% trans "À propos de la vérification" %}</h5>
-          <p class="small text-muted">
+      <!-- Aperçu du certificat -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8">
+        <div class="bg-gradient-to-r from-numeria-teal to-numeria-blue p-6">
+          <div class="text-center">
+            <i class="fas fa-award text-4xl text-white mb-2"></i>
+            <h3 class="text-2xl font-bold text-white">
+              {{ certificat.inscription.session_formation.formation.titre }}
+            </h3>
+          </div>
+        </div>
+
+        <div class="p-8">
+          <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div class="text-center">
+              <div class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                {% trans "Délivré à" %}
+              </div>
+              <div class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ certificat.inscription.etudiant.get_full_name }}
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                {% trans "Date de délivrance" %}
+              </div>
+              <div class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ certificat.date_delivrance|date:"d/m/Y" }}
+              </div>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div>
+              <div class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                {% trans "Session de formation" %}
+              </div>
+              <div class="text-gray-900 dark:text-white">
+                {{ certificat.inscription.session_formation.date_debut|date:"d M Y" }} →
+                {{ certificat.inscription.session_formation.date_fin|date:"d M Y" }}
+              </div>
+            </div>
+            <div>
+              <div class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                {% trans "Note finale" %}
+              </div>
+              <div class="text-gray-900 dark:text-white">
+                {{ certificat.note_finale|default:"N/A" }}/100
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <a href="{% url 'formation:certificat_detail' certificat.inscription.id %}"
+               class="inline-flex items-center px-8 py-3 bg-numeria-teal hover:bg-numeria-teal/90 text-white font-semibold rounded-lg transition-colors duration-200">
+              <i class="fas fa-eye mr-2"></i>
+              {% trans "Voir le certificat complet" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <!-- Certificat invalide -->
+      <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-8 mb-8">
+        <div class="text-center">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-red-500 rounded-full mb-4">
+            <i class="fas fa-times-circle text-2xl text-white"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-red-800 dark:text-red-200 mb-4">
+            {% trans "Certificat invalide" %}
+          </h2>
+          <p class="text-red-700 dark:text-red-300 mb-4">
+            {% trans "Ce code de vérification ne correspond à aucun certificat valide." %}
+          </p>
+          <p class="text-red-600 dark:text-red-400 text-sm">
+            {% trans "Vérifiez que le code est correct ou contactez le support." %}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Informations générales -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <div class="inline-flex items-center justify-center w-12 h-12 bg-numeria-teal rounded-lg">
+            <i class="fas fa-info-circle text-white"></i>
+          </div>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            {% trans "À propos de la vérification" %}
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
             {% trans "Tous les certificats délivrés par Numeria possèdent un code de vérification unique qui permet de confirmer leur authenticité. Cette vérification est publique et peut être partagée sur les réseaux sociaux professionnels." %}
           </p>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div class="grid md:grid-cols-3 gap-6 text-center">
+          <div>
+            <div class="inline-flex items-center justify-center w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-lg mb-2">
+              <i class="fas fa-shield-alt text-green-600 dark:text-green-400"></i>
+            </div>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">
+              {% trans "Authentique" %}
+            </h4>
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              {% trans "Vérification sécurisée" %}
+            </p>
+          </div>
+          <div>
+            <div class="inline-flex items-center justify-center w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-lg mb-2">
+              <i class="fas fa-share-alt text-blue-600 dark:text-blue-400"></i>
+            </div>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">
+              {% trans "Partageable" %}
+            </h4>
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              {% trans "Lien public unique" %}
+            </p>
+          </div>
+          <div>
+            <div class="inline-flex items-center justify-center w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded-lg mb-2">
+              <i class="fas fa-clock text-purple-600 dark:text-purple-400"></i>
+            </div>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">
+              {% trans "Permanent" %}
+            </h4>
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              {% trans "Valable à vie" %}
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<style>
-.certificate-preview {
-  background: #f8f9fa;
-  padding: 30px;
-  border-radius: 10px;
-  margin: 20px 0;
-}
-
-.certificate-preview h3 {
-  color: #28a745;
-  margin-bottom: 20px;
-}
-</style>
 {% endblock %}

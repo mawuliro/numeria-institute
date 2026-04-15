@@ -4,88 +4,73 @@
 {% block title %}{{ lecon.titre }}{% endblock %}
 
 {% block contenu %}
-<div class="container-fluid my-5">
-  <div class="row">
-    <!-- Sidebar: Navigation leçons -->
-    <div class="col-lg-3 order-lg-2">
-      <div class="card sticky-top" style="top: 20px;">
-        <div class="card-body">
-          <h5 class="card-title">{% trans "Progression" %}</h5>
-          
-          <div class="progress mb-3">
-            <div class="progress-bar bg-success" role="progressbar" 
-                 style="width: {{ progression_pct }}%">
-              {{ progression_pct }}%
-            </div>
-          </div>
-
-          <div class="small text-muted mb-3">
-            {{ lecon_actuelle }}/{{ total_lecons }} leçons
-          </div>
-
-          <!-- Liste leçons -->
-          <div class="list-group list-group-flush">
-            {% for l in autres_lecons %}
-              <a href="{% url 'formation:voir_lecon' l.id %}" 
-                 class="list-group-item list-group-item-action {% if l.id == lecon.id %}active{% endif %}">
-                <div class="small">
-                  {% if l.progression %}
-                    <span class="text-success">✅</span>
-                  {% endif %}
-                  <span class="font-weight-bold">{{ forloop.counter }}</span> · {{ l.titre|truncatewords:5 }}
-                </div>
-              </a>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Contenu principal -->
-    <div class="col-lg-9 order-lg-1">
-      <!-- Header leçon -->
-      <div class="mb-4">
-        <h1>{{ lecon.titre }}</h1>
-        <p class="text-muted">
+<!-- Header Section -->
+<div class="bg-gradient-to-br from-numeria-teal to-numeria-blue text-white">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-bold mb-2">{{ lecon.titre }}</h1>
+        <p class="text-lg opacity-90">
           {% trans "Leçon" %} {{ lecon_actuelle }} / {{ total_lecons }}
           {% if lecon.duree_estimee %}
-            · <i class="fas fa-clock"></i> {{ lecon.duree_estimee }} min
+            · <i class="fas fa-clock mr-1"></i> {{ lecon.duree_estimee }} min
           {% endif %}
         </p>
       </div>
+      <div class="hidden md:block">
+        <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold">{{ progression_pct }}%</div>
+          <div class="text-sm opacity-90">{% trans "Progression" %}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
+<div class="container mx-auto px-4 py-8">
+  <div class="grid lg:grid-cols-4 gap-8">
+    <!-- Contenu principal -->
+    <div class="lg:col-span-3 space-y-8">
       <!-- Contenu HTML -->
-      <div class="card mb-4">
-        <div class="card-body lesson-content">
-          {{ lecon.contenu_html|safe }}
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+        <div class="p-8">
+          <div class="lesson-content prose dark:prose-invert max-w-none">
+            {{ lecon.contenu_html|safe }}
+          </div>
         </div>
       </div>
 
       <!-- Vidéo -->
       {% if lecon.url_video %}
-        <div class="card mb-4">
-          <div class="card-header bg-dark text-white">
-            <i class="fab fa-youtube"></i> {% trans "Vidéo pédagogique" %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+          <div class="bg-gradient-to-r from-red-500 to-red-600 p-4">
+            <h3 class="text-white font-semibold flex items-center">
+              <i class="fab fa-youtube mr-2"></i>
+              {% trans "Vidéo pédagogique" %}
+            </h3>
           </div>
-          <div class="card-body p-0">
-            <div class="ratio ratio-16x9">
+          <div class="p-0">
+            <div class="aspect-video">
               {% if "youtube.com" in lecon.url_video or "youtu.be" in lecon.url_video %}
                 {% if "watch?v=" in lecon.url_video %}
                   {% with video_id=lecon.url_video|cut:"https://www.youtube.com/watch?v="|cut:"https://youtube.com/watch?v=" %}
-                    <iframe src="https://www.youtube.com/embed/{{ video_id }}" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    <iframe src="https://www.youtube.com/embed/{{ video_id }}"
+                            class="w-full h-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen>
                     </iframe>
                   {% endwith %}
                 {% else %}
-                  <iframe src="{{ lecon.url_video }}" 
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  <iframe src="{{ lecon.url_video }}"
+                          class="w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowfullscreen>
                   </iframe>
                 {% endif %}
               {% elif "vimeo.com" in lecon.url_video %}
-                <iframe src="{{ lecon.url_video }}" 
-                        allow="autoplay; fullscreen; picture-in-picture" 
+                <iframe src="{{ lecon.url_video }}"
+                        class="w-full h-full"
+                        allow="autoplay; fullscreen; picture-in-picture"
                         allowfullscreen>
                 </iframe>
               {% endif %}
@@ -96,77 +81,162 @@
 
       <!-- Ressources à télécharger -->
       {% if lecon.ressources %}
-        <div class="card mb-4">
-          <div class="card-header bg-info text-white">
-            <i class="fas fa-file-download"></i> {% trans "Ressources" %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+          <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-4">
+            <h3 class="text-white font-semibold flex items-center">
+              <i class="fas fa-file-download mr-2"></i>
+              {% trans "Ressources" %}
+            </h3>
           </div>
-          <div class="card-body">
-            <ul class="list-unstyled">
+          <div class="p-6">
+            <div class="grid sm:grid-cols-2 gap-3">
               {% for ressource in lecon.ressources %}
-                <li class="mb-2">
-                  <a href="{{ ressource.url }}" download class="btn btn-sm btn-outline-info">
-                    <i class="fas fa-download"></i> {{ ressource.nom }}
-                  </a>
-                </li>
+                <a href="{{ ressource.url }}"
+                   download
+                   class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200">
+                  <i class="fas fa-file mr-3 text-blue-500"></i>
+                  <span class="font-medium text-gray-900 dark:text-white">{{ ressource.nom }}</span>
+                  <i class="fas fa-download ml-auto text-gray-400"></i>
+                </a>
               {% endfor %}
-            </ul>
+            </div>
           </div>
         </div>
       {% endif %}
 
       <!-- Exercices code (optionnel) -->
       {% if lecon.exercice_code %}
-        <div class="card mb-4">
-          <div class="card-header bg-warning text-dark">
-            <i class="fas fa-code"></i> {% trans "Exercice" %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+          <div class="bg-gradient-to-r from-yellow-500 to-orange-500 p-4">
+            <h3 class="text-white font-semibold flex items-center">
+              <i class="fas fa-code mr-2"></i>
+              {% trans "Exercice pratique" %}
+            </h3>
           </div>
-          <div class="card-body">
-            <p>{{ lecon.exercice_code }}</p>
-            <button class="btn btn-warning btn-sm" onclick="alert('TODO: Intégrer compilateur en ligne')">
+          <div class="p-6">
+            <p class="text-gray-700 dark:text-gray-300 mb-4">{{ lecon.exercice_code }}</p>
+            <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
+                    onclick="alert('TODO: Intégrer compilateur en ligne')">
+              <i class="fas fa-play mr-2"></i>
               {% trans "Démarrer l'exercice" %}
             </button>
           </div>
         </div>
       {% endif %}
 
+      <!-- Statut de la leçon -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+        {% if not progression.date_completion %}
+          <form method="post" class="mb-4">
+            {% csrf_token %}
+            <button type="submit"
+                    name="mark_complete"
+                    class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+              <i class="fas fa-check-circle mr-2"></i>
+              {% trans "Marquer cette leçon comme complétée" %}
+            </button>
+          </form>
+        {% else %}
+          <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+            <div class="flex items-center text-green-800 dark:text-green-200">
+              <i class="fas fa-check-circle mr-2"></i>
+              <span class="font-medium">
+                {% trans "Leçon complétée le" %} {{ progression.date_completion|date:"d/m/Y à H:i" }}
+              </span>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
       <!-- Navigation entre leçons -->
-      <div class="row g-3 mb-4">
-        <div class="col-6">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
           {% if lecon_prev %}
-            <a href="{% url 'formation:voir_lecon' lecon_prev.id %}" class="btn btn-outline-secondary btn-lg w-100">
-              ← {% trans "Précédent" %}
+            <a href="{% url 'formation:voir_lecon' lecon_prev.id %}"
+               class="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+              <i class="fas fa-arrow-left mr-2"></i>
+              {% trans "Précédent" %}
             </a>
           {% endif %}
         </div>
-        <div class="col-6">
+        <div>
           {% if lecon_next %}
-            <a href="{% url 'formation:voir_lecon' lecon_next.id %}" class="btn btn-primary btn-lg w-100">
-              {% trans "Suivant" %} →
+            <a href="{% url 'formation:voir_lecon' lecon_next.id %}"
+               class="w-full bg-numeria-teal hover:bg-numeria-teal/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+              {% trans "Suivant" %}
+              <i class="fas fa-arrow-right ml-2"></i>
             </a>
           {% else %}
-            <form method="post" class="d-grid">
+            <form method="post">
               {% csrf_token %}
-              <button type="submit" name="complete_formation" class="btn btn-success btn-lg">
-                🎉 {% trans "Terminer" %}
+              <button type="submit"
+                      name="complete_formation"
+                      class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                <i class="fas fa-trophy mr-2"></i>
+                {% trans "Terminer la formation" %}
               </button>
             </form>
           {% endif %}
         </div>
       </div>
+    </div>
 
-      <!-- Marquer complétée -->
-      {% if not progression.date_completion %}
-        <form method="post" class="mb-4">
-          {% csrf_token %}
-          <button type="submit" name="mark_complete" class="btn btn-success">
-            ✅ {% trans "Marquer cette leçon complétée" %}
-          </button>
-        </form>
-      {% else %}
-        <div class="alert alert-success">
-          ✅ {% trans "Vous avez complété cette leçon le" %} {{ progression.date_completion|date:"d/m/Y à H:i" }}
+    <!-- Sidebar: Navigation leçons -->
+    <div class="lg:col-span-1">
+      <div class="sticky top-8">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+          <div class="bg-gradient-to-r from-numeria-teal to-numeria-blue p-4">
+            <h3 class="text-white font-semibold text-center">
+              <i class="fas fa-list mr-2"></i>
+              {% trans "Progression" %}
+            </h3>
+          </div>
+
+          <div class="p-6">
+            <!-- Barre de progression -->
+            <div class="mb-4">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {% trans "Complétion" %}
+                </span>
+                <span class="text-sm font-bold text-numeria-teal">
+                  {{ progression_pct }}%
+                </span>
+              </div>
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                <div class="bg-numeria-teal h-3 rounded-full transition-all duration-300"
+                     style="width: {{ progression_pct }}%"></div>
+              </div>
+            </div>
+
+            <div class="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">
+              {{ lecon_actuelle }}/{{ total_lecons }} {% trans "leçons" %}
+            </div>
+
+            <!-- Liste des leçons -->
+            <div class="space-y-2 max-h-96 overflow-y-auto">
+              {% for l in autres_lecons %}
+                <a href="{% url 'formation:voir_lecon' l.id %}"
+                   class="block p-3 rounded-lg transition-colors duration-200 {% if l.id == lecon.id %}bg-numeria-teal text-white{% else %}bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-white{% endif %}">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold mr-3 {% if l.id == lecon.id %}text-numeria-teal bg-white{% endif %}">
+                      {{ forloop.counter }}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="text-sm font-medium truncate">
+                        {% if l.progression %}
+                          <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                        {% endif %}
+                        {{ l.titre|truncatewords:5 }}
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
         </div>
-      {% endif %}
+      </div>
     </div>
   </div>
 </div>
@@ -176,27 +246,34 @@
     font-size: 16px;
     line-height: 1.8;
   }
-  
+
   .lesson-content h2 {
     margin-top: 2rem;
     margin-bottom: 1rem;
   }
-  
+
   .lesson-content p {
     margin-bottom: 1rem;
   }
-  
+
   .lesson-content ul, .lesson-content ol {
     margin-left: 2rem;
     margin-bottom: 1rem;
   }
-  
+
   .lesson-content code {
     background-color: #f5f5f5;
     padding: 2px 8px;
     border-radius: 4px;
     font-family: 'Courier New', monospace;
   }
+
+  .dark .lesson-content code {
+    background-color: #374151;
+    color: #e5e7eb;
+  }
+</style>
+{% endblock %}
   
   .lesson-content pre {
     background-color: #f5f5f5;

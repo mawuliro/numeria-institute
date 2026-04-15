@@ -4,158 +4,235 @@
 {% block title %}{% trans "Mes formations" %}{% endblock %}
 
 {% block contenu %}
-<div class="container my-5">
-  <h1 class="mb-4">{% trans "Mes formations" %}</h1>
+<!-- Hero Section -->
+<div class="bg-gradient-to-br from-numeria-teal to-numeria-blue text-white">
+  <div class="container mx-auto px-4 py-16">
+    <div class="text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        <i class="fas fa-graduation-cap mr-4"></i>
+        {% trans "Mes formations" %}
+      </h1>
+      <p class="text-xl opacity-90 max-w-2xl mx-auto">
+        {% trans "Suivez votre progression et accédez à vos cours en ligne" %}
+      </p>
+    </div>
+  </div>
+</div>
 
+<div class="container mx-auto px-4 py-12">
   {% if not inscriptions %}
-    <div class="alert alert-info">
-      <p>{% trans "Vous n'êtes pas encore inscrit à une formation." %}</p>
-      <a href="{% url 'formation:liste' %}" class="btn btn-primary">
+    <!-- État vide -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center">
+      <i class="fas fa-book-open text-6xl text-gray-300 dark:text-gray-600 mb-6"></i>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        {% trans "Aucune formation trouvée" %}
+      </h3>
+      <p class="text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto">
+        {% trans "Vous n'êtes pas encore inscrit à une formation. Découvrez nos formations disponibles." %}
+      </p>
+      <a href="{% url 'formation:liste' %}"
+         class="inline-flex items-center px-8 py-3 bg-numeria-teal hover:bg-numeria-teal/90 text-white font-semibold rounded-lg transition-colors duration-200">
+        <i class="fas fa-search mr-2"></i>
         {% trans "Découvrir les formations" %}
       </a>
     </div>
   {% else %}
-    <div class="row">
-      <!-- Formations en cours -->
-      <div class="col-md-6 mb-4">
-        <h3>{% trans "En cours" %}</h3>
-        {% with en_cours=inscriptions|dictsort:"session_formation.date_debut" %}
-          {% for inscription in en_cours %}
-            {% if inscription.session_formation.statut == "en_cours" %}
-              <div class="card mb-3">
-                <div class="card-body">
-                  <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                      <h5 class="card-title">
-                        {{ inscription.session_formation.formation.titre }}
-                      </h5>
-                      <p class="small text-muted">
-                        {{ inscription.session_formation.date_debut|date:"d M Y" }} → 
-                        {{ inscription.session_formation.date_fin|date:"d M Y" }}
-                      </p>
+    <!-- Formations en cours -->
+    {% with en_cours=inscriptions|dictsort:"session_formation.date_debut" %}
+      {% if en_cours %}
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+            <i class="fas fa-play-circle mr-3 text-numeria-teal"></i>
+            {% trans "Formations en cours" %}
+          </h2>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for inscription in en_cours %}
+              {% if inscription.session_formation.statut == "en_cours" %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                  <div class="bg-gradient-to-r from-numeria-teal to-numeria-blue p-4">
+                    <div class="flex justify-between items-start">
+                      <div class="text-white">
+                        <h3 class="font-bold text-lg mb-1">
+                          {{ inscription.session_formation.formation.titre }}
+                        </h3>
+                        <p class="text-sm opacity-90">
+                          {{ inscription.session_formation.date_debut|date:"d M Y" }} →
+                          {{ inscription.session_formation.date_fin|date:"d M Y" }}
+                        </p>
+                      </div>
+                      <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        {% trans "En cours" %}
+                      </span>
                     </div>
-                    <span class="badge bg-success">{% trans "En cours" %}</span>
                   </div>
 
-                  <!-- Progression -->
-                  <div class="mb-3">
-                    <div class="d-flex justify-content-between small mb-2">
-                      <span>{% trans "Progression" %}</span>
-                      <strong>{{ inscription.progression_pct }}%</strong>
-                    </div>
-                    <div class="progress" style="height: 25px;">
-                      <div class="progress-bar bg-success" role="progressbar" 
-                           style="width: {{ inscription.progression_pct }}%">
-                        {% if inscription.progression_pct > 20 %}
+                  <div class="p-6">
+                    <!-- Progression -->
+                    <div class="mb-4">
+                      <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {% trans "Progression" %}
+                        </span>
+                        <span class="text-sm font-bold text-numeria-teal">
                           {{ inscription.progression_pct }}%
-                        {% endif %}
+                        </span>
+                      </div>
+                      <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                        <div class="bg-numeria-teal h-3 rounded-full transition-all duration-300"
+                             style="width: {{ inscription.progression_pct }}%"></div>
                       </div>
                     </div>
-                  </div>
 
-                  <!-- Statut paiement -->
-                  {% if inscription.statut == "confirmee" %}
-                    <p class="small text-success mb-3">
-                      ✅ {% trans "Paiement confirmé" %}
-                    </p>
-                  {% else %}
-                    <p class="small text-warning mb-3">
-                      ⏳ {% trans "Paiement en attente de validation" %}
-                    </p>
-                  {% endif %}
-
-                  <!-- CTA -->
-                  {% if inscription.a_acces %}
-                    {% if inscription.prochaine_lecon %}
-                      <a href="{% url 'formation:voir_lecon' inscription.prochaine_lecon.id %}" class="btn btn-primary btn-sm w-100">
-                        {% trans "Continuer" %}
-                      </a>
+                    <!-- Statut paiement -->
+                    {% if inscription.statut == "confirmee" %}
+                      <div class="flex items-center text-green-600 dark:text-green-400 mb-4">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        <span class="text-sm font-medium">{% trans "Paiement confirmé" %}</span>
+                      </div>
                     {% else %}
-                      <p class="text-success small">
-                        🎉 {% trans "Formation terminée !" %}
-                      </p>
+                      <div class="flex items-center text-yellow-600 dark:text-yellow-400 mb-4">
+                        <i class="fas fa-clock mr-2"></i>
+                        <span class="text-sm font-medium">{% trans "Paiement en attente" %}</span>
+                      </div>
                     {% endif %}
-                  {% else %}
-                    <p class="text-muted small">
-                      {% trans "Accès déblocage après validation du paiement" %}
-                    </p>
-                  {% endif %}
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        {% endwith %}
-      </div>
 
-      <!-- Formations terminées -->
-      <div class="col-md-6 mb-4">
-        <h3>{% trans "Terminées" %}</h3>
-        {% with terminees=inscriptions %}
-          {% for inscription in terminees %}
-            {% if inscription.session_formation.statut == "terminee" or inscription.progression_pct == 100 %}
-              <div class="card mb-3">
-                <div class="card-body">
-                  <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h5 class="card-title">
-                      {{ inscription.session_formation.formation.titre }}
-                    </h5>
-                    <span class="badge bg-success">100%</span>
-                  </div>
-
-                  <p class="small text-muted mb-3">
-                    {% trans "Complétée le" %} {{ inscription.date_completion|default:inscription.date_fin|date:"d M Y" }}
-                  </p>
-
-                  <!-- Voie certificat -->
-                  {% if inscription.certificat %}
-                    <a href="{% url 'formation:certificat_detail' inscription.certificat.inscription.id %}" class="btn btn-success btn-sm me-2">
-                      🎓 {% trans "Certificat" %}
-                    </a>
-                  {% endif %}
-
-                  <!-- Partager -->
-                  <button class="btn btn-outline-primary btn-sm" onclick="shareToLinkedIn('{{ inscription.certificat.token_verification }}')">
-                    <i class="fab fa-linkedin"></i> {% trans "Partager" %}
-                  </button>
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        {% endwith %}
-      </div>
-    </div>
-
-    <!-- Formations pas encore commencées -->
-    <div class="row">
-      <div class="col-12">
-        <h3>{% trans "À venir" %}</h3>
-        <div class="row g-3">
-          {% for inscription in inscriptions %}
-            {% if inscription.session_formation.statut == "planifiee" %}
-              <div class="col-md-4">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">
-                      {{ inscription.session_formation.formation.titre }}
-                    </h5>
-                    <p class="card-text small text-muted">
-                      {% trans "Commence le" %} {{ inscription.session_formation.date_debut|date:"d M Y" }}
-                    </p>
-                    <span class="badge bg-info">{% trans "À venir" %}</span>
+                    <!-- CTA -->
+                    {% if inscription.a_acces %}
+                      {% if inscription.prochaine_lecon %}
+                        <a href="{% url 'formation:voir_lecon' inscription.prochaine_lecon.id %}"
+                           class="w-full bg-numeria-teal hover:bg-numeria-teal/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 inline-flex items-center justify-center">
+                          <i class="fas fa-play mr-2"></i>
+                          {% trans "Continuer le cours" %}
+                        </a>
+                      {% else %}
+                        <div class="w-full bg-green-500 text-white font-semibold py-3 px-4 rounded-lg inline-flex items-center justify-center">
+                          <i class="fas fa-trophy mr-2"></i>
+                          {% trans "Formation terminée !" %}
+                        </div>
+                      {% endif %}
+                    {% else %}
+                      <div class="w-full bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-300 font-semibold py-3 px-4 rounded-lg inline-flex items-center justify-center">
+                        <i class="fas fa-lock mr-2"></i>
+                        {% trans "Accès en attente de validation" %}
+                      </div>
+                    {% endif %}
                   </div>
                 </div>
-              </div>
-            {% endif %}
-          {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
-      </div>
-    </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Formations terminées -->
+    {% with terminees=inscriptions %}
+      {% if terminees %}
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+            <i class="fas fa-check-circle mr-3 text-green-500"></i>
+            {% trans "Formations terminées" %}
+          </h2>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for inscription in terminees %}
+              {% if inscription.session_formation.statut == "terminee" or inscription.progression_pct == 100 %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                  <div class="bg-gradient-to-r from-green-500 to-green-600 p-4">
+                    <div class="flex justify-between items-start">
+                      <div class="text-white">
+                        <h3 class="font-bold text-lg mb-1">
+                          {{ inscription.session_formation.formation.titre }}
+                        </h3>
+                        <p class="text-sm opacity-90">
+                          {% trans "Complétée le" %} {{ inscription.date_completion|default:inscription.date_fin|date:"d M Y" }}
+                        </p>
+                      </div>
+                      <span class="bg-white text-green-600 px-3 py-1 rounded-full text-sm font-medium">
+                        100%
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="p-6">
+                    <!-- Actions -->
+                    <div class="flex flex-wrap gap-3">
+                      {% if inscription.certificat %}
+                        <a href="{% url 'formation:certificat_detail' inscription.certificat.inscription.id %}"
+                           class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 inline-flex items-center justify-center">
+                          <i class="fas fa-certificate mr-2"></i>
+                          {% trans "Certificat" %}
+                        </a>
+                      {% endif %}
+
+                      {% if inscription.certificat %}
+                        <button onclick="shareToLinkedIn('{{ inscription.certificat.token_verification }}')"
+                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 inline-flex items-center justify-center">
+                          <i class="fab fa-linkedin mr-2"></i>
+                          {% trans "Partager" %}
+                        </button>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Formations à venir -->
+    {% with a_venir=inscriptions %}
+      {% if a_venir %}
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+            <i class="fas fa-calendar-alt mr-3 text-blue-500"></i>
+            {% trans "Formations à venir" %}
+          </h2>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for inscription in a_venir %}
+              {% if inscription.session_formation.statut == "planifiee" %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                  <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-4">
+                    <div class="text-white">
+                      <h3 class="font-bold text-lg mb-2">
+                        {{ inscription.session_formation.formation.titre }}
+                      </h3>
+                      <p class="text-sm opacity-90 mb-3">
+                        {% trans "Commence le" %} {{ inscription.session_formation.date_debut|date:"d M Y" }}
+                      </p>
+                      <span class="bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
+                        {% trans "À venir" %}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="p-6">
+                    <div class="text-center text-gray-600 dark:text-gray-300">
+                      <i class="fas fa-clock text-2xl mb-2"></i>
+                      <p class="text-sm">
+                        {% trans "L'accès sera disponible prochainement" %}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% endwith %}
   {% endif %}
 
   <!-- Bouton retour -->
-  <div class="mt-5">
-    <a href="{% url 'formation:liste' %}" class="btn btn-outline-secondary">
-      ← {% trans "Découvrir d'autres formations" %}
+  <div class="text-center mt-12">
+    <a href="{% url 'formation:liste' %}"
+       class="inline-flex items-center px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold rounded-lg transition-colors duration-200">
+      <i class="fas fa-arrow-left mr-2"></i>
+      {% trans "Découvrir d'autres formations" %}
     </a>
   </div>
 </div>
