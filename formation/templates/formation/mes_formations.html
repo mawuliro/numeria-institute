@@ -66,9 +66,15 @@
 
                   <!-- CTA -->
                   {% if inscription.a_acces %}
-                    <a href="{% url 'formation:voir_lecon' inscription.prochaine_lecon.id %}" class="btn btn-primary btn-sm w-100">
-                      {% trans "Continuer" %}
-                    </a>
+                    {% if inscription.prochaine_lecon %}
+                      <a href="{% url 'formation:voir_lecon' inscription.prochaine_lecon.id %}" class="btn btn-primary btn-sm w-100">
+                        {% trans "Continuer" %}
+                      </a>
+                    {% else %}
+                      <p class="text-success small">
+                        🎉 {% trans "Formation terminée !" %}
+                      </p>
+                    {% endif %}
                   {% else %}
                     <p class="text-muted small">
                       {% trans "Accès déblocage après validation du paiement" %}
@@ -102,7 +108,7 @@
 
                   <!-- Voie certificat -->
                   {% if inscription.certificat %}
-                    <a href="{% url 'formation:certificat_detail' inscription.certificat.id %}" class="btn btn-success btn-sm me-2">
+                    <a href="{% url 'formation:certificat_detail' inscription.certificat.inscription.id %}" class="btn btn-success btn-sm me-2">
                       🎓 {% trans "Certificat" %}
                     </a>
                   {% endif %}

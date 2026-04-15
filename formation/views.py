@@ -157,6 +157,17 @@ def voir_lecon(request, lecon_id):
     # Autres leçons pour sidebar
     autres_lecons = formation.lecons.all().order_by('ordre')
     
+    # Récupérer les progressions pour toutes les leçons
+    progressions = {p.lecon_id: p for p in inscription.progressions_lecons.all()}
+    
+    # Ajouter les progressions aux leçons
+    for l in autres_lecons:
+        l.progression = progressions.get(l.id)
+    
+    # Calculer la position actuelle
+    lecon_actuelle = list(autres_lecons).index(lecon) + 1
+    total_lecons = autres_lecons.count()
+    
     context = {
         'lecon': lecon,
         'formation': formation,
@@ -164,6 +175,8 @@ def voir_lecon(request, lecon_id):
         'lecon_suivante': lecon_suivante,
         'lecon_precedente': lecon_precedente,
         'autres_lecons': autres_lecons,
+        'lecon_actuelle': lecon_actuelle,
+        'total_lecons': total_lecons,
         'date_expiration': inscription.acces_expire(),
     }
     return render(request, 'formation/voir_lecon.html', context)

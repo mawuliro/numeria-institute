@@ -370,6 +370,20 @@ class InscriptionFormation(models.Model):
     def est_acces_expire(self):
         """L'accès a-t-il expiré?"""
         return timezone.now().date() > self.acces_expire()
+    
+    @property
+    def prochaine_lecon(self):
+        """Retourne la prochaine leçon à faire (non terminée)."""
+        # Trouver la première leçon non terminée
+        progressions = self.progressions_lecons.all()
+        lecons_terminees = set(p.lecon_id for p in progressions if p.est_terminees)
+        
+        # Retourner la première leçon non terminée
+        for lecon in self.session.formation.lecons.order_by('ordre'):
+            if lecon.id not in lecons_terminees:
+                return lecon
+        
+        return None  # Toutes les leçons sont terminées
 
 
 class LeconFormation(models.Model):

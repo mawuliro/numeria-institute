@@ -42,7 +42,7 @@
               </div>
 
               <div class="mt-4">
-                <a href="{% url 'formation:certificat_detail' certificat.id %}" class="btn btn-primary">
+                <a href="{% url 'formation:certificat_detail' certificat.inscription.id %}" class="btn btn-primary">
                   {% trans "Voir le certificat complet" %}
                 </a>
               </div>

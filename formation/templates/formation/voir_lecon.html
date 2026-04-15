@@ -25,7 +25,7 @@
 
           <!-- Liste leçons -->
           <div class="list-group list-group-flush">
-            {% for l in toutes_lecons %}
+            {% for l in autres_lecons %}
               <a href="{% url 'formation:voir_lecon' l.id %}" 
                  class="list-group-item list-group-item-action {% if l.id == lecon.id %}active{% endif %}">
                 <div class="small">
