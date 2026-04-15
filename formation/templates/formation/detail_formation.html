@@ -125,7 +125,7 @@
                   <!-- CTA -->
                   {% if session.est_ouverte_aux_inscriptions %}
                     {% if session.places_disponibles > 0 %}
-                      <a href="{% url 'formation:inscrire' %}" 
+                      <a href="{% url 'formation:inscrire' session.id %}" 
                          class="btn btn-primary w-100"
                          data-session-id="{{ session.id }}">
                         {% trans "S'inscrire" %}
