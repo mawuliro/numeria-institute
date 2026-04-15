@@ -49,7 +49,7 @@
                     {% csrf_token %}
                     <button type="submit"
                         class="bg-numeria-or text-numeria-bleu font-bold px-4 py-1.5 rounded-lg text-xs hover:bg-yellow-400 transition-colors">
-                        {% if cours.est_gratuit %}S'inscrire gratuitement{% else %}S'inscrire{% endif %}
+                        {% if cours.est_gratuit %}{% trans "S'inscrire gratuitement" %}{% else %}{% trans "S'inscrire" %}{% endif %}
                     </button>
                 </form>
                 {% endif %}
@@ -223,7 +223,7 @@
                         {% csrf_token %}
                         <button type="submit"
                             class="w-full bg-numeria-bleu text-white font-bold py-2 rounded-lg text-xs hover:bg-numeria-bleu-fonce transition-colors">
-                            {% if cours.est_gratuit %}Commencer gratuitement{% else %}S'inscrire{% endif %}
+                            {% if cours.est_gratuit %}{% trans "Commencer gratuitement" %}{% else %}{% trans "S'inscrire" %}{% endif %}
                         </button>
                     </form>
                 </div>
@@ -285,7 +285,7 @@
                     <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-8 text-center mb-8">
                         <div class="text-4xl mb-3">🔒</div>
                         <h3 class="font-bold text-gray-700 dark:text-gray-200 mb-2">
-                            Contenu réservé aux inscrits
+                            {% trans "Contenu réservé aux inscrits" %}
                         </h3>
                         <p class="text-gray-400 dark:text-gray-500 text-sm mb-4">
                             {% trans "Inscris-toi gratuitement pour accéder à tout le contenu." %}
@@ -294,7 +294,7 @@
                             {% csrf_token %}
                             <button type="submit"
                                 class="bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
-                                {% if cours.est_gratuit %}🚀 Commencer gratuitement{% else %}💳 S'inscrire{% endif %}
+                                {% if cours.est_gratuit %}🚀 {% trans "Commencer gratuitement" %}{% else %}💳 {% trans "S'inscrire" %}{% endif %}
                             </button>
                         </form>
                     </div>
@@ -783,7 +783,7 @@
                         {% csrf_token %}
                         <button type="submit"
                             class="bg-numeria-or text-numeria-bleu font-bold px-10 py-4 rounded-xl hover:bg-yellow-400 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform text-lg">
-                            {% if cours.est_gratuit %}🚀 Commencer gratuitement{% else %}💳 S'inscrire — {{ cours.prix }} FCFA{% endif %}
+                            {% if cours.est_gratuit %}🚀 {% trans "Commencer gratuitement" %}{% else %}💳 {% trans "S'inscrire" %} — {{ cours.prix }} FCFA{% endif %}
                         </button>
                     </form>
                     {% else %}

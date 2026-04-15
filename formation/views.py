@@ -3,7 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.db.models import Q
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import get_language
 
 from .models import (
     Formation, SessionFormation, InscriptionFormation,
@@ -81,9 +83,15 @@ def detail_session(request, session_id):
     return render(request, 'formation/detail_session.html', context)
 
 
-@login_required
 def inscrire_formation(request, session_id):
     """Inscription à une session."""
+    if not request.user.is_authenticated:
+        language = get_language() or 'fr'
+        login_url = reverse('comptes:connexion')
+        if not login_url.startswith(f'/{language}/'):
+            login_url = f'/{language}{login_url}'
+        return redirect(f'{login_url}?next={request.path}')
+
     session = get_object_or_404(SessionFormation, id=session_id)
     
     # Vérifications

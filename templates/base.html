@@ -18,7 +18,6 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block titre %}Numeria Institute{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}{% trans "Éducation scientifique accessible en Afrique. Cours de mathématiques, sciences et IA pour apprenants africains et francophones." %}{% endblock %}">
 
     <meta property="og:title" content="{% block og_titre %}Numeria Institute{% endblock %}">
@@ -37,6 +36,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
+    <title>{% block titre %}{% block title %}Numeria Institute{% endblock %}{% endblock %}</title>
 
     <!-- Structured Data -->
     <script type="application/ld+json">
