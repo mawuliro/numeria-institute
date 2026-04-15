@@ -273,6 +273,16 @@ class SessionFormation(models.Model):
         ).count()
         return max(0, self.places_totales - nb_inscrits)
     
+    def places_occupees(self):
+        """Nombre de places déjà réservées."""
+        return self.places_totales - self.places_disponibles()
+    
+    def taux_remplissage(self):
+        """Pourcentage de places occupées."""
+        if self.places_totales <= 0:
+            return 0
+        return min(100, int((self.places_occupees() / self.places_totales) * 100))
+    
     def est_ouverte_aux_inscriptions(self):
         """Session accepte des inscriptions."""
         now = timezone.now().date()
