@@ -294,6 +294,28 @@ class SessionFormation(models.Model):
             self.places_disponibles() > 0
         )
     
+    def clean(self):
+        """Valider la cohérence des dates de session et d'inscription."""
+        super().clean()
+        erreurs = {}
+
+        if self.date_fin_inscriptions < self.date_debut_inscriptions:
+            erreurs['date_fin_inscriptions'] = ValidationError(
+                "La date de fin des inscriptions doit être postérieure ou égale à la date de début."
+            )
+
+        if self.date_fin < self.date_debut:
+            erreurs['date_fin'] = ValidationError(
+                "La date de fin de la session doit être postérieure ou égale à la date de début."
+            )
+
+        if erreurs:
+            raise ValidationError(erreurs)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
     def get_instructeurs(self):
         """Retourne les instructeurs (de session ou de formation)."""
         if self.instructeurs_session.exists():
