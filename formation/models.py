@@ -270,7 +270,7 @@ class SessionFormation(models.Model):
     def places_disponibles(self):
         """Nombre de places restantes."""
         nb_inscrits = self.inscriptions.filter(
-            statut__in=['confirmee', 'en_cours', 'terminee']
+            statut__in=['en_attente', 'confirmee', 'en_cours', 'terminee']
         ).count()
         return max(0, self.places_totales - nb_inscrits)
     
@@ -288,9 +288,8 @@ class SessionFormation(models.Model):
         """Session accepte des inscriptions."""
         now = timezone.now().date()
         return (
-            self.statut in ['ouverture', 'en_cours'] and
-            now >= self.date_debut_inscriptions and
-            now <= self.date_fin_inscriptions and
+            self.statut not in ['fermee', 'annulee'] and
+            self.date_debut_inscriptions <= now <= self.date_fin_inscriptions and
             self.places_disponibles() > 0
         )
     
