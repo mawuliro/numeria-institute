@@ -4,132 +4,243 @@
 {% block title %}{% trans "Formations" %}{% endblock %}
 
 {% block contenu %}
-<div class="container my-5">
-  <div class="row mb-5">
-    <div class="col-12">
-      <h1 class="display-4">{% trans "Nos Formations" %}</h1>
-      <p class="lead text-muted">{% trans "Apprenez auprès des meilleurs experts du continent" %}</p>
-    </div>
-  </div>
-
-  <!-- Filtres -->
-  <div class="row mb-4">
-    <div class="col-md-3">
-      <form method="get" class="card p-3">
-        <h5>{% trans "Filtres" %}</h5>
-        
-        <div class="mb-3">
-          <label>{% trans "Type" %}</label>
-          <select name="type" class="form-select">
-            <option value="">{% trans "Tous" %}</option>
-            <option value="Bootcamp" {% if request.GET.type == 'Bootcamp' %}selected{% endif %}>Bootcamp</option>
-            <option value="Masterclass" {% if request.GET.type == 'Masterclass' %}selected{% endif %}>Masterclass</option>
-            <option value="Certification" {% if request.GET.type == 'Certification' %}selected{% endif %}>{% trans "Certification" %}</option>
-          </select>
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-numeria-bleu via-numeria-bleu-fonce to-numeria-bleu text-white py-20">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-5xl md:text-6xl font-bold mb-6">
+        {% trans "Nos Formations" %}
+      </h1>
+      <p class="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed">
+        {% trans "Apprenez auprès des meilleurs experts du continent" %}
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 text-sm">
+        <div class="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+          <i class="fas fa-users mr-2"></i>{% trans "Experts africains" %}
         </div>
-
-        <div class="mb-3">
-          <label>{% trans "Niveau" %}</label>
-          <select name="niveau" class="form-select">
-            <option value="">{% trans "Tous" %}</option>
-            <option value="Débutant" {% if request.GET.niveau == 'Débutant' %}selected{% endif %}>{% trans "Débutant" %}</option>
-            <option value="Intermédiaire" {% if request.GET.niveau == 'Intermédiaire' %}selected{% endif %}>{% trans "Intermédiaire" %}</option>
-            <option value="Avancé" {% if request.GET.niveau == 'Avancé' %}selected{% endif %}>{% trans "Avancé" %}</option>
-          </select>
+        <div class="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+          <i class="fas fa-certificate mr-2"></i>{% trans "Certifications reconnues" %}
         </div>
-
-        <button type="submit" class="btn btn-primary w-100">{% trans "Filtrer" %}</button>
-      </form>
-    </div>
-
-    <!-- Liste formations -->
-    <div class="col-md-9">
-      <div class="row g-4">
-        {% for formation in formations %}
-          <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-              <!-- Header -->
-              <div class="card-header bg-primary text-white">
-                <span class="badge bg-light text-dark">{{ formation.get_type_display }}</span>
-                <span class="badge bg-warning text-dark float-end">{{ formation.niveau }}</span>
-              </div>
-
-              <!-- Body -->
-              <div class="card-body">
-                <h5 class="card-title">{{ formation.titre }}</h5>
-                <p class="card-text text-muted">{{ formation.description_courte|truncatewords:15 }}</p>
-
-                <p class="small mb-2">
-                  <i class="fas fa-clock"></i> {{ formation.duree_heures }} heures
-                </p>
-
-                <!-- Stats -->
-                <p class="small text-muted">
-                  {{ formation.nombre_etudiants_total }} {% trans "étudiants" %} | 
-                  {{ formation.nombre_certifies }} 🎓
-                </p>
-
-                <!-- Prochaine session -->
-                {% with session=formation.prochaine_session %}
-                  {% if session %}
-                    <div class="alert alert-info small mb-3">
-                      <strong>Prochaine:</strong> 
-                      <br/>{{ session.date_debut|date:"d M Y" }}
-                      <br/>
-                      {% if session.places_disponibles > 0 %}
-                        <span class="text-success">
-                          {{ session.places_disponibles }}/{{ session.places_totales }} places
-                        </span>
-                      {% else %}
-                        <span class="text-danger">{% trans "Complet" %}</span>
-                      {% endif %}
-                    </div>
-
-                    {% if session.places_disponibles > 0 %}
-                      <a href="{% url 'formation:session_detail' session.id %}" class="btn btn-primary btn-sm w-100">
-                        {% trans "Voir & s'inscrire" %}
-                      </a>
-                    {% else %}
-                      <button class="btn btn-secondary btn-sm w-100" disabled>
-                        {% trans "Complet" %}
-                      </button>
-                    {% endif %}
-                  {% else %}
-                    <p class="text-muted small">
-                      <i class="fas fa-info-circle"></i> 
-                      {% trans "Aucune session à venir" %}
-                    </p>
-                  {% endif %}
-                {% endwith %}
-              </div>
-
-              <!-- Footer -->
-              <div class="card-footer bg-light">
-                <a href="{% url 'formation:detail' formation.slug %}" class="btn btn-link btn-sm">
-                  {% trans "Voir le programme" %} →
-                </a>
-              </div>
-            </div>
-          </div>
-        {% empty %}
-          <div class="col-12">
-            <div class="alert alert-warning">
-              {% trans "Aucune formation publiée n'est disponible pour le moment." %}
-            </div>
-          </div>
-        {% endfor %}
+        <div class="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+          <i class="fas fa-globe mr-2"></i>{% trans "Formation en ligne" %}
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>
+
+<!-- Main Content -->
+<section class="py-16 bg-gray-50 dark:bg-gray-900">
+  <div class="container mx-auto px-4">
+    <div class="grid lg:grid-cols-4 gap-8">
+
+      <!-- Filters Sidebar -->
+      <div class="lg:col-span-1">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-6">
+          <h3 class="text-xl font-bold mb-6 text-gray-900 dark:text-white">
+            <i class="fas fa-filter mr-2 text-numeria-teal"></i>
+            {% trans "Filtres" %}
+          </h3>
+
+          <form method="get" class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {% trans "Type de formation" %}
+              </label>
+              <select name="type" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-numeria-teal focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                <option value="">{% trans "Tous les types" %}</option>
+                <option value="bootcamp" {% if request.GET.type == 'bootcamp' %}selected{% endif %}>Bootcamp</option>
+                <option value="masterclass" {% if request.GET.type == 'masterclass' %}selected{% endif %}>Masterclass</option>
+                <option value="certification" {% if request.GET.type == 'certification' %}selected{% endif %}>Certification</option>
+                <option value="workshop" {% if request.GET.type == 'workshop' %}selected{% endif %}>Workshop</option>
+                <option value="course" {% if request.GET.type == 'course' %}selected{% endif %}>Cours</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {% trans "Niveau" %}
+              </label>
+              <select name="niveau" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-numeria-teal focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                <option value="">{% trans "Tous les niveaux" %}</option>
+                <option value="debutant" {% if request.GET.niveau == 'debutant' %}selected{% endif %}>{% trans "Débutant" %}</option>
+                <option value="intermediaire" {% if request.GET.niveau == 'intermediaire' %}selected{% endif %}>{% trans "Intermédiaire" %}</option>
+                <option value="avance" {% if request.GET.niveau == 'avance' %}selected{% endif %}>{% trans "Avancé" %}</option>
+                <option value="expert" {% if request.GET.niveau == 'expert' %}selected{% endif %}>{% trans "Expert" %}</option>
+              </select>
+            </div>
+
+            <button type="submit" class="w-full bg-numeria-teal hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+              <i class="fas fa-search mr-2"></i>
+              {% trans "Appliquer les filtres" %}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Formations Grid -->
+      <div class="lg:col-span-3">
+        <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {% for formation in formations %}
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
+              <!-- Card Header with Image Placeholder -->
+              <div class="relative h-48 bg-gradient-to-br from-numeria-teal to-numeria-bleu flex items-center justify-center">
+                {% if formation.image_couverture %}
+                  <img src="{{ formation.image_couverture.url }}" alt="{{ formation.titre }}" class="w-full h-full object-cover">
+                {% else %}
+                  <div class="text-white text-center">
+                    <i class="fas fa-graduation-cap text-6xl mb-2"></i>
+                    <p class="text-sm opacity-75">{% trans "Image à venir" %}</p>
+                  </div>
+                {% endif %}
+
+                <!-- Badges Overlay -->
+                <div class="absolute top-4 left-4 flex gap-2">
+                  <span class="bg-white/90 text-numeria-bleu px-3 py-1 rounded-full text-xs font-semibold">
+                    {{ formation.get_type_display }}
+                  </span>
+                </div>
+                <div class="absolute top-4 right-4">
+                  <span class="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-semibold">
+                    {{ formation.get_niveau_display }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Card Body -->
+              <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
+                  {{ formation.titre }}
+                </h3>
+
+                <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">
+                  {{ formation.description_courte }}
+                </p>
+
+                <!-- Stats -->
+                <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
+                  <div class="flex items-center">
+                    <i class="fas fa-clock mr-1 text-numeria-teal"></i>
+                    {{ formation.duree_heures }}h
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-users mr-1 text-numeria-teal"></i>
+                    {{ formation.nombre_etudiants_total }}
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-certificate mr-1 text-numeria-teal"></i>
+                    {{ formation.nombre_certifies }}
+                  </div>
+                </div>
+
+                <!-- Next Session Info -->
+                {% with session=formation.prochaine_session %}
+                  {% if session %}
+                    <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 mb-4">
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <p class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                            {% trans "Prochaine session" %}
+                          </p>
+                          <p class="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                            {{ session.date_debut|date:"d M Y" }}
+                          </p>
+                        </div>
+                        <div class="text-right">
+                          {% if session.places_disponibles > 0 %}
+                            <span class="text-green-600 dark:text-green-400 text-sm font-medium">
+                              {{ session.places_disponibles }}/{{ session.places_totales }}
+                            </span>
+                          {% else %}
+                            <span class="text-red-600 dark:text-red-400 text-sm font-medium">
+                              {% trans "Complet" %}
+                            </span>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endwith %}
+
+                <!-- Action Buttons -->
+                <div class="space-y-2">
+                  {% with session=formation.prochaine_session %}
+                    {% if session and session.places_disponibles > 0 %}
+                      <a href="{% url 'formation:session_detail' session.id %}"
+                         class="block w-full bg-numeria-teal hover:bg-teal-600 text-white text-center py-2 px-4 rounded-lg font-semibold transition duration-300">
+                        <i class="fas fa-plus mr-2"></i>
+                        {% trans "Voir & s'inscrire" %}
+                      </a>
+                    {% elif session %}
+                      <button class="w-full bg-gray-300 text-gray-500 py-2 px-4 rounded-lg cursor-not-allowed" disabled>
+                        <i class="fas fa-times mr-2"></i>
+                        {% trans "Session complète" %}
+                      </button>
+                    {% endif %}
+                  {% endwith %}
+
+                  <a href="{% url 'formation:detail' formation.slug %}"
+                     class="block w-full border-2 border-numeria-teal text-numeria-teal hover:bg-numeria-teal hover:text-white text-center py-2 px-4 rounded-lg font-semibold transition duration-300">
+                    <i class="fas fa-eye mr-2"></i>
+                    {% trans "Voir le programme" %}
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="col-span-full">
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center">
+                <i class="fas fa-graduation-cap text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  {% trans "Aucune formation disponible" %}
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                  {% trans "Nous travaillons à ajouter de nouvelles formations. Revenez bientôt !" %}
+                </p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="bg-numeria-teal py-16">
+  <div class="container mx-auto px-4 text-center">
+    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+      {% trans "Prêt à commencer votre apprentissage ?" %}
+    </h2>
+    <p class="text-xl text-teal-100 mb-8 max-w-2xl mx-auto">
+      {% trans "Rejoignez des milliers d'apprenants africains qui transforment leur carrière grâce à nos formations." %}
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="{% url 'comptes:inscription' %}" class="bg-white text-numeria-teal hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105">
+        <i class="fas fa-user-plus mr-2"></i>
+        {% trans "Créer un compte" %}
+      </a>
+      <a href="{% url 'contact' %}" class="border-2 border-white text-white hover:bg-white hover:text-numeria-teal font-bold py-3 px-8 rounded-lg transition duration-300">
+        <i class="fas fa-envelope mr-2"></i>
+        {% trans "Nous contacter" %}
+      </a>
+    </div>
+  </div>
+</section>
 
 <style>
-  .card {
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-  }
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 </style>
 {% endblock %}
