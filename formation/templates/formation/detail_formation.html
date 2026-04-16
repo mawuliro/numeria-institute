@@ -51,8 +51,8 @@
 
         <!-- Image/CTA -->
         <div class="lg:col-span-1">
-          {% if formation.image_couverture %}
-            <img src="{{ formation.image_couverture.url }}" alt="{{ formation.titre }}"
+          {% if formation.image_couverture_url %}
+            <img src="{{ formation.image_couverture_url }}" alt="{{ formation.titre }}"
                  class="w-full rounded-xl shadow-2xl mb-6">
           {% else %}
             <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center mb-6">

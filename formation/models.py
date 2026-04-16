@@ -85,7 +85,9 @@ class Formation(models.Model):
     image_couverture = models.ImageField(
         upload_to='formations/covers/',
         verbose_name='Image de couverture',
-        help_text='1200x630px recommandé'
+        help_text='1200x630px recommandé',
+        blank=True,
+        null=True
     )
     
     # Compétences enseignées
@@ -155,6 +157,16 @@ class Formation(models.Model):
             statut__in=['planifiee', 'ouverture', 'en_cours'],
             date_fin_inscriptions__gte=timezone.now().date()
         ).order_by('date_debut').first()
+    
+    @property
+    def image_couverture_url(self):
+        """URL de l'image de couverture, ou None si elle n'existe pas."""
+        if self.image_couverture:
+            try:
+                return self.image_couverture.url
+            except (ValueError, AttributeError):
+                return None
+        return None
 
 
 class SessionFormation(models.Model):

@@ -85,8 +85,8 @@
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
               <!-- Card Header with Image Placeholder -->
               <div class="relative h-48 bg-gradient-to-br from-numeria-teal to-numeria-bleu flex items-center justify-center">
-                {% if formation.image_couverture %}
-                  <img src="{{ formation.image_couverture.url }}" alt="{{ formation.titre }}" class="w-full h-full object-cover">
+                {% if formation.image_couverture_url %}
+                  <img src="{{ formation.image_couverture_url }}" alt="{{ formation.titre }}" class="w-full h-full object-cover">
                 {% else %}
                   <div class="text-white text-center">
                     <i class="fas fa-graduation-cap text-6xl mb-2"></i>
