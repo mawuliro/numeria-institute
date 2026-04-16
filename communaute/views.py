@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .models import Categorie, Sujet, Message, Vote, ProfilUtilisateur
@@ -56,18 +56,21 @@ def detail_sujet(request, pk):
     sujet.vues += 1
     sujet.save(update_fields=['vues'])
 
-    messages_sujet = sujet.messages.all().order_by('date_creation')
+    messages_sujet = sujet.messages.annotate(
+        likes_count=Count('votes', filter=Q(votes__valeur=1)),
+        dislikes_count=Count('votes', filter=Q(votes__valeur=-1)),
+    ).order_by('date_creation')
 
     # Pagination des messages
     paginator = Paginator(messages_sujet, 15)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # Récupérer les votes de l'utilisateur actuel pour chaque message
+    # Récupérer les votes de l'utilisateur actuel pour chaque message (single query)
     user_votes = {}
     if request.user.is_authenticated:
         votes = Vote.objects.filter(
-            message__in=[msg.pk for msg in page_obj],
+            message__in=list(page_obj.object_list.values_list('pk', flat=True)),
             utilisateur=request.user
         ).values('message', 'valeur')
         user_votes = {vote['message']: vote['valeur'] for vote in votes}
@@ -282,11 +285,15 @@ def voter_message(request, pk):
         Vote.objects.create(message=message, utilisateur=request.user, valeur=valeur)
         action = 'nouveau'
 
-    # Retourner les compteurs séparés
+    # Retourner les compteurs séparés (single aggregation query)
+    counts = message.votes.aggregate(
+        likes=Count('id', filter=Q(valeur=1)),
+        dislikes=Count('id', filter=Q(valeur=-1)),
+    )
     response_data = {
         'action': action,
-        'nombre_likes': message.nombre_likes,
-        'nombre_dislikes': message.nombre_dislikes,
+        'nombre_likes': counts['likes'] or 0,
+        'nombre_dislikes': counts['dislikes'] or 0,
         'vote_utilisateur': valeur if action != 'annule' else 0
     }
 

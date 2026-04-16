@@ -4,6 +4,8 @@ from django.contrib.auth import login, logout, authenticate, update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from .forms import FormulaireInscription, FormulaireConnexion, FormulaireProfil
 from .models import Profil
@@ -46,7 +48,9 @@ def connexion(request):
                 login(request, user)
                 messages.success(request, _("Bon retour, {first_name} ! 👋").format(first_name=user.first_name))
 
-                next_url = request.GET.get('next', 'comptes:tableau_de_bord')
+                next_url = request.GET.get('next', '')
+                if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+                    next_url = reverse('comptes:tableau_de_bord')
                 return redirect(next_url)
             else:
                 messages.error(request, _("Nom d'utilisateur ou mot de passe incorrect."))
@@ -93,7 +97,9 @@ def tableau_de_bord(request):
         id__in=ids_inscrits
     )[:3]
 
-    articles_recents = Article.objects.filter(est_publie=True)[:3]
+    articles_recents = Article.objects.filter(
+        est_publie=True
+    ).select_related('auteur', 'categorie').order_by('-date_creation')[:3]
 
     contexte = {
         'profil': profil,

@@ -9,6 +9,7 @@ Architecture extensible — pour ajouter un nouveau provider :
 
 import uuid
 from django.utils import timezone
+from django.db import transaction
 from .models import Paiement
 from cours.models import InscriptionCours
 from formation.models import InscriptionFormation
@@ -19,7 +20,7 @@ def generer_reference():
     Génère une référence unique pour chaque paiement.
     Format : NIM-2025-XXXXXXXX
     """
-    code = str(uuid.uuid4()).upper()[:8]
+    code = uuid.uuid4().hex.upper()[:16]
     annee = timezone.now().year
     return f"NIM-{annee}-{code}"
 
@@ -66,10 +67,12 @@ def creer_paiement(etudiant, cours=None, formation_inscription=None, provider='s
     return paiement, True  # True = nouveau paiement créé
 
 
+@transaction.atomic
 def confirmer_paiement(paiement, reference_provider=None):
     """
     Confirme un paiement et inscrit l'étudiant au cours.
     Appelé par le webhook du provider ou en mode sandbox.
+    Wrapped in an atomic transaction so payment + inscription always succeed or fail together.
     """
     # Mettre à jour le statut
     paiement.statut = 'reussi'

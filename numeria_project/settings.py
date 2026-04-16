@@ -256,7 +256,7 @@ if not DEBUG:
     SECURE_CONTENT_SECURITY_POLICY = {
         'default-src': ("'self'",),
         'script-src': ("'self'", "cdn.jsdelivr.net", "unpkg.com"),
-        'style-src': ("'self'", "'unsafe-inline'", "cdn.jsdelivr.net"),
+        'style-src': ("'self'", "cdn.jsdelivr.net", "unpkg.com"),
         'img-src': ("'self'", "data:", "https:"),
     }
     

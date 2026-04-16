@@ -1,17 +1,22 @@
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
 from .models import Article, Categorie
 
 
 def liste_articles(request):
     """
     Vue pour la page liste du blog.
-    Affiche tous les articles publiés.
+    Affiche tous les articles publiés, avec pagination.
     """
 
-    # Tous les articles publiés
-    articles = Article.objects.filter(est_publie=True)
+    articles_list = Article.objects.filter(
+        est_publie=True
+    ).select_related('auteur', 'categorie').order_by('-date_creation')
 
-    # Toutes les catégories — pour le filtre sur la page
+    paginator = Paginator(articles_list, 20)
+    page_number = request.GET.get('page')
+    articles = paginator.get_page(page_number)
+
     categories = Categorie.objects.all()
 
     contexte = {
@@ -29,19 +34,20 @@ def detail_article(request, slug):
     Ex: /blog/introduction-algebre-lineaire/
     """
 
-    # On cherche l'article par son slug
-    # Si introuvable → page 404 automatiquement
-    article = get_object_or_404(Article, slug=slug, est_publie=True)
+    article = get_object_or_404(
+        Article.objects.select_related('auteur', 'categorie'),
+        slug=slug,
+        est_publie=True,
+    )
 
     # On incrémente le nombre de vues à chaque visite
     article.nombre_vues += 1
-    article.save()
+    article.save(update_fields=['nombre_vues'])
 
     # 3 articles récents pour la sidebar
     articles_recents = Article.objects.filter(
         est_publie=True
-    ).exclude(id=article.id)[:3]
-    # exclude(id=article.id) → on exclut l'article actuel
+    ).exclude(id=article.id).select_related('auteur', 'categorie').order_by('-date_creation')[:3]
 
     contexte = {
         'article': article,

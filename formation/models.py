@@ -147,7 +147,7 @@ class Formation(models.Model):
             statut__in=['planifiee', 'ouverture', 'en_cours'],
             date_debut_inscriptions__lte=timezone.now().date(),
             date_fin_inscriptions__gte=timezone.now().date()
-        )
+        ).order_by('date_debut')
     
     def prochaine_session(self):
         """La prochaine session à démarrer ou ouverte."""
@@ -397,15 +397,15 @@ class InscriptionFormation(models.Model):
     @property
     def prochaine_lecon(self):
         """Retourne la prochaine leçon à faire (non terminée)."""
-        # Trouver la première leçon non terminée
+        if not self.session_id:
+            return None
         progressions = self.progressions_lecons.all()
         lecons_terminees = set(p.lecon_id for p in progressions if p.est_terminees)
-        
-        # Retourner la première leçon non terminée
+
         for lecon in self.session.formation.lecons.order_by('ordre'):
             if lecon.id not in lecons_terminees:
                 return lecon
-        
+
         return None  # Toutes les leçons sont terminées
 
 

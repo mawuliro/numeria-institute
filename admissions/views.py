@@ -103,7 +103,8 @@ def page_paiement_candidature(request, campagne_id):
                 paiement = Paiement.objects.create(
                     etudiant=request.user,
                     cours=None,
-                    montant=campagne.frais_candidature,
+                    montant_initial=campagne.frais_candidature,
+                    montant_final=campagne.frais_candidature,
                     devise='XOF',
                     statut='reussi',
                     provider='sandbox',
@@ -133,7 +134,8 @@ def page_paiement_candidature(request, campagne_id):
         paiement_attente = Paiement.objects.create(
             etudiant=request.user,
             cours=None,
-            montant=campagne.frais_candidature,
+            montant_initial=campagne.frais_candidature,
+            montant_final=campagne.frais_candidature,
             devise='XOF',
             statut='en_attente',
             provider='sandbox',

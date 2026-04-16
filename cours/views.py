@@ -495,6 +495,9 @@ def poser_question(request, cours_id):
             if not question or len(question) < 5:
                 messages.error(request, "La question doit contenir au moins 5 caractères.")
                 return redirect('cours:detail', cours_id=cours_id)
+            if len(question) > 500:
+                messages.error(request, "La question ne peut pas dépasser 500 caractères.")
+                return redirect('cours:detail', cours_id=cours_id)
             
             # Créer la question (en attente de modération)
             QuestionFAQ.objects.create(

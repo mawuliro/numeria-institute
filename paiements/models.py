@@ -150,6 +150,9 @@ class Paiement(models.Model):
         indexes = [
             models.Index(fields=['etudiant', '-date_creation']),
             models.Index(fields=['statut']),
+            models.Index(fields=['provider']),
+            models.Index(fields=['reference_provider']),
+            models.Index(fields=['etudiant', 'statut', '-date_creation']),
         ]
 
 
