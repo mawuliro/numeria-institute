@@ -1,347 +1,661 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block titre %}{% trans "Visioconférence" %} — Numeria Institute{% endblock %}
-{% block meta_description %}{% trans "Rejoignez la salle de visioconférence en groupe pour votre séance ou session." %}{% endblock %}
+{% block titre %}{{ room_title }} — Visioconférence{% endblock %}
+{% block meta_description %}Rejoignez la salle de visioconférence — {{ room_title }}{% endblock %}
 
 {% block contenu %}
-<section class="py-10">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                {% if back_url %}
-                    <a href="{{ back_url }}"
-                       class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-700 text-sm font-medium">
-                        ← {{ back_label|default:_('Retour') }}
-                    </a>
-                {% endif %}
-                <h1 class="mt-4 text-3xl font-extrabold text-gray-900 dark:text-white">🎥 {{ room_title }}</h1>
-                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 max-w-2xl">{{ room_description }}</p>
-            </div>
-            <div class="text-right">
-                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                    <strong>{{ room_modalite }}</strong>
-                </span>
-            </div>
-        </div>
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  GOOGLE MEET–STYLE VIDEO ROOM — fullscreen overlay          ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<div id="meetApp"
+     class="fixed inset-0 z-[9999] flex flex-col overflow-hidden"
+     style="background:#202124; font-family:'Google Sans',Roboto,Arial,sans-serif;">
 
-        <div class="grid gap-6 lg:grid-cols-[1.4fr_0.8fr]">
-            <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-                <div class="grid gap-4 lg:grid-cols-[1.5fr_0.8fr]">
-                    <div class="space-y-4">
-                        <div class="space-y-4">
-                            <div id="remoteVideos" class="grid gap-4"></div>
-                            <div class="rounded-3xl overflow-hidden bg-black aspect-video">
-                                <video id="localVideo" autoplay muted playsinline class="w-full h-full object-cover"></video>
-                            </div>
-                        </div>
+  <!-- ─── TOP BAR ──────────────────────────────────────────────── -->
+  <div class="flex items-center justify-between px-4 h-14 flex-shrink-0 z-10">
 
-                        <div class="space-y-4">
-                            <div class="rounded-3xl border border-gray-200 bg-slate-50 p-4 dark:border-gray-700 dark:bg-gray-800">
-                                <h2 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">{% trans "État de la session" %}</h2>
-                                <p id="video-status" class="text-sm text-slate-600 dark:text-slate-300">{% trans "Initialisation..." %}</p>
-                            </div>
-
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                <div class="rounded-3xl border border-gray-200 bg-slate-50 p-4 dark:border-gray-700 dark:bg-gray-800">
-                                    <p class="text-sm text-slate-400 mb-2">{% trans "Vous" %}</p>
-                                    <p class="text-base font-semibold text-slate-900 dark:text-white">{{ current_user_name }}</p>
-                                    <p class="text-xs uppercase text-slate-500 dark:text-slate-400 mt-2">{{ role_label }}</p>
-                                </div>
-                                <div class="rounded-3xl border border-gray-200 bg-slate-50 p-4 dark:border-gray-700 dark:bg-gray-800">
-                                    <p class="text-sm text-slate-400 mb-2">{% trans "Participants" %}</p>
-                                    <p class="text-base font-semibold text-slate-900 dark:text-white">{{ participants_count }}</p>
-                                    {% if participant_label %}
-                                        <p class="text-xs uppercase text-slate-500 dark:text-slate-400 mt-2">{{ participant_label }}</p>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <div class="rounded-3xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
-                                <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">{% trans "Détails" %}</h3>
-                                <p class="text-sm text-slate-600 dark:text-slate-300"><strong>{% trans "Date" %} :</strong> {{ room_date }}</p>
-                                <p class="text-sm text-slate-600 dark:text-slate-300"><strong>{% trans "Heure" %} :</strong> {{ room_time }}</p>
-                                {% if room_duration %}
-                                    <p class="text-sm text-slate-600 dark:text-slate-300"><strong>{% trans "Durée" %} :</strong> {{ room_duration }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-                        <h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">{% trans "Instructions" %}</h2>
-                        <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-300">
-                            <li>✅ {% trans "Autorisez l'accès à votre caméra et votre micro." %}</li>
-                            <li>✅ {% trans "Restez sur cette page jusqu'à la fin de la session." %}</li>
-                            <li>✅ {% trans "La visioconférence est directement établie entre les navigateurs." %}</li>
-                        </ul>
-                        <div class="mt-6 rounded-2xl bg-slate-50 p-4 text-xs text-slate-500 dark:bg-gray-900 dark:text-slate-400">
-                            <p>{% trans "Si un participant ne rejoint pas, actualisez la page et réessayez." %}</p>
-                        </div>
-
-                        {% if room_notes %}
-                            <div class="mt-6 rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-600 dark:border-gray-700 dark:bg-gray-900 dark:text-slate-300">
-                                {{ room_notes }}
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-                <h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">{% trans "Participants" %}</h2>
-                <div class="space-y-3 text-sm text-slate-700 dark:text-slate-200">
-                    {% for participant in room_participants %}
-                        <div class="rounded-2xl bg-slate-50 p-4 dark:bg-gray-800">
-                            <p class="font-semibold">{{ participant.name }}</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ participant.role }}</p>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+    <!-- Left: back + title -->
+    <div class="flex items-center gap-3 min-w-0 flex-1">
+      {% if back_url %}
+      <a href="{{ back_url }}" id="btnBack"
+         class="flex-shrink-0 w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white transition"
+         title="{% trans 'Retour' %}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+      </a>
+      {% endif %}
+      <div class="min-w-0">
+        <p class="text-white font-medium text-sm leading-tight truncate">{{ room_title }}</p>
+        <p class="text-white/40 text-xs truncate">{{ room_description }}</p>
+      </div>
     </div>
-</section>
+
+    <!-- Center: connection status pill -->
+    <div class="flex items-center gap-2">
+      <div id="statusPill" class="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1">
+        <span id="statusDot" class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+        <span id="statusText" class="text-white/70 text-xs whitespace-nowrap">{% trans "Connexion…" %}</span>
+      </div>
+    </div>
+
+    <!-- Right: clock + participants -->
+    <div class="flex items-center gap-3 flex-1 justify-end">
+      <span id="meetClock" class="text-white/60 text-sm tabular-nums hidden sm:block"></span>
+      <div class="flex items-center gap-1.5 text-white/50 text-sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+        <span id="participantCount">{{ participants_count }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MAIN STAGE ───────────────────────────────────────────── -->
+  <div class="flex flex-1 overflow-hidden min-h-0">
+
+    <!-- Video grid -->
+    <div id="videoGrid"
+         class="flex-1 p-3 grid gap-3 content-center overflow-hidden transition-all duration-300"
+         style="grid-template-columns:1fr; grid-template-rows:1fr;">
+
+      <!-- Local tile -->
+      <div id="localTile"
+           class="relative rounded-2xl overflow-hidden group"
+           style="background:#3c4043; min-height:120px;">
+        <video id="localVideo" autoplay muted playsinline
+               class="w-full h-full object-cover"
+               style="transform:scaleX(-1); display:block;"></video>
+        <!-- Camera-off avatar -->
+        <div id="localAvatar" class="absolute inset-0 flex items-center justify-center hidden">
+          <div class="w-24 h-24 rounded-full flex items-center justify-center text-4xl font-bold text-white select-none"
+               style="background:#5f6368;">{{ current_user_name|first|upper }}</div>
+        </div>
+        <!-- Tile label bar -->
+        <div class="absolute bottom-0 left-0 right-0 px-3 py-2"
+             style="background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 100%);">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-white text-sm font-medium truncate">{% trans "Vous" %} — {{ current_user_name }}</span>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <div id="localMicBadge"
+                   class="w-6 h-6 rounded-full flex items-center justify-center"
+                   style="background:rgba(255,255,255,.15);">
+                <svg id="localMicSvg" width="12" height="12" viewBox="0 0 24 24" fill="white">
+                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16c-2.47 0-4.52-1.8-4.93-4.15-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/>
+                </svg>
+              </div>
+              <span class="text-white/60 text-xs">{{ role_label }}</span>
+            </div>
+          </div>
+        </div>
+        <!-- Active-speaker ring -->
+        <div id="localSpeakRing"
+             class="absolute inset-0 rounded-2xl pointer-events-none hidden"
+             style="box-shadow:inset 0 0 0 3px #1a73e8;"></div>
+      </div><!-- /localTile -->
+
+    </div><!-- /videoGrid -->
+
+    <!-- ─── SIDEBAR ────────────────────────────────────────────── -->
+    <div id="sidebar"
+         class="hidden w-80 flex-shrink-0 flex flex-col overflow-hidden"
+         style="background:#2d2e30; border-left:1px solid rgba(255,255,255,.08);">
+      <!-- Tabs -->
+      <div class="flex border-b" style="border-color:rgba(255,255,255,.1);">
+        <button id="tabPeople" onclick="switchTab('people')"
+                class="flex-1 py-3 text-sm font-medium transition"
+                style="color:#8ab4f8; border-bottom:2px solid #8ab4f8;">
+          {% trans "Participants" %}
+        </button>
+        <button id="tabChat" onclick="switchTab('chat')"
+                class="flex-1 py-3 text-sm font-medium transition"
+                style="color:rgba(255,255,255,.45); border-bottom:2px solid transparent;">
+          {% trans "Chat" %}
+        </button>
+      </div>
+
+      <!-- People panel -->
+      <div id="panelPeople" class="flex-1 overflow-y-auto p-4 space-y-2">
+        <p class="text-xs uppercase tracking-wider mb-3" style="color:rgba(255,255,255,.3);">
+          {{ participants_count }} {% trans "participants" %}
+        </p>
+        {% for p in room_participants %}
+        <div class="flex items-center gap-3 rounded-xl px-3 py-2 transition" style="cursor:default;"
+             onmouseenter="this.style.background='rgba(255,255,255,.05)'" onmouseleave="this.style.background=''">
+          <div class="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-sm font-bold text-white select-none"
+               style="background:#5f6368;">{{ p.name|first|upper }}</div>
+          <div class="min-w-0 flex-1">
+            <p class="text-white text-sm font-medium truncate">{{ p.name }}</p>
+            <p class="text-xs truncate" style="color:rgba(255,255,255,.4);">{{ p.role }}</p>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,.3)">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16c-2.47 0-4.52-1.8-4.93-4.15-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/>
+          </svg>
+        </div>
+        {% empty %}
+        <p class="text-center text-sm py-8" style="color:rgba(255,255,255,.25);">{% trans "Aucun participant pour l'instant." %}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Chat panel -->
+      <div id="panelChat" class="hidden flex-col flex-1 overflow-hidden">
+        <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-3">
+          <p class="text-center text-sm py-10" style="color:rgba(255,255,255,.25);" id="chatEmpty">{% trans "Les messages apparaîtront ici." %}</p>
+        </div>
+        <div class="p-3 flex gap-2" style="border-top:1px solid rgba(255,255,255,.1);">
+          <input id="chatInput" type="text"
+                 placeholder="{% trans 'Envoyer un message…' %}"
+                 onkeydown="if(event.key==='Enter')sendChat()"
+                 class="flex-1 rounded-full px-4 py-2 text-sm text-white outline-none"
+                 style="background:rgba(255,255,255,.1); color:white;"
+                 onfocus="this.style.boxShadow='0 0 0 1px #8ab4f8'" onblur="this.style.boxShadow=''">
+          <button onclick="sendChat()"
+                  class="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center transition"
+                  style="background:#1a73e8;"
+                  onmouseenter="this.style.background='#1967d2'" onmouseleave="this.style.background='#1a73e8'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div><!-- /sidebar -->
+
+  </div><!-- /stage -->
+
+  <!-- ─── CONTROL BAR ──────────────────────────────────────────── -->
+  <div class="flex-shrink-0 flex items-center justify-between px-4 h-20 gap-2">
+
+    <!-- Left: call duration -->
+    <div class="hidden sm:flex flex-col w-36">
+      <span class="text-white/60 text-sm font-medium truncate">{{ room_title }}</span>
+      <span id="callDuration" class="text-xs tabular-nums" style="color:rgba(255,255,255,.35);">00:00</span>
+    </div>
+
+    <!-- Center: main controls -->
+    <div class="flex items-center gap-2 mx-auto">
+
+      <!-- Mic -->
+      <div class="flex flex-col items-center gap-0.5">
+        <button id="btnMic" onclick="toggleMic()"
+                class="meet-ctrl w-14 h-14 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95 relative"
+                style="background:#3c4043;" title="{% trans 'Micro' %}">
+          <svg id="micOnIcon" width="22" height="22" viewBox="0 0 24 24" fill="white">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16c-2.47 0-4.52-1.8-4.93-4.15-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/>
+          </svg>
+          <svg id="micOffIcon" width="22" height="22" viewBox="0 0 24 24" fill="white" class="hidden">
+            <path d="M19 11c0 1.19-.34 2.3-.9 3.28l-1.23-1.23c.27-.62.43-1.31.43-2.05H19zm-7 7c-2.76 0-5-2.24-5-5v-1.17l-1.45-1.45C5.21 11.29 5 12.12 5 13c0 3.53 2.61 6.43 6 6.92V22h2v-2.08c1.46-.2 2.79-.81 3.9-1.69l-1.46-1.46C14.35 17.57 13.21 18 12 18zm7.71 3.29L3.29 4.87 4.71 3.46 21.29 20.03 19.71 21.3zM12 2C10.34 2 9 3.34 9 5v5.17l3 3V5c0-.55.45-1 1-1s1 .45 1 1v.17l1.98 1.98c.01-.05.02-.1.02-.15V5c0-1.66-1.34-3-3-3z"/>
+          </svg>
+          <span class="meet-tip">{% trans "Couper le micro" %}</span>
+        </button>
+        <span class="text-xs" style="color:rgba(255,255,255,.35);">{% trans "Micro" %}</span>
+      </div>
+
+      <!-- Camera -->
+      <div class="flex flex-col items-center gap-0.5">
+        <button id="btnCam" onclick="toggleCam()"
+                class="meet-ctrl w-14 h-14 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95 relative"
+                style="background:#3c4043;" title="{% trans 'Caméra' %}">
+          <svg id="camOnIcon" width="22" height="22" viewBox="0 0 24 24" fill="white">
+            <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+          </svg>
+          <svg id="camOffIcon" width="22" height="22" viewBox="0 0 24 24" fill="white" class="hidden">
+            <path d="M21 6.5l-4-4-2.17 2.17-1.82-1.82C12.63 2.31 12.33 2 12 2H4c-.55 0-1 .45-1 1v.18L1.27 1.46 0 2.73 22.54 25.27 23.81 24 21 21.19V6.5zM17 9l2-2v7.19L17 12.19V9zM3 5.27l14 14H4c-.55 0-1-.45-1-1V5.27z"/>
+          </svg>
+          <span class="meet-tip">{% trans "Couper la caméra" %}</span>
+        </button>
+        <span class="text-xs" style="color:rgba(255,255,255,.35);">{% trans "Caméra" %}</span>
+      </div>
+
+      <!-- Screen share -->
+      <div class="hidden sm:flex flex-col items-center gap-0.5">
+        <button onclick="meetToast('{% trans "Partage d\'écran bientôt disponible" %}')"
+                class="meet-ctrl w-14 h-14 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95 relative"
+                style="background:#3c4043;" title="{% trans "Partager l'écran" %}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,.5)">
+            <path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/>
+          </svg>
+          <span class="meet-tip">{% trans "Partager l'écran" %}</span>
+        </button>
+        <span class="text-xs" style="color:rgba(255,255,255,.25);">{% trans "Écran" %}</span>
+      </div>
+
+      <!-- Raise hand -->
+      <div class="hidden sm:flex flex-col items-center gap-0.5">
+        <button id="btnHand" onclick="toggleHand()"
+                class="meet-ctrl w-14 h-14 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95 relative"
+                style="background:#3c4043;" title="{% trans 'Lever la main' %}">
+          <svg id="handSvg" width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,.6)">
+            <path d="M21 7c0-1.38-1.12-2.5-2.5-2.5-.05 0-.09.01-.14.01C18.05 3.43 16.96 2.5 15.5 2.5c-.39 0-.77.08-1.1.23C14.01 1.75 13.13 1 12 1c-1.12 0-2 .87-2 1.97V8.12C9.73 7.44 9.02 7 8.2 7 6.98 7 6 8.02 6 9.25c0 .58.23 1.1.59 1.49L10.5 17H21V7zm-2 8H11.42l-3.92-4.54c-.08-.1-.25-.18-.31-.46 0-.41.35-.75.76-.75.21 0 .4.08.54.22l1.81 2.08L12 13V2.97c0-.53.44-.97 1-.97.53 0 1 .44 1 .97V9h2V4.25c0-.69.56-1.25 1.25-1.25S18.5 3.56 18.5 4.25V9h2V7c0-.69.56-1.25 1.25-1.25S23 6.31 23 7v8H19zM5 19h14v2H5z"/>
+          </svg>
+          <span class="meet-tip">{% trans "Lever la main" %}</span>
+        </button>
+        <span class="text-xs" style="color:rgba(255,255,255,.25);">{% trans "Main" %}</span>
+      </div>
+
+      <!-- Leave call — red -->
+      <div class="flex flex-col items-center gap-0.5 mx-1">
+        <button onclick="leaveCall()"
+                class="meet-ctrl w-16 h-14 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95 relative"
+                style="background:#ea4335; box-shadow:0 4px 20px rgba(234,67,53,.35);"
+                onmouseenter="this.style.background='#d93025'" onmouseleave="this.style.background='#ea4335'"
+                title="{% trans 'Quitter' %}">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="white" style="transform:rotate(135deg)">
+            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+          </svg>
+          <span class="meet-tip">{% trans "Quitter l'appel" %}</span>
+        </button>
+        <span class="text-xs" style="color:rgba(234,67,53,.7);">{% trans "Quitter" %}</span>
+      </div>
+
+    </div><!-- /center controls -->
+
+    <!-- Right: sidebar toggles -->
+    <div class="hidden sm:flex items-center gap-2 w-36 justify-end">
+      <button id="btnPeople" onclick="toggleSidebar('people')"
+              class="meet-ctrl w-12 h-12 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95 relative"
+              style="background:#3c4043;" title="{% trans 'Participants' %}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+        <span class="meet-tip">{% trans "Participants" %}</span>
+      </button>
+      <button id="btnChat" onclick="toggleSidebar('chat')"
+              class="meet-ctrl w-12 h-12 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95 relative"
+              style="background:#3c4043;" title="{% trans 'Chat' %}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+        </svg>
+        <span id="chatBadge"
+              class="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-[10px] font-bold hidden items-center justify-center"
+              style="background:#1a73e8;"></span>
+        <span class="meet-tip">{% trans "Chat" %}</span>
+      </button>
+    </div>
+
+  </div><!-- /control bar -->
+
+  <!-- ─── TOAST ─────────────────────────────────────────────────── -->
+  <div id="meetToast"
+       class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[10000] text-white text-sm rounded-xl px-5 py-2.5 pointer-events-none transition-all duration-300"
+       style="background:#3c4043; opacity:0; box-shadow:0 4px 20px rgba(0,0,0,.4);">
+  </div>
+
+</div><!-- /meetApp -->
+
+<!-- ──────────────────────────────────────────────────────────────── -->
+<style>
+/* Fade-in entrance */
+@keyframes meetFadeIn { from{opacity:0;transform:scale(.98)} to{opacity:1;transform:scale(1)} }
+#meetApp { animation: meetFadeIn .25s ease-out; }
+
+/* Control button tooltip */
+.meet-tip {
+  position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+  background:rgba(60,64,67,.95); backdrop-filter:blur(8px);
+  color:#fff; font-size:11px; white-space:nowrap;
+  padding:4px 10px; border-radius:8px;
+  opacity:0; pointer-events:none; transition:opacity .15s;
+  border:1px solid rgba(255,255,255,.1);
+}
+.meet-ctrl:hover .meet-tip { opacity:1; }
+
+/* Active (muted) state */
+.meet-active { background:#ea4335 !important; }
+
+/* Hand wave */
+@keyframes handWave {
+  0%,100%{transform:rotate(0)} 25%{transform:rotate(-20deg)} 75%{transform:rotate(20deg)}
+}
+.hand-waving { animation:handWave .8s ease-in-out infinite; }
+
+/* Remote tile */
+.remote-tile {
+  position:relative; border-radius:1rem; overflow:hidden;
+  background:#3c4043; min-height:120px;
+}
+.remote-tile video { width:100%; height:100%; object-fit:cover; }
+.remote-tile .tile-label {
+  position:absolute; bottom:0; left:0; right:0; padding:8px 12px;
+  background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 100%);
+}
+.remote-tile .speak-ring {
+  position:absolute; inset:0; border-radius:1rem; pointer-events:none;
+  box-shadow:inset 0 0 0 3px #1a73e8; opacity:0; transition:opacity .15s;
+}
+.remote-tile.speaking .speak-ring { opacity:1; }
+
+/* Video grid responsive layouts */
+.vg-1 { grid-template-columns:1fr; grid-template-rows:1fr; }
+.vg-2 { grid-template-columns:repeat(2,1fr); grid-template-rows:1fr; }
+.vg-3 { grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(2,1fr); }
+.vg-4 { grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(2,1fr); }
+.vg-5,.vg-6 { grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(2,1fr); }
+</style>
 
 <script>
-(function() {
-    const currentUserId = {{ current_user_id }};
-    const roomType = '{{ room_type }}';
-    const roomPk = {{ room_pk }};
-    const statusEl = document.getElementById('video-status');
-    const localVideo = document.getElementById('localVideo');
-    const remoteVideos = document.getElementById('remoteVideos');
+(function(){
+  /* ── Config ─────────────────────────────────────────────── */
+  const CURRENT_USER_ID  = {{ current_user_id }};
+  const ROOM_TYPE        = '{{ room_type }}';
+  const ROOM_PK          = {{ room_pk }};
+  const BACK_URL         = '{{ back_url|default:"/" }}';
 
-    const peerConnections = {};
-    let localStream = null;
-    const currentClientId = (function() {
-        if (window.crypto && window.crypto.randomUUID) {
-            return window.crypto.randomUUID();
-        }
-        return `client_${Math.random().toString(36).slice(2, 10)}_${Date.now()}`;
-    })();
+  /* ── State ──────────────────────────────────────────────── */
+  let localStream   = null;
+  let micOn         = true;
+  let camOn         = true;
+  let handUp        = false;
+  let activeSidebar = null;   // 'people' | 'chat' | null
+  let callStart     = Date.now();
+  let peerConns     = {};
+  let unreadChat    = 0;
+  const clientId    = (crypto.randomUUID?.() ?? `c_${Math.random().toString(36).slice(2)}_${Date.now()}`);
 
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const socketUrl = `${wsProtocol}://${window.location.host}/ws/mentorat/video/${roomType}/${roomPk}/`;
-    const socket = new WebSocket(socketUrl);
+  /* ── DOM refs ───────────────────────────────────────────── */
+  const $  = id => document.getElementById(id);
+  const localVideo   = $('localVideo');
+  const localAvatar  = $('localAvatar');
+  const videoGrid    = $('videoGrid');
+  const sidebar      = $('sidebar');
+  const statusDot    = $('statusDot');
+  const statusText   = $('statusText');
+  const chatMessages = $('chatMessages');
 
-    function setStatus(text) {
-        statusEl.textContent = text;
+  /* ── Clock ──────────────────────────────────────────────── */
+  function tick() {
+    const n = new Date();
+    $('meetClock').textContent = n.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  }
+  tick(); setInterval(tick, 15000);
+
+  /* ── Duration ───────────────────────────────────────────── */
+  setInterval(()=>{
+    const s = Math.floor((Date.now()-callStart)/1000);
+    $('callDuration').textContent =
+      `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+  }, 1000);
+
+  /* ── Toast ──────────────────────────────────────────────── */
+  window.meetToast = function(msg) {
+    const t = $('meetToast');
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(t._tid);
+    t._tid = setTimeout(()=>{ t.style.opacity='0'; }, 2600);
+  };
+
+  /* ── Status ─────────────────────────────────────────────── */
+  function setStatus(text, color) {
+    statusText.textContent = text;
+    const colors = { yellow:'#facc15', green:'#22c55e', red:'#ef4444' };
+    statusDot.style.background = colors[color] || colors.yellow;
+    statusDot.style.animation  = color === 'green' ? 'none' : 'pulse 2s cubic-bezier(.4,0,.6,1) infinite';
+  }
+
+  /* ── Grid layout ────────────────────────────────────────── */
+  function refreshGrid() {
+    const n = Math.max(1, Math.min(6, videoGrid.children.length));
+    ['vg-1','vg-2','vg-3','vg-4','vg-5','vg-6'].forEach(c=>videoGrid.classList.remove(c));
+    videoGrid.classList.add(`vg-${n}`);
+    videoGrid.style.gridTemplateColumns = '';
+    videoGrid.style.gridTemplateRows    = '';
+    $('participantCount').textContent = videoGrid.children.length;
+  }
+
+  /* ── Mic toggle ─────────────────────────────────────────── */
+  window.toggleMic = function(){
+    micOn = !micOn;
+    localStream?.getAudioTracks().forEach(t=>t.enabled=micOn);
+    $('btnMic').classList.toggle('meet-active', !micOn);
+    $('micOnIcon').classList.toggle('hidden', !micOn);
+    $('micOffIcon').classList.toggle('hidden', micOn);
+    $('localMicBadge').style.opacity = micOn ? '1' : '.4';
+    meetToast(micOn ? '{% trans "Micro activé" %}' : '{% trans "Micro coupé" %}');
+  };
+
+  /* ── Camera toggle ──────────────────────────────────────── */
+  window.toggleCam = function(){
+    camOn = !camOn;
+    localStream?.getVideoTracks().forEach(t=>t.enabled=camOn);
+    $('btnCam').classList.toggle('meet-active', !camOn);
+    $('camOnIcon').classList.toggle('hidden', !camOn);
+    $('camOffIcon').classList.toggle('hidden', camOn);
+    localVideo.style.display  = camOn ? 'block' : 'none';
+    localAvatar.classList.toggle('hidden', camOn);
+    meetToast(camOn ? '{% trans "Caméra activée" %}' : '{% trans "Caméra désactivée" %}');
+  };
+
+  /* ── Hand raise ─────────────────────────────────────────── */
+  window.toggleHand = function(){
+    handUp = !handUp;
+    $('btnHand').classList.toggle('meet-active', handUp);
+    $('handSvg').classList.toggle('hand-waving', handUp);
+    $('handSvg').style.fill = handUp ? '#facc15' : 'rgba(255,255,255,.6)';
+    meetToast(handUp ? '✋ {% trans "Main levée" %}' : '{% trans "Main baissée" %}');
+  };
+
+  /* ── Leave ──────────────────────────────────────────────── */
+  window.leaveCall = function(){
+    localStream?.getTracks().forEach(t=>t.stop());
+    Object.values(peerConns).forEach(({pc})=>pc.close());
+    socket?.close();
+    window.location.href = BACK_URL;
+  };
+
+  /* ── Sidebar ────────────────────────────────────────────── */
+  window.toggleSidebar = function(tab){
+    if(activeSidebar === tab){
+      sidebar.classList.add('hidden');
+      activeSidebar = null;
+      [['btnPeople','#3c4043'],['btnChat','#3c4043']].forEach(([id,c])=>$(id).style.background=c);
+    } else {
+      sidebar.classList.remove('hidden');
+      activeSidebar = tab;
+      switchTab(tab);
+      $('btnPeople').style.background = tab==='people' ? '#1a73e8' : '#3c4043';
+      $('btnChat').style.background   = tab==='chat'   ? '#1a73e8' : '#3c4043';
+      if(tab==='chat'){ unreadChat=0; $('chatBadge').classList.add('hidden'); }
     }
+  };
 
-    async function createRemoteVideoElement(userId) {
-        let container = document.getElementById(`remote-video-${userId}`);
-        if (container) {
-            return container.querySelector('video');
-        }
+  window.switchTab = function(tab){
+    $('panelPeople').classList.toggle('hidden', tab!=='people');
+    $('panelChat').classList.toggle('hidden',   tab!=='chat');
+    $('panelChat').style.display = tab==='chat' ? 'flex' : '';
+    const active   = 'color:#8ab4f8; border-bottom:2px solid #8ab4f8;';
+    const inactive = 'color:rgba(255,255,255,.45); border-bottom:2px solid transparent;';
+    $('tabPeople').style.cssText += tab==='people' ? active : inactive;
+    $('tabChat').style.cssText   += tab==='chat'   ? active : inactive;
+  };
 
-        container = document.createElement('div');
-        container.id = `remote-video-${userId}`;
-        container.className = 'rounded-3xl overflow-hidden bg-black aspect-video';
+  /* ── Chat ───────────────────────────────────────────────── */
+  window.sendChat = function(){
+    const input = $('chatInput');
+    const msg = input.value.trim();
+    if(!msg) return;
+    input.value = '';
+    appendChat('{% trans "Vous" %}', msg, true);
+    // Could broadcast via WebSocket data channel in the future
+  };
 
-        const video = document.createElement('video');
-        video.autoplay = true;
-        video.playsInline = true;
-        video.className = 'w-full h-full object-cover';
-
-        container.appendChild(video);
-        remoteVideos.appendChild(container);
-        return video;
+  function appendChat(sender, msg, isSelf){
+    const empty = $('chatEmpty');
+    if(empty) empty.remove();
+    const d = document.createElement('div');
+    d.className = 'flex flex-col';
+    d.innerHTML = `
+      <span style="color:${isSelf?'#8ab4f8':'#81c995'};font-size:12px;font-weight:500;">${sender}</span>
+      <div style="margin-top:4px;background:${isSelf?'#3c4043':'#284153'};border-radius:${isSelf?'1rem 1rem .25rem 1rem':'1rem 1rem 1rem .25rem'};padding:8px 12px;color:white;font-size:14px;word-break:break-word;">${msg.replace(/</g,'&lt;')}</div>
+    `;
+    chatMessages.appendChild(d);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    if(activeSidebar !== 'chat'){
+      unreadChat++;
+      const badge = $('chatBadge');
+      badge.textContent = unreadChat;
+      badge.style.display = 'flex';
     }
+  }
 
-    function removeRemoteVideo(userId) {
-        const container = document.getElementById(`remote-video-${userId}`);
-        if (container) {
-            container.remove();
-        }
+  /* ── Remote tile factory ────────────────────────────────── */
+  async function getOrCreateRemoteTile(cid, name){
+    let tile = $(`tile-${cid}`);
+    if(tile) return tile.querySelector('video');
+    tile = document.createElement('div');
+    tile.id = `tile-${cid}`;
+    tile.className = 'remote-tile';
+    const initial = (name||'P').charAt(0).toUpperCase();
+    tile.innerHTML = `
+      <video autoplay playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+      <div class="remote-avatar" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+        <div style="width:80px;height:80px;border-radius:50%;background:#5f6368;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:white;">${initial}</div>
+      </div>
+      <div class="tile-label">
+        <span style="color:white;font-size:14px;font-weight:500;">${name||'Participant'}</span>
+      </div>
+      <div class="speak-ring"></div>
+    `;
+    videoGrid.appendChild(tile);
+    refreshGrid();
+    return tile.querySelector('video');
+  }
+
+  function removeRemoteTile(cid){
+    const tile = $(`tile-${cid}`);
+    if(tile){ tile.remove(); refreshGrid(); }
+  }
+
+  /* ── WebRTC ─────────────────────────────────────────────── */
+  async function getPeer(remoteId){
+    if(peerConns[remoteId]) return peerConns[remoteId].pc;
+    const pc = new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
+
+    pc.ontrack = async e => {
+      const vid = await getOrCreateRemoteTile(remoteId);
+      if(vid.srcObject !== e.streams[0]){
+        vid.srcObject = e.streams[0];
+        const tile = $(`tile-${remoteId}`);
+        tile?.querySelector('.remote-avatar')?.remove();
+      }
+    };
+
+    pc.onicecandidate = e => {
+      if(e.candidate) send('ice-candidate',{candidate:e.candidate.toJSON(),target_client_id:remoteId});
+    };
+
+    pc.onconnectionstatechange = ()=>{
+      if(pc.connectionState==='connected')     setStatus('{% trans "Connecté" %}','green');
+      else if(['disconnected','failed'].includes(pc.connectionState)) setStatus('{% trans "Reconnexion…" %}','yellow');
+    };
+
+    localStream?.getTracks().forEach(t=>pc.addTrack(t,localStream));
+    peerConns[remoteId] = {pc};
+    return pc;
+  }
+
+  async function closePeer(cid){
+    const d = peerConns[cid]; if(!d) return;
+    d.pc.close(); delete peerConns[cid]; removeRemoteTile(cid);
+  }
+
+  async function initMedia(){
+    if(localStream) return localStream;
+    try{
+      localStream = await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+      localVideo.srcObject = localStream;
+      setStatus('{% trans "En attente des participants…" %}','green');
+      return localStream;
+    }catch(err){
+      setStatus('{% trans "Accès caméra/micro refusé" %}','red');
+      localAvatar.classList.remove('hidden');
+      localVideo.style.display='none';
+      meetToast('{% trans "Accès caméra/micro refusé. Vérifiez les permissions." %}');
     }
+  }
 
-    async function createPeerConnection(remoteClientId) {
-        if (peerConnections[remoteClientId]) {
-            return peerConnections[remoteClientId].pc;
-        }
+  function send(type, payload={}){
+    if(socket.readyState===WebSocket.OPEN)
+      socket.send(JSON.stringify({signal_type:type, payload}));
+  }
 
-        const pc = new RTCPeerConnection({
-            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
-        });
+  async function createOffer(rid){
+    const pc = await getPeer(rid);
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    send('sdp-offer',{type:offer.type, sdp:offer.sdp, target_client_id:rid});
+  }
 
-        pc.ontrack = (event) => {
-            const videoElement = createRemoteVideoElement(remoteClientId);
-            if (videoElement.srcObject !== event.streams[0]) {
-                videoElement.srcObject = event.streams[0];
-            }
-        };
+  async function createAnswer(rid){
+    const pc = await getPeer(rid);
+    const ans = await pc.createAnswer();
+    await pc.setLocalDescription(ans);
+    send('sdp-answer',{type:ans.type, sdp:ans.sdp, target_client_id:rid});
+  }
 
-        pc.onicecandidate = (event) => {
-            if (event.candidate) {
-                sendSignal('ice-candidate', {
-                    candidate: event.candidate.toJSON(),
-                    target_client_id: remoteClientId,
-                });
-            }
-        };
+  /* ── WebSocket ──────────────────────────────────────────── */
+  const proto  = location.protocol==='https:' ? 'wss' : 'ws';
+  const socket = new WebSocket(`${proto}://${location.host}/ws/mentorat/video/${ROOM_TYPE}/${ROOM_PK}/`);
 
-        pc.onconnectionstatechange = () => {
-            setStatus(`{% trans "État" %} : ${pc.connectionState}`);
-        };
+  socket.addEventListener('open', async ()=>{
+    setStatus('{% trans "Connexion établie" %}','green');
+    await initMedia().catch(()=>{});
+    send('peer_announce',{client_id:clientId});
+  });
 
-        if (localStream) {
-            localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
-        }
+  socket.addEventListener('error', ()=>setStatus('{% trans "Erreur WebSocket" %}','red'));
+  socket.addEventListener('close', ()=>setStatus('{% trans "Déconnecté" %}','red'));
 
-        peerConnections[remoteClientId] = { pc };
-        return pc;
+  socket.addEventListener('message', async e=>{
+    const msg  = JSON.parse(e.data);
+    const from = msg.sender_client_id;
+
+    if(msg.signal_type==='peer_list'){
+      for(const p of (msg.peers||[]))
+        if(p.client_id!==clientId && clientId<p.client_id) await createOffer(p.client_id);
+      return;
     }
-
-    async function closePeer(remoteClientId) {
-        const peerData = peerConnections[remoteClientId];
-        if (!peerData) {
-            return;
-        }
-
-        peerData.pc.close();
-        delete peerConnections[remoteClientId];
-        removeRemoteVideo(remoteClientId);
+    if(msg.signal_type==='peer_announce'){
+      if(msg.client_id!==clientId && clientId<msg.client_id) await createOffer(msg.client_id);
+      return;
     }
-
-    async function initLocalStream() {
-        if (localStream) {
-            return localStream;
-        }
-
-        try {
-            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            localVideo.srcObject = localStream;
-            setStatus('{% trans "Caméra et micro actifs. En attente des autres participants..." %}');
-            return localStream;
-        } catch (error) {
-            setStatus('{% trans "Erreur : impossible d’accéder à la caméra ou au micro." %}');
-            console.error(error);
-            throw error;
-        }
+    if(msg.signal_type==='peer_left'){
+      if(msg.client_id!==clientId){ meetToast('{% trans "Un participant a quitté" %}'); await closePeer(msg.client_id); }
+      return;
     }
+    if(msg.target_client_id && msg.target_client_id!==clientId) return;
+    if(from===clientId) return;
 
-    function sendSignal(signalType, payload = {}) {
-        if (socket.readyState !== WebSocket.OPEN) {
-            return;
-        }
-
-        socket.send(JSON.stringify({ signal_type: signalType, payload }));
+    if(msg.signal_type==='sdp-offer'){
+      await initMedia().catch(()=>{});
+      const pc=await getPeer(from);
+      await pc.setRemoteDescription(new RTCSessionDescription(msg.payload));
+      await createAnswer(from);
+      setStatus('{% trans "Connexion en cours…" %}','yellow');
     }
-
-    async function createOffer(remoteClientId) {
-        const pc = await createPeerConnection(remoteClientId);
-        const offer = await pc.createOffer();
-        await pc.setLocalDescription(offer);
-        sendSignal('sdp-offer', {
-            type: offer.type,
-            sdp: offer.sdp,
-            target_client_id: remoteClientId,
-        });
+    else if(msg.signal_type==='sdp-answer'){
+      const d=peerConns[from]; if(d) await d.pc.setRemoteDescription(new RTCSessionDescription(msg.payload));
     }
-
-    async function createAnswer(remoteClientId) {
-        const pc = await createPeerConnection(remoteClientId);
-        const answer = await pc.createAnswer();
-        await pc.setLocalDescription(answer);
-        sendSignal('sdp-answer', {
-            type: answer.type,
-            sdp: answer.sdp,
-            target_client_id: remoteClientId,
-        });
+    else if(msg.signal_type==='ice-candidate'){
+      const d=peerConns[from];
+      if(d) try{ await d.pc.addIceCandidate(new RTCIceCandidate(msg.payload)); }catch{}
     }
+  });
 
-    socket.addEventListener('open', async () => {
-        setStatus('{% trans "Connexion au serveur de signalisation établie." %}');
-        if (!localStream) {
-            await initLocalStream();
-        }
-        sendSignal('peer_announce', { client_id: currentClientId });
-    });
+  /* ── Keyboard shortcuts ─────────────────────────────────── */
+  document.addEventListener('keydown', e=>{
+    if(e.target.tagName==='INPUT') return;
+    if(e.key==='d') toggleMic();
+    if(e.key==='e') toggleCam();
+    if(e.key==='Escape') leaveCall();
+  });
 
-    socket.addEventListener('error', () => {
-        setStatus('{% trans "Erreur de connexion WebSocket. Vérifiez le serveur de signalling." %}');
-        console.error('WebSocket error');
-    });
+  /* ── Boot ───────────────────────────────────────────────── */
+  initMedia().catch(()=>{});
+  refreshGrid();
 
-    socket.addEventListener('close', () => {
-        setStatus('{% trans "Connexion WebSocket fermée." %}');
-    });
-
-    // Request camera / microphone access right away so the user sees the prompt quickly.
-    initLocalStream().catch(() => {
-        // Error already handled in initLocalStream
-    });
-
-    socket.addEventListener('message', async (event) => {
-        const message = JSON.parse(event.data);
-
-        if (message.signal_type === 'peer_list') {
-            const peers = message.peers || [];
-            for (const peer of peers) {
-                if (peer.client_id !== currentClientId && currentClientId < peer.client_id) {
-                    await createOffer(peer.client_id);
-                }
-            }
-            return;
-        }
-
-        if (message.signal_type === 'peer_announce') {
-            if (message.client_id !== currentClientId && currentClientId < message.client_id) {
-                await createOffer(message.client_id);
-            }
-            return;
-        }
-
-        if (message.signal_type === 'peer_left') {
-            if (message.client_id === currentClientId) {
-                return;
-            }
-            setStatus('{% trans "Un participant a quitté la session." %}');
-            await closePeer(message.client_id);
-            return;
-        }
-
-        if (message.target_client_id && message.target_client_id !== currentClientId) {
-            return;
-        }
-
-        const remoteClientId = message.sender_client_id;
-        if (remoteClientId === currentClientId) {
-            return;
-        }
-
-        if (message.signal_type === 'sdp-offer') {
-            await initLocalStream();
-            const pc = await createPeerConnection(remoteClientId);
-            await pc.setRemoteDescription(new RTCSessionDescription(message.payload));
-            await createAnswer(remoteClientId);
-            setStatus('{% trans "Offre reçue. Envoi de la réponse..." %}');
-            return;
-        }
-
-        if (message.signal_type === 'sdp-answer') {
-            const peerData = peerConnections[remoteClientId];
-            if (!peerData) {
-                return;
-            }
-            await peerData.pc.setRemoteDescription(new RTCSessionDescription(message.payload));
-            setStatus('{% trans "Réponse reçue. Connexion en cours..." %}');
-            return;
-        }
-
-        if (message.signal_type === 'ice-candidate') {
-            const peerData = peerConnections[remoteClientId];
-            if (!peerData) {
-                return;
-            }
-            try {
-                await peerData.pc.addIceCandidate(new RTCIceCandidate(message.payload));
-            } catch (error) {
-                console.warn('ICE candidate error', error);
-            }
-        }
-    });
 })();
 </script>
 {% endblock %}
