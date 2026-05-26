@@ -2,10 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden, Http404
-from django.db.models import Q
 from django.urls import reverse
-from django.utils import timezone
-from django.utils.translation import get_language
 
 from .models import (
     Formation, SessionFormation, InscriptionFormation,
@@ -167,15 +164,9 @@ def video_session(request, session_id):
     return render(request, 'video_room.html', context)
 
 
+@login_required
 def inscrire_formation(request, session_id):
     """Inscription à une session."""
-    if not request.user.is_authenticated:
-        language = get_language() or 'fr'
-        login_url = reverse('comptes:connexion')
-        if not login_url.startswith(f'/{language}/'):
-            login_url = f'/{language}{login_url}'
-        return redirect(f'{login_url}?next={request.path}')
-
     session = get_object_or_404(SessionFormation, id=session_id)
 
     # Vérifications
@@ -205,13 +196,6 @@ def inscrire_formation(request, session_id):
 @login_required
 def voir_paiement(request, inscription_id):
     """Redirection vers la page de paiement centralisée."""
-    if not request.user.is_authenticated:
-        language = get_language() or 'fr'
-        login_url = reverse('comptes:connexion')
-        if not login_url.startswith(f'/{language}/'):
-            login_url = f'/{language}{login_url}'
-        return redirect(f'{login_url}?next={request.path}')
-
     inscription = get_object_or_404(
         InscriptionFormation,
         id=inscription_id,

@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
+from django.db.models import F
 from .models import Article, Categorie
 
 
@@ -40,9 +41,7 @@ def detail_article(request, slug):
         est_publie=True,
     )
 
-    # On incrémente le nombre de vues à chaque visite
-    article.nombre_vues += 1
-    article.save(update_fields=['nombre_vues'])
+    Article.objects.filter(pk=article.pk).update(nombre_vues=F('nombre_vues') + 1)
 
     # 3 articles récents pour la sidebar
     articles_recents = Article.objects.filter(

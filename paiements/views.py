@@ -11,6 +11,7 @@ from .service import (
     verifier_acces_cours,
     verifier_acces_formation
 )
+from .constants import PAYMENT_PROVIDERS
 
 
 @login_required
@@ -35,44 +36,7 @@ def page_paiement(request, cours_id):
         'objet': cours,
         'objet_type': 'cours',
         'action_url': reverse('paiements:initier', args=[cours.id]),
-        # On ajoutera les vrais providers ici plus tard
-        'providers_disponibles': [
-            {
-                'id': 'sandbox',
-                'nom': '🧪 Paiement test (sandbox)',
-                'description': 'Mode test — aucun argent réel',
-                'icone': '🧪',
-                'disponible': True,
-            },
-            {
-                'id': 'fedapay',
-                'nom': 'FedaPay',
-                'description': 'Mobile Money, carte bancaire (Togo/Bénin)',
-                'icone': '📱',
-                'disponible': False,  # Activé quand le compte est créé
-            },
-            {
-                'id': 'cinetpay',
-                'nom': 'CinetPay',
-                'description': 'Mobile Money, carte Visa (Afrique de l\'Ouest)',
-                'icone': '💳',
-                'disponible': False,
-            },
-            {
-                'id': 'mixx',
-                'nom': 'Mixx by YAS',
-                'description': 'Wave, Flooz, T-Money (Togo)',
-                'icone': '📲',
-                'disponible': False,
-            },
-            {
-                'id': 'stripe',
-                'nom': 'Stripe',
-                'description': 'Carte bancaire internationale (Visa, Mastercard)',
-                'icone': '🌍',
-                'disponible': False,
-            },
-        ]
+        'providers_disponibles': PAYMENT_PROVIDERS,
     }
 
     return render(request, 'paiements/page_paiement.html', contexte)
@@ -92,43 +56,7 @@ def page_paiement_formation(request, inscription_id):
     contexte = {
         'objet': inscription,
         'objet_type': 'formation',
-        'providers_disponibles': [
-            {
-                'id': 'sandbox',
-                'nom': '🧪 Paiement test (sandbox)',
-                'description': 'Mode test — aucun argent réel',
-                'icone': '🧪',
-                'disponible': True,
-            },
-            {
-                'id': 'fedapay',
-                'nom': 'FedaPay',
-                'description': 'Mobile Money, carte bancaire (Togo/Bénin)',
-                'icone': '📱',
-                'disponible': False,
-            },
-            {
-                'id': 'cinetpay',
-                'nom': 'CinetPay',
-                'description': 'Mobile Money, carte Visa (Afrique de l\'Ouest)',
-                'icone': '💳',
-                'disponible': False,
-            },
-            {
-                'id': 'mixx',
-                'nom': 'Mixx by YAS',
-                'description': 'Wave, Flooz, T-Money (Togo)',
-                'icone': '📲',
-                'disponible': False,
-            },
-            {
-                'id': 'stripe',
-                'nom': 'Stripe',
-                'description': 'Carte bancaire internationale (Visa, Mastercard)',
-                'icone': '🌍',
-                'disponible': False,
-            },
-        ],
+        'providers_disponibles': PAYMENT_PROVIDERS,
         'action_url': reverse('paiements:initier_formation', args=[inscription.id]),
     }
 

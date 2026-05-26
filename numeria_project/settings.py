@@ -111,6 +111,12 @@ if DATABASE_URL and not DATABASE_URL.startswith('sqlite'):
         )
     }
 else:
+    if not DEBUG:
+        from django.core.exceptions import ImproperlyConfigured
+        raise ImproperlyConfigured(
+            "DATABASE_URL est requis en production. "
+            "Ajoutez-la dans les variables d'environnement Railway."
+        )
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -166,8 +172,6 @@ if not _valid_cloudinary:
     os.environ.pop('CLOUDINARY_URL', None)
 
 import cloudinary
-import cloudinary.uploader
-import cloudinary.api
 
 if CLOUDINARY_URL:
     # Parse l'URL Cloudinary
@@ -204,6 +208,12 @@ else:
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.railway.app",
+]
+
+# ── MENTORAT — Numéros de paiement Mobile Money ──────────────────────────────
+MENTORAT_NUMEROS_PAIEMENT = [
+    {'operateur': 'TMoney', 'numero': config('MENTORAT_TMONEY', default='+228 93 00 00 00'), 'emoji': '📱'},
+    {'operateur': 'Flooz',  'numero': config('MENTORAT_FLOOZ',  default='+228 95 00 00 00'), 'emoji': '📱'},
 ]
 
 # ── AUTHENTIFICATION ─────────────────────────────────────────────────────────

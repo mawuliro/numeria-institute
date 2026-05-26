@@ -21,7 +21,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
-from .models import PaiementSeance, SeanceMentorat
+from .models import PaiementSeance
 import logging
 
 logger = logging.getLogger(__name__)
@@ -173,9 +173,21 @@ class ValidateurPaiement:
             paiement.est_suspect = True
             paiement.raisons_suspect = ' | '.join(raisons)
             logger.warning(f"PAIEMENT SUSPECT #{paiement.id}: {paiement.raisons_suspect}")
-            
-            # TODO: Envoyer email à admin
-            # send_email_admin_paiement_suspect(paiement)
+
+            try:
+                from django.core.mail import mail_admins
+                mail_admins(
+                    subject=f'[Numeria] Paiement suspect #{paiement.id}',
+                    message=(
+                        f"Un paiement suspect a été détecté.\n\n"
+                        f"Paiement ID : {paiement.id}\n"
+                        f"Montant     : {paiement.montant_total} FCFA\n"
+                        f"Raisons     : {paiement.raisons_suspect}\n"
+                    ),
+                    fail_silently=True,
+                )
+            except Exception:
+                pass
         else:
             paiement.est_suspect = False
 
@@ -216,8 +228,24 @@ class ValidateurPaiement:
         paiement.raison_echec = raison
         paiement.save()
         logger.info(f"PAIEMENT CONTESTÉ PAR MENTOR #{paiement.id}: {raison}")
-        
-        # TODO: Remboursement automatique mentoré
+
+        try:
+            from django.core.mail import mail_admins
+            mentee = paiement.seance.relation.mentee
+            mail_admins(
+                subject=f'[Numeria] Remboursement requis — Paiement #{paiement.id}',
+                message=(
+                    f"Un mentor a contesté un paiement. Remboursement manuel requis.\n\n"
+                    f"Paiement ID  : {paiement.id}\n"
+                    f"Montant      : {paiement.montant_total} FCFA\n"
+                    f"Mentoré      : {mentee}\n"
+                    f"Raison       : {raison}\n\n"
+                    f"Action : procéder au remboursement via le gateway de paiement."
+                ),
+                fail_silently=True,
+            )
+        except Exception:
+            pass
 
 
 class ContestationPaiement(models.Model):

@@ -1,9 +1,14 @@
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
+from django.core.mail import BadHeaderError
+from smtplib import SMTPException
 from cours.models import Cours
 from blog.models import Article
 from .models import HomePage, AboutPage, ContactPage
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -236,10 +241,8 @@ Lomé, Togo 🇹🇬
                     fail_silently=False,
                 )
                 email_sent = True
-            except Exception as e:
+            except (SMTPException, BadHeaderError, ConnectionError, TimeoutError, OSError) as e:
                 email_sent = False
-                import logging
-                logger = logging.getLogger(__name__)
                 logger.error(f'Email error: {str(e)}')
 
             from django.contrib import messages

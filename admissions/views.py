@@ -9,6 +9,7 @@ from django.utils.translation import gettext as _
 from .models import CampagneRecrutement, Candidature
 from .forms import FormulaireCandidature
 from paiements.models import Paiement
+from paiements.constants import PAYMENT_PROVIDERS
 import uuid
 
 
@@ -146,29 +147,7 @@ def page_paiement_candidature(request, campagne_id):
     context = {
         'campagne': campagne,
         'paiement': paiement_attente,
-        'providers': [
-            {
-                'id': 'sandbox',
-                'nom': '🧪 Mode test (sandbox)',
-                'description': 'Paiement de test - aucun argent réel',
-                'icone': '🧪',
-                'disponible': True,
-            },
-            {
-                'id': 'fedapay',
-                'nom': 'FedaPay',
-                'description': 'Mobile Money (Togo, Bénin)',
-                'icone': '📱',
-                'disponible': False,
-            },
-            {
-                'id': 'cinetpay',
-                'nom': 'CinetPay',
-                'description': 'Mobile Money (Afrique de l\'Ouest)',
-                'icone': '💳',
-                'disponible': False,
-            },
-        ]
+        'providers': PAYMENT_PROVIDERS,
     }
     
     return render(request, 'admissions/paiement_candidature.html', context)

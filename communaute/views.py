@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Count, F, Q
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .models import Categorie, Sujet, Message, Vote, ProfilUtilisateur
@@ -52,9 +52,7 @@ def detail_sujet(request, pk):
     """Affiche les détails d'un sujet et ses messages."""
     sujet = get_object_or_404(Sujet, pk=pk)
 
-    # Incrémenter le compteur de vues
-    sujet.vues += 1
-    sujet.save(update_fields=['vues'])
+    Sujet.objects.filter(pk=sujet.pk).update(vues=F('vues') + 1)
 
     messages_sujet = sujet.messages.annotate(
         likes_count=Count('votes', filter=Q(votes__valeur=1)),

@@ -120,14 +120,17 @@ def dashboard(request):
     # ============================================================
     
     niveaux_etudes = {
-        'lycee': 0, 'licence': 0, 'master': 0, 
+        'lycee': 0, 'licence': 0, 'master': 0,
         'doctorat': 0, 'professionnel': 0, 'autre': 0
     }
-    
-    for user in User.objects.filter(profil__isnull=False):
-        niveau = user.profil.niveau_etudes
-        if niveau in niveaux_etudes:
-            niveaux_etudes[niveau] += 1
+
+    for item in (
+        User.objects
+        .filter(profil__isnull=False, profil__niveau_etudes__in=niveaux_etudes)
+        .values('profil__niveau_etudes')
+        .annotate(count=Count('id'))
+    ):
+        niveaux_etudes[item['profil__niveau_etudes']] = item['count']
     
     # ============================================================
     # CONTEXTE

@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.db.models import Q, Sum
 from django.urls import reverse
 from paiements.service import creer_paiement, traiter_paiement
+from paiements.constants import PAYMENT_PROVIDERS
 from django.utils import timezone
 from django.http import Http404
 from .models import Mentor, Mentee, DemandeMentorat, RelationMentorat, SeanceMentorat, PaiementSeance
@@ -561,43 +563,7 @@ def paiement_seance(request, seance_pk):
         messages.info(request, "Ce paiement est déjà confirmé.")
         return redirect('mentorat:detail_relation', pk=seance.relation.pk)
 
-    providers_disponibles = [
-        {
-            'id': 'sandbox',
-            'nom': '🧪 Paiement test (sandbox)',
-            'description': 'Mode test — aucun argent réel',
-            'icone': '🧪',
-            'disponible': True,
-        },
-        {
-            'id': 'fedapay',
-            'nom': 'FedaPay',
-            'description': 'Mobile Money, carte bancaire (Togo/Bénin)',
-            'icone': '📱',
-            'disponible': False,
-        },
-        {
-            'id': 'cinetpay',
-            'nom': 'CinetPay',
-            'description': 'Mobile Money, carte Visa (Afrique de l\'Ouest)',
-            'icone': '💳',
-            'disponible': False,
-        },
-        {
-            'id': 'mixx',
-            'nom': 'Mixx by YAS',
-            'description': 'Wave, Flooz, T-Money (Togo)',
-            'icone': '📲',
-            'disponible': False,
-        },
-        {
-            'id': 'stripe',
-            'nom': 'Stripe',
-            'description': 'Carte bancaire internationale (Visa, Mastercard)',
-            'icone': '🌍',
-            'disponible': False,
-        },
-    ]
+    providers_disponibles = PAYMENT_PROVIDERS
 
     if request.method == 'POST' and 'provider' in request.POST:
         provider = request.POST.get('provider', 'sandbox')
@@ -644,11 +610,7 @@ def paiement_seance(request, seance_pk):
     else:
         form = PaiementSeanceForm(instance=paiement_seance)
 
-    # Numéros mobile money Numeria (à configurer selon votre pays)
-    numeros_paiement = [
-        {'operateur': 'TMoney', 'numero': '+228 93 00 00 00', 'emoji': '📱'},
-        {'operateur': 'Flooz', 'numero': '+228 95 00 00 00', 'emoji': '📱'},
-    ]
+    numeros_paiement = settings.MENTORAT_NUMEROS_PAIEMENT
 
     return render(request, 'mentorat/paiement_seance.html', {
         'seance': seance,

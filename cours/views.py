@@ -134,7 +134,10 @@ def detail_cours(request, cours_id):
         reponse_choisie   = request.GET.get('choisie', '').upper()
 
         if exercice_actif_id:
-            exercice_actif_id = int(exercice_actif_id)
+            try:
+                exercice_actif_id = int(exercice_actif_id)
+            except (ValueError, TypeError):
+                exercice_actif_id = None
 
     total_lecons           = lecons.count()
     lecons_terminees_count = len(lecons_terminees_ids)
@@ -448,7 +451,7 @@ def evaluer_cours(request, cours_id):
     
     if request.method == 'POST':
         try:
-            note = int(request.POST.get('note', 0))
+            note = int(request.POST.get('note', 0) or 0)
             if note < 1 or note > 5:
                 messages.error(request, "La note doit être entre 1 et 5.")
                 return redirect('cours:detail', cours_id=cours_id)
