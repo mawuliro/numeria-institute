@@ -157,11 +157,17 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # ── CLOUDINARY — Configuration complète ──────────────────────────────────────
+CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
+
+# Cloudinary reads CLOUDINARY_URL from os.environ at import time.
+# If the value is missing or invalid, we unset it so the import doesn't crash.
+_valid_cloudinary = bool(re.match(r'cloudinary://[^:]+:[^@]+@.+', CLOUDINARY_URL))
+if not _valid_cloudinary:
+    os.environ.pop('CLOUDINARY_URL', None)
+
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-
-CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
 
 if CLOUDINARY_URL:
     # Parse l'URL Cloudinary
