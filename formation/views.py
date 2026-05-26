@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, Http404
 from django.db.models import Q
 from django.urls import reverse
 from django.utils import timezone
@@ -65,21 +65,106 @@ def detail_session(request, session_id):
     session = get_object_or_404(SessionFormation, id=session_id)
     formation = session.formation
     
-    # Vérifier si l'utilisateur est inscrit
+    # Vérifier si l'utilisateur est inscrit ou instructeur
     inscription = None
+    est_instructeur = False
     if request.user.is_authenticated:
         inscription = InscriptionFormation.objects.filter(
             session=session,
             etudiant=request.user
         ).first()
-    
+        est_instructeur = session.get_instructeurs().filter(pk=request.user.pk).exists()
+
+    peut_inscrire = session.est_ouverte_aux_inscriptions() and not inscription
+    peut_rejoindre_visio = (
+        session.modalite in ['visio', 'hybride'] and
+        session.statut != 'annulee' and
+        (est_instructeur or (inscription and inscription.a_acces()))
+    )
+
     context = {
         'session': session,
         'formation': formation,
         'inscription': inscription,
-        'peut_inscrire': session.est_ouverte_aux_inscriptions() and not inscription,
+        'est_instructeur': est_instructeur,
+        'peut_inscrire': peut_inscrire,
+        'peut_rejoindre_visio': peut_rejoindre_visio,
     }
     return render(request, 'formation/detail_session.html', context)
+
+
+@login_required
+def video_session(request, session_id):
+    """Page de visioconférence pour une session de formation."""
+    session = get_object_or_404(
+        SessionFormation.objects.select_related('formation')
+        .prefetch_related('instructeurs_session', 'formation__instructeurs', 'inscriptions__etudiant'),
+        id=session_id
+    )
+
+    if session.statut == 'annulee':
+        raise Http404("Cette session est annulée.")
+
+    est_instructeur = session.get_instructeurs().filter(pk=request.user.pk).exists()
+    inscription = InscriptionFormation.objects.filter(
+        session=session,
+        etudiant=request.user,
+        statut__in=['confirmee', 'en_cours', 'terminee']
+    ).first()
+
+    if not est_instructeur and not inscription:
+        raise Http404("Accès refusé.")
+
+    if session.modalite not in ['visio', 'hybride']:
+        raise Http404("Cette session n'est pas prévue en visioconférence.")
+
+    instructors = list(session.get_instructeurs().all())
+    participants = [
+        {
+            'id': instructor.id,
+            'name': instructor.get_full_name() or instructor.username,
+            'role': 'Instructeur',
+        }
+        for instructor in instructors
+    ]
+
+    if inscription:
+        participants.append({
+            'id': request.user.id,
+            'name': request.user.get_full_name() or request.user.username,
+            'role': 'Étudiant',
+        })
+    else:
+        participants.append({
+            'id': request.user.id,
+            'name': request.user.get_full_name() or request.user.username,
+            'role': 'Instructeur',
+        })
+
+    participant_count = session.inscriptions.filter(
+        statut__in=['confirmee', 'en_cours', 'terminee']
+    ).count() + len(instructors)
+
+    context = {
+        'room_type': 'formation_session',
+        'room_pk': session.id,
+        'room_title': session.nom,
+        'room_description': session.formation.titre,
+        'room_modalite': session.get_modalite_display(),
+        'room_date': session.date_debut.strftime('%d %B %Y'),
+        'room_time': '',
+        'room_duration': None,
+        'room_participants': participants,
+        'participants_count': participant_count,
+        'participant_label': f"{participant_count} participants attendus",
+        'current_user_id': request.user.id,
+        'current_user_name': request.user.get_full_name() or request.user.username,
+        'role_label': 'Instructeur' if est_instructeur else 'Étudiant',
+        'back_url': reverse('formation:session_detail', args=[session.id]),
+        'back_label': "Retour à la session",
+        'room_notes': "La session est prévue en visioconférence. Vérifiez votre connexion avant de rejoindre.",
+    }
+    return render(request, 'video_room.html', context)
 
 
 def inscrire_formation(request, session_id):
@@ -92,12 +177,12 @@ def inscrire_formation(request, session_id):
         return redirect(f'{login_url}?next={request.path}')
 
     session = get_object_or_404(SessionFormation, id=session_id)
-    
+
     # Vérifications
     if not session.est_ouverte_aux_inscriptions():
         messages.error(request, "Cette session n'est plus ouverte aux inscriptions.")
         return redirect('formation:session_detail', session_id=session.id)
-    
+
     inscription = InscriptionFormation.objects.filter(session=session, etudiant=request.user).first()
     if inscription:
         if inscription.statut == 'en_attente':
@@ -112,7 +197,7 @@ def inscrire_formation(request, session_id):
         prix_paye_fcfa=session.prix_reduit_fcfa or session.prix_fcfa,
         statut='en_attente'  # En attente de paiement
     )
-    
+
     messages.success(request, "Inscription créée. Veuillez effectuer le paiement.")
     return redirect('paiements:page_paiement_formation', inscription_id=inscription.id)
 

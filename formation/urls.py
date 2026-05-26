@@ -9,6 +9,7 @@ urlpatterns = [
 
     # Sessions
     path('session/<int:session_id>/', views.detail_session, name='session_detail'),
+    path('session/<int:session_id>/video/', views.video_session, name='video_session'),
 
     # Inscriptions
     path('session/<int:session_id>/inscrire/', views.inscrire_formation, name='inscrire'),

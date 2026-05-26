@@ -1,0 +1,323 @@
+{% extends 'base.html' %}
+
+{% block titre %}{% trans "Visioconférence" %} — Numeria Institute{% endblock %}
+{% block meta_description %}{% trans "Rejoignez la salle de visioconférence en groupe pour votre séance ou session." %}{% endblock %}
+
+{% block content %}
+<section class="py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                {% if back_url %}
+                    <a href="{{ back_url }}"
+                       class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-700 text-sm font-medium">
+                        ← {{ back_label|default:_('Retour') }}
+                    </a>
+                {% endif %}
+                <h1 class="mt-4 text-3xl font-extrabold text-gray-900 dark:text-white">🎥 {{ room_title }}</h1>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 max-w-2xl">{{ room_description }}</p>
+            </div>
+            <div class="text-right">
+                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                    <strong>{{ room_modalite }}</strong>
+                </span>
+            </div>
+        </div>
+
+        <div class="grid gap-6 lg:grid-cols-[1.4fr_0.8fr]">
+            <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+                <div class="grid gap-4 lg:grid-cols-[1.5fr_0.8fr]">
+                    <div class="space-y-4">
+                        <div class="space-y-4">
+                            <div id="remoteVideos" class="grid gap-4"></div>
+                            <div class="rounded-3xl overflow-hidden bg-black aspect-video">
+                                <video id="localVideo" autoplay muted playsinline class="w-full h-full object-cover"></video>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="rounded-3xl border border-gray-200 bg-slate-50 p-4 dark:border-gray-700 dark:bg-gray-800">
+                                <h2 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">{% trans "État de la session" %}</h2>
+                                <p id="video-status" class="text-sm text-slate-600 dark:text-slate-300">{% trans "Initialisation..." %}</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div class="rounded-3xl border border-gray-200 bg-slate-50 p-4 dark:border-gray-700 dark:bg-gray-800">
+                                    <p class="text-sm text-slate-400 mb-2">{% trans "Vous" %}</p>
+                                    <p class="text-base font-semibold text-slate-900 dark:text-white">{{ current_user_name }}</p>
+                                    <p class="text-xs uppercase text-slate-500 dark:text-slate-400 mt-2">{{ role_label }}</p>
+                                </div>
+                                <div class="rounded-3xl border border-gray-200 bg-slate-50 p-4 dark:border-gray-700 dark:bg-gray-800">
+                                    <p class="text-sm text-slate-400 mb-2">{% trans "Participants" %}</p>
+                                    <p class="text-base font-semibold text-slate-900 dark:text-white">{{ participants_count }}</p>
+                                    {% if participant_label %}
+                                        <p class="text-xs uppercase text-slate-500 dark:text-slate-400 mt-2">{{ participant_label }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="rounded-3xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
+                                <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">{% trans "Détails" %}</h3>
+                                <p class="text-sm text-slate-600 dark:text-slate-300"><strong>{% trans "Date" %} :</strong> {{ room_date }}</p>
+                                <p class="text-sm text-slate-600 dark:text-slate-300"><strong>{% trans "Heure" %} :</strong> {{ room_time }}</p>
+                                {% if room_duration %}
+                                    <p class="text-sm text-slate-600 dark:text-slate-300"><strong>{% trans "Durée" %} :</strong> {{ room_duration }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+                        <h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">{% trans "Instructions" %}</h2>
+                        <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-300">
+                            <li>✅ {% trans "Autorisez l'accès à votre caméra et votre micro." %}</li>
+                            <li>✅ {% trans "Restez sur cette page jusqu'à la fin de la session." %}</li>
+                            <li>✅ {% trans "La visioconférence est directement établie entre les navigateurs." %}</li>
+                        </ul>
+                        <div class="mt-6 rounded-2xl bg-slate-50 p-4 text-xs text-slate-500 dark:bg-gray-900 dark:text-slate-400">
+                            <p>{% trans "Si un participant ne rejoint pas, actualisez la page et réessayez." %}</p>
+                        </div>
+
+                        {% if room_notes %}
+                            <div class="mt-6 rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-600 dark:border-gray-700 dark:bg-gray-900 dark:text-slate-300">
+                                {{ room_notes }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+                <h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">{% trans "Participants" %}</h2>
+                <div class="space-y-3 text-sm text-slate-700 dark:text-slate-200">
+                    {% for participant in room_participants %}
+                        <div class="rounded-2xl bg-slate-50 p-4 dark:bg-gray-800">
+                            <p class="font-semibold">{{ participant.name }}</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ participant.role }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+(function() {
+    const currentUserId = {{ current_user_id }};
+    const roomType = '{{ room_type }}';
+    const roomPk = {{ room_pk }};
+    const statusEl = document.getElementById('video-status');
+    const localVideo = document.getElementById('localVideo');
+    const remoteVideos = document.getElementById('remoteVideos');
+
+    const peers = {};
+    let localStream = null;
+
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const socketUrl = `${wsProtocol}://${window.location.host}/ws/mentorat/video/${roomType}/${roomPk}/`;
+    const socket = new WebSocket(socketUrl);
+
+    function setStatus(text) {
+        statusEl.textContent = text;
+    }
+
+    async function createRemoteVideoElement(userId) {
+        let container = document.getElementById(`remote-video-${userId}`);
+        if (container) {
+            return container.querySelector('video');
+        }
+
+        container = document.createElement('div');
+        container.id = `remote-video-${userId}`;
+        container.className = 'rounded-3xl overflow-hidden bg-black aspect-video';
+
+        const video = document.createElement('video');
+        video.autoplay = true;
+        video.playsInline = true;
+        video.className = 'w-full h-full object-cover';
+
+        container.appendChild(video);
+        remoteVideos.appendChild(container);
+        return video;
+    }
+
+    function removeRemoteVideo(userId) {
+        const container = document.getElementById(`remote-video-${userId}`);
+        if (container) {
+            container.remove();
+        }
+    }
+
+    async function createPeerConnection(remoteUserId) {
+        if (peers[remoteUserId]) {
+            return peers[remoteUserId].pc;
+        }
+
+        const pc = new RTCPeerConnection({
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+        });
+
+        pc.ontrack = (event) => {
+            const videoElement = createRemoteVideoElement(remoteUserId);
+            if (videoElement.srcObject !== event.streams[0]) {
+                videoElement.srcObject = event.streams[0];
+            }
+        };
+
+        pc.onicecandidate = (event) => {
+            if (event.candidate) {
+                sendSignal('ice-candidate', {
+                    candidate: event.candidate.toJSON(),
+                    target_id: remoteUserId,
+                });
+            }
+        };
+
+        pc.onconnectionstatechange = () => {
+            setStatus(`{% trans "État" %} : ${pc.connectionState}`);
+        };
+
+        if (localStream) {
+            localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
+        }
+
+        peers[remoteUserId] = { pc };
+        return pc;
+    }
+
+    async function closePeer(remoteUserId) {
+        const peerData = peers[remoteUserId];
+        if (!peerData) {
+            return;
+        }
+
+        peerData.pc.close();
+        delete peers[remoteUserId];
+        removeRemoteVideo(remoteUserId);
+    }
+
+    async function initLocalStream() {
+        if (localStream) {
+            return localStream;
+        }
+
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            localVideo.srcObject = localStream;
+            setStatus('{% trans "Caméra et micro actifs. En attente des autres participants..." %}');
+            return localStream;
+        } catch (error) {
+            setStatus('{% trans "Erreur : impossible d’accéder à la caméra ou au micro." %}');
+            console.error(error);
+            throw error;
+        }
+    }
+
+    function sendSignal(signalType, payload = {}) {
+        if (socket.readyState !== WebSocket.OPEN) {
+            return;
+        }
+
+        socket.send(JSON.stringify({ signal_type: signalType, payload }));
+    }
+
+    async function createOffer(remoteUserId) {
+        const pc = await createPeerConnection(remoteUserId);
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        sendSignal('sdp-offer', {
+            type: offer.type,
+            sdp: offer.sdp,
+            target_id: remoteUserId,
+        });
+    }
+
+    async function createAnswer(remoteUserId) {
+        const pc = await createPeerConnection(remoteUserId);
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        sendSignal('sdp-answer', {
+            type: answer.type,
+            sdp: answer.sdp,
+            target_id: remoteUserId,
+        });
+    }
+
+    socket.addEventListener('open', async () => {
+        setStatus('{% trans "Connexion au serveur de signalisation établie." %}');
+        await initLocalStream();
+        sendSignal('peer_announce');
+    });
+
+    socket.addEventListener('message', async (event) => {
+        const message = JSON.parse(event.data);
+
+        if (message.signal_type === 'peer_list') {
+            const existingUsers = message.user_ids || [];
+            for (const peerId of existingUsers) {
+                if (peerId !== currentUserId && currentUserId < peerId) {
+                    await createOffer(peerId);
+                }
+            }
+            return;
+        }
+
+        if (message.signal_type === 'peer_announce') {
+            if (message.user_id !== currentUserId && currentUserId < message.user_id) {
+                await createOffer(message.user_id);
+            }
+            return;
+        }
+
+        if (message.signal_type === 'peer_left') {
+            if (message.user_id !== currentUserId) {
+                setStatus('{% trans "Un participant a quitté la session." %}');
+                await closePeer(message.user_id);
+            }
+            return;
+        }
+
+        if (message.target_id && message.target_id !== currentUserId) {
+            return;
+        }
+
+        const remoteUserId = message.sender_id;
+        if (remoteUserId === currentUserId) {
+            return;
+        }
+
+        if (message.signal_type === 'sdp-offer') {
+            await initLocalStream();
+            const pc = await createPeerConnection(remoteUserId);
+            await pc.setRemoteDescription(new RTCSessionDescription(message.payload));
+            await createAnswer(remoteUserId);
+            setStatus('{% trans "Offre reçue. Envoi de la réponse..." %}');
+            return;
+        }
+
+        if (message.signal_type === 'sdp-answer') {
+            const peerData = peers[remoteUserId];
+            if (!peerData) {
+                return;
+            }
+            await peerData.pc.setRemoteDescription(new RTCSessionDescription(message.payload));
+            setStatus('{% trans "Réponse reçue. Connexion en cours..." %}');
+            return;
+        }
+
+        if (message.signal_type === 'ice-candidate') {
+            const peerData = peers[remoteUserId];
+            if (!peerData) {
+                return;
+            }
+            try {
+                await peerData.pc.addIceCandidate(new RTCIceCandidate(message.payload));
+            } catch (error) {
+                console.warn('ICE candidate error', error);
+            }
+        }
+    });
+})();
+</script>
+{% endblock %}

@@ -208,7 +208,14 @@
                             {% endif %}
 
                             {% if seance.statut == 'planifiee' %}
-                            <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                            <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 flex flex-wrap gap-2">
+                                {% if seance.modalite == 'visio' %}
+                                <a href="{% url 'mentorat:video_seance' seance.pk %}"
+                                   style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                   class="bg-numeria-teal/10 text-numeria-teal hover:bg-numeria-teal hover:text-white px-4 py-2 rounded-xl transition-colors text-xs">
+                                    🎥 {% trans "Rejoindre en visio" %}
+                                </a>
+                                {% endif %}
                                 <a href="{% url 'mentorat:terminer_seance' seance.pk %}"
                                    style="font-family:'Outfit',sans-serif;font-weight:700;"
                                    class="bg-numeria-or/10 text-numeria-or hover:bg-numeria-or hover:text-white px-4 py-2 rounded-xl transition-colors text-xs">

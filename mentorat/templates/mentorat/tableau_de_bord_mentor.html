@@ -189,10 +189,18 @@
                             {% trans "Avec" %} {{ seance.relation.mentee.profil.utilisateur.get_full_name }}
                             · {{ seance.get_modalite_display }}
                         </p>
-                        <a href="{% url 'mentorat:terminer_seance' seance.pk %}"
-                           class="bg-numeria-or/15 text-numeria-or hover:bg-numeria-or hover:text-white px-4 py-1.5 rounded-lg text-xs transition-colors font-semibold">
-                            ✅ {% trans "Terminer" %}
-                        </a>
+                        <div class="flex flex-wrap gap-2">
+                            {% if seance.modalite == 'visio' %}
+                            <a href="{% url 'mentorat:video_seance' seance.pk %}"
+                               class="bg-numeria-teal/15 text-numeria-teal hover:bg-numeria-teal hover:text-white px-4 py-1.5 rounded-lg text-xs transition-colors font-semibold">
+                                🎥 {% trans "Rejoindre" %}
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'mentorat:terminer_seance' seance.pk %}"
+                               class="bg-numeria-or/15 text-numeria-or hover:bg-numeria-or hover:text-white px-4 py-1.5 rounded-lg text-xs transition-colors font-semibold">
+                                ✅ {% trans "Terminer" %}
+                            </a>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>

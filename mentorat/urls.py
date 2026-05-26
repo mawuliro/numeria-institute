@@ -29,4 +29,5 @@ urlpatterns = [
     # Gestion des séances
     path('seance/<int:seance_pk>/terminer/', views.terminer_seance, name='terminer_seance'),
     path('seance/<int:seance_pk>/paiement/', views.paiement_seance, name='paiement_seance'),
+    path('seance/<int:seance_pk>/video/', views.video_seance, name='video_seance'),
 ]

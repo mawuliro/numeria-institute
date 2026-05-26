@@ -99,7 +99,13 @@
 
                     <!-- CTA -->
                     {% if inscription.a_acces %}
-                      {% if inscription.prochaine_lecon %}
+                      {% if inscription.session_formation.modalite in ['visio', 'hybride'] %}
+                        <a href="{% url 'formation:video_session' inscription.session_formation.id %}"
+                           class="w-full bg-numeria-teal hover:bg-numeria-teal/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 inline-flex items-center justify-center">
+                          <i class="fas fa-video mr-2"></i>
+                          {% trans "Rejoindre la visioconférence" %}
+                        </a>
+                      {% elif inscription.prochaine_lecon %}
                         <a href="{% url 'formation:voir_lecon' inscription.prochaine_lecon.id %}"
                            class="w-full bg-numeria-teal hover:bg-numeria-teal/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 inline-flex items-center justify-center">
                           <i class="fas fa-play mr-2"></i>

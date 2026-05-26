@@ -51,6 +51,14 @@
                 {% trans "Inscription indisponible" %}
               </button>
             {% endif %}
+
+            {% if peut_rejoindre_visio %}
+              <a href="{% url 'formation:video_session' session.id %}" class="bg-numeria-teal hover:bg-numeria-teal/90 text-white font-bold py-4 px-8 rounded-xl transition duration-300 text-center">
+                <i class="fas fa-video mr-2"></i>
+                {% trans "Rejoindre la visioconférence" %}
+              </a>
+            {% endif %}
+
             <a href="{% url 'formation:detail' formation.slug %}" class="bg-white/10 border border-white/20 text-white hover:bg-white hover:text-numeria-teal font-semibold py-4 px-8 rounded-xl transition duration-300 text-center">
               <i class="fas fa-arrow-left mr-2"></i>
               {% trans "Retour à la formation" %}

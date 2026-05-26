@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+
+{% block titre %}{% trans "Visioconférence" %} — Numeria Institute{% endblock %}
+{% block meta_description %}{% trans "Rejoignez la salle de visioconférence pour votre séance de mentorat." %}{% endblock %}
+
+{% block content %}
+<section class="py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <a href="{% url 'mentorat:detail_relation' seance.relation.pk %}"
+                   class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-700 text-sm font-medium">
+                    ← {% trans "Retour à la relation" %}
+                </a>
+                <h1 class="mt-4 text-3xl font-extrabold text-gray-900 dark:text-white">🎥 {% trans "Visioconférence" %}</h1>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 max-w-2xl">{% trans "Rejoignez votre séance de mentorat en visioconférence. Activez votre caméra et votre micro, puis attendez que votre interlocuteur rejoigne." %}</p>
+            </div>
+            <div class="text-right">
+                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                    <strong>{% trans "Séance" %} :</strong> {{ seance.titre }}
+                </span>
+            </div>
+        </div>
+
+        <div class="grid gap-6 lg:grid-cols-[1.4fr_0.8fr]">
+            <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+                <div class="grid gap-4 lg:grid-cols-[1.5fr_0.8fr]">
+                    <div class="space-y-4">
+                        <div class="rounded-3xl overflow-hidden bg-black aspect-video">
+                            <video id="remoteVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div class="rounded-3xl overflow-hidden bg-black aspect-video">
+                                <video id="localVideo" autoplay muted playsinline class="w-full h-full object-cover"></video>
+                            </div>
+                            <div class="rounded-3xl border border-gray-200 bg-slate-50 p-4 dark:border-gray-700 dark:bg-gray-800">
+                                <h2 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">{% trans "État de la session" %}</h2>
+                                <p id="video-status" class="text-sm text-slate-600 dark:text-slate-300">{% trans "Initialisation..." %}</p>
+                                <div class="mt-4 text-sm text-slate-600 dark:text-slate-300 space-y-2">
+                                    <p><strong>{% trans "Vous" %} :</strong> {{ request.user.get_full_name|default:request.user.username }}</p>
+                                    <p><strong>{% trans "Interlocuteur" %} :</strong>
+                                        {% if role == 'mentor' %}
+                                            {{ mentee_user.get_full_name|default:mentee_user.username }}
+                                        {% else %}
+                                            {{ mentor_user.get_full_name|default:mentor_user.username }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-3xl border border-gray-200 bg-slate-50 p-6 text-sm text-slate-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200">
+                        <h2 class="text-base font-semibold mb-4">{% trans "Instructions" %}</h2>
+                        <ul class="space-y-3">
+                            <li>✅ {% trans "Autorisez l'accès à votre micro et caméra." %}</li>
+                            <li>✅ {% trans "Restez sur cette page jusqu'à la fin de la séance." %}</li>
+                            <li>✅ {% trans "L'audio et la vidéo sont envoyés directement entre vos navigateurs." %}</li>
+                        </ul>
+                        <div class="mt-6">
+                            <div class="rounded-2xl bg-white p-4 text-xs text-slate-500 dark:bg-gray-900 dark:text-slate-400">
+                                <p><strong>{% trans "Date" %} :</strong> {{ seance.date_heure|date:"d M Y" }}</p>
+                                <p><strong>{% trans "Heure" %} :</strong> {{ seance.date_heure|date:"H:i" }}</p>
+                                <p><strong>{% trans "Durée" %} :</strong> {{ seance.duree_minutes }} {% trans "minutes" %}</p>
+                                <p><strong>{% trans "Modalité" %} :</strong> {{ seance.get_modalite_display }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+                <h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">{% trans "Conseils" %}</h2>
+                <p class="text-sm text-slate-600 dark:text-slate-300">{% trans "Pour une meilleure qualité, utilisez un casque et une connexion Wi-Fi stable." %}</p>
+                <div class="mt-6 rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-gray-900">
+                    <p class="text-sm text-slate-500 dark:text-slate-400">{% trans "Si votre interlocuteur ne rejoint pas, attendez quelques instants puis actualisez la page." %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+(function() {
+    const currentUserId = {{ current_user_id }};
+    const otherUserId = {{ other_user_id }};
+    const initiator = currentUserId < otherUserId;
+    const seancePk = {{ seance.pk }};
+    const statusEl = document.getElementById('video-status');
+    const localVideo = document.getElementById('localVideo');
+    const remoteVideo = document.getElementById('remoteVideo');
+
+    let pc = null;
+    let localStream = null;
+    let started = false;
+
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const socketUrl = `${wsProtocol}://${window.location.host}/ws/mentorat/video/${seancePk}/`;
+    const socket = new WebSocket(socketUrl);
+
+    function setStatus(text) {
+        statusEl.textContent = text;
+    }
+
+    function sendSignal(signalType, payload) {
+        if (socket.readyState !== WebSocket.OPEN) {
+            return;
+        }
+        socket.send(JSON.stringify({ signal_type: signalType, payload }));
+    }
+
+    async function createPeerConnection() {
+        if (pc) {
+            return pc;
+        }
+
+        pc = new RTCPeerConnection({
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+        });
+
+        pc.ontrack = (event) => {
+            if (remoteVideo.srcObject !== event.streams[0]) {
+                remoteVideo.srcObject = event.streams[0];
+            }
+        };
+
+        pc.onicecandidate = (event) => {
+            if (event.candidate) {
+                sendSignal('ice-candidate', event.candidate.toJSON());
+            }
+        };
+
+        pc.onconnectionstatechange = () => {
+            setStatus(`{% trans "État" %} : ${pc.connectionState}`);
+        };
+
+        return pc;
+    }
+
+    async function initLocalStream() {
+        if (localStream) {
+            return localStream;
+        }
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            localVideo.srcObject = localStream;
+            const peerConnection = await createPeerConnection();
+            localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
+            setStatus('{% trans "Caméra et micro actifs. En attente d’autre participant..." %}');
+            return localStream;
+        } catch (error) {
+            setStatus('{% trans "Erreur : impossible d’accéder à la caméra ou au micro." %}');
+            console.error(error);
+        }
+    }
+
+    async function createOffer() {
+        if (started) {
+            return;
+        }
+        await initLocalStream();
+        const peerConnection = await createPeerConnection();
+        const offer = await peerConnection.createOffer();
+        await peerConnection.setLocalDescription(offer);
+        sendSignal('sdp-offer', { type: offer.type, sdp: offer.sdp });
+        started = true;
+        setStatus('{% trans "Offre envoyée. En attente de la réponse de l’autre participant..." %}');
+    }
+
+    socket.addEventListener('open', async () => {
+        setStatus('{% trans "Connexion au serveur de signalisation établie." %}');
+        await initLocalStream();
+    });
+
+    socket.addEventListener('message', async (event) => {
+        const message = JSON.parse(event.data);
+
+        if (message.signal_type === 'peer_joined') {
+            if (message.user_id !== currentUserId && initiator && !started) {
+                await createOffer();
+            }
+            return;
+        }
+
+        if (message.signal_type === 'peer_left') {
+            if (message.user_id !== currentUserId) {
+                setStatus('{% trans "L’autre participant a quitté la séance." %}');
+            }
+            return;
+        }
+
+        if (message.sender_id === currentUserId) {
+            return;
+        }
+
+        const peerConnection = await createPeerConnection();
+
+        if (message.signal_type === 'sdp-offer') {
+            await initLocalStream();
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(message.payload));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            sendSignal('sdp-answer', { type: answer.type, sdp: answer.sdp });
+            started = true;
+            setStatus('{% trans "Offre reçue. Réponse envoyée." %}');
+            return;
+        }
+
+        if (message.signal_type === 'sdp-answer') {
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(message.payload));
+            started = true;
+            setStatus('{% trans "Réponse reçue. Connexion en cours..." %}');
+            return;
+        }
+
+        if (message.signal_type === 'ice-candidate') {
+            try {
+                await peerConnection.addIceCandidate(new RTCIceCandidate(message.payload));
+            } catch (error) {
+                console.warn('ICE candidate error', error);
+            }
+            return;
+        }
+    });
+})();
+</script>
+{% endblock %}

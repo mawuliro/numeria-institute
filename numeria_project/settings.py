@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'cloudinary',           # ← NOUVEAU : Doit être avant cloudinary_storage
     'cloudinary_storage',   # ← NOUVEAU : Doit être avant staticfiles
+    'channels',
     'pages',
     'cours',
     'blog',
@@ -89,7 +90,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'numeria_project.wsgi.application'
+ASGI_APPLICATION = 'numeria_project.asgi.application'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 # ── BASE DE DONNÉES ─────────────────────────────────────────────────────────
 DATABASE_URL = os.environ.get('DATABASE_URL') or config('DATABASE_URL', default='')

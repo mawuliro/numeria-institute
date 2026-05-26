@@ -3,7 +3,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q, Sum
+from django.urls import reverse
 from django.utils import timezone
+from django.http import Http404
 from .models import Mentor, Mentee, DemandeMentorat, RelationMentorat, SeanceMentorat, PaiementSeance
 from .forms import InscriptionMentorForm, InscriptionMenteeForm, DemandeMentoratForm, SeanceMentoratForm, TerminerSeanceForm, PaiementSeanceForm
 
@@ -252,6 +254,82 @@ def tableau_de_bord_mentor(request):
         'nb_paiements_confirmes': paiements_confirmes.count(),
     }
     return render(request, 'mentorat/tableau_de_bord_mentor.html', context)
+
+
+def _is_seance_participant(user, seance):
+    if not hasattr(user, 'profil'):
+        return False
+    profil = user.profil
+    return (
+        hasattr(profil, 'mentorat_mentor') and seance.relation.mentor == profil.mentorat_mentor
+    ) or (
+        hasattr(profil, 'mentorat_mentee') and seance.relation.mentee == profil.mentorat_mentee
+    )
+
+
+@login_required
+def video_seance(request, seance_pk):
+    """Page de visioconférence pour une séance de mentorat en visio."""
+    seance = get_object_or_404(
+        SeanceMentorat.objects.select_related(
+            'relation__mentor__profil__utilisateur',
+            'relation__mentee__profil__utilisateur',
+            'relation__mentor__profil',
+            'relation__mentee__profil'
+        ),
+        pk=seance_pk,
+        statut='planifiee'
+    )
+
+    if seance.modalite != 'visio':
+        raise Http404("Cette séance n'est pas prévue en visioconférence.")
+
+    if not _is_seance_participant(request.user, seance):
+        raise Http404("Accès refusé.")
+
+    mentor_user = seance.relation.mentor.profil.utilisateur
+    mentee_user = seance.relation.mentee.profil.utilisateur
+    current_user_id = request.user.id
+    if current_user_id == mentor_user.id:
+        role = 'mentor'
+    elif current_user_id == mentee_user.id:
+        role = 'mentee'
+    else:
+        raise Http404("Accès refusé.")
+
+    participants = [
+        {
+            'id': mentor_user.id,
+            'name': mentor_user.get_full_name() or mentor_user.username,
+            'role': 'mentor',
+        },
+        {
+            'id': mentee_user.id,
+            'name': mentee_user.get_full_name() or mentee_user.username,
+            'role': 'mentee',
+        },
+    ]
+
+    context = {
+        'room_type': 'mentorat_seance',
+        'room_pk': seance.pk,
+        'room_title': seance.titre,
+        'room_description': seance.description or seance.relation.mentor.profil.utilisateur.get_full_name() or seance.relation.mentee.profil.utilisateur.get_full_name() or seance.titre,
+        'room_modalite': seance.get_modalite_display(),
+        'room_date': seance.date_heure.strftime('%d %B %Y'),
+        'room_time': seance.date_heure.strftime('%H:%M'),
+        'room_duration': f"{seance.duree_minutes} minutes",
+        'room_participants': participants,
+        'participants_count': len(participants),
+        'participant_label': 'Mentor et mentee',
+        'current_user_id': current_user_id,
+        'current_user_name': request.user.get_full_name() or request.user.username,
+        'role_label': 'Mentor' if role == 'mentor' else 'Mentee',
+        'back_url': reverse('mentorat:detail_relation', kwargs={'pk': seance.relation.pk}),
+        'back_label': "Retour à la relation",
+        'room_notes': "Activez votre micro et votre caméra, puis lancez la session en groupe.",
+    }
+    return render(request, 'video_room.html', context)
 
 
 @login_required
