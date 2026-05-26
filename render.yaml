@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: numeria
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn numeria_project.wsgi --worker-class gevent --worker-connections 1000 --log-file - --timeout 120
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: SECRET_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: numeria-db
+          property: connectionString
+      - key: CLOUDINARY_URL
+        sync: false
+      - key: EMAIL_SERVICE
+        sync: false
+      - key: CSRF_TRUSTED_ORIGINS
+        value: ""
+
+databases:
+  - name: numeria-db
+    plan: free
+    databaseName: numeria
+    user: numeria

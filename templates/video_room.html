@@ -253,8 +253,24 @@
 
     socket.addEventListener('open', async () => {
         setStatus('{% trans "Connexion au serveur de signalisation établie." %}');
-        await initLocalStream();
+        if (!localStream) {
+            await initLocalStream();
+        }
         sendSignal('peer_announce', { client_id: currentClientId });
+    });
+
+    socket.addEventListener('error', () => {
+        setStatus('{% trans "Erreur de connexion WebSocket. Vérifiez le serveur de signalling." %}');
+        console.error('WebSocket error');
+    });
+
+    socket.addEventListener('close', () => {
+        setStatus('{% trans "Connexion WebSocket fermée." %}');
+    });
+
+    // Request camera / microphone access right away so the user sees the prompt quickly.
+    initLocalStream().catch(() => {
+        // Error already handled in initLocalStream
     });
 
     socket.addEventListener('message', async (event) => {
