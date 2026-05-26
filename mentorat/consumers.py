@@ -9,7 +9,8 @@ from .models import SeanceMentorat
 from formation.models import SessionFormation, InscriptionFormation
 
 User = get_user_model()
-ACTIVE_VIDEO_ROOMS = defaultdict(set)
+ACTIVE_VIDEO_ROOMS = defaultdict(dict)
+CHANNEL_CLIENT_INFO = {}
 
 class VideoChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -27,38 +28,33 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
+        CHANNEL_CLIENT_INFO[self.channel_name] = {
+            'room_group_name': self.room_group_name,
+            'user_id': user.id,
+            'client_id': None,
+        }
+
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        ACTIVE_VIDEO_ROOMS[self.room_group_name].add(user.id)
         await self.accept()
-
-        existing_participants = [uid for uid in ACTIVE_VIDEO_ROOMS[self.room_group_name] if uid != user.id]
-        await self.send(text_data=json.dumps({
-            'signal_type': 'peer_list',
-            'user_ids': existing_participants,
-        }))
-
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'peer.status',
-                'event': 'peer_announce',
-                'user_id': user.id,
-            }
-        )
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
-        user = self.scope['user']
-        if user.is_authenticated:
-            ACTIVE_VIDEO_ROOMS[self.room_group_name].discard(user.id)
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'peer.status',
-                    'event': 'peer_left',
-                    'user_id': user.id,
-                }
-            )
+        client_info = CHANNEL_CLIENT_INFO.get(self.channel_name)
+        if client_info:
+            client_id = client_info.get('client_id')
+            user_id = client_info.get('user_id')
+            if client_id:
+                ACTIVE_VIDEO_ROOMS[self.room_group_name].pop(client_id, None)
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'peer.status',
+                        'event': 'peer_left',
+                        'user_id': user_id,
+                        'client_id': client_id,
+                    }
+                )
+            CHANNEL_CLIENT_INFO.pop(self.channel_name, None)
 
     async def receive(self, text_data=None, bytes_data=None):
         if text_data is None:
@@ -68,14 +64,42 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
         signal_type = data.get('signal_type')
         payload = data.get('payload', {})
         user = self.scope['user']
+        client_info = CHANNEL_CLIENT_INFO.get(self.channel_name)
+        if not client_info:
+            return
 
         if signal_type == 'peer_announce':
+            client_id = payload.get('client_id')
+            if not client_id:
+                return
+
+            previous_id = client_info.get('client_id')
+            if previous_id and previous_id != client_id:
+                ACTIVE_VIDEO_ROOMS[self.room_group_name].pop(previous_id, None)
+
+            client_info['client_id'] = client_id
+            ACTIVE_VIDEO_ROOMS[self.room_group_name][client_id] = {
+                'channel_name': self.channel_name,
+                'user_id': user.id,
+            }
+
+            existing_participants = [
+                {'client_id': cid, 'user_id': info['user_id']}
+                for cid, info in ACTIVE_VIDEO_ROOMS[self.room_group_name].items()
+                if cid != client_id
+            ]
+            await self.send(text_data=json.dumps({
+                'signal_type': 'peer_list',
+                'peers': existing_participants,
+            }))
+
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'peer.status',
                     'event': 'peer_announce',
                     'user_id': user.id,
+                    'client_id': client_id,
                 }
             )
             return
@@ -83,7 +107,10 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
         if signal_type not in {'sdp-offer', 'sdp-answer', 'ice-candidate'}:
             return
 
-        target_id = payload.get('target_id')
+        if not client_info.get('client_id'):
+            return
+
+        target_id = payload.get('target_client_id') or payload.get('target_id')
         if target_id is None:
             return
 
@@ -91,8 +118,8 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'signal.message',
-                'sender_id': user.id,
-                'target_id': target_id,
+                'sender_client_id': client_info.get('client_id'),
+                'target_client_id': target_id,
                 'signal_type': signal_type,
                 'payload': payload,
             }
@@ -100,8 +127,8 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
 
     async def signal_message(self, event):
         await self.send(text_data=json.dumps({
-            'sender_id': event['sender_id'],
-            'target_id': event['target_id'],
+            'sender_client_id': event['sender_client_id'],
+            'target_client_id': event['target_client_id'],
             'signal_type': event['signal_type'],
             'payload': event['payload'],
         }))
@@ -110,6 +137,7 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'signal_type': event['event'],
             'user_id': event['user_id'],
+            'client_id': event.get('client_id'),
         }))
 
     @database_sync_to_async

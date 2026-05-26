@@ -8,6 +8,7 @@ Architecture extensible — pour ajouter un nouveau provider :
 """
 
 import uuid
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.db import transaction
 from .models import Paiement
@@ -25,21 +26,38 @@ def generer_reference():
     return f"NIM-{annee}-{code}"
 
 
-def creer_paiement(etudiant, cours=None, formation_inscription=None, provider='sandbox'):
+def creer_paiement(etudiant, cours=None, formation_inscription=None, paiement_seance=None, provider='sandbox'):
     """
     Crée un enregistrement de paiement en attente.
     Appelé quand l'étudiant clique sur "Payer".
     """
-    if not cours and not formation_inscription:
-        raise ValueError('Un paiement doit être associé à un cours ou une inscription de formation.')
+    if not cours and not formation_inscription and not paiement_seance:
+        raise ValueError('Un paiement doit être associé à un cours, une inscription de formation ou une séance de mentorat.')
 
-    if cours and formation_inscription:
-        raise ValueError('Un paiement ne peut pas être lié à la fois à un cours et à une inscription de formation.')
+    if sum(bool(x) for x in [cours, formation_inscription, paiement_seance]) != 1:
+        raise ValueError('Un paiement ne peut pas être lié à plusieurs objets en même temps.')
 
     if formation_inscription and formation_inscription.etudiant != etudiant:
         raise ValueError('L’inscription de formation doit appartenir à l’étudiant en cours.')
 
-    # Vérifier qu'il n'y a pas déjà un paiement réussi
+    if paiement_seance and paiement_seance.seance.relation.mentee.profil.utilisateur != etudiant:
+        raise ValueError('La séance de mentorat doit appartenir au mentoré en cours.')
+
+    # Vérifier s'il existe déjà un paiement actif pour cette séance
+    if paiement_seance is not None:
+        paiement_existant = None
+        try:
+            paiement_existant = paiement_seance.paiement
+        except ObjectDoesNotExist:
+            paiement_existant = None
+
+        if paiement_existant and paiement_existant.statut != 'echoue':
+            if paiement_existant.statut != 'reussi':
+                paiement_existant.provider = provider
+                paiement_existant.save(update_fields=['provider'])
+            return paiement_existant, False
+
+    # Vérifier qu'il n'y a pas déjà un paiement réussi pour un cours ou une formation
     paiement_existant = Paiement.objects.filter(
         etudiant=etudiant,
         cours=cours,
@@ -50,7 +68,12 @@ def creer_paiement(etudiant, cours=None, formation_inscription=None, provider='s
     if paiement_existant:
         return paiement_existant, False  # False = déjà existant
 
-    montant = cours.prix if cours else formation_inscription.prix_paye_fcfa
+    if paiement_seance:
+        montant = paiement_seance.montant_total
+    elif cours:
+        montant = cours.prix
+    else:
+        montant = formation_inscription.prix_paye_fcfa
 
     paiement = Paiement.objects.create(
         etudiant=etudiant,

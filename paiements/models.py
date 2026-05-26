@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from cours.models import Cours
 
 
@@ -121,7 +122,15 @@ class Paiement(models.Model):
         elif self.formation_inscription:
             item_titre = f"{self.formation_inscription.session.formation.titre} — {self.formation_inscription.session.nom}"
         else:
-            item_titre = 'Paiement'
+            paiement_seance = None
+            try:
+                paiement_seance = self.paiement_seance
+            except ObjectDoesNotExist:
+                pass
+            if paiement_seance:
+                item_titre = f"Séance {paiement_seance.seance.titre}"
+            else:
+                item_titre = 'Paiement'
         return f"{self.reference_numeria} — {self.etudiant.username} — {item_titre} — {self.statut}"
 
     @property
@@ -130,7 +139,14 @@ class Paiement(models.Model):
 
     @property
     def objet(self):
-        return self.cours or self.formation_inscription
+        if self.cours:
+            return self.cours
+        if self.formation_inscription:
+            return self.formation_inscription
+        try:
+            return self.paiement_seance
+        except ObjectDoesNotExist:
+            return None
 
     @property
     def objet_type(self):
@@ -138,6 +154,11 @@ class Paiement(models.Model):
             return 'cours'
         if self.formation_inscription:
             return 'formation'
+        try:
+            if self.paiement_seance:
+                return 'mentorat'
+        except ObjectDoesNotExist:
+            pass
         return None
 
     def est_reussi(self):

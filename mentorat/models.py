@@ -385,6 +385,13 @@ class PaiementSeance(models.Model):
         on_delete=models.CASCADE,
         related_name='paiement'
     )
+    paiement = models.OneToOneField(
+        'paiements.Paiement',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='paiement_seance'
+    )
 
     # Montants
     montant_total = models.PositiveIntegerField(verbose_name='Montant total (FCFA)')
@@ -480,8 +487,13 @@ class PaiementSeance(models.Model):
             commission_numeria=commission,
             montant_mentor=tarif - commission,
             adresse_ip_mentoré=ip_mentoré,
-            user_agent=user_agent,
+            user_agent=user_agent or '',
         )
+
+    def lier_paiement(self, paiement):
+        """Lie un paiement provider à cette séance."""
+        self.paiement = paiement
+        self.save()
 
     def confirmer(self):
         """Admin confirme le paiement."""

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q, Sum
 from django.urls import reverse
+from paiements.service import creer_paiement, traiter_paiement
 from django.utils import timezone
 from django.http import Http404
 from .models import Mentor, Mentee, DemandeMentorat, RelationMentorat, SeanceMentorat, PaiementSeance
@@ -417,7 +418,13 @@ def planifier_seance(request, relation_pk):
             seance.save()
             # Si le mentor est payant, créer un paiement et rediriger vers le paiement
             if seance.est_payante():
-                paiement = PaiementSeance.creer_pour_seance(seance)
+                ip_mentoré = request.META.get('REMOTE_ADDR')
+                user_agent = request.META.get('HTTP_USER_AGENT', '')
+                paiement = PaiementSeance.creer_pour_seance(
+                    seance,
+                    ip_mentoré=ip_mentoré,
+                    user_agent=user_agent,
+                )
                 messages.info(request, "Séance planifiée. Veuillez procéder au paiement pour la confirmer.")
                 return redirect('mentorat:paiement_seance', seance_pk=seance.pk)
             messages.success(request, "Séance planifiée avec succès !")
@@ -529,7 +536,7 @@ def terminer_relation(request, relation_pk):
 @login_required
 def paiement_seance(request, seance_pk):
     """
-    Page de paiement mobile money pour une séance payante.
+    Page de paiement pour une séance payante.
     Accessible uniquement par le mentee de la relation.
     """
     seance = get_object_or_404(SeanceMentorat, pk=seance_pk)
@@ -540,8 +547,8 @@ def paiement_seance(request, seance_pk):
         messages.error(request, "Accès non autorisé.")
         return redirect('mentorat:index')
 
-    # Récupérer ou créer le paiement associé
-    paiement, _ = PaiementSeance.objects.get_or_create(
+    # Récupérer ou créer le paiement de séance associé
+    paiement_seance, _ = PaiementSeance.objects.get_or_create(
         seance=seance,
         defaults={
             'montant_total': seance.relation.mentor.tarif_par_seance,
@@ -550,20 +557,92 @@ def paiement_seance(request, seance_pk):
         }
     )
 
-    if paiement.statut == 'confirme':
+    if paiement_seance.statut == 'confirme':
         messages.info(request, "Ce paiement est déjà confirmé.")
         return redirect('mentorat:detail_relation', pk=seance.relation.pk)
 
+    providers_disponibles = [
+        {
+            'id': 'sandbox',
+            'nom': '🧪 Paiement test (sandbox)',
+            'description': 'Mode test — aucun argent réel',
+            'icone': '🧪',
+            'disponible': True,
+        },
+        {
+            'id': 'fedapay',
+            'nom': 'FedaPay',
+            'description': 'Mobile Money, carte bancaire (Togo/Bénin)',
+            'icone': '📱',
+            'disponible': False,
+        },
+        {
+            'id': 'cinetpay',
+            'nom': 'CinetPay',
+            'description': 'Mobile Money, carte Visa (Afrique de l\'Ouest)',
+            'icone': '💳',
+            'disponible': False,
+        },
+        {
+            'id': 'mixx',
+            'nom': 'Mixx by YAS',
+            'description': 'Wave, Flooz, T-Money (Togo)',
+            'icone': '📲',
+            'disponible': False,
+        },
+        {
+            'id': 'stripe',
+            'nom': 'Stripe',
+            'description': 'Carte bancaire internationale (Visa, Mastercard)',
+            'icone': '🌍',
+            'disponible': False,
+        },
+    ]
+
+    if request.method == 'POST' and 'provider' in request.POST:
+        provider = request.POST.get('provider', 'sandbox')
+        try:
+            paiement, nouveau = creer_paiement(
+                etudiant=request.user,
+                paiement_seance=paiement_seance,
+                provider=provider
+            )
+
+            paiement_seance.lier_paiement(paiement)
+
+            if paiement.statut != 'reussi':
+                traiter_paiement(paiement, provider)
+
+            paiement_seance.confirmer()
+
+            messages.success(
+                request,
+                "✅ Paiement réussi ! Votre séance de mentorat est confirmée."
+            )
+            return redirect('mentorat:detail_relation', pk=seance.relation.pk)
+
+        except NotImplementedError:
+            messages.warning(
+                request,
+                f"⚠️ Le provider '{provider}' n'est pas encore disponible. Contactez-nous à contact@numeriainstitute.com"
+            )
+            return redirect('mentorat:paiement_seance', seance_pk=seance.pk)
+
+        except Exception as e:
+            messages.error(request, f"❌ Erreur lors du paiement : {str(e)}")
+            return redirect('mentorat:paiement_seance', seance_pk=seance.pk)
+
     if request.method == 'POST':
-        form = PaiementSeanceForm(request.POST, request.FILES, instance=paiement)
+        form = PaiementSeanceForm(request.POST, request.FILES, instance=paiement_seance)
         if form.is_valid():
             p = form.save(commit=False)
             p.statut = 'preuve_soumise'
+            p.date_submission = timezone.now()
             p.save()
             messages.success(request, "Preuve de paiement envoyée. Votre séance sera confirmée après vérification.")
             return redirect('mentorat:detail_relation', pk=seance.relation.pk)
     else:
-        form = PaiementSeanceForm(instance=paiement)
+        form = PaiementSeanceForm(instance=paiement_seance)
 
     # Numéros mobile money Numeria (à configurer selon votre pays)
     numeros_paiement = [
@@ -573,7 +652,8 @@ def paiement_seance(request, seance_pk):
 
     return render(request, 'mentorat/paiement_seance.html', {
         'seance': seance,
-        'paiement': paiement,
+        'paiement': paiement_seance,
         'form': form,
         'numeros_paiement': numeros_paiement,
+        'providers_disponibles': providers_disponibles,
     })

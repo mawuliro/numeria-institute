@@ -64,6 +64,60 @@
                 </div>
             </div>
 
+            <!-- Paiement provider -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+                    <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white text-lg">
+                        {% trans "Payer en ligne" %}
+                    </h2>
+                </div>
+                <div class="px-6 py-5 space-y-4">
+                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                        {% trans "Choisissez un provider pour payer votre séance et confirmez automatiquement votre réservation." %}
+                    </p>
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        <div class="grid gap-3">
+                            {% for provider in providers_disponibles %}
+                            <label class="flex items-center gap-4 p-4 rounded-2xl border cursor-pointer transition-all
+                                {% if provider.disponible %}
+                                    border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-numeria-or
+                                {% else %}
+                                    border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 opacity-60 cursor-not-allowed
+                                {% endif %}">
+                                <input type="radio"
+                                    name="provider"
+                                    value="{{ provider.id }}"
+                                    {% if not provider.disponible %}disabled{% endif %}
+                                    {% if forloop.first and provider.disponible %}checked{% endif %}
+                                    class="accent-numeria-or">
+                                <span class="text-2xl">{{ provider.icone }}</span>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <p class="font-bold text-gray-800 dark:text-gray-100 text-sm">{{ provider.nom }}</p>
+                                        {% if not provider.disponible %}
+                                        <span class="bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs px-2 py-0.5 rounded-full">
+                                            {% trans "Bientôt disponible" %}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">{{ provider.description }}</p>
+                                </div>
+                                {% if provider.disponible %}
+                                <span class="text-green-500 text-xs font-bold">✅ {% trans "Disponible" %}</span>
+                                {% endif %}
+                            </label>
+                            {% endfor %}
+                        </div>
+                        <button type="submit"
+                                style="font-family:'Outfit',sans-serif; font-weight:700;"
+                                class="w-full bg-numeria-bleu text-white py-3 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-sm">
+                            {% trans "Payer la séance en ligne" %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+
             <!-- Statut actuel -->
             {% if paiement.statut == 'preuve_soumise' %}
             <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-2xl px-6 py-4 flex items-start gap-3">

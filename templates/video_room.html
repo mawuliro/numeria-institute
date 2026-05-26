@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block titre %}{% trans "Visioconférence" %} — Numeria Institute{% endblock %}
 {% block meta_description %}{% trans "Rejoignez la salle de visioconférence en groupe pour votre séance ou session." %}{% endblock %}
 
-{% block content %}
+{% block contenu %}
 <section class="py-10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -111,8 +112,14 @@
     const localVideo = document.getElementById('localVideo');
     const remoteVideos = document.getElementById('remoteVideos');
 
-    const peers = {};
+    const peerConnections = {};
     let localStream = null;
+    const currentClientId = (function() {
+        if (window.crypto && window.crypto.randomUUID) {
+            return window.crypto.randomUUID();
+        }
+        return `client_${Math.random().toString(36).slice(2, 10)}_${Date.now()}`;
+    })();
 
     const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
     const socketUrl = `${wsProtocol}://${window.location.host}/ws/mentorat/video/${roomType}/${roomPk}/`;
@@ -149,9 +156,9 @@
         }
     }
 
-    async function createPeerConnection(remoteUserId) {
-        if (peers[remoteUserId]) {
-            return peers[remoteUserId].pc;
+    async function createPeerConnection(remoteClientId) {
+        if (peerConnections[remoteClientId]) {
+            return peerConnections[remoteClientId].pc;
         }
 
         const pc = new RTCPeerConnection({
@@ -159,7 +166,7 @@
         });
 
         pc.ontrack = (event) => {
-            const videoElement = createRemoteVideoElement(remoteUserId);
+            const videoElement = createRemoteVideoElement(remoteClientId);
             if (videoElement.srcObject !== event.streams[0]) {
                 videoElement.srcObject = event.streams[0];
             }
@@ -169,7 +176,7 @@
             if (event.candidate) {
                 sendSignal('ice-candidate', {
                     candidate: event.candidate.toJSON(),
-                    target_id: remoteUserId,
+                    target_client_id: remoteClientId,
                 });
             }
         };
@@ -182,19 +189,19 @@
             localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
         }
 
-        peers[remoteUserId] = { pc };
+        peerConnections[remoteClientId] = { pc };
         return pc;
     }
 
-    async function closePeer(remoteUserId) {
-        const peerData = peers[remoteUserId];
+    async function closePeer(remoteClientId) {
+        const peerData = peerConnections[remoteClientId];
         if (!peerData) {
             return;
         }
 
         peerData.pc.close();
-        delete peers[remoteUserId];
-        removeRemoteVideo(remoteUserId);
+        delete peerConnections[remoteClientId];
+        removeRemoteVideo(remoteClientId);
     }
 
     async function initLocalStream() {
@@ -222,82 +229,83 @@
         socket.send(JSON.stringify({ signal_type: signalType, payload }));
     }
 
-    async function createOffer(remoteUserId) {
-        const pc = await createPeerConnection(remoteUserId);
+    async function createOffer(remoteClientId) {
+        const pc = await createPeerConnection(remoteClientId);
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
         sendSignal('sdp-offer', {
             type: offer.type,
             sdp: offer.sdp,
-            target_id: remoteUserId,
+            target_client_id: remoteClientId,
         });
     }
 
-    async function createAnswer(remoteUserId) {
-        const pc = await createPeerConnection(remoteUserId);
+    async function createAnswer(remoteClientId) {
+        const pc = await createPeerConnection(remoteClientId);
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
         sendSignal('sdp-answer', {
             type: answer.type,
             sdp: answer.sdp,
-            target_id: remoteUserId,
+            target_client_id: remoteClientId,
         });
     }
 
     socket.addEventListener('open', async () => {
         setStatus('{% trans "Connexion au serveur de signalisation établie." %}');
         await initLocalStream();
-        sendSignal('peer_announce');
+        sendSignal('peer_announce', { client_id: currentClientId });
     });
 
     socket.addEventListener('message', async (event) => {
         const message = JSON.parse(event.data);
 
         if (message.signal_type === 'peer_list') {
-            const existingUsers = message.user_ids || [];
-            for (const peerId of existingUsers) {
-                if (peerId !== currentUserId && currentUserId < peerId) {
-                    await createOffer(peerId);
+            const peers = message.peers || [];
+            for (const peer of peers) {
+                if (peer.client_id !== currentClientId && currentClientId < peer.client_id) {
+                    await createOffer(peer.client_id);
                 }
             }
             return;
         }
 
         if (message.signal_type === 'peer_announce') {
-            if (message.user_id !== currentUserId && currentUserId < message.user_id) {
-                await createOffer(message.user_id);
+            if (message.client_id !== currentClientId && currentClientId < message.client_id) {
+                await createOffer(message.client_id);
             }
             return;
         }
 
         if (message.signal_type === 'peer_left') {
-            if (message.user_id !== currentUserId) {
-                setStatus('{% trans "Un participant a quitté la session." %}');
-                await closePeer(message.user_id);
+            if (message.client_id === currentClientId) {
+                return;
             }
+            setStatus('{% trans "Un participant a quitté la session." %}');
+            await closePeer(message.client_id);
             return;
         }
 
-        if (message.target_id && message.target_id !== currentUserId) {
+        if (message.target_client_id && message.target_client_id !== currentClientId) {
             return;
         }
 
-        const remoteUserId = message.sender_id;
-        if (remoteUserId === currentUserId) {
+        const remoteClientId = message.sender_client_id;
+        if (remoteClientId === currentClientId) {
             return;
         }
 
         if (message.signal_type === 'sdp-offer') {
             await initLocalStream();
-            const pc = await createPeerConnection(remoteUserId);
+            const pc = await createPeerConnection(remoteClientId);
             await pc.setRemoteDescription(new RTCSessionDescription(message.payload));
-            await createAnswer(remoteUserId);
+            await createAnswer(remoteClientId);
             setStatus('{% trans "Offre reçue. Envoi de la réponse..." %}');
             return;
         }
 
         if (message.signal_type === 'sdp-answer') {
-            const peerData = peers[remoteUserId];
+            const peerData = peerConnections[remoteClientId];
             if (!peerData) {
                 return;
             }
@@ -307,7 +315,7 @@
         }
 
         if (message.signal_type === 'ice-candidate') {
-            const peerData = peers[remoteUserId];
+            const peerData = peerConnections[remoteClientId];
             if (!peerData) {
                 return;
             }
