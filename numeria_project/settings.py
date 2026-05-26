@@ -197,7 +197,7 @@ else:
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.onrender.com",
+    "https://*.railway.app",
 ]
 
 # ── AUTHENTIFICATION ─────────────────────────────────────────────────────────
@@ -271,13 +271,13 @@ if not DEBUG:
     X_FRAME_OPTIONS = 'DENY'
     
     # Force HTTPS
-    SECURE_SSL_REDIRECT = False  # Render handles HTTPS termination
+    SECURE_SSL_REDIRECT = False  # Railway handles HTTPS
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # ── SÉCURITÉ EN PRODUCTION ───────────────────────────────────────────────────
 if not DEBUG:
-    SECURE_SSL_REDIRECT     = False   # Render gère HTTPS — évite la boucle
+    SECURE_SSL_REDIRECT     = False   # Railway gère HTTPS — évite la boucle
     SESSION_COOKIE_SECURE   = True
     CSRF_COOKIE_SECURE      = True
     LANGUAGE_COOKIE_SAMESITE = 'Lax'
