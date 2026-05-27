@@ -455,6 +455,11 @@
   window.toggleScreenShare = async function(){
     if(screenShareOn){ stopScreenShare(); return; }
     try{
+      if(!localStream){ await initMedia(); }
+      if(!localStream){
+        meetToast('{% trans "Impossible d\'initialiser la caméra/micro avant le partage." %}');
+        return;
+      }
       screenStream = await navigator.mediaDevices.getDisplayMedia({video:{cursor:'always'},audio:false});
       const track = screenStream.getVideoTracks()[0];
 
@@ -639,7 +644,15 @@
       else if(['disconnected','failed'].includes(pc.connectionState)) setStatus('{% trans "Reconnexion…" %}','yellow');
     };
 
-    localStream?.getTracks().forEach(t=>pc.addTrack(t,localStream));
+    if(screenShareOn && screenStream){
+      for(const track of localStream?.getAudioTracks() || []){
+        pc.addTrack(track, localStream);
+      }
+      const screenTrack = screenStream.getVideoTracks()[0];
+      if(screenTrack) pc.addTrack(screenTrack, screenStream);
+    } else {
+      localStream?.getTracks().forEach(t=>pc.addTrack(t, localStream));
+    }
     peerConns[remoteId] = {pc};
     return pc;
   }
