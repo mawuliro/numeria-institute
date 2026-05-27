@@ -77,14 +77,16 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
             if previous_id and previous_id != client_id:
                 ACTIVE_VIDEO_ROOMS[self.room_group_name].pop(previous_id, None)
 
+            display_name = await self.get_display_name(user)
             client_info['client_id'] = client_id
             ACTIVE_VIDEO_ROOMS[self.room_group_name][client_id] = {
                 'channel_name': self.channel_name,
                 'user_id': user.id,
+                'display_name': display_name,
             }
 
             existing_participants = [
-                {'client_id': cid, 'user_id': info['user_id']}
+                {'client_id': cid, 'user_id': info['user_id'], 'display_name': info.get('display_name', '')}
                 for cid, info in ACTIVE_VIDEO_ROOMS[self.room_group_name].items()
                 if cid != client_id
             ]
@@ -100,6 +102,7 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
                     'event': 'peer_announce',
                     'user_id': user.id,
                     'client_id': client_id,
+                    'display_name': display_name,
                 }
             )
             return
@@ -134,6 +137,22 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
                     'client_id': client_id,
                     'message': message,
                     'sender_name': display_name,
+                }
+            )
+            return
+
+        if signal_type == 'raise_hand':
+            client_id = client_info.get('client_id')
+            if not client_id:
+                return
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'peer.status',
+                    'event': 'raise_hand',
+                    'user_id': user.id,
+                    'client_id': client_id,
+                    'raised': payload.get('raised', True),
                 }
             )
             return
@@ -182,8 +201,9 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
             'user_id': event['user_id'],
             'client_id': event.get('client_id'),
         }
-        if 'action' in event:
-            msg['action'] = event['action']
+        for key in ('action', 'raised', 'display_name'):
+            if key in event:
+                msg[key] = event[key]
         await self.send(text_data=json.dumps(msg))
 
     @database_sync_to_async

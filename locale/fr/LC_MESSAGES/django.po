@@ -4958,3 +4958,23 @@ msgstr ""
 #: templates/video_room.html:771
 msgid "Connexion en cours…"
 msgstr ""
+
+#: templates/video_room.html
+msgid "Partage d'écran activé"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Partage d'écran arrêté"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Impossible de partager l'écran"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Impossible d'initialiser la caméra/micro avant le partage."
+msgstr ""
+
+#: templates/video_room.html
+msgid "Impossible de répondre à l'offre vidéo."
+msgstr ""

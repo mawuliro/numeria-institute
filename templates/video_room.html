@@ -326,6 +326,21 @@
 }
 .remote-tile.speaking .speak-ring { opacity:1; }
 
+/* Hand raised badge */
+.hand-badge {
+  position:absolute; top:10px; right:10px; z-index:10;
+  background:rgba(250,204,21,.92); backdrop-filter:blur(4px);
+  color:#1a1a1a; border-radius:999px; padding:4px 10px;
+  font-size:11px; font-weight:600;
+  display:flex; align-items:center; gap:4px;
+  pointer-events:none;
+  animation: handPulse 1.2s ease-in-out infinite;
+}
+@keyframes handPulse {
+  0%,100%{ transform:scale(1); }
+  50%{ transform:scale(1.06); }
+}
+
 /* Screen share badge */
 .screen-badge {
   position:absolute; top:10px; left:10px; z-index:10;
@@ -362,6 +377,7 @@
   let activeSidebar = null;   // 'people' | 'chat' | null
   let callStart     = Date.now();
   let peerConns     = {};
+  let peerNames     = {};     // clientId → display name
   let unreadChat    = 0;
   const clientId    = (crypto.randomUUID?.() ?? `c_${Math.random().toString(36).slice(2)}_${Date.now()}`);
 
@@ -449,7 +465,22 @@
     $('handSvg').classList.toggle('hand-waving', handUp);
     $('handSvg').style.fill = handUp ? '#facc15' : 'rgba(255,255,255,.6)';
     meetToast(handUp ? '✋ {% trans "Main levée" %}' : '{% trans "Main baissée" %}');
+    send('raise_hand', {raised: handUp});
+    setHandBadge('localTile', handUp);
   };
+
+  function setHandBadge(tileId, show){
+    const tile = $(tileId); if(!tile) return;
+    let badge = tile.querySelector('.hand-badge');
+    if(show && !badge){
+      badge = document.createElement('div');
+      badge.className = 'hand-badge';
+      badge.innerHTML = '✋ {% trans "Main levée" %}';
+      tile.appendChild(badge);
+    } else if(!show && badge){
+      badge.remove();
+    }
+  }
 
   /* ── Screen share ───────────────────────────────────────── */
   window.toggleScreenShare = async function(){
@@ -586,7 +617,7 @@
     `;
     chatMessages.appendChild(d);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    if(activeSidebar !== 'chat'){
+    if(!isSelf && activeSidebar !== 'chat'){
       unreadChat++;
       const badge = $('chatBadge');
       badge.textContent = unreadChat;
@@ -596,19 +627,25 @@
 
   /* ── Remote tile factory ────────────────────────────────── */
   async function getOrCreateRemoteTile(cid, name){
+    const displayName = name || peerNames[cid] || '{% trans "Participant" %}';
     let tile = $(`tile-${cid}`);
-    if(tile) return tile.querySelector('video');
+    if(tile){
+      // Update label if we now have a real name
+      const lbl = tile.querySelector('.tile-label span');
+      if(lbl && lbl.textContent === '{% trans "Participant" %}' && name) lbl.textContent = displayName;
+      return tile.querySelector('video');
+    }
     tile = document.createElement('div');
     tile.id = `tile-${cid}`;
     tile.className = 'remote-tile';
-    const initial = (name||'P').charAt(0).toUpperCase();
+    const initial = displayName.charAt(0).toUpperCase();
     tile.innerHTML = `
       <video autoplay playsinline style="width:100%;height:100%;object-fit:cover;"></video>
       <div class="remote-avatar" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
         <div style="width:80px;height:80px;border-radius:50%;background:#5f6368;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:white;">${initial}</div>
       </div>
       <div class="tile-label">
-        <span style="color:white;font-size:14px;font-weight:500;">${name||'Participant'}</span>
+        <span style="color:white;font-size:14px;font-weight:500;">${displayName}</span>
       </div>
       <div class="speak-ring"></div>
     `;
@@ -628,7 +665,7 @@
     const pc = new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
 
     pc.ontrack = async e => {
-      const vid = await getOrCreateRemoteTile(remoteId);
+      const vid = await getOrCreateRemoteTile(remoteId, peerNames[remoteId] || null);
       if(vid.srcObject !== e.streams[0]){
         vid.srcObject = e.streams[0];
         const tile = $(`tile-${remoteId}`);
@@ -664,7 +701,7 @@
 
   async function closePeer(cid){
     const d = peerConns[cid]; if(!d) return;
-    d.pc.close(); delete peerConns[cid]; removeRemoteTile(cid);
+    d.pc.close(); delete peerConns[cid]; delete peerNames[cid]; removeRemoteTile(cid);
   }
 
   async function drainIceCandidates(cid){
@@ -737,12 +774,19 @@
     const from = msg.sender_client_id;
 
     if(msg.signal_type==='peer_list'){
-      for(const p of (msg.peers||[]))
+      for(const p of (msg.peers||[])){
+        if(p.display_name) peerNames[p.client_id] = p.display_name;
+        if(p.client_id !== clientId) getOrCreateRemoteTile(p.client_id, p.display_name||null);
         if(p.client_id!==clientId && clientId<p.client_id) await createOffer(p.client_id);
+      }
       return;
     }
     if(msg.signal_type==='peer_announce'){
-      if(msg.client_id!==clientId && clientId<msg.client_id) await createOffer(msg.client_id);
+      if(msg.client_id !== clientId){
+        if(msg.display_name) peerNames[msg.client_id] = msg.display_name;
+        getOrCreateRemoteTile(msg.client_id, msg.display_name||null);
+        if(clientId < msg.client_id) await createOffer(msg.client_id);
+      }
       return;
     }
     if(msg.signal_type==='peer_left'){
@@ -752,6 +796,11 @@
     if(msg.signal_type==='screen_share'){
       if(msg.client_id && msg.client_id!==clientId)
         setScreenBadge(`tile-${msg.client_id}`, msg.action==='start');
+      return;
+    }
+    if(msg.signal_type==='raise_hand'){
+      if(msg.client_id && msg.client_id!==clientId)
+        setHandBadge(`tile-${msg.client_id}`, msg.raised);
       return;
     }
     if(msg.signal_type==='chat'){
@@ -796,6 +845,7 @@
     if(e.key==='d') toggleMic();
     if(e.key==='e') toggleCam();
     if(e.key==='s') toggleScreenShare();
+    if(e.key==='h') toggleHand();
     if(e.key==='Escape') leaveCall();
   });
 

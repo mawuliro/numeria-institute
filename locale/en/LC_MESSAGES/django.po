@@ -4677,4 +4677,24 @@ msgstr "A participant left"
 msgid "Vous"
 msgstr "You"
 
+#: templates/video_room.html
+msgid "Partage d'écran activé"
+msgstr "Screen sharing started"
+
+#: templates/video_room.html
+msgid "Partage d'écran arrêté"
+msgstr "Screen sharing stopped"
+
+#: templates/video_room.html
+msgid "Impossible de partager l'écran"
+msgstr "Unable to share screen"
+
+#: templates/video_room.html
+msgid "Impossible d'initialiser la caméra/micro avant le partage."
+msgstr "Unable to initialize camera/mic before sharing."
+
+#: templates/video_room.html
+msgid "Impossible de répondre à l'offre vidéo."
+msgstr "Unable to respond to the video offer."
+
 
