@@ -210,15 +210,15 @@
 
       <!-- Screen share -->
       <div class="hidden sm:flex flex-col items-center gap-0.5">
-        <button onclick="meetToast('{% trans "Partage d\'écran bientôt disponible" %}')"
+        <button id="btnScreen" onclick="toggleScreenShare()"
                 class="meet-ctrl w-14 h-14 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95 relative"
                 style="background:#3c4043;" title="{% trans "Partager l'écran" %}">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,.5)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
             <path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/>
           </svg>
-          <span class="meet-tip">{% trans "Partager l'écran" %}</span>
+          <span id="screenTip" class="meet-tip">{% trans "Partager l'écran" %}</span>
         </button>
-        <span class="text-xs" style="color:rgba(255,255,255,.25);">{% trans "Écran" %}</span>
+        <span class="text-xs" style="color:rgba(255,255,255,.35);">{% trans "Écran" %}</span>
       </div>
 
       <!-- Raise hand -->
@@ -326,6 +326,16 @@
 }
 .remote-tile.speaking .speak-ring { opacity:1; }
 
+/* Screen share badge */
+.screen-badge {
+  position:absolute; top:10px; left:10px; z-index:10;
+  background:rgba(26,115,232,.9); backdrop-filter:blur(4px);
+  color:#fff; border-radius:999px; padding:4px 10px;
+  font-size:11px; font-weight:500;
+  display:flex; align-items:center; gap:5px;
+  pointer-events:none;
+}
+
 /* Video grid responsive layouts */
 .vg-1 { grid-template-columns:1fr; grid-template-rows:1fr; }
 .vg-2 { grid-template-columns:repeat(2,1fr); grid-template-rows:1fr; }
@@ -344,8 +354,10 @@
 
   /* ── State ──────────────────────────────────────────────── */
   let localStream   = null;
+  let screenStream  = null;
   let micOn         = true;
   let camOn         = true;
+  let screenShareOn = false;
   let handUp        = false;
   let activeSidebar = null;   // 'people' | 'chat' | null
   let callStart     = Date.now();
@@ -423,8 +435,10 @@
     $('btnCam').classList.toggle('meet-active', !camOn);
     $('camOnIcon').classList.toggle('hidden', !camOn);
     $('camOffIcon').classList.toggle('hidden', camOn);
-    localVideo.style.display  = camOn ? 'block' : 'none';
-    localAvatar.classList.toggle('hidden', camOn);
+    if(!screenShareOn){
+      localVideo.style.display  = camOn ? 'block' : 'none';
+      localAvatar.classList.toggle('hidden', camOn);
+    }
     meetToast(camOn ? '{% trans "Caméra activée" %}' : '{% trans "Caméra désactivée" %}');
   };
 
@@ -437,9 +451,83 @@
     meetToast(handUp ? '✋ {% trans "Main levée" %}' : '{% trans "Main baissée" %}');
   };
 
+  /* ── Screen share ───────────────────────────────────────── */
+  window.toggleScreenShare = async function(){
+    if(screenShareOn){ stopScreenShare(); return; }
+    try{
+      screenStream = await navigator.mediaDevices.getDisplayMedia({video:{cursor:'always'},audio:false});
+      const track = screenStream.getVideoTracks()[0];
+
+      // Replace video track in every peer connection (no renegotiation needed)
+      for(const {pc} of Object.values(peerConns)){
+        const sender = pc.getSenders().find(s=>s.track?.kind==='video');
+        if(sender) await sender.replaceTrack(track);
+      }
+
+      // Show screen on local tile, remove mirror effect
+      localVideo.srcObject = screenStream;
+      localVideo.style.transform = 'none';
+      localVideo.style.display   = 'block';
+      localAvatar.classList.add('hidden');
+
+      screenShareOn = true;
+      $('btnScreen').style.background = '#1a73e8';
+      $('screenTip').textContent = '{% trans "Arrêter le partage" %}';
+      setScreenBadge('localTile', true);
+      send('screen_share',{action:'start'});
+      meetToast('{% trans "Partage d\'écran activé" %}');
+
+      // Handle browser-level "Stop sharing" button
+      track.addEventListener('ended', stopScreenShare);
+    }catch(err){
+      if(err.name!=='NotAllowedError') meetToast('{% trans "Impossible de partager l\'écran" %}');
+    }
+  };
+
+  function stopScreenShare(){
+    if(!screenShareOn) return;
+    screenShareOn = false;
+
+    screenStream?.getTracks().forEach(t=>t.stop());
+    screenStream = null;
+
+    // Restore camera track in every peer connection
+    const camTrack = localStream?.getVideoTracks()[0];
+    for(const {pc} of Object.values(peerConns)){
+      const sender = pc.getSenders().find(s=>s.track?.kind==='video');
+      if(sender && camTrack) sender.replaceTrack(camTrack).catch(()=>{});
+    }
+
+    // Restore local video
+    localVideo.srcObject       = localStream;
+    localVideo.style.transform = 'scaleX(-1)';
+    localVideo.style.display   = camOn ? 'block' : 'none';
+    localAvatar.classList.toggle('hidden', camOn);
+
+    $('btnScreen').style.background = '#3c4043';
+    $('screenTip').textContent = '{% trans "Partager l\'écran" %}';
+    setScreenBadge('localTile', false);
+    send('screen_share',{action:'stop'});
+    meetToast('{% trans "Partage d\'écran arrêté" %}');
+  }
+
+  function setScreenBadge(tileId, show){
+    const tile = $(tileId); if(!tile) return;
+    let badge = tile.querySelector('.screen-badge');
+    if(show && !badge){
+      badge = document.createElement('div');
+      badge.className = 'screen-badge';
+      badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> {% trans "Partage d'écran" %}`;
+      tile.appendChild(badge);
+    } else if(!show && badge){
+      badge.remove();
+    }
+  }
+
   /* ── Leave ──────────────────────────────────────────────── */
   window.leaveCall = function(){
     localStream?.getTracks().forEach(t=>t.stop());
+    screenStream?.getTracks().forEach(t=>t.stop());
     Object.values(peerConns).forEach(({pc})=>pc.close());
     socket?.close();
     window.location.href = BACK_URL;
@@ -625,6 +713,11 @@
       if(msg.client_id!==clientId){ meetToast('{% trans "Un participant a quitté" %}'); await closePeer(msg.client_id); }
       return;
     }
+    if(msg.signal_type==='screen_share'){
+      if(msg.client_id && msg.client_id!==clientId)
+        setScreenBadge(`tile-${msg.client_id}`, msg.action==='start');
+      return;
+    }
     if(msg.target_client_id && msg.target_client_id!==clientId) return;
     if(from===clientId) return;
 
@@ -649,6 +742,7 @@
     if(e.target.tagName==='INPUT') return;
     if(e.key==='d') toggleMic();
     if(e.key==='e') toggleCam();
+    if(e.key==='s') toggleScreenShare();
     if(e.key==='Escape') leaveCall();
   });
 

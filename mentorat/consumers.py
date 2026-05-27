@@ -104,6 +104,22 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
             )
             return
 
+        if signal_type == 'screen_share':
+            client_id = client_info.get('client_id')
+            if not client_id:
+                return
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'peer.status',
+                    'event': 'screen_share',
+                    'user_id': user.id,
+                    'client_id': client_id,
+                    'action': payload.get('action', 'start'),
+                }
+            )
+            return
+
         if signal_type not in {'sdp-offer', 'sdp-answer', 'ice-candidate'}:
             return
 
@@ -134,11 +150,14 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
         }))
 
     async def peer_status(self, event):
-        await self.send(text_data=json.dumps({
+        msg = {
             'signal_type': event['event'],
             'user_id': event['user_id'],
             'client_id': event.get('client_id'),
-        }))
+        }
+        if 'action' in event:
+            msg['action'] = event['action']
+        await self.send(text_data=json.dumps(msg))
 
     @database_sync_to_async
     def get_room(self, room_type, room_pk):
