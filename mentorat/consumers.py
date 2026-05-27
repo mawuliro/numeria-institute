@@ -166,7 +166,7 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
                 return SeanceMentorat.objects.select_related(
                     'relation__mentor__profil__utilisateur',
                     'relation__mentee__profil__utilisateur'
-                ).get(pk=room_pk, statut='planifiee')
+                ).get(pk=room_pk, statut__in=['planifiee', 'en_cours'])
             except SeanceMentorat.DoesNotExist:
                 return None
 

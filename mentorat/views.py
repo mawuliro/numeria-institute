@@ -8,6 +8,7 @@ from django.urls import reverse
 from paiements.service import creer_paiement, traiter_paiement
 from paiements.constants import PAYMENT_PROVIDERS
 from django.utils import timezone
+from datetime import timedelta
 from django.http import Http404
 from .models import Mentor, Mentee, DemandeMentorat, RelationMentorat, SeanceMentorat, PaiementSeance
 from .forms import InscriptionMentorForm, InscriptionMenteeForm, DemandeMentoratForm, SeanceMentoratForm, TerminerSeanceForm, PaiementSeanceForm
@@ -231,7 +232,7 @@ def tableau_de_bord_mentor(request):
 
     seances_a_venir = SeanceMentorat.objects.filter(
         relation__mentor=mentor,
-        date_heure__gte=timezone.now(),
+        date_heure__gte=timezone.now() - timedelta(hours=4),
         statut='planifiee'
     ).select_related('relation__mentee__profil__utilisateur').order_by('date_heure')[:5]
 
@@ -281,7 +282,7 @@ def video_seance(request, seance_pk):
             'relation__mentee__profil'
         ),
         pk=seance_pk,
-        statut='planifiee'
+        statut__in=['planifiee', 'en_cours']
     )
 
     if seance.modalite != 'visio':
@@ -357,7 +358,7 @@ def tableau_de_bord_mentee(request):
 
     seances_a_venir = SeanceMentorat.objects.filter(
         relation__mentee=mentee,
-        date_heure__gte=timezone.now(),
+        date_heure__gte=timezone.now() - timedelta(hours=4),
         statut='planifiee'
     ).select_related('relation__mentor__profil__utilisateur').order_by('date_heure')[:5]
 
@@ -472,7 +473,7 @@ def terminer_seance(request, seance_pk):
     """
     Terminer une séance avec des notes.
     """
-    seance = get_object_or_404(SeanceMentorat, pk=seance_pk, statut='planifiee')
+    seance = get_object_or_404(SeanceMentorat, pk=seance_pk, statut__in=['planifiee', 'en_cours'])
 
     # Vérifier que l'utilisateur fait partie de la relation
     user_profil = request.user.profil

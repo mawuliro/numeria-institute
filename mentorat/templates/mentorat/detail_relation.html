@@ -207,7 +207,7 @@
                             </div>
                             {% endif %}
 
-                            {% if seance.statut == 'planifiee' %}
+                            {% if seance.statut == 'planifiee' or seance.statut == 'en_cours' %}
                             <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 flex flex-wrap gap-2">
                                 {% if seance.modalite == 'visio' %}
                                 <a href="{% url 'mentorat:video_seance' seance.pk %}"
