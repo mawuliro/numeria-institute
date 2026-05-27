@@ -644,6 +644,10 @@
       else if(['disconnected','failed'].includes(pc.connectionState)) setStatus('{% trans "Reconnexion…" %}','yellow');
     };
 
+    if(!localStream){
+      await initMedia();
+    }
+
     if(screenShareOn && screenStream){
       for(const track of localStream?.getAudioTracks() || []){
         pc.addTrack(track, localStream);
@@ -683,6 +687,11 @@
   }
 
   async function createOffer(rid){
+    const stream = await initMedia();
+    if(!stream){
+      setStatus('{% trans "Impossible de démarrer la session vidéo." %}','red');
+      return;
+    }
     const pc = await getPeer(rid);
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
@@ -690,6 +699,11 @@
   }
 
   async function createAnswer(rid){
+    const stream = await initMedia();
+    if(!stream){
+      setStatus('{% trans "Impossible de répondre à l\'offre vidéo." %}','red');
+      return;
+    }
     const pc = await getPeer(rid);
     const ans = await pc.createAnswer();
     await pc.setLocalDescription(ans);
