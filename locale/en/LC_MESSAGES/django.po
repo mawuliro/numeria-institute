@@ -4633,3 +4633,260 @@ msgstr "Terms of Service"
 
 #~ msgid "Sujet fermé"
 #~ msgstr "Closed topic"
+
+#: automatically added
+msgid "Parcourez le blog de Numeria Institute pour des actualités scientifiques, des histoires d'IA et des ressources d'apprentissage."
+msgstr "Browse Numeria Institute's blog for scientific news, AI stories, and learning resources."
+
+#: automatically added
+msgid 'Blog Numeria Institute'
+msgstr 'Numeria Institute Blog'
+
+#: automatically added
+msgid "Lisez les derniers articles sur la science et l'IA de Numeria Institute, conçus pour les apprenants et passionnés de technologie."
+msgstr 'Read the latest science and AI articles from Numeria Institute, designed for learners and technology enthusiasts.'
+
+#: automatically added
+msgid 'Lecture rapide'
+msgstr 'Quick read'
+
+#: automatically added
+msgid 'Lire'
+msgstr 'Read'
+
+#: automatically added
+msgid 'Aucun article disponible pour le moment.'
+msgstr 'No articles available at the moment.'
+
+#: automatically added
+msgid 'Catégories'
+msgstr 'Categories'
+
+#: automatically added
+msgid 'Découvrez les campagnes de candidature en Calcul Scientifique et Intelligence Artificielle à Numeria Institute à Lomé.'
+msgstr 'Discover the application campaigns in Scientific Computing and Artificial Intelligence at Numeria Institute in Lomé.'
+
+#: automatically added
+msgid 'Admissions ouvertes — Numeria Institute'
+msgstr 'Open admissions — Numeria Institute'
+
+#: automatically added
+msgid "Consultez les dates limites, places et frais d'inscription des campagnes de candidature Numeria Institute."
+msgstr 'Check deadlines, spots, and application fees for Numeria Institute application campaigns.'
+
+#: automatically added
+msgid 'Candidatures ouvertes'
+msgstr 'Open applications'
+
+#: automatically added
+msgid 'Rejoignez Numeria Institute'
+msgstr 'Join Numeria Institute'
+
+#: automatically added
+msgid "Des programmes d'excellence en Calcul Scientifique et en Intelligence Artificielle, basés à Lomé."
+msgstr 'Excellence programs in Scientific Computing and Artificial Intelligence based in Lomé.'
+
+#: automatically added
+msgid 'Date limite :'
+msgstr 'Deadline:'
+
+#: automatically added
+msgid 'Places :'
+msgstr 'Spots:'
+
+#: automatically added
+msgid 'Frais de candidature :'
+msgstr 'Application fee:'
+
+#: automatically added
+msgid 'Candidatures reçues :'
+msgstr 'Applications received:'
+
+#: automatically added
+msgid 'Voir les détails'
+msgstr 'See details'
+
+#: automatically added
+msgid 'Campagne fermée'
+msgstr 'Campaign closed'
+
+#: automatically added
+msgid "Numeria Institute est né d'une simple observation : l'Afrique subsaharienne vit une transformation numérique accélérée, avec une jeunesse nombreuse et ambitieuse, mais une absence criante de formation pratique en sciences computationnelles et intelligence artificielle."
+msgstr 'Numeria Institute was born from a simple observation: Sub-Saharan Africa is undergoing accelerated digital transformation, with a large and ambitious youth, but a glaring lack of practical training in computational sciences and artificial intelligence.'
+
+#: automatically added
+msgid 'Basé à '
+msgstr 'Based in '
+
+#: automatically added
+msgid ", au cœur de l'Afrique de l'Ouest, Numeria Institute a été fondé avec une vision claire : devenir le hub de référence pour la formation technologique appliquée pour l'ensemble de la région CEDEAO."
+msgstr ', at the heart of West Africa, Numeria Institute was founded with a clear vision: to become the reference hub for applied tech training for the entire ECOWAS region.'
+
+#: automatically added
+msgid 'Notre approche est unique : nous combinons rigueur académique et projets ancrés dans les réalités africaines — agriculture, santé, énergie, finance inclusive — pour former des experts capables de créer des solutions à fort impact local.'
+msgstr 'Our approach is unique: we combine academic rigor with projects rooted in African realities — agriculture, health, energy, inclusive finance — to train experts able to create locally impactful solutions.'
+
+#: automatically added
+msgid 'Rigueur scientifique et qualité pédagogique dans chaque cours et chaque interaction.'
+msgstr 'Scientific rigor and pedagogical quality in every course and every interaction.'
+
+#: automatically added
+msgid 'Ancrage local'
+msgstr 'Local focus'
+
+#: automatically added
+msgid 'Chaque projet doit répondre à un vrai défi africain. La technologie au service du continent.'
+msgstr 'Every project must answer a real African challenge. Technology serving the continent.'
+
+#: automatically added
+msgid 'Innovation'
+msgstr 'Innovation'
+
+#: automatically added
+msgid 'Esprit entrepreneurial, créativité et curiosité au cœur de notre approche pédagogique.'
+msgstr 'Entrepreneurial mindset, creativity and curiosity at the heart of our pedagogical approach.'
+
+#: automatically added
+msgid 'Accessibilité'
+msgstr 'Accessibility'
+
+#: automatically added
+msgid 'Inclusion et accessibilité pour tous les niveaux, bourses, tarification adaptée, cours en ligne gratuits.'
+msgstr 'Inclusion and accessibility for all levels, scholarships, adapted pricing, free online courses.'
+
+#: automatically added
+msgid 'Collaboration'
+msgstr 'Collaboration'
+
+#: automatically added
+msgid "Coopération Sud-Sud et partenariats internationaux pour connecter l'Afrique au monde."
+msgstr 'South-South cooperation and international partnerships to connect Africa with the world.'
+
+#: automatically added
+msgid 'Impact mesurable'
+msgstr 'Measurable impact'
+
+#: automatically added
+msgid 'Chaque étudiant formé devient un vecteur de changement dans sa communauté et son pays.'
+msgstr 'Every trained student becomes a vector of change in their community and country.'
+
+#: automatically added
+msgid 'Des praticiens passionnés, pas seulement des théoriciens.'
+msgstr 'Passionate practitioners, not just theorists.'
+
+#: automatically added
+msgid 'Co-fondateur & Directeur académique'
+msgstr 'Co-founder & Academic Director'
+
+#: automatically added
+msgid "Expert en sciences computationnelles et passionné par l'éducation scientifique. Visionnaire derrière Numeria Institute."
+msgstr 'Expert in computational sciences and passionate about scientific education. Visionary behind Numeria Institute.'
+
+#: automatically added
+msgid 'Co-fondateur & Directeur technique'
+msgstr 'Co-founder & Technical Director'
+
+#: automatically added
+msgid 'Expert technique et stratège. Responsable du développement technologique et des partenariats de Numeria Institute.'
+msgstr "Technical expert and strategist. Responsible for Numeria Institute's technology development and partnerships."
+
+#: automatically added
+msgid 'Stratégie'
+msgstr 'Strategy'
+
+#: automatically added
+msgid 'Deux parcours complémentaires pour former les experts de demain.'
+msgstr "Two complementary pathways to train tomorrow's experts."
+
+#: automatically added
+msgid '3-6 mois · Lomé + en ligne'
+msgstr '3-6 months · Lomé + online'
+
+#: automatically added
+msgid 'Méthodes numériques avancées'
+msgstr 'Advanced Numerical Methods'
+
+#: automatically added
+msgid 'Gestion de projet scientifique'
+msgstr 'Scientific Project Management'
+
+#: automatically added
+msgid 'Public : étudiants en 3e année de licence, master, diplômés en mathématiques, physique et ingénierie'
+msgstr "Audience: 3rd year Bachelor's, Master's students, Mathematics, Physics and Engineering graduates"
+
+#: automatically added
+msgid 'Apprentissage automatique & Intelligence Artificielle'
+msgstr 'Machine Learning & Artificial Intelligence'
+
+#: automatically added
+msgid 'Python pour la science des données'
+msgstr 'Python for Data Science'
+
+#: automatically added
+msgid 'Apprentissage automatique fondamental'
+msgstr 'Fundamental Machine Learning'
+
+#: automatically added
+msgid 'Apprentissage profond & réseaux de neurones'
+msgstr 'Deep Learning & Neural Networks'
+
+#: automatically added
+msgid 'Traitement du langage naturel & IA pour les langues africaines'
+msgstr 'NLP & AI for African Languages'
+
+#: automatically added
+msgid 'IA appliquée & déploiement'
+msgstr 'Applied AI & Deployment'
+
+#: automatically added
+msgid 'Public : toutes disciplines scientifiques, développeurs, professionnels'
+msgstr 'Audience: all scientific disciplines, developers, professionals'
+
+#: automatically added
+msgid 'Nous trouver'
+msgstr 'Find us'
+
+#: automatically added
+msgid "Basé à Lomé, rayonnement dans toute l'Afrique de l'Ouest"
+msgstr 'Based in Lomé, reaching across West Africa'
+
+#: automatically added
+msgid 'Quartier étudiant, zone à accès facile'
+msgstr 'Student district, easy access area'
+
+#: automatically added
+msgid 'Et partout en ligne 🌐'
+msgstr 'And everywhere online 🌐'
+
+#: automatically added
+msgid "Position stratégique au cœur de l'Afrique de l'Ouest"
+msgstr 'Strategic location at the heart of West Africa'
+
+#: automatically added
+msgid 'Université de Lomé'
+msgstr 'University of Lomé'
+
+#: automatically added
+msgid 'Aéroport international'
+msgstr 'International airport'
+
+#: automatically added
+msgid 'Port autonome'
+msgstr 'Autonomous port'
+
+#: automatically added
+msgid 'Hub CEDEAO'
+msgstr 'ECOWAS hub'
+
+#: automatically added
+msgid "Rejoins l'aventure Numeria"
+msgstr 'Join the Numeria journey'
+
+#: automatically added
+msgid "Que tu sois étudiant, professionnel ou partenaire d'entreprise, il y a une place pour toi dans notre écosystème."
+msgstr 'Whether you are a student, professional or corporate partner, there is a place for you in our ecosystem.'
+
+#: automatically added
+msgid 'Devenir partenaire'
+msgstr 'Become a partner'
+

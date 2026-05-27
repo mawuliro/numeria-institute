@@ -35,7 +35,7 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
-    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
+    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri|replace:'http://','https://' }}{% endblock %}">
     <title>{% block titre %}{% block title %}Numeria Institute{% endblock %}{% endblock %}</title>
 
     <!-- Structured Data -->
@@ -272,20 +272,7 @@
 
                 <!-- NAVIGATION DESKTOP -->
                 <nav class="hidden lg:flex items-center gap-7 xl:gap-9">
-                    <a href="/" class="nav-pill {% if request.path == '/' %}actif{% endif %}">{% trans "Accueil" %}</a>
-                    <a href="{% url 'cours:catalogue' %}" class="nav-pill {% if '/cours' in request.path %}actif{% endif %}">{% trans "Cours" %}</a>
-                    <a href="{% url 'formation:liste' %}" class="nav-pill {% if '/formations' in request.path %}actif{% endif %}">{% trans "Formations" %}</a>
-                    <a href="{% url 'blog:liste' %}" class="nav-pill {% if '/blog' in request.path %}actif{% endif %}">{% trans "Blog" %}</a>
-                    <a href="{% url 'admissions:liste_campagnes' %}" class="nav-pill {% if '/admissions' in request.path %}actif{% endif %}">{% trans "Candidatures" %}</a>
-                    <a href="{% url 'communaute:liste_categories' %}" class="nav-pill {% if '/communaute' in request.path %}actif{% endif %}">{% trans "Communauté" %}</a>
-                    <a href="{% url 'mentorat:index' %}" class="nav-pill {% if '/mentorat' in request.path %}actif{% endif %}">{% trans "Mentorat" %}</a>
-                    <a href="{% url 'a_propos' %}" class="nav-pill {% if '/a-propos' in request.path %}actif{% endif %}">{% trans "À propos" %}</a>
-                    <a href="{% url 'contact' %}" class="nav-pill {% if '/contact' in request.path %}actif{% endif %}">{% trans "Contact" %}</a>
-                    {% if user.is_authenticated and user.is_staff %}
-                    <a href="{% url 'analytics:dashboard' %}" class="nav-pill {% if '/analytics' in request.path %}actif{% endif %} flex items-center gap-1">
-                        📊 Analytics
-                    </a>
-                    {% endif %}
+                    {% include 'includes/nav_items.html' with is_mobile=False %}
                 </nav>
 
                 <!-- BOUTONS + MODE SOMBRE + HAMBURGER -->
@@ -356,19 +343,7 @@
         <!-- MENU MOBILE -->
         <div id="menu-mobile" class="lg:hidden bg-numeria-bleu-fonce border-t border-white/10 w-full">
             <div class="w-full px-4 sm:px-8 py-4 flex flex-col gap-1">
-                <a href="/" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if request.path == '/' %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "Accueil" %}</a>
-                <a href="{% url 'cours:catalogue' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/cours' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "Cours" %}</a>
-                <a href="{% url 'blog:liste' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/blog' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "Blog" %}</a>
-                <a href="{% url 'admissions:liste_campagnes' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/admissions' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">🎓 {% trans "Candidatures" %}</a>
-                <a href="{% url 'communaute:liste_categories' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/communaute' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "Communauté" %}</a>
-                <a href="{% url 'mentorat:index' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/mentorat' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">🤝 {% trans "Mentorat" %}</a>
-                <a href="{% url 'a_propos' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/a-propos' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "À propos" %}</a>
-                <a href="{% url 'contact' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/contact' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %}">{% trans "Contact" %}</a>
-                {% if user.is_authenticated and user.is_staff %}
-                <a href="{% url 'analytics:dashboard' %}" class="py-3 px-4 rounded-xl text-sm font-medium transition-colors {% if '/analytics' in request.path %}bg-white/10 text-numeria-teal{% else %}text-blue-200 hover:text-white hover:bg-white/10{% endif %} flex items-center gap-2">
-                    📊 Analytics
-                </a>
-                {% endif %}
+                {% include 'includes/nav_items.html' with is_mobile=True %}
                 <div class="border-t border-white/10 my-2"></div>
                 <!-- Sélecteur de langue mobile -->
                 <div class="flex gap-2 px-4 py-2">
@@ -427,7 +402,7 @@
                     <p class="text-blue-300 text-sm leading-relaxed mb-4 max-w-xs">
                         {% trans "L'éducation scientifique accessible, engageante et gratuite pour tous les apprenants africains et francophones du monde entier." %}
                     </p>
-                    <p class="text-blue-400 text-xs">📍 Lomé, Togo · Rayonnement CEDEAO</p>
+                    <p class="text-blue-400 text-xs">📍 Lomé, Togo · {% trans "Rayonnement CEDEAO" %}</p>
                 </div>
 
                 <!-- Navigation -->
@@ -452,12 +427,24 @@
                             <a href="mailto:contact@numeriainstitute.com" class="hover:text-numeria-teal transition-colors break-all">contact@numeriainstitute.com</a>
                         </p>
                         <p class="text-blue-300 text-sm flex items-center gap-2"><span class="text-numeria-teal">📍</span> Lomé, Togo</p>
-                        <p class="text-blue-300 text-sm flex items-center gap-2"><span class="text-numeria-teal">🌍</span> Afrique de l'Ouest</p>
+                        <p class="text-blue-300 text-sm flex items-center gap-2"><span class="text-numeria-teal">🌍</span> {% trans "Afrique de l'Ouest" %}</p>
                     </div>
                     <div class="flex gap-2.5 mt-5">
-                        <span class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center text-blue-300 text-xs font-bold cursor-default" title="LinkedIn — bientôt disponible">in</span>
-                        <span class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center text-blue-300 text-xs font-bold cursor-default" title="YouTube — bientôt disponible">▶</span>
-                        <span class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center text-blue-300 text-xs font-bold cursor-default" title="Facebook — bientôt disponible">f</span>
+                        <span class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center text-blue-300 text-xs font-bold cursor-default" title="LinkedIn — bientôt disponible">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M4.98 3.5C4.98 4.6 4.15 5.5 3 5.5C1.84 5.5 1 4.6 1 3.5C1 2.4 1.84 1.5 3 1.5C4.15 1.5 4.98 2.4 4.98 3.5ZM.5 22H5.5V7.99H.5V22ZM8.5 7.99H13.2V10.1H13.3C14 9 15.63 7.84 17.72 7.84C22.14 7.84 23 10.58 23 15.11V22H18V15.94C18 13.81 17.92 11.2 15.07 11.2C12.18 11.2 11.72 13.52 11.72 15.79V22H6.72V7.99H8.5Z"/>
+                            </svg>
+                        </span>
+                        <span class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center text-blue-300 text-xs font-bold cursor-default" title="YouTube — bientôt disponible">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M23.498 6.186a2.786 2.786 0 0 0-1.96-1.967C19.644 4 12 4 12 4s-7.645 0-9.538.219A2.786 2.786 0 0 0 .503 6.186 29.5 29.5 0 0 0 0 12a29.5 29.5 0 0 0 .503 5.814 2.786 2.786 0 0 0 1.959 1.968C4.355 20 12 20 12 20s7.645 0 9.538-.219a2.786 2.786 0 0 0 1.96-1.967A29.5 29.5 0 0 0 24 12a29.5 29.5 0 0 0-.502-5.814ZM9.545 15.568V8.432L15.818 12l-6.273 3.568Z"/>
+                            </svg>
+                        </span>
+                        <span class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center text-blue-300 text-xs font-bold cursor-default" title="Facebook — bientôt disponible">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.406.593 24 1.325 24h11.495v-9.294H9.691V11.08h3.129V8.41c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.098 2.795.142v3.24l-1.918.001c-1.504 0-1.794.716-1.794 1.764v2.312h3.587l-.467 3.626h-3.12V24h6.116C23.406 24 24 23.406 24 22.676V1.325C24 .593 23.406 0 22.675 0Z"/>
+                            </svg>
+                        </span>
                     </div>
                 </div>
 

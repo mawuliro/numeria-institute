@@ -39,9 +39,7 @@
             <!-- Localisation -->
             <div class="flex items-center justify-center gap-2 mt-6 text-blue-300">
                 <span>📍</span>
-                <span class="font-semibold">Lomé, Togo Rayonnement CEDEAO</span>
-            </div>
-
+                    <span class="font-semibold">Lomé, Togo · {% trans "Rayonnement CEDEAO" %}</span>
         </div>
     </div>
 </section>
@@ -53,19 +51,19 @@
 
             <div>
                 <div class="text-numeria-or text-4xl font-bold">{{ total_etudiants }}+</div>
-                <div class="text-blue-300 text-sm mt-1">Étudiants inscrits</div>
+                <div class="text-blue-300 text-sm mt-1">{% trans "Étudiants inscrits" %}</div>
             </div>
             <div>
                 <div class="text-numeria-or text-4xl font-bold">{{ total_cours }}+</div>
-                <div class="text-blue-300 text-sm mt-1">Cours disponibles</div>
+                <div class="text-blue-300 text-sm mt-1">{% trans "Cours disponibles" %}</div>
             </div>
             <div>
                 <div class="text-numeria-or text-4xl font-bold">15+</div>
-                <div class="text-blue-300 text-sm mt-1">Pays représentés</div>
+                <div class="text-blue-300 text-sm mt-1">{% trans "Pays représentés" %}</div>
             </div>
             <div>
                 <div class="text-numeria-or text-4xl font-bold">2025</div>
-                <div class="text-blue-300 text-sm mt-1">Année de création</div>
+                <div class="text-blue-300 text-sm mt-1">{% trans "Année de création" %}</div>
             </div>
 
         </div>
@@ -79,18 +77,18 @@
 
             <div class="flex items-center gap-3 mb-6">
                 <div class="w-10 h-10 bg-numeria-or rounded-xl flex items-center justify-center text-xl">📖</div>
-                <h2 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or">Notre histoire</h2>
+                <h2 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or">{% trans "Notre histoire" %}</h2>
             </div>
 
             <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700 shadow-sm">
                 <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-lg mb-4">
-                    Numeria Institute est né d'un constat simple : l'Afrique subsaharienne connaît une transformation numérique accélérée, avec une jeunesse nombreuse et ambitieuse, mais un manque criant de formations pratiques en sciences computationnelles et intelligence artificielle.
+                    {% trans "Numeria Institute est né d'une simple observation : l'Afrique subsaharienne vit une transformation numérique accélérée, avec une jeunesse nombreuse et ambitieuse, mais une absence criante de formation pratique en sciences computationnelles et intelligence artificielle." %}
                 </p>
                 <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-lg mb-4">
-                    Basé à <strong class="text-numeria-bleu dark:text-numeria-or">Lomé, Togo</strong>, au cœur de l'Afrique de l'Ouest, Numeria Institute a été fondé avec une vision claire : devenir le hub de référence en formation tech appliquée pour toute la région CEDEAO.
+                    {% trans "Basé à " %}<strong class="text-numeria-bleu dark:text-numeria-or">Lomé, Togo</strong>{% trans ", au cœur de l'Afrique de l'Ouest, Numeria Institute a été fondé avec une vision claire : devenir le hub de référence pour la formation technologique appliquée pour l'ensemble de la région CEDEAO." %}
                 </p>
                 <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
-                    Notre approche est unique : nous couplons la rigueur académique avec des projets ancrés dans les réalités africaines agriculture, santé, énergie, finance inclusive pour former des experts capables de créer des solutions à impact local.
+                    {% trans "Notre approche est unique : nous combinons rigueur académique et projets ancrés dans les réalités africaines — agriculture, santé, énergie, finance inclusive — pour former des experts capables de créer des solutions à fort impact local." %}
                 </p>
             </div>
 
@@ -104,7 +102,7 @@
         <div class="max-w-5xl mx-auto">
 
             <h2 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or text-center mb-12">
-                Vision & Mission
+                {% trans "Vision & Mission" %}
             </h2>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -112,18 +110,18 @@
                 <!-- Vision -->
                 <div class="bg-numeria-bleu rounded-2xl p-8 text-white">
                     <div class="text-4xl mb-4">🔭</div>
-                    <h3 class="text-numeria-or font-bold text-xl mb-4">Notre Vision</h3>
+                    <h3 class="text-numeria-or font-bold text-xl mb-4">{% trans "Notre Vision" %}</h3>
                     <p class="text-blue-200 leading-relaxed">
-                        Devenir, d'ici 2030, le principal institut de formation en sciences computationnelles et intelligence artificielle appliquée en Afrique de l'Ouest francophone, produisant des experts capables de modéliser, analyser et résoudre les problèmes complexes du continent.
+                        {% trans "Devenir, d'ici 2030, le principal institut de formation en sciences computationnelles et intelligence artificielle appliquée en Afrique de l'Ouest francophone, produisant des experts capables de modéliser, analyser et résoudre les problèmes complexes du continent." %}
                     </p>
                 </div>
 
                 <!-- Mission -->
                 <div class="bg-numeria-blanc dark:bg-gray-700 rounded-2xl p-8 border border-gray-200 dark:border-gray-600">
                     <div class="text-4xl mb-4">🎯</div>
-                    <h3 class="text-numeria-bleu dark:text-numeria-or font-bold text-xl mb-4">Notre Mission</h3>
+                    <h3 class="text-numeria-bleu dark:text-numeria-or font-bold text-xl mb-4">{% trans "Notre Mission" %}</h3>
                     <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        Former une nouvelle génération de scientifiques et d'ingénieurs numériques africains, équipés d'outils modernes (Python, Fortran, ML/AI), capables de mener des recherches appliquées et de créer des produits technologiques à fort impact social et économique.
+                        {% trans "Former une nouvelle génération de scientifiques et d'ingénieurs numériques africains, équipés d'outils modernes (Python, Fortran, ML/AI), capables de mener des recherches appliquées et de créer des produits technologiques à fort impact social et économique." %}
                     </p>
                 </div>
 
@@ -138,56 +136,56 @@
         <div class="max-w-5xl mx-auto">
 
             <h2 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or text-center mb-12">
-                Nos valeurs fondatrices
+                {% trans "Nos valeurs fondatrices" %}
             </h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
                 <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                     <div class="text-3xl mb-3">🏆</div>
-                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">Excellence académique</h3>
+                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">{% trans "Excellence académique" %}</h3>
                     <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                        Rigueur scientifique et qualité pédagogique dans chaque cours et chaque interaction.
+                        {% trans "Rigueur scientifique et qualité pédagogique dans chaque cours et chaque interaction." %}
                     </p>
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                     <div class="text-3xl mb-3">🌍</div>
-                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">Ancrage local</h3>
+                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">{% trans "Ancrage local" %}</h3>
                     <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                        Chaque projet doit répondre à un problème réel africain. La technologie au service du continent.
+                        {% trans "Chaque projet doit répondre à un vrai défi africain. La technologie au service du continent." %}
                     </p>
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                     <div class="text-3xl mb-3">💡</div>
-                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">Innovation</h3>
+                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">{% trans "Innovation" %}</h3>
                     <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                        Esprit entrepreneurial, créativité et curiosité au cœur de notre approche pédagogique.
+                        {% trans "Esprit entrepreneurial, créativité et curiosité au cœur de notre approche pédagogique." %}
                     </p>
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                     <div class="text-3xl mb-3">🤝</div>
-                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">Accessibilité</h3>
+                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">{% trans "Accessibilité" %}</h3>
                     <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                        Inclusion et accessibilité pour tous les niveaux, bourses, prix adaptés, cours gratuits en ligne.
+                        {% trans "Inclusion et accessibilité pour tous les niveaux, bourses, tarification adaptée, cours en ligne gratuits." %}
                     </p>
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                     <div class="text-3xl mb-3">🔗</div>
-                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">Collaboration</h3>
+                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">{% trans "Collaboration" %}</h3>
                     <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                        Coopération Sud-Sud et partenariats internationaux pour connecter l'Afrique au monde.
+                        {% trans "Coopération Sud-Sud et partenariats internationaux pour connecter l'Afrique au monde." %}
                     </p>
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                     <div class="text-3xl mb-3">📈</div>
-                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">Impact mesurable</h3>
+                    <h3 class="font-bold text-numeria-bleu dark:text-numeria-or mb-2">{% trans "Impact mesurable" %}</h3>
                     <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                        Chaque étudiant formé est un vecteur de changement dans sa communauté et son pays.
+                        {% trans "Chaque étudiant formé devient un vecteur de changement dans sa communauté et son pays." %}
                     </p>
                 </div>
 
@@ -202,16 +200,10 @@
         <div class="max-w-5xl mx-auto">
 
             <h2 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or text-center mb-4">
-                Les fondateurs
+                {% trans "Les fondateurs" %}
             </h2>
             <p class="text-gray-500 dark:text-gray-400 text-center mb-12">
-                Des praticiens passionnés, pas seulement des théoriciens.
-            </p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
-
-                <!-- Fondateur 1 -->
-                <div class="bg-numeria-blanc dark:bg-gray-700 rounded-2xl p-8 border border-gray-100 dark:border-gray-600 text-center">
+                    {% trans "Des praticiens passionnés, pas seulement des théoriciens." %}
                     <!-- Avatar initiales -->
                     <div class="w-24 h-24 bg-numeria-bleu rounded-full flex items-center justify-center text-numeria-or text-3xl font-bold mx-auto mb-4 shadow-lg">
                         OD
@@ -220,15 +212,15 @@
                         Ounimborbitibou Djabon
                     </h3>
                     <p class="text-numeria-or text-sm font-semibold mb-3">
-                        Co-fondateur & Directeur académique
+                        {% trans "Co-fondateur & Directeur académique" %}
                     </p>
                     <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                        Expert en sciences computationnelles et passionné d'éducation scientifique. Visionnaire derrière le projet Numeria Institute.
+                        {% trans "Expert en sciences computationnelles et passionné par l'éducation scientifique. Visionnaire derrière Numeria Institute." %}
                     </p>
                     <div class="flex justify-center gap-3 mt-4">
-                        <span class="bg-numeria-bleu text-white text-xs font-bold px-3 py-1 rounded-full">Recherche</span>
+                        <span class="bg-numeria-bleu text-white text-xs font-bold px-3 py-1 rounded-full">{% trans "Recherche" %}</span>
                         <span class="bg-numeria-bleu text-white text-xs font-bold px-3 py-1 rounded-full">ML/AI</span>
-                        <span class="bg-numeria-bleu text-white text-xs font-bold px-3 py-1 rounded-full">Éducation</span>
+                        <span class="bg-numeria-bleu text-white text-xs font-bold px-3 py-1 rounded-full">{% trans "Éducation" %}</span>
                     </div>
                 </div>
 
@@ -241,14 +233,14 @@
                         Mawulikplimi R. Hounkpe
                     </h3>
                     <p class="text-numeria-or text-sm font-semibold mb-3">
-                        Co-fondateur & Directeur technique
+                        {% trans "Co-fondateur & Directeur technique" %}
                     </p>
                     <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                        Expert technique et stratège. Responsable du développement technologique et des partenariats de Numeria Institute.
+                        {% trans "Expert technique et stratège. Responsable du développement technologique et des partenariats de Numeria Institute." %}
                     </p>
                     <div class="flex justify-center gap-3 mt-4">
-                        <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full">Recherche</span>
-                        <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full">Stratégie</span>
+                        <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full">{% trans "Recherche" %}</span>
+                        <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full">{% trans "Stratégie" %}</span>
                     </div>
                 </div>
 
@@ -263,10 +255,10 @@
         <div class="max-w-5xl mx-auto">
 
             <h2 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or text-center mb-4">
-                Ce que nous enseignons
+                {% trans "Ce que nous enseignons" %}
             </h2>
             <p class="text-gray-500 dark:text-gray-400 text-center mb-12">
-                Deux filières complémentaires pour former les experts de demain.
+                {% trans "Deux parcours complémentaires pour former les experts de demain." %}
             </p>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -274,21 +266,21 @@
                 <!-- Filière A -->
                 <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm">
                     <div class="bg-numeria-bleu p-6">
-                        <div class="text-numeria-or text-xs font-bold tracking-widest uppercase mb-2">Filière A</div>
-                        <h3 class="text-white font-bold text-xl">Calcul Scientifique & Analyse Numérique</h3>
-                        <p class="text-blue-200 text-sm mt-2">3-6 mois · Lomé + En ligne</p>
+                        <div class="text-numeria-or text-xs font-bold tracking-widest uppercase mb-2">{% trans "Filière A" %}</div>
+                        <h3 class="text-white font-bold text-xl">{% trans "Calcul Scientifique & Analyse Numérique" %}</h3>
+                        <p class="text-blue-200 text-sm mt-2">{% trans "3-6 mois · Lomé + en ligne" %}</p>
                     </div>
                     <div class="p-6">
                         <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> Python Scientifique (NumPy, SciPy, Matplotlib)</li>
-                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> Fortran & Calcul Haute Performance</li>
-                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> Calcul Formel avec Mathematica</li>
-                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> Méthodes Numériques Avancées</li>
-                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> Gestion de Projet Scientifique</li>
+                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> {% trans "Python scientifique (NumPy, SciPy, Matplotlib)" %}</li>
+                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> {% trans "Fortran & calcul haute performance" %}</li>
+                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> {% trans "Calcul symbolique avec Mathematica" %}</li>
+                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> {% trans "Méthodes numériques avancées" %}</li>
+                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> {% trans "Gestion de projet scientifique" %}</li>
                         </ul>
                         <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
                             <p class="text-xs text-gray-400 dark:text-gray-500">
-                                Public : Licence 3, Master, Ingénieurs en Maths, Physique, Génie
+                                {% trans "Public : étudiants en 3e année de licence, master, diplômés en mathématiques, physique et ingénierie" %}
                             </p>
                         </div>
                     </div>
@@ -297,21 +289,21 @@
                 <!-- Filière B -->
                 <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm">
                     <div class="bg-numeria-bleu p-6">
-                        <div class="text-numeria-or text-xs font-bold tracking-widest uppercase mb-2">Filière B</div>
-                        <h3 class="text-white font-bold text-xl">Machine Learning & Intelligence Artificielle</h3>
-                        <p class="text-blue-200 text-sm mt-2">3-6 mois · Lomé + En ligne</p>
+                        <div class="text-numeria-or text-xs font-bold tracking-widest uppercase mb-2">{% trans "Filière B" %}</div>
+                        <h3 class="text-white font-bold text-xl">{% trans "Apprentissage automatique & Intelligence Artificielle" %}</h3>
+                        <p class="text-blue-200 text-sm mt-2">{% trans "3-6 mois · Lomé + en ligne" %}</p>
                     </div>
                     <div class="p-6">
                         <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> Python pour la Data Science</li>
-                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> Machine Learning Fondamental</li>
-                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> Deep Learning & Réseaux de Neurones</li>
-                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> NLP & IA pour Langues Africaines</li>
-                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> IA Appliquée & Déploiement</li>
+                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> {% trans "Python pour la science des données" %}</li>
+                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> {% trans "Apprentissage automatique fondamental" %}</li>
+                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> {% trans "Apprentissage profond & réseaux de neurones" %}</li>
+                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> {% trans "Traitement du langage naturel & IA pour les langues africaines" %}</li>
+                            <li class="flex items-center gap-2"><span class="text-numeria-or">→</span> {% trans "IA appliquée & déploiement" %}</li>
                         </ul>
                         <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
                             <p class="text-xs text-gray-400 dark:text-gray-500">
-                                Public : Toutes disciplines scientifiques, Développeurs, Professionnels
+                                {% trans "Public : toutes disciplines scientifiques, développeurs, professionnels" %}
                             </p>
                         </div>
                     </div>
@@ -328,10 +320,10 @@
         <div class="max-w-5xl mx-auto">
 
             <h2 class="text-3xl font-bold text-white text-center mb-4">
-                Nous trouver
+                {% trans "Nous trouver" %}
             </h2>
             <p class="text-blue-200 text-center mb-12">
-                Basés à Lomé, rayonnant sur toute l'Afrique de l'Ouest
+                {% trans "Basé à Lomé, rayonnement dans toute l'Afrique de l'Ouest" %}
             </p>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -344,9 +336,9 @@
                             📍
                         </div>
                         <div>
-                            <h3 class="text-white font-bold mb-1">Adresse</h3>
+                            <h3 class="text-white font-bold mb-1">{% trans "Adresse" %}</h3>
                             <p class="text-blue-200 text-sm">Lomé, Togo</p>
-                            <p class="text-blue-300 text-xs mt-1">Quartier estudiantin zone accessible</p>
+                            <p class="text-blue-300 text-xs mt-1">{% trans "Quartier étudiant, zone à accès facile" %}</p>
                         </div>
                     </div>
 
@@ -355,7 +347,7 @@
                             ✉️
                         </div>
                         <div>
-                            <h3 class="text-white font-bold mb-1">Email</h3>
+                            <h3 class="text-white font-bold mb-1">{% trans "Email" %}</h3>
                             <a href="mailto:contact@numeriainstitute.com"
                                class="text-numeria-or hover:text-yellow-300 transition-colors text-sm">
                                 contact@numeriainstitute.com
@@ -368,10 +360,10 @@
                             🌍
                         </div>
                         <div>
-                            <h3 class="text-white font-bold mb-1">Rayonnement</h3>
+                            <h3 class="text-white font-bold mb-1">{% trans "Contact" %}</h3>
                             <p class="text-blue-200 text-sm">Togo · Ghana · Bénin · Côte d'Ivoire</p>
                             <p class="text-blue-200 text-sm">Sénégal · Mali · Burkina Faso</p>
-                            <p class="text-blue-300 text-xs mt-1">Et partout en ligne 🌐</p>
+                            <p class="text-blue-300 text-xs mt-1">{% trans "Et partout en ligne 🌐" %}</p>
                         </div>
                     </div>
 
@@ -387,13 +379,13 @@
                     <div class="text-8xl mb-4">🗺️</div>
                     <h3 class="text-numeria-or font-bold text-xl mb-2">Lomé, Togo</h3>
                     <p class="text-blue-200 text-sm mb-4">
-                        Position stratégique au cœur de l'Afrique de l'Ouest
+                        {% trans "Position stratégique au cœur de l'Afrique de l'Ouest" %}
                     </p>
                     <div class="grid grid-cols-2 gap-3 text-xs text-blue-300">
-                        <div class="bg-blue-900 rounded-lg p-2">🏛️ Université de Lomé</div>
-                        <div class="bg-blue-900 rounded-lg p-2">✈️ Aéroport international</div>
-                        <div class="bg-blue-900 rounded-lg p-2">🌊 Port autonome</div>
-                        <div class="bg-blue-900 rounded-lg p-2">🔗 Hub CEDEAO</div>
+                        <div class="bg-blue-900 rounded-lg p-2">🏛️ {% trans "Université de Lomé" %}</div>
+                        <div class="bg-blue-900 rounded-lg p-2">✈️ {% trans "Aéroport international" %}</div>
+                        <div class="bg-blue-900 rounded-lg p-2">🌊 {% trans "Port autonome" %}</div>
+                        <div class="bg-blue-900 rounded-lg p-2">🔗 {% trans "Hub CEDEAO" %}</div>
                     </div>
                 </div>
 
@@ -406,19 +398,19 @@
 <section class="w-full py-20 bg-numeria-blanc dark:bg-gray-900 text-center">
     <div class="max-w-2xl mx-auto px-4">
         <h2 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-4">
-            Rejoins l'aventure Numeria
+            {% trans "Rejoins l'aventure Numeria" %}
         </h2>
         <p class="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
-            Que tu sois étudiant, professionnel ou partenaire d'entreprise, il y a une place pour toi dans notre écosystème.
+            {% trans "Que tu sois étudiant, professionnel ou partenaire d'entreprise, il y a une place pour toi dans notre écosystème." %}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="{% url 'comptes:inscription' %}"
                class="bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
-                S'inscrire gratuitement
+                {% trans "S'inscrire gratuitement" %}
             </a>
             <a href="{% url 'contact' %}"
                class="border-2 border-numeria-bleu dark:border-numeria-or text-numeria-bleu dark:text-numeria-or font-bold px-8 py-3 rounded-xl hover:bg-numeria-bleu hover:text-white dark:hover:bg-numeria-or dark:hover:text-numeria-bleu transition-colors">
-                Devenir partenaire
+                {% trans "Devenir partenaire" %}
             </a>
         </div>
     </div>

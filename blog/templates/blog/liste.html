@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% block titre %}Blog Numeria Institute{% endblock %}
+{% block meta_description %}{% trans "Parcourez le blog de Numeria Institute pour des actualités scientifiques, des histoires d'IA et des ressources d'apprentissage." %}{% endblock %}
+{% block og_titre %}{% trans "Blog Numeria Institute" %}{% endblock %}
+{% block og_description %}{% trans "Lisez les derniers articles sur la science et l'IA de Numeria Institute, conçus pour les apprenants et passionnés de technologie." %}{% endblock %}
 {% block contenu %}
 
 <!-- EN-TÊTE -->
@@ -22,8 +25,16 @@
                 {% trans "Actualités & Savoirs" %}
             </h1>
             <p class="text-blue-200 text-lg">
-                <span class="text-numeria-teal font-bold">{{ articles|length }}</span>
-                article{{ articles|length|pluralize }}{% if categories %} · {{ categories|length }} domaine{{ categories|length|pluralize }}{% endif %}
+                {% blocktrans count article_count=articles|length %}
+                    {{ article_count }} article
+                {% plural %}
+                    {{ article_count }} articles
+                {% endblocktrans %}
+                {% if categories %} · {% blocktrans count category_count=categories|length %}
+                    {{ category_count }} domaine
+                {% plural %}
+                    {{ category_count }} domaines
+                {% endblocktrans %}{% endif %}
             </p>
         </div>
     </div>
@@ -63,7 +74,13 @@
                                             {{ article.date_creation|date:"d F Y" }}
                                         </span>
                                         <span class="text-gray-400 dark:text-gray-500 text-xs">•</span>
-                                        <span class="text-gray-400 dark:text-gray-500 text-xs">{{ article.nombre_vues }} vues</span>
+                                        <span class="text-gray-400 dark:text-gray-500 text-xs">
+                                            {% blocktrans count views=article.nombre_vues %}
+                                                {{ views }} view
+                                            {% plural %}
+                                                {{ views }} views
+                                            {% endblocktrans %}
+                                        </span>
                                     </div>
                                     <h2 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-xl text-numeria-bleu dark:text-white mb-3 group-hover:text-numeria-teal transition-colors leading-tight">
                                         <a href="{% url 'blog:detail' article.slug %}">{{ article.titre }}</a>
@@ -84,12 +101,12 @@
                                         </div>
                                         <div>
                                             <p class="text-gray-800 dark:text-white text-sm font-semibold">{{ article.auteur.username }}</p>
-                                            <p class="text-gray-400 dark:text-gray-500 text-xs">Lecture rapide</p>
+                                            <p class="text-gray-400 dark:text-gray-500 text-xs">{% trans "Lecture rapide" %}</p>
                                         </div>
                                     </div>
                                     <a href="{% url 'blog:detail' article.slug %}"
                                        class="inline-flex items-center gap-2 rounded-full bg-numeria-teal/10 text-numeria-teal px-3 py-1 text-xs font-semibold hover:bg-numeria-teal/15 transition-colors">
-                                        Lire <span>→</span>
+                                        {% trans "Lire" %} <span>→</span>
                                     </a>
                                 </div>
                             </div>
@@ -100,7 +117,7 @@
                 {% else %}
                 <div class="text-center py-20">
                     <div class="text-5xl mb-4">📝</div>
-                    <p class="text-gray-400 dark:text-gray-500 text-lg">Aucun article disponible pour le moment.</p>
+                    <p class="text-gray-400 dark:text-gray-500 text-lg">{% trans "Aucun article disponible pour le moment." %}</p>
                 </div>
                 {% endif %}
             </div>
@@ -113,7 +130,7 @@
                 <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
                     <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-numeria-bleu dark:text-white text-base mb-4 flex items-center gap-2">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                        Catégories
+                        {% trans "Catégories" %}
                     </h3>
                     <ul class="flex flex-col gap-1">
                         {% for categorie in categories %}

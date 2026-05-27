@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% block titre %}Candidatures — Numeria Institute{% endblock %}
+{% block meta_description %}{% trans "Découvrez les campagnes de candidature en Calcul Scientifique et Intelligence Artificielle à Numeria Institute à Lomé." %}{% endblock %}
+{% block og_titre %}{% trans "Admissions ouvertes — Numeria Institute" %}{% endblock %}
+{% block og_description %}{% trans "Consultez les dates limites, places et frais d'inscription des campagnes de candidature Numeria Institute." %}{% endblock %}
 {% block contenu %}
 
 <!-- EN-TÊTE -->
@@ -16,13 +19,13 @@
         <div class="max-w-4xl mx-auto text-center">
             <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-5 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
                 <span class="w-1.5 h-1.5 bg-numeria-teal rounded-full animate-pulse"></span>
-                Candidatures ouvertes
+                {% trans "Candidatures ouvertes" %}
             </div>
             <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-4xl sm:text-5xl text-white mb-4">
-                Rejoignez Numeria Institute
+                {% trans "Rejoignez Numeria Institute" %}
             </h1>
             <p class="text-blue-200 text-lg max-w-2xl mx-auto leading-relaxed">
-                Des programmes d'excellence en Calcul Scientifique et en Intelligence Artificielle, basés à Lomé.
+                {% trans "Des programmes d'excellence en Calcul Scientifique et en Intelligence Artificielle, basés à Lomé." %}
             </p>
         </div>
     </div>
@@ -59,17 +62,17 @@
                         <div class="space-y-2.5 mb-6">
                             <div class="flex items-center gap-2.5 text-sm">
                                 <span class="w-6 text-center text-numeria-teal">📅</span>
-                                <span class="text-gray-600 dark:text-gray-400">Date limite : <strong class="text-gray-800 dark:text-gray-200">{{ campagne.date_limite|date:"d F Y" }}</strong></span>
+                                <span class="text-gray-600 dark:text-gray-400">{% trans "Date limite :" %} <strong class="text-gray-800 dark:text-gray-200">{{ campagne.date_limite|date:"d F Y" }}</strong></span>
                             </div>
                             <div class="flex items-center gap-2.5 text-sm">
                                 <span class="w-6 text-center text-numeria-teal">👥</span>
-                                <span class="text-gray-600 dark:text-gray-400">Places : <strong class="text-gray-800 dark:text-gray-200">{{ campagne.capacite_max }}</strong></span>
+                                <span class="text-gray-600 dark:text-gray-400">{% trans "Places :" %} <strong class="text-gray-800 dark:text-gray-200">{{ campagne.capacite_max }}</strong></span>
                             </div>
                             <div class="flex items-center gap-2.5 text-sm">
                                 <span class="w-6 text-center text-numeria-teal">💰</span>
-                                <span class="text-gray-600 dark:text-gray-400">Frais de candidature :
+                                <span class="text-gray-600 dark:text-gray-400">{% trans "Frais de candidature :" %}
                                     {% if campagne.frais_candidature == 0 %}
-                                        <strong class="text-green-500">Gratuit</strong>
+                                        <strong class="text-green-500">{% trans "Gratuit" %}</strong>
                                     {% else %}
                                         <strong class="text-gray-800 dark:text-gray-200">{{ campagne.frais_candidature }} FCFA</strong>
                                     {% endif %}
@@ -77,7 +80,7 @@
                             </div>
                             <div class="flex items-center gap-2.5 text-sm">
                                 <span class="w-6 text-center text-numeria-teal">📋</span>
-                                <span class="text-gray-600 dark:text-gray-400">Candidatures reçues : <strong class="text-gray-800 dark:text-gray-200">{{ campagne.nb_candidatures }}</strong></span>
+                                <span class="text-gray-600 dark:text-gray-400">{% trans "Candidatures reçues :" %} <strong class="text-gray-800 dark:text-gray-200">{{ campagne.nb_candidatures }}</strong></span>
                             </div>
                         </div>
 
@@ -85,11 +88,11 @@
                             <a href="{% url 'admissions:detail_campagne' campagne.id %}"
                                style="font-family:'Outfit',sans-serif;font-weight:700;"
                                class="block text-center bg-numeria-teal text-numeria-bleu py-3 rounded-xl hover:bg-teal-300 transition-colors">
-                                Voir les détails →
+                                {% trans "Voir les détails" %} →
                             </a>
                         {% else %}
                             <div class="text-center bg-gray-100 dark:bg-gray-700 py-3 rounded-xl">
-                                <span class="text-gray-500 dark:text-gray-400 text-sm font-medium">🔒 Campagne fermée</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm font-medium">🔒 {% trans "Campagne fermée" %}</span>
                             </div>
                         {% endif %}
                     </div>
