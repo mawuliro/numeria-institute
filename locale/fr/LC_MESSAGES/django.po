@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-14 23:06+0000\n"
+"POT-Creation-Date: 2026-05-27 20:42+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: French <contact@numeriainstitute.com>\n"
@@ -21,6 +21,7 @@ msgstr ""
 
 #: admissions/templates/admissions/candidature.html:11
 #: admissions/templates/admissions/paiement_candidature.html:11
+#: formation/templates/formation/detail_session.html:64
 msgid "Retour à la formation"
 msgstr ""
 
@@ -54,6 +55,7 @@ msgid "Soumettre ma candidature"
 msgstr ""
 
 #: admissions/templates/admissions/confirmation_paiement.html:3
+#: formation/templates/formation/mes_formations.html:91
 msgid "Paiement confirmé"
 msgstr ""
 
@@ -70,12 +72,14 @@ msgstr ""
 #: admissions/templates/admissions/confirmation_paiement.html:25
 #: admissions/templates/admissions/detail_candidature.html:62
 #: admissions/templates/admissions/paiement_candidature.html:40
-#: paiements/templates/paiements/page_paiement.html:105
+#: paiements/templates/paiements/page_paiement.html:116
 msgid "Récapitulatif"
 msgstr ""
 
 #: admissions/templates/admissions/confirmation_paiement.html:29
 #: admissions/templates/admissions/paiement_candidature.html:43
+#: formation/templates/formation/detail_session.html:80
+#: formation/templates/formation/paiement.html:36
 msgid "Formation"
 msgstr ""
 
@@ -165,6 +169,81 @@ msgstr ""
 msgid "Message de l'équipe Numeria"
 msgstr ""
 
+#: admissions/templates/admissions/liste_campagnes.html:4
+msgid ""
+"Découvrez les campagnes de candidature en Calcul Scientifique et "
+"Intelligence Artificielle à Numeria Institute à Lomé."
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:5
+msgid "Admissions ouvertes — Numeria Institute"
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:6
+msgid ""
+"Consultez les dates limites, places et frais d'inscription des campagnes de "
+"candidature Numeria Institute."
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:22
+msgid "Candidatures ouvertes"
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:25
+msgid "Rejoignez Numeria Institute"
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:28
+msgid ""
+"Des programmes d'excellence en Calcul Scientifique et en Intelligence "
+"Artificielle, basés à Lomé."
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:65
+msgid "Date limite :"
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:69
+msgid "Places :"
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:73
+msgid "Frais de candidature :"
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:75
+#: cours/templates/cours/catalogue.html:206
+#: pages/templates/pages/accueil.html:231
+#: paiements/templates/paiements/page_paiement.html:159
+msgid "Gratuit"
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:83
+msgid "Candidatures reçues :"
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:91
+msgid "Voir les détails"
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:95
+msgid "Campagne fermée"
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:108
+msgid "Aucune campagne ouverte"
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:109
+msgid "Revenez plus tard ou contactez-nous pour plus d'informations."
+msgstr ""
+
+#: admissions/templates/admissions/liste_campagnes.html:113
+#: formation/templates/formation/liste.html:225
+#: pages/templates/pages/a_propos.html:372
+msgid "Nous contacter"
+msgstr ""
+
 #: admissions/templates/admissions/mes_candidatures.html:3
 #: admissions/templates/admissions/mes_candidatures.html:12
 msgid "Mes candidatures"
@@ -221,6 +300,37 @@ msgstr ""
 msgid "Paiement sécurisé · Mode test (sandbox)"
 msgstr ""
 
+#: admissions/views.py:71
+msgid "❌ Cette campagne de recrutement est fermée."
+msgstr ""
+
+#: admissions/views.py:76
+msgid "⚠️ Vous avez déjà candidaté pour cette formation."
+msgstr ""
+
+#: admissions/views.py:87
+msgid ""
+"✅ Vous avez déjà payé les frais de candidature. Vous pouvez maintenant "
+"postuler."
+msgstr ""
+
+#: admissions/views.py:123
+#, python-brace-format
+msgid ""
+"✅ Paiement de {montant} FCFA réussi ! Vous pouvez maintenant remplir votre "
+"formulaire de candidature."
+msgstr ""
+
+#: admissions/views.py:130
+msgid ""
+"⚠️ Seul le mode sandbox est disponible pour le moment. Les autres moyens de "
+"paiement arrivent bientôt."
+msgstr ""
+
+#: admissions/views.py:168
+msgid "Aucun paiement trouvé. Veuillez effectuer le paiement."
+msgstr ""
+
 #: analytics/templates/analytics/dashboard.html:136
 msgid "Aucune donnée pour le moment"
 msgstr ""
@@ -253,13 +363,13 @@ msgstr ""
 msgid "Active la newsletter pour fidéliser les utilisateurs"
 msgstr ""
 
-#: blog/templates/blog/detail.html:26 templates/base.html:275
-#: templates/base.html:358
+#: blog/templates/blog/detail.html:26 templates/includes/nav_items.html:4
+#: templates/includes/nav_items.html:17
 msgid "Accueil"
 msgstr ""
 
-#: blog/templates/blog/detail.html:28 templates/base.html:277
-#: templates/base.html:360
+#: blog/templates/blog/detail.html:28 templates/includes/nav_items.html:7
+#: templates/includes/nav_items.html:20
 msgid "Blog"
 msgstr ""
 
@@ -267,31 +377,103 @@ msgstr ""
 msgid "Retour au blog"
 msgstr ""
 
-#: blog/templates/blog/liste.html:19
-msgid "Blog scientifique"
-msgstr ""
-
-#: blog/templates/blog/liste.html:22
-msgid "Actualités & Savoirs"
-msgstr ""
-
-#: blog/templates/blog/liste.html:139
-msgid "Commence à apprendre"
-msgstr ""
-
-#: blog/templates/blog/liste.html:142
-msgid "Accède à des cours scientifiques de qualité, gratuits et payants."
-msgstr ""
-
-#: blog/templates/blog/liste.html:147
+#: blog/templates/blog/detail.html:184 blog/templates/blog/liste.html:164
+#: paiements/templates/paiements/historique.html:85
 msgid "Voir les cours →"
 msgstr ""
 
+#: blog/templates/blog/liste.html:4
+msgid ""
+"Parcourez le blog de Numeria Institute pour des actualités scientifiques, "
+"des histoires d'IA et des ressources d'apprentissage."
+msgstr ""
+
+#: blog/templates/blog/liste.html:5
+msgid "Blog Numeria Institute"
+msgstr ""
+
+#: blog/templates/blog/liste.html:6
+msgid ""
+"Lisez les derniers articles sur la science et l'IA de Numeria Institute, "
+"conçus pour les apprenants et passionnés de technologie."
+msgstr ""
+
+#: blog/templates/blog/liste.html:22
+msgid "Blog scientifique"
+msgstr ""
+
+#: blog/templates/blog/liste.html:25
+msgid "Actualités & Savoirs"
+msgstr ""
+
+#: blog/templates/blog/liste.html:28
+#, python-format
+msgid ""
+"\n"
+"                    %(article_count)s article\n"
+"                "
+msgid_plural ""
+"\n"
+"                    %(article_count)s articles\n"
+"                "
+msgstr[0] ""
+msgstr[1] ""
+
+#: blog/templates/blog/liste.html:33
+#, python-format
+msgid ""
+"\n"
+"                    %(category_count)s domaine\n"
+"                "
+msgid_plural ""
+"\n"
+"                    %(category_count)s domaines\n"
+"                "
+msgstr[0] ""
+msgstr[1] ""
+
+#: blog/templates/blog/liste.html:78
+#, python-format
+msgid ""
+"\n"
+"                                                %(views)s view\n"
+"                                            "
+msgid_plural ""
+"\n"
+"                                                %(views)s views\n"
+"                                            "
+msgstr[0] ""
+msgstr[1] ""
+
+#: blog/templates/blog/liste.html:104
+msgid "Lecture rapide"
+msgstr ""
+
+#: blog/templates/blog/liste.html:109
+msgid "Lire"
+msgstr ""
+
+#: blog/templates/blog/liste.html:120
+msgid "Aucun article disponible pour le moment."
+msgstr ""
+
+#: blog/templates/blog/liste.html:133
+msgid "Catégories"
+msgstr ""
+
 #: blog/templates/blog/liste.html:156
+msgid "Commence à apprendre"
+msgstr ""
+
+#: blog/templates/blog/liste.html:159
+msgid "Accède à des cours scientifiques de qualité, gratuits et payants."
+msgstr ""
+
+#: blog/templates/blog/liste.html:173
 msgid "Rejoins Numeria Institute"
 msgstr ""
 
-#: blog/templates/blog/liste.html:158
+#: blog/templates/blog/liste.html:175
 msgid "Cours, certificats, communauté."
 msgstr ""
 
@@ -308,8 +490,8 @@ msgstr ""
 #: communaute/templates/communaute/liste_categories.html:41
 #: communaute/templates/communaute/modifier_message.html:3
 #: communaute/templates/communaute/modifier_profil.html:3
-#: comptes/templates/comptes/inscription.html:248 templates/base.html:279
-#: templates/base.html:362 templates/base.html:441
+#: comptes/templates/comptes/inscription.html:248 templates/base.html:417
+#: templates/includes/nav_items.html:9 templates/includes/nav_items.html:22
 msgid "Communauté"
 msgstr ""
 
@@ -361,6 +543,7 @@ msgstr ""
 #: communaute/templates/communaute/modifier_profil.html:100
 #: communaute/templates/communaute/modifier_sujet.html:70
 #: communaute/templates/communaute/repondre_sujet.html:71
+#: cours/templates/cours/detail.html:511
 #: mentorat/templates/mentorat/demander_mentorat.html:95
 #: mentorat/templates/mentorat/devenir_mentee.html:90
 #: mentorat/templates/mentorat/devenir_mentor.html:124
@@ -414,6 +597,7 @@ msgid "Publier le sujet"
 msgstr ""
 
 #: communaute/templates/communaute/creer_sujet.html:90
+#: mentorat/templates/mentorat/video_seance.html:73
 msgid "Conseils"
 msgstr ""
 
@@ -481,12 +665,14 @@ msgstr ""
 
 #: communaute/templates/communaute/detail_categorie.html:168
 #: communaute/templates/communaute/detail_sujet.html:256
+#: formation/templates/formation/voir_lecon.html:158
 #: mentorat/templates/mentorat/liste_mentors.html:175
 msgid "Précédent"
 msgstr ""
 
 #: communaute/templates/communaute/detail_categorie.html:182
 #: communaute/templates/communaute/detail_sujet.html:270
+#: formation/templates/formation/voir_lecon.html:166
 #: mentorat/templates/mentorat/liste_mentors.html:184
 msgid "Suivant"
 msgstr ""
@@ -577,7 +763,7 @@ msgstr ""
 #: communaute/templates/communaute/detail_sujet.html:307
 #: communaute/templates/communaute/liste_categories.html:203
 #: comptes/templates/comptes/connexion.html:129
-#: comptes/templates/comptes/inscription.html:230 templates/base.html:389
+#: comptes/templates/comptes/inscription.html:230 templates/base.html:365
 msgid "Se connecter"
 msgstr ""
 
@@ -945,7 +1131,19 @@ msgstr ""
 msgid "Profils"
 msgstr ""
 
-#: comptes/templates/comptes/connexion.html:3 templates/base.html:336
+#: comptes/templates/comptes/changer_mot_de_passe.html:12
+#: comptes/templates/comptes/modifier_profil.html:14
+#: comptes/templates/comptes/supprimer_compte.html:12
+msgid "Retour au profil"
+msgstr ""
+
+#: comptes/templates/comptes/changer_mot_de_passe.html:16
+#: comptes/templates/comptes/changer_mot_de_passe.html:51
+#: comptes/templates/comptes/profil.html:102
+msgid "Changer le mot de passe"
+msgstr ""
+
+#: comptes/templates/comptes/connexion.html:3 templates/base.html:324
 msgid "Connexion"
 msgstr ""
 
@@ -969,7 +1167,9 @@ msgstr ""
 msgid "Pas encore de compte ?"
 msgstr ""
 
-#: comptes/templates/comptes/connexion.html:140 templates/base.html:390
+#: comptes/templates/comptes/connexion.html:140
+#: cours/templates/cours/detail.html:52 pages/templates/pages/a_propos.html:409
+#: templates/base.html:366
 msgid "S'inscrire gratuitement"
 msgstr ""
 
@@ -1007,6 +1207,11 @@ msgstr ""
 msgid "Certificats PDF"
 msgstr ""
 
+#: comptes/templates/comptes/profil.html:110
+#: comptes/templates/comptes/supprimer_compte.html:19
+msgid "Supprimer mon compte"
+msgstr ""
+
 #: comptes/templates/comptes/supprimer_compte.html:44
 msgid "Pour confirmer la suppression, entre ton mot de passe actuel :"
 msgstr ""
@@ -1020,7 +1225,7 @@ msgstr ""
 msgid "Nouveau cours"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:386
+#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:362
 msgid "Mon profil"
 msgstr ""
 
@@ -1029,6 +1234,7 @@ msgid "Cours inscrits"
 msgstr ""
 
 #: comptes/templates/comptes/tableau_de_bord.html:65
+#: formation/templates/formation/mes_formations.html:65
 msgid "En cours"
 msgstr ""
 
@@ -1076,6 +1282,60 @@ msgstr ""
 msgid "Pour toi"
 msgstr ""
 
+#: comptes/views.py:24
+#, python-brace-format
+msgid "Bienvenue sur Numeria, {first_name} ! 🎓"
+msgstr ""
+
+#: comptes/views.py:27
+msgid "Veuillez corriger les erreurs ci-dessous."
+msgstr ""
+
+#: comptes/views.py:49
+#, python-brace-format
+msgid "Bon retour, {first_name} ! 👋"
+msgstr ""
+
+#: comptes/views.py:56
+msgid "Nom d'utilisateur ou mot de passe incorrect."
+msgstr ""
+
+#: comptes/views.py:68
+#, python-brace-format
+msgid "À bientôt, {prenom} ! 👋"
+msgstr ""
+
+#: comptes/views.py:134
+msgid "Ton profil a été mis à jour ! ✅"
+msgstr ""
+
+#: comptes/views.py:150
+msgid ""
+"Profil mis à jour, mais la photo n'a pas pu être enregistrée (Cloudinary non "
+"configuré)."
+msgstr ""
+
+#: comptes/views.py:156
+msgid "Veuillez corriger les erreurs."
+msgstr ""
+
+#: comptes/views.py:189
+msgid "Ta photo de profil a été supprimée. ✅"
+msgstr ""
+
+#: comptes/views.py:191
+msgid "Tu n'as pas de photo de profil à supprimer."
+msgstr ""
+
+#: comptes/views.py:231
+#, python-brace-format
+msgid "Ton compte a été supprimé, {prenom}. Nous espérons te revoir ! 👋"
+msgstr ""
+
+#: comptes/views.py:234
+msgid "Mot de passe incorrect. Ton compte n'a pas été supprimé."
+msgstr ""
+
 #: cours/templates/cours/catalogue.html:3
 #: cours/templates/cours/catalogue.html:5
 msgid "Catalogue des cours"
@@ -1091,12 +1351,6 @@ msgstr ""
 
 #: cours/templates/cours/catalogue.html:74
 msgid "Tous les cycles"
-msgstr ""
-
-#: cours/templates/cours/catalogue.html:206
-#: pages/templates/pages/accueil.html:231
-#: paiements/templates/paiements/page_paiement.html:132
-msgid "Gratuit"
 msgstr ""
 
 #: cours/templates/cours/catalogue.html:211
@@ -1116,8 +1370,24 @@ msgstr ""
 msgid "Voir tous les cours"
 msgstr ""
 
+#: cours/templates/cours/detail.html:52 cours/templates/cours/detail.html:226
+#: cours/templates/cours/detail.html:297 cours/templates/cours/detail.html:786
+#: formation/templates/formation/detail_formation.html:194
+#: formation/templates/formation/detail_session.html:46 templates/base.html:328
+msgid "S'inscrire"
+msgstr ""
+
 #: cours/templates/cours/detail.html:220
 msgid "Inscris-toi pour accéder aux leçons"
+msgstr ""
+
+#: cours/templates/cours/detail.html:226 cours/templates/cours/detail.html:297
+#: cours/templates/cours/detail.html:786
+msgid "Commencer gratuitement"
+msgstr ""
+
+#: cours/templates/cours/detail.html:288
+msgid "Contenu réservé aux inscrits"
 msgstr ""
 
 #: cours/templates/cours/detail.html:291
@@ -1129,6 +1399,7 @@ msgid "Vérification du certificat"
 msgstr ""
 
 #: cours/templates/cours/verifier_certificat.html:22
+#: formation/templates/formation/verifier_certificat.html:32
 msgid "Certificat authentique"
 msgstr ""
 
@@ -1149,6 +1420,7 @@ msgid "a complété avec succès le cours"
 msgstr ""
 
 #: cours/templates/cours/verifier_certificat.html:94
+#: formation/templates/formation/liste.html:62
 msgid "Niveau"
 msgstr ""
 
@@ -1441,8 +1713,8 @@ msgstr ""
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1561
 #, python-format
 msgid ""
-"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
-"HH:MM[:ss[.uuuuuu]][TZ] format."
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
+"uuuuuu]][TZ] format."
 msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1569
@@ -1468,8 +1740,8 @@ msgstr ""
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1864
 #, python-format
 msgid ""
-"“%(value)s” value has an invalid format. It must be in [DD] "
-"[[HH:]MM:]ss[.uuuuuu] format."
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
 msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1868
@@ -2321,8 +2593,8 @@ msgstr ""
 #: env/lib/python3.12/site-packages/django/views/generic/dates.py:680
 #, python-format
 msgid ""
-"Future %(verbose_name_plural)s not available because "
-"%(class_name)s.allow_future is False."
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
 msgstr ""
 
 #: env/lib/python3.12/site-packages/django/views/generic/dates.py:720
@@ -2437,6 +2709,508 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/httplib2/__init__.py:1471
 msgid "Redirected but the response is missing a Location: header."
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:39
+msgid "Étudiants"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:43
+msgid "Certifiés"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:47
+msgid "Note"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:60
+#: formation/templates/formation/detail_session.html:75
+#: formation/templates/formation/liste.html:93
+msgid "Image à venir"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:70
+#: formation/templates/formation/detail_formation.html:276
+msgid "S'inscrire maintenant"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:90
+msgid "Instructeurs"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:124
+msgid "Sessions disponibles"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:148
+#: formation/templates/formation/detail_session.html:22
+msgid "Format"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:154
+msgid "Places"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:164
+msgid "Remplissage"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:184
+msgid "Inscriptions:"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:199
+#: formation/templates/formation/liste.html:177
+msgid "Session complète"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:205
+msgid "Inscriptions fermées"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:217
+msgid "Aucune session à venir"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:220
+msgid "Les sessions pour cette formation seront bientôt annoncées."
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:231
+msgid "Compétences visées"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:247
+msgid "Prérequis"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:266
+msgid "Prêt à commencer ?"
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:269
+msgid ""
+"Rejoignez cette formation et développez vos compétences avec les meilleurs "
+"experts."
+msgstr ""
+
+#: formation/templates/formation/detail_formation.html:282
+msgid "Voir toutes les formations"
+msgstr ""
+
+#: formation/templates/formation/detail_session.html:4
+msgid "Détails de la session"
+msgstr ""
+
+#: formation/templates/formation/detail_session.html:18
+msgid "Dates"
+msgstr ""
+
+#: formation/templates/formation/detail_session.html:26
+msgid "Places restantes"
+msgstr ""
+
+#: formation/templates/formation/detail_session.html:30
+msgid "Prix"
+msgstr ""
+
+#: formation/templates/formation/detail_session.html:40
+msgid "Inscriptions ouvertes"
+msgstr ""
+
+#: formation/templates/formation/detail_session.html:51
+msgid "Inscription indisponible"
+msgstr ""
+
+#: formation/templates/formation/detail_session.html:58
+#: formation/templates/formation/mes_formations.html:106
+msgid "Rejoindre la visioconférence"
+msgstr ""
+
+#: formation/templates/formation/liste.html:4
+#: formation/templates/formation/liste.html:12
+msgid "Nos Formations"
+msgstr ""
+
+#: formation/templates/formation/liste.html:15
+msgid "Apprenez auprès des meilleurs experts du continent"
+msgstr ""
+
+#: formation/templates/formation/liste.html:19
+msgid "Experts africains"
+msgstr ""
+
+#: formation/templates/formation/liste.html:22
+msgid "Certifications reconnues"
+msgstr ""
+
+#: formation/templates/formation/liste.html:25
+msgid "Formation en ligne"
+msgstr ""
+
+#: formation/templates/formation/liste.html:42
+msgid "Filtres"
+msgstr ""
+
+#: formation/templates/formation/liste.html:48
+msgid "Type de formation"
+msgstr ""
+
+#: formation/templates/formation/liste.html:51
+msgid "Tous les types"
+msgstr ""
+
+#: formation/templates/formation/liste.html:65
+msgid "Tous les niveaux"
+msgstr ""
+
+#: formation/templates/formation/liste.html:66
+msgid "Débutant"
+msgstr ""
+
+#: formation/templates/formation/liste.html:67
+msgid "Intermédiaire"
+msgstr ""
+
+#: formation/templates/formation/liste.html:68
+msgid "Avancé"
+msgstr ""
+
+#: formation/templates/formation/liste.html:69
+msgid "Expert"
+msgstr ""
+
+#: formation/templates/formation/liste.html:75
+msgid "Appliquer les filtres"
+msgstr ""
+
+#: formation/templates/formation/liste.html:143
+msgid "Prochaine session"
+msgstr ""
+
+#: formation/templates/formation/liste.html:156
+msgid "Complet"
+msgstr ""
+
+#: formation/templates/formation/liste.html:172
+msgid "Voir & s'inscrire"
+msgstr ""
+
+#: formation/templates/formation/liste.html:185
+msgid "Voir le programme"
+msgstr ""
+
+#: formation/templates/formation/liste.html:195
+msgid "Aucune formation disponible"
+msgstr ""
+
+#: formation/templates/formation/liste.html:198
+msgid "Nous travaillons à ajouter de nouvelles formations. Revenez bientôt !"
+msgstr ""
+
+#: formation/templates/formation/liste.html:213
+msgid "Prêt à commencer votre apprentissage ?"
+msgstr ""
+
+#: formation/templates/formation/liste.html:216
+msgid ""
+"Rejoignez des milliers d'apprenants africains qui transforment leur carrière "
+"grâce à nos formations."
+msgstr ""
+
+#: formation/templates/formation/liste.html:221
+msgid "Créer un compte"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:4
+#: formation/templates/formation/mes_formations.html:13
+msgid "Mes formations"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:16
+msgid "Suivez votre progression et accédez à vos cours en ligne"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:28
+msgid "Aucune formation trouvée"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:31
+msgid ""
+"Vous n'êtes pas encore inscrit à une formation. Découvrez nos formations "
+"disponibles."
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:36
+msgid "Découvrir les formations"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:46
+msgid "Formations en cours"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:75
+#: formation/templates/formation/voir_lecon.html:23
+#: formation/templates/formation/voir_lecon.html:191
+msgid "Progression"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:96
+msgid "Paiement en attente"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:112
+msgid "Continuer le cours"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:117
+msgid "Formation terminée !"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:123
+msgid "Accès en attente de validation"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:141
+msgid "Formations terminées"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:155
+msgid "Complétée le"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:171
+msgid "Certificat"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:179
+msgid "Partager"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:198
+msgid "Formations à venir"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:211
+msgid "Commence le"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:214
+msgid "À venir"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:223
+msgid "L'accès sera disponible prochainement"
+msgstr ""
+
+#: formation/templates/formation/mes_formations.html:241
+msgid "Découvrir d'autres formations"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:4
+msgid "Paiement de l'inscription"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:13
+msgid "Finaliser votre paiement"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:16
+msgid "Complétez votre inscription en effectuant le paiement"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:28
+msgid "Détails de l'inscription"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:46
+msgid "Session"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:59 templates/video_room.html:759
+msgid "Participant"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:72
+msgid "Montant à payer:"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:85
+msgid "Méthode de paiement"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:100
+msgid "Carte bancaire"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:103
+msgid "Visa, Mastercard, etc."
+msgstr ""
+
+#: formation/templates/formation/paiement.html:113
+msgid "Paiement mobile"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:116
+msgid "Orange Money, MTN Money, etc."
+msgstr ""
+
+#: formation/templates/formation/paiement.html:126
+msgid "Virement bancaire"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:129
+msgid "Transférez directement depuis votre banque"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:140
+msgid ""
+"J'accepte les conditions d'utilisation et je confirme que je vais procéder "
+"au paiement pour cette inscription."
+msgstr ""
+
+#: formation/templates/formation/paiement.html:150 templates/video_room.html:23
+msgid "Retour"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:155
+msgid "Confirmer et payer"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:162
+msgid "Vos données de paiement sont sécurisées"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:171
+msgid "Besoin d'aide?"
+msgstr ""
+
+#: formation/templates/formation/paiement.html:174
+msgid "Contactez notre support si vous avez des questions sur le paiement."
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:4
+msgid "Vérifier certificat"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:13
+msgid "Vérification de certificat"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:16
+msgid "Vérifiez l'authenticité d'un certificat Numeria"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:35
+msgid "Ce certificat a été délivré par Numeria et est valide."
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:55
+msgid "Délivré à"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:63
+msgid "Date de délivrance"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:74
+#: paiements/templates/paiements/page_paiement.html:142
+msgid "Session de formation"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:83
+msgid "Note finale"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:95
+msgid "Voir le certificat complet"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:108
+msgid "Certificat invalide"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:111
+msgid "Ce code de vérification ne correspond à aucun certificat valide."
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:114
+msgid "Vérifiez que le code est correct ou contactez le support."
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:130
+msgid "À propos de la vérification"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:133
+msgid ""
+"Tous les certificats délivrés par Numeria possèdent un code de vérification "
+"unique qui permet de confirmer leur authenticité. Cette vérification est "
+"publique et peut être partagée sur les réseaux sociaux professionnels."
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:145
+msgid "Authentique"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:148
+msgid "Vérification sécurisée"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:156
+msgid "Partageable"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:159
+msgid "Lien public unique"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:167
+msgid "Permanent"
+msgstr ""
+
+#: formation/templates/formation/verifier_certificat.html:170
+msgid "Valable à vie"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:14
+msgid "Leçon"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:49
+msgid "Vidéo pédagogique"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:88
+msgid "Ressources"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:113
+msgid "Exercice pratique"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:121
+msgid "Démarrer l'exercice"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:136
+msgid "Marquer cette leçon comme complétée"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:144
+msgid "Leçon complétée le"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:176
+msgid "Terminer la formation"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:200
+msgid "Complétion"
+msgstr ""
+
+#: formation/templates/formation/voir_lecon.html:213
+msgid "leçons"
 msgstr ""
 
 #: mentorat/templates/mentorat/demander_mentorat.html:3
@@ -2629,20 +3403,24 @@ msgstr ""
 msgid "Notes du mentoré"
 msgstr ""
 
-#: mentorat/templates/mentorat/detail_relation.html:215
+#: mentorat/templates/mentorat/detail_relation.html:216
+msgid "Rejoindre en visio"
+msgstr ""
+
+#: mentorat/templates/mentorat/detail_relation.html:222
 #: mentorat/templates/mentorat/terminer_seance.html:62
 msgid "Marquer comme terminée"
 msgstr ""
 
-#: mentorat/templates/mentorat/detail_relation.html:227
+#: mentorat/templates/mentorat/detail_relation.html:234
 msgid "Aucune séance planifiée"
 msgstr ""
 
-#: mentorat/templates/mentorat/detail_relation.html:229
+#: mentorat/templates/mentorat/detail_relation.html:236
 msgid "Planifiez votre première séance pour commencer."
 msgstr ""
 
-#: mentorat/templates/mentorat/detail_relation.html:233
+#: mentorat/templates/mentorat/detail_relation.html:240
 msgid "Planifier la première séance"
 msgstr ""
 
@@ -2666,8 +3444,8 @@ msgstr ""
 
 #: mentorat/templates/mentorat/devenir_mentee.html:18
 #: mentorat/templates/mentorat/devenir_mentor.html:18
-#: mentorat/templates/mentorat/index.html:4 templates/base.html:280
-#: templates/base.html:363
+#: mentorat/templates/mentorat/index.html:4
+#: templates/includes/nav_items.html:10 templates/includes/nav_items.html:23
 msgid "Mentorat"
 msgstr ""
 
@@ -2865,6 +3643,8 @@ msgid "Parcourez nos mentors et demandez un accompagnement personnalisé."
 msgstr ""
 
 #: mentorat/templates/mentorat/liste_mentors.html:32
+#: pages/templates/pages/a_propos.html:221
+#: pages/templates/pages/a_propos.html:242
 msgid "Recherche"
 msgstr ""
 
@@ -2946,66 +3726,90 @@ msgstr ""
 msgid "Part reversée au mentor"
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:72
+#: mentorat/templates/mentorat/paiement_seance.html:71
+msgid "Payer en ligne"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:76
+msgid ""
+"Choisissez un provider pour payer votre séance et confirmez automatiquement "
+"votre réservation."
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:100
+#: paiements/templates/paiements/page_paiement.html:77
+msgid "Bientôt disponible"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:107
+#: paiements/templates/paiements/page_paiement.html:87
+msgid "Disponible"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:115
+msgid "Payer la séance en ligne"
+msgstr ""
+
+#: mentorat/templates/mentorat/paiement_seance.html:126
 msgid "Preuve soumise — en attente de confirmation"
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:73
+#: mentorat/templates/mentorat/paiement_seance.html:127
 msgid ""
 "Notre équipe vérifiera votre paiement dans les 24h ouvrées. Vous pouvez "
 "soumettre une nouvelle preuve si nécessaire."
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:82
+#: mentorat/templates/mentorat/paiement_seance.html:136
 msgid "Comment payer"
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:87
+#: mentorat/templates/mentorat/paiement_seance.html:141
 msgid ""
 "Effectuez un virement mobile money vers l'un des numéros ci-dessous en "
 "mentionnant votre nom et le titre de la séance."
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:103
+#: mentorat/templates/mentorat/paiement_seance.html:157
 msgid "Important"
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:103
+#: mentorat/templates/mentorat/paiement_seance.html:157
 msgid ""
 "conservez la capture d'écran de confirmation de votre transaction. Vous en "
 "aurez besoin pour soumettre la preuve ci-dessous."
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:112
+#: mentorat/templates/mentorat/paiement_seance.html:166
 msgid "Soumettre ma preuve de paiement"
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:124
+#: mentorat/templates/mentorat/paiement_seance.html:178
 msgid "Référence de la transaction"
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:131
+#: mentorat/templates/mentorat/paiement_seance.html:185
 msgid "Numéro de transaction fourni par votre opérateur mobile money"
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:139
+#: mentorat/templates/mentorat/paiement_seance.html:193
 msgid "Capture d'écran du paiement"
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:143
+#: mentorat/templates/mentorat/paiement_seance.html:197
 msgid "Preuve actuelle"
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:145
+#: mentorat/templates/mentorat/paiement_seance.html:199
 msgid ""
 "Preuve actuellement enregistrée — vous pouvez en soumettre une nouvelle."
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:160
+#: mentorat/templates/mentorat/paiement_seance.html:214
 msgid "Envoyer ma preuve de paiement"
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:170
+#: mentorat/templates/mentorat/paiement_seance.html:224
 msgid "Retour à la relation de mentorat"
 msgstr ""
 
@@ -3016,6 +3820,7 @@ msgstr ""
 #: mentorat/templates/mentorat/planifier_seance.html:14
 #: mentorat/templates/mentorat/terminer_relation.html:14
 #: mentorat/templates/mentorat/terminer_seance.html:14
+#: mentorat/templates/mentorat/video_seance.html:13
 msgid "Retour à la relation"
 msgstr ""
 
@@ -3039,6 +3844,7 @@ msgid "Durée (minutes)"
 msgstr ""
 
 #: mentorat/templates/mentorat/planifier_seance.html:86
+#: mentorat/templates/mentorat/video_seance.html:65
 msgid "Modalité"
 msgstr ""
 
@@ -3108,6 +3914,7 @@ msgstr ""
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:127
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:154
+#: mentorat/templates/mentorat/video_seance.html:20
 msgid "Séance"
 msgstr ""
 
@@ -3120,8 +3927,13 @@ msgstr ""
 msgid "Prochaines séances"
 msgstr ""
 
-#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:170
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:194
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:172
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:196
+msgid "Rejoindre"
+msgstr ""
+
+#: mentorat/templates/mentorat/tableau_de_bord_mentee.html:177
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:201
 msgid "Terminer"
 msgstr ""
 
@@ -3214,28 +4026,452 @@ msgstr ""
 msgid "Ajoutez vos notes sur cette séance avant de la marquer comme terminée."
 msgstr ""
 
-#: numeria_project/settings.py:131
+#: mentorat/templates/mentorat/video_seance.html:3
+#: mentorat/templates/mentorat/video_seance.html:15
+msgid "Visioconférence"
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:4
+msgid "Rejoignez la salle de visioconférence pour votre séance de mentorat."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:16
+msgid ""
+"Rejoignez votre séance de mentorat en visioconférence. Activez votre caméra "
+"et votre micro, puis attendez que votre interlocuteur rejoigne."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:37
+msgid "État de la session"
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:38
+msgid "Initialisation..."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:40
+#: templates/video_room.html:79 templates/video_room.html:575
+msgid "Vous"
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:41
+msgid "Interlocuteur"
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:54
+msgid "Instructions"
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:56
+msgid "Autorisez l'accès à votre micro et caméra."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:57
+msgid "Restez sur cette page jusqu'à la fin de la séance."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:58
+msgid "L'audio et la vidéo sont envoyés directement entre vos navigateurs."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:62
+msgid "Date"
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:63
+msgid "Heure"
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:64
+msgid "Durée"
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:64
+msgid "minutes"
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:74
+msgid ""
+"Pour une meilleure qualité, utilisez un casque et une connexion Wi-Fi stable."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:76
+msgid ""
+"Si votre interlocuteur ne rejoint pas, attendez quelques instants puis "
+"actualisez la page."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:134
+msgid "État"
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:149
+msgid "Caméra et micro actifs. En attente d’autre participant..."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:152
+msgid "Erreur : impossible d’accéder à la caméra ou au micro."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:167
+msgid "Offre envoyée. En attente de la réponse de l’autre participant..."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:171
+msgid "Connexion au serveur de signalisation établie."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:187
+msgid "L’autre participant a quitté la séance."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:205
+msgid "Offre reçue. Réponse envoyée."
+msgstr ""
+
+#: mentorat/templates/mentorat/video_seance.html:212
+msgid "Réponse reçue. Connexion en cours..."
+msgstr ""
+
+#: numeria_project/settings.py:146
 msgid "Français"
 msgstr ""
 
-#: numeria_project/settings.py:132
+#: numeria_project/settings.py:147
 msgid "English"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:78
-msgid "étudiants"
+#: pages/templates/pages/a_propos.html:42 templates/base.html:405
+msgid "Rayonnement CEDEAO"
 msgstr ""
 
+#: pages/templates/pages/a_propos.html:54
 #: pages/templates/pages/accueil.html:131
 msgid "Étudiants inscrits"
 msgstr ""
 
+#: pages/templates/pages/a_propos.html:58
 #: pages/templates/pages/accueil.html:135
 msgid "Cours disponibles"
 msgstr ""
 
+#: pages/templates/pages/a_propos.html:62
 #: pages/templates/pages/accueil.html:139
 msgid "Pays représentés"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:66
+msgid "Année de création"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:80
+msgid "Notre histoire"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:85
+msgid ""
+"Numeria Institute est né d'une simple observation : l'Afrique subsaharienne "
+"vit une transformation numérique accélérée, avec une jeunesse nombreuse et "
+"ambitieuse, mais une absence criante de formation pratique en sciences "
+"computationnelles et intelligence artificielle."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:88
+msgid "Basé à "
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:88
+msgid ""
+", au cœur de l'Afrique de l'Ouest, Numeria Institute a été fondé avec une "
+"vision claire : devenir le hub de référence pour la formation technologique "
+"appliquée pour l'ensemble de la région CEDEAO."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:91
+msgid ""
+"Notre approche est unique : nous combinons rigueur académique et projets "
+"ancrés dans les réalités africaines — agriculture, santé, énergie, finance "
+"inclusive — pour former des experts capables de créer des solutions à fort "
+"impact local."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:105
+msgid "Vision & Mission"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:113
+msgid "Notre Vision"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:115
+msgid ""
+"Devenir, d'ici 2030, le principal institut de formation en sciences "
+"computationnelles et intelligence artificielle appliquée en Afrique de "
+"l'Ouest francophone, produisant des experts capables de modéliser, analyser "
+"et résoudre les problèmes complexes du continent."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:122
+msgid "Notre Mission"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:124
+msgid ""
+"Former une nouvelle génération de scientifiques et d'ingénieurs numériques "
+"africains, équipés d'outils modernes (Python, Fortran, ML/AI), capables de "
+"mener des recherches appliquées et de créer des produits technologiques à "
+"fort impact social et économique."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:139
+msgid "Nos valeurs fondatrices"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:146
+msgid "Excellence académique"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:148
+msgid ""
+"Rigueur scientifique et qualité pédagogique dans chaque cours et chaque "
+"interaction."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:154
+msgid "Ancrage local"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:156
+msgid ""
+"Chaque projet doit répondre à un vrai défi africain. La technologie au "
+"service du continent."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:162
+msgid "Innovation"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:164
+msgid ""
+"Esprit entrepreneurial, créativité et curiosité au cœur de notre approche "
+"pédagogique."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:170
+msgid "Accessibilité"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:172
+msgid ""
+"Inclusion et accessibilité pour tous les niveaux, bourses, tarification "
+"adaptée, cours en ligne gratuits."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:178
+msgid "Collaboration"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:180
+msgid ""
+"Coopération Sud-Sud et partenariats internationaux pour connecter l'Afrique "
+"au monde."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:186
+msgid "Impact mesurable"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:188
+msgid ""
+"Chaque étudiant formé devient un vecteur de changement dans sa communauté et "
+"son pays."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:203
+msgid "Les fondateurs"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:206
+msgid "Des praticiens passionnés, pas seulement des théoriciens."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:215
+msgid "Co-fondateur & Directeur académique"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:218
+msgid ""
+"Expert en sciences computationnelles et passionné par l'éducation "
+"scientifique. Visionnaire derrière Numeria Institute."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:223
+msgid "Éducation"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:236
+msgid "Co-fondateur & Directeur technique"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:239
+msgid ""
+"Expert technique et stratège. Responsable du développement technologique et "
+"des partenariats de Numeria Institute."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:243
+msgid "Stratégie"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:258
+msgid "Ce que nous enseignons"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:261
+msgid "Deux parcours complémentaires pour former les experts de demain."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:269
+msgid "Filière A"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:270
+msgid "Calcul Scientifique & Analyse Numérique"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:271
+#: pages/templates/pages/a_propos.html:294
+msgid "3-6 mois · Lomé + en ligne"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:275
+msgid "Python scientifique (NumPy, SciPy, Matplotlib)"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:276
+msgid "Fortran & calcul haute performance"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:277
+msgid "Calcul symbolique avec Mathematica"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:278
+msgid "Méthodes numériques avancées"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:279
+msgid "Gestion de projet scientifique"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:283
+msgid ""
+"Public : étudiants en 3e année de licence, master, diplômés en "
+"mathématiques, physique et ingénierie"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:292
+msgid "Filière B"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:293
+msgid "Apprentissage automatique & Intelligence Artificielle"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:298
+msgid "Python pour la science des données"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:299
+msgid "Apprentissage automatique fondamental"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:300
+msgid "Apprentissage profond & réseaux de neurones"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:301
+msgid "Traitement du langage naturel & IA pour les langues africaines"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:302
+msgid "IA appliquée & déploiement"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:306
+msgid "Public : toutes disciplines scientifiques, développeurs, professionnels"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:323
+msgid "Nous trouver"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:326
+msgid "Basé à Lomé, rayonnement dans toute l'Afrique de l'Ouest"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:339
+msgid "Adresse"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:341
+msgid "Quartier étudiant, zone à accès facile"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:350
+msgid "Email"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:363 templates/base.html:416
+#: templates/base.html:423 templates/includes/nav_items.html:12
+#: templates/includes/nav_items.html:25
+msgid "Contact"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:366
+msgid "Et partout en ligne 🌐"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:382
+msgid "Position stratégique au cœur de l'Afrique de l'Ouest"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:385
+msgid "Université de Lomé"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:386
+msgid "Aéroport international"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:387
+msgid "Port autonome"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:388
+msgid "Hub CEDEAO"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:401
+msgid "Rejoins l'aventure Numeria"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:404
+msgid ""
+"Que tu sois étudiant, professionnel ou partenaire d'entreprise, il y a une "
+"place pour toi dans notre écosystème."
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:413
+msgid "Devenir partenaire"
+msgstr ""
+
+#: pages/templates/pages/accueil.html:54
+msgid "Voir les cours"
+msgstr ""
+
+#: pages/templates/pages/accueil.html:78
+msgid "étudiants"
 msgstr ""
 
 #: pages/templates/pages/accueil.html:172
@@ -3351,99 +4587,135 @@ msgid ""
 "Aucune carte bancaire requise · Cours gratuits disponibles immédiatement"
 msgstr ""
 
-#: pages/views.py:41 templates/base.html:22 templates/base.html:25
-#: templates/base.html:34
+#: pages/templates/pages/confidentialite.html:103
+msgid ""
+"Pour toute question relative à vos données personnelles, contactez-nous à :"
+msgstr ""
+
+#: pages/templates/pages/contact.html:276
+msgid ""
+"Oui, des bourses sont disponibles pour les candidats méritants. Contactez-"
+"nous pour en savoir plus."
+msgstr ""
+
+#: pages/views.py:46 templates/base.html:21 templates/base.html:24
+#: templates/base.html:33
 msgid ""
 "Éducation scientifique accessible en Afrique. Cours de mathématiques, "
 "sciences et IA pour apprenants africains et francophones."
 msgstr ""
 
-#: pages/views.py:62
+#: pages/views.py:67
 msgid ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses for African and French-speaking learners."
 msgstr ""
 
-#: pages/views.py:127
+#: pages/views.py:132
 msgid ""
 "Découvrez Numeria Institute, notre mission et notre équipe pour l'éducation "
 "scientifique en Afrique."
 msgstr ""
 
-#: pages/views.py:142
+#: pages/views.py:147
 msgid ""
 "Discover Numeria Institute, our mission and team for scientific education in "
 "Africa."
+msgstr ""
+
+#: pages/views.py:252
+#, python-brace-format
+msgid ""
+"✅ Merci {nom} ! Ton message a bien été envoyé. Nous te répondrons dans "
+"24-48h."
+msgstr ""
+
+#: pages/views.py:257
+#, python-brace-format
+msgid "✅ Message reçu {nom} ! Nous te répondrons bientôt."
+msgstr ""
+
+#: paiements/templates/paiements/historique.html:81
+msgid "Inscris-toi à un contenu payant pour voir ton historique ici."
 msgstr ""
 
 #: paiements/templates/paiements/page_paiement.html:3
 msgid "Paiement"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:14
+#: paiements/templates/paiements/page_paiement.html:15
 msgid "Retour au cours"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:17
+#: paiements/templates/paiements/page_paiement.html:20
+msgid "Retour à la session"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:24
 msgid "Finaliser l'inscription"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:39
+#: paiements/templates/paiements/page_paiement.html:46
 msgid "Choisir un mode de paiement"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:70
-msgid "Bientôt disponible"
-msgstr ""
-
-#: paiements/templates/paiements/page_paiement.html:80
-msgid "Disponible"
-msgstr ""
-
-#: paiements/templates/paiements/page_paiement.html:90
+#: paiements/templates/paiements/page_paiement.html:98
 #, python-format
 msgid "Payer %(prix)s %(devise)s →"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:94
+#: paiements/templates/paiements/page_paiement.html:100
+#, python-format
+msgid "Payer %(prix)s FCFA →"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:105
 msgid "Paiement sécurisé — vos données sont protégées"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:120
+#: paiements/templates/paiements/page_paiement.html:140
 #, python-format
 msgid "%(n)s leçons · %(niveau)s"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:127
+#: paiements/templates/paiements/page_paiement.html:151
 msgid "Prix du cours"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:131
+#: paiements/templates/paiements/page_paiement.html:151
+msgid "Prix de la session"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:158
 msgid "Frais de traitement"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:137
+#: paiements/templates/paiements/page_paiement.html:164
 msgid "Total"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:146
+#: paiements/templates/paiements/page_paiement.html:173
 msgid "Ce qui est inclus"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:151
+#: paiements/templates/paiements/page_paiement.html:179
 #, python-format
 msgid "%(n)s leçons complètes"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:155
+#: paiements/templates/paiements/page_paiement.html:181
+msgid "Accès à toutes les leçons de la session"
+msgstr ""
+
+#: paiements/templates/paiements/page_paiement.html:186
 msgid "Accès à vie"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:159
+#: paiements/templates/paiements/page_paiement.html:190
 msgid "Certificat officiel"
 msgstr ""
 
-#: paiements/templates/paiements/page_paiement.html:163
+#: paiements/templates/paiements/page_paiement.html:194
 msgid "Support par email"
 msgstr ""
 
@@ -3453,214 +4725,236 @@ msgid ""
 "sciences et IA."
 msgstr ""
 
-#: templates/base.html:276 templates/base.html:359
-msgid "Cours"
-msgstr ""
-
-#: templates/base.html:278 templates/base.html:361 templates/base.html:438
-msgid "Candidatures"
-msgstr ""
-
-#: templates/base.html:281 templates/base.html:364 templates/base.html:439
-msgid "À propos"
-msgstr ""
-
-#: templates/base.html:282 templates/base.html:365 templates/base.html:440
-#: templates/base.html:447
-msgid "Contact"
-msgstr ""
-
-#: templates/base.html:320 templates/base.html:385
+#: templates/base.html:308 templates/base.html:361
 msgid "Tableau de bord"
 msgstr ""
 
-#: templates/base.html:340
-msgid "S'inscrire"
-msgstr ""
-
-#: templates/base.html:387
+#: templates/base.html:363
 msgid "Se déconnecter"
 msgstr ""
 
-#: templates/base.html:427
+#: templates/base.html:403
 msgid ""
 "L'éducation scientifique accessible, engageante et gratuite pour tous les "
 "apprenants africains et francophones du monde entier."
 msgstr ""
 
-#: templates/base.html:434
+#: templates/base.html:410
 msgid "Navigation"
 msgstr ""
 
-#: templates/base.html:436
+#: templates/base.html:412
 msgid "Nos cours"
 msgstr ""
 
-#: templates/base.html:437
+#: templates/base.html:413
 msgid "Le blog"
 msgstr ""
 
-#: templates/base.html:466
+#: templates/base.html:414 templates/includes/nav_items.html:8
+#: templates/includes/nav_items.html:21
+msgid "Candidatures"
+msgstr ""
+
+#: templates/base.html:415 templates/includes/nav_items.html:11
+#: templates/includes/nav_items.html:24
+msgid "À propos"
+msgstr ""
+
+#: templates/base.html:430
+msgid "Afrique de l'Ouest"
+msgstr ""
+
+#: templates/base.html:454
 msgid "Tous droits réservés"
 msgstr ""
 
-#: templates/base.html:468
+#: templates/base.html:456
 msgid "Confidentialité"
 msgstr ""
 
-#: templates/base.html:469
+#: templates/base.html:457
 msgid "CGU"
 msgstr ""
 
-#: templates/video_room.html
-msgid "Accès caméra/micro refusé"
+#: templates/includes/nav_items.html:5 templates/includes/nav_items.html:18
+msgid "Cours"
 msgstr ""
 
-#: templates/video_room.html
-msgid "Accès caméra/micro refusé. Vérifiez les permissions."
+#: templates/includes/nav_items.html:6 templates/includes/nav_items.html:19
+msgid "Formations"
 msgstr ""
 
-#: templates/video_room.html
-msgid "Arrêter le partage"
+#: templates/includes/nav_items.html:14 templates/includes/nav_items.html:27
+msgid "Analytics"
 msgstr ""
 
-#: templates/video_room.html
-msgid "Aucun participant pour l'instant."
-msgstr ""
-
-#: templates/video_room.html
-msgid "Caméra"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Caméra activée"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Caméra désactivée"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Chat"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Connecté"
-msgstr ""
-
-#: templates/video_room.html
+#: templates/video_room.html:39
 msgid "Connexion…"
 msgstr ""
 
-#: templates/video_room.html
-msgid "Connexion en cours…"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Connexion établie"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Couper la caméra"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Couper le micro"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Déconnecté"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Écran"
-msgstr ""
-
-#: templates/video_room.html
-msgid "En attente des participants…"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Erreur WebSocket"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Impossible de démarrer la session vidéo."
-msgstr ""
-
-#: templates/video_room.html
-msgid "Les messages apparaîtront ici."
-msgstr ""
-
-#: templates/video_room.html
-msgid "Lever la main"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Main"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Main baissée"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Main levée"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Micro"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Micro activé"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Micro coupé"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Non connecté"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Partage d'écran"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Partager l'écran"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Participant"
-msgstr ""
-
-#: templates/video_room.html
-msgid "participants"
-msgstr ""
-
-#: templates/video_room.html
+#: templates/video_room.html:109 templates/video_room.html:258
+#: templates/video_room.html:262
 msgid "Participants"
 msgstr ""
 
-#: templates/video_room.html
+#: templates/video_room.html:114 templates/video_room.html:266
+#: templates/video_room.html:273
+msgid "Chat"
+msgstr ""
+
+#: templates/video_room.html:121
+msgid "participants"
+msgstr ""
+
+#: templates/video_room.html:137
+msgid "Aucun participant pour l'instant."
+msgstr ""
+
+#: templates/video_room.html:144
+msgid "Les messages apparaîtront ici."
+msgstr ""
+
+#: templates/video_room.html:148
+msgid "Envoyer un message…"
+msgstr ""
+
+#: templates/video_room.html:183 templates/video_room.html:192
+msgid "Micro"
+msgstr ""
+
+#: templates/video_room.html:190
+msgid "Couper le micro"
+msgstr ""
+
+#: templates/video_room.html:199 templates/video_room.html:208
+msgid "Caméra"
+msgstr ""
+
+#: templates/video_room.html:206
+msgid "Couper la caméra"
+msgstr ""
+
+#: templates/video_room.html:215 templates/video_room.html:219
+msgid "Partager l'écran"
+msgstr ""
+
+#: templates/video_room.html:221
+msgid "Écran"
+msgstr ""
+
+#: templates/video_room.html:228 templates/video_room.html:232
+msgid "Lever la main"
+msgstr ""
+
+#: templates/video_room.html:234
+msgid "Main"
+msgstr ""
+
+#: templates/video_room.html:243 templates/video_room.html:249
 msgid "Quitter"
 msgstr ""
 
-#: templates/video_room.html
+#: templates/video_room.html:247
 msgid "Quitter l'appel"
 msgstr ""
 
-#: templates/video_room.html
+#: templates/video_room.html:428
+msgid "Micro activé"
+msgstr ""
+
+#: templates/video_room.html:428
+msgid "Micro coupé"
+msgstr ""
+
+#: templates/video_room.html:442
+msgid "Caméra activée"
+msgstr ""
+
+#: templates/video_room.html:442
+msgid "Caméra désactivée"
+msgstr ""
+
+#: templates/video_room.html:451
+msgid "Main levée"
+msgstr ""
+
+#: templates/video_room.html:451
+msgid "Main baissée"
+msgstr ""
+
+#: templates/video_room.html:460
+msgid "Impossible d\\"
+msgstr ""
+
+#: templates/video_room.html:480
+msgid "Arrêter le partage"
+msgstr ""
+
+#: templates/video_room.html:483 templates/video_room.html:516
+msgid "Partage d\\"
+msgstr ""
+
+#: templates/video_room.html:488
+msgid "Impossible de partager l\\"
+msgstr ""
+
+#: templates/video_room.html:513
+msgid "Partager l\\"
+msgstr ""
+
+#: templates/video_room.html:525
+msgid "Partage d'écran"
+msgstr ""
+
+#: templates/video_room.html:572
+msgid "Non connecté"
+msgstr ""
+
+#: templates/video_room.html:644
+msgid "Connecté"
+msgstr ""
+
+#: templates/video_room.html:645
 msgid "Reconnexion…"
 msgstr ""
 
-#: templates/video_room.html
+#: templates/video_room.html:683
+msgid "En attente des participants…"
+msgstr ""
+
+#: templates/video_room.html:686
+msgid "Accès caméra/micro refusé"
+msgstr ""
+
+#: templates/video_room.html:689
+msgid "Accès caméra/micro refusé. Vérifiez les permissions."
+msgstr ""
+
+#: templates/video_room.html:701
+msgid "Impossible de démarrer la session vidéo."
+msgstr ""
+
+#: templates/video_room.html:713
+msgid "Impossible de répondre à l\\"
+msgstr ""
+
+#: templates/video_room.html:727
+msgid "Connexion établie"
+msgstr ""
+
+#: templates/video_room.html:732
+msgid "Erreur WebSocket"
+msgstr ""
+
+#: templates/video_room.html:733
+msgid "Déconnecté"
+msgstr ""
+
+#: templates/video_room.html:749
 msgid "Un participant a quitté"
 msgstr ""
 
-#: templates/video_room.html
-msgid "Vous"
+#: templates/video_room.html:771
+msgid "Connexion en cours…"
 msgstr ""
-
