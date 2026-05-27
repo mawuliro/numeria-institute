@@ -457,7 +457,7 @@
     try{
       if(!localStream){ await initMedia(); }
       if(!localStream){
-        meetToast('{% trans "Impossible d\'initialiser la caméra/micro avant le partage." %}');
+        meetToast("{% trans 'Impossible d\'initialiser la caméra/micro avant le partage.' %}");
         return;
       }
       screenStream = await navigator.mediaDevices.getDisplayMedia({video:{cursor:'always'},audio:false});
@@ -480,12 +480,12 @@
       $('screenTip').textContent = '{% trans "Arrêter le partage" %}';
       setScreenBadge('localTile', true);
       send('screen_share',{action:'start'});
-      meetToast('{% trans "Partage d\'écran activé" %}');
+      meetToast("{% trans 'Partage d\'écran activé' %}");
 
       // Handle browser-level "Stop sharing" button
       track.addEventListener('ended', stopScreenShare);
     }catch(err){
-      if(err.name!=='NotAllowedError') meetToast('{% trans "Impossible de partager l\'écran" %}');
+      if(err.name!=='NotAllowedError') meetToast("{% trans 'Impossible de partager l\'écran' %}");
     }
   };
 
@@ -510,10 +510,10 @@
     localAvatar.classList.toggle('hidden', camOn);
 
     $('btnScreen').style.background = '#3c4043';
-    $('screenTip').textContent = '{% trans "Partager l\'écran" %}';
+    $('screenTip').textContent = "{% trans 'Partager l\'écran' %}";
     setScreenBadge('localTile', false);
     send('screen_share',{action:'stop'});
-    meetToast('{% trans "Partage d\'écran arrêté" %}');
+    meetToast("{% trans 'Partage d\'écran arrêté' %}");
   }
 
   function setScreenBadge(tileId, show){
@@ -701,7 +701,7 @@
   async function createAnswer(rid){
     const stream = await initMedia();
     if(!stream){
-      setStatus('{% trans "Impossible de répondre à l\'offre vidéo." %}','red');
+      setStatus("{% trans 'Impossible de répondre à l\'offre vidéo.' %}",'red');
       return;
     }
     const pc = await getPeer(rid);
