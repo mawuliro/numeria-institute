@@ -569,9 +569,10 @@
     const input = $('chatInput');
     const msg = input.value.trim();
     if(!msg) return;
+    if(socket.readyState !== WebSocket.OPEN){ meetToast('{% trans "Non connecté" %}'); return; }
     input.value = '';
+    send('chat', {message: msg});
     appendChat('{% trans "Vous" %}', msg, true);
-    // Could broadcast via WebSocket data channel in the future
   };
 
   function appendChat(sender, msg, isSelf){
@@ -657,13 +658,21 @@
     } else {
       localStream?.getTracks().forEach(t=>pc.addTrack(t, localStream));
     }
-    peerConns[remoteId] = {pc};
+    peerConns[remoteId] = {pc, pendingCandidates: []};
     return pc;
   }
 
   async function closePeer(cid){
     const d = peerConns[cid]; if(!d) return;
     d.pc.close(); delete peerConns[cid]; removeRemoteTile(cid);
+  }
+
+  async function drainIceCandidates(cid){
+    const d = peerConns[cid]; if(!d) return;
+    for(const c of d.pendingCandidates){
+      try{ await d.pc.addIceCandidate(new RTCIceCandidate(c)); }catch{}
+    }
+    d.pendingCandidates = [];
   }
 
   async function initMedia(){
@@ -745,6 +754,11 @@
         setScreenBadge(`tile-${msg.client_id}`, msg.action==='start');
       return;
     }
+    if(msg.signal_type==='chat'){
+      if(msg.client_id !== clientId)
+        appendChat(msg.sender_name || '{% trans "Participant" %}', msg.message, false);
+      return;
+    }
     if(msg.target_client_id && msg.target_client_id!==clientId) return;
     if(from===clientId) return;
 
@@ -752,15 +766,27 @@
       await initMedia().catch(()=>{});
       const pc=await getPeer(from);
       await pc.setRemoteDescription(new RTCSessionDescription(msg.payload));
+      await drainIceCandidates(from);
       await createAnswer(from);
       setStatus('{% trans "Connexion en cours…" %}','yellow');
     }
     else if(msg.signal_type==='sdp-answer'){
-      const d=peerConns[from]; if(d) await d.pc.setRemoteDescription(new RTCSessionDescription(msg.payload));
+      const d=peerConns[from];
+      if(d){
+        await d.pc.setRemoteDescription(new RTCSessionDescription(msg.payload));
+        await drainIceCandidates(from);
+      }
     }
     else if(msg.signal_type==='ice-candidate'){
       const d=peerConns[from];
-      if(d) try{ await d.pc.addIceCandidate(new RTCIceCandidate(msg.payload)); }catch{}
+      if(d){
+        const c = msg.payload.candidate;
+        if(d.pc.remoteDescription){
+          try{ await d.pc.addIceCandidate(new RTCIceCandidate(c)); }catch{}
+        } else {
+          d.pendingCandidates.push(c);
+        }
+      }
     }
   });
 

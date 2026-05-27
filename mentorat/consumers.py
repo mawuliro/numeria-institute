@@ -120,6 +120,24 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
             )
             return
 
+        if signal_type == 'chat':
+            message = payload.get('message', '').strip()
+            client_id = client_info.get('client_id')
+            if not message or not client_id:
+                return
+            display_name = await self.get_display_name(user)
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat.message',
+                    'user_id': user.id,
+                    'client_id': client_id,
+                    'message': message,
+                    'sender_name': display_name,
+                }
+            )
+            return
+
         if signal_type not in {'sdp-offer', 'sdp-answer', 'ice-candidate'}:
             return
 
@@ -149,6 +167,15 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
             'payload': event['payload'],
         }))
 
+    async def chat_message(self, event):
+        await self.send(text_data=json.dumps({
+            'signal_type': 'chat',
+            'user_id': event['user_id'],
+            'client_id': event['client_id'],
+            'message': event['message'],
+            'sender_name': event['sender_name'],
+        }))
+
     async def peer_status(self, event):
         msg = {
             'signal_type': event['event'],
@@ -158,6 +185,10 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
         if 'action' in event:
             msg['action'] = event['action']
         await self.send(text_data=json.dumps(msg))
+
+    @database_sync_to_async
+    def get_display_name(self, user):
+        return user.get_full_name() or user.username
 
     @database_sync_to_async
     def get_room(self, room_type, room_pk):
