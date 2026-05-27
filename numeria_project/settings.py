@@ -159,7 +159,7 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 STATIC_URL       = '/static/'
 STATIC_ROOT      = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = []
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Django 6 uses STORAGES dict — configured below after Cloudinary detection
 
 
 # ── CLOUDINARY — Configuration complète ──────────────────────────────────────
@@ -193,16 +193,28 @@ if CLOUDINARY_URL:
             'CLOUDINARY_CLOUD_NAME': cloud_name,
         }
 
-# settings.py - Ajoute ceci
+# ── STORAGES — Django 6 format (DEFAULT_FILE_STORAGE/STATICFILES_STORAGE are removed) ──
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL  = '/media/'
 
-# Cloudinary Storage
 if not DEBUG and USE_CLOUDINARY:
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    STORAGES = {
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        },
+    }
 else:
-    # En développement, utilise le stockage local
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-    MEDIA_ROOT = BASE_DIR / 'media'
-    MEDIA_URL = '/media/'
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        },
+    }
 
 
 
@@ -301,3 +313,38 @@ if not DEBUG:
     _extra_csrf = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
     if _extra_csrf:
         CSRF_TRUSTED_ORIGINS = _extra_csrf
+
+
+# ── LOGGING — Écriture des erreurs vers stdout (visible dans Railway) ─────────
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+}
