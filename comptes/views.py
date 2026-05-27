@@ -129,11 +129,28 @@ def modifier_profil(request):
             user=request.user
         )
         if formulaire.is_valid():
-            formulaire.save()
-            messages.success(request, _("Ton profil a été mis à jour ! ✅"))
-            return redirect('comptes:profil')
+            try:
+                formulaire.save()
+                messages.success(request, _("Ton profil a été mis à jour ! ✅"))
+                return redirect('comptes:profil')
+            except ValueError as e:
+                if 'api_key' in str(e).lower():
+                    # Cloudinary not configured — save all fields except photo.
+                    # user.save() already ran inside formulaire.save(); only profil.save() failed.
+                    cd = formulaire.cleaned_data
+                    Profil.objects.filter(pk=profil.pk).update(
+                        bio=cd.get('bio', ''),
+                        pays=cd.get('pays', ''),
+                        ville=cd.get('ville', ''),
+                        niveau_etudes=cd.get('niveau_etudes', ''),
+                        domaine=cd.get('domaine', ''),
+                        linkedin=cd.get('linkedin', ''),
+                        github=cd.get('github', ''),
+                    )
+                    messages.warning(request, _("Profil mis à jour, mais la photo n'a pas pu être enregistrée (Cloudinary non configuré)."))
+                    return redirect('comptes:profil')
+                raise
         else:
-            # Debug en cas d'erreur
             if request.user.is_superuser:
                 print(formulaire.errors)
             messages.error(request, _("Veuillez corriger les erreurs."))
