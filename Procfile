@@ -1,1 +1,1 @@
-web: gunicorn numeria_project.wsgi --worker-class gevent --worker-connections 1000 --log-file - --timeout 120
+web: gunicorn numeria_project.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --workers 4 --log-file - --timeout 120
