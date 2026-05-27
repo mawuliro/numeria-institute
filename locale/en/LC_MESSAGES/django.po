@@ -16,10 +16,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: admissions/templates/admissions/candidature.html:3
-#, fuzzy
-#| msgid "Candidatures"
 msgid "Candidature"
-msgstr "Applications"
+msgstr "Application"
 
 #: admissions/templates/admissions/candidature.html:11
 #: admissions/templates/admissions/paiement_candidature.html:11
@@ -37,10 +35,8 @@ msgid "Frais de candidature payés : %(montant)s FCFA"
 msgstr "Application fee paid: %(montant)s FCFA"
 
 #: admissions/templates/admissions/candidature.html:72
-#, fuzzy
-#| msgid "Informations"
 msgid "Informations personnelles"
-msgstr "Information"
+msgstr "Personal information"
 
 #: admissions/templates/admissions/candidature.html:130
 msgid "Parcours académique"
@@ -51,10 +47,8 @@ msgid "Documents"
 msgstr "Documents"
 
 #: admissions/templates/admissions/candidature.html:204
-#, fuzzy
-#| msgid "Question initiale"
 msgid "Questions"
-msgstr "Original question"
+msgstr "Questions"
 
 #: admissions/templates/admissions/candidature.html:242
 msgid "Soumettre ma candidature"
@@ -88,8 +82,6 @@ msgstr "Summary"
 #: admissions/templates/admissions/paiement_candidature.html:43
 #: formation/templates/formation/detail_session.html:72
 #: formation/templates/formation/paiement.html:36
-#, fuzzy
-#| msgid "Informations"
 msgid "Formation"
 msgstr "Programme"
 
@@ -126,13 +118,13 @@ msgstr "Congratulations!"
 msgid ""
 "Votre candidature a été acceptée. Vous recevrez prochainement un email avec "
 "les prochaines étapes."
-msgstr ""
+msgstr "Your application has been accepted. You will soon receive an email with the next steps."
 
 #: admissions/templates/admissions/detail_candidature.html:48
 msgid ""
 "Vous êtes sur liste d'attente. Nous vous tiendrons informé dès qu'une place "
 "se libère."
-msgstr ""
+msgstr "You are on the waiting list. We will keep you informed as soon as a place becomes available."
 
 #: admissions/templates/admissions/detail_candidature.html:55
 msgid "Nous sommes désolés, votre candidature n'a pas été retenue cette année."
@@ -143,10 +135,8 @@ msgid "Nom complet"
 msgstr "Full name"
 
 #: admissions/templates/admissions/detail_candidature.html:66
-#, fuzzy
-#| msgid "Mot de passe"
 msgid "Date de naissance"
-msgstr "Password"
+msgstr "Date of birth"
 
 #: admissions/templates/admissions/detail_candidature.html:67
 msgid "Téléphone"
@@ -174,16 +164,12 @@ msgid "Moyenne générale"
 msgstr "Overall average"
 
 #: admissions/templates/admissions/detail_candidature.html:75
-#, fuzzy
-#| msgid "Navigation"
 msgid "Motivation"
-msgstr "Navigation"
+msgstr "Motivation"
 
 #: admissions/templates/admissions/detail_candidature.html:82
-#, fuzzy
-#| msgid "Membre de la communauté Numeria"
 msgid "Message de l'équipe Numeria"
-msgstr "Numeria community member"
+msgstr "Message from the Numeria team"
 
 #: admissions/templates/admissions/liste_campagnes.html:105
 msgid "Aucune campagne ouverte"
@@ -201,26 +187,20 @@ msgstr "Contact us"
 
 #: admissions/templates/admissions/mes_candidatures.html:3
 #: admissions/templates/admissions/mes_candidatures.html:12
-#, fuzzy
-#| msgid "Candidatures"
 msgid "Mes candidatures"
-msgstr "Applications"
+msgstr "My applications"
 
 #: admissions/templates/admissions/mes_candidatures.html:17
-#, fuzzy
-#| msgid "Nouvelle catégorie"
 msgid "Nouvelle candidature"
-msgstr "New category"
+msgstr "New application"
 
 #: admissions/templates/admissions/mes_candidatures.html:33
 msgid "Soumise le"
 msgstr "Submitted on"
 
 #: admissions/templates/admissions/mes_candidatures.html:52
-#, fuzzy
-#| msgid "Voir les sujets"
 msgid "Voir le détail"
-msgstr "View topics"
+msgstr "View details"
 
 #: admissions/templates/admissions/mes_candidatures.html:66
 msgid "Aucune candidature soumise"
@@ -231,17 +211,13 @@ msgid "Vous n'avez encore soumis aucune candidature."
 msgstr "You haven't submitted any application yet."
 
 #: admissions/templates/admissions/mes_candidatures.html:74
-#, fuzzy
-#| msgid "Voir tous les mentors disponibles"
 msgid "Voir les formations disponibles"
-msgstr "View all available mentors"
+msgstr "View available training programmes"
 
 #: admissions/templates/admissions/paiement_candidature.html:3
 #: admissions/templates/admissions/paiement_candidature.html:18
-#, fuzzy
-#| msgid "Formulaire de candidature"
 msgid "Frais de candidature"
-msgstr "Application form"
+msgstr "Application fees"
 
 #: admissions/templates/admissions/paiement_candidature.html:47
 #: mentorat/templates/mentorat/paiement_seance.html:59
@@ -280,16 +256,13 @@ msgid ""
 msgstr "✅ You have already paid the application fees. You can now apply."
 
 #: admissions/views.py:121
-#, fuzzy, python-brace-format
-#| msgid ""
-#| "Vos frais de candidature ont été confirmés. Vous pouvez maintenant "
-#| "remplir votre formulaire."
+#, python-brace-format
 msgid ""
 "✅ Paiement de {montant} FCFA réussi ! Vous pouvez maintenant remplir votre "
 "formulaire de candidature."
 msgstr ""
-"Your application fees have been confirmed. You can now fill in your "
-"application form."
+"✅ Payment of {montant} FCFA successful! You can now fill in your application "
+"form."
 
 #: admissions/views.py:128
 msgid ""
@@ -301,43 +274,39 @@ msgstr ""
 
 #: admissions/views.py:187
 msgid "Aucun paiement trouvé. Veuillez effectuer le paiement."
-msgstr ""
+msgstr "No payment found. Please make the payment."
 
 #: analytics/templates/analytics/dashboard.html:136
-#, fuzzy
-#| msgid "Aucun cours disponible pour le moment."
 msgid "Aucune donnée pour le moment"
-msgstr "No courses available at the moment."
+msgstr "No data at the moment"
 
 #: analytics/templates/analytics/dashboard.html:137
 msgid "Les cours populaires apparaîtront ici"
-msgstr ""
+msgstr "Popular courses will appear here"
 
 #: analytics/templates/analytics/dashboard.html:176
-#, fuzzy
-#| msgid "Prochaines séances"
 msgid "Prochaine étape"
-msgstr "Upcoming sessions"
+msgstr "Next step"
 
 #: analytics/templates/analytics/dashboard.html:177
 msgid "Ajoute plus de cours pour augmenter l'engagement"
-msgstr ""
+msgstr "Add more courses to increase engagement"
 
 #: analytics/templates/analytics/dashboard.html:180
 msgid "Taux de conversion"
-msgstr ""
+msgstr "Conversion rate"
 
 #: analytics/templates/analytics/dashboard.html:181
 msgid "Connecte Google Analytics pour des données avancées"
-msgstr ""
+msgstr "Connect Google Analytics for advanced data"
 
 #: analytics/templates/analytics/dashboard.html:184
 msgid "Newsletter"
-msgstr ""
+msgstr "Newsletter"
 
 #: analytics/templates/analytics/dashboard.html:185
 msgid "Active la newsletter pour fidéliser les utilisateurs"
-msgstr ""
+msgstr "Activate the newsletter to retain users"
 
 #: blog/templates/blog/detail.html:26 templates/base.html:276
 #: templates/base.html:360
@@ -384,10 +353,8 @@ msgstr "Courses, certificates, community."
 
 #: communaute/templates/communaute/creer_categorie.html:3
 #: communaute/templates/communaute/creer_categorie.html:20
-#, fuzzy
-#| msgid "Créer la première catégorie"
 msgid "Créer une catégorie"
-msgstr "Create the first category"
+msgstr "Create a category"
 
 #: communaute/templates/communaute/creer_categorie.html:3
 #: communaute/templates/communaute/creer_sujet.html:3
@@ -405,7 +372,7 @@ msgstr "Community"
 #: communaute/templates/communaute/creer_categorie.html:4
 msgid ""
 "Créer une nouvelle catégorie de forum dans la communauté Numeria Institute."
-msgstr ""
+msgstr "Create a new forum category in the Numeria Institute community."
 
 #: communaute/templates/communaute/creer_categorie.html:14
 #: communaute/templates/communaute/creer_sujet.html:14
@@ -468,7 +435,7 @@ msgstr "Create a topic"
 #: communaute/templates/communaute/creer_sujet.html:4
 msgid ""
 "Créez un nouveau sujet de discussion dans la communauté Numeria Institute."
-msgstr ""
+msgstr "Create a new discussion topic in the Numeria Institute community."
 
 #: communaute/templates/communaute/creer_sujet.html:17
 msgid "Créer un nouveau sujet"
@@ -533,6 +500,8 @@ msgid ""
 "Sujets de discussion dans la catégorie %(nom)s de la communauté Numeria "
 "Institute."
 msgstr ""
+"Discussion topics in the %(nom)s category of the Numeria Institute "
+"community."
 
 #: communaute/templates/communaute/detail_categorie.html:32
 msgid "Nouveau sujet"
@@ -584,10 +553,8 @@ msgid "Suivant"
 msgstr "Next"
 
 #: communaute/templates/communaute/detail_categorie.html:195
-#, fuzzy
-#| msgid "Aucun cours disponible pour le moment."
 msgid "Aucun sujet pour le moment"
-msgstr "No courses available at the moment."
+msgstr "No topics yet"
 
 #: communaute/templates/communaute/detail_categorie.html:197
 msgid "Soyez le premier à lancer une discussion !"
@@ -604,7 +571,7 @@ msgstr "Log in to create a topic"
 #: communaute/templates/communaute/detail_sujet.html:4
 #, python-format
 msgid "Discussion : %(titre)s dans la communauté Numeria Institute."
-msgstr ""
+msgstr "Discussion: %(titre)s in the Numeria Institute community."
 
 #: communaute/templates/communaute/detail_sujet.html:35
 msgid "vue"
@@ -649,10 +616,8 @@ msgid "Auteur"
 msgstr "Author"
 
 #: communaute/templates/communaute/detail_sujet.html:239
-#, fuzzy
-#| msgid "Utile ?"
 msgid "Utile"
-msgstr "Helpful?"
+msgstr "Helpful"
 
 #: communaute/templates/communaute/detail_sujet.html:286
 msgid "Vous avez une réponse à apporter ?"
@@ -678,16 +643,12 @@ msgid "Se connecter"
 msgstr "Log in"
 
 #: communaute/templates/communaute/liste_categories.html:4
-#, fuzzy
-#| msgid ""
-#| "Échangez avec d'autres apprenants, posez vos questions et partagez vos "
-#| "connaissances en sciences, mathématiques et IA."
 msgid ""
 "Rejoignez la communauté Numeria. Échangez avec d'autres apprenants, posez "
 "vos questions et partagez vos connaissances en sciences."
 msgstr ""
-"Connect with other learners, ask your questions and share your knowledge in "
-"science, mathematics and AI."
+"Join the Numeria community. Connect with other learners, ask questions and "
+"share your knowledge in science."
 
 # ===== COMMUNAUTÉ =====
 #: communaute/templates/communaute/liste_categories.html:37
@@ -703,10 +664,8 @@ msgstr ""
 "science, mathematics and AI."
 
 #: communaute/templates/communaute/liste_categories.html:51
-#, fuzzy
-#| msgid "Sujet"
 msgid "Sujets"
-msgstr "Topic"
+msgstr "Topics"
 
 #: communaute/templates/communaute/liste_categories.html:55
 #: env/lib/python3.12/site-packages/django/contrib/messages/apps.py:16
@@ -738,26 +697,20 @@ msgid "sujet"
 msgstr "topic"
 
 #: communaute/templates/communaute/liste_categories.html:125
-#, fuzzy
-#| msgid "sujet"
 msgid "sujets"
-msgstr "topic"
+msgstr "topics"
 
 #: communaute/templates/communaute/liste_categories.html:128
 msgid "Vide"
 msgstr "Empty"
 
 #: communaute/templates/communaute/liste_categories.html:150
-#, fuzzy
-#| msgid "Forums de discussion"
 msgid "discussion"
-msgstr "Discussion forums"
+msgstr "discussion"
 
 #: communaute/templates/communaute/liste_categories.html:152
-#, fuzzy
-#| msgid "Créer le premier sujet"
 msgid "Soyez le premier à poster"
-msgstr "Create the first topic"
+msgstr "Be the first to post"
 
 #: communaute/templates/communaute/liste_categories.html:156
 msgid "Voir"
@@ -793,10 +746,8 @@ msgid "Modifier le message"
 msgstr "Edit message"
 
 #: communaute/templates/communaute/modifier_message.html:4
-#, fuzzy
-#| msgid "Membre de la communauté Numeria"
 msgid "Modifier votre message dans la communauté Numeria Institute."
-msgstr "Numeria community member"
+msgstr "Edit your message in the Numeria Institute community."
 
 #: communaute/templates/communaute/modifier_message.html:14
 #: communaute/templates/communaute/modifier_sujet.html:14
@@ -822,7 +773,7 @@ msgstr "Edit my profile"
 
 #: communaute/templates/communaute/modifier_profil.html:4
 msgid "Personnalisez votre profil communautaire sur Numeria Institute."
-msgstr ""
+msgstr "Customise your community profile on Numeria Institute."
 
 #: communaute/templates/communaute/modifier_profil.html:14
 msgid "Retour à mon profil"
@@ -869,7 +820,7 @@ msgstr "Your personal or professional website (optional)."
 #: communaute/templates/communaute/modifier_sujet.html:4
 #, python-format
 msgid "Modifier le sujet \"%(titre)s\" dans la communauté Numeria Institute."
-msgstr ""
+msgstr "Edit the topic \"%(titre)s\" in the Numeria Institute community."
 
 #: communaute/templates/communaute/modifier_sujet.html:17
 msgid "Modifier le sujet"
@@ -882,13 +833,13 @@ msgstr "Content"
 #: communaute/templates/communaute/profil_utilisateur.html:3
 #, python-format
 msgid "Profil de %(username)s"
-msgstr ""
+msgstr "Profile of %(username)s"
 
 #: communaute/templates/communaute/profil_utilisateur.html:4
 #, python-format
 msgid ""
 "Découvrez le profil de %(username)s dans la communauté Numeria Institute."
-msgstr ""
+msgstr "Discover %(username)s's profile in the Numeria Institute community."
 
 #: communaute/templates/communaute/profil_utilisateur.html:35
 msgid "Membre de la communauté Numeria"
@@ -936,7 +887,7 @@ msgstr "View all topics"
 #: communaute/templates/communaute/repondre_sujet.html:4
 #, python-format
 msgid "Répondre au sujet \"%(titre)s\" dans la communauté Numeria Institute."
-msgstr ""
+msgstr "Reply to the topic \"%(titre)s\" in the Numeria Institute community."
 
 #: communaute/templates/communaute/repondre_sujet.html:18
 msgid "Partagez votre réponse avec la communauté"
@@ -1105,20 +1056,16 @@ msgstr "Sign up for free"
 
 #: comptes/templates/comptes/connexion.html:149
 #: comptes/templates/comptes/inscription.html:255
-#, fuzzy
-#| msgid "Retour à mon profil"
 msgid "Retour à l'accueil"
-msgstr "Back to my profile"
+msgstr "Back to home"
 
 #: comptes/templates/comptes/inscription.html:43
 msgid "Rejoins Numeria"
 msgstr "Join Numeria"
 
 #: comptes/templates/comptes/inscription.html:46
-#, fuzzy
-#| msgid "Créer mon compte gratuitement"
 msgid "Crée ton compte gratuitement et commence à apprendre"
-msgstr "Create my account for free"
+msgstr "Create your free account and start learning"
 
 #: comptes/templates/comptes/inscription.html:91
 msgid "Nom"
@@ -1130,22 +1077,16 @@ msgid "Créer mon compte gratuitement"
 msgstr "Create my account for free"
 
 #: comptes/templates/comptes/inscription.html:226
-#, fuzzy
-#| msgid "Créer un compte gratuit"
 msgid "Déjà un compte ?"
-msgstr "Create a free account"
+msgstr "Already have an account?"
 
 #: comptes/templates/comptes/inscription.html:240
-#, fuzzy
-#| msgid "Cours populaires"
 msgid "Cours gratuits"
-msgstr "Popular courses"
+msgstr "Free courses"
 
 #: comptes/templates/comptes/inscription.html:244
-#, fuzzy
-#| msgid "Certificats officiels"
 msgid "Certificats PDF"
-msgstr "Official certificates"
+msgstr "PDF certificates"
 
 #: comptes/templates/comptes/profil.html:110
 #: comptes/templates/comptes/supprimer_compte.html:19
@@ -1154,7 +1095,7 @@ msgstr "Delete my account"
 
 #: comptes/templates/comptes/supprimer_compte.html:44
 msgid "Pour confirmer la suppression, entre ton mot de passe actuel :"
-msgstr ""
+msgstr "To confirm deletion, enter your current password:"
 
 #: comptes/templates/comptes/tableau_de_bord.html:22
 #, python-format
@@ -1162,49 +1103,37 @@ msgid "Bonjour, %(name)s"
 msgstr "Hello, %(name)s"
 
 #: comptes/templates/comptes/tableau_de_bord.html:33
-#, fuzzy
-#| msgid "Nos cours"
 msgid "Nouveau cours"
-msgstr "Our courses"
+msgstr "New course"
 
 #: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:388
 msgid "Mon profil"
 msgstr "My profile"
 
 #: comptes/templates/comptes/tableau_de_bord.html:53
-#, fuzzy
-#| msgid "Mentorés inscrits"
 msgid "Cours inscrits"
-msgstr "Enrolled mentees"
+msgstr "Enrolled courses"
 
 #: comptes/templates/comptes/tableau_de_bord.html:65
 #: formation/templates/formation/mes_formations.html:65
-#, fuzzy
-#| msgid "Nos cours"
 msgid "En cours"
-msgstr "Our courses"
+msgstr "In progress"
 
 #: comptes/templates/comptes/tableau_de_bord.html:77
 msgid "Terminés"
 msgstr "Completed"
 
 #: comptes/templates/comptes/tableau_de_bord.html:89
-#, fuzzy
-#| msgid "Professionnel"
 msgid "Progression globale"
-msgstr "Professional"
+msgstr "Overall progress"
 
 #: comptes/templates/comptes/tableau_de_bord.html:110
-#, fuzzy
-#| msgid "Nos cours"
 msgid "Mes cours"
-msgstr "Our courses"
+msgstr "My courses"
 
 #: comptes/templates/comptes/tableau_de_bord.html:113
-#, fuzzy
-#| msgid "Voir le cours"
 msgid "Voir tout"
-msgstr "View course"
+msgstr "View all"
 
 #: comptes/templates/comptes/tableau_de_bord.html:133
 msgid "Terminé"
@@ -1219,24 +1148,20 @@ msgid "Revoir"
 msgstr "Review"
 
 #: comptes/templates/comptes/tableau_de_bord.html:159
-#, fuzzy
-#| msgid "Contenu"
 msgid "Continuer"
-msgstr "Content"
+msgstr "Continue"
 
 #: comptes/templates/comptes/tableau_de_bord.html:177
 msgid "Tu n'es inscrit à aucun cours"
 msgstr "You are not enrolled in any course"
 
 #: comptes/templates/comptes/tableau_de_bord.html:178
-#, fuzzy
-#| msgid "Commence à apprendre aujourd'hui"
 msgid "Découvre notre catalogue et commence à apprendre dès aujourd'hui !"
-msgstr "Start learning today"
+msgstr "Discover our catalogue and start learning today!"
 
 #: comptes/templates/comptes/tableau_de_bord.html:262
 msgid "Pour toi"
-msgstr ""
+msgstr "For you"
 
 #: comptes/views.py:22
 #, python-brace-format
@@ -1253,8 +1178,6 @@ msgid "Bon retour, {first_name} ! 👋"
 msgstr "Welcome back, {first_name}! 👋"
 
 #: comptes/views.py:52
-#, fuzzy
-#| msgid "Nom d'utilisateur unique"
 msgid "Nom d'utilisateur ou mot de passe incorrect."
 msgstr "Incorrect username or password."
 
@@ -1286,7 +1209,7 @@ msgstr "Your account has been deleted, {prenom}. We hope to see you again! 👋"
 
 #: comptes/views.py:211
 msgid "Mot de passe incorrect. Ton compte n'a pas été supprimé."
-msgstr ""
+msgstr "Incorrect password. Your account has not been deleted."
 
 #: cours/templates/cours/catalogue.html:3
 #: cours/templates/cours/catalogue.html:5
@@ -1336,27 +1259,19 @@ msgid "S'inscrire"
 msgstr "Sign up"
 
 #: cours/templates/cours/detail.html:220
-#, fuzzy
-#| msgid "Connecte-toi pour accéder à tes cours"
 msgid "Inscris-toi pour accéder aux leçons"
 msgstr "Log in to access your courses"
 
 #: cours/templates/cours/detail.html:226 cours/templates/cours/detail.html:297
 #: cours/templates/cours/detail.html:786
-#, fuzzy
-#| msgid "S'inscrire gratuitement"
 msgid "Commencer gratuitement"
 msgstr "Start for free"
 
 #: cours/templates/cours/detail.html:288
-#, fuzzy
-#| msgid "Mentorés inscrits"
 msgid "Contenu réservé aux inscrits"
 msgstr "Content reserved for enrolled students"
 
 #: cours/templates/cours/detail.html:291
-#, fuzzy
-#| msgid "Connecte-toi pour accéder à tes cours"
 msgid "Inscris-toi gratuitement pour accéder à tout le contenu."
 msgstr "Sign up for free to access everything."
 
@@ -1405,60 +1320,58 @@ msgstr "Discover our courses"
 #: env/lib/python3.12/site-packages/cloudinary/forms.py:55
 #: env/lib/python3.12/site-packages/cloudinary/forms.py:124
 msgid "No file selected!"
-msgstr ""
+msgstr "No file selected!"
 
 #: env/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
 msgid "Site Maps"
-msgstr ""
+msgstr "Site Maps"
 
 #: env/lib/python3.12/site-packages/django/contrib/staticfiles/apps.py:9
-#, fuzzy
-#| msgid "Statistiques"
 msgid "Static Files"
-msgstr "Statistics"
+msgstr "Static Files"
 
 #: env/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
 msgid "Syndication"
-msgstr ""
+msgstr "Syndication"
 
 #. Translators: String used to replace omitted page numbers in elided page
 #. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
 #: env/lib/python3.12/site-packages/django/core/paginator.py:33
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: env/lib/python3.12/site-packages/django/core/paginator.py:35
 msgid "That page number is not an integer"
-msgstr ""
+msgstr "That page number is not an integer"
 
 #: env/lib/python3.12/site-packages/django/core/paginator.py:36
 msgid "That page number is less than 1"
-msgstr ""
+msgstr "That page number is less than 1"
 
 #: env/lib/python3.12/site-packages/django/core/paginator.py:37
 msgid "That page contains no results"
-msgstr ""
+msgstr "That page contains no results"
 
 #: env/lib/python3.12/site-packages/django/core/validators.py:22
 msgid "Enter a valid value."
-msgstr ""
+msgstr "Enter a valid value."
 
 #: env/lib/python3.12/site-packages/django/core/validators.py:70
 msgid "Enter a valid domain name."
-msgstr ""
+msgstr "Enter a valid domain name."
 
 #: env/lib/python3.12/site-packages/django/core/validators.py:153
 #: env/lib/python3.12/site-packages/django/forms/fields.py:773
 msgid "Enter a valid URL."
-msgstr ""
+msgstr "Enter a valid URL."
 
 #: env/lib/python3.12/site-packages/django/core/validators.py:200
 msgid "Enter a valid integer."
-msgstr ""
+msgstr "Enter a valid integer."
 
 #: env/lib/python3.12/site-packages/django/core/validators.py:211
 msgid "Enter a valid email address."
-msgstr ""
+msgstr "Enter a valid email address."
 
 #. Translators: "letters" means latin letters: a-z and A-Z.
 #: env/lib/python3.12/site-packages/django/core/validators.py:289
@@ -1482,20 +1395,20 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/core/validators.py:311
 msgid "IPv4"
-msgstr ""
+msgstr "IPv4"
 
 #: env/lib/python3.12/site-packages/django/core/validators.py:320
 #: env/lib/python3.12/site-packages/django/utils/ipv6.py:43
 msgid "IPv6"
-msgstr ""
+msgstr "IPv6"
 
 #: env/lib/python3.12/site-packages/django/core/validators.py:334
 msgid "IPv4 or IPv6"
-msgstr ""
+msgstr "IPv4 or IPv6"
 
 #: env/lib/python3.12/site-packages/django/core/validators.py:375
 msgid "Enter only digits separated by commas."
-msgstr ""
+msgstr "Enter only digits separated by commas."
 
 #: env/lib/python3.12/site-packages/django/core/validators.py:381
 #, python-format
@@ -1584,12 +1497,12 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/core/validators.py:659
 msgid "Null characters are not allowed."
-msgstr ""
+msgstr "Null characters are not allowed."
 
 #: env/lib/python3.12/site-packages/django/db/models/base.py:1633
 #: env/lib/python3.12/site-packages/django/forms/models.py:932
 msgid "and"
-msgstr ""
+msgstr "and"
 
 #: env/lib/python3.12/site-packages/django/db/models/base.py:1635
 #, python-format
@@ -1608,11 +1521,11 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:135
 msgid "This field cannot be null."
-msgstr ""
+msgstr "This field cannot be null."
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:136
 msgid "This field cannot be blank."
-msgstr ""
+msgstr "This field cannot be blank."
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:137
 #, python-format
@@ -1644,7 +1557,7 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1164
 msgid "Boolean (Either True or False)"
-msgstr ""
+msgstr "Boolean (Either True or False)"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1214
 #, python-format
@@ -1657,7 +1570,7 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1325
 msgid "Comma-separated integers"
-msgstr ""
+msgstr "Comma-separated integers"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1426
 #, python-format
@@ -1676,7 +1589,7 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1434
 msgid "Date (without time)"
-msgstr ""
+msgstr "Date (without time)"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1561
 #, python-format
@@ -1694,7 +1607,7 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1574
 msgid "Date (with time)"
-msgstr ""
+msgstr "Date (with time)"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1701
 #, python-format
@@ -1703,7 +1616,7 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1703
 msgid "Decimal number"
-msgstr ""
+msgstr "Decimal number"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1864
 #, python-format
@@ -1713,18 +1626,16 @@ msgid ""
 msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1868
-#, fuzzy
-#| msgid "Description"
 msgid "Duration"
-msgstr "Description"
+msgstr "Duration"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
 msgid "Email address"
-msgstr ""
+msgstr "Email address"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1945
 msgid "File path"
-msgstr ""
+msgstr "File path"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2023
 #, python-format
@@ -1733,7 +1644,7 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2025
 msgid "Floating point number"
-msgstr ""
+msgstr "Floating point number"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2065
 #, python-format
@@ -1742,23 +1653,23 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2067
 msgid "Integer"
-msgstr ""
+msgstr "Integer"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2163
 msgid "Big (8 byte) integer"
-msgstr ""
+msgstr "Big (8 byte) integer"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2180
 msgid "Small integer"
-msgstr ""
+msgstr "Small integer"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2188
 msgid "IPv4 address"
-msgstr ""
+msgstr "IPv4 address"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2219
 msgid "IP address"
-msgstr ""
+msgstr "IP address"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2310
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2311
@@ -1768,19 +1679,19 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2313
 msgid "Boolean (Either True, False or None)"
-msgstr ""
+msgstr "Boolean (Either True, False or None)"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2364
 msgid "Positive big integer"
-msgstr ""
+msgstr "Positive big integer"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2379
 msgid "Positive integer"
-msgstr ""
+msgstr "Positive integer"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2394
 msgid "Positive small integer"
-msgstr ""
+msgstr "Positive small integer"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2410
 #, python-format
@@ -1789,7 +1700,7 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2446
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2526
 #, python-format
@@ -1807,15 +1718,15 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2534
 msgid "Time"
-msgstr ""
+msgstr "Time"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2642
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2666
 msgid "Raw binary data"
-msgstr ""
+msgstr "Raw binary data"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2731
 #, python-format
@@ -1824,23 +1735,23 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2733
 msgid "Universally unique identifier"
-msgstr ""
+msgstr "Universally unique identifier"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/files.py:244
 msgid "File"
-msgstr ""
+msgstr "File"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/files.py:420
 msgid "Image"
-msgstr ""
+msgstr "Image"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/json.py:24
 msgid "A JSON object"
-msgstr ""
+msgstr "A JSON object"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/json.py:26
 msgid "Value must be valid JSON."
-msgstr ""
+msgstr "Value must be valid JSON."
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/related.py:978
 #, python-format
@@ -1849,11 +1760,11 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/related.py:981
 msgid "Foreign Key (type determined by related field)"
-msgstr ""
+msgstr "Foreign Key (type determined by related field)"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1275
 msgid "One-to-one relationship"
-msgstr ""
+msgstr "One-to-one relationship"
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1332
 #, python-format
@@ -1867,7 +1778,7 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1382
 msgid "Many-to-many relationship"
-msgstr ""
+msgstr "Many-to-many relationship"
 
 #. Translators: If found as last label character, these punctuation
 #. characters will prevent the default label_suffix to be appended to
@@ -1878,29 +1789,29 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:91
 msgid "This field is required."
-msgstr ""
+msgstr "This field is required."
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:313
 msgid "Enter a whole number."
-msgstr ""
+msgstr "Enter a whole number."
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:484
 #: env/lib/python3.12/site-packages/django/forms/fields.py:1241
 msgid "Enter a valid date."
-msgstr ""
+msgstr "Enter a valid date."
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:507
 #: env/lib/python3.12/site-packages/django/forms/fields.py:1242
 msgid "Enter a valid time."
-msgstr ""
+msgstr "Enter a valid time."
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:534
 msgid "Enter a valid date/time."
-msgstr ""
+msgstr "Enter a valid date/time."
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:568
 msgid "Enter a valid duration."
-msgstr ""
+msgstr "Enter a valid duration."
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:569
 #, python-brace-format
@@ -1909,15 +1820,15 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:638
 msgid "No file was submitted. Check the encoding type on the form."
-msgstr ""
+msgstr "No file was submitted. Check the encoding type on the form."
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:639
 msgid "No file was submitted."
-msgstr ""
+msgstr "No file was submitted."
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:640
 msgid "The submitted file is empty."
-msgstr ""
+msgstr "The submitted file is empty."
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:642
 #, python-format
@@ -1929,7 +1840,7 @@ msgstr[1] ""
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:647
 msgid "Please either submit a file or check the clear checkbox, not both."
-msgstr ""
+msgstr "Please either submit a file or check the clear checkbox, not both."
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:715
 msgid ""
@@ -1956,11 +1867,11 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:1313
 msgid "Enter a valid UUID."
-msgstr ""
+msgstr "Enter a valid UUID."
 
 #: env/lib/python3.12/site-packages/django/forms/fields.py:1343
 msgid "Enter a valid JSON."
-msgstr ""
+msgstr "Enter a valid JSON."
 
 #. Translators: This is the default suffix added to form field labels
 #: env/lib/python3.12/site-packages/django/forms/forms.py:97
@@ -1996,11 +1907,11 @@ msgstr[1] ""
 #: env/lib/python3.12/site-packages/django/forms/formsets.py:484
 #: env/lib/python3.12/site-packages/django/forms/formsets.py:491
 msgid "Order"
-msgstr ""
+msgstr "Order"
 
 #: env/lib/python3.12/site-packages/django/forms/formsets.py:499
 msgid "Delete"
-msgstr ""
+msgstr "Delete"
 
 #: env/lib/python3.12/site-packages/django/forms/models.py:925
 #, python-format
@@ -2021,15 +1932,15 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/forms/models.py:946
 msgid "Please correct the duplicate values below."
-msgstr ""
+msgstr "Please correct the duplicate values below."
 
 #: env/lib/python3.12/site-packages/django/forms/models.py:1383
 msgid "The inline value did not match the parent instance."
-msgstr ""
+msgstr "The inline value did not match the parent instance."
 
 #: env/lib/python3.12/site-packages/django/forms/models.py:1474
 msgid "Select a valid choice. That choice is not one of the available choices."
-msgstr ""
+msgstr "Select a valid choice. That choice is not one of the available choices."
 
 #: env/lib/python3.12/site-packages/django/forms/models.py:1623
 #, python-format
@@ -2045,31 +1956,27 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/forms/widgets.py:528
 msgid "Clear"
-msgstr ""
+msgstr "Clear"
 
 #: env/lib/python3.12/site-packages/django/forms/widgets.py:529
 msgid "Currently"
-msgstr ""
+msgstr "Currently"
 
 #: env/lib/python3.12/site-packages/django/forms/widgets.py:530
-#, fuzzy
-#| msgid "Échangez"
 msgid "Change"
-msgstr "Exchange"
+msgstr "Change"
 
 #: env/lib/python3.12/site-packages/django/forms/widgets.py:869
 msgid "Unknown"
-msgstr ""
+msgstr "Unknown"
 
 #: env/lib/python3.12/site-packages/django/forms/widgets.py:870
 msgid "Yes"
-msgstr ""
+msgstr "Yes"
 
 #: env/lib/python3.12/site-packages/django/forms/widgets.py:871
-#, fuzzy
-#| msgid "Nom"
 msgid "No"
-msgstr "Last name"
+msgstr "No"
 
 #: env/lib/python3.12/site-packages/django/tasks/base.py:34
 msgctxt "Task"
@@ -2094,7 +2001,7 @@ msgstr ""
 #. Translators: Please do not add spaces around commas.
 #: env/lib/python3.12/site-packages/django/template/defaultfilters.py:878
 msgid "yes,no,maybe"
-msgstr ""
+msgstr "yes,no,maybe"
 
 #: env/lib/python3.12/site-packages/django/template/defaultfilters.py:908
 #: env/lib/python3.12/site-packages/django/template/defaultfilters.py:925
@@ -2131,197 +2038,179 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/utils/dateformat.py:74
 msgid "p.m."
-msgstr ""
+msgstr "p.m."
 
 #: env/lib/python3.12/site-packages/django/utils/dateformat.py:75
 msgid "a.m."
-msgstr ""
+msgstr "a.m."
 
 #: env/lib/python3.12/site-packages/django/utils/dateformat.py:80
 msgid "PM"
-msgstr ""
+msgstr "PM"
 
 #: env/lib/python3.12/site-packages/django/utils/dateformat.py:81
 msgid "AM"
-msgstr ""
+msgstr "AM"
 
 #: env/lib/python3.12/site-packages/django/utils/dateformat.py:153
 msgid "midnight"
-msgstr ""
+msgstr "midnight"
 
 #: env/lib/python3.12/site-packages/django/utils/dateformat.py:155
 msgid "noon"
-msgstr ""
+msgstr "noon"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:7
 msgid "Monday"
-msgstr ""
+msgstr "Monday"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:8
 msgid "Tuesday"
-msgstr ""
+msgstr "Tuesday"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:9
 msgid "Wednesday"
-msgstr ""
+msgstr "Wednesday"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:10
 msgid "Thursday"
-msgstr ""
+msgstr "Thursday"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:11
 msgid "Friday"
-msgstr ""
+msgstr "Friday"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:12
 msgid "Saturday"
-msgstr ""
+msgstr "Saturday"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:13
 msgid "Sunday"
-msgstr ""
+msgstr "Sunday"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:16
 msgid "Mon"
-msgstr ""
+msgstr "Mon"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:17
-#, fuzzy
-#| msgid "vue"
 msgid "Tue"
-msgstr "view"
+msgstr "Tue"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:18
 msgid "Wed"
-msgstr ""
+msgstr "Wed"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:19
-#, fuzzy
-#| msgid "vue"
 msgid "Thu"
-msgstr "view"
+msgstr "Thu"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:20
 msgid "Fri"
-msgstr ""
+msgstr "Fri"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:21
-#, fuzzy
-#| msgid "Suivant"
 msgid "Sat"
-msgstr "Next"
+msgstr "Sat"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:22
-#, fuzzy
-#| msgid "Suivant"
 msgid "Sun"
-msgstr "Next"
+msgstr "Sun"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:25
 msgid "January"
-msgstr ""
+msgstr "January"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:26
 msgid "February"
-msgstr ""
+msgstr "February"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:27
 msgid "March"
-msgstr ""
+msgstr "March"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:28
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:29
 msgid "May"
-msgstr ""
+msgstr "May"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:30
 msgid "June"
-msgstr ""
+msgstr "June"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:31
 msgid "July"
-msgstr ""
+msgstr "July"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:32
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:33
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:34
 msgid "October"
-msgstr ""
+msgstr "October"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:35
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:36
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:39
 msgid "jan"
-msgstr ""
+msgstr "jan"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:40
 msgid "feb"
-msgstr ""
+msgstr "feb"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:41
-#, fuzzy
-#| msgid "Par"
 msgid "mar"
-msgstr "By"
+msgstr "mar"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:42
-#, fuzzy
-#| msgid "Par"
 msgid "apr"
-msgstr "By"
+msgstr "apr"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:43
-#, fuzzy
-#| msgid "Par"
 msgid "may"
-msgstr "By"
+msgstr "may"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:44
-#, fuzzy
-#| msgid "Suivant"
 msgid "jun"
-msgstr "Next"
+msgstr "jun"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:45
 msgid "jul"
-msgstr ""
+msgstr "jul"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:46
 msgid "aug"
-msgstr ""
+msgstr "aug"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:47
 msgid "sep"
-msgstr ""
+msgstr "sep"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:48
-#, fuzzy
-#| msgid "Contact"
 msgid "oct"
-msgstr "Contact"
+msgstr "oct"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:49
 msgid "nov"
-msgstr ""
+msgstr "nov"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:50
 msgid "dec"
-msgstr ""
+msgstr "dec"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:53
 msgctxt "abbrev. month"
@@ -2336,27 +2225,27 @@ msgstr ""
 #: env/lib/python3.12/site-packages/django/utils/dates.py:55
 msgctxt "abbrev. month"
 msgid "March"
-msgstr ""
+msgstr "March"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:56
 msgctxt "abbrev. month"
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:57
 msgctxt "abbrev. month"
 msgid "May"
-msgstr ""
+msgstr "May"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:58
 msgctxt "abbrev. month"
 msgid "June"
-msgstr ""
+msgstr "June"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:59
 msgctxt "abbrev. month"
 msgid "July"
-msgstr ""
+msgstr "July"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:60
 msgctxt "abbrev. month"
@@ -2386,66 +2275,66 @@ msgstr ""
 #: env/lib/python3.12/site-packages/django/utils/dates.py:67
 msgctxt "alt. month"
 msgid "January"
-msgstr ""
+msgstr "January"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:68
 msgctxt "alt. month"
 msgid "February"
-msgstr ""
+msgstr "February"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:69
 msgctxt "alt. month"
 msgid "March"
-msgstr ""
+msgstr "March"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:70
 msgctxt "alt. month"
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:71
 msgctxt "alt. month"
 msgid "May"
-msgstr ""
+msgstr "May"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:72
 msgctxt "alt. month"
 msgid "June"
-msgstr ""
+msgstr "June"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:73
 msgctxt "alt. month"
 msgid "July"
-msgstr ""
+msgstr "July"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:74
 msgctxt "alt. month"
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:75
 msgctxt "alt. month"
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:76
 msgctxt "alt. month"
 msgid "October"
-msgstr ""
+msgstr "October"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:77
 msgctxt "alt. month"
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:78
 msgctxt "alt. month"
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #: env/lib/python3.12/site-packages/django/utils/ipv6.py:20
 msgid "This is not a valid IPv6 address."
-msgstr ""
+msgstr "This is not a valid IPv6 address."
 
 #: env/lib/python3.12/site-packages/django/utils/text.py:76
 #, python-format
@@ -2454,16 +2343,14 @@ msgid "%(truncated_text)s…"
 msgstr ""
 
 #: env/lib/python3.12/site-packages/django/utils/text.py:282
-#, fuzzy
-#| msgid "Voir"
 msgid "or"
-msgstr "View"
+msgstr "or"
 
 #. Translators: This string is used as a separator between list elements
 #: env/lib/python3.12/site-packages/django/utils/text.py:301
 #: env/lib/python3.12/site-packages/django/utils/timesince.py:135
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #: env/lib/python3.12/site-packages/django/utils/timesince.py:8
 #, python-format
@@ -2509,11 +2396,11 @@ msgstr[1] ""
 
 #: env/lib/python3.12/site-packages/django/views/csrf.py:29
 msgid "Forbidden"
-msgstr ""
+msgstr "Forbidden"
 
 #: env/lib/python3.12/site-packages/django/views/csrf.py:30
 msgid "CSRF verification failed. Request aborted."
-msgstr ""
+msgstr "CSRF verification failed. Request aborted."
 
 #: env/lib/python3.12/site-packages/django/views/csrf.py:34
 msgid ""
@@ -2554,31 +2441,29 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/views/csrf.py:66
 msgid "More information is available with DEBUG=True."
-msgstr ""
+msgstr "More information is available with DEBUG=True."
 
 #: env/lib/python3.12/site-packages/django/views/generic/dates.py:44
 msgid "No year specified"
-msgstr ""
+msgstr "No year specified"
 
 #: env/lib/python3.12/site-packages/django/views/generic/dates.py:64
 #: env/lib/python3.12/site-packages/django/views/generic/dates.py:115
 #: env/lib/python3.12/site-packages/django/views/generic/dates.py:214
-#, fuzzy
-#| msgid "Date et heure"
 msgid "Date out of range"
-msgstr "Date and time"
+msgstr "Date out of range"
 
 #: env/lib/python3.12/site-packages/django/views/generic/dates.py:94
 msgid "No month specified"
-msgstr ""
+msgstr "No month specified"
 
 #: env/lib/python3.12/site-packages/django/views/generic/dates.py:147
 msgid "No day specified"
-msgstr ""
+msgstr "No day specified"
 
 #: env/lib/python3.12/site-packages/django/views/generic/dates.py:194
 msgid "No week specified"
-msgstr ""
+msgstr "No week specified"
 
 #: env/lib/python3.12/site-packages/django/views/generic/dates.py:353
 #: env/lib/python3.12/site-packages/django/views/generic/dates.py:384
@@ -2619,7 +2504,7 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/views/static.py:49
 msgid "Directory indexes are not allowed here."
-msgstr ""
+msgstr "Directory indexes are not allowed here."
 
 #: env/lib/python3.12/site-packages/django/views/static.py:51
 #, python-format
@@ -2636,7 +2521,7 @@ msgstr ""
 #: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:7
 #: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:204
 msgid "The install worked successfully! Congratulations!"
-msgstr ""
+msgstr "The install worked successfully! Congratulations!"
 
 #: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:206
 #, python-format
@@ -2656,7 +2541,7 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:217
 msgid "Django Documentation"
-msgstr ""
+msgstr "Django Documentation"
 
 #: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:218
 msgid "Topics, references, &amp; how-to’s"
@@ -2664,19 +2549,19 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:226
 msgid "Tutorial: A Polling App"
-msgstr ""
+msgstr "Tutorial: A Polling App"
 
 #: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:227
 msgid "Get started with Django"
-msgstr ""
+msgstr "Get started with Django"
 
 #: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:235
 msgid "Django Community"
-msgstr ""
+msgstr "Django Community"
 
 #: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:236
 msgid "Connect, get help, or contribute"
-msgstr ""
+msgstr "Connect, get help, or contribute"
 
 #: env/lib/python3.12/site-packages/httplib2/__init__.py:407
 #, python-format
@@ -2708,14 +2593,10 @@ msgid "Redirected but the response is missing a Location: header."
 msgstr ""
 
 #: formation/templates/formation/detail_formation.html:39
-#, fuzzy
-#| msgid "étudiants"
 msgid "Étudiants"
 msgstr "Students"
 
 #: formation/templates/formation/detail_formation.html:43
-#, fuzzy
-#| msgid "Certificats officiels"
 msgid "Certifiés"
 msgstr "Certified"
 
@@ -2726,545 +2607,413 @@ msgstr "Rating"
 #: formation/templates/formation/detail_formation.html:60
 #: formation/templates/formation/detail_session.html:67
 #: formation/templates/formation/liste.html:93
-#, fuzzy
-#| msgid "Séances à venir"
 msgid "Image à venir"
-msgstr "Upcoming sessions"
+msgstr "Image coming soon"
 
 #: formation/templates/formation/detail_formation.html:70
 #: formation/templates/formation/detail_formation.html:276
-#, fuzzy
-#| msgid "S'inscrire gratuitement"
 msgid "S'inscrire maintenant"
 msgstr "Sign up now"
 
 #: formation/templates/formation/detail_formation.html:90
 msgid "Instructeurs"
-msgstr ""
+msgstr "Instructors"
 
 #: formation/templates/formation/detail_formation.html:124
-#, fuzzy
-#| msgid "Mentors disponibles"
 msgid "Sessions disponibles"
-msgstr "Available mentors"
+msgstr "Available sessions"
 
 #: formation/templates/formation/detail_formation.html:148
 #: formation/templates/formation/detail_session.html:22
-#, fuzzy
-#| msgid "Informations"
 msgid "Format"
-msgstr "Programme"
+msgstr "Format"
 
 #: formation/templates/formation/detail_formation.html:154
 msgid "Places"
-msgstr ""
+msgstr "Seats"
 
 #: formation/templates/formation/detail_formation.html:164
-#, fuzzy
-#| msgid "Messages"
 msgid "Remplissage"
-msgstr "Messages"
+msgstr "Occupancy"
 
 #: formation/templates/formation/detail_formation.html:184
-#, fuzzy
-#| msgid "Description"
 msgid "Inscriptions:"
-msgstr "Description"
+msgstr "Enrolments:"
 
 #: formation/templates/formation/detail_formation.html:199
 #: formation/templates/formation/liste.html:177
-#, fuzzy
-#| msgid "%(n)s leçons complètes"
 msgid "Session complète"
-msgstr "%(n)s complete lessons"
+msgstr "Session full"
 
 #: formation/templates/formation/detail_formation.html:205
-#, fuzzy
-#| msgid "Description"
 msgid "Inscriptions fermées"
-msgstr "Description"
+msgstr "Enrolments closed"
 
 #: formation/templates/formation/detail_formation.html:217
-#, fuzzy
-#| msgid "Relations actives"
 msgid "Aucune session à venir"
-msgstr "Active relationships"
+msgstr "No upcoming sessions"
 
 #: formation/templates/formation/detail_formation.html:220
 msgid "Les sessions pour cette formation seront bientôt annoncées."
-msgstr ""
+msgstr "Sessions for this training programme will be announced soon."
 
 #: formation/templates/formation/detail_formation.html:231
-#, fuzzy
-#| msgid "Séances à venir"
 msgid "Compétences visées"
-msgstr "Target Skills"
+msgstr "Target skills"
 
 #: formation/templates/formation/detail_formation.html:247
 msgid "Prérequis"
 msgstr "Prerequisites"
 
 #: formation/templates/formation/detail_formation.html:266
-#, fuzzy
-#| msgid "Prêt à commencer ton voyage scientifique ?"
 msgid "Prêt à commencer ?"
-msgstr "Ready to start your scientific journey?"
+msgstr "Ready to start?"
 
 #: formation/templates/formation/detail_formation.html:269
 msgid ""
 "Rejoignez cette formation et développez vos compétences avec les meilleurs "
 "experts."
-msgstr ""
+msgstr "Join this training programme and develop your skills with the best experts."
 
 #: formation/templates/formation/detail_formation.html:282
-#, fuzzy
-#| msgid "Voir tous les cours"
 msgid "Voir toutes les formations"
-msgstr "View all training programs"
+msgstr "View all training programmes"
 
 #: formation/templates/formation/detail_session.html:4
 msgid "Détails de la session"
-msgstr ""
+msgstr "Session details"
 
 #: formation/templates/formation/detail_session.html:18
 msgid "Dates"
-msgstr ""
+msgstr "Dates"
 
 #: formation/templates/formation/detail_session.html:26
-#, fuzzy
-#| msgid "Mentors disponibles"
 msgid "Places restantes"
-msgstr "Available mentors"
+msgstr "Remaining seats"
 
 #: formation/templates/formation/detail_session.html:30
 msgid "Prix"
-msgstr ""
+msgstr "Price"
 
 #: formation/templates/formation/detail_session.html:40
-#, fuzzy
-#| msgid "Description"
 msgid "Inscriptions ouvertes"
-msgstr "Description"
+msgstr "Enrolments open"
 
 #: formation/templates/formation/detail_session.html:51
-#, fuzzy
-#| msgid "Mentors disponibles"
 msgid "Inscription indisponible"
-msgstr "Available mentors"
+msgstr "Enrolment unavailable"
 
 #: formation/templates/formation/liste.html:4
 #: formation/templates/formation/liste.html:12
-#, fuzzy
-#| msgid "Informations"
 msgid "Nos Formations"
-msgstr "Our Training Programs"
+msgstr "Our Training Programmes"
 
 #: formation/templates/formation/liste.html:15
 msgid "Apprenez auprès des meilleurs experts du continent"
 msgstr "Learn from the best experts on the continent"
 
 #: formation/templates/formation/liste.html:19
-#, fuzzy
-#| msgid "Ancrage africain"
 msgid "Experts africains"
 msgstr "African experts"
 
 #: formation/templates/formation/liste.html:22
-#, fuzzy
-#| msgid "Certificats officiels"
 msgid "Certifications reconnues"
-msgstr "Recognized certifications"
+msgstr "Recognised certifications"
 
 #: formation/templates/formation/liste.html:25
-#, fuzzy
-#| msgid "Informations"
 msgid "Formation en ligne"
 msgstr "Online training"
 
 #: formation/templates/formation/liste.html:42
-#, fuzzy
-#| msgid "Filtrer"
 msgid "Filtres"
 msgstr "Filters"
 
 #: formation/templates/formation/liste.html:48
-#, fuzzy
-#| msgid "Informations"
 msgid "Type de formation"
-msgstr "Information"
+msgstr "Type of training"
 
 #: formation/templates/formation/liste.html:51
-#, fuzzy
-#| msgid "Tous les cycles"
 msgid "Tous les types"
-msgstr "All levels"
+msgstr "All types"
 
 #: formation/templates/formation/liste.html:65
-#, fuzzy
-#| msgid "Tous niveaux"
 msgid "Tous les niveaux"
 msgstr "All levels"
 
 #: formation/templates/formation/liste.html:66
-#, fuzzy
-#| msgid "Début"
 msgid "Débutant"
-msgstr "Start"
+msgstr "Beginner"
 
 #: formation/templates/formation/liste.html:67
 msgid "Intermédiaire"
-msgstr ""
+msgstr "Intermediate"
 
 #: formation/templates/formation/liste.html:68
 msgid "Avancé"
-msgstr ""
+msgstr "Advanced"
 
 #: formation/templates/formation/liste.html:69
 msgid "Expert"
-msgstr ""
+msgstr "Expert"
 
 #: formation/templates/formation/liste.html:75
-#, fuzzy
-#| msgid "Réinitialiser les filtres"
 msgid "Appliquer les filtres"
-msgstr "Reset filters"
+msgstr "Apply filters"
 
 #: formation/templates/formation/liste.html:143
-#, fuzzy
-#| msgid "Prochaines séances"
 msgid "Prochaine session"
-msgstr "Upcoming sessions"
+msgstr "Next session"
 
 #: formation/templates/formation/liste.html:156
-#, fuzzy
-#| msgid "Nom complet"
 msgid "Complet"
-msgstr "Full name"
+msgstr "Full"
 
 #: formation/templates/formation/liste.html:172
-#, fuzzy
-#| msgid "S'inscrire"
 msgid "Voir & s'inscrire"
-msgstr "Sign up"
+msgstr "View & sign up"
 
 #: formation/templates/formation/liste.html:185
-#, fuzzy
-#| msgid "Rejoignez le programme"
 msgid "Voir le programme"
-msgstr "Join the programme"
+msgstr "View programme"
 
 #: formation/templates/formation/liste.html:195
-#, fuzzy
-#| msgid "Voir tous les mentors disponibles"
 msgid "Aucune formation disponible"
-msgstr "View all available mentors"
+msgstr "No training programme available"
 
 #: formation/templates/formation/liste.html:198
 msgid "Nous travaillons à ajouter de nouvelles formations. Revenez bientôt !"
-msgstr ""
+msgstr "We are working on adding new training programmes. Come back soon!"
 
 #: formation/templates/formation/liste.html:213
-#, fuzzy
-#| msgid "Prêt à commencer ton voyage scientifique ?"
 msgid "Prêt à commencer votre apprentissage ?"
-msgstr "Ready to start your scientific journey?"
+msgstr "Ready to start your learning?"
 
 #: formation/templates/formation/liste.html:216
-#, fuzzy
-#| msgid ""
-#| "Rejoins des milliers d'apprenants qui transforment leur avenir grâce à la "
-#| "science."
 msgid ""
 "Rejoignez des milliers d'apprenants africains qui transforment leur carrière "
 "grâce à nos formations."
-msgstr "Join thousands of learners transforming their future through science."
+msgstr "Join thousands of African learners transforming their careers through our training programmes."
 
 #: formation/templates/formation/liste.html:221
-#, fuzzy
-#| msgid "Créer un compte gratuit"
 msgid "Créer un compte"
-msgstr "Create a free account"
+msgstr "Create an account"
 
 #: formation/templates/formation/mes_formations.html:4
 #: formation/templates/formation/mes_formations.html:13
-#, fuzzy
-#| msgid "Informations"
 msgid "Mes formations"
-msgstr "Information"
+msgstr "My training programmes"
 
 #: formation/templates/formation/mes_formations.html:16
 msgid "Suivez votre progression et accédez à vos cours en ligne"
-msgstr ""
+msgstr "Track your progress and access your online courses"
 
 #: formation/templates/formation/mes_formations.html:28
-#, fuzzy
-#| msgid "Aucun cours trouvé"
 msgid "Aucune formation trouvée"
-msgstr "No courses found"
+msgstr "No training programme found"
 
 #: formation/templates/formation/mes_formations.html:31
 msgid ""
 "Vous n'êtes pas encore inscrit à une formation. Découvrez nos formations "
 "disponibles."
-msgstr ""
+msgstr "You are not yet enrolled in a training programme. Discover our available programmes."
 
 #: formation/templates/formation/mes_formations.html:36
-#, fuzzy
-#| msgid "Découvrir nos cours"
 msgid "Découvrir les formations"
-msgstr "Discover our courses"
+msgstr "Discover training programmes"
 
 #: formation/templates/formation/mes_formations.html:46
-#, fuzzy
-#| msgid "Informations"
 msgid "Formations en cours"
-msgstr "Programme"
+msgstr "Ongoing training programmes"
 
 #: formation/templates/formation/mes_formations.html:75
 #: formation/templates/formation/voir_lecon.html:23
 #: formation/templates/formation/voir_lecon.html:191
-#, fuzzy
-#| msgid "Professionnel"
 msgid "Progression"
-msgstr "Professional"
+msgstr "Progress"
 
 #: formation/templates/formation/mes_formations.html:96
-#, fuzzy
-#| msgid "Demandes en attente"
 msgid "Paiement en attente"
-msgstr "Pending requests"
+msgstr "Payment pending"
 
 #: formation/templates/formation/mes_formations.html:106
-#, fuzzy
-#| msgid "Voir le cours"
 msgid "Continuer le cours"
-msgstr "View course"
+msgstr "Continue the course"
 
 #: formation/templates/formation/mes_formations.html:111
-#, fuzzy
-#| msgid "Informations"
 msgid "Formation terminée !"
-msgstr "Programme"
+msgstr "Training programme completed!"
 
 #: formation/templates/formation/mes_formations.html:117
-#, fuzzy
-#| msgid "Preuve soumise — en attente de confirmation"
 msgid "Accès en attente de validation"
-msgstr "Proof submitted — awaiting confirmation"
+msgstr "Access pending validation"
 
 #: formation/templates/formation/mes_formations.html:135
-#, fuzzy
-#| msgid "Informations"
 msgid "Formations terminées"
-msgstr "Information"
+msgstr "Completed training programmes"
 
 #: formation/templates/formation/mes_formations.html:149
 msgid "Complétée le"
-msgstr ""
+msgstr "Completed on"
 
 #: formation/templates/formation/mes_formations.html:165
-#, fuzzy
-#| msgid "Certificats officiels"
 msgid "Certificat"
-msgstr "Official certificates"
+msgstr "Certificate"
 
 #: formation/templates/formation/mes_formations.html:173
 msgid "Partager"
-msgstr ""
+msgstr "Share"
 
 #: formation/templates/formation/mes_formations.html:192
-#, fuzzy
-#| msgid "Informations"
 msgid "Formations à venir"
-msgstr "Programme"
+msgstr "Upcoming training programmes"
 
 #: formation/templates/formation/mes_formations.html:205
-#, fuzzy
-#| msgid "Comment payer"
 msgid "Commence le"
-msgstr "How to pay"
+msgstr "Starts on"
 
 #: formation/templates/formation/mes_formations.html:208
 msgid "À venir"
-msgstr ""
+msgstr "Coming soon"
 
 #: formation/templates/formation/mes_formations.html:217
 msgid "L'accès sera disponible prochainement"
-msgstr ""
+msgstr "Access will be available soon"
 
 #: formation/templates/formation/mes_formations.html:235
-#, fuzzy
-#| msgid "Découvrir nos cours"
 msgid "Découvrir d'autres formations"
-msgstr "Discover our courses"
+msgstr "Discover other training programmes"
 
 #: formation/templates/formation/paiement.html:4
-#, fuzzy
-#| msgid "Finaliser l'inscription"
 msgid "Paiement de l'inscription"
-msgstr "Complete registration"
+msgstr "Enrolment payment"
 
 #: formation/templates/formation/paiement.html:13
-#, fuzzy
-#| msgid "Frais de traitement"
 msgid "Finaliser votre paiement"
-msgstr "Processing fee"
+msgstr "Complete your payment"
 
 #: formation/templates/formation/paiement.html:16
 msgid "Complétez votre inscription en effectuant le paiement"
-msgstr ""
+msgstr "Complete your enrolment by making the payment"
 
 #: formation/templates/formation/paiement.html:28
-#, fuzzy
-#| msgid "Finaliser l'inscription"
 msgid "Détails de l'inscription"
-msgstr "Complete registration"
+msgstr "Enrolment details"
 
 #: formation/templates/formation/paiement.html:46
-#, fuzzy
-#| msgid "Question initiale"
 msgid "Session"
-msgstr "Original question"
+msgstr "Session"
 
 #: formation/templates/formation/paiement.html:59
 msgid "Participant"
-msgstr ""
+msgstr "Participant"
 
 #: formation/templates/formation/paiement.html:72
-#, fuzzy
-#| msgid "Total à payer"
 msgid "Montant à payer:"
-msgstr "Total to pay"
+msgstr "Amount to pay:"
 
 #: formation/templates/formation/paiement.html:85
-#, fuzzy
-#| msgid "Moyen de paiement"
 msgid "Méthode de paiement"
 msgstr "Payment method"
 
 #: formation/templates/formation/paiement.html:100
 msgid "Carte bancaire"
-msgstr ""
+msgstr "Bank card"
 
 #: formation/templates/formation/paiement.html:103
 msgid "Visa, Mastercard, etc."
-msgstr ""
+msgstr "Visa, Mastercard, etc."
 
 #: formation/templates/formation/paiement.html:113
-#, fuzzy
-#| msgid "Paiement confirmé"
 msgid "Paiement mobile"
-msgstr "Payment confirmed"
+msgstr "Mobile payment"
 
 #: formation/templates/formation/paiement.html:116
 msgid "Orange Money, MTN Money, etc."
-msgstr ""
+msgstr "Orange Money, MTN Money, etc."
 
 #: formation/templates/formation/paiement.html:126
 msgid "Virement bancaire"
-msgstr ""
+msgstr "Bank transfer"
 
 #: formation/templates/formation/paiement.html:129
 msgid "Transférez directement depuis votre banque"
-msgstr ""
+msgstr "Transfer directly from your bank"
 
 #: formation/templates/formation/paiement.html:140
 msgid ""
 "J'accepte les conditions d'utilisation et je confirme que je vais procéder "
 "au paiement pour cette inscription."
-msgstr ""
+msgstr "I accept the terms of use and confirm that I will proceed with payment for this enrolment."
 
 #: formation/templates/formation/paiement.html:150
-#, fuzzy
-#| msgid "Bon retour"
 msgid "Retour"
-msgstr "Welcome back"
+msgstr "Back"
 
 #: formation/templates/formation/paiement.html:155
-#, fuzzy
-#| msgid "Confirmer le mot de passe"
 msgid "Confirmer et payer"
-msgstr "Confirm password"
+msgstr "Confirm and pay"
 
 #: formation/templates/formation/paiement.html:162
 msgid "Vos données de paiement sont sécurisées"
-msgstr ""
+msgstr "Your payment data is secure"
 
 #: formation/templates/formation/paiement.html:171
 msgid "Besoin d'aide?"
-msgstr ""
+msgstr "Need help?"
 
 #: formation/templates/formation/paiement.html:174
 msgid "Contactez notre support si vous avez des questions sur le paiement."
-msgstr ""
+msgstr "Contact our support team if you have questions about the payment."
 
 #: formation/templates/formation/verifier_certificat.html:4
-#, fuzzy
-#| msgid "Vérification du certificat"
 msgid "Vérifier certificat"
-msgstr "Certificate verification"
+msgstr "Verify certificate"
 
 #: formation/templates/formation/verifier_certificat.html:13
-#, fuzzy
-#| msgid "Vérification du certificat"
 msgid "Vérification de certificat"
 msgstr "Certificate verification"
 
 #: formation/templates/formation/verifier_certificat.html:16
-#, fuzzy
-#| msgid "Vérification du certificat"
 msgid "Vérifiez l'authenticité d'un certificat Numeria"
-msgstr "Certificate verification"
+msgstr "Verify the authenticity of a Numeria certificate"
 
 #: formation/templates/formation/verifier_certificat.html:35
-#, fuzzy
-#| msgid "Ce certificat a été émis par Numeria Institute et est authentifié."
 msgid "Ce certificat a été délivré par Numeria et est valide."
-msgstr "This certificate was issued by Numeria Institute and is authenticated."
+msgstr "This certificate was issued by Numeria and is valid."
 
 #: formation/templates/formation/verifier_certificat.html:55
 msgid "Délivré à"
-msgstr ""
+msgstr "Issued to"
 
 #: formation/templates/formation/verifier_certificat.html:63
-#, fuzzy
-#| msgid "Mot de passe"
 msgid "Date de délivrance"
-msgstr "Password"
+msgstr "Issue date"
 
 #: formation/templates/formation/verifier_certificat.html:74
-#, fuzzy
-#| msgid "Informations"
 msgid "Session de formation"
-msgstr "Information"
+msgstr "Training session"
 
 #: formation/templates/formation/verifier_certificat.html:83
 msgid "Note finale"
-msgstr ""
+msgstr "Final grade"
 
 #: formation/templates/formation/verifier_certificat.html:95
-#, fuzzy
-#| msgid "Voir le sujet complet"
 msgid "Voir le certificat complet"
-msgstr "View full topic"
+msgstr "View full certificate"
 
 #: formation/templates/formation/verifier_certificat.html:108
-#, fuzzy
-#| msgid "Certificat officiel"
 msgid "Certificat invalide"
-msgstr "Official certificate"
+msgstr "Invalid certificate"
 
 #: formation/templates/formation/verifier_certificat.html:111
 msgid "Ce code de vérification ne correspond à aucun certificat valide."
-msgstr ""
+msgstr "This verification code does not correspond to any valid certificate."
 
 #: formation/templates/formation/verifier_certificat.html:114
 msgid "Vérifiez que le code est correct ou contactez le support."
-msgstr ""
+msgstr "Check that the code is correct or contact support."
 
 #: formation/templates/formation/verifier_certificat.html:130
-#, fuzzy
-#| msgid "Code de vérification"
 msgid "À propos de la vérification"
 msgstr "Verification code"
 
@@ -3274,82 +3023,73 @@ msgid ""
 "unique qui permet de confirmer leur authenticité. Cette vérification est "
 "publique et peut être partagée sur les réseaux sociaux professionnels."
 msgstr ""
+"All certificates issued by Numeria have a unique verification code that "
+"confirms their authenticity. This verification is public and can be shared "
+"on professional social networks."
 
 #: formation/templates/formation/verifier_certificat.html:145
-#, fuzzy
-#| msgid "Certificat authentique"
 msgid "Authentique"
-msgstr "Authentic certificate"
+msgstr "Authentic"
 
 #: formation/templates/formation/verifier_certificat.html:148
-#, fuzzy
-#| msgid "Vérification du certificat"
 msgid "Vérification sécurisée"
-msgstr "Certificate verification"
+msgstr "Secure verification"
 
 #: formation/templates/formation/verifier_certificat.html:156
 msgid "Partageable"
-msgstr ""
+msgstr "Shareable"
 
 #: formation/templates/formation/verifier_certificat.html:159
 msgid "Lien public unique"
-msgstr ""
+msgstr "Unique public link"
 
 #: formation/templates/formation/verifier_certificat.html:167
 msgid "Permanent"
-msgstr ""
+msgstr "Permanent"
 
 #: formation/templates/formation/verifier_certificat.html:170
 msgid "Valable à vie"
-msgstr ""
+msgstr "Valid for life"
 
 #: formation/templates/formation/voir_lecon.html:14
 msgid "Leçon"
-msgstr ""
+msgstr "Lesson"
 
 #: formation/templates/formation/voir_lecon.html:49
 msgid "Vidéo pédagogique"
-msgstr ""
+msgstr "Educational video"
 
 #: formation/templates/formation/voir_lecon.html:88
 msgid "Ressources"
-msgstr ""
+msgstr "Resources"
 
 #: formation/templates/formation/voir_lecon.html:113
-#, fuzzy
-#| msgid "Exercices interactifs"
 msgid "Exercice pratique"
-msgstr "Interactive exercises"
+msgstr "Practical exercise"
 
 #: formation/templates/formation/voir_lecon.html:121
 msgid "Démarrer l'exercice"
-msgstr ""
+msgstr "Start the exercise"
 
 #: formation/templates/formation/voir_lecon.html:136
 msgid "Marquer cette leçon comme complétée"
-msgstr ""
+msgstr "Mark this lesson as completed"
 
 #: formation/templates/formation/voir_lecon.html:144
-#, fuzzy
-#| msgid "%(n)s leçons complètes"
 msgid "Leçon complétée le"
-msgstr "%(n)s complete lessons"
+msgstr "Lesson completed on"
 
 #: formation/templates/formation/voir_lecon.html:176
-#, fuzzy
-#| msgid "Rejoignez la conversation"
 msgid "Terminer la formation"
-msgstr "Join the conversation"
+msgstr "Complete the training programme"
 
 #: formation/templates/formation/voir_lecon.html:200
-#, fuzzy
-#| msgid "Nom complet"
 msgid "Complétion"
-msgstr "Full name"
+msgstr "Completion"
 
 #: formation/templates/formation/voir_lecon.html:213
 msgid "leçons"
-msgstr ""
+msgstr "lessons"
 
 #: mentorat/templates/mentorat/demander_mentorat.html:3
 #: mentorat/templates/mentorat/demander_mentorat.html:20
@@ -3361,10 +3101,8 @@ msgid "Envoyez une demande de mentorat à un expert sur Numeria Institute."
 msgstr "Send a mentoring request to an expert on Numeria Institute."
 
 #: mentorat/templates/mentorat/demander_mentorat.html:14
-#, fuzzy
-#| msgid "Retour au sujet"
 msgid "Retour au profil du mentor"
-msgstr "Back to topic"
+msgstr "Back to mentor profile"
 
 #: mentorat/templates/mentorat/demander_mentorat.html:18
 msgid "Demande de mentorat"
@@ -3375,15 +3113,13 @@ msgid "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor."
 msgstr "Introduce yourself and explain why you want this mentor."
 
 #: mentorat/templates/mentorat/demander_mentorat.html:45
-#, fuzzy
-#| msgid "Mentorat"
 msgid "Mentor demandé"
-msgstr "Mentorship"
+msgstr "Requested mentor"
 
 #: mentorat/templates/mentorat/demander_mentorat.html:72
 msgid ""
 "Décrivez votre parcours, vos objectifs et pourquoi ce mentor vous intéresse."
-msgstr ""
+msgstr "Describe your background, goals and why this mentor interests you."
 
 #: mentorat/templates/mentorat/demander_mentorat.html:78
 msgid "À propos du processus"
@@ -3413,10 +3149,8 @@ msgstr "Send the request"
 #: mentorat/templates/mentorat/detail_relation.html:44
 #: mentorat/templates/mentorat/detail_relation.html:127
 #: mentorat/templates/mentorat/terminer_relation.html:52
-#, fuzzy
-#| msgid "Mentorat"
 msgid "Mentor"
-msgstr "Mentorship"
+msgstr "Mentor"
 
 #: mentorat/templates/mentorat/detail_mentor.html:4
 #, python-format
@@ -3424,10 +3158,8 @@ msgid "Profil du mentor %(name)s sur Numeria Institute."
 msgstr "Mentor profile of %(name)s on Numeria Institute."
 
 #: mentorat/templates/mentorat/detail_mentor.html:14
-#, fuzzy
-#| msgid "Retour au sujet"
 msgid "Retour à la liste"
-msgstr "Back to topic"
+msgstr "Back to the list"
 
 #: mentorat/templates/mentorat/detail_mentor.html:47
 msgid "mentoré(s)"
@@ -3446,21 +3178,16 @@ msgid "Demande déjà envoyée ou en cours"
 msgstr "Request already sent or in progress"
 
 #: mentorat/templates/mentorat/detail_mentor.html:92
-#, fuzzy
-#| msgid "Mentors actifs"
 msgid "Mentorés accompagnés"
-msgstr "Active mentors"
+msgstr "Mentees supported"
 
 #: mentorat/templates/mentorat/detail_mentor.html:98
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:25
-#, fuzzy
-#| msgid "Mentors actifs"
 msgid "Mentorés actifs"
-msgstr "Active mentors"
+msgstr "Active mentees"
 
 #: mentorat/templates/mentorat/detail_mentor.html:120
-#, fuzzy, python-format
-#| msgid "À propos"
+#, python-format
 msgid "À propos de %(name)s"
 msgstr "About"
 
@@ -3473,49 +3200,39 @@ msgstr "Field"
 #: mentorat/templates/mentorat/detail_mentor.html:159
 #: mentorat/templates/mentorat/detail_mentor.html:167
 #: mentorat/templates/mentorat/liste_mentors.html:142
-#, fuzzy
-#| msgid "Photo de profil"
 msgid "Voir le profil"
-msgstr "Profile photo"
+msgstr "View profile"
 
 #: mentorat/templates/mentorat/detail_relation.html:3
 #: mentorat/templates/mentorat/detail_relation.html:29
 msgid "Relation de mentorat"
-msgstr ""
+msgstr "Mentoring relationship"
 
 #: mentorat/templates/mentorat/detail_relation.html:4
 msgid "Détail de votre relation de mentorat sur Numeria Institute."
 msgstr "Details of your mentoring relationship on Numeria Institute."
 
 #: mentorat/templates/mentorat/detail_relation.html:15
-#, fuzzy
-#| msgid "Tableau de bord"
 msgid "Tableau de bord mentor"
-msgstr "Dashboard"
+msgstr "Mentor dashboard"
 
 #: mentorat/templates/mentorat/detail_relation.html:19
-#, fuzzy
-#| msgid "Tableau de bord"
 msgid "Tableau de bord mentoré"
-msgstr "Dashboard"
+msgstr "Mentee dashboard"
 
 #: mentorat/templates/mentorat/detail_relation.html:25
-#, fuzzy
-#| msgid "Relations actives"
 msgid "Relation active"
-msgstr "Active relationships"
+msgstr "Active relationship"
 
 #: mentorat/templates/mentorat/detail_relation.html:64
 #: mentorat/templates/mentorat/terminer_relation.html:58
-#, fuzzy
-#| msgid "Mentorat"
 msgid "Mentoré"
-msgstr "Mentorship"
+msgstr "Mentee"
 
 #: mentorat/templates/mentorat/detail_relation.html:82
 #: mentorat/templates/mentorat/detail_relation.html:149
 msgid "Séances"
-msgstr ""
+msgstr "Sessions"
 
 #: mentorat/templates/mentorat/detail_relation.html:86
 #: mentorat/templates/mentorat/terminer_relation.html:64
@@ -3526,7 +3243,7 @@ msgstr "Start"
 #: mentorat/templates/mentorat/planifier_seance.html:3
 #: mentorat/templates/mentorat/planifier_seance.html:17
 msgid "Planifier une séance"
-msgstr ""
+msgstr "Schedule a session"
 
 #: mentorat/templates/mentorat/detail_relation.html:99
 msgid "Confirmer la fin de cette relation ?"
@@ -3534,16 +3251,12 @@ msgstr "Confirm ending this relationship?"
 
 #: mentorat/templates/mentorat/detail_relation.html:100
 #: mentorat/templates/mentorat/terminer_relation.html:17
-#, fuzzy
-#| msgid "Rejoignez la conversation"
 msgid "Terminer la relation"
-msgstr "Join the conversation"
+msgstr "End the relationship"
 
 #: mentorat/templates/mentorat/detail_relation.html:118
-#, fuzzy
-#| msgid "Sujets actifs"
 msgid "Objectifs"
-msgstr "Active topics"
+msgstr "Goals"
 
 #: mentorat/templates/mentorat/detail_relation.html:135
 #: mentorat/templates/mentorat/liste_mentors.html:50
@@ -3551,21 +3264,17 @@ msgid "Expérience"
 msgstr "Experience"
 
 #: mentorat/templates/mentorat/detail_relation.html:139
-#, fuzzy
-#| msgid "Confidentialité"
 msgid "Disponibilité"
-msgstr "Privacy Policy"
+msgstr "Availability"
 
 #: mentorat/templates/mentorat/detail_relation.html:170
 msgid "min"
-msgstr ""
+msgstr "min"
 
 #: mentorat/templates/mentorat/detail_relation.html:197
 #: mentorat/templates/mentorat/terminer_seance.html:39
-#, fuzzy
-#| msgid "Trouver un Mentor"
 msgid "Notes du mentor"
-msgstr "Find a Mentor"
+msgstr "Mentor notes"
 
 #: mentorat/templates/mentorat/detail_relation.html:203
 #: mentorat/templates/mentorat/terminer_seance.html:50
@@ -3579,17 +3288,15 @@ msgstr "Mark as completed"
 
 #: mentorat/templates/mentorat/detail_relation.html:227
 msgid "Aucune séance planifiée"
-msgstr ""
+msgstr "No session scheduled"
 
 #: mentorat/templates/mentorat/detail_relation.html:229
 msgid "Planifiez votre première séance pour commencer."
 msgstr "Schedule your first session to get started."
 
 #: mentorat/templates/mentorat/detail_relation.html:233
-#, fuzzy
-#| msgid "Créer la première catégorie"
 msgid "Planifier la première séance"
-msgstr "Create the first category"
+msgstr "Schedule the first session"
 
 #: mentorat/templates/mentorat/devenir_mentee.html:3
 #: mentorat/templates/mentorat/devenir_mentee.html:20
@@ -3600,22 +3307,16 @@ msgid "Trouver un Mentor"
 msgstr "Find a Mentor"
 
 #: mentorat/templates/mentorat/devenir_mentee.html:4
-#, fuzzy
-#| msgid ""
-#| "Bénéficiez de conseils personnalisés d'experts dans votre domaine. "
-#| "Accélérez votre apprentissage et votre carrière."
 msgid "Bénéficiez de conseils personnalisés d'experts sur Numeria Institute."
-msgstr ""
+msgstr "Get personalised advice from experts on Numeria Institute."
 "Get personalised advice from experts in your field. Accelerate your learning "
 "and career."
 
 #: mentorat/templates/mentorat/devenir_mentee.html:14
 #: mentorat/templates/mentorat/devenir_mentor.html:14
 #: mentorat/templates/mentorat/liste_mentors.html:15
-#, fuzzy
-#| msgid "Retour au sujet"
 msgid "Retour au mentorat"
-msgstr "Back to topic"
+msgstr "Back to mentoring"
 
 #: mentorat/templates/mentorat/devenir_mentee.html:18
 #: mentorat/templates/mentorat/devenir_mentor.html:18
@@ -3625,12 +3326,8 @@ msgid "Mentorat"
 msgstr "Mentorship"
 
 #: mentorat/templates/mentorat/devenir_mentee.html:21
-#, fuzzy
-#| msgid ""
-#| "Bénéficiez de conseils personnalisés d'experts dans votre domaine. "
-#| "Accélérez votre apprentissage et votre carrière."
 msgid "Bénéficiez de conseils personnalisés d'experts dans votre domaine."
-msgstr ""
+msgstr "Get personalised advice from experts in your field."
 "Get personalised advice from experts in your field.Get personalised advice "
 "from experts in your field. Accelerate your learning and career."
 
@@ -3640,14 +3337,10 @@ msgstr ""
 #: mentorat/templates/mentorat/devenir_mentor.html:58
 #: mentorat/templates/mentorat/devenir_mentor.html:76
 #: mentorat/templates/mentorat/planifier_seance.html:89
-#, fuzzy
-#| msgid "Se déconnecter"
 msgid "Sélectionner"
-msgstr "Log out"
+msgstr "Select"
 
 #: mentorat/templates/mentorat/devenir_mentee.html:86
-#, fuzzy
-#| msgid "S'inscrire comme mentoré"
 msgid "S'inscrire en tant que mentoré"
 msgstr "Register as a mentee"
 
@@ -3659,24 +3352,16 @@ msgid "Devenir Mentor"
 msgstr "Become a Mentor"
 
 #: mentorat/templates/mentorat/devenir_mentor.html:4
-#, fuzzy
-#| msgid ""
-#| "Partagez votre expertise et aidez la nouvelle génération à réussir. "
-#| "Faites la différence dans la vie d'un apprenant."
 msgid ""
 "Partagez votre expertise et guidez la nouvelle génération sur Numeria "
 "Institute."
-msgstr ""
+msgstr "Share your expertise and guide the next generation on Numeria Institute."
 "Share your expertise and help the next generation succeed. Make a difference "
 "in a learner's life."
 
 #: mentorat/templates/mentorat/devenir_mentor.html:21
-#, fuzzy
-#| msgid ""
-#| "Partagez votre expertise et aidez la nouvelle génération à réussir. "
-#| "Faites la différence dans la vie d'un apprenant."
 msgid "Partagez votre expertise et aidez la nouvelle génération à réussir."
-msgstr ""
+msgstr "Share your expertise and help the next generation succeed."
 "Share your expertise and help the next generation succeed.Share your "
 "expertise and help the next generation succeed. Make a difference in a "
 "learner's life."
@@ -3686,6 +3371,8 @@ msgid ""
 "Programme de mentorat de Numeria Institute : connectez-vous avec des experts "
 "en sciences et IA pour accélérer votre développement."
 msgstr ""
+"Numeria Institute mentoring programme: connect with science and AI experts "
+"to accelerate your development."
 
 # ===== BASE TEMPLATE MENTORAT =====
 #: mentorat/templates/mentorat/index.html:19
@@ -3829,8 +3516,6 @@ msgstr ""
 "Mentors and mentees are matched according to their profiles and fields."
 
 #: mentorat/templates/mentorat/index.html:183
-#, fuzzy
-#| msgid "Échangez"
 msgid "Échangez"
 msgstr "Exchange"
 
@@ -3840,8 +3525,6 @@ msgid ""
 msgstr "Schedule sessions and benefit from tailored personalised advice."
 
 #: mentorat/templates/mentorat/index.html:199
-#, fuzzy
-#| msgid "Voir tous les mentors disponibles"
 msgid "Voir tous les mentors disponibles"
 msgstr "View all available mentors"
 
@@ -3849,7 +3532,7 @@ msgstr "View all available mentors"
 msgid ""
 "Découvrez nos mentors experts et trouvez celui qui correspond à vos "
 "objectifs sur Numeria Institute."
-msgstr ""
+msgstr "Discover our expert mentors and find the one that matches your goals on Numeria Institute."
 
 #: mentorat/templates/mentorat/liste_mentors.html:19
 msgid "Mentors disponibles"
@@ -3864,16 +3547,12 @@ msgid "Recherche"
 msgstr "Search"
 
 #: mentorat/templates/mentorat/liste_mentors.html:34
-#, fuzzy
-#| msgid "Votre prénom"
 msgid "Nom, prénom..."
-msgstr "Your first name"
+msgstr "Last name, first name..."
 
 #: mentorat/templates/mentorat/liste_mentors.html:42
-#, fuzzy
-#| msgid "Tous les cycles"
 msgid "Tous les domaines"
-msgstr "All levels"
+msgstr "All fields"
 
 #: mentorat/templates/mentorat/liste_mentors.html:53
 msgid "Tous niveaux"
@@ -3900,16 +3579,12 @@ msgid "Demander"
 msgstr "Request"
 
 #: mentorat/templates/mentorat/liste_mentors.html:158
-#, fuzzy
-#| msgid "Aucun cours trouvé"
 msgid "Aucun mentor trouvé"
-msgstr "No courses found"
+msgstr "No mentor found"
 
 #: mentorat/templates/mentorat/liste_mentors.html:160
-#, fuzzy
-#| msgid "Essaie d'autres filtres ou reviens bientôt !"
 msgid "Essayez d'autres critères de recherche."
-msgstr "Try other filters or check back soon!"
+msgstr "Try other search criteria."
 
 #: mentorat/templates/mentorat/liste_mentors.html:163
 msgid "Réinitialiser les filtres"
@@ -3921,18 +3596,14 @@ msgid "Page %(page)s / %(pages)s"
 msgstr "Page %(page)s / %(pages)s"
 
 #: mentorat/templates/mentorat/paiement_seance.html:4
-#, fuzzy
-#| msgid "Titre du sujet"
 msgid "Paiement de la séance"
-msgstr "Topic title"
+msgstr "Session payment"
 
 #: mentorat/templates/mentorat/paiement_seance.html:17
 msgid "Paiement requis"
 msgstr "Payment required"
 
 #: mentorat/templates/mentorat/paiement_seance.html:23
-#, fuzzy
-#| msgid "Séances à venir"
 msgid "Séance avec"
 msgstr "Session with"
 
@@ -4061,16 +3732,14 @@ msgstr "Schedule the session"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:3
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:17
-#, fuzzy
-#| msgid "Tableau de bord"
 msgid "Tableau de bord Mentoré"
-msgstr "Dashboard"
+msgstr "Mentee Dashboard"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:4
 msgid ""
 "Suivez vos demandes de mentorat, vos mentors et vos séances sur Numeria "
 "Institute."
-msgstr ""
+msgstr "Track your mentoring requests, mentors and sessions on Numeria Institute."
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:15
 msgid "Espace Mentoré"
@@ -4079,10 +3748,8 @@ msgstr "Mentee Space"
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:22
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:94
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:140
-#, fuzzy
-#| msgid "Trouver un Mentor"
 msgid "Trouver un mentor"
-msgstr "Find a Mentor"
+msgstr "Find a mentor"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:34
 msgid "Demandes envoyées"
@@ -4102,20 +3769,16 @@ msgid "Envoyée le"
 msgstr "Sent on"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:82
-#, fuzzy
-#| msgid "Réponses"
 msgid "Réponse le"
-msgstr "Replies"
+msgstr "Response on"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:91
 msgid "Aucune demande envoyée"
 msgstr "No request sent"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:106
-#, fuzzy
-#| msgid "Mentorat"
 msgid "Mes mentors"
-msgstr "Mentorship"
+msgstr "My mentors"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:117
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:142
@@ -4130,13 +3793,11 @@ msgstr "View details"
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:127
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:154
 msgid "Séance"
-msgstr ""
+msgstr "Session"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:136
-#, fuzzy
-#| msgid "Mentors actifs"
 msgid "Aucun mentor actif"
-msgstr "Active mentors"
+msgstr "No active mentor"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:155
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:177
@@ -4150,15 +3811,13 @@ msgstr "End session"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:3
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:15
-#, fuzzy
-#| msgid "Tableau de bord"
 msgid "Tableau de bord Mentor"
-msgstr "Dashboard"
+msgstr "Mentor Dashboard"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:4
 msgid ""
 "Gérez vos relations de mentorat, demandes et séances sur Numeria Institute."
-msgstr ""
+msgstr "Manage your mentoring relationships, requests and sessions on Numeria Institute."
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:13
 msgid "Espace Mentor"
@@ -4174,17 +3833,15 @@ msgstr "Pending requests"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:48
 msgid "Revenus confirmés"
-msgstr ""
+msgstr "Confirmed earnings"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:55
 msgid "En attente de confirmation"
-msgstr ""
+msgstr "Awaiting confirmation"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:62
-#, fuzzy
-#| msgid "Séances à venir"
 msgid "Séances payées"
-msgstr "Upcoming sessions"
+msgstr "Paid sessions"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:81
 msgid "Demandes de mentorat"
@@ -4203,10 +3860,8 @@ msgid "Aucune demande en attente"
 msgstr "No pending requests"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:163
-#, fuzzy
-#| msgid "Relations actives"
 msgid "Aucune relation active"
-msgstr "Active relationships"
+msgstr "No active relationship"
 
 #: mentorat/templates/mentorat/terminer_relation.html:3
 msgid "Terminer la relation de mentorat"
@@ -4217,16 +3872,14 @@ msgid "Confirmez la fin de votre relation de mentorat sur Numeria Institute."
 msgstr "Confirm the end of your mentoring relationship on Numeria Institute."
 
 #: mentorat/templates/mentorat/terminer_relation.html:40
-#, fuzzy
-#| msgid "Confirmer le mot de passe"
 msgid "Confirmer la fin de la relation"
-msgstr "Confirm password"
+msgstr "Confirm end of relationship"
 
 #: mentorat/templates/mentorat/terminer_relation.html:43
 msgid ""
 "Cette action est irréversible. La relation de mentorat sera marquée comme "
 "terminée et les statistiques mises à jour."
-msgstr ""
+msgstr "This action is irreversible. The mentoring relationship will be marked as ended and statistics updated."
 
 #: mentorat/templates/mentorat/terminer_relation.html:75
 msgid "Confirmer et terminer la relation"
@@ -4254,8 +3907,6 @@ msgid "English"
 msgstr "English"
 
 #: pages/templates/pages/accueil.html:54
-#, fuzzy
-#| msgid "Voir le cours"
 msgid "Voir les cours"
 msgstr "View courses"
 
@@ -4416,7 +4067,7 @@ msgstr ""
 msgid ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses for African and French-speaking learners."
-msgstr ""
+msgstr "Accessible scientific education in Africa. Mathematics, science and AI courses for African and French-speaking learners."
 
 #: pages/views.py:127
 msgid ""
@@ -4427,10 +4078,6 @@ msgstr ""
 "Africa."
 
 #: pages/views.py:142
-#, fuzzy
-#| msgid ""
-#| "Découvrez Numeria Institute, notre mission et notre équipe pour "
-#| "l'éducation scientifique en Afrique."
 msgid ""
 "Discover Numeria Institute, our mission and team for scientific education in "
 "Africa."
@@ -4457,13 +4104,11 @@ msgstr "Sign up for a paid course to see your history here."
 
 #: paiements/templates/paiements/page_paiement.html:3
 msgid "Paiement"
-msgstr ""
+msgstr "Payment"
 
 #: paiements/templates/paiements/page_paiement.html:14
-#, fuzzy
-#| msgid "Retour aux forums"
 msgid "Retour au cours"
-msgstr "Back to forums"
+msgstr "Back to the course"
 
 #: paiements/templates/paiements/page_paiement.html:17
 msgid "Finaliser l'inscription"
@@ -4541,10 +4186,8 @@ msgid "Cours"
 msgstr "Courses"
 
 #: templates/base.html:278
-#, fuzzy
-#| msgid "Informations"
 msgid "Formations"
-msgstr "Training Programs"
+msgstr "Training Programmes"
 
 #: templates/base.html:280 templates/base.html:363 templates/base.html:440
 msgid "Candidatures"
@@ -4599,23 +4242,15 @@ msgstr "Privacy Policy"
 msgid "CGU"
 msgstr "Terms of Service"
 
-#, fuzzy
-#~| msgid "Certificats officiels"
 #~ msgid "certificats"
-#~ msgstr "Official certificates"
+#~ msgstr "certificates"
 
-#, fuzzy
-#~| msgid "Retour aux forums"
 #~ msgid "Contenu du cours"
-#~ msgstr "Back to forums"
+#~ msgstr "Course content"
 
-#, fuzzy
-#~| msgid "Aucune information renseignée."
 #~ msgid "Aucune formation ne correspond à vos critères"
-#~ msgstr "No information provided."
+#~ msgstr "No training programme matches your criteria"
 
-#, fuzzy
-#~| msgid "Terminés"
 #~ msgid "Terminées"
 #~ msgstr "Completed"
 
@@ -4889,4 +4524,157 @@ msgstr 'Whether you are a student, professional or corporate partner, there is a
 #: automatically added
 msgid 'Devenir partenaire'
 msgstr 'Become a partner'
+
+#: templates/video_room.html
+msgid "Accès caméra/micro refusé"
+msgstr "Camera/mic access denied"
+
+#: templates/video_room.html
+msgid "Accès caméra/micro refusé. Vérifiez les permissions."
+msgstr "Camera/mic access denied. Check your permissions."
+
+#: templates/video_room.html
+msgid "Arrêter le partage"
+msgstr "Stop sharing"
+
+#: templates/video_room.html
+msgid "Aucun participant pour l'instant."
+msgstr "No participants yet."
+
+#: templates/video_room.html
+msgid "Caméra"
+msgstr "Camera"
+
+#: templates/video_room.html
+msgid "Caméra activée"
+msgstr "Camera on"
+
+#: templates/video_room.html
+msgid "Caméra désactivée"
+msgstr "Camera off"
+
+#: templates/video_room.html
+msgid "Chat"
+msgstr "Chat"
+
+#: templates/video_room.html
+msgid "Connecté"
+msgstr "Connected"
+
+#: templates/video_room.html
+msgid "Connexion…"
+msgstr "Connecting…"
+
+#: templates/video_room.html
+msgid "Connexion en cours…"
+msgstr "Connecting…"
+
+#: templates/video_room.html
+msgid "Connexion établie"
+msgstr "Connection established"
+
+#: templates/video_room.html
+msgid "Couper la caméra"
+msgstr "Turn off camera"
+
+#: templates/video_room.html
+msgid "Couper le micro"
+msgstr "Mute microphone"
+
+#: templates/video_room.html
+msgid "Déconnecté"
+msgstr "Disconnected"
+
+#: templates/video_room.html
+msgid "Écran"
+msgstr "Screen"
+
+#: templates/video_room.html
+msgid "En attente des participants…"
+msgstr "Waiting for participants…"
+
+#: templates/video_room.html
+msgid "Erreur WebSocket"
+msgstr "WebSocket error"
+
+#: templates/video_room.html
+msgid "Impossible de démarrer la session vidéo."
+msgstr "Unable to start the video session."
+
+#: templates/video_room.html
+msgid "Les messages apparaîtront ici."
+msgstr "Messages will appear here."
+
+#: templates/video_room.html
+msgid "Lever la main"
+msgstr "Raise hand"
+
+#: templates/video_room.html
+msgid "Main"
+msgstr "Hand"
+
+#: templates/video_room.html
+msgid "Main baissée"
+msgstr "Hand lowered"
+
+#: templates/video_room.html
+msgid "Main levée"
+msgstr "Hand raised"
+
+#: templates/video_room.html
+msgid "Micro"
+msgstr "Mic"
+
+#: templates/video_room.html
+msgid "Micro activé"
+msgstr "Mic on"
+
+#: templates/video_room.html
+msgid "Micro coupé"
+msgstr "Mic muted"
+
+#: templates/video_room.html
+msgid "Non connecté"
+msgstr "Not connected"
+
+#: templates/video_room.html
+msgid "Partage d'écran"
+msgstr "Screen sharing"
+
+#: templates/video_room.html
+msgid "Partager l'écran"
+msgstr "Share screen"
+
+#: templates/video_room.html
+msgid "Participant"
+msgstr "Participant"
+
+#: templates/video_room.html
+msgid "participants"
+msgstr "participants"
+
+#: templates/video_room.html
+msgid "Participants"
+msgstr "Participants"
+
+#: templates/video_room.html
+msgid "Quitter"
+msgstr "Leave"
+
+#: templates/video_room.html
+msgid "Quitter l'appel"
+msgstr "Leave call"
+
+#: templates/video_room.html
+msgid "Reconnexion…"
+msgstr "Reconnecting…"
+
+#: templates/video_room.html
+msgid "Un participant a quitté"
+msgstr "A participant left"
+
+#: templates/video_room.html
+msgid "Vous"
+msgstr "You"
+
 

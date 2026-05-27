@@ -3511,3 +3511,156 @@ msgstr ""
 #: templates/base.html:469
 msgid "CGU"
 msgstr ""
+
+#: templates/video_room.html
+msgid "Accès caméra/micro refusé"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Accès caméra/micro refusé. Vérifiez les permissions."
+msgstr ""
+
+#: templates/video_room.html
+msgid "Arrêter le partage"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Aucun participant pour l'instant."
+msgstr ""
+
+#: templates/video_room.html
+msgid "Caméra"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Caméra activée"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Caméra désactivée"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Chat"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Connecté"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Connexion…"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Connexion en cours…"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Connexion établie"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Couper la caméra"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Couper le micro"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Déconnecté"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Écran"
+msgstr ""
+
+#: templates/video_room.html
+msgid "En attente des participants…"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Erreur WebSocket"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Impossible de démarrer la session vidéo."
+msgstr ""
+
+#: templates/video_room.html
+msgid "Les messages apparaîtront ici."
+msgstr ""
+
+#: templates/video_room.html
+msgid "Lever la main"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Main"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Main baissée"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Main levée"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Micro"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Micro activé"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Micro coupé"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Non connecté"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Partage d'écran"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Partager l'écran"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Participant"
+msgstr ""
+
+#: templates/video_room.html
+msgid "participants"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Participants"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Quitter"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Quitter l'appel"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Reconnexion…"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Un participant a quitté"
+msgstr ""
+
+#: templates/video_room.html
+msgid "Vous"
+msgstr ""
+
