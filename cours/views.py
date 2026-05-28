@@ -1,5 +1,8 @@
+import logging
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+
+logger = logging.getLogger(__name__)
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.utils import timezone
@@ -182,7 +185,10 @@ def inscrire_cours(request, cours_id):
             progression=0,
             est_termine=False
         )
-        send_course_enrollment_email(request.user, cours, language=getattr(request, 'LANGUAGE_CODE', None))
+        try:
+            send_course_enrollment_email(request.user, cours, language=getattr(request, 'LANGUAGE_CODE', None))
+        except Exception as e:
+            logger.error(f"Course enrollment email failed for {request.user.email}: {e}")
         messages.success(request, _("🎉 Bienvenue dans le cours « %(titre)s » !") % {'titre': cours.titre})
         return redirect('cours:detail', cours_id=cours_id)
     else:

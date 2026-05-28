@@ -1,8 +1,11 @@
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+
+logger = logging.getLogger(__name__)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.signing import BadSignature, SignatureExpired
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -26,7 +29,10 @@ def inscription(request):
         formulaire = FormulaireInscription(request.POST)
         if formulaire.is_valid():
             user = formulaire.save()
-            send_verification_email(request, user)
+            try:
+                send_verification_email(request, user)
+            except Exception as e:
+                logger.error(f"Verification email failed for {user.email}: {e}")
             messages.success(request, _("✅ Ton compte a été créé. Vérifie ta boîte email pour activer ton accès."))
             return redirect('comptes:verification_sent')
         else:
@@ -55,7 +61,10 @@ def verify_email(request, token):
 
     user.is_active = True
     user.save(update_fields=['is_active'])
-    send_welcome_email(request, user)
+    try:
+        send_welcome_email(request, user)
+    except Exception as e:
+        logger.error(f"Welcome email failed for {user.email}: {e}")
     login(request, user)
     messages.success(request, _("🎉 Ton adresse email est confirmée. Bienvenue sur Numeria !"))
     return redirect('comptes:tableau_de_bord')
@@ -68,7 +77,10 @@ def resend_verification_email(request):
             email = formulaire.cleaned_data['email']
             user = User.objects.filter(email__iexact=email).first()
             if user and not user.is_active:
-                send_verification_email(request, user)
+                try:
+                    send_verification_email(request, user)
+                except Exception as e:
+                    logger.error(f"Resend verification email failed for {user.email}: {e}")
                 messages.success(request, _("Un nouvel email de confirmation a été envoyé à {email}. Vérifie ta boîte de réception.").format(email=email))
                 return redirect('comptes:verification_sent')
             elif user and user.is_active:

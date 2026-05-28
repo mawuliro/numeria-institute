@@ -266,10 +266,7 @@ else:  # default SMTP
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Numeria Institute <numeriainstitude@gmail.com>')
 CONTACT_EMAIL = config('CONTACT_EMAIL', default='numeriainstitude@gmail.com')
 ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@numeriainstitute.com')
-
-# Email configuration for production
-if not DEBUG:
-    EMAIL_TIMEOUT = 10  # Timeout for email connections
+EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
 
 
 # ── SÉCURITÉ AVANCÉE ─────────────────────────────────────────────────────────
