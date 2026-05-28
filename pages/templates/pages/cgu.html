@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
-{% block titre %}Conditions Générales d'Utilisation — Numeria Institute{% endblock %}
-{% block meta_description %}Conditions Générales d'Utilisation de Numeria Institute : accès à la plateforme, propriété intellectuelle, paiements et responsabilités.{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Conditions Générales d'Utilisation" %} — Numeria Institute{% endblock %}
+{% block meta_description %}{% trans "Conditions Générales d'Utilisation de Numeria Institute : accès à la plateforme, propriété intellectuelle, paiements et responsabilités." %}{% endblock %}
 
 {% block contenu %}
 <section class="w-full py-16 md:py-20 bg-numeria-blanc dark:bg-gray-900 min-h-screen">
     <div class="w-full px-4 sm:px-8 lg:px-16 max-w-4xl mx-auto">
 
         <div class="mb-10">
-            <div class="inline-flex items-center gap-2 bg-numeria-teal/10 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">Légal</div>
+            <div class="inline-flex items-center gap-2 bg-numeria-teal/10 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">{% trans "Légal" %}</div>
             <h1 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
-                Conditions Générales d'Utilisation
+                {% trans "Conditions Générales d'Utilisation" %}
             </h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Dernière mise à jour : janvier 2026</p>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">{% trans "Dernière mise à jour : janvier 2026" %}</p>
         </div>
 
         <div class="prose prose-lg dark:prose-invert max-w-none space-y-10 text-gray-700 dark:text-gray-300">
@@ -19,118 +20,128 @@
             <!-- 1. Objet -->
             <div>
                 <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
-                    1. Objet
+                    {% trans "1. Objet" %}
                 </h2>
                 <p>
+                    {% blocktrans trimmed %}
                     Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et l'utilisation de la plateforme Numeria Institute, accessible à l'adresse <strong>numeriainstitute.com</strong>, exploitée par Numeria Institute, basé à Lomé, Togo.
+                    {% endblocktrans %}
                 </p>
                 <p class="mt-3">
+                    {% blocktrans trimmed %}
                     En accédant à la plateforme, vous acceptez sans réserve les présentes CGU. Si vous n'acceptez pas ces conditions, vous devez cesser d'utiliser la plateforme.
+                    {% endblocktrans %}
                 </p>
             </div>
 
             <!-- 2. Accès à la plateforme -->
             <div>
                 <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
-                    2. Accès à la plateforme
+                    {% trans "2. Accès à la plateforme" %}
                 </h2>
                 <ul class="list-disc list-inside space-y-2 pl-2">
-                    <li>L'accès à la plateforme nécessite la création d'un compte avec une adresse e-mail valide.</li>
-                    <li>Vous êtes responsable de la confidentialité de vos identifiants de connexion.</li>
-                    <li>Numeria Institute se réserve le droit de suspendre ou supprimer tout compte en cas de violation des présentes CGU.</li>
-                    <li>Certains contenus sont accessibles gratuitement ; d'autres nécessitent un paiement préalable.</li>
-                    <li>La plateforme est accessible 24h/24, 7j/7, sous réserve de maintenances planifiées ou d'incidents techniques.</li>
+                    <li>{% trans "L'accès à la plateforme nécessite la création d'un compte avec une adresse e-mail valide." %}</li>
+                    <li>{% trans "Vous êtes responsable de la confidentialité de vos identifiants de connexion." %}</li>
+                    <li>{% trans "Numeria Institute se réserve le droit de suspendre ou supprimer tout compte en cas de violation des présentes CGU." %}</li>
+                    <li>{% trans "Certains contenus sont accessibles gratuitement ; d'autres nécessitent un paiement préalable." %}</li>
+                    <li>{% trans "La plateforme est accessible 24h/24, 7j/7, sous réserve de maintenances planifiées ou d'incidents techniques." %}</li>
                 </ul>
             </div>
 
             <!-- 3. Propriété intellectuelle -->
             <div>
                 <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
-                    3. Propriété intellectuelle
+                    {% trans "3. Propriété intellectuelle" %}
                 </h2>
                 <p class="mb-3">
+                    {% blocktrans trimmed %}
                     Tous les contenus présents sur la plateforme (textes, vidéos, exercices, schémas, code source, logos) sont la propriété exclusive de Numeria Institute ou de ses partenaires et sont protégés par les lois applicables en matière de propriété intellectuelle.
+                    {% endblocktrans %}
                 </p>
                 <ul class="list-disc list-inside space-y-2 pl-2">
-                    <li>Toute reproduction, redistribution ou exploitation commerciale des contenus sans autorisation écrite préalable est interdite.</li>
-                    <li>L'accès aux cours vous confère une licence personnelle, non cessible et non exclusive pour votre usage propre.</li>
-                    <li>Les certificats délivrés par Numeria Institute sont nominatifs et ne peuvent être revendus ni transférés.</li>
+                    <li>{% trans "Toute reproduction, redistribution ou exploitation commerciale des contenus sans autorisation écrite préalable est interdite." %}</li>
+                    <li>{% trans "L'accès aux cours vous confère une licence personnelle, non cessible et non exclusive pour votre usage propre." %}</li>
+                    <li>{% trans "Les certificats délivrés par Numeria Institute sont nominatifs et ne peuvent être revendus ni transférés." %}</li>
                 </ul>
             </div>
 
             <!-- 4. Responsabilités -->
             <div>
                 <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
-                    4. Responsabilités
+                    {% trans "4. Responsabilités" %}
                 </h2>
-                <p class="mb-3"><strong>Responsabilités de Numeria Institute :</strong></p>
+                <p class="mb-3"><strong>{% trans "Responsabilités de Numeria Institute :" %}</strong></p>
                 <ul class="list-disc list-inside space-y-2 pl-2 mb-4">
-                    <li>Mettre à disposition des contenus de qualité et à jour dans la mesure du possible.</li>
-                    <li>Garantir la sécurité des données personnelles conformément à notre politique de confidentialité.</li>
-                    <li>Traiter les demandes d'assistance dans un délai raisonnable.</li>
+                    <li>{% trans "Mettre à disposition des contenus de qualité et à jour dans la mesure du possible." %}</li>
+                    <li>{% trans "Garantir la sécurité des données personnelles conformément à notre politique de confidentialité." %}</li>
+                    <li>{% trans "Traiter les demandes d'assistance dans un délai raisonnable." %}</li>
                 </ul>
-                <p class="mb-3"><strong>Responsabilités de l'utilisateur :</strong></p>
+                <p class="mb-3"><strong>{% trans "Responsabilités de l'utilisateur :" %}</strong></p>
                 <ul class="list-disc list-inside space-y-2 pl-2">
-                    <li>Utiliser la plateforme dans le respect des lois en vigueur et des présentes CGU.</li>
-                    <li>Ne pas tenter de pirater, déstabiliser ou surcharger la plateforme.</li>
-                    <li>Ne pas partager ses identifiants de connexion avec des tiers.</li>
-                    <li>Fournir des informations exactes lors de l'inscription et des candidatures.</li>
+                    <li>{% trans "Utiliser la plateforme dans le respect des lois en vigueur et des présentes CGU." %}</li>
+                    <li>{% trans "Ne pas tenter de pirater, déstabiliser ou surcharger la plateforme." %}</li>
+                    <li>{% trans "Ne pas partager ses identifiants de connexion avec des tiers." %}</li>
+                    <li>{% trans "Fournir des informations exactes lors de l'inscription et des candidatures." %}</li>
                 </ul>
             </div>
 
             <!-- 5. Paiements et remboursements -->
             <div>
                 <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
-                    5. Paiements et remboursements
+                    {% trans "5. Paiements et remboursements" %}
                 </h2>
                 <ul class="list-disc list-inside space-y-2 pl-2">
-                    <li>Les prix des cours et frais de candidature sont indiqués en Francs CFA (XOF) et sont TTC.</li>
-                    <li>Les paiements sont traités via des prestataires sécurisés (Mobile Money, carte bancaire).</li>
-                    <li>Tout achat est définitif sauf indication contraire.</li>
-                    <li>Une demande de remboursement peut être soumise dans les <strong>7 jours</strong> suivant l'achat, à condition que moins de 20 % du contenu du cours ait été consulté.</li>
-                    <li>Les frais de candidature à un programme d'admission sont non remboursables une fois le dossier soumis.</li>
-                    <li>Pour toute demande de remboursement, contactez : <a href="mailto:contact@numeriainstitute.com" class="text-numeria-teal hover:underline">contact@numeriainstitute.com</a></li>
+                    <li>{% trans "Les prix des cours et frais de candidature sont indiqués en Francs CFA (XOF) et sont TTC." %}</li>
+                    <li>{% trans "Les paiements sont traités via des prestataires sécurisés (Mobile Money, carte bancaire)." %}</li>
+                    <li>{% trans "Tout achat est définitif sauf indication contraire." %}</li>
+                    <li>{% blocktrans trimmed %}Une demande de remboursement peut être soumise dans les <strong>7 jours</strong> suivant l'achat, à condition que moins de 20 % du contenu du cours ait été consulté.{% endblocktrans %}</li>
+                    <li>{% trans "Les frais de candidature à un programme d'admission sont non remboursables une fois le dossier soumis." %}</li>
+                    <li>{% blocktrans trimmed %}Pour toute demande de remboursement, contactez : <a href="mailto:numeriainstitude@gmail.com" class="text-numeria-teal hover:underline">numeriainstitude@gmail.com</a>{% endblocktrans %}</li>
                 </ul>
             </div>
 
             <!-- 6. Résiliation -->
             <div>
                 <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
-                    6. Résiliation
+                    {% trans "6. Résiliation" %}
                 </h2>
                 <ul class="list-disc list-inside space-y-2 pl-2">
-                    <li>Vous pouvez clôturer votre compte à tout moment depuis la section <strong>Supprimer mon compte</strong> de votre profil.</li>
-                    <li>Numeria Institute se réserve le droit de résilier ou suspendre un compte sans préavis en cas de manquement grave aux présentes CGU.</li>
-                    <li>En cas de résiliation, vos données sont supprimées conformément à notre politique de confidentialité.</li>
-                    <li>Les accès aux cours payants sont maintenus jusqu'à la date d'expiration éventuelle ou la suppression du compte.</li>
+                    <li>{% blocktrans trimmed %}Vous pouvez clôturer votre compte à tout moment depuis la section <strong>Supprimer mon compte</strong> de votre profil.{% endblocktrans %}</li>
+                    <li>{% trans "Numeria Institute se réserve le droit de résilier ou suspendre un compte sans préavis en cas de manquement grave aux présentes CGU." %}</li>
+                    <li>{% trans "En cas de résiliation, vos données sont supprimées conformément à notre politique de confidentialité." %}</li>
+                    <li>{% trans "Les accès aux cours payants sont maintenus jusqu'à la date d'expiration éventuelle ou la suppression du compte." %}</li>
                 </ul>
             </div>
 
             <!-- 7. Modification des CGU -->
             <div>
                 <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
-                    7. Modification des CGU
+                    {% trans "7. Modification des CGU" %}
                 </h2>
                 <p>
+                    {% blocktrans trimmed %}
                     Numeria Institute se réserve le droit de modifier les présentes CGU à tout moment. Les utilisateurs seront informés par e-mail ou par un avis sur la plateforme. La poursuite de l'utilisation de la plateforme après notification vaut acceptation des nouvelles conditions.
+                    {% endblocktrans %}
                 </p>
             </div>
 
             <!-- 8. Droit applicable -->
             <div>
                 <h2 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-xl text-numeria-bleu dark:text-white mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
-                    8. Droit applicable
+                    {% trans "8. Droit applicable" %}
                 </h2>
                 <p>
+                    {% blocktrans trimmed %}
                     Les présentes CGU sont régies par le droit togolais. Tout litige sera soumis aux tribunaux compétents de Lomé, Togo, sauf disposition légale contraire applicable à l'utilisateur.
+                    {% endblocktrans %}
                 </p>
             </div>
 
         </div>
 
         <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-wrap gap-6">
-            <a href="/" class="text-numeria-teal hover:underline text-sm font-medium">← Retour à l'accueil</a>
-            <a href="{% url 'confidentialite' %}" class="text-numeria-teal hover:underline text-sm font-medium">Politique de confidentialité →</a>
+            <a href="/" class="text-numeria-teal hover:underline text-sm font-medium">{% trans "← Retour à l'accueil" %}</a>
+            <a href="{% url 'confidentialite' %}" class="text-numeria-teal hover:underline text-sm font-medium">{% trans "Politique de confidentialité →" %}</a>
         </div>
 
     </div>

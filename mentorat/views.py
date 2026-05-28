@@ -7,6 +7,7 @@ from django.conf import settings
 from numeria_project.emails import send_mentorship_acceptance_email
 from django.db.models import Q, Sum
 from django.urls import reverse
+from django.utils.translation import gettext as _
 from paiements.service import creer_paiement, traiter_paiement
 from paiements.constants import PAYMENT_PROVIDERS
 from django.utils import timezone
@@ -68,7 +69,7 @@ def devenir_mentor(request):
     Candidature pour devenir mentor.
     """
     if not hasattr(request.user, 'profil'):
-        messages.error(request, "Votre profil n'est pas configuré. Veuillez contacter l'administrateur.")
+        messages.error(request, _("Votre profil n'est pas configuré. Veuillez contacter l'administrateur."))
         return redirect('mentorat:index')
 
     profil = request.user.profil
@@ -79,7 +80,7 @@ def devenir_mentor(request):
             form = MentorProfileForm(request.POST, request.FILES, instance=mentor, profil=profil)
             if form.is_valid():
                 form.save()
-                messages.success(request, "Votre profil mentor a été mis à jour.")
+                messages.success(request, _("Votre profil mentor a été mis à jour."))
                 return redirect('mentorat:tableau_de_bord_mentor')
         else:
             form = MentorProfileForm(instance=mentor, profil=profil)
@@ -109,7 +110,7 @@ def devenir_mentor(request):
             if form.cleaned_data.get('cv'):
                 application.cv = form.cleaned_data['cv']
             application.save()
-            messages.success(request, "Votre candidature a bien été envoyée. Un administrateur la validera prochainement.")
+            messages.success(request, _("Votre candidature a bien été envoyée. Un administrateur la validera prochainement."))
             return redirect('mentorat:devenir_mentor')
     else:
         form = MentorApplicationForm(instance=application if application and application.status == 'rejected' else None)
@@ -128,12 +129,12 @@ def devenir_mentee(request):
     """
     # Vérifier que l'utilisateur a un profil
     if not hasattr(request.user, 'profil'):
-        messages.error(request, "Votre profil n'est pas configuré. Veuillez contacter l'administrateur.")
+        messages.error(request, _("Votre profil n'est pas configuré. Veuillez contacter l'administrateur."))
         return redirect('mentorat:index')
 
     # Vérifier si l'utilisateur a déjà un profil mentee
     if hasattr(request.user.profil, 'mentorat_mentee'):
-        messages.info(request, "Vous êtes déjà inscrit en tant que mentoré.")
+        messages.info(request, _("Vous êtes déjà inscrit en tant que mentoré."))
         return redirect('mentorat:tableau_de_bord_mentee')
 
     if request.method == 'POST':
@@ -142,7 +143,7 @@ def devenir_mentee(request):
             mentee = form.save(commit=False)
             mentee.profil = request.user.profil
             mentee.save()
-            messages.success(request, "Vous êtes maintenant inscrit en tant que mentoré.")
+            messages.success(request, _("Vous êtes maintenant inscrit en tant que mentoré."))
             return redirect('mentorat:tableau_de_bord_mentee')
     else:
         form = InscriptionMenteeForm()
@@ -223,7 +224,7 @@ def demander_mentorat(request, mentor_pk):
 
     # Vérifications
     if not hasattr(request.user, 'profil') or not hasattr(request.user.profil, 'mentorat_mentee'):
-        messages.error(request, "Vous devez d'abord vous inscrire en tant que mentoré.")
+        messages.error(request, _("Vous devez d'abord vous inscrire en tant que mentoré."))
         return redirect('mentorat:devenir_mentee')
 
     mentee = request.user.profil.mentorat_mentee
@@ -234,7 +235,7 @@ def demander_mentorat(request, mentor_pk):
         mentor=mentor,
         statut__in=['en_attente', 'acceptee']
     ).exists():
-        messages.warning(request, "Vous avez déjà une demande en cours avec ce mentor.")
+        messages.warning(request, _("Vous avez déjà une demande en cours avec ce mentor."))
         return redirect('mentorat:detail_mentor', pk=mentor_pk)
 
     if RelationMentorat.objects.filter(
@@ -242,7 +243,7 @@ def demander_mentorat(request, mentor_pk):
         mentor=mentor,
         est_active=True
     ).exists():
-        messages.info(request, "Vous êtes déjà en relation de mentorat avec ce mentor.")
+        messages.info(request, _("Vous êtes déjà en relation de mentorat avec ce mentor."))
         return redirect('mentorat:tableau_de_bord_mentee')
 
     if request.method == 'POST':
@@ -252,7 +253,7 @@ def demander_mentorat(request, mentor_pk):
             demande.mentee = mentee
             demande.mentor = mentor
             demande.save()
-            messages.success(request, "Votre demande de mentorat a été envoyée !")
+            messages.success(request, _("Votre demande de mentorat a été envoyée !"))
             return redirect('mentorat:tableau_de_bord_mentee')
     else:
         form = DemandeMentoratForm()
@@ -269,7 +270,7 @@ def tableau_de_bord_mentor(request):
     Tableau de bord du mentor.
     """
     if not hasattr(request.user, 'profil') or not hasattr(request.user.profil, 'mentorat_mentor'):
-        messages.error(request, "Vous n'êtes pas inscrit en tant que mentor.")
+        messages.error(request, _("Vous n'êtes pas inscrit en tant que mentor."))
         return redirect('mentorat:devenir_mentor')
 
     mentor = request.user.profil.mentorat_mentor
@@ -360,10 +361,10 @@ def application_detail(request, application_pk):
         notes = request.POST.get('rejection_notes', '')
         if action == 'approve':
             application.approve()
-            messages.success(request, 'La candidature a été approuvée et le mentor a été activé.')
+            messages.success(request, _('La candidature a été approuvée et le mentor a été activé.'))
         elif action == 'reject':
             application.reject(notes=notes)
-            messages.success(request, 'La candidature a été rejetée.')
+            messages.success(request, _('La candidature a été rejetée.'))
         return redirect('mentorat:application_detail', application_pk=application.pk)
     return render(request, 'mentorat/admin_application_detail.html', {
         'application': application,
@@ -441,7 +442,7 @@ def tableau_de_bord_mentee(request):
     Tableau de bord du mentoré.
     """
     if not hasattr(request.user, 'profil') or not hasattr(request.user.profil, 'mentorat_mentee'):
-        messages.error(request, "Vous n'êtes pas inscrit en tant que mentoré.")
+        messages.error(request, _("Vous n'êtes pas inscrit en tant que mentoré."))
         return redirect('mentorat:devenir_mentee')
 
     mentee = request.user.profil.mentorat_mentee
@@ -479,11 +480,11 @@ def gerer_demande(request, demande_pk, action):
 
     # Vérifier que l'utilisateur est le mentor concerné
     if not hasattr(request.user, 'profil') or not hasattr(request.user.profil, 'mentorat_mentor'):
-        messages.error(request, "Accès non autorisé.")
+        messages.error(request, _("Accès non autorisé."))
         return redirect('mentorat:index')
 
     if demande.mentor != request.user.profil.mentorat_mentor:
-        messages.error(request, "Cette demande ne vous concerne pas.")
+        messages.error(request, _("Cette demande ne vous concerne pas."))
         return redirect('mentorat:tableau_de_bord_mentor')
 
     if action == 'accepter':
@@ -492,10 +493,10 @@ def gerer_demande(request, demande_pk, action):
             send_mentorship_acceptance_email(demande, language=getattr(request, 'LANGUAGE_CODE', None))
         except Exception:
             pass
-        messages.success(request, f"Demande de {demande.mentee} acceptée !")
+        messages.success(request, _("Demande de %(mentee)s acceptée !") % {'mentee': demande.mentee})
     elif action == 'refuser':
         demande.refuser()
-        messages.success(request, f"Demande de {demande.mentee} refusée.")
+        messages.success(request, _("Demande de %(mentee)s refusée.") % {'mentee': demande.mentee})
 
     return redirect('mentorat:tableau_de_bord_mentor')
 
@@ -513,7 +514,7 @@ def planifier_seance(request, relation_pk):
         (hasattr(user_profil, 'mentorat_mentor') and relation.mentor == user_profil.mentorat_mentor) or
         (hasattr(user_profil, 'mentorat_mentee') and relation.mentee == user_profil.mentorat_mentee)
     ):
-        messages.error(request, "Accès non autorisé.")
+        messages.error(request, _("Accès non autorisé."))
         return redirect('mentorat:index')
 
     if request.method == 'POST':
@@ -531,9 +532,9 @@ def planifier_seance(request, relation_pk):
                     ip_mentoré=ip_mentoré,
                     user_agent=user_agent,
                 )
-                messages.info(request, "Séance planifiée. Veuillez procéder au paiement pour la confirmer.")
+                messages.info(request, _("Séance planifiée. Veuillez procéder au paiement pour la confirmer."))
                 return redirect('mentorat:paiement_seance', seance_pk=seance.pk)
-            messages.success(request, "Séance planifiée avec succès !")
+            messages.success(request, _("Séance planifiée avec succès !"))
             return redirect('mentorat:detail_relation', pk=relation_pk)
     else:
         form = SeanceMentoratForm()
@@ -558,7 +559,7 @@ def detail_relation(request, pk):
         (hasattr(user_profil, 'mentorat_mentor') and relation.mentor == user_profil.mentorat_mentor) or
         (hasattr(user_profil, 'mentorat_mentee') and relation.mentee == user_profil.mentorat_mentee)
     ):
-        messages.error(request, "Accès non autorisé.")
+        messages.error(request, _("Accès non autorisé."))
         return redirect('mentorat:index')
 
     seances = SeanceMentorat.objects.filter(relation=relation).order_by('-date_heure')
@@ -584,7 +585,7 @@ def terminer_seance(request, seance_pk):
         (hasattr(user_profil, 'mentorat_mentor') and seance.relation.mentor == user_profil.mentorat_mentor) or
         (hasattr(user_profil, 'mentorat_mentee') and seance.relation.mentee == user_profil.mentorat_mentee)
     ):
-        messages.error(request, "Accès non autorisé.")
+        messages.error(request, _("Accès non autorisé."))
         return redirect('mentorat:index')
 
     if request.method == 'POST':
@@ -601,7 +602,7 @@ def terminer_seance(request, seance_pk):
 
             seance.statut = 'terminee'
             seance.save()
-            messages.success(request, "Séance terminée avec succès !")
+            messages.success(request, _("Séance terminée avec succès !"))
             return redirect('mentorat:detail_relation', pk=seance.relation.pk)
     else:
         form = TerminerSeanceForm()
@@ -625,12 +626,12 @@ def terminer_relation(request, relation_pk):
         (hasattr(user_profil, 'mentorat_mentor') and relation.mentor == user_profil.mentorat_mentor) or
         (hasattr(user_profil, 'mentorat_mentee') and relation.mentee == user_profil.mentorat_mentee)
     ):
-        messages.error(request, "Accès non autorisé.")
+        messages.error(request, _("Accès non autorisé."))
         return redirect('mentorat:index')
 
     if request.method == 'POST':
         relation.terminer()
-        messages.success(request, "Relation de mentorat terminée.")
+        messages.success(request, _("Relation de mentorat terminée."))
         if hasattr(user_profil, 'mentorat_mentor'):
             return redirect('mentorat:tableau_de_bord_mentor')
         else:
@@ -650,7 +651,7 @@ def paiement_seance(request, seance_pk):
     # Seul le mentee doit payer
     user_profil = request.user.profil
     if not (hasattr(user_profil, 'mentorat_mentee') and seance.relation.mentee == user_profil.mentorat_mentee):
-        messages.error(request, "Accès non autorisé.")
+        messages.error(request, _("Accès non autorisé."))
         return redirect('mentorat:index')
 
     # Récupérer ou créer le paiement de séance associé
@@ -664,7 +665,7 @@ def paiement_seance(request, seance_pk):
     )
 
     if paiement_seance.statut == 'confirme':
-        messages.info(request, "Ce paiement est déjà confirmé.")
+        messages.info(request, _("Ce paiement est déjà confirmé."))
         return redirect('mentorat:detail_relation', pk=seance.relation.pk)
 
     providers_disponibles = PAYMENT_PROVIDERS
@@ -694,7 +695,7 @@ def paiement_seance(request, seance_pk):
         except NotImplementedError:
             messages.warning(
                 request,
-                f"⚠️ Le provider '{provider}' n'est pas encore disponible. Contactez-nous à contact@numeriainstitute.com"
+                f"⚠️ Le provider '{provider}' n'est pas encore disponible. Contactez-nous à {settings.CONTACT_EMAIL}"
             )
             return redirect('mentorat:paiement_seance', seance_pk=seance.pk)
 
@@ -709,7 +710,7 @@ def paiement_seance(request, seance_pk):
             p.statut = 'preuve_soumise'
             p.date_submission = timezone.now()
             p.save()
-            messages.success(request, "Preuve de paiement envoyée. Votre séance sera confirmée après vérification.")
+            messages.success(request, _("Preuve de paiement envoyée. Votre séance sera confirmée après vérification."))
             return redirect('mentorat:detail_relation', pk=seance.relation.pk)
     else:
         form = PaiementSeanceForm(instance=paiement_seance)

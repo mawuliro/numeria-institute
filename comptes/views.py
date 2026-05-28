@@ -258,10 +258,10 @@ def changer_mot_de_passe(request):
         if formulaire.is_valid():
             user = formulaire.save()
             update_session_auth_hash(request, user)
-            messages.success(request, "Ton mot de passe a été changé avec succès ! 🔐")
+            messages.success(request, _("Ton mot de passe a été changé avec succès ! 🔐"))
             return redirect('comptes:profil')
         else:
-            messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
+            messages.error(request, _("Veuillez corriger les erreurs ci-dessous."))
     else:
         formulaire = PasswordChangeForm(request.user)
 

@@ -1,4 +1,5 @@
 import logging
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
@@ -171,7 +172,7 @@ def contact(request):
             intro="Une question, une idée de partenariat ou simplement envie d'en savoir plus ? Nous sommes là pour vous.",
             address="Lomé, Togo",
             phone="+228 XX XX XX XX",
-            email="contact@numeriainstitute.com",
+            email=settings.CONTACT_EMAIL,
             hours="Lundi-Vendredi: 9h-18h",
             meta_title="Contact - Numeria Institute",
             meta_description="Contactez Numeria Institute pour toute question ou partenariat."
@@ -217,7 +218,7 @@ Nous avons bien reçu votre message concernant : {sujet}
 
 Notre équipe vous répondra dans les 24 à 48 heures.
 
-Si vous avez une question urgente, vous pouvez nous appeler directement à contact@numeriainstitute.com
+Si vous avez une question urgente, vous pouvez nous appeler directement à {settings.CONTACT_EMAIL}
 
 Cordialement,
 L'équipe Numeria Institute

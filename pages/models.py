@@ -77,7 +77,7 @@ class ContactPage(models.Model):
     intro = models.TextField(default="Nous sommes là pour vous aider.", verbose_name="Introduction")
     address = models.TextField(default="Lomé, Togo", verbose_name="Adresse")
     phone = models.CharField(max_length=20, default="+228 XX XX XX XX", verbose_name="Téléphone")
-    email = models.EmailField(default="contact@numeriainstitute.com", verbose_name="Email")
+    email = models.EmailField(default="numeriainstitude@gmail.com", verbose_name="Email")
     hours = models.TextField(default="Lundi-Vendredi: 9h-18h", verbose_name="Horaires")
 
     meta_title = models.CharField(max_length=60, default="Contact - Numeria Institute", verbose_name="Meta title")

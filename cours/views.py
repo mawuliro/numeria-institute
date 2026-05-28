@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.http import HttpResponse
 import uuid
 from numeria_project.emails import send_course_enrollment_email
@@ -171,7 +172,7 @@ def inscrire_cours(request, cours_id):
     cours = get_object_or_404(Cours, id=cours_id, est_publie=True)
 
     if InscriptionCours.objects.filter(etudiant=request.user, cours=cours).exists():
-        messages.info(request, f"Tu es déjà inscrit au cours « {cours.titre} » ! 📚")
+        messages.info(request, _("Tu es déjà inscrit au cours « %(titre)s » ! 📚") % {'titre': cours.titre})
         return redirect('cours:detail', cours_id=cours_id)
 
     if cours.est_gratuit:
@@ -182,7 +183,7 @@ def inscrire_cours(request, cours_id):
             est_termine=False
         )
         send_course_enrollment_email(request.user, cours, language=getattr(request, 'LANGUAGE_CODE', None))
-        messages.success(request, f"🎉 Bienvenue dans le cours « {cours.titre} » !")
+        messages.success(request, _("🎉 Bienvenue dans le cours « %(titre)s » !") % {'titre': cours.titre})
         return redirect('cours:detail', cours_id=cours_id)
     else:
         # Cours payant — redirection vers la page de paiement
@@ -203,9 +204,9 @@ def se_desinscrire(request, cours_id):
             etudiant=request.user, lecon__cours=cours
         ).delete()
         inscription.delete()
-        messages.success(request, f"Tu t'es désinscrit du cours « {cours.titre} ».")
+        messages.success(request, _("Tu t'es désinscrit du cours « %(titre)s » .") % {'titre': cours.titre})
     else:
-        messages.error(request, "Tu n'es pas inscrit à ce cours.")
+        messages.error(request, _("Tu n'es pas inscrit à ce cours."))
 
     return redirect('cours:catalogue')
 
@@ -224,7 +225,7 @@ def terminer_lecon(request, lecon_id):
     ).first()
 
     if not inscription:
-        messages.error(request, "Tu n'es pas inscrit à ce cours.")
+        messages.error(request, _("Tu n'es pas inscrit à ce cours."))
         return redirect('cours:detail', cours_id=cours.id)
 
     progression_lecon, cree = ProgressionLecon.objects.get_or_create(
@@ -246,16 +247,16 @@ def terminer_lecon(request, lecon_id):
                 inscription.date_fin    = timezone.now()
                 messages.success(
                     request,
-                    f"🎉 Félicitations ! Tu as terminé le cours « {cours.titre} » !"
+                    _("🎉 Félicitations ! Tu as terminé le cours « %(titre)s » !") % {'titre': cours.titre}
                 )
             else:
                 messages.success(
                     request,
-                    f"✅ Leçon terminée ! Progression : {nouveau_pourcentage}%"
+                    _("✅ Leçon terminée ! Progression : %(pct)s%%") % {'pct': nouveau_pourcentage}
                 )
             inscription.save()
     else:
-        messages.info(request, "Cette leçon était déjà marquée comme terminée.")
+        messages.info(request, _("Cette leçon était déjà marquée comme terminée."))
 
     # Rediriger vers la leçon suivante si elle existe
     lecon_suivante = cours.lecons.filter(
@@ -299,7 +300,7 @@ def annuler_lecon(request, lecon_id):
         inscription.date_fin    = None
         inscription.save()
 
-    messages.info(request, "Leçon marquée comme non terminée.")
+    messages.info(request, _("Leçon marquée comme non terminée."))
     return redirect('cours:detail', cours_id=cours.id)
 
 
@@ -324,14 +325,14 @@ def soumettre_exercice(request, exercice_id):
         etudiant=request.user,
         cours=cours
     ).exists():
-        messages.error(request, "Tu n'es pas inscrit à ce cours.")
+        messages.error(request, _("Tu n'es pas inscrit à ce cours."))
         return redirect('cours:detail', cours_id=cours.id)
 
     # Récupérer la réponse choisie
     reponse_choisie = request.POST.get('reponse', '').upper()
 
     if reponse_choisie not in ['A', 'B', 'C', 'D']:
-        messages.error(request, "Réponse invalide.")
+        messages.error(request, _("Réponse invalide."))
         # CORRIGÉ : reverse() au lieu de syntaxe template dans du Python
         url_detail = reverse('cours:detail', kwargs={'cours_id': cours.id})
         return redirect(f'{url_detail}?lecon={lecon.id}')
@@ -386,7 +387,7 @@ def telecharger_certificat(request, inscription_id):
     if inscription.cours.est_gratuit:
         messages.error(
             request,
-            "Les certificats sont réservés aux cours payants."
+            _("Les certificats sont réservés aux cours payants.")
         )
         return redirect('comptes:tableau_de_bord')
 
@@ -448,14 +449,14 @@ def evaluer_cours(request, cours_id):
     ).first()
     
     if not inscription:
-        messages.error(request, "Vous devez terminer le cours avant de le noter.")
+        messages.error(request, _("Vous devez terminer le cours avant de le noter."))
         return redirect('cours:detail', cours_id=cours_id)
     
     if request.method == 'POST':
         try:
             note = int(request.POST.get('note', 0) or 0)
             if note < 1 or note > 5:
-                messages.error(request, "La note doit être entre 1 et 5.")
+                messages.error(request, _("La note doit être entre 1 et 5."))
                 return redirect('cours:detail', cours_id=cours_id)
             
             commentaire = request.POST.get('commentaire', '').strip()
@@ -470,9 +471,9 @@ def evaluer_cours(request, cours_id):
                 }
             )
             
-            messages.success(request, "✅ Merci pour votre évaluation !")
+            messages.success(request, _("✅ Merci pour votre évaluation !"))
         except Exception as e:
-            messages.error(request, f"Erreur lors de l'évaluation : {str(e)}")
+            messages.error(request, _("Erreur lors de l'évaluation : %(err)s") % {'err': str(e)})
         
         return redirect('cours:detail', cours_id=cours_id)
     
@@ -491,17 +492,17 @@ def poser_question(request, cours_id):
     ).first()
     
     if not inscription:
-        messages.error(request, "Vous devez être inscrit au cours pour poser une question.")
+        messages.error(request, _("Vous devez être inscrit au cours pour poser une question."))
         return redirect('cours:detail', cours_id=cours_id)
     
     if request.method == 'POST':
         try:
             question = request.POST.get('question', '').strip()
             if not question or len(question) < 5:
-                messages.error(request, "La question doit contenir au moins 5 caractères.")
+                messages.error(request, _("La question doit contenir au moins 5 caractères."))
                 return redirect('cours:detail', cours_id=cours_id)
             if len(question) > 500:
-                messages.error(request, "La question ne peut pas dépasser 500 caractères.")
+                messages.error(request, _("La question ne peut pas dépasser 500 caractères."))
                 return redirect('cours:detail', cours_id=cours_id)
             
             # Créer la question (en attente de modération)
@@ -513,9 +514,9 @@ def poser_question(request, cours_id):
                 approuvee_par_admin=False
             )
             
-            messages.success(request, "✅ Votre question a été soumise et sera modérée par un admin.")
+            messages.success(request, _("✅ Votre question a été soumise et sera modérée par un admin."))
         except Exception as e:
-            messages.error(request, f"Erreur lors de la soumission : {str(e)}")
+            messages.error(request, _("Erreur lors de la soumission : %(err)s") % {'err': str(e)})
         
         return redirect('cours:detail', cours_id=cours_id)
     

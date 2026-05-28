@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block titre %}Paiement confirmé Numeria Institute{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Paiement confirmé" %} — Numeria Institute{% endblock %}
 {% block contenu %}
 
 <section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-20">
@@ -12,33 +13,33 @@
             </div>
 
             <h1 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-4">
-                Paiement confirmé !
+                {% trans "Paiement confirmé !" %}
             </h1>
             <p class="text-gray-500 dark:text-gray-400 text-lg mb-8">
                 {% if paiement.objet_type == 'cours' %}
-                    Tu es maintenant inscrit au cours <strong>{{ paiement.cours.titre }}</strong>.
+                    {% blocktrans with titre=paiement.cours.titre %}Tu es maintenant inscrit au cours <strong>{{ titre }}</strong>.{% endblocktrans %}
                 {% else %}
-                    Tu es maintenant inscrit à la session <strong>{{ paiement.formation_inscription.session.nom }}</strong> de <strong>{{ paiement.formation_inscription.session.formation.titre }}</strong>.
+                    {% blocktrans with session=paiement.formation_inscription.session.nom formation=paiement.formation_inscription.session.formation.titre %}Tu es maintenant inscrit à la session <strong>{{ session }}</strong> de <strong>{{ formation }}</strong>.{% endblocktrans %}
                 {% endif %}
-                Bonne apprentissage ! 🎓
+                {% trans "Bonne apprentissage ! 🎓" %}
             </p>
 
             <!-- Détails du paiement -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 mb-8 text-left">
                 <h2 class="font-bold text-numeria-bleu dark:text-numeria-or mb-4">
-                    Récapitulatif du paiement
+                    {% trans "Récapitulatif du paiement" %}
                 </h2>
                 <div class="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                        <p class="text-gray-400 dark:text-gray-500">Référence</p>
+                        <p class="text-gray-400 dark:text-gray-500">{% trans "Référence" %}</p>
                         <p class="font-bold text-gray-800 dark:text-gray-100">{{ paiement.reference_numeria }}</p>
                     </div>
                     <div>
-                        <p class="text-gray-400 dark:text-gray-500">Montant payé</p>
+                        <p class="text-gray-400 dark:text-gray-500">{% trans "Montant payé" %}</p>
                         <p class="font-bold text-gray-800 dark:text-gray-100">{{ paiement.montant }} {{ paiement.devise }}</p>
                     </div>
                     <div>
-                        <p class="text-gray-400 dark:text-gray-500">{% if paiement.objet_type == 'cours' %}Cours{% else %}Session{% endif %}</p>
+                        <p class="text-gray-400 dark:text-gray-500">{% if paiement.objet_type == 'cours' %}{% trans "Cours" %}{% else %}{% trans "Session" %}{% endif %}</p>
                         <p class="font-bold text-gray-800 dark:text-gray-100">
                             {% if paiement.objet_type == 'cours' %}
                                 {{ paiement.cours.titre }}
@@ -48,7 +49,7 @@
                         </p>
                     </div>
                     <div>
-                        <p class="text-gray-400 dark:text-gray-500">Date</p>
+                        <p class="text-gray-400 dark:text-gray-500">{% trans "Date" %}</p>
                         <p class="font-bold text-gray-800 dark:text-gray-100">{{ paiement.date_creation|date:"d/m/Y H:i" }}</p>
                     </div>
                 </div>
@@ -59,17 +60,17 @@
                 {% if paiement.objet_type == 'cours' %}
                 <a href="{% url 'cours:detail' paiement.cours.id %}"
                    class="bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
-                    Commencer le cours →
+                    {% trans "Commencer le cours →" %}
                 </a>
                 {% else %}
                 <a href="{% url 'formation:session_detail' paiement.formation_inscription.session.id %}"
                    class="bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
-                    Voir la session →
+                    {% trans "Voir la session →" %}
                 </a>
                 {% endif %}
                 <a href="{% url 'comptes:tableau_de_bord' %}"
                    class="border border-numeria-bleu dark:border-numeria-or text-numeria-bleu dark:text-numeria-or font-bold px-8 py-3 rounded-xl hover:bg-numeria-bleu hover:text-white transition-colors">
-                    Tableau de bord
+                    {% trans "Tableau de bord" %}
                 </a>
             </div>
 

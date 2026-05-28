@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -99,7 +100,7 @@ def initier_paiement_formation(request, inscription_id):
     except NotImplementedError:
         messages.warning(
             request,
-            f"⚠️ Le provider '{provider}' n'est pas encore disponible. Contactez-nous à contact@numeriainstitute.com"
+            f"⚠️ Le provider '{provider}' n'est pas encore disponible. Contactez-nous à {settings.CONTACT_EMAIL}"
         )
         return redirect('paiements:page_paiement_formation', inscription_id=inscription.id)
 
@@ -144,7 +145,7 @@ def initier_paiement(request, cours_id):
         messages.warning(
             request,
             f"⚠️ Le provider '{provider}' n'est pas encore disponible. "
-            f"Contactez-nous à contact@numeriainstitute.com"
+            f"Contactez-nous à {settings.CONTACT_EMAIL}"
         )
         return redirect('paiements:page_paiement', cours_id=cours_id)
 

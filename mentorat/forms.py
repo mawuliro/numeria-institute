@@ -1,25 +1,26 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
+from django.utils.translation import gettext_lazy as _
 from .models import Mentor, Mentee, DemandeMentorat, SeanceMentorat, PaiementSeance, MentorApplication
 
 
 def validate_file_size(value):
     max_size = 5 * 1024 * 1024  # 5 MB
     if value.size > max_size:
-        raise ValidationError("Le fichier dépasse la taille maximale de 5MB.")
+        raise ValidationError(_("Le fichier dépasse la taille maximale de 5MB."))
 
 
 class MentorApplicationForm(forms.ModelForm):
     certificate = forms.FileField(
-        label='Certificat',
+        label=_('Certificat'),
         validators=[FileExtensionValidator(['pdf', 'jpg', 'jpeg', 'png']), validate_file_size],
-        help_text='PDF, JPG, PNG, ou JPEG. Taille max 5MB.',
+        help_text=_('PDF, JPG, PNG, ou JPEG. Taille max 5MB.'),
     )
     cv = forms.FileField(
-        label='CV',
+        label=_('CV'),
         validators=[FileExtensionValidator(['pdf', 'doc', 'docx']), validate_file_size],
-        help_text='PDF, DOC, DOCX. Taille max 5MB.',
+        help_text=_('PDF, DOC, DOCX. Taille max 5MB.'),
     )
 
     class Meta:
@@ -41,20 +42,20 @@ class MentorApplicationForm(forms.ModelForm):
         widgets = {
             'bio': forms.Textarea(attrs={
                 'rows': 6,
-                'placeholder': 'Décrivez votre parcours, vos compétences et pourquoi vous souhaitez mentorer.'
+                'placeholder': _('Décrivez votre parcours, vos compétences et pourquoi vous souhaitez mentorer.')
             }),
             'expertise_categories': forms.Textarea(attrs={
                 'rows': 3,
-                'placeholder': 'Ex: Data Science, Python, Carrière tech'
+                'placeholder': _('Ex: Data Science, Python, Carrière tech')
             }),
             'social_profiles': forms.Textarea(attrs={
                 'rows': 2,
-                'placeholder': 'Ex: Twitter.com/moncompte, Instagram.com/moncompte'
+                'placeholder': _('Ex: Twitter.com/moncompte, Instagram.com/moncompte')
             }),
         }
         help_texts = {
-            'expertise_categories': 'Séparez les sujets par des virgules.',
-            'social_profiles': 'Optionnel, séparez les liens par des virgules.',
+            'expertise_categories': _('Séparez les sujets par des virgules.'),
+            'social_profiles': _('Optionnel, séparez les liens par des virgules.'),
         }
 
     def clean(self):
@@ -62,16 +63,16 @@ class MentorApplicationForm(forms.ModelForm):
         certificate = cleaned_data.get('certificate')
         cv = cleaned_data.get('cv')
         if not certificate:
-            self.add_error('certificate', 'Un certificat est requis.')
+            self.add_error('certificate', _('Un certificat est requis.'))
         if not cv:
-            self.add_error('cv', 'Un CV est requis.')
+            self.add_error('cv', _('Un CV est requis.'))
         return cleaned_data
 
 
 class MentorProfileForm(forms.ModelForm):
-    linkedin = forms.URLField(required=False, label='LinkedIn')
-    github = forms.URLField(required=False, label='GitHub')
-    photo = forms.ImageField(required=False, label='Photo de profil')
+    linkedin = forms.URLField(required=False, label=_('LinkedIn'))
+    github = forms.URLField(required=False, label=_('GitHub'))
+    photo = forms.ImageField(required=False, label=_('Photo de profil'))
 
     class Meta:
         model = Mentor
@@ -88,18 +89,18 @@ class MentorProfileForm(forms.ModelForm):
         widgets = {
             'bio_mentorat': forms.Textarea(attrs={
                 'rows': 5,
-                'placeholder': 'Parlez de votre expertise, de vos succès et de la façon dont vous accompagnez vos mentorés.'
+                'placeholder': _('Parlez de votre expertise, de vos succès et de la façon dont vous accompagnez vos mentorés.')
             }),
             'categories': forms.TextInput(attrs={
-                'placeholder': 'Ex: leadership, product management, entretien technique'
+                'placeholder': _('Ex: leadership, product management, entretien technique')
             }),
             'langues': forms.TextInput(attrs={
-                'placeholder': 'Ex: Français, Anglais'
+                'placeholder': _('Ex: Français, Anglais')
             }),
         }
         help_texts = {
-            'tarif_par_seance': 'Entrez un tarif par séance en FCFA.',
-            'categories': 'Mots-clés ou catégories de mentorat séparés par des virgules.',
+            'tarif_par_seance': _('Entrez un tarif par séance en FCFA.'),
+            'categories': _('Mots-clés ou catégories de mentorat séparés par des virgules.'),
         }
 
     def __init__(self, *args, **kwargs):
@@ -141,15 +142,15 @@ class InscriptionMentorForm(forms.ModelForm):
         widgets = {
             'bio_mentorat': forms.Textarea(attrs={
                 'rows': 5,
-                'placeholder': 'Décrivez votre parcours, vos expériences, et vos motivations à devenir mentor...'
+                'placeholder': _('Décrivez votre parcours, vos expériences, et vos motivations à devenir mentor...')
             }),
             'tarif_par_seance': forms.NumberInput(attrs={
                 'min': 0,
-                'placeholder': '0',
+                'placeholder': _('0'),
             }),
         }
         help_texts = {
-            'tarif_par_seance': 'Laissez 0 si votre mentorat est gratuit. Numeria prélève 20% de commission sur chaque séance payante.',
+            'tarif_par_seance': _('Laissez 0 si votre mentorat est gratuit. Numeria prélève 20% de commission sur chaque séance payante.'),
         }
 
 
@@ -162,7 +163,7 @@ class PaiementSeanceForm(forms.ModelForm):
         fields = ['reference_mobile_money', 'preuve_paiement']
         widgets = {
             'reference_mobile_money': forms.TextInput(attrs={
-                'placeholder': 'Ex: TM2504120001...',
+                'placeholder': _('Ex: TM2504120001...'),
             }),
         }
 
@@ -181,7 +182,7 @@ class InscriptionMenteeForm(forms.ModelForm):
         widgets = {
             'besoins': forms.Textarea(attrs={
                 'rows': 4,
-                'placeholder': 'Décrivez vos objectifs, vos difficultés actuelles, et ce que vous attendez de votre mentor...'
+                'placeholder': _('Décrivez vos objectifs, vos difficultés actuelles, et ce que vous attendez de votre mentor...')
             }),
         }
 
@@ -196,7 +197,7 @@ class DemandeMentoratForm(forms.ModelForm):
         widgets = {
             'message': forms.Textarea(attrs={
                 'rows': 4,
-                'placeholder': 'Présentez-vous brièvement et expliquez pourquoi vous souhaitez ce mentor...'
+                'placeholder': _('Présentez-vous brièvement et expliquez pourquoi vous souhaitez ce mentor...')
             }),
         }
 
@@ -216,11 +217,11 @@ class SeanceMentoratForm(forms.ModelForm):
         ]
         widgets = {
             'date_heure': forms.DateTimeInput(attrs={
-                'type': 'datetime-local'
+                'type': _('datetime-local')
             }),
             'description': forms.Textarea(attrs={
                 'rows': 3,
-                'placeholder': 'Description de la séance...'
+                'placeholder': _('Description de la séance...')
             }),
         }
 
@@ -233,16 +234,16 @@ class TerminerSeanceForm(forms.Form):
         required=False,
         widget=forms.Textarea(attrs={
             'rows': 4,
-            'placeholder': 'Vos notes sur la séance...'
+            'placeholder': _('Vos notes sur la séance...')
         }),
-        label="Notes du mentor"
+        label=_("Notes du mentor")
     )
 
     notes_mentee = forms.CharField(
         required=False,
         widget=forms.Textarea(attrs={
             'rows': 4,
-            'placeholder': 'Vos notes sur la séance...'
+            'placeholder': _('Vos notes sur la séance...')
         }),
-        label="Notes du mentoré"
+        label=_("Notes du mentoré")
     )

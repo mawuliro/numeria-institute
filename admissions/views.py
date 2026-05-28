@@ -181,12 +181,12 @@ def candidature(request, campagne_id):
     campagne = get_object_or_404(CampagneRecrutement, id=campagne_id)
     
     if not campagne.est_ouverte():
-        messages.error(request, "❌ Cette campagne de recrutement est fermée.")
+        messages.error(request, _("❌ Cette campagne de recrutement est fermée."))
         return redirect('admissions:liste_campagnes')
     
     # Vérifier si l'utilisateur a déjà candidaté
     if Candidature.objects.filter(utilisateur=request.user, campagne=campagne).exists():
-        messages.warning(request, "⚠️ Vous avez déjà soumis une candidature.")
+        messages.warning(request, _("⚠️ Vous avez déjà soumis une candidature."))
         return redirect('admissions:detail_campagne', campagne_id=campagne.id)
     
     # Vérifier le paiement si la campagne est payante
@@ -225,10 +225,10 @@ def candidature(request, campagne_id):
             
             candidature.save()
             
-            messages.success(request, "✅ Votre candidature a été soumise avec succès !")
+            messages.success(request, _("✅ Votre candidature a été soumise avec succès !"))
             return redirect('admissions:mes_candidatures')
         else:
-            messages.error(request, "❌ Veuillez corriger les erreurs ci-dessous.")
+            messages.error(request, _("❌ Veuillez corriger les erreurs ci-dessous."))
     else:
         initial = {
             'nom': request.user.last_name,
@@ -310,6 +310,6 @@ def changer_statut(request, candidature_id):
                 except Exception:
                     pass
 
-            messages.success(request, f"✅ Statut mis à jour : {dict(Candidature.STATUTS)[nouveau_statut]}")
+            messages.success(request, _("✅ Statut mis à jour : %(statut)s") % {'statut': dict(Candidature.STATUTS)[nouveau_statut]})
     
     return redirect('admissions:admin_candidatures')

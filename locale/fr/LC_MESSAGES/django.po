@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-27 20:42+0000\n"
+"POT-Creation-Date: 2026-05-28 21:09+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: French <contact@numeriainstitute.com>\n"
@@ -56,6 +56,7 @@ msgstr ""
 
 #: admissions/templates/admissions/confirmation_paiement.html:3
 #: formation/templates/formation/mes_formations.html:91
+#: paiements/templates/paiements/confirmation.html:3
 msgid "Paiement confirmé"
 msgstr ""
 
@@ -84,11 +85,13 @@ msgid "Formation"
 msgstr ""
 
 #: admissions/templates/admissions/confirmation_paiement.html:33
+#: paiements/templates/paiements/confirmation.html:38
 msgid "Montant payé"
 msgstr ""
 
 #: admissions/templates/admissions/confirmation_paiement.html:37
 #: cours/templates/cours/verifier_certificat.html:112
+#: paiements/templates/paiements/confirmation.html:34
 msgid "Référence"
 msgstr ""
 
@@ -105,6 +108,7 @@ msgid "Retour à mes candidatures"
 msgstr ""
 
 #: admissions/templates/admissions/detail_candidature.html:27
+#: mentorat/models.py:330 mentorat/models.py:468
 msgid "Statut"
 msgstr ""
 
@@ -129,6 +133,7 @@ msgid "Nous sommes désolés, votre candidature n'a pas été retenue cette ann�
 msgstr ""
 
 #: admissions/templates/admissions/detail_candidature.html:65
+#: mentorat/models.py:132
 msgid "Nom complet"
 msgstr ""
 
@@ -137,11 +142,12 @@ msgid "Date de naissance"
 msgstr ""
 
 #: admissions/templates/admissions/detail_candidature.html:67
+#: mentorat/models.py:475
 msgid "Téléphone"
 msgstr ""
 
 #: admissions/templates/admissions/detail_candidature.html:69
-#: comptes/forms.py:114 comptes/forms.py:212
+#: comptes/forms.py:114 comptes/forms.py:213
 #: mentorat/templates/mentorat/detail_mentor.html:136
 msgid "Pays"
 msgstr ""
@@ -153,7 +159,7 @@ msgstr ""
 #: admissions/templates/admissions/detail_candidature.html:71
 #: communaute/templates/communaute/modifier_profil.html:71
 #: communaute/templates/communaute/profil_utilisateur.html:99
-#: comptes/forms.py:214
+#: comptes/forms.py:215 mentorat/models.py:278
 msgid "Niveau d'études"
 msgstr ""
 
@@ -300,66 +306,83 @@ msgstr ""
 msgid "Paiement sécurisé · Mode test (sandbox)"
 msgstr ""
 
-#: admissions/views.py:71
+#: admissions/views.py:72 admissions/views.py:184
 msgid "❌ Cette campagne de recrutement est fermée."
 msgstr ""
 
-#: admissions/views.py:76
+#: admissions/views.py:77
 msgid "⚠️ Vous avez déjà candidaté pour cette formation."
 msgstr ""
 
-#: admissions/views.py:87
+#: admissions/views.py:88
 msgid ""
 "✅ Vous avez déjà payé les frais de candidature. Vous pouvez maintenant "
 "postuler."
 msgstr ""
 
-#: admissions/views.py:123
+#: admissions/views.py:124
 #, python-brace-format
 msgid ""
 "✅ Paiement de {montant} FCFA réussi ! Vous pouvez maintenant remplir votre "
 "formulaire de candidature."
 msgstr ""
 
-#: admissions/views.py:130
+#: admissions/views.py:131
 msgid ""
 "⚠️ Seul le mode sandbox est disponible pour le moment. Les autres moyens de "
 "paiement arrivent bientôt."
 msgstr ""
 
-#: admissions/views.py:168
+#: admissions/views.py:169
 msgid "Aucun paiement trouvé. Veuillez effectuer le paiement."
 msgstr ""
 
-#: analytics/templates/analytics/dashboard.html:136
+#: admissions/views.py:189
+msgid "⚠️ Vous avez déjà soumis une candidature."
+msgstr ""
+
+#: admissions/views.py:228
+msgid "✅ Votre candidature a été soumise avec succès !"
+msgstr ""
+
+#: admissions/views.py:231
+msgid "❌ Veuillez corriger les erreurs ci-dessous."
+msgstr ""
+
+#: admissions/views.py:313
+#, python-format
+msgid "✅ Statut mis à jour : %(statut)s"
+msgstr ""
+
+#: analytics/templates/analytics/dashboard.html:158
 msgid "Aucune donnée pour le moment"
 msgstr ""
 
-#: analytics/templates/analytics/dashboard.html:137
+#: analytics/templates/analytics/dashboard.html:159
 msgid "Les cours populaires apparaîtront ici"
 msgstr ""
 
-#: analytics/templates/analytics/dashboard.html:176
+#: analytics/templates/analytics/dashboard.html:198
 msgid "Prochaine étape"
 msgstr ""
 
-#: analytics/templates/analytics/dashboard.html:177
+#: analytics/templates/analytics/dashboard.html:199
 msgid "Ajoute plus de cours pour augmenter l'engagement"
 msgstr ""
 
-#: analytics/templates/analytics/dashboard.html:180
+#: analytics/templates/analytics/dashboard.html:202
 msgid "Taux de conversion"
 msgstr ""
 
-#: analytics/templates/analytics/dashboard.html:181
+#: analytics/templates/analytics/dashboard.html:203
 msgid "Connecte Google Analytics pour des données avancées"
 msgstr ""
 
-#: analytics/templates/analytics/dashboard.html:184
+#: analytics/templates/analytics/dashboard.html:206
 msgid "Newsletter"
 msgstr ""
 
-#: analytics/templates/analytics/dashboard.html:185
+#: analytics/templates/analytics/dashboard.html:207
 msgid "Active la newsletter pour fidéliser les utilisateurs"
 msgstr ""
 
@@ -378,7 +401,7 @@ msgid "Retour au blog"
 msgstr ""
 
 #: blog/templates/blog/detail.html:184 blog/templates/blog/liste.html:164
-#: paiements/templates/paiements/historique.html:85
+#: paiements/templates/paiements/historique.html:86
 msgid "Voir les cours →"
 msgstr ""
 
@@ -490,7 +513,7 @@ msgstr ""
 #: communaute/templates/communaute/liste_categories.html:41
 #: communaute/templates/communaute/modifier_message.html:3
 #: communaute/templates/communaute/modifier_profil.html:3
-#: comptes/templates/comptes/inscription.html:248 templates/base.html:417
+#: comptes/templates/comptes/inscription.html:248 templates/base.html:418
 #: templates/includes/nav_items.html:9 templates/includes/nav_items.html:22
 msgid "Communauté"
 msgstr ""
@@ -521,7 +544,7 @@ msgid "Nom de la catégorie"
 msgstr ""
 
 #: communaute/templates/communaute/creer_categorie.html:47
-#: mentorat/templates/mentorat/planifier_seance.html:53
+#: mentorat/models.py:447 mentorat/templates/mentorat/planifier_seance.html:53
 msgid "Description"
 msgstr ""
 
@@ -546,7 +569,7 @@ msgstr ""
 #: cours/templates/cours/detail.html:511
 #: mentorat/templates/mentorat/demander_mentorat.html:95
 #: mentorat/templates/mentorat/devenir_mentee.html:90
-#: mentorat/templates/mentorat/devenir_mentor.html:124
+#: mentorat/templates/mentorat/devenir_mentor.html:92
 #: mentorat/templates/mentorat/planifier_seance.html:110
 #: mentorat/templates/mentorat/terminer_relation.html:79
 #: mentorat/templates/mentorat/terminer_seance.html:66
@@ -597,7 +620,7 @@ msgid "Publier le sujet"
 msgstr ""
 
 #: communaute/templates/communaute/creer_sujet.html:90
-#: mentorat/templates/mentorat/video_seance.html:73
+#: mentorat/templates/mentorat/video_seance.html:74
 msgid "Conseils"
 msgstr ""
 
@@ -666,14 +689,14 @@ msgstr ""
 #: communaute/templates/communaute/detail_categorie.html:168
 #: communaute/templates/communaute/detail_sujet.html:256
 #: formation/templates/formation/voir_lecon.html:158
-#: mentorat/templates/mentorat/liste_mentors.html:175
+#: mentorat/templates/mentorat/liste_mentors.html:180
 msgid "Précédent"
 msgstr ""
 
 #: communaute/templates/communaute/detail_categorie.html:182
 #: communaute/templates/communaute/detail_sujet.html:270
 #: formation/templates/formation/voir_lecon.html:166
-#: mentorat/templates/mentorat/liste_mentors.html:184
+#: mentorat/templates/mentorat/liste_mentors.html:189
 msgid "Suivant"
 msgstr ""
 
@@ -763,7 +786,8 @@ msgstr ""
 #: communaute/templates/communaute/detail_sujet.html:307
 #: communaute/templates/communaute/liste_categories.html:203
 #: comptes/templates/comptes/connexion.html:129
-#: comptes/templates/comptes/inscription.html:230 templates/base.html:365
+#: comptes/templates/comptes/inscription.html:230 templates/base.html:366
+#: templates/registration/password_reset_complete.html:8
 msgid "Se connecter"
 msgstr ""
 
@@ -901,7 +925,8 @@ msgstr ""
 msgid "Personnalisez votre présence dans la communauté"
 msgstr ""
 
-#: communaute/templates/communaute/modifier_profil.html:35 comptes/forms.py:210
+#: communaute/templates/communaute/modifier_profil.html:35 comptes/forms.py:211
+#: mentorat/forms.py:75
 msgid "Photo de profil"
 msgstr ""
 
@@ -909,7 +934,7 @@ msgstr ""
 msgid "Formats : JPG, PNG, GIF. Taille max : 5 Mo."
 msgstr ""
 
-#: communaute/templates/communaute/modifier_profil.html:47 comptes/forms.py:211
+#: communaute/templates/communaute/modifier_profil.html:47 comptes/forms.py:212
 msgid "Biographie"
 msgstr ""
 
@@ -1035,7 +1060,7 @@ msgstr ""
 msgid "Publier la réponse"
 msgstr ""
 
-#: comptes/forms.py:97
+#: comptes/forms.py:97 comptes/forms.py:245
 msgid "Adresse email"
 msgstr ""
 
@@ -1055,7 +1080,7 @@ msgstr ""
 msgid "Votre nom"
 msgstr ""
 
-#: comptes/forms.py:124 comptes/forms.py:151 comptes/forms.py:152
+#: comptes/forms.py:124 comptes/forms.py:152 comptes/forms.py:153
 #: comptes/templates/comptes/connexion.html:77
 #: comptes/templates/comptes/inscription.html:126
 msgid "Nom d'utilisateur"
@@ -1069,7 +1094,7 @@ msgstr ""
 msgid "Nom d'utilisateur unique"
 msgstr ""
 
-#: comptes/forms.py:127 comptes/forms.py:155
+#: comptes/forms.py:127 comptes/forms.py:156
 #: comptes/templates/comptes/connexion.html:96
 #: comptes/templates/comptes/inscription.html:170
 msgid "Mot de passe"
@@ -1087,19 +1112,23 @@ msgstr ""
 msgid "Répète ton mot de passe"
 msgstr ""
 
-#: comptes/forms.py:156
+#: comptes/forms.py:157
 msgid "Ton mot de passe"
 msgstr ""
 
-#: comptes/forms.py:213 mentorat/templates/mentorat/detail_mentor.html:143
+#: comptes/forms.py:214 mentorat/templates/mentorat/detail_mentor.html:143
 msgid "Ville"
 msgstr ""
 
-#: comptes/forms.py:215
+#: comptes/forms.py:216
 msgid "Domaine d'études"
 msgstr ""
 
-#: comptes/models.py:36
+#: comptes/forms.py:246
+msgid "Votre adresse email"
+msgstr ""
+
+#: comptes/models.py:36 mentorat/models.py:269
 msgid "Lycée"
 msgstr ""
 
@@ -1107,27 +1136,27 @@ msgstr ""
 msgid "Licence"
 msgstr ""
 
-#: comptes/models.py:38
+#: comptes/models.py:38 mentorat/models.py:271
 msgid "Master"
 msgstr ""
 
-#: comptes/models.py:39
+#: comptes/models.py:39 mentorat/models.py:272
 msgid "Doctorat"
 msgstr ""
 
-#: comptes/models.py:40
+#: comptes/models.py:40 mentorat/models.py:273
 msgid "Professionnel"
 msgstr ""
 
-#: comptes/models.py:41
+#: comptes/models.py:41 mentorat/models.py:30 mentorat/models.py:259
 msgid "Autre"
 msgstr ""
 
-#: comptes/models.py:100
+#: comptes/models.py:112
 msgid "Profil"
 msgstr ""
 
-#: comptes/models.py:101
+#: comptes/models.py:113
 msgid "Profils"
 msgstr ""
 
@@ -1143,7 +1172,7 @@ msgstr ""
 msgid "Changer le mot de passe"
 msgstr ""
 
-#: comptes/templates/comptes/connexion.html:3 templates/base.html:324
+#: comptes/templates/comptes/connexion.html:3 templates/base.html:325
 msgid "Connexion"
 msgstr ""
 
@@ -1169,7 +1198,7 @@ msgstr ""
 
 #: comptes/templates/comptes/connexion.html:140
 #: cours/templates/cours/detail.html:52 pages/templates/pages/a_propos.html:409
-#: templates/base.html:366
+#: templates/base.html:367
 msgid "S'inscrire gratuitement"
 msgstr ""
 
@@ -1225,7 +1254,7 @@ msgstr ""
 msgid "Nouveau cours"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:362
+#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:363
 msgid "Mon profil"
 msgstr ""
 
@@ -1234,7 +1263,7 @@ msgid "Cours inscrits"
 msgstr ""
 
 #: comptes/templates/comptes/tableau_de_bord.html:65
-#: formation/templates/formation/mes_formations.html:65
+#: formation/templates/formation/mes_formations.html:65 mentorat/models.py:460
 msgid "En cours"
 msgstr ""
 
@@ -1282,57 +1311,84 @@ msgstr ""
 msgid "Pour toi"
 msgstr ""
 
-#: comptes/views.py:24
-#, python-brace-format
-msgid "Bienvenue sur Numeria, {first_name} ! 🎓"
+#: comptes/views.py:30
+msgid ""
+"✅ Ton compte a été créé. Vérifie ta boîte email pour activer ton accès."
 msgstr ""
 
-#: comptes/views.py:27
+#: comptes/views.py:33 comptes/views.py:264
 msgid "Veuillez corriger les erreurs ci-dessous."
 msgstr ""
 
-#: comptes/views.py:49
+#: comptes/views.py:53
+msgid "Ton compte est déjà activé. Connecte-toi pour continuer."
+msgstr ""
+
+#: comptes/views.py:60
+msgid "🎉 Ton adresse email est confirmée. Bienvenue sur Numeria !"
+msgstr ""
+
+#: comptes/views.py:72
+#, python-brace-format
+msgid ""
+"Un nouvel email de confirmation a été envoyé à {email}. Vérifie ta boîte de "
+"réception."
+msgstr ""
+
+#: comptes/views.py:75
+msgid "Ce compte est déjà activé. Connecte-toi pour continuer."
+msgstr ""
+
+#: comptes/views.py:77
+msgid "Aucun compte actif n'a été trouvé pour cette adresse email."
+msgstr ""
+
+#: comptes/views.py:99
 #, python-brace-format
 msgid "Bon retour, {first_name} ! 👋"
 msgstr ""
 
-#: comptes/views.py:56
+#: comptes/views.py:106
 msgid "Nom d'utilisateur ou mot de passe incorrect."
 msgstr ""
 
-#: comptes/views.py:68
+#: comptes/views.py:118
 #, python-brace-format
 msgid "À bientôt, {prenom} ! 👋"
 msgstr ""
 
-#: comptes/views.py:134
+#: comptes/views.py:184
 msgid "Ton profil a été mis à jour ! ✅"
 msgstr ""
 
-#: comptes/views.py:150
+#: comptes/views.py:200
 msgid ""
 "Profil mis à jour, mais la photo n'a pas pu être enregistrée (Cloudinary non "
 "configuré)."
 msgstr ""
 
-#: comptes/views.py:156
+#: comptes/views.py:206
 msgid "Veuillez corriger les erreurs."
 msgstr ""
 
-#: comptes/views.py:189
+#: comptes/views.py:239
 msgid "Ta photo de profil a été supprimée. ✅"
 msgstr ""
 
-#: comptes/views.py:191
+#: comptes/views.py:241
 msgid "Tu n'as pas de photo de profil à supprimer."
 msgstr ""
 
-#: comptes/views.py:231
+#: comptes/views.py:261
+msgid "Ton mot de passe a été changé avec succès ! 🔐"
+msgstr ""
+
+#: comptes/views.py:281
 #, python-brace-format
 msgid "Ton compte a été supprimé, {prenom}. Nous espérons te revoir ! 👋"
 msgstr ""
 
-#: comptes/views.py:234
+#: comptes/views.py:284
 msgid "Mot de passe incorrect. Ton compte n'a pas été supprimé."
 msgstr ""
 
@@ -1373,7 +1429,7 @@ msgstr ""
 #: cours/templates/cours/detail.html:52 cours/templates/cours/detail.html:226
 #: cours/templates/cours/detail.html:297 cours/templates/cours/detail.html:786
 #: formation/templates/formation/detail_formation.html:194
-#: formation/templates/formation/detail_session.html:46 templates/base.html:328
+#: formation/templates/formation/detail_session.html:46 templates/base.html:329
 msgid "S'inscrire"
 msgstr ""
 
@@ -1436,6 +1492,89 @@ msgstr ""
 msgid "Découvrir nos cours"
 msgstr ""
 
+#: cours/views.py:175
+#, python-format
+msgid "Tu es déjà inscrit au cours « %(titre)s » ! 📚"
+msgstr ""
+
+#: cours/views.py:186
+#, python-format
+msgid "🎉 Bienvenue dans le cours « %(titre)s » !"
+msgstr ""
+
+#: cours/views.py:207
+#, python-format
+msgid "Tu t'es désinscrit du cours « %(titre)s » ."
+msgstr ""
+
+#: cours/views.py:209 cours/views.py:228 cours/views.py:328
+msgid "Tu n'es pas inscrit à ce cours."
+msgstr ""
+
+#: cours/views.py:250
+#, python-format
+msgid "🎉 Félicitations ! Tu as terminé le cours « %(titre)s » !"
+msgstr ""
+
+#: cours/views.py:255
+#, python-format
+msgid "✅ Leçon terminée ! Progression : %(pct)s%%"
+msgstr ""
+
+#: cours/views.py:259
+msgid "Cette leçon était déjà marquée comme terminée."
+msgstr ""
+
+#: cours/views.py:303
+msgid "Leçon marquée comme non terminée."
+msgstr ""
+
+#: cours/views.py:335
+msgid "Réponse invalide."
+msgstr ""
+
+#: cours/views.py:390
+msgid "Les certificats sont réservés aux cours payants."
+msgstr ""
+
+#: cours/views.py:452
+msgid "Vous devez terminer le cours avant de le noter."
+msgstr ""
+
+#: cours/views.py:459
+msgid "La note doit être entre 1 et 5."
+msgstr ""
+
+#: cours/views.py:474
+msgid "✅ Merci pour votre évaluation !"
+msgstr ""
+
+#: cours/views.py:476
+#, python-format
+msgid "Erreur lors de l'évaluation : %(err)s"
+msgstr ""
+
+#: cours/views.py:495
+msgid "Vous devez être inscrit au cours pour poser une question."
+msgstr ""
+
+#: cours/views.py:502
+msgid "La question doit contenir au moins 5 caractères."
+msgstr ""
+
+#: cours/views.py:505
+msgid "La question ne peut pas dépasser 500 caractères."
+msgstr ""
+
+#: cours/views.py:517
+msgid "✅ Votre question a été soumise et sera modérée par un admin."
+msgstr ""
+
+#: cours/views.py:519
+#, python-format
+msgid "Erreur lors de la soumission : %(err)s"
+msgstr ""
+
 #: env/lib/python3.12/site-packages/cloudinary/forms.py:55
 #: env/lib/python3.12/site-packages/cloudinary/forms.py:124
 msgid "No file selected!"
@@ -1443,10 +1582,6 @@ msgstr ""
 
 #: env/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
 msgid "Site Maps"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/contrib/staticfiles/apps.py:9
-msgid "Static Files"
 msgstr ""
 
 #: env/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
@@ -2979,7 +3114,8 @@ msgstr ""
 msgid "Complétée le"
 msgstr ""
 
-#: formation/templates/formation/mes_formations.html:171
+#: formation/templates/formation/mes_formations.html:171 mentorat/forms.py:16
+#: mentorat/models.py:152
 msgid "Certificat"
 msgstr ""
 
@@ -3024,10 +3160,15 @@ msgid "Détails de l'inscription"
 msgstr ""
 
 #: formation/templates/formation/paiement.html:46
+#: paiements/templates/paiements/confirmation.html:42
 msgid "Session"
 msgstr ""
 
-#: formation/templates/formation/paiement.html:59 templates/video_room.html:759
+#: formation/templates/formation/paiement.html:59 templates/video_room.html:619
+#: templates/video_room.html:668 templates/video_room.html:892
+#: templates/video_room.html:897 templates/video_room.html:1079
+#: templates/video_room.html:1095 templates/video_room.html:1103
+#: templates/video_room.html:1116
 msgid "Participant"
 msgstr ""
 
@@ -3069,7 +3210,7 @@ msgid ""
 "au paiement pour cette inscription."
 msgstr ""
 
-#: formation/templates/formation/paiement.html:150 templates/video_room.html:23
+#: formation/templates/formation/paiement.html:150 templates/video_room.html:26
 msgid "Retour"
 msgstr ""
 
@@ -3213,6 +3354,620 @@ msgstr ""
 msgid "leçons"
 msgstr ""
 
+#: formation/views.py:175
+msgid "Cette session n'est plus ouverte aux inscriptions."
+msgstr ""
+
+#: formation/views.py:182
+msgid "Vous êtes déjà inscrit à cette session."
+msgstr ""
+
+#: formation/views.py:193
+msgid "Inscription créée. Veuillez effectuer le paiement."
+msgstr ""
+
+#: formation/views.py:239
+msgid "Votre accès à cette formation a expiré."
+msgstr ""
+
+#: formation/views.py:311
+msgid "Ce certificat a expiré."
+msgstr ""
+
+#: mentorat/admin.py:41
+#, python-format
+msgid "%(count)d demandes acceptées."
+msgstr ""
+
+#: mentorat/admin.py:42
+msgid "Accepter les demandes sélectionnées"
+msgstr ""
+
+#: mentorat/admin.py:47
+#, python-format
+msgid "%(count)d demandes refusées."
+msgstr ""
+
+#: mentorat/admin.py:48
+msgid "Refuser les demandes sélectionnées"
+msgstr ""
+
+#: mentorat/admin.py:81
+msgid "Confirmer les paiements sélectionnés"
+msgstr ""
+
+#: mentorat/forms.py:11
+msgid "Le fichier dépasse la taille maximale de 5MB."
+msgstr ""
+
+#: mentorat/forms.py:18
+msgid "PDF, JPG, PNG, ou JPEG. Taille max 5MB."
+msgstr ""
+
+#: mentorat/forms.py:21 mentorat/models.py:147
+msgid "CV"
+msgstr ""
+
+#: mentorat/forms.py:23
+msgid "PDF, DOC, DOCX. Taille max 5MB."
+msgstr ""
+
+#: mentorat/forms.py:45
+msgid ""
+"Décrivez votre parcours, vos compétences et pourquoi vous souhaitez mentorer."
+msgstr ""
+
+#: mentorat/forms.py:49
+msgid "Ex: Data Science, Python, Carrière tech"
+msgstr ""
+
+#: mentorat/forms.py:53
+msgid "Ex: Twitter.com/moncompte, Instagram.com/moncompte"
+msgstr ""
+
+#: mentorat/forms.py:57
+msgid "Séparez les sujets par des virgules."
+msgstr ""
+
+#: mentorat/forms.py:58
+msgid "Optionnel, séparez les liens par des virgules."
+msgstr ""
+
+#: mentorat/forms.py:66
+msgid "Un certificat est requis."
+msgstr ""
+
+#: mentorat/forms.py:68
+msgid "Un CV est requis."
+msgstr ""
+
+#: mentorat/forms.py:73
+msgid "LinkedIn"
+msgstr ""
+
+#: mentorat/forms.py:74
+msgid "GitHub"
+msgstr ""
+
+#: mentorat/forms.py:92
+msgid ""
+"Parlez de votre expertise, de vos succès et de la façon dont vous "
+"accompagnez vos mentorés."
+msgstr ""
+
+#: mentorat/forms.py:95
+msgid "Ex: leadership, product management, entretien technique"
+msgstr ""
+
+#: mentorat/forms.py:98
+msgid "Ex: Français, Anglais"
+msgstr ""
+
+#: mentorat/forms.py:102
+msgid "Entrez un tarif par séance en FCFA."
+msgstr ""
+
+#: mentorat/forms.py:103
+msgid "Mots-clés ou catégories de mentorat séparés par des virgules."
+msgstr ""
+
+#: mentorat/forms.py:145
+msgid ""
+"Décrivez votre parcours, vos expériences, et vos motivations à devenir "
+"mentor..."
+msgstr ""
+
+#: mentorat/forms.py:149
+msgid "0"
+msgstr ""
+
+#: mentorat/forms.py:153
+#, python-format
+msgid ""
+"Laissez 0 si votre mentorat est gratuit. Numeria prélève 20% de commission "
+"sur chaque séance payante."
+msgstr ""
+
+#: mentorat/forms.py:166
+msgid "Ex: TM2504120001..."
+msgstr ""
+
+#: mentorat/forms.py:185
+msgid ""
+"Décrivez vos objectifs, vos difficultés actuelles, et ce que vous attendez "
+"de votre mentor..."
+msgstr ""
+
+#: mentorat/forms.py:200
+msgid ""
+"Présentez-vous brièvement et expliquez pourquoi vous souhaitez ce mentor..."
+msgstr ""
+
+#: mentorat/forms.py:220
+msgid "datetime-local"
+msgstr ""
+
+#: mentorat/forms.py:224
+msgid "Description de la séance..."
+msgstr ""
+
+#: mentorat/forms.py:237 mentorat/forms.py:246
+msgid "Vos notes sur la séance..."
+msgstr ""
+
+#: mentorat/forms.py:239 mentorat/models.py:488
+#: mentorat/templates/mentorat/detail_relation.html:197
+#: mentorat/templates/mentorat/terminer_seance.html:39
+msgid "Notes du mentor"
+msgstr ""
+
+#: mentorat/forms.py:248 mentorat/models.py:492
+#: mentorat/templates/mentorat/detail_relation.html:203
+#: mentorat/templates/mentorat/terminer_seance.html:50
+msgid "Notes du mentoré"
+msgstr ""
+
+#: mentorat/models.py:21
+msgid "Informatique"
+msgstr ""
+
+#: mentorat/models.py:22
+msgid "Mathématiques"
+msgstr ""
+
+#: mentorat/models.py:23
+msgid "Physique"
+msgstr ""
+
+#: mentorat/models.py:24
+msgid "Chimie"
+msgstr ""
+
+#: mentorat/models.py:25
+msgid "Biologie"
+msgstr ""
+
+#: mentorat/models.py:26
+msgid "Ingénierie"
+msgstr ""
+
+#: mentorat/models.py:27
+msgid "Data Science"
+msgstr ""
+
+#: mentorat/models.py:28
+msgid "Intelligence Artificielle"
+msgstr ""
+
+#: mentorat/models.py:29
+msgid "Entrepreneuriat"
+msgstr ""
+
+#: mentorat/models.py:35
+msgid "Domaine d'expertise"
+msgstr ""
+
+#: mentorat/models.py:40
+msgid "Débutant (1-2 ans)"
+msgstr ""
+
+#: mentorat/models.py:41
+msgid "Intermédiaire (3-5 ans)"
+msgstr ""
+
+#: mentorat/models.py:42
+msgid "Avancé (6-10 ans)"
+msgstr ""
+
+#: mentorat/models.py:43
+msgid "Expert (+10 ans)"
+msgstr ""
+
+#: mentorat/models.py:48
+msgid "Niveau d'expérience"
+msgstr ""
+
+#: mentorat/models.py:53
+msgid "1-2 heures par semaine"
+msgstr ""
+
+#: mentorat/models.py:54
+msgid "3-4 heures par semaine"
+msgstr ""
+
+#: mentorat/models.py:55
+msgid "Plus de 5 heures par semaine"
+msgstr ""
+
+#: mentorat/models.py:60 mentorat/templates/mentorat/detail_relation.html:139
+msgid "Disponibilité"
+msgstr ""
+
+#: mentorat/models.py:66
+msgid "Biographie de mentor"
+msgstr ""
+
+#: mentorat/models.py:67
+msgid "Décrivez votre parcours, vos motivations à devenir mentor..."
+msgstr ""
+
+#: mentorat/models.py:73 mentorat/models.py:135
+msgid "Titre professionnel"
+msgstr ""
+
+#: mentorat/models.py:74
+msgid "Ex: Coach en Data Science, Ingénieur logiciel senior..."
+msgstr ""
+
+#: mentorat/models.py:79
+msgid "Catégories de mentorat"
+msgstr ""
+
+#: mentorat/models.py:80
+msgid "Liste courte des sujets séparés par des virgules."
+msgstr ""
+
+#: mentorat/models.py:85
+msgid "Langues parlées"
+msgstr ""
+
+#: mentorat/models.py:86
+msgid "Ex: Français, Anglais."
+msgstr ""
+
+#: mentorat/models.py:93
+msgid "Tarif par séance (FCFA)"
+msgstr ""
+
+#: mentorat/models.py:94
+#, python-format
+msgid "0 = mentorat gratuit. Numeria prélevé 20% de commission."
+msgstr ""
+
+#: mentorat/models.py:98
+msgid "Actif comme mentor"
+msgstr ""
+
+#: mentorat/models.py:106 mentorat/templates/mentorat/detail_mentor.html:3
+#: mentorat/templates/mentorat/detail_relation.html:44
+#: mentorat/templates/mentorat/detail_relation.html:127
+#: mentorat/templates/mentorat/terminer_relation.html:52
+msgid "Mentor"
+msgstr ""
+
+#: mentorat/models.py:107
+msgid "Mentors"
+msgstr ""
+
+#: mentorat/models.py:122 mentorat/models.py:321
+msgid "En attente"
+msgstr ""
+
+#: mentorat/models.py:123
+msgid "Approuvé"
+msgstr ""
+
+#: mentorat/models.py:124
+msgid "Rejeté"
+msgstr ""
+
+#: mentorat/models.py:139
+msgid "Biographie professionnelle"
+msgstr ""
+
+#: mentorat/models.py:142
+msgid "Expertise / catégories"
+msgstr ""
+
+#: mentorat/models.py:143
+msgid "Séparez les thèmes par des virgules."
+msgstr ""
+
+#: mentorat/models.py:148
+msgid "PDF, JPG, PNG, DOCX. Taille max 5MB."
+msgstr ""
+
+#: mentorat/models.py:153
+msgid "Un document de certification est requis."
+msgstr ""
+
+#: mentorat/models.py:155
+msgid "Profil LinkedIn"
+msgstr ""
+
+#: mentorat/models.py:156
+msgid "Site portfolio"
+msgstr ""
+
+#: mentorat/models.py:157
+msgid "Profil GitHub"
+msgstr ""
+
+#: mentorat/models.py:162
+msgid "Lettre de recommandation"
+msgstr ""
+
+#: mentorat/models.py:163 mentorat/models.py:170
+msgid "Optionnel"
+msgstr ""
+
+#: mentorat/models.py:169
+msgid "Documents supplémentaires"
+msgstr ""
+
+#: mentorat/models.py:174
+msgid "Réseaux sociaux"
+msgstr ""
+
+#: mentorat/models.py:175
+msgid "Liens vers d’autres profils sociaux, séparés par des virgules."
+msgstr ""
+
+#: mentorat/models.py:181
+msgid "Statut de la candidature"
+msgstr ""
+
+#: mentorat/models.py:183
+msgid "Notes de rejet"
+msgstr ""
+
+#: mentorat/models.py:190
+msgid "Candidature Mentor"
+msgstr ""
+
+#: mentorat/models.py:191
+msgid "Candidatures Mentors"
+msgstr ""
+
+#: mentorat/models.py:255
+msgid "Orientation professionnelle"
+msgstr ""
+
+#: mentorat/models.py:256
+msgid "Développement de compétences"
+msgstr ""
+
+#: mentorat/models.py:257
+msgid "Conseils carrière"
+msgstr ""
+
+#: mentorat/models.py:258
+msgid "Accompagnement projet"
+msgstr ""
+
+#: mentorat/models.py:264
+msgid "Objectifs principaux"
+msgstr ""
+
+#: mentorat/models.py:270
+msgid "Licence/Bachelor"
+msgstr ""
+
+#: mentorat/models.py:284
+msgid "Besoins spécifiques"
+msgstr ""
+
+#: mentorat/models.py:285
+msgid "Décrivez ce que vous attendez de votre mentor..."
+msgstr ""
+
+#: mentorat/models.py:289
+msgid "Recherche un mentor"
+msgstr ""
+
+#: mentorat/models.py:296 mentorat/templates/mentorat/detail_relation.html:64
+#: mentorat/templates/mentorat/terminer_relation.html:58
+msgid "Mentoré"
+msgstr ""
+
+#: mentorat/models.py:297
+msgid "Mentorés"
+msgstr ""
+
+#: mentorat/models.py:322
+msgid "Acceptée"
+msgstr ""
+
+#: mentorat/models.py:323
+msgid "Refusée"
+msgstr ""
+
+#: mentorat/models.py:324 mentorat/models.py:461
+msgid "Terminée"
+msgstr ""
+
+#: mentorat/models.py:336
+msgid "Message au mentor"
+msgstr ""
+
+#: mentorat/models.py:337
+msgid "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor..."
+msgstr ""
+
+#: mentorat/models.py:345 mentorat/templates/mentorat/demander_mentorat.html:18
+msgid "Demande de mentorat"
+msgstr ""
+
+#: mentorat/models.py:346
+#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:81
+msgid "Demandes de mentorat"
+msgstr ""
+
+#: mentorat/models.py:406
+msgid "Objectifs de la relation"
+msgstr ""
+
+#: mentorat/models.py:410 mentorat/templates/mentorat/detail_relation.html:3
+#: mentorat/templates/mentorat/detail_relation.html:29
+msgid "Relation de mentorat"
+msgstr ""
+
+#: mentorat/models.py:411
+msgid "Relations de mentorat"
+msgstr ""
+
+#: mentorat/models.py:443 mentorat/templates/mentorat/planifier_seance.html:41
+msgid "Titre de la séance"
+msgstr ""
+
+#: mentorat/models.py:451 mentorat/templates/mentorat/planifier_seance.html:66
+msgid "Date et heure"
+msgstr ""
+
+#: mentorat/models.py:454 mentorat/templates/mentorat/planifier_seance.html:76
+msgid "Durée (minutes)"
+msgstr ""
+
+#: mentorat/models.py:459
+msgid "Planifiée"
+msgstr ""
+
+#: mentorat/models.py:462
+msgid "Annulée"
+msgstr ""
+
+#: mentorat/models.py:473
+msgid "Présentiel"
+msgstr ""
+
+#: mentorat/models.py:474 mentorat/templates/mentorat/video_seance.html:4
+#: mentorat/templates/mentorat/video_seance.html:16
+msgid "Visioconférence"
+msgstr ""
+
+#: mentorat/models.py:476 pages/templates/pages/a_propos.html:350
+msgid "Email"
+msgstr ""
+
+#: mentorat/models.py:482 mentorat/templates/mentorat/planifier_seance.html:86
+#: mentorat/templates/mentorat/video_seance.html:66
+msgid "Modalité"
+msgstr ""
+
+#: mentorat/models.py:500
+msgid "Séance de mentorat"
+msgstr ""
+
+#: mentorat/models.py:501
+msgid "Séances de mentorat"
+msgstr ""
+
+#: mentorat/models.py:543
+msgid "Montant total (FCFA)"
+msgstr ""
+
+#: mentorat/models.py:544
+msgid "Commission Numeria (FCFA)"
+msgstr ""
+
+#: mentorat/models.py:545
+msgid "Part mentor (FCFA)"
+msgstr ""
+
+#: mentorat/models.py:549
+msgid "En attente de paiement"
+msgstr ""
+
+#: mentorat/models.py:550
+msgid "Preuve soumise"
+msgstr ""
+
+#: mentorat/models.py:551
+msgid "Confirmé"
+msgstr ""
+
+#: mentorat/models.py:552
+msgid "Échec / Annulé"
+msgstr ""
+
+#: mentorat/models.py:559
+msgid "Référence mobile money"
+msgstr ""
+
+#: mentorat/models.py:560
+msgid "Numéro de transaction TMoney / Flooz / autre"
+msgstr ""
+
+#: mentorat/models.py:565 mentorat/templates/mentorat/paiement_seance.html:193
+msgid "Capture d'écran du paiement"
+msgstr ""
+
+#: mentorat/models.py:571
+msgid "Paiement flaggé comme suspect"
+msgstr ""
+
+#: mentorat/models.py:572
+msgid "En escrow pour vérification admin"
+msgstr ""
+
+#: mentorat/models.py:576
+msgid "Raisons du flagging"
+msgstr ""
+
+#: mentorat/models.py:577
+msgid "Séparées par |"
+msgstr ""
+
+#: mentorat/models.py:581
+msgid "Date de déblocage (escrow)"
+msgstr ""
+
+#: mentorat/models.py:582
+msgid "Après cette date, si pas de contestation, débloquer"
+msgstr ""
+
+#: mentorat/models.py:586
+msgid "Date de soumission de preuve"
+msgstr ""
+
+#: mentorat/models.py:590
+msgid "Raison de l'échec/contestation"
+msgstr ""
+
+#: mentorat/models.py:594
+msgid "Signature HMAC du mentoré"
+msgstr ""
+
+#: mentorat/models.py:595
+msgid "Empêche modification du montant"
+msgstr ""
+
+#: mentorat/models.py:601
+msgid "IP du mentoré (audit)"
+msgstr ""
+
+#: mentorat/models.py:605
+msgid "User-Agent (audit)"
+msgstr ""
+
+#: mentorat/models.py:613
+msgid "Paiement de séance"
+msgstr ""
+
+#: mentorat/models.py:614
+msgid "Paiements de séances"
+msgstr ""
+
 #: mentorat/templates/mentorat/demander_mentorat.html:3
 #: mentorat/templates/mentorat/demander_mentorat.html:20
 msgid "Demander un mentorat"
@@ -3224,10 +3979,6 @@ msgstr ""
 
 #: mentorat/templates/mentorat/demander_mentorat.html:14
 msgid "Retour au profil du mentor"
-msgstr ""
-
-#: mentorat/templates/mentorat/demander_mentorat.html:18
-msgid "Demande de mentorat"
 msgstr ""
 
 #: mentorat/templates/mentorat/demander_mentorat.html:21
@@ -3265,13 +4016,6 @@ msgstr ""
 
 #: mentorat/templates/mentorat/demander_mentorat.html:91
 msgid "Envoyer la demande"
-msgstr ""
-
-#: mentorat/templates/mentorat/detail_mentor.html:3
-#: mentorat/templates/mentorat/detail_relation.html:44
-#: mentorat/templates/mentorat/detail_relation.html:127
-#: mentorat/templates/mentorat/terminer_relation.html:52
-msgid "Mentor"
 msgstr ""
 
 #: mentorat/templates/mentorat/detail_mentor.html:4
@@ -3315,19 +4059,14 @@ msgstr ""
 
 #: mentorat/templates/mentorat/detail_mentor.html:150
 #: mentorat/templates/mentorat/detail_relation.html:131
-#: mentorat/templates/mentorat/liste_mentors.html:39
+#: mentorat/templates/mentorat/liste_mentors.html:44
 msgid "Domaine"
 msgstr ""
 
 #: mentorat/templates/mentorat/detail_mentor.html:159
 #: mentorat/templates/mentorat/detail_mentor.html:167
-#: mentorat/templates/mentorat/liste_mentors.html:142
+#: mentorat/templates/mentorat/liste_mentors.html:147
 msgid "Voir le profil"
-msgstr ""
-
-#: mentorat/templates/mentorat/detail_relation.html:3
-#: mentorat/templates/mentorat/detail_relation.html:29
-msgid "Relation de mentorat"
 msgstr ""
 
 #: mentorat/templates/mentorat/detail_relation.html:4
@@ -3344,11 +4083,6 @@ msgstr ""
 
 #: mentorat/templates/mentorat/detail_relation.html:25
 msgid "Relation active"
-msgstr ""
-
-#: mentorat/templates/mentorat/detail_relation.html:64
-#: mentorat/templates/mentorat/terminer_relation.html:58
-msgid "Mentoré"
 msgstr ""
 
 #: mentorat/templates/mentorat/detail_relation.html:82
@@ -3381,26 +4115,12 @@ msgid "Objectifs"
 msgstr ""
 
 #: mentorat/templates/mentorat/detail_relation.html:135
-#: mentorat/templates/mentorat/liste_mentors.html:50
+#: mentorat/templates/mentorat/liste_mentors.html:55
 msgid "Expérience"
-msgstr ""
-
-#: mentorat/templates/mentorat/detail_relation.html:139
-msgid "Disponibilité"
 msgstr ""
 
 #: mentorat/templates/mentorat/detail_relation.html:170
 msgid "min"
-msgstr ""
-
-#: mentorat/templates/mentorat/detail_relation.html:197
-#: mentorat/templates/mentorat/terminer_seance.html:39
-msgid "Notes du mentor"
-msgstr ""
-
-#: mentorat/templates/mentorat/detail_relation.html:203
-#: mentorat/templates/mentorat/terminer_seance.html:50
-msgid "Notes du mentoré"
 msgstr ""
 
 #: mentorat/templates/mentorat/detail_relation.html:216
@@ -3426,9 +4146,9 @@ msgstr ""
 
 #: mentorat/templates/mentorat/devenir_mentee.html:3
 #: mentorat/templates/mentorat/devenir_mentee.html:20
-#: mentorat/templates/mentorat/index.html:122
+#: mentorat/templates/mentorat/index.html:144
 #: mentorat/templates/mentorat/liste_mentors.html:3
-#: mentorat/templates/mentorat/liste_mentors.html:21
+#: mentorat/templates/mentorat/liste_mentors.html:26
 msgid "Trouver un Mentor"
 msgstr ""
 
@@ -3455,9 +4175,6 @@ msgstr ""
 
 #: mentorat/templates/mentorat/devenir_mentee.html:40
 #: mentorat/templates/mentorat/devenir_mentee.html:58
-#: mentorat/templates/mentorat/devenir_mentor.html:40
-#: mentorat/templates/mentorat/devenir_mentor.html:58
-#: mentorat/templates/mentorat/devenir_mentor.html:76
 #: mentorat/templates/mentorat/planifier_seance.html:89
 msgid "Sélectionner"
 msgstr ""
@@ -3468,8 +4185,7 @@ msgstr ""
 
 #: mentorat/templates/mentorat/devenir_mentor.html:3
 #: mentorat/templates/mentorat/devenir_mentor.html:20
-#: mentorat/templates/mentorat/devenir_mentor.html:120
-#: mentorat/templates/mentorat/index.html:84
+#: mentorat/templates/mentorat/index.html:92
 msgid "Devenir Mentor"
 msgstr ""
 
@@ -3528,103 +4244,115 @@ msgid ""
 "accompagnement, il y a une place pour vous."
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:72
+#: mentorat/templates/mentorat/index.html:69
+msgid "Gérer candidatures mentor"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:80
 msgid "Mentor actif"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:74
+#: mentorat/templates/mentorat/index.html:82
 msgid "Mon Espace Mentor"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:76
+#: mentorat/templates/mentorat/index.html:84
 msgid ""
 "Gérez vos mentorés, planifiez des séances et suivez vos revenus depuis votre "
 "tableau de bord."
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:81
-#: mentorat/templates/mentorat/index.html:119
+#: mentorat/templates/mentorat/index.html:89
+#: mentorat/templates/mentorat/index.html:141
 msgid "Mon tableau de bord"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:86
+#: mentorat/templates/mentorat/index.html:94
 msgid ""
 "Partagez votre expertise et aidez la nouvelle génération à réussir. Faites "
 "la différence dans la vie d'un apprenant."
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:92
+#: mentorat/templates/mentorat/index.html:101
+msgid "Voir ma candidature"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:107
+msgid "Réviser ma candidature"
+msgstr ""
+
+#: mentorat/templates/mentorat/index.html:113
 msgid "S'inscrire comme mentor"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:98
+#: mentorat/templates/mentorat/index.html:120
 msgid "Se connecter pour devenir mentor"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:110
+#: mentorat/templates/mentorat/index.html:132
 msgid "Mentoré inscrit"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:112
+#: mentorat/templates/mentorat/index.html:134
 msgid "Mon Espace Mentoré"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:114
+#: mentorat/templates/mentorat/index.html:136
 msgid ""
 "Retrouvez vos séances planifiées, vos mentors et l'avancement de votre "
 "parcours d'apprentissage."
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:124
+#: mentorat/templates/mentorat/index.html:146
 msgid ""
 "Bénéficiez de conseils personnalisés d'experts dans votre domaine. Accélérez "
 "votre apprentissage et votre carrière."
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:130
+#: mentorat/templates/mentorat/index.html:152
 msgid "S'inscrire comme mentoré"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:136
+#: mentorat/templates/mentorat/index.html:158
 msgid "Se connecter pour trouver un mentor"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:151
+#: mentorat/templates/mentorat/index.html:173
 msgid "En 3 étapes"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:153
+#: mentorat/templates/mentorat/index.html:175
 msgid "Comment ça marche ?"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:163
+#: mentorat/templates/mentorat/index.html:185
 msgid "Inscrivez-vous"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:165
+#: mentorat/templates/mentorat/index.html:187
 msgid ""
 "Créez votre profil de mentor ou de mentoré selon vos besoins et objectifs."
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:173
+#: mentorat/templates/mentorat/index.html:195
 msgid "Connectez-vous"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:175
+#: mentorat/templates/mentorat/index.html:197
 msgid ""
 "Les mentors et mentorés sont mis en relation selon leurs profils et domaines."
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:183
+#: mentorat/templates/mentorat/index.html:205
 msgid "Échangez"
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:185
+#: mentorat/templates/mentorat/index.html:207
 msgid ""
 "Planifiez des séances et bénéficiez de conseils personnalisés sur mesure."
 msgstr ""
 
-#: mentorat/templates/mentorat/index.html:199
+#: mentorat/templates/mentorat/index.html:221
 msgid "Voir tous les mentors disponibles"
 msgstr ""
 
@@ -3635,64 +4363,69 @@ msgid ""
 msgstr ""
 
 #: mentorat/templates/mentorat/liste_mentors.html:19
+msgid "Tableau de bord mentoring"
+msgstr ""
+
+#: mentorat/templates/mentorat/liste_mentors.html:24
 msgid "Mentors disponibles"
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:22
+#: mentorat/templates/mentorat/liste_mentors.html:27
 msgid "Parcourez nos mentors et demandez un accompagnement personnalisé."
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:32
+#: mentorat/templates/mentorat/liste_mentors.html:37
 #: pages/templates/pages/a_propos.html:221
 #: pages/templates/pages/a_propos.html:242
 msgid "Recherche"
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:34
+#: mentorat/templates/mentorat/liste_mentors.html:39
 msgid "Nom, prénom..."
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:42
+#: mentorat/templates/mentorat/liste_mentors.html:47
 msgid "Tous les domaines"
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:53
+#: mentorat/templates/mentorat/liste_mentors.html:58
 msgid "Tous niveaux"
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:64
+#: mentorat/templates/mentorat/liste_mentors.html:69
 msgid "Filtrer"
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:68
+#: mentorat/templates/mentorat/liste_mentors.html:73
+#: templates/registration/password_reset_confirm.html:10
 msgid "Réinitialiser"
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:124
+#: mentorat/templates/mentorat/liste_mentors.html:129
 msgid "actif(s)"
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:125
+#: mentorat/templates/mentorat/liste_mentors.html:130
 msgid "total"
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:147
+#: mentorat/templates/mentorat/liste_mentors.html:152
 msgid "Demander"
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:158
+#: mentorat/templates/mentorat/liste_mentors.html:163
 msgid "Aucun mentor trouvé"
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:160
+#: mentorat/templates/mentorat/liste_mentors.html:165
 msgid "Essayez d'autres critères de recherche."
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:163
+#: mentorat/templates/mentorat/liste_mentors.html:168
 msgid "Réinitialiser les filtres"
 msgstr ""
 
-#: mentorat/templates/mentorat/liste_mentors.html:179
+#: mentorat/templates/mentorat/liste_mentors.html:184
 #, python-format
 msgid "Page %(page)s / %(pages)s"
 msgstr ""
@@ -3710,6 +4443,7 @@ msgid "Séance avec"
 msgstr ""
 
 #: mentorat/templates/mentorat/paiement_seance.html:40
+#: paiements/templates/paiements/confirmation.html:30
 msgid "Récapitulatif du paiement"
 msgstr ""
 
@@ -3792,10 +4526,6 @@ msgstr ""
 msgid "Numéro de transaction fourni par votre opérateur mobile money"
 msgstr ""
 
-#: mentorat/templates/mentorat/paiement_seance.html:193
-msgid "Capture d'écran du paiement"
-msgstr ""
-
 #: mentorat/templates/mentorat/paiement_seance.html:197
 msgid "Preuve actuelle"
 msgstr ""
@@ -3820,7 +4550,7 @@ msgstr ""
 #: mentorat/templates/mentorat/planifier_seance.html:14
 #: mentorat/templates/mentorat/terminer_relation.html:14
 #: mentorat/templates/mentorat/terminer_seance.html:14
-#: mentorat/templates/mentorat/video_seance.html:13
+#: mentorat/templates/mentorat/video_seance.html:14
 msgid "Retour à la relation"
 msgstr ""
 
@@ -3829,23 +4559,6 @@ msgstr ""
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:165
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:189
 msgid "Avec"
-msgstr ""
-
-#: mentorat/templates/mentorat/planifier_seance.html:41
-msgid "Titre de la séance"
-msgstr ""
-
-#: mentorat/templates/mentorat/planifier_seance.html:66
-msgid "Date et heure"
-msgstr ""
-
-#: mentorat/templates/mentorat/planifier_seance.html:76
-msgid "Durée (minutes)"
-msgstr ""
-
-#: mentorat/templates/mentorat/planifier_seance.html:86
-#: mentorat/templates/mentorat/video_seance.html:65
-msgid "Modalité"
 msgstr ""
 
 #: mentorat/templates/mentorat/planifier_seance.html:106
@@ -3914,7 +4627,7 @@ msgstr ""
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentee.html:127
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:154
-#: mentorat/templates/mentorat/video_seance.html:20
+#: mentorat/templates/mentorat/video_seance.html:21
 msgid "Séance"
 msgstr ""
 
@@ -3971,10 +4684,6 @@ msgstr ""
 msgid "Séances payées"
 msgstr ""
 
-#: mentorat/templates/mentorat/tableau_de_bord_mentor.html:81
-msgid "Demandes de mentorat"
-msgstr ""
-
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:104
 msgid "Accepter"
 msgstr ""
@@ -4026,111 +4735,205 @@ msgstr ""
 msgid "Ajoutez vos notes sur cette séance avant de la marquer comme terminée."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:3
-#: mentorat/templates/mentorat/video_seance.html:15
-msgid "Visioconférence"
-msgstr ""
-
-#: mentorat/templates/mentorat/video_seance.html:4
+#: mentorat/templates/mentorat/video_seance.html:5
 msgid "Rejoignez la salle de visioconférence pour votre séance de mentorat."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:16
+#: mentorat/templates/mentorat/video_seance.html:17
 msgid ""
 "Rejoignez votre séance de mentorat en visioconférence. Activez votre caméra "
 "et votre micro, puis attendez que votre interlocuteur rejoigne."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:37
+#: mentorat/templates/mentorat/video_seance.html:38
 msgid "État de la session"
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:38
+#: mentorat/templates/mentorat/video_seance.html:39
 msgid "Initialisation..."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:40
-#: templates/video_room.html:79 templates/video_room.html:575
+#: mentorat/templates/mentorat/video_seance.html:41
+#: templates/video_room.html:80 templates/video_room.html:868
 msgid "Vous"
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:41
+#: mentorat/templates/mentorat/video_seance.html:42
 msgid "Interlocuteur"
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:54
+#: mentorat/templates/mentorat/video_seance.html:55
 msgid "Instructions"
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:56
+#: mentorat/templates/mentorat/video_seance.html:57
 msgid "Autorisez l'accès à votre micro et caméra."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:57
+#: mentorat/templates/mentorat/video_seance.html:58
 msgid "Restez sur cette page jusqu'à la fin de la séance."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:58
+#: mentorat/templates/mentorat/video_seance.html:59
 msgid "L'audio et la vidéo sont envoyés directement entre vos navigateurs."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:62
+#: mentorat/templates/mentorat/video_seance.html:63
+#: paiements/templates/paiements/confirmation.html:52
 msgid "Date"
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:63
+#: mentorat/templates/mentorat/video_seance.html:64
 msgid "Heure"
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:64
+#: mentorat/templates/mentorat/video_seance.html:65
 msgid "Durée"
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:64
+#: mentorat/templates/mentorat/video_seance.html:65
 msgid "minutes"
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:74
+#: mentorat/templates/mentorat/video_seance.html:75
 msgid ""
 "Pour une meilleure qualité, utilisez un casque et une connexion Wi-Fi stable."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:76
+#: mentorat/templates/mentorat/video_seance.html:77
 msgid ""
 "Si votre interlocuteur ne rejoint pas, attendez quelques instants puis "
 "actualisez la page."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:134
+#: mentorat/templates/mentorat/video_seance.html:135
 msgid "État"
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:149
+#: mentorat/templates/mentorat/video_seance.html:150
 msgid "Caméra et micro actifs. En attente d’autre participant..."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:152
+#: mentorat/templates/mentorat/video_seance.html:153
 msgid "Erreur : impossible d’accéder à la caméra ou au micro."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:167
+#: mentorat/templates/mentorat/video_seance.html:168
 msgid "Offre envoyée. En attente de la réponse de l’autre participant..."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:171
+#: mentorat/templates/mentorat/video_seance.html:172
 msgid "Connexion au serveur de signalisation établie."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:187
+#: mentorat/templates/mentorat/video_seance.html:188
 msgid "L’autre participant a quitté la séance."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:205
+#: mentorat/templates/mentorat/video_seance.html:206
 msgid "Offre reçue. Réponse envoyée."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:212
+#: mentorat/templates/mentorat/video_seance.html:213
 msgid "Réponse reçue. Connexion en cours..."
+msgstr ""
+
+#: mentorat/views.py:72 mentorat/views.py:132
+msgid "Votre profil n'est pas configuré. Veuillez contacter l'administrateur."
+msgstr ""
+
+#: mentorat/views.py:83
+msgid "Votre profil mentor a été mis à jour."
+msgstr ""
+
+#: mentorat/views.py:113
+msgid ""
+"Votre candidature a bien été envoyée. Un administrateur la validera "
+"prochainement."
+msgstr ""
+
+#: mentorat/views.py:137
+msgid "Vous êtes déjà inscrit en tant que mentoré."
+msgstr ""
+
+#: mentorat/views.py:146
+msgid "Vous êtes maintenant inscrit en tant que mentoré."
+msgstr ""
+
+#: mentorat/views.py:227
+msgid "Vous devez d'abord vous inscrire en tant que mentoré."
+msgstr ""
+
+#: mentorat/views.py:238
+msgid "Vous avez déjà une demande en cours avec ce mentor."
+msgstr ""
+
+#: mentorat/views.py:246
+msgid "Vous êtes déjà en relation de mentorat avec ce mentor."
+msgstr ""
+
+#: mentorat/views.py:256
+msgid "Votre demande de mentorat a été envoyée !"
+msgstr ""
+
+#: mentorat/views.py:273
+msgid "Vous n'êtes pas inscrit en tant que mentor."
+msgstr ""
+
+#: mentorat/views.py:364
+msgid "La candidature a été approuvée et le mentor a été activé."
+msgstr ""
+
+#: mentorat/views.py:367
+msgid "La candidature a été rejetée."
+msgstr ""
+
+#: mentorat/views.py:445
+msgid "Vous n'êtes pas inscrit en tant que mentoré."
+msgstr ""
+
+#: mentorat/views.py:483 mentorat/views.py:517 mentorat/views.py:562
+#: mentorat/views.py:588 mentorat/views.py:629 mentorat/views.py:654
+msgid "Accès non autorisé."
+msgstr ""
+
+#: mentorat/views.py:487
+msgid "Cette demande ne vous concerne pas."
+msgstr ""
+
+#: mentorat/views.py:496
+#, python-format
+msgid "Demande de %(mentee)s acceptée !"
+msgstr ""
+
+#: mentorat/views.py:499
+#, python-format
+msgid "Demande de %(mentee)s refusée."
+msgstr ""
+
+#: mentorat/views.py:535
+msgid "Séance planifiée. Veuillez procéder au paiement pour la confirmer."
+msgstr ""
+
+#: mentorat/views.py:537
+msgid "Séance planifiée avec succès !"
+msgstr ""
+
+#: mentorat/views.py:605
+msgid "Séance terminée avec succès !"
+msgstr ""
+
+#: mentorat/views.py:634
+msgid "Relation de mentorat terminée."
+msgstr ""
+
+#: mentorat/views.py:668
+msgid "Ce paiement est déjà confirmé."
+msgstr ""
+
+#: mentorat/views.py:713
+msgid ""
+"Preuve de paiement envoyée. Votre séance sera confirmée après vérification."
 msgstr ""
 
 #: numeria_project/settings.py:146
@@ -4141,7 +4944,7 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: pages/templates/pages/a_propos.html:42 templates/base.html:405
+#: pages/templates/pages/a_propos.html:42 templates/base.html:406
 msgid "Rayonnement CEDEAO"
 msgstr ""
 
@@ -4418,12 +5221,8 @@ msgstr ""
 msgid "Quartier étudiant, zone à accès facile"
 msgstr ""
 
-#: pages/templates/pages/a_propos.html:350
-msgid "Email"
-msgstr ""
-
-#: pages/templates/pages/a_propos.html:363 templates/base.html:416
-#: templates/base.html:423 templates/includes/nav_items.html:12
+#: pages/templates/pages/a_propos.html:363 templates/base.html:417
+#: templates/base.html:424 templates/includes/nav_items.html:12
 #: templates/includes/nav_items.html:25
 msgid "Contact"
 msgstr ""
@@ -4587,7 +5386,454 @@ msgid ""
 "Aucune carte bancaire requise · Cours gratuits disponibles immédiatement"
 msgstr ""
 
-#: pages/templates/pages/confidentialite.html:103
+#: pages/templates/pages/cgu.html:3 pages/templates/pages/cgu.html:13
+msgid "Conditions Générales d'Utilisation"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:4
+msgid ""
+"Conditions Générales d'Utilisation de Numeria Institute : accès à la "
+"plateforme, propriété intellectuelle, paiements et responsabilités."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:11
+#: pages/templates/pages/confidentialite.html:11
+msgid "Légal"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:15
+#: pages/templates/pages/confidentialite.html:15
+msgid "Dernière mise à jour : janvier 2026"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:23
+msgid "1. Objet"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:26
+msgid ""
+"Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et "
+"l'utilisation de la plateforme Numeria Institute, accessible à l'adresse "
+"<strong>numeriainstitute.com</strong>, exploitée par Numeria Institute, basé "
+"à Lomé, Togo."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:31
+msgid ""
+"En accédant à la plateforme, vous acceptez sans réserve les présentes CGU. "
+"Si vous n'acceptez pas ces conditions, vous devez cesser d'utiliser la "
+"plateforme."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:40
+msgid "2. Accès à la plateforme"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:43
+msgid ""
+"L'accès à la plateforme nécessite la création d'un compte avec une adresse e-"
+"mail valide."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:44
+msgid ""
+"Vous êtes responsable de la confidentialité de vos identifiants de connexion."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:45
+msgid ""
+"Numeria Institute se réserve le droit de suspendre ou supprimer tout compte "
+"en cas de violation des présentes CGU."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:46
+msgid ""
+"Certains contenus sont accessibles gratuitement ; d'autres nécessitent un "
+"paiement préalable."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:47
+msgid ""
+"La plateforme est accessible 24h/24, 7j/7, sous réserve de maintenances "
+"planifiées ou d'incidents techniques."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:54
+msgid "3. Propriété intellectuelle"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:57
+msgid ""
+"Tous les contenus présents sur la plateforme (textes, vidéos, exercices, "
+"schémas, code source, logos) sont la propriété exclusive de Numeria "
+"Institute ou de ses partenaires et sont protégés par les lois applicables en "
+"matière de propriété intellectuelle."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:62
+msgid ""
+"Toute reproduction, redistribution ou exploitation commerciale des contenus "
+"sans autorisation écrite préalable est interdite."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:63
+msgid ""
+"L'accès aux cours vous confère une licence personnelle, non cessible et non "
+"exclusive pour votre usage propre."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:64
+msgid ""
+"Les certificats délivrés par Numeria Institute sont nominatifs et ne peuvent "
+"être revendus ni transférés."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:71
+msgid "4. Responsabilités"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:73
+msgid "Responsabilités de Numeria Institute :"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:75
+msgid ""
+"Mettre à disposition des contenus de qualité et à jour dans la mesure du "
+"possible."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:76
+msgid ""
+"Garantir la sécurité des données personnelles conformément à notre politique "
+"de confidentialité."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:77
+msgid "Traiter les demandes d'assistance dans un délai raisonnable."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:79
+msgid "Responsabilités de l'utilisateur :"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:81
+msgid ""
+"Utiliser la plateforme dans le respect des lois en vigueur et des présentes "
+"CGU."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:82
+msgid "Ne pas tenter de pirater, déstabiliser ou surcharger la plateforme."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:83
+msgid "Ne pas partager ses identifiants de connexion avec des tiers."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:84
+msgid ""
+"Fournir des informations exactes lors de l'inscription et des candidatures."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:91
+msgid "5. Paiements et remboursements"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:94
+msgid ""
+"Les prix des cours et frais de candidature sont indiqués en Francs CFA (XOF) "
+"et sont TTC."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:95
+msgid ""
+"Les paiements sont traités via des prestataires sécurisés (Mobile Money, "
+"carte bancaire)."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:96
+msgid "Tout achat est définitif sauf indication contraire."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:97
+#, python-format
+msgid ""
+"Une demande de remboursement peut être soumise dans les <strong>7 jours</"
+"strong> suivant l'achat, à condition que moins de 20 %% du contenu du cours "
+"ait été consulté."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:98
+msgid ""
+"Les frais de candidature à un programme d'admission sont non remboursables "
+"une fois le dossier soumis."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:99
+msgid ""
+"Pour toute demande de remboursement, contactez : <a href=\"mailto:"
+"numeriainstitude@gmail.com\" class=\"text-numeria-teal hover:"
+"underline\">numeriainstitude@gmail.com</a>"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:106
+msgid "6. Résiliation"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:109
+msgid ""
+"Vous pouvez clôturer votre compte à tout moment depuis la section "
+"<strong>Supprimer mon compte</strong> de votre profil."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:110
+msgid ""
+"Numeria Institute se réserve le droit de résilier ou suspendre un compte "
+"sans préavis en cas de manquement grave aux présentes CGU."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:111
+msgid ""
+"En cas de résiliation, vos données sont supprimées conformément à notre "
+"politique de confidentialité."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:112
+msgid ""
+"Les accès aux cours payants sont maintenus jusqu'à la date d'expiration "
+"éventuelle ou la suppression du compte."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:119
+msgid "7. Modification des CGU"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:122
+msgid ""
+"Numeria Institute se réserve le droit de modifier les présentes CGU à tout "
+"moment. Les utilisateurs seront informés par e-mail ou par un avis sur la "
+"plateforme. La poursuite de l'utilisation de la plateforme après "
+"notification vaut acceptation des nouvelles conditions."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:131
+msgid "8. Droit applicable"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:134
+msgid ""
+"Les présentes CGU sont régies par le droit togolais. Tout litige sera soumis "
+"aux tribunaux compétents de Lomé, Togo, sauf disposition légale contraire "
+"applicable à l'utilisateur."
+msgstr ""
+
+#: pages/templates/pages/cgu.html:143
+#: pages/templates/pages/confidentialite.html:116
+msgid "← Retour à l'accueil"
+msgstr ""
+
+#: pages/templates/pages/cgu.html:144
+msgid "Politique de confidentialité →"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:3
+#: pages/templates/pages/confidentialite.html:13
+msgid "Politique de confidentialité"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:4
+msgid ""
+"Politique de confidentialité de Numeria Institute : données collectées, "
+"utilisation, cookies et droits des utilisateurs."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:22
+msgid ""
+"Numeria Institute (<strong>numeriainstitude@gmail.com</strong>) s'engage à "
+"protéger la vie privée de ses utilisateurs. La présente politique décrit "
+"quelles données nous collectons, pourquoi nous les collectons et comment "
+"vous pouvez exercer vos droits."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:30
+msgid "1. Données collectées"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:32
+msgid ""
+"Lors de votre inscription et utilisation de la plateforme, nous collectons "
+"les informations suivantes :"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:34
+msgid "<strong>Identité :</strong> nom, prénom, adresse e-mail."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:35
+msgid ""
+"<strong>Profil :</strong> pays, ville, niveau d'études, domaine d'intérêt."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:36
+msgid ""
+"<strong>Progression pédagogique :</strong> cours suivis, leçons terminées, "
+"exercices soumis, certificats obtenus."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:37
+msgid ""
+"<strong>Données de candidature :</strong> CV, lettre de motivation, relevés "
+"de notes (pour les dossiers d'admission uniquement)."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:38
+msgid ""
+"<strong>Données de paiement :</strong> référence de transaction (nous ne "
+"stockons pas les numéros de carte bancaire)."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:39
+msgid ""
+"<strong>Données techniques :</strong> adresse IP, type de navigateur, pages "
+"visitées (via journaux serveur)."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:46
+msgid "2. Utilisation des données"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:48
+msgid "Vos données sont utilisées exclusivement pour :"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:50
+msgid "Gérer votre compte et vous authentifier sur la plateforme."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:51
+msgid "Suivre et afficher votre progression dans les cours."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:52
+msgid "Générer et délivrer vos certificats de réussite."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:53
+msgid "Traiter vos dossiers de candidature aux programmes d'admission."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:54
+msgid "Améliorer le contenu et les fonctionnalités de la plateforme."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:55
+msgid ""
+"Vous envoyer des notifications liées à votre activité (réponse à "
+"candidature, confirmation de paiement)."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:57
+msgid ""
+"Nous ne vendons, ne louons ni ne partageons vos données personnelles avec "
+"des tiers à des fins commerciales."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:63
+msgid "3. Cookies"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:65
+msgid ""
+"Numeria Institute utilise des cookies techniques strictement nécessaires au "
+"bon fonctionnement du site :"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:67
+msgid ""
+"<strong>Session Django :</strong> maintient votre connexion entre les pages."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:68
+msgid ""
+"<strong>CSRF token :</strong> protège les formulaires contre les attaques de "
+"type falsification de requêtes."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:69
+msgid ""
+"<strong>Préférence d'affichage :</strong> mémorise votre choix de mode clair/"
+"sombre (stocké dans <code>localStorage</code>, pas un cookie)."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:71
+msgid ""
+"Nous n'utilisons pas de cookies publicitaires ni de traceurs tiers (Google "
+"Analytics, Facebook Pixel, etc.)."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:77
+msgid "4. Vos droits"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:79
+msgid ""
+"Conformément aux principes généraux de protection des données, vous disposez "
+"des droits suivants :"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:81
+msgid ""
+"<strong>Droit d'accès :</strong> obtenir une copie des données vous "
+"concernant."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:82
+msgid ""
+"<strong>Droit de rectification :</strong> corriger des informations "
+"inexactes ou incomplètes."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:83
+msgid ""
+"<strong>Droit à l'effacement :</strong> demander la suppression de votre "
+"compte et de vos données."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:84
+msgid ""
+"<strong>Droit à la portabilité :</strong> recevoir vos données dans un "
+"format structuré."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:85
+msgid ""
+"<strong>Droit d'opposition :</strong> vous opposer à certains traitements de "
+"vos données."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:88
+msgid ""
+"Vous pouvez exercer ces droits directement depuis votre profil (section "
+"<strong>Supprimer mon compte</strong>) ou en nous contactant."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:97
+msgid "5. Conservation des données"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:99
+msgid ""
+"Vos données sont conservées aussi longtemps que votre compte est actif. En "
+"cas de suppression de compte, vos données personnelles sont effacées dans un "
+"délai de 30 jours. Les données de transaction sont conservées 5 ans à des "
+"fins comptables et légales."
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:105
+msgid "6. Contact"
+msgstr ""
+
+#: pages/templates/pages/confidentialite.html:108
 msgid ""
 "Pour toute question relative à vos données personnelles, contactez-nous à :"
 msgstr ""
@@ -4598,44 +5844,86 @@ msgid ""
 "nous pour en savoir plus."
 msgstr ""
 
-#: pages/views.py:46 templates/base.html:21 templates/base.html:24
+#: pages/views.py:48 templates/base.html:21 templates/base.html:24
 #: templates/base.html:33
 msgid ""
 "Éducation scientifique accessible en Afrique. Cours de mathématiques, "
 "sciences et IA pour apprenants africains et francophones."
 msgstr ""
 
-#: pages/views.py:67
+#: pages/views.py:69
 msgid ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses for African and French-speaking learners."
 msgstr ""
 
-#: pages/views.py:132
+#: pages/views.py:134
 msgid ""
 "Découvrez Numeria Institute, notre mission et notre équipe pour l'éducation "
 "scientifique en Afrique."
 msgstr ""
 
-#: pages/views.py:147
+#: pages/views.py:149
 msgid ""
 "Discover Numeria Institute, our mission and team for scientific education in "
 "Africa."
 msgstr ""
 
-#: pages/views.py:252
+#: pages/views.py:247
 #, python-brace-format
 msgid ""
 "✅ Merci {nom} ! Ton message a bien été envoyé. Nous te répondrons dans "
 "24-48h."
 msgstr ""
 
-#: pages/views.py:257
+#: pages/views.py:252
 #, python-brace-format
 msgid "✅ Message reçu {nom} ! Nous te répondrons bientôt."
 msgstr ""
 
-#: paiements/templates/paiements/historique.html:81
+#: paiements/templates/paiements/confirmation.html:16
+msgid "Paiement confirmé !"
+msgstr ""
+
+#: paiements/templates/paiements/confirmation.html:20
+#, python-format
+msgid "Tu es maintenant inscrit au cours <strong>%(titre)s</strong>."
+msgstr ""
+
+#: paiements/templates/paiements/confirmation.html:22
+#, python-format
+msgid ""
+"Tu es maintenant inscrit à la session <strong>%(session)s</strong> de "
+"<strong>%(formation)s</strong>."
+msgstr ""
+
+#: paiements/templates/paiements/confirmation.html:24
+msgid "Bonne apprentissage ! 🎓"
+msgstr ""
+
+#: paiements/templates/paiements/confirmation.html:42
+#: templates/includes/nav_items.html:5 templates/includes/nav_items.html:18
+msgid "Cours"
+msgstr ""
+
+#: paiements/templates/paiements/confirmation.html:63
+msgid "Commencer le cours →"
+msgstr ""
+
+#: paiements/templates/paiements/confirmation.html:68
+msgid "Voir la session →"
+msgstr ""
+
+#: paiements/templates/paiements/confirmation.html:73 templates/base.html:309
+#: templates/base.html:362
+msgid "Tableau de bord"
+msgstr ""
+
+#: paiements/templates/paiements/historique.html:3
+msgid "Historique des paiements"
+msgstr ""
+
+#: paiements/templates/paiements/historique.html:82
 msgid "Inscris-toi à un contenu payant pour voir ton historique ici."
 msgstr ""
 
@@ -4725,60 +6013,118 @@ msgid ""
 "sciences et IA."
 msgstr ""
 
-#: templates/base.html:308 templates/base.html:361
-msgid "Tableau de bord"
-msgstr ""
-
-#: templates/base.html:363
+#: templates/base.html:364
 msgid "Se déconnecter"
 msgstr ""
 
-#: templates/base.html:403
+#: templates/base.html:404
 msgid ""
 "L'éducation scientifique accessible, engageante et gratuite pour tous les "
 "apprenants africains et francophones du monde entier."
 msgstr ""
 
-#: templates/base.html:410
+#: templates/base.html:411
 msgid "Navigation"
 msgstr ""
 
-#: templates/base.html:412
+#: templates/base.html:413
 msgid "Nos cours"
 msgstr ""
 
-#: templates/base.html:413
+#: templates/base.html:414
 msgid "Le blog"
 msgstr ""
 
-#: templates/base.html:414 templates/includes/nav_items.html:8
+#: templates/base.html:415 templates/includes/nav_items.html:8
 #: templates/includes/nav_items.html:21
 msgid "Candidatures"
 msgstr ""
 
-#: templates/base.html:415 templates/includes/nav_items.html:11
+#: templates/base.html:416 templates/includes/nav_items.html:11
 #: templates/includes/nav_items.html:24
 msgid "À propos"
 msgstr ""
 
-#: templates/base.html:430
+#: templates/base.html:431
 msgid "Afrique de l'Ouest"
 msgstr ""
 
-#: templates/base.html:454
+#: templates/base.html:455
 msgid "Tous droits réservés"
 msgstr ""
 
-#: templates/base.html:456
+#: templates/base.html:457
 msgid "Confidentialité"
 msgstr ""
 
-#: templates/base.html:457
+#: templates/base.html:458
 msgid "CGU"
 msgstr ""
 
-#: templates/includes/nav_items.html:5 templates/includes/nav_items.html:18
-msgid "Cours"
+#: templates/comptes/verification_expired.html:6
+msgid "Lien de vérification expiré"
+msgstr ""
+
+#: templates/comptes/verification_expired.html:7
+msgid ""
+"Ton lien de vérification a expiré. Nous t'avons envoyé un nouvel email si "
+"nécessaire."
+msgstr ""
+
+#: templates/comptes/verification_expired.html:8
+msgid "Tu peux en demander un autre ici :"
+msgstr ""
+
+#: templates/comptes/verification_expired.html:9
+msgid "Renvoyer l'email"
+msgstr ""
+
+#: templates/comptes/verification_invalid.html:6
+msgid "Lien de vérification invalide"
+msgstr ""
+
+#: templates/comptes/verification_invalid.html:7
+msgid ""
+"Le lien de vérification que tu as utilisé est incorrect ou a déjà été "
+"utilisé."
+msgstr ""
+
+#: templates/comptes/verification_invalid.html:8
+msgid "Tu peux demander un nouvel email de vérification ici :"
+msgstr ""
+
+#: templates/comptes/verification_invalid.html:9
+#: templates/comptes/verification_resend.html:6
+msgid "Renvoyer l'email de vérification"
+msgstr ""
+
+#: templates/comptes/verification_resend.html:7
+msgid ""
+"Saisis l'adresse email utilisée lors de ton inscription et nous te "
+"renverrons un lien d'activation."
+msgstr ""
+
+#: templates/comptes/verification_resend.html:17
+msgid "Renvoyer"
+msgstr ""
+
+#: templates/comptes/verification_sent.html:6
+msgid "Vérification de l'adresse email"
+msgstr ""
+
+#: templates/comptes/verification_sent.html:7
+msgid ""
+"Un email a été envoyé à ton adresse. Clique sur le lien reçu pour activer "
+"ton compte."
+msgstr ""
+
+#: templates/comptes/verification_sent.html:8
+msgid ""
+"Si tu ne le reçois pas dans quelques minutes, vérifie ton dossier spam ou"
+msgstr ""
+
+#: templates/comptes/verification_sent.html:8
+msgid "renvoie l'email de vérification"
 msgstr ""
 
 #: templates/includes/nav_items.html:6 templates/includes/nav_items.html:19
@@ -4789,192 +6135,269 @@ msgstr ""
 msgid "Analytics"
 msgstr ""
 
-#: templates/video_room.html:39
+#: templates/registration/password_reset_complete.html:6
+msgid "Mot de passe réinitialisé"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:7
+msgid ""
+"Ton mot de passe a bien été réinitialisé. Tu peux maintenant te connecter."
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:6
+msgid "Choisissez un nouveau mot de passe"
+msgstr ""
+
+#: templates/registration/password_reset_done.html:6
+msgid "Lien de réinitialisation envoyé"
+msgstr ""
+
+#: templates/registration/password_reset_done.html:7
+msgid ""
+"Nous avons envoyé un email avec les instructions pour réinitialiser ton mot "
+"de passe."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:2
+#, python-format
+msgid "Bonjour %(user.get_full_name|default:username)s,"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:4
+msgid "Tu as demandé à réinitialiser ton mot de passe pour Numeria Institute."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:5
+msgid "Clique sur le lien ci-dessous pour choisir un nouveau mot de passe :"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:9
+msgid "Si tu n'as pas fait cette demande, ignore simplement ce message."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:11
+msgid "À bientôt,\\nL'équipe Numeria Institute"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:6
+msgid "Réinitialiser le mot de passe"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:7
+msgid "Entrez votre adresse email pour recevoir un lien de réinitialisation."
+msgstr ""
+
+#: templates/registration/password_reset_form.html:12
+msgid "Envoyer le lien"
+msgstr ""
+
+#: templates/registration/password_reset_subject.txt:1
+msgid "Réinitialisation du mot de passe Numeria"
+msgstr ""
+
+#: templates/video_room.html:42
 msgid "Connexion…"
 msgstr ""
 
-#: templates/video_room.html:109 templates/video_room.html:258
-#: templates/video_room.html:262
+#: templates/video_room.html:110 templates/video_room.html:259
+#: templates/video_room.html:263
 msgid "Participants"
 msgstr ""
 
-#: templates/video_room.html:114 templates/video_room.html:266
-#: templates/video_room.html:273
+#: templates/video_room.html:115 templates/video_room.html:267
+#: templates/video_room.html:274
 msgid "Chat"
 msgstr ""
 
-#: templates/video_room.html:121
+#: templates/video_room.html:122
 msgid "participants"
 msgstr ""
 
-#: templates/video_room.html:137
+#: templates/video_room.html:138
 msgid "Aucun participant pour l'instant."
 msgstr ""
 
-#: templates/video_room.html:144
+#: templates/video_room.html:145
 msgid "Les messages apparaîtront ici."
 msgstr ""
 
-#: templates/video_room.html:148
+#: templates/video_room.html:149
 msgid "Envoyer un message…"
 msgstr ""
 
-#: templates/video_room.html:183 templates/video_room.html:192
+#: templates/video_room.html:184 templates/video_room.html:193
 msgid "Micro"
 msgstr ""
 
-#: templates/video_room.html:190
+#: templates/video_room.html:191
 msgid "Couper le micro"
 msgstr ""
 
-#: templates/video_room.html:199 templates/video_room.html:208
+#: templates/video_room.html:200 templates/video_room.html:209
 msgid "Caméra"
 msgstr ""
 
-#: templates/video_room.html:206
+#: templates/video_room.html:207
 msgid "Couper la caméra"
 msgstr ""
 
-#: templates/video_room.html:215 templates/video_room.html:219
+#: templates/video_room.html:216 templates/video_room.html:220
 msgid "Partager l'écran"
 msgstr ""
 
-#: templates/video_room.html:221
+#: templates/video_room.html:222
 msgid "Écran"
 msgstr ""
 
-#: templates/video_room.html:228 templates/video_room.html:232
+#: templates/video_room.html:229 templates/video_room.html:233
 msgid "Lever la main"
 msgstr ""
 
-#: templates/video_room.html:234
+#: templates/video_room.html:235
 msgid "Main"
 msgstr ""
 
-#: templates/video_room.html:243 templates/video_room.html:249
+#: templates/video_room.html:244 templates/video_room.html:250
 msgid "Quitter"
 msgstr ""
 
-#: templates/video_room.html:247
+#: templates/video_room.html:248
 msgid "Quitter l'appel"
 msgstr ""
 
-#: templates/video_room.html:428
-msgid "Micro activé"
+#: templates/video_room.html:560 templates/video_room.html:1044
+msgid "Non supporté par ce navigateur"
 msgstr ""
 
-#: templates/video_room.html:428
-msgid "Micro coupé"
+#: templates/video_room.html:567 templates/video_room.html:742
+msgid "Partage en cours par"
 msgstr ""
 
-#: templates/video_room.html:442
-msgid "Caméra activée"
+#: templates/video_room.html:568
+msgid "Partage en cours"
 msgstr ""
 
-#: templates/video_room.html:442
-msgid "Caméra désactivée"
-msgstr ""
-
-#: templates/video_room.html:451
-msgid "Main levée"
-msgstr ""
-
-#: templates/video_room.html:451
-msgid "Main baissée"
-msgstr ""
-
-#: templates/video_room.html:460
-msgid "Impossible d\\"
-msgstr ""
-
-#: templates/video_room.html:480
+#: templates/video_room.html:572 templates/video_room.html:573
+#: templates/video_room.html:769
 msgid "Arrêter le partage"
 msgstr ""
 
-#: templates/video_room.html:483 templates/video_room.html:516
-msgid "Partage d\\"
+#: templates/video_room.html:572 templates/video_room.html:573
+msgid "Partager l\\'écran"
 msgstr ""
 
-#: templates/video_room.html:488
-msgid "Impossible de partager l\\"
+#: templates/video_room.html:636
+msgid "Partage d\\'écran"
 msgstr ""
 
-#: templates/video_room.html:513
-msgid "Partager l\\"
+#: templates/video_room.html:698
+msgid "Micro activé"
 msgstr ""
 
-#: templates/video_room.html:525
-msgid "Partage d'écran"
+#: templates/video_room.html:698
+msgid "Micro coupé"
 msgstr ""
 
-#: templates/video_room.html:572
-msgid "Non connecté"
+#: templates/video_room.html:712
+msgid "Caméra activée"
 msgstr ""
 
-#: templates/video_room.html:644
-msgid "Connecté"
+#: templates/video_room.html:712
+msgid "Caméra désactivée"
 msgstr ""
 
-#: templates/video_room.html:645
-msgid "Reconnexion…"
+#: templates/video_room.html:721 templates/video_room.html:732
+msgid "Main levée"
 msgstr ""
 
-#: templates/video_room.html:683
-msgid "En attente des participants…"
-msgstr ""
-
-#: templates/video_room.html:686
-msgid "Accès caméra/micro refusé"
-msgstr ""
-
-#: templates/video_room.html:689
-msgid "Accès caméra/micro refusé. Vérifiez les permissions."
-msgstr ""
-
-#: templates/video_room.html:701
-msgid "Impossible de démarrer la session vidéo."
-msgstr ""
-
-#: templates/video_room.html:713
-msgid "Impossible de répondre à l\\"
-msgstr ""
-
-#: templates/video_room.html:727
-msgid "Connexion établie"
-msgstr ""
-
-#: templates/video_room.html:732
-msgid "Erreur WebSocket"
-msgstr ""
-
-#: templates/video_room.html:733
-msgid "Déconnecté"
+#: templates/video_room.html:721
+msgid "Main baissée"
 msgstr ""
 
 #: templates/video_room.html:749
-msgid "Un participant a quitté"
+msgid "Impossible d\\"
 msgstr ""
 
-#: templates/video_room.html:771
+#: templates/video_room.html:772 templates/video_room.html:807
+msgid "Partage d\\"
+msgstr ""
+
+#: templates/video_room.html:778
+msgid "Impossible de partager l\\"
+msgstr ""
+
+#: templates/video_room.html:803
+msgid "Partager l\\"
+msgstr ""
+
+#: templates/video_room.html:816 templates/video_room.html:819
+msgid "Partage d'écran"
+msgstr ""
+
+#: templates/video_room.html:865
+msgid "Non connecté"
+msgstr ""
+
+#: templates/video_room.html:947
+msgid "Connecté"
+msgstr ""
+
+#: templates/video_room.html:948
+msgid "Reconnexion…"
+msgstr ""
+
+#: templates/video_room.html:953
+msgid "Recherche du réseau…"
+msgstr ""
+
+#: templates/video_room.html:954
+msgid "Problème de réseau"
+msgstr ""
+
+#: templates/video_room.html:959
+msgid "Traversée du réseau réussie"
+msgstr ""
+
+#: templates/video_room.html:999
+msgid "En attente des participants…"
+msgstr ""
+
+#: templates/video_room.html:1002
+msgid "Accès caméra/micro refusé"
+msgstr ""
+
+#: templates/video_room.html:1005
+msgid "Accès caméra/micro refusé. Vérifiez les permissions."
+msgstr ""
+
+#: templates/video_room.html:1017
+msgid "Impossible de démarrer la session vidéo."
+msgstr ""
+
+#: templates/video_room.html:1029
+msgid "Impossible de répondre à l\\"
+msgstr ""
+
+#: templates/video_room.html:1051 templates/video_room.html:1079
+msgid "a rejoint la réunion"
+msgstr ""
+
+#: templates/video_room.html:1051 templates/video_room.html:1096
+msgid "a quitté la réunion"
+msgstr ""
+
+#: templates/video_room.html:1062
+msgid "Connexion établie"
+msgstr ""
+
+#: templates/video_room.html:1067
+msgid "Erreur WebSocket"
+msgstr ""
+
+#: templates/video_room.html:1068
+msgid "Déconnecté"
+msgstr ""
+
+#: templates/video_room.html:1129
 msgid "Connexion en cours…"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Partage d'écran activé"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Partage d'écran arrêté"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Impossible de partager l'écran"
-msgstr ""
-
-#: templates/video_room.html
-msgid "Impossible d'initialiser la caméra/micro avant le partage."
-msgstr ""
-
-#: templates/video_room.html
-msgid "Impossible de répondre à l'offre vidéo."
 msgstr ""

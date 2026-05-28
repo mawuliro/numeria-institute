@@ -263,8 +263,8 @@ else:  # default SMTP
     EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
     EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Numeria Institute <contact@numeriainstitute.com>')
-CONTACT_EMAIL = config('CONTACT_EMAIL', default='contact@numeriainstitute.com')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Numeria Institute <numeriainstitude@gmail.com>')
+CONTACT_EMAIL = config('CONTACT_EMAIL', default='numeriainstitude@gmail.com')
 ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@numeriainstitute.com')
 
 # Email configuration for production

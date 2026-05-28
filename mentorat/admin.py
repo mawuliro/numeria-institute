@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 from .models import Mentor, Mentee, MentorApplication, DemandeMentorat, RelationMentorat, SeanceMentorat, PaiementSeance
 
 
@@ -37,14 +38,14 @@ class DemandeMentoratAdmin(admin.ModelAdmin):
     def accepter_demandes(self, request, queryset):
         for demande in queryset.filter(statut='en_attente'):
             demande.accepter()
-        self.message_user(request, f"{queryset.filter(statut='en_attente').count()} demandes acceptées.")
-    accepter_demandes.short_description = "Accepter les demandes sélectionnées"
+        self.message_user(request, _('%(count)d demandes acceptées.') % {'count': queryset.filter(statut='en_attente').count()})
+    accepter_demandes.short_description = _('Accepter les demandes sélectionnées')
 
     def refuser_demandes(self, request, queryset):
         for demande in queryset.filter(statut='en_attente'):
             demande.refuser()
-        self.message_user(request, f"{queryset.filter(statut='en_attente').count()} demandes refusées.")
-    refuser_demandes.short_description = "Refuser les demandes sélectionnées"
+        self.message_user(request, _('%(count)d demandes refusées.') % {'count': queryset.filter(statut='en_attente').count()})
+    refuser_demandes.short_description = _('Refuser les demandes sélectionnées')
 
 
 @admin.register(RelationMentorat)
@@ -77,4 +78,4 @@ class PaiementSeanceAdmin(admin.ModelAdmin):
             p.confirmer()
             count += 1
         self.message_user(request, f"{count} paiement(s) confirmé(s).")
-    confirmer_paiements.short_description = "Confirmer les paiements sélectionnés"
+    confirmer_paiements.short_description = _('Confirmer les paiements sélectionnés')

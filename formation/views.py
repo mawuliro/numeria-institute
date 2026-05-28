@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden, Http404
 from django.urls import reverse
+from django.utils.translation import gettext as _
 
 from .models import (
     Formation, SessionFormation, InscriptionFormation,
@@ -171,14 +172,14 @@ def inscrire_formation(request, session_id):
 
     # Vérifications
     if not session.est_ouverte_aux_inscriptions():
-        messages.error(request, "Cette session n'est plus ouverte aux inscriptions.")
+        messages.error(request, _("Cette session n'est plus ouverte aux inscriptions."))
         return redirect('formation:session_detail', session_id=session.id)
 
     inscription = InscriptionFormation.objects.filter(session=session, etudiant=request.user).first()
     if inscription:
         if inscription.statut == 'en_attente':
             return redirect('paiements:page_paiement_formation', inscription_id=inscription.id)
-        messages.warning(request, "Vous êtes déjà inscrit à cette session.")
+        messages.warning(request, _("Vous êtes déjà inscrit à cette session."))
         return redirect('formation:mes_formations')
 
     # Créer inscription en attente de paiement
@@ -189,7 +190,7 @@ def inscrire_formation(request, session_id):
         statut='en_attente'  # En attente de paiement
     )
 
-    messages.success(request, "Inscription créée. Veuillez effectuer le paiement.")
+    messages.success(request, _("Inscription créée. Veuillez effectuer le paiement."))
     return redirect('paiements:page_paiement_formation', inscription_id=inscription.id)
 
 
@@ -235,7 +236,7 @@ def voir_lecon(request, lecon_id):
     
     # Vérifier accès pas expiré
     if inscription.est_acces_expire():
-        messages.error(request, "Votre accès à cette formation a expiré.")
+        messages.error(request, _("Votre accès à cette formation a expiré."))
         return redirect('formation:mes_formations')
     
     # Enregistrer progression
@@ -307,7 +308,7 @@ def verifier_certificat(request, token):
     certificat = get_object_or_404(CertificatFormation, token_verification=token)
     
     if not certificat.est_valide():
-        messages.warning(request, "Ce certificat a expiré.")
+        messages.warning(request, _("Ce certificat a expiré."))
     
     context = {
         'certificat': certificat,

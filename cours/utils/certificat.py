@@ -7,6 +7,7 @@ import qrcode
 import io
 import math
 from datetime import datetime
+from django.conf import settings
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.units import cm
 from reportlab.lib.colors import HexColor, white
@@ -450,7 +451,7 @@ def generer_certificat_pdf(inscription, url_verification=None):
 
     c.setFont('Helvetica', 7.5)
     c.drawCentredString(CX, zone_bas + 0.15 * cm,
-                        'Numeria Institute · Lomé, Togo · contact@numeriainstitute.com')
+                        f'Numeria Institute · Lomé, Togo · {settings.CONTACT_EMAIL}')
 
     c.save()
     buffer.seek(0)

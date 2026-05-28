@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('intro', models.TextField(default='Nous sommes là pour vous aider.', verbose_name='Introduction')),
                 ('address', models.TextField(default='Lomé, Togo', verbose_name='Adresse')),
                 ('phone', models.CharField(default='+228 XX XX XX XX', max_length=20, verbose_name='Téléphone')),
-                ('email', models.EmailField(default='contact@numeriainstitute.com', max_length=254, verbose_name='Email')),
+                ('email', models.EmailField(default='numeriainstitude@gmail.com', max_length=254, verbose_name='Email')),
                 ('hours', models.TextField(default='Lundi-Vendredi: 9h-18h', verbose_name='Horaires')),
                 ('meta_title', models.CharField(default='Contact - Numeria Institute', max_length=60, verbose_name='Meta title')),
                 ('meta_description', models.TextField(default='...', max_length=160, verbose_name='Meta description')),
