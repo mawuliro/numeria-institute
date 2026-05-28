@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.conf import settings
+from numeria_project.emails import send_mentorship_acceptance_email
 from django.db.models import Q, Sum
 from django.urls import reverse
 from paiements.service import creer_paiement, traiter_paiement
@@ -487,6 +488,10 @@ def gerer_demande(request, demande_pk, action):
 
     if action == 'accepter':
         demande.accepter()
+        try:
+            send_mentorship_acceptance_email(demande, language=getattr(request, 'LANGUAGE_CODE', None))
+        except Exception:
+            pass
         messages.success(request, f"Demande de {demande.mentee} acceptée !")
     elif action == 'refuser':
         demande.refuser()

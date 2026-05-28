@@ -1,0 +1,10 @@
+<html>
+  <body style="font-family:Arial,Helvetica,sans-serif;color:#333;line-height:1.6;">
+    <h1>Confirme ton compte Numeria</h1>
+    <p>Bonjour {{ user.first_name }},</p>
+    <p>Merci pour ton inscription sur Numeria Institute. Clique sur le bouton ci-dessous pour activer ton compte :</p>
+    <p><a href="{{ verification_url }}" style="background:#003366;color:#fff;padding:12px 20px;text-decoration:none;border-radius:5px;">Activer mon compte</a></p>
+    <p>Ce lien expire dans 24 heures.</p>
+    <p>À bientôt,<br/>L'équipe {{ site_name }}</p>
+  </body>
+</html>

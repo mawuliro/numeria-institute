@@ -3,10 +3,15 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.db.models import Count, Sum, Avg
 from django.db.models.functions import TruncDay
+from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
+from urllib.parse import urlencode
 from cours.models import InscriptionCours, Cours
 from paiements.models import Paiement
+from admissions.models import Candidature
+from formation.models import InscriptionFormation
+from mentorat.models import MentorApplication, PaiementSeance
 from django.contrib.auth.models import User
 from blog.models import Article
 import json
@@ -116,7 +121,58 @@ def dashboard(request):
     ).count()
     
     # ============================================================
-    # 7. DISTRIBUTION DES NIVEAUX D'ÉTUDES
+    # 7. PENDING ADMIN VALIDATIONS
+    # ============================================================
+
+    pending_candidatures = Candidature.objects.filter(
+        statut__in=['soumise', 'en_revue']
+    ).count()
+    pending_mentor_applications = MentorApplication.objects.filter(
+        status='pending'
+    ).count()
+    pending_formation_inscriptions = InscriptionFormation.objects.filter(
+        statut='en_attente'
+    ).count()
+    pending_mentor_payments = PaiementSeance.objects.filter(
+        statut='preuve_soumise'
+    ).count()
+
+    def admin_filter_url(name, params):
+        return f"{reverse(name)}?{urlencode(params)}"
+
+    pending_admin_tasks = [
+        {
+            'titre': 'Candidatures à examiner',
+            'count': pending_candidatures,
+            'url': admin_filter_url('admin:admissions_candidature_changelist', {'statut': 'soumise'}),
+            'details': 'Statuts soumise / en revue',
+            'badge_class': 'bg-rose-500 text-white' if pending_candidatures else 'bg-slate-400 text-white',
+        },
+        {
+            'titre': 'Demandes mentorat',
+            'count': pending_mentor_applications,
+            'url': admin_filter_url('admin:mentorat_mentorapplication_changelist', {'status': 'pending'}),
+            'details': 'Candidatures de mentors en attente',
+            'badge_class': 'bg-rose-500 text-white' if pending_mentor_applications else 'bg-slate-400 text-white',
+        },
+        {
+            'titre': 'Inscriptions formations en attente',
+            'count': pending_formation_inscriptions,
+            'url': admin_filter_url('admin:formation_inscriptionformation_changelist', {'statut': 'en_attente'}),
+            'details': 'Paiements à confirmer',
+            'badge_class': 'bg-rose-500 text-white' if pending_formation_inscriptions else 'bg-slate-400 text-white',
+        },
+        {
+            'titre': 'Preuves de paiement mentorat',
+            'count': pending_mentor_payments,
+            'url': admin_filter_url('admin:mentorat_paiementseance_changelist', {'statut': 'preuve_soumise'}),
+            'details': 'Validation des preuves soumises',
+            'badge_class': 'bg-rose-500 text-white' if pending_mentor_payments else 'bg-slate-400 text-white',
+        },
+    ]
+    
+    # ============================================================
+    # 8. DISTRIBUTION DES NIVEAUX D'ÉTUDES
     # ============================================================
     
     niveaux_etudes = {
@@ -145,6 +201,7 @@ def dashboard(request):
         'cours_populaires': cours_populaires,
         'completion_data': json.dumps(completion_data),
         'utilisateurs_actifs_7j': utilisateurs_actifs_7j,
+        'pending_admin_tasks': pending_admin_tasks,
         'niveaux_etudes': niveaux_etudes,
         'periode_30j': last_30_days.strftime('%d/%m/%Y'),
     }

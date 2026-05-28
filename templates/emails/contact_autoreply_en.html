@@ -1,0 +1,13 @@
+<html>
+  <body style="font-family:Arial,Helvetica,sans-serif;color:#333;line-height:1.6;">
+    <h1>Thanks for reaching out</h1>
+    <p>Hi {{ name }},</p>
+    <p>We received your message regarding:</p>
+    <p><strong>{{ subject }}</strong></p>
+    {% if organisation %}
+    <p>Organization: {{ organisation }}</p>
+    {% endif %}
+    <p>One of our team members will reply within 24 to 48 hours.</p>
+    <p>Best regards,<br/>The {{ site_name }} team</p>
+  </body>
+</html>

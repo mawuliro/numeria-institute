@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<section class="section container">
+  <h1>{% trans "Renvoyer l'email de vérification" %}</h1>
+  <p>{% trans "Saisis l'adresse email utilisée lors de ton inscription et nous te renverrons un lien d'activation." %}</p>
+  <form method="post" class="form">
+    {% csrf_token %}
+    <div class="field">
+      {{ formulaire.email.label_tag }}
+      {{ formulaire.email }}
+      {% if formulaire.email.errors %}
+        <p class="help is-danger">{{ formulaire.email.errors }}</p>
+      {% endif %}
+    </div>
+    <button type="submit" class="button is-primary">{% trans "Renvoyer" %}</button>
+  </form>
+</section>
+{% endblock %}

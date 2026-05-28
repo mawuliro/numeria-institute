@@ -6,6 +6,7 @@ from django.core.mail import BadHeaderError
 from smtplib import SMTPException
 from cours.models import Cours
 from blog.models import Article
+from numeria_project.emails import send_contact_form_emails
 from .models import HomePage, AboutPage, ContactPage
 
 logger = logging.getLogger(__name__)
@@ -224,21 +225,14 @@ Lomé, Togo 🇹🇬
             """
 
             try:
-                # Send to admin
-                send_mail(
-                    subject=f'[Numeria] Nouveau message : {sujet} — {nom}',
-                    message=contenu_email_admin,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[settings.CONTACT_EMAIL],
-                    fail_silently=False,
-                )
-                # Send confirmation to user
-                send_mail(
-                    subject=f'Confirmation : Nous avons reçu votre message',
-                    message=contenu_email_utilisateur,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[email_utilisateur],
-                    fail_silently=False,
+                send_contact_form_emails(
+                    request=request,
+                    name=nom,
+                    email=email_utilisateur,
+                    organisation=organisation,
+                    subject=sujet,
+                    message=message,
+                    is_partner=est_partenaire,
                 )
                 email_sent = True
             except (SMTPException, BadHeaderError, ConnectionError, TimeoutError, OSError) as e:

@@ -10,6 +10,7 @@ from .models import CampagneRecrutement, Candidature
 from .forms import FormulaireCandidature
 from paiements.models import Paiement
 from paiements.constants import PAYMENT_PROVIDERS
+from numeria_project.emails import send_candidacy_acceptance_email
 import uuid
 
 
@@ -302,7 +303,13 @@ def changer_statut(request, candidature_id):
             candidature.commentaire_admin = commentaire
             candidature.date_decision = timezone.now()
             candidature.save()
-            
+
+            if nouveau_statut == 'acceptee':
+                try:
+                    send_candidacy_acceptance_email(candidature, language=getattr(request, 'LANGUAGE_CODE', None))
+                except Exception:
+                    pass
+
             messages.success(request, f"✅ Statut mis à jour : {dict(Candidature.STATUTS)[nouveau_statut]}")
     
     return redirect('admissions:admin_candidatures')

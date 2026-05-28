@@ -1,0 +1,13 @@
+<html>
+  <body style="font-family:Arial,Helvetica,sans-serif;color:#333;line-height:1.6;">
+    <h1>Merci pour ton message</h1>
+    <p>Bonjour {{ name }},</p>
+    <p>Merci d'avoir contacté Numeria Institute. Nous avons bien reçu ta demande concernant :</p>
+    <p><strong>{{ subject }}</strong></p>
+    {% if organisation %}
+    <p>Organisation : {{ organisation }}</p>
+    {% endif %}
+    <p>Un membre de notre équipe te répondra dans les 24 à 48 heures.</p>
+    <p>À bientôt,<br/>L'équipe {{ site_name }}</p>
+  </body>
+</html>

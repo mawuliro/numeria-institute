@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<section class="section container">
+  <h1>{% trans "Lien de vérification invalide" %}</h1>
+  <p>{% trans "Le lien de vérification que tu as utilisé est incorrect ou a déjà été utilisé." %}</p>
+  <p>{% trans "Tu peux demander un nouvel email de vérification ici :" %}</p>
+  <a class="button" href="{% url 'comptes:resend_verification_email' %}">{% trans "Renvoyer l'email de vérification" %}</a>
+</section>
+{% endblock %}

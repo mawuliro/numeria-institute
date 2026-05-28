@@ -83,6 +83,28 @@
             </div>
         </div>
 
+        {% if pending_admin_tasks %}
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-lg mb-8 border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white">🔔 Actions administratives en attente</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Toutes les demandes nécessitant une validation admin directe.</p>
+                </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {% for item in pending_admin_tasks %}
+                <a href="{{ item.url }}" class="block rounded-2xl p-5 bg-slate-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm text-gray-500 dark:text-gray-400">{{ item.details }}</span>
+                        <span class="inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs font-semibold {{ item.badge_class }}">{{ item.count }}</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ item.titre }}</h3>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
         <!-- Graphiques principaux -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Inscriptions -->

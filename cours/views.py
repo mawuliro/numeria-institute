@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.http import HttpResponse
 import uuid
+from numeria_project.emails import send_course_enrollment_email
 from .models import Cours, InscriptionCours, Lecon, ProgressionLecon
 
 
@@ -180,6 +181,7 @@ def inscrire_cours(request, cours_id):
             progression=0,
             est_termine=False
         )
+        send_course_enrollment_email(request.user, cours, language=getattr(request, 'LANGUAGE_CODE', None))
         messages.success(request, f"🎉 Bienvenue dans le cours « {cours.titre} » !")
         return redirect('cours:detail', cours_id=cours_id)
     else:

@@ -120,6 +120,13 @@ def confirmer_paiement(paiement, reference_provider=None):
         }
     )
 
+    if cree:
+        try:
+            from numeria_project.emails import send_course_enrollment_email
+            send_course_enrollment_email(paiement.etudiant, paiement.cours)
+        except Exception:
+            pass
+
     return inscription
 
 

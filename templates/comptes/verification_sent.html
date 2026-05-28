@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<section class="section container">
+  <h1>{% trans "Vérification de l'adresse email" %}</h1>
+  <p>{% trans "Un email a été envoyé à ton adresse. Clique sur le lien reçu pour activer ton compte." %}</p>
+  <p>{% trans "Si tu ne le reçois pas dans quelques minutes, vérifie ton dossier spam ou" %} <a href="{% url 'comptes:resend_verification_email' %}">{% trans "renvoie l'email de vérification" %}</a>.</p>
+</section>
+{% endblock %}
