@@ -177,6 +177,9 @@ def contact(request):
             meta_title="Contact - Numeria Institute",
             meta_description="Contactez Numeria Institute pour toute question ou partenariat."
         )
+    elif contactpage.email != settings.CONTACT_EMAIL:
+        contactpage.email = settings.CONTACT_EMAIL
+        contactpage.save(update_fields=['email'])
 
     if request.method == 'POST':
         formulaire = FormulaireContact(request.POST)

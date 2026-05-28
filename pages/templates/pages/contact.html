@@ -32,7 +32,7 @@
                 <div class="flex-1 min-w-0">
 
                     <h2 class="text-2xl font-bold text-numeria-bleu dark:text-numeria-or mb-6">
-                        Envoyer un message
+                        {% trans "Envoyer un message" %}
                     </h2>
 
                     <!-- Messages -->
@@ -64,14 +64,14 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
-                                        Nom complet <span class="text-red-400">*</span>
+                                        {% trans "Nom complet" %} <span class="text-red-400">*</span>
                                     </label>
                                     <div class="relative">
                                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
                                         <input type="text"
                                             name="nom_complet"
                                             value="{{ formulaire.nom_complet.value|default:'' }}"
-                                            placeholder="Votre nom et prénom"
+                                            placeholder="{% trans 'Votre nom et prénom' %}"
                                             class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or transition-colors"
                                             required>
                                     </div>
@@ -82,7 +82,7 @@
 
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
-                                        Email <span class="text-red-400">*</span>
+                                        {% trans "Email" %} <span class="text-red-400">*</span>
                                     </label>
                                     <div class="relative">
                                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">✉️</span>
@@ -102,15 +102,15 @@
                             <!-- Organisation -->
                             <div class="mb-5">
                                 <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
-                                    Organisation
-                                    <span class="normal-case font-normal text-gray-400 ml-1">(optionnel)</span>
+                                    {% trans "Organisation" %}
+                                    <span class="normal-case font-normal text-gray-400 ml-1">({% trans "optionnel" %})</span>
                                 </label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🏛️</span>
                                     <input type="text"
                                         name="organisation"
                                         value="{{ formulaire.organisation.value|default:'' }}"
-                                        placeholder="Université, entreprise, ONG..."
+                                        placeholder="{% trans 'Université, entreprise, ONG...' %}"
                                         class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or transition-colors">
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                             <!-- Sujet -->
                             <div class="mb-5">
                                 <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
-                                    Sujet <span class="text-red-400">*</span>
+                                    {% trans "Sujet" %} <span class="text-red-400">*</span>
                                 </label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10">📋</span>
@@ -142,12 +142,12 @@
                             <!-- Message -->
                             <div class="mb-5">
                                 <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">
-                                    Message <span class="text-red-400">*</span>
+                                    {% trans "Message" %} <span class="text-red-400">*</span>
                                 </label>
                                 <textarea
                                     name="message"
                                     rows="6"
-                                    placeholder="Écrivez votre message ici... (minimum 20 caractères)"
+                                    placeholder="{% trans 'Écrivez votre message ici... (minimum 20 caractères)' %}"
                                     class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 text-sm focus:outline-none focus:border-numeria-or transition-colors resize-none"
                                     required>{{ formulaire.message.value|default:'' }}</textarea>
                                 {% if formulaire.message.errors %}
@@ -163,8 +163,7 @@
                                         class="mt-0.5 w-4 h-4 accent-numeria-or"
                                         {% if formulaire.est_partenaire.value %}checked{% endif %}>
                                     <span class="text-sm text-gray-600 dark:text-gray-300 group-hover:text-numeria-bleu dark:group-hover:text-numeria-or transition-colors">
-                                        Je souhaite discuter d'un <strong>partenariat</strong> avec Numeria Institute
-                                        (université, entreprise, ONG, institution)
+                                        {% blocktrans %}Je souhaite discuter d'un <strong>partenariat</strong> avec Numeria Institute (université, entreprise, ONG, institution){% endblocktrans %}
                                     </span>
                                 </label>
                             </div>
@@ -172,11 +171,11 @@
                             <!-- Bouton envoyer -->
                             <button type="submit"
                                 class="w-full bg-numeria-or text-numeria-bleu font-bold py-4 rounded-xl hover:bg-yellow-400 transition-all text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform">
-                                Envoyer le message 📨
+                                {% trans "Envoyer le message" %} 📨
                             </button>
 
                             <p class="text-center text-gray-400 dark:text-gray-500 text-xs mt-4">
-                                Nous répondons sous 24 à 48 heures ouvrables.
+                                {% trans "Nous répondons sous 24 à 48 heures ouvrables." %}
                             </p>
 
                         </form>
@@ -189,7 +188,7 @@
                     <!-- Coordonnées -->
                     <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
                         <h3 class="font-bold text-numeria-bleu dark:text-numeria-or text-lg mb-5">
-                            Nos coordonnées
+                            {% trans "Nos coordonnées" %}
                         </h3>
                         <div class="flex flex-col gap-4">
 
@@ -198,7 +197,7 @@
                                     📍
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">Adresse</p>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">{% trans "Adresse" %}</p>
                                     <p class="text-gray-500 dark:text-gray-400 text-sm">{{ contactpage.address }}</p>
                                 </div>
                             </div>
@@ -208,7 +207,7 @@
                                     ✉️
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">Email</p>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">{% trans "Email" %}</p>
                                     <a href="mailto:{{ contactpage.email }}"
                                        class="text-numeria-bleu dark:text-numeria-or text-sm hover:opacity-75 transition-opacity">
                                         {{ contactpage.email }}
@@ -221,7 +220,7 @@
                                     📞
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">Téléphone</p>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">{% trans "Téléphone" %}</p>
                                     <a href="tel:{{ contactpage.phone }}"
                                        class="text-numeria-bleu dark:text-numeria-or text-sm hover:opacity-75 transition-opacity">
                                         {{ contactpage.phone }}
@@ -234,9 +233,9 @@
                                     ⏰
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">Horaires</p>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">{% trans "Horaires" %}</p>
                                     <p class="text-gray-500 dark:text-gray-400 text-sm">{{ contactpage.hours }}</p>
-                                    <p class="text-gray-400 dark:text-gray-500 text-xs">Heure de Lomé (GMT+0)</p>
+                                    <p class="text-gray-400 dark:text-gray-500 text-xs">{% trans "Heure de Lomé (GMT+0)" %}</p>
                                 </div>
                             </div>
 
@@ -246,31 +245,31 @@
                     <!-- FAQ rapide -->
                     <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
                         <h3 class="font-bold text-numeria-bleu dark:text-numeria-or text-lg mb-4">
-                            Questions fréquentes
+                            {% trans "Questions fréquentes" %}
                         </h3>
                         <div class="flex flex-col gap-4">
 
                             <div>
                                 <p class="font-semibold text-gray-700 dark:text-gray-200 text-sm mb-1">
-                                    Les cours en ligne sont-ils gratuits ?
+                                    {% trans "Les cours en ligne sont-ils gratuits ?" %}
                                 </p>
                                 <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">
-                                    Oui, la majorité des cours en ligne sont gratuits. Certains cours avancés sont payants.
+                                    {% trans "Oui, la majorité des cours en ligne sont gratuits. Certains cours avancés sont payants." %}
                                 </p>
                             </div>
 
                             <div class="border-t border-gray-100 dark:border-gray-700 pt-3">
                                 <p class="font-semibold text-gray-700 dark:text-gray-200 text-sm mb-1">
-                                    Comment candidater aux filières physiques ?
+                                    {% trans "Comment candidater aux filières physiques ?" %}
                                 </p>
                                 <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">
-                                    Les candidatures se font en ligne. Créez un compte et suivez le processus de candidature.
+                                    {% trans "Les candidatures se font en ligne. Créez un compte et suivez le processus de candidature." %}
                                 </p>
                             </div>
 
                             <div class="border-t border-gray-100 dark:border-gray-700 pt-3">
                                 <p class="font-semibold text-gray-700 dark:text-gray-200 text-sm mb-1">
-                                    Proposez-vous des bourses ?
+                                    {% trans "Proposez-vous des bourses ?" %}
                                 </p>
                                 <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">
                                     {% trans "Oui, des bourses sont disponibles pour les candidats méritants. Contactez-nous pour en savoir plus." %}
@@ -284,13 +283,13 @@
                     <div class="bg-numeria-bleu rounded-2xl p-6 text-center">
                         <div class="text-3xl mb-3">🤝</div>
                         <h3 class="text-numeria-or font-bold text-lg mb-2">
-                            Devenir partenaire
+                            {% trans "Devenir partenaire" %}
                         </h3>
                         <p class="text-blue-200 text-sm mb-4 leading-relaxed">
-                            Université, entreprise, ONG ou institution construisons ensemble l'avenir scientifique de l'Afrique.
+                            {% trans "Université, entreprise, ONG ou institution — construisons ensemble l'avenir scientifique de l'Afrique." %}
                         </p>
                         <p class="text-blue-300 text-xs">
-                            Cochez la case partenariat dans le formulaire pour qu'on vous recontacte en priorité.
+                            {% trans "Cochez la case partenariat dans le formulaire pour qu'on vous recontacte en priorité." %}
                         </p>
                     </div>
 
@@ -307,10 +306,10 @@
         <div class="max-w-3xl mx-auto text-center">
 
             <h2 class="text-2xl font-bold text-numeria-bleu dark:text-numeria-or mb-3">
-                Suivez-nous
+                {% trans "Suivez-nous" %}
             </h2>
             <p class="text-gray-500 dark:text-gray-400 text-sm mb-8">
-                Restez informés des dernières actualités de Numeria Institute
+                {% trans "Restez informés des dernières actualités de Numeria Institute" %}
             </p>
 
             <div class="flex flex-wrap justify-center gap-4">
@@ -319,7 +318,7 @@
                     <span class="text-2xl">▶️</span>
                     <div class="text-left">
                         <p class="font-bold text-numeria-bleu dark:text-numeria-or text-sm group-hover:text-numeria-or">YouTube</p>
-                        <p class="text-gray-400 text-xs">Cours & tutoriels</p>
+                        <p class="text-gray-400 text-xs">{% trans "Cours & tutoriels" %}</p>
                     </div>
                 </a>
 
@@ -327,7 +326,7 @@
                     <span class="text-2xl">💼</span>
                     <div class="text-left">
                         <p class="font-bold text-numeria-bleu dark:text-numeria-or text-sm group-hover:text-numeria-or">LinkedIn</p>
-                        <p class="text-gray-400 text-xs">Actualités pro</p>
+                        <p class="text-gray-400 text-xs">{% trans "Actualités pro" %}</p>
                     </div>
                 </a>
 
@@ -335,7 +334,7 @@
                     <span class="text-2xl">📘</span>
                     <div class="text-left">
                         <p class="font-bold text-numeria-bleu dark:text-numeria-or text-sm group-hover:text-numeria-or">Facebook</p>
-                        <p class="text-gray-400 text-xs">Communauté</p>
+                        <p class="text-gray-400 text-xs">{% trans "Communauté" %}</p>
                     </div>
                 </a>
 
@@ -343,7 +342,7 @@
                     <span class="text-2xl">📸</span>
                     <div class="text-left">
                         <p class="font-bold text-numeria-bleu dark:text-numeria-or text-sm group-hover:text-numeria-or">Instagram</p>
-                        <p class="text-gray-400 text-xs">Vie du campus</p>
+                        <p class="text-gray-400 text-xs">{% trans "Vie du campus" %}</p>
                     </div>
                 </a>
 

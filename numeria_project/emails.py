@@ -54,6 +54,7 @@ def send_verification_email(request, user, language=None):
     language = _get_language(language or getattr(request, 'LANGUAGE_CODE', None))
     token = make_email_verification_token(user)
     verification_url = request.build_absolute_uri(reverse('comptes:verify_email', args=[token]))
+    logger.info('send_verification_email: sending to %s, url=%s', user.email, verification_url)
     subject = 'Confirm your Numeria account' if language == 'en' else 'Confirme ton compte Numeria'
     html_body = _render_template(
         f'emails/verify_email_{language}.html',
@@ -65,7 +66,12 @@ def send_verification_email(request, user, language=None):
         language=language,
     )
     text_content = strip_tags(html_body)
-    _send_html_email(subject, text_content, html_body, [user.email])
+    try:
+        _send_html_email(subject, text_content, html_body, [user.email])
+        logger.info('send_verification_email: sent OK to %s', user.email)
+    except Exception as e:
+        logger.error('send_verification_email: FAILED for %s — %s', user.email, e)
+        raise
 
 
 def send_welcome_email(request, user, language=None):

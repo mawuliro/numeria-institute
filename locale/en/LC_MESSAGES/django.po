@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-28 21:08+0000\n"
+"POT-Creation-Date: 2026-05-28 22:41+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -139,7 +139,8 @@ msgid "Nous sommes désolés, votre candidature n'a pas été retenue cette ann�
 msgstr "We are sorry, your application was not selected this year."
 
 #: admissions/templates/admissions/detail_candidature.html:65
-#: mentorat/models.py:132
+#: mentorat/models.py:132 pages/forms.py:19
+#: pages/templates/pages/contact.html:67
 msgid "Nom complet"
 msgstr "Full name"
 
@@ -148,7 +149,7 @@ msgid "Date de naissance"
 msgstr "Date of birth"
 
 #: admissions/templates/admissions/detail_candidature.html:67
-#: mentorat/models.py:475
+#: mentorat/models.py:475 pages/templates/pages/contact.html:223
 msgid "Téléphone"
 msgstr "Phone"
 
@@ -547,7 +548,8 @@ msgstr "Create a category"
 #: communaute/templates/communaute/liste_categories.html:41
 #: communaute/templates/communaute/modifier_message.html:3
 #: communaute/templates/communaute/modifier_profil.html:3
-#: comptes/templates/comptes/inscription.html:248 templates/base.html:418
+#: comptes/templates/comptes/inscription.html:248
+#: pages/templates/pages/contact.html:337 templates/base.html:418
 #: templates/includes/nav_items.html:9 templates/includes/nav_items.html:22
 msgid "Communauté"
 msgstr "Community"
@@ -695,7 +697,8 @@ msgstr "New topic"
 msgid "Nouvelle catégorie"
 msgstr "New category"
 
-#: communaute/templates/communaute/detail_categorie.html:55
+#: communaute/templates/communaute/detail_categorie.html:55 pages/forms.py:43
+#: pages/templates/pages/contact.html:121
 msgid "Sujet"
 msgstr "Topic"
 
@@ -1102,7 +1105,7 @@ msgstr "Be clear, precise and respectful in your replies."
 msgid "Publier la réponse"
 msgstr "Publish reply"
 
-#: comptes/forms.py:97 comptes/forms.py:245
+#: comptes/forms.py:97 comptes/forms.py:245 pages/forms.py:27
 msgid "Adresse email"
 msgstr "Email address"
 
@@ -1193,6 +1196,7 @@ msgid "Professionnel"
 msgstr "Professional"
 
 #: comptes/models.py:41 mentorat/models.py:30 mentorat/models.py:259
+#: pages/forms.py:15
 msgid "Autre"
 msgstr "Other"
 
@@ -1355,84 +1359,84 @@ msgstr "Discover our catalogue and start learning today!"
 msgid "Pour toi"
 msgstr "For you"
 
-#: comptes/views.py:30
+#: comptes/views.py:36
 msgid ""
 "✅ Ton compte a été créé. Vérifie ta boîte email pour activer ton accès."
 msgstr ""
 
-#: comptes/views.py:33 comptes/views.py:264
+#: comptes/views.py:39 comptes/views.py:276
 msgid "Veuillez corriger les erreurs ci-dessous."
 msgstr "Please correct the errors below."
 
-#: comptes/views.py:53
+#: comptes/views.py:59
 msgid "Ton compte est déjà activé. Connecte-toi pour continuer."
 msgstr "Your account is already activated. Log in to continue."
 
-#: comptes/views.py:60
+#: comptes/views.py:69
 msgid "🎉 Ton adresse email est confirmée. Bienvenue sur Numeria !"
 msgstr "🎉 Your email address is confirmed. Welcome to Numeria!"
 
-#: comptes/views.py:72
+#: comptes/views.py:84
 #, python-brace-format
 msgid ""
 "Un nouvel email de confirmation a été envoyé à {email}. Vérifie ta boîte de "
 "réception."
 msgstr ""
 
-#: comptes/views.py:75
+#: comptes/views.py:87
 msgid "Ce compte est déjà activé. Connecte-toi pour continuer."
 msgstr "This account is already activated. Log in to continue."
 
-#: comptes/views.py:77
+#: comptes/views.py:89
 msgid "Aucun compte actif n'a été trouvé pour cette adresse email."
 msgstr "No active account was found for this email address."
 
-#: comptes/views.py:99
+#: comptes/views.py:111
 #, python-brace-format
 msgid "Bon retour, {first_name} ! 👋"
 msgstr "Welcome back, {first_name}! 👋"
 
-#: comptes/views.py:106
+#: comptes/views.py:118
 msgid "Nom d'utilisateur ou mot de passe incorrect."
 msgstr "Incorrect username or password."
 
-#: comptes/views.py:118
+#: comptes/views.py:130
 #, python-brace-format
 msgid "À bientôt, {prenom} ! 👋"
 msgstr "See you soon, {prenom}! 👋"
 
-#: comptes/views.py:184
+#: comptes/views.py:196
 msgid "Ton profil a été mis à jour ! ✅"
 msgstr "Your profile has been updated! ✅"
 
-#: comptes/views.py:200
+#: comptes/views.py:212
 msgid ""
 "Profil mis à jour, mais la photo n'a pas pu être enregistrée (Cloudinary non "
 "configuré)."
 msgstr ""
 
-#: comptes/views.py:206
+#: comptes/views.py:218
 msgid "Veuillez corriger les erreurs."
 msgstr "Please correct the errors."
 
-#: comptes/views.py:239
+#: comptes/views.py:251
 msgid "Ta photo de profil a été supprimée. ✅"
 msgstr "Your profile picture has been deleted. ✅"
 
-#: comptes/views.py:241
+#: comptes/views.py:253
 msgid "Tu n'as pas de photo de profil à supprimer."
 msgstr "You don't have a profile picture to delete."
 
-#: comptes/views.py:261
+#: comptes/views.py:273
 msgid "Ton mot de passe a été changé avec succès ! 🔐"
 msgstr "Your password has been changed successfully! 🔐"
 
-#: comptes/views.py:281
+#: comptes/views.py:293
 #, python-brace-format
 msgid "Ton compte a été supprimé, {prenom}. Nous espérons te revoir ! 👋"
 msgstr "Your account has been deleted, {prenom}. We hope to see you again! 👋"
 
-#: comptes/views.py:284
+#: comptes/views.py:296
 msgid "Mot de passe incorrect. Ton compte n'a pas été supprimé."
 msgstr "Incorrect password. Your account has not been deleted."
 
@@ -1536,91 +1540,91 @@ msgstr "Verification code"
 msgid "Découvrir nos cours"
 msgstr "Discover our courses"
 
-#: cours/views.py:175
+#: cours/views.py:178
 #, python-format
 msgid "Tu es déjà inscrit au cours « %(titre)s » ! 📚"
 msgstr "You are already enrolled in the course « %(titre)s »! 📚"
 
-#: cours/views.py:186
+#: cours/views.py:192
 #, python-format
 msgid "🎉 Bienvenue dans le cours « %(titre)s » !"
 msgstr "🎉 Welcome to the course « %(titre)s »!"
 
-#: cours/views.py:207
+#: cours/views.py:213
 #, python-format
 msgid "Tu t'es désinscrit du cours « %(titre)s » ."
 msgstr "You have unenrolled from the course « %(titre)s »."
 
-#: cours/views.py:209 cours/views.py:228 cours/views.py:328
+#: cours/views.py:215 cours/views.py:234 cours/views.py:334
 #, fuzzy
 #| msgid "Tu n'es inscrit à aucun cours"
 msgid "Tu n'es pas inscrit à ce cours."
 msgstr "You are not enrolled in any course"
 
-#: cours/views.py:250
+#: cours/views.py:256
 #, python-format
 msgid "🎉 Félicitations ! Tu as terminé le cours « %(titre)s » !"
 msgstr "🎉 Congratulations! You have completed the course « %(titre)s »!"
 
-#: cours/views.py:255
+#: cours/views.py:261
 #, python-format
 msgid "✅ Leçon terminée ! Progression : %(pct)s%%"
 msgstr "✅ Lesson completed! Progress: %(pct)s%%"
 
-#: cours/views.py:259
+#: cours/views.py:265
 msgid "Cette leçon était déjà marquée comme terminée."
 msgstr "This lesson was already marked as completed."
 
-#: cours/views.py:303
+#: cours/views.py:309
 #, fuzzy
 #| msgid "Marquer comme terminée"
 msgid "Leçon marquée comme non terminée."
 msgstr "Mark as completed"
 
-#: cours/views.py:335
+#: cours/views.py:341
 #, fuzzy
 #| msgid "Réponse le"
 msgid "Réponse invalide."
 msgstr "Response on"
 
-#: cours/views.py:390
+#: cours/views.py:396
 msgid "Les certificats sont réservés aux cours payants."
 msgstr "Certificates are only available for paid courses."
 
-#: cours/views.py:452
+#: cours/views.py:458
 msgid "Vous devez terminer le cours avant de le noter."
 msgstr "You must complete the course before rating it."
 
-#: cours/views.py:459
+#: cours/views.py:465
 msgid "La note doit être entre 1 et 5."
 msgstr "The rating must be between 1 and 5."
 
-#: cours/views.py:474
+#: cours/views.py:480
 msgid "✅ Merci pour votre évaluation !"
 msgstr "✅ Thank you for your review!"
 
-#: cours/views.py:476
+#: cours/views.py:482
 #, python-format
 msgid "Erreur lors de l'évaluation : %(err)s"
 msgstr "Error during rating: %(err)s"
 
-#: cours/views.py:495
+#: cours/views.py:501
 msgid "Vous devez être inscrit au cours pour poser une question."
 msgstr "You must be enrolled in the course to ask a question."
 
-#: cours/views.py:502
+#: cours/views.py:508
 msgid "La question doit contenir au moins 5 caractères."
 msgstr "The question must contain at least 5 characters."
 
-#: cours/views.py:505
+#: cours/views.py:511
 msgid "La question ne peut pas dépasser 500 caractères."
 msgstr "The question cannot exceed 500 characters."
 
-#: cours/views.py:517
+#: cours/views.py:523
 msgid "✅ Votre question a été soumise et sera modérée par un admin."
 msgstr "✅ Your question has been submitted and will be reviewed by an admin."
 
-#: cours/views.py:519
+#: cours/views.py:525
 #, python-format
 msgid "Erreur lors de la soumission : %(err)s"
 msgstr "Error during submission: %(err)s"
@@ -3755,7 +3759,6 @@ msgid "Tarif par séance (FCFA)"
 msgstr "Session fee"
 
 #: mentorat/models.py:94
-#, python-format
 msgid "0 = mentorat gratuit. Numeria prélevé 20% de commission."
 msgstr "0 = free mentorship. Numeria charges 20% commission."
 
@@ -4025,6 +4028,7 @@ msgid "Visioconférence"
 msgstr "Video Conference"
 
 #: mentorat/models.py:476 pages/templates/pages/a_propos.html:350
+#: pages/templates/pages/contact.html:85 pages/templates/pages/contact.html:210
 msgid "Email"
 msgstr "Email"
 
@@ -4250,7 +4254,7 @@ msgstr "Active mentees"
 #: mentorat/templates/mentorat/detail_mentor.html:120
 #, python-format
 msgid "À propos de %(name)s"
-msgstr "About"
+msgstr "About %(name)s"
 
 #: mentorat/templates/mentorat/detail_mentor.html:150
 #: mentorat/templates/mentorat/detail_relation.html:131
@@ -4351,9 +4355,10 @@ msgstr "Find a Mentor"
 
 #: mentorat/templates/mentorat/devenir_mentee.html:4
 msgid "Bénéficiez de conseils personnalisés d'experts sur Numeria Institute."
-msgstr "Get personalized advice from experts on Numeria Institute."
-"Get personalised advice from experts on Numeria Institute.Get personalised "
-"advice from experts in your field. Accelerate your learning and career."
+msgstr ""
+"Get personalized advice from experts on Numeria Institute.Get personalised "
+"advice from experts on Numeria Institute.Get personalised advice from "
+"experts in your field. Accelerate your learning and career."
 
 #: mentorat/templates/mentorat/devenir_mentee.html:14
 #: mentorat/templates/mentorat/devenir_mentor.html:14
@@ -4370,10 +4375,11 @@ msgstr "Mentorship"
 
 #: mentorat/templates/mentorat/devenir_mentee.html:21
 msgid "Bénéficiez de conseils personnalisés d'experts dans votre domaine."
-msgstr "Get personalized advice from experts in your field."
-"Get personalised advice from experts in your field.Get personalised advice "
+msgstr ""
+"Get personalized advice from experts in your field.Get personalised advice "
 "from experts in your field.Get personalised advice from experts in your "
-"field. Accelerate your learning and career."
+"field.Get personalised advice from experts in your field. Accelerate your "
+"learning and career."
 
 #: mentorat/templates/mentorat/devenir_mentee.html:40
 #: mentorat/templates/mentorat/devenir_mentee.html:58
@@ -4402,10 +4408,11 @@ msgstr ""
 
 #: mentorat/templates/mentorat/devenir_mentor.html:21
 msgid "Partagez votre expertise et aidez la nouvelle génération à réussir."
-msgstr "Share your expertise and help the next generation succeed."
+msgstr ""
 "Share your expertise and help the next generation succeed.Share your "
 "expertise and help the next generation succeed.Share your expertise and help "
-"the next generation succeed. Make a difference in a learner's life."
+"the next generation succeed.Share your expertise and help the next "
+"generation succeed. Make a difference in a learner's life."
 
 #: mentorat/templates/mentorat/index.html:5
 msgid ""
@@ -5230,6 +5237,68 @@ msgstr "French"
 msgid "English"
 msgstr "English"
 
+#: pages/forms.py:9
+msgid "— Choisir un sujet —"
+msgstr "— Choose a subject —"
+
+#: pages/forms.py:10
+#, fuzzy
+#| msgid "Demande de mentorat"
+msgid "Demande d'information"
+msgstr "Mentoring request"
+
+#: pages/forms.py:11
+#, fuzzy
+#| msgid "Inscriptions fermées"
+msgid "Inscription aux filières"
+msgstr "Enrolments closed"
+
+#: pages/forms.py:12
+msgid "Proposition de partenariat"
+msgstr "Partnership proposal"
+
+#: pages/forms.py:13
+msgid "Contact presse / média"
+msgstr "Press / media contact"
+
+#: pages/forms.py:14
+#, fuzzy
+#| msgid "Problème de réseau"
+msgid "Problème technique"
+msgstr "Network problem"
+
+#: pages/forms.py:22 pages/templates/pages/contact.html:74
+#, fuzzy
+#| msgid "Votre prénom"
+msgid "Votre nom et prénom"
+msgstr "Your first name"
+
+#: pages/forms.py:34
+msgid "Organisation / Université"
+msgstr "Organisation / University"
+
+#: pages/forms.py:38
+#, fuzzy
+#| msgid "Université de Lomé"
+msgid "Optionnel — Ex: Université de Lomé"
+msgstr "University of Lomé"
+
+#: pages/forms.py:48 pages/templates/pages/contact.html:145
+#, fuzzy
+#| msgid "Messages"
+msgid "Message"
+msgstr "Messages"
+
+#: pages/forms.py:51
+msgid "Écrivez votre message ici..."
+msgstr "Write your message here..."
+
+#: pages/forms.py:57
+#, fuzzy
+#| msgid "Planifiez une séance de mentorat sur Numeria Institute."
+msgid "Je souhaite discuter d'un partenariat avec Numeria Institute"
+msgstr "Schedule a mentoring session on Numeria Institute."
+
 #: pages/templates/pages/a_propos.html:42 templates/base.html:406
 msgid "Rayonnement CEDEAO"
 msgstr "ECOWAS Reach"
@@ -5524,6 +5593,7 @@ msgid "Basé à Lomé, rayonnement dans toute l'Afrique de l'Ouest"
 msgstr "Based in Lomé, reaching across all of West Africa"
 
 #: pages/templates/pages/a_propos.html:339
+#: pages/templates/pages/contact.html:200
 #, fuzzy
 #| msgid "Adresse email"
 msgid "Adresse"
@@ -5576,6 +5646,7 @@ msgid ""
 msgstr ""
 
 #: pages/templates/pages/a_propos.html:413
+#: pages/templates/pages/contact.html:286
 #, fuzzy
 #| msgid "Devenir Mentor"
 msgid "Devenir partenaire"
@@ -5665,7 +5736,8 @@ msgstr "Interactive exercises"
 
 #: pages/templates/pages/accueil.html:312
 msgid "Des QCM avec corrigés détaillés visibles seulement après réussite."
-msgstr "Multiple-choice questions with detailed answers visible only after passing."
+msgstr ""
+"Multiple-choice questions with detailed answers visible only after passing."
 "Multiple-choice questions with detailed solutions revealed only after "
 "success."
 
@@ -6174,13 +6246,144 @@ msgid ""
 "Pour toute question relative à vos données personnelles, contactez-nous à :"
 msgstr "For any questions regarding your personal data, contact us at:"
 
-#: pages/templates/pages/contact.html:276
+#: pages/templates/pages/contact.html:35
+#, fuzzy
+#| msgid "Envoyer la demande"
+msgid "Envoyer un message"
+msgstr "Send the request"
+
+#: pages/templates/pages/contact.html:105
+#, fuzzy
+#| msgid "Navigation"
+msgid "Organisation"
+msgstr "Navigation"
+
+#: pages/templates/pages/contact.html:106
+#, fuzzy
+#| msgid "Optionnel"
+msgid "optionnel"
+msgstr "Optional"
+
+#: pages/templates/pages/contact.html:113
+msgid "Université, entreprise, ONG..."
+msgstr "University, company, NGO..."
+
+#: pages/templates/pages/contact.html:150
+msgid "Écrivez votre message ici... (minimum 20 caractères)"
+msgstr "Write your message here... (minimum 20 characters)"
+
+#: pages/templates/pages/contact.html:166
+msgid ""
+"Je souhaite discuter d'un <strong>partenariat</strong> avec Numeria "
+"Institute (université, entreprise, ONG, institution)"
+msgstr ""
+
+#: pages/templates/pages/contact.html:174
+#, fuzzy
+#| msgid "Envoyer la demande"
+msgid "Envoyer le message"
+msgstr "Send the request"
+
+#: pages/templates/pages/contact.html:178
+msgid "Nous répondons sous 24 à 48 heures ouvrables."
+msgstr "We respond within 24 to 48 business hours."
+
+#: pages/templates/pages/contact.html:191
+#, fuzzy
+#| msgid "Nos cours"
+msgid "Nos coordonnées"
+msgstr "Our courses"
+
+#: pages/templates/pages/contact.html:236
+msgid "Horaires"
+msgstr "Hours"
+
+#: pages/templates/pages/contact.html:238
+msgid "Heure de Lomé (GMT+0)"
+msgstr "Lomé time (GMT+0)"
+
+#: pages/templates/pages/contact.html:248
+#, fuzzy
+#| msgid "Question initiale"
+msgid "Questions fréquentes"
+msgstr "Original question"
+
+#: pages/templates/pages/contact.html:254
+msgid "Les cours en ligne sont-ils gratuits ?"
+msgstr "Are online courses free?"
+
+#: pages/templates/pages/contact.html:257
+#, fuzzy
+#| msgid ""
+#| "La majorité des cours sont gratuits. Paiement Mobile Money disponible."
+msgid ""
+"Oui, la majorité des cours en ligne sont gratuits. Certains cours avancés "
+"sont payants."
+msgstr "Most courses are free. Mobile Money payment available."
+
+#: pages/templates/pages/contact.html:263
+msgid "Comment candidater aux filières physiques ?"
+msgstr "How do I apply for in-person programmes?"
+
+#: pages/templates/pages/contact.html:266
+msgid ""
+"Les candidatures se font en ligne. Créez un compte et suivez le processus de "
+"candidature."
+msgstr ""
+
+#: pages/templates/pages/contact.html:272
+msgid "Proposez-vous des bourses ?"
+msgstr "Do you offer scholarships?"
+
+#: pages/templates/pages/contact.html:275
 msgid ""
 "Oui, des bourses sont disponibles pour les candidats méritants. Contactez-"
 "nous pour en savoir plus."
 msgstr ""
 "Yes, scholarships are available for deserving candidates. Contact us to "
 "learn more."
+
+#: pages/templates/pages/contact.html:289
+msgid ""
+"Université, entreprise, ONG ou institution — construisons ensemble l'avenir "
+"scientifique de l'Afrique."
+msgstr ""
+
+#: pages/templates/pages/contact.html:292
+msgid ""
+"Cochez la case partenariat dans le formulaire pour qu'on vous recontacte en "
+"priorité."
+msgstr ""
+
+#: pages/templates/pages/contact.html:309
+#, fuzzy
+#| msgid "Inscrivez-vous"
+msgid "Suivez-nous"
+msgstr "Sign up"
+
+#: pages/templates/pages/contact.html:312
+#, fuzzy
+#| msgid "Rejoins Numeria Institute"
+msgid "Restez informés des dernières actualités de Numeria Institute"
+msgstr "Join Numeria Institute"
+
+#: pages/templates/pages/contact.html:321
+#, fuzzy
+#| msgid "Cours gratuits"
+msgid "Cours & tutoriels"
+msgstr "Free courses"
+
+#: pages/templates/pages/contact.html:329
+#, fuzzy
+#| msgid "Actualités & Savoirs"
+msgid "Actualités pro"
+msgstr "News & Knowledge"
+
+#: pages/templates/pages/contact.html:345
+#, fuzzy
+#| msgid "Prix du cours"
+msgid "Vie du campus"
+msgstr "Course price"
 
 #: pages/views.py:48 templates/base.html:21 templates/base.html:24
 #: templates/base.html:33
@@ -6215,7 +6418,7 @@ msgstr ""
 "Discover Numeria Institute, our mission and team for scientific education in "
 "Africa."
 
-#: pages/views.py:247
+#: pages/views.py:250
 #, python-brace-format
 msgid ""
 "✅ Merci {nom} ! Ton message a bien été envoyé. Nous te répondrons dans "
@@ -6223,7 +6426,7 @@ msgid ""
 msgstr ""
 "✅ Thank you {nom}! Your message has been sent. We'll reply within 24-48h."
 
-#: pages/views.py:252
+#: pages/views.py:255
 #, python-brace-format
 msgid "✅ Message reçu {nom} ! Nous te répondrons bientôt."
 msgstr "✅ Message received {nom}! We'll reply soon."
@@ -6551,8 +6754,9 @@ msgstr ""
 #| "Suivez vos demandes de mentorat, vos mentors et vos séances sur Numeria "
 #| "Institute."
 msgid "Tu as demandé à réinitialiser ton mot de passe pour Numeria Institute."
-msgstr "You requested a password reset for Numeria Institute."
-"Track your mentoring requests, mentors and sessions on Numeria Institute."
+msgstr ""
+"You requested a password reset for Numeria Institute.Track your mentoring "
+"requests, mentors and sessions on Numeria Institute."
 
 #: templates/registration/password_reset_email.html:5
 msgid "Clique sur le lien ci-dessous pour choisir un nouveau mot de passe :"

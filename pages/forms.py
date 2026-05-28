@@ -1,59 +1,59 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 
 class FormulaireContact(forms.Form):
     """Formulaire de contact de la page Contact."""
 
     SUJETS = [
-        ('', '— Choisir un sujet —'),
-        ('information', 'Demande d\'information'),
-        ('inscription', 'Inscription aux filières'),
-        ('partenariat', 'Proposition de partenariat'),
-        ('presse', 'Contact presse / média'),
-        ('technique', 'Problème technique'),
-        ('autre', 'Autre'),
+        ('', _('— Choisir un sujet —')),
+        ('information', _("Demande d'information")),
+        ('inscription', _('Inscription aux filières')),
+        ('partenariat', _('Proposition de partenariat')),
+        ('presse', _('Contact presse / média')),
+        ('technique', _('Problème technique')),
+        ('autre', _('Autre')),
     ]
 
     nom_complet = forms.CharField(
-        label='Nom complet',
+        label=_('Nom complet'),
         max_length=100,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Votre nom et prénom',
+            'placeholder': _('Votre nom et prénom'),
         })
     )
 
     email = forms.EmailField(
-        label='Adresse email',
+        label=_('Adresse email'),
         widget=forms.EmailInput(attrs={
             'placeholder': 'votre@email.com',
         })
     )
 
     organisation = forms.CharField(
-        label='Organisation / Université',
+        label=_('Organisation / Université'),
         max_length=100,
         required=False,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Optionnel — Ex: Université de Lomé',
+            'placeholder': _('Optionnel — Ex: Université de Lomé'),
         })
     )
 
     sujet = forms.ChoiceField(
-        label='Sujet',
+        label=_('Sujet'),
         choices=SUJETS,
     )
 
     message = forms.CharField(
-        label='Message',
+        label=_('Message'),
         min_length=20,
         widget=forms.Textarea(attrs={
-            'placeholder': 'Écrivez votre message ici...',
+            'placeholder': _('Écrivez votre message ici...'),
             'rows': 6,
         })
     )
 
-    # Case à cocher pour les partenariats
     est_partenaire = forms.BooleanField(
-        label='Je souhaite discuter d\'un partenariat avec Numeria Institute',
+        label=_("Je souhaite discuter d'un partenariat avec Numeria Institute"),
         required=False,
     )
