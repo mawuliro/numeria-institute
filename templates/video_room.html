@@ -10,7 +10,10 @@
 <!-- ╚══════════════════════════════════════════════════════════════╝ -->
 <div id="meetApp"
      class="fixed inset-0 z-[9999] flex flex-col overflow-hidden"
-     style="background:#202124; font-family:'Google Sans',Roboto,Arial,sans-serif;">
+     style="background:radial-gradient(circle at 15% 20%, rgba(56,189,248,.18), transparent 25%),
+                    radial-gradient(circle at 80% 15%, rgba(52,211,153,.15), transparent 22%),
+                    linear-gradient(180deg, #111827 0%, #161b22 100%);
+            font-family:'Google Sans',Roboto,Arial,sans-serif;">
 
   <!-- ─── TOP BAR ──────────────────────────────────────────────── -->
   <div class="flex items-center justify-between px-4 h-14 flex-shrink-0 z-10">
@@ -408,7 +411,7 @@
   /* ── Toast ──────────────────────────────────────────────── */
   window.meetToast = function(msg) {
     const t = $('meetToast');
-    t.textContent = msg;
+    t.textContent = `🚀 ${msg}`;
     t.style.opacity = '1';
     t.style.transform = 'translateX(-50%) translateY(0)';
     clearTimeout(t._tid);
@@ -662,12 +665,17 @@
   /* ── WebRTC ─────────────────────────────────────────────── */
   async function getPeer(remoteId){
     if(peerConns[remoteId]) return peerConns[remoteId].pc;
-    const pc = new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
+    const pc = new RTCPeerConnection({
+      iceServers: [
+        {urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun2.l.google.com:19302','stun:stun3.l.google.com:19302']},
+      ],
+    });
 
     pc.ontrack = async e => {
       const vid = await getOrCreateRemoteTile(remoteId, peerNames[remoteId] || null);
       if(vid.srcObject !== e.streams[0]){
         vid.srcObject = e.streams[0];
+        vid.play().catch(()=>{});
         const tile = $(`tile-${remoteId}`);
         tile?.querySelector('.remote-avatar')?.remove();
       }
@@ -681,6 +689,18 @@
       if(pc.connectionState==='connected')     setStatus('{% trans "Connecté" %}','green');
       else if(['disconnected','failed'].includes(pc.connectionState)) setStatus('{% trans "Reconnexion…" %}','yellow');
     };
+
+    pc.oniceconnectionstatechange = ()=>{
+      if(pc.iceConnectionState === 'completed' || pc.iceConnectionState === 'connected') return;
+      if(pc.iceConnectionState === 'checking') setStatus('{% trans "Recherche du réseau…" %}','yellow');
+      if(pc.iceConnectionState === 'failed')   setStatus('{% trans "Problème de réseau" %}','red');
+    };
+
+    pc.onicegatheringstatechange = ()=>{
+      if(pc.iceGatheringState === 'complete') {
+        setStatus('{% trans "Traversée du réseau réussie" %}','green');
+      }
+    }; 
 
     if(!localStream){
       await initMedia();
@@ -813,16 +833,18 @@
 
     if(msg.signal_type==='sdp-offer'){
       await initMedia().catch(()=>{});
-      const pc=await getPeer(from);
-      await pc.setRemoteDescription(new RTCSessionDescription(msg.payload));
+      const pc = await getPeer(from);
+      const remoteDesc = {type: msg.payload.type, sdp: msg.payload.sdp};
+      await pc.setRemoteDescription(new RTCSessionDescription(remoteDesc));
       await drainIceCandidates(from);
       await createAnswer(from);
       setStatus('{% trans "Connexion en cours…" %}','yellow');
     }
     else if(msg.signal_type==='sdp-answer'){
-      const d=peerConns[from];
+      const d = peerConns[from];
       if(d){
-        await d.pc.setRemoteDescription(new RTCSessionDescription(msg.payload));
+        const remoteDesc = {type: msg.payload.type, sdp: msg.payload.sdp};
+        await d.pc.setRemoteDescription(new RTCSessionDescription(remoteDesc));
         await drainIceCandidates(from);
       }
     }
