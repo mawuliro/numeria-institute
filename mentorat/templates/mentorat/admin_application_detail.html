@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block titre %}Détail candidature mentor — Numeria Institute{% endblock %}
+{% block contenu %}
+<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-4xl mx-auto space-y-8">
+            <div class="flex items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-extrabold">Détails de la candidature</h1>
+                    <p class="text-gray-600 dark:text-gray-300">Examinez et validez ou rejetez cette candidature.</p>
+                </div>
+                <a href="{% url 'mentorat:applications_list' %}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 transition-colors">Retour aux candidatures</a>
+            </div>
+            <div class="rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 space-y-6">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Candidat</p>
+                        <p class="mt-2 text-lg font-semibold">{{ application.profil.utilisateur.get_full_name|default:application.profil.utilisateur.username }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ application.profil.utilisateur.email }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Statut</p>
+                        <p class="mt-2 text-lg font-semibold">{{ application.get_status_display }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Créé le {{ application.date_created|date:'SHORT_DATETIME_FORMAT' }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Titre professionnel</p>
+                        <p class="mt-2">{{ application.professional_title }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Expertise</p>
+                        <p class="mt-2">{{ application.expertise_categories }}</p>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Présentation</p>
+                    <p class="mt-2 text-gray-700 dark:text-gray-200">{{ application.bio|linebreaksbr }}</p>
+                </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.2em] text-gray-500">LinkedIn</p>
+                        <p class="mt-2">{{ application.linkedin|default:'-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Portfolio / GitHub</p>
+                        <p class="mt-2">{{ application.portfolio|default:'-' }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.2em] text-gray-500">Certificat</p>
+                        <p class="mt-2">{% if application.certificate %}<a class="text-numeria-teal hover:text-teal-500" href="{{ application.certificate.url }}">Télécharger</a>{% else %}-{% endif %}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.2em] text-gray-500">CV</p>
+                        <p class="mt-2">{% if application.cv %}<a class="text-numeria-teal hover:text-teal-500" href="{{ application.cv.url }}">Télécharger</a>{% else %}-{% endif %}</p>
+                    </div>
+                </div>
+                {% if application.rejection_notes %}
+                <div class="rounded-3xl bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-700 p-6">
+                    <p class="text-sm font-semibold text-red-700 dark:text-red-200">Notes de rejet</p>
+                    <p class="mt-2 text-sm text-red-600 dark:text-red-300">{{ application.rejection_notes }}</p>
+                </div>
+                {% endif %}
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        <label for="rejection_notes" class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Commentaire de rejet</label>
+                        <textarea id="rejection_notes" name="rejection_notes" rows="4" class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-gray-100">{{ application.rejection_notes }}</textarea>
+                    </div>
+                    <div class="flex flex-col gap-3 sm:flex-row">
+                        <button type="submit" name="action" value="approve" class="inline-flex items-center justify-center flex-1 rounded-xl bg-numeria-teal px-5 py-3 text-sm font-semibold text-white hover:bg-teal-300 transition-colors">Approuver</button>
+                        <button type="submit" name="action" value="reject" class="inline-flex items-center justify-center flex-1 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white hover:bg-red-500 transition-colors">Rejeter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

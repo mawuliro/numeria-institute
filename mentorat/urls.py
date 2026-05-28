@@ -12,6 +12,9 @@ urlpatterns = [
     # Inscription
     path('devenir-mentor/', views.devenir_mentor, name='devenir_mentor'),
     path('devenir-mentee/', views.devenir_mentee, name='devenir_mentee'),
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('admin-applications/', views.applications_list, name='applications_list'),
+    path('admin-applications/<int:application_pk>/', views.application_detail, name='application_detail'),
 
     # Demandes de mentorat
     path('demander/<int:mentor_pk>/', views.demander_mentorat, name='demander_mentorat'),

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block titre %}Candidatures Mentorat — Numeria Institute{% endblock %}
+{% block contenu %}
+<section class="w-full py-12 bg-numeria-blanc dark:bg-gray-900">
+    <div class="w-full px-4 sm:px-8 lg:px-16">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex items-center justify-between gap-4 mb-8">
+                <div>
+                    <h1 class="text-3xl font-extrabold">Candidatures mentor</h1>
+                    <p class="text-gray-600 dark:text-gray-300">Consultez et gérez les candidatures envoyées par les futurs mentors.</p>
+                </div>
+                <a href="{% url 'mentorat:admin_dashboard' %}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 transition-colors">Retour au tableau de bord</a>
+            </div>
+            <div class="overflow-x-auto rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                <table class="min-w-full text-left text-sm text-gray-700 dark:text-gray-200">
+                    <thead class="bg-gray-50 dark:bg-gray-900/80 text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">
+                        <tr>
+                            <th class="px-6 py-4">Candidat</th>
+                            <th class="px-6 py-4">Statut</th>
+                            <th class="px-6 py-4">Date</th>
+                            <th class="px-6 py-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for application in applications %}
+                        <tr class="border-t border-gray-100 dark:border-gray-700">
+                            <td class="px-6 py-4">{{ application.profil.utilisateur.get_full_name|default:application.profil.utilisateur.username }}</td>
+                            <td class="px-6 py-4">{{ application.get_status_display }}</td>
+                            <td class="px-6 py-4">{{ application.date_created|date:'SHORT_DATETIME_FORMAT' }}</td>
+                            <td class="px-6 py-4">
+                                <a href="{% url 'mentorat:application_detail' application.pk %}" class="text-numeria-teal hover:text-teal-500">Voir</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">Aucune candidature trouvée.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.db.models import Q, Sum
@@ -10,23 +11,44 @@ from paiements.constants import PAYMENT_PROVIDERS
 from django.utils import timezone
 from datetime import timedelta
 from django.http import Http404
-from .models import Mentor, Mentee, DemandeMentorat, RelationMentorat, SeanceMentorat, PaiementSeance
-from .forms import InscriptionMentorForm, InscriptionMenteeForm, DemandeMentoratForm, SeanceMentoratForm, TerminerSeanceForm, PaiementSeanceForm
+from .models import (
+    Mentor,
+    Mentee,
+    MentorApplication,
+    DemandeMentorat,
+    RelationMentorat,
+    SeanceMentorat,
+    PaiementSeance,
+)
+from .forms import (
+    MentorApplicationForm,
+    MentorProfileForm,
+    InscriptionMentorForm,
+    InscriptionMenteeForm,
+    DemandeMentoratForm,
+    SeanceMentoratForm,
+    TerminerSeanceForm,
+    PaiementSeanceForm,
+)
 
 
 def index(request):
     """
     Page d'accueil du mentorat.
     """
-    mentors_count = Mentor.objects.filter(est_actif=True).count()
+    mentors_count = Mentor.objects.filter(est_actif=True, profil__est_menteur=True).count()
     mentees_count = Mentee.objects.filter(est_actif=True).count()
     relations_count = RelationMentorat.objects.filter(est_active=True).count()
 
     est_mentor = False
     est_mentee = False
+    application_status = None
     if request.user.is_authenticated and hasattr(request.user, 'profil'):
         est_mentor = hasattr(request.user.profil, 'mentorat_mentor')
         est_mentee = hasattr(request.user.profil, 'mentorat_mentee')
+        application = getattr(request.user.profil, 'application_mentor', None)
+        if application:
+            application_status = application.status
 
     context = {
         'mentors_count': mentors_count,
@@ -34,6 +56,7 @@ def index(request):
         'relations_count': relations_count,
         'est_mentor': est_mentor,
         'est_mentee': est_mentee,
+        'application_status': application_status,
     }
     return render(request, 'mentorat/index.html', context)
 
@@ -41,30 +64,60 @@ def index(request):
 @login_required
 def devenir_mentor(request):
     """
-    Inscription en tant que mentor.
+    Candidature pour devenir mentor.
     """
-    # Vérifier que l'utilisateur a un profil
     if not hasattr(request.user, 'profil'):
         messages.error(request, "Votre profil n'est pas configuré. Veuillez contacter l'administrateur.")
         return redirect('mentorat:index')
 
-    # Vérifier si l'utilisateur a déjà un profil mentor
-    if hasattr(request.user.profil, 'mentorat_mentor'):
-        messages.info(request, "Vous êtes déjà inscrit en tant que mentor.")
-        return redirect('mentorat:tableau_de_bord_mentor')
+    profil = request.user.profil
+    # Si le mentor est déjà approuvé, on lui permet d'éditer son profil.
+    if hasattr(profil, 'mentorat_mentor'):
+        mentor = profil.mentorat_mentor
+        if request.method == 'POST':
+            form = MentorProfileForm(request.POST, request.FILES, instance=mentor, profil=profil)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Votre profil mentor a été mis à jour.")
+                return redirect('mentorat:tableau_de_bord_mentor')
+        else:
+            form = MentorProfileForm(instance=mentor, profil=profil)
+
+        return render(request, 'mentorat/devenir_mentor.html', {
+            'form': form,
+            'is_mentor': True,
+            'mentor': mentor,
+        })
+
+    application = getattr(profil, 'application_mentor', None)
+    if application and application.status == 'pending':
+        return render(request, 'mentorat/devenir_mentor.html', {
+            'application': application,
+            'application_pending': True,
+        })
 
     if request.method == 'POST':
-        form = InscriptionMentorForm(request.POST)
+        form = MentorApplicationForm(request.POST, request.FILES, instance=application if application and application.status == 'rejected' else None)
         if form.is_valid():
-            mentor = form.save(commit=False)
-            mentor.profil = request.user.profil
-            mentor.save()
-            messages.success(request, "Félicitations ! Vous êtes maintenant inscrit en tant que mentor.")
-            return redirect('mentorat:tableau_de_bord_mentor')
+            application = form.save(commit=False)
+            application.profil = profil
+            application.status = 'pending'
+            application.save()
+            if form.cleaned_data.get('certificate'):
+                application.certificate = form.cleaned_data['certificate']
+            if form.cleaned_data.get('cv'):
+                application.cv = form.cleaned_data['cv']
+            application.save()
+            messages.success(request, "Votre candidature a bien été envoyée. Un administrateur la validera prochainement.")
+            return redirect('mentorat:devenir_mentor')
     else:
-        form = InscriptionMentorForm()
+        form = MentorApplicationForm(instance=application if application and application.status == 'rejected' else None)
 
-    return render(request, 'mentorat/devenir_mentor.html', {'form': form})
+    return render(request, 'mentorat/devenir_mentor.html', {
+        'form': form,
+        'application_rejected': application and application.status == 'rejected',
+        'rejection_notes': application.rejection_notes if application and application.status == 'rejected' else '',
+    })
 
 
 @login_required
@@ -101,7 +154,7 @@ def liste_mentors(request):
     """
     Liste des mentors disponibles.
     """
-    mentors = Mentor.objects.filter(est_actif=True).select_related('profil__utilisateur')
+    mentors = Mentor.objects.filter(est_actif=True, profil__est_menteur=True).select_related('profil__utilisateur')
 
     # Filtres
     domaine = request.GET.get('domaine')
@@ -269,6 +322,51 @@ def _is_seance_participant(user, seance):
     ) or (
         hasattr(profil, 'mentorat_mentee') and seance.relation.mentee == profil.mentorat_mentee
     )
+
+
+@staff_member_required
+def admin_dashboard(request):
+    """Tableau de bord administratif pour les candidatures de mentors."""
+    pending_applications = MentorApplication.objects.filter(status='pending').count()
+    approved_applications = MentorApplication.objects.filter(status='approved').count()
+    rejected_applications = MentorApplication.objects.filter(status='rejected').count()
+    mentors_count = Mentor.objects.filter(est_actif=True, profil__est_menteur=True).count()
+    bookings = SeanceMentorat.objects.filter(statut='planifiee').count()
+    return render(request, 'mentorat/admin_dashboard.html', {
+        'pending_applications': pending_applications,
+        'approved_applications': approved_applications,
+        'rejected_applications': rejected_applications,
+        'mentors_count': mentors_count,
+        'bookings': bookings,
+    })
+
+
+@staff_member_required
+def applications_list(request):
+    """Liste des candidatures mentor disponibles pour admin."""
+    applications = MentorApplication.objects.all().select_related('profil__utilisateur')
+    return render(request, 'mentorat/admin_applications.html', {
+        'applications': applications,
+    })
+
+
+@staff_member_required
+def application_detail(request, application_pk):
+    """Détail et modération d'une candidature de mentor."""
+    application = get_object_or_404(MentorApplication.objects.select_related('profil__utilisateur'), pk=application_pk)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        notes = request.POST.get('rejection_notes', '')
+        if action == 'approve':
+            application.approve()
+            messages.success(request, 'La candidature a été approuvée et le mentor a été activé.')
+        elif action == 'reject':
+            application.reject(notes=notes)
+            messages.success(request, 'La candidature a été rejetée.')
+        return redirect('mentorat:application_detail', application_pk=application.pk)
+    return render(request, 'mentorat/admin_application_detail.html', {
+        'application': application,
+    })
 
 
 @login_required

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Mentor, Mentee, DemandeMentorat, RelationMentorat, SeanceMentorat, PaiementSeance
+from .models import Mentor, Mentee, MentorApplication, DemandeMentorat, RelationMentorat, SeanceMentorat, PaiementSeance
 
 
 @admin.register(Mentor)
@@ -16,6 +16,14 @@ class MenteeAdmin(admin.ModelAdmin):
     list_filter = ['objectifs', 'niveau_etudes', 'est_actif', 'a_mentor_actuel']
     search_fields = ['profil__utilisateur__username', 'profil__utilisateur__first_name', 'profil__utilisateur__last_name']
     readonly_fields = ['date_inscription']
+
+
+@admin.register(MentorApplication)
+class MentorApplicationAdmin(admin.ModelAdmin):
+    list_display = ['profil', 'status', 'date_created', 'date_updated']
+    list_filter = ['status', 'date_created']
+    search_fields = ['profil__utilisateur__username', 'profil__utilisateur__first_name', 'profil__utilisateur__last_name']
+    readonly_fields = ['date_created', 'date_updated']
 
 
 @admin.register(DemandeMentorat)

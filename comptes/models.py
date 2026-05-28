@@ -62,6 +62,18 @@ class Profil(models.Model):
         verbose_name='Accès mentor activé',
         help_text='Peut répondre aux questions des étudiants'
     )
+
+    ROLE_CHOICES = [
+        ('mentee', 'Mentee'),
+        ('mentor', 'Mentor'),
+    ]
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default='mentee',
+        verbose_name='Rôle utilisateur',
+        help_text='Rôle de l’utilisateur dans la plateforme.'
+    )
     
     # --- PRÉFÉRENCES ---
     notifications_activees = models.BooleanField(

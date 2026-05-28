@@ -66,6 +66,25 @@ class Mentor(models.Model):
         help_text='Décrivez votre parcours, vos motivations à devenir mentor...'
     )
 
+    titre_professionnel = models.CharField(
+        max_length=120,
+        blank=True,
+        verbose_name='Titre professionnel',
+        help_text='Ex: Coach en Data Science, Ingénieur logiciel senior...'
+    )
+    categories = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='Catégories de mentorat',
+        help_text='Liste courte des sujets séparés par des virgules.'
+    )
+    langues = models.CharField(
+        max_length=150,
+        blank=True,
+        verbose_name='Langues parlées',
+        help_text='Ex: Français, Anglais.'
+    )
+
     # Tarification
     TAUX_COMMISSION = 20  # Numeria prélève 20% sur chaque séance payante
     tarif_par_seance = models.PositiveIntegerField(
@@ -92,6 +111,132 @@ class Mentor(models.Model):
 
     def get_absolute_url(self):
         return reverse('mentorat:mentor_detail', kwargs={'pk': self.pk})
+
+
+class MentorApplication(models.Model):
+    """
+    Application d'un utilisateur pour devenir mentor.
+    """
+    STATUTS = [
+        ('pending', 'En attente'),
+        ('approved', 'Approuvé'),
+        ('rejected', 'Rejeté'),
+    ]
+
+    profil = models.OneToOneField(
+        Profil,
+        on_delete=models.CASCADE,
+        related_name='application_mentor'
+    )
+    full_name = models.CharField(max_length=150, verbose_name='Nom complet')
+    professional_title = models.CharField(
+        max_length=120,
+        verbose_name='Titre professionnel'
+    )
+    bio = models.TextField(
+        max_length=1200,
+        verbose_name='Biographie professionnelle'
+    )
+    expertise_categories = models.TextField(
+        verbose_name='Expertise / catégories',
+        help_text='Séparez les thèmes par des virgules.'
+    )
+    cv = models.FileField(
+        upload_to='mentor_applications/cvs/',
+        verbose_name='CV',
+        help_text='PDF, JPG, PNG, DOCX. Taille max 5MB.'
+    )
+    certificate = models.FileField(
+        upload_to='mentor_applications/certificats/',
+        verbose_name='Certificat',
+        help_text='Un document de certification est requis.',
+    )
+    linkedin = models.URLField(blank=True, null=True, verbose_name='Profil LinkedIn')
+    portfolio = models.URLField(blank=True, null=True, verbose_name='Site portfolio')
+    github = models.URLField(blank=True, null=True, verbose_name='Profil GitHub')
+    recommendation_letter = models.FileField(
+        upload_to='mentor_applications/recommendations/',
+        blank=True,
+        null=True,
+        verbose_name='Lettre de recommandation',
+        help_text='Optionnel',
+    )
+    additional_documents = models.FileField(
+        upload_to='mentor_applications/documents/',
+        blank=True,
+        null=True,
+        verbose_name='Documents supplémentaires',
+        help_text='Optionnel',
+    )
+    social_profiles = models.TextField(
+        blank=True,
+        verbose_name='Réseaux sociaux',
+        help_text='Liens vers d’autres profils sociaux, séparés par des virgules.',
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUTS,
+        default='pending',
+        verbose_name='Statut de la candidature'
+    )
+    rejection_notes = models.TextField(blank=True, verbose_name='Notes de rejet')
+    approved_at = models.DateTimeField(blank=True, null=True)
+    rejected_at = models.DateTimeField(blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Candidature Mentor'
+        verbose_name_plural = 'Candidatures Mentors'
+        ordering = ['-date_created']
+
+    def __str__(self):
+        return f"Candidature Mentor: {self.full_name} ({self.get_status_display()})"
+
+    def approve(self):
+        """Approuve la candidature et active l'accès mentor."""
+        if self.status != 'pending':
+            return
+        mentor, created = Mentor.objects.get_or_create(
+            profil=self.profil,
+            defaults={
+                'titre_professionnel': self.professional_title,
+                'bio_mentorat': self.bio,
+                'domaines_expertise': self._best_matching_expertise(),
+                'categories': self.expertise_categories,
+                'niveau_experience': 'intermediaire',
+                'disponibilite': 'hebdomadaire',
+                'tarif_par_seance': 0,
+            }
+        )
+        if not created:
+            mentor.titre_professionnel = self.professional_title
+            mentor.bio_mentorat = self.bio
+            mentor.categories = self.expertise_categories
+            mentor.save()
+
+        self.profil.est_menteur = True
+        self.profil.role = 'mentor'
+        self.profil.save()
+
+        self.status = 'approved'
+        self.approved_at = timezone.now()
+        self.rejection_notes = ''
+        self.save()
+
+    def reject(self, notes=''):  # pragma: no cover
+        self.status = 'rejected'
+        self.rejection_notes = notes
+        self.rejected_at = timezone.now()
+        self.save()
+
+    def _best_matching_expertise(self):
+        """Retourne une valeur de domaines_expertise si possible."""
+        lower = self.expertise_categories.lower()
+        for key, label in Mentor.DOMAINES:
+            if key in lower or label.lower() in lower:
+                return key
+        return 'autre'
 
 
 class Mentee(models.Model):
