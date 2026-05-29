@@ -51,6 +51,11 @@ def inscription(request):
                 send_verification_email(request, user)
             except Exception as e:
                 logger.error(f"Verification email failed for {user.email}: {e}")
+                messages.error(request, _(
+                    "Une erreur est survenue lors de l'envoi de l'email de confirmation. "
+                    "Merci de réessayer plus tard ou de contacter le support."
+                ))
+                return render(request, 'comptes/inscription.html', {'formulaire': formulaire})
             messages.success(request, _("✅ Ton compte a été créé. Vérifie ta boîte email pour activer ton accès."))
             return redirect('comptes:verification_sent')
         else:
@@ -83,7 +88,7 @@ def verify_email(request, token):
         send_welcome_email(request, user)
     except Exception as e:
         logger.error(f"Welcome email failed for {user.email}: {e}")
-    login(request, user)
+    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
     messages.success(request, _("🎉 Ton adresse email est confirmée. Bienvenue sur Numeria !"))
     return redirect('comptes:tableau_de_bord')
 

@@ -258,28 +258,39 @@ RATELIMIT_USE_CACHE = 'default'
 
 
 # ── EMAIL ─────────────────────────────────────────────────────────────────────
-# Email backend selection: 'smtp' (SMTP), 'gmail' (Gmail), 'mailgun', or 'console' (dev)
-_email_service = config('EMAIL_SERVICE', default='smtp').lower()
+# Email backend selection: 'smtp', 'gmail', 'mailgun', 'brevo' or 'console'
+EMAIL_SERVICE = config('EMAIL_SERVICE', default='smtp').strip().lower()
 
-if _email_service == 'mailgun':
+if EMAIL_SERVICE == 'mailgun':
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'smtp.mailgun.org'
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
     EMAIL_HOST_USER = config('MAILGUN_SMTP_USER', default='')
     EMAIL_HOST_PASSWORD = config('MAILGUN_SMTP_PASSWORD', default='')
-elif _email_service == 'gmail':
+elif EMAIL_SERVICE == 'gmail':
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
     EMAIL_HOST_USER = config('GMAIL_EMAIL', default='')
     EMAIL_HOST_PASSWORD = config('GMAIL_APP_PASSWORD', default='')
-else:  # default SMTP
-    EMAIL_BACKEND = os.environ.get(
-        'EMAIL_BACKEND',
-        'django.core.mail.backends.smtp.EmailBackend'
-    )
+elif EMAIL_SERVICE == 'brevo':
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = config('EMAIL_HOST', default='smtp-relay.brevo.com')
+    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+elif EMAIL_SERVICE == 'console':
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_HOST = config('EMAIL_HOST', default='')
+    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+else:
+    EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
     EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
     EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
     EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)

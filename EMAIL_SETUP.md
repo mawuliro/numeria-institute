@@ -174,9 +174,9 @@ python manage.py test_email --to your@email.com
 
 ```env
 # Email Service Selection
-EMAIL_SERVICE=smtp|gmail|mailgun|console
+EMAIL_SERVICE=smtp|gmail|mailgun|brevo|console
 
-# SMTP Configuration (for 'smtp' or 'console' services)
+# SMTP Configuration (for 'smtp', 'brevo' or 'console' services)
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 EMAIL_HOST=smtp.provider.com
 EMAIL_PORT=587
