@@ -4,13 +4,30 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
-logger = logging.getLogger(__name__)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.signing import BadSignature, SignatureExpired
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from django_ratelimit.decorators import ratelimit
+from django_ratelimit.exceptions import Ratelimited
+from django.contrib.auth.views import PasswordResetView
+from django.urls import reverse_lazy
+
+logger = logging.getLogger(__name__)
+
+
+class RatelimitedPasswordResetView(PasswordResetView):
+    """Password reset with IP-based rate limiting to prevent email bombing."""
+    template_name = 'registration/password_reset_form.html'
+    email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.txt'
+    html_email_template_name = 'registration/password_reset_email.html'
+    success_url = reverse_lazy('comptes:password_reset_done')
+
+    @ratelimit(key='ip', rate='5/h', method='POST', block=True)
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 from .forms import FormulaireInscription, FormulaireConnexion, FormulaireProfil, VerificationResendForm
 from .models import Profil
 from numeria_project.emails import (
@@ -20,6 +37,7 @@ from numeria_project.emails import (
 )
 
 
+@ratelimit(key='ip', rate='10/h', method='POST', block=True)
 def inscription(request):
     """Inscription d'un nouvel utilisateur."""
     if request.user.is_authenticated:
@@ -93,6 +111,7 @@ def resend_verification_email(request):
     return render(request, 'comptes/verification_resend.html', {'formulaire': formulaire})
 
 
+@ratelimit(key='ip', rate='20/h', method='POST', block=True)
 def connexion(request):
     """Connexion d'un utilisateur existant."""
     if request.user.is_authenticated:

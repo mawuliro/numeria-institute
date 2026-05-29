@@ -34,6 +34,7 @@ USE_CLOUDINARY    = bool(_cloudinary_match)
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'axes',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -61,13 +62,14 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'axes.middleware.AxesMiddleware',           # ← brute-force protection
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.gzip.GZipMiddleware',  # Compress responses
+    'django.middleware.gzip.GZipMiddleware',
 ]
 
 ROOT_URLCONF = 'numeria_project.urls'
@@ -111,18 +113,19 @@ if DATABASE_URL and not DATABASE_URL.startswith('sqlite'):
         )
     }
 else:
-    if not DEBUG:
-        from django.core.exceptions import ImproperlyConfigured
-        raise ImproperlyConfigured(
-            "DATABASE_URL est requis en production. "
-            "Ajoutez-la dans les variables d'environnement Railway."
-        )
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    if not DEBUG:
+        import warnings
+        warnings.warn(
+            "DATABASE_URL n'est pas définie. En production, ajoutez-la dans les variables Railway.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
 
 
 # ── TÉLÉCHARGEMENT DE FICHIERS ──────────────────────────────────────────────
@@ -218,9 +221,11 @@ else:
 
 
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.railway.app",
-]
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='https://web-production-8bcf4.up.railway.app',
+    cast=Csv(),
+)
 
 # ── MENTORAT — Numéros de paiement Mobile Money ──────────────────────────────
 MENTORAT_NUMEROS_PAIEMENT = [
@@ -233,7 +238,23 @@ LOGIN_URL           = '/comptes/connexion/'
 LOGIN_REDIRECT_URL  = '/comptes/tableau-de-bord/'
 LOGOUT_REDIRECT_URL = '/'
 
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# django-axes — brute-force login protection
+AXES_FAILURE_LIMIT         = 5
+AXES_COOLOFF_TIME          = 1           # lock for 1 hour after 5 failures
+AXES_LOCKOUT_TEMPLATE      = 'comptes/locked.html'
+AXES_RESET_ON_SUCCESS      = True
+AXES_ENABLE_ADMIN          = False       # keep admin unaffected
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ── RATE LIMITING ─────────────────────────────────────────────────────────────
+RATELIMIT_ENABLE    = True
+RATELIMIT_USE_CACHE = 'default'
 
 
 # ── EMAIL ─────────────────────────────────────────────────────────────────────
@@ -269,50 +290,35 @@ ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@numeriainstitute.com')
 EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
 
 
-# ── SÉCURITÉ AVANCÉE ─────────────────────────────────────────────────────────
-# Rate limiting and DDoS protection
-RATELIMIT_ENABLE = True
-RATELIMIT_USE_CACHE = 'default'
+# ── SÉCURITÉ — EN-TÊTES ───────────────────────────────────────────────────────
+X_FRAME_OPTIONS             = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY      = 'strict-origin-when-cross-origin'
+SESSION_COOKIE_HTTPONLY     = True
+SESSION_COOKIE_SAMESITE     = 'Lax'
 
-# Content Security Policy
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = ("'self'", "cdn.jsdelivr.net", "unpkg.com", "*.google.com", "*.gstatic.com")
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "unpkg.com")
-CSP_IMG_SRC = ("'self'", "data:", "https:")
-CSP_FONT_SRC = ("'self'", "data:", "cdn.jsdelivr.net")
-CSP_CONNECT_SRC = ("'self'", "cloudinary.com", "res.cloudinary.com")
+# Railway terminates TLS at the edge — never redirect here (would loop).
+# W008 is silenced because HTTPS enforcement is Railway's responsibility.
+SECURE_SSL_REDIRECT     = False
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Security headers in production
-if not DEBUG:
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_SECURITY_POLICY = {
-        'default-src': ("'self'",),
-        'script-src': ("'self'", "cdn.jsdelivr.net", "unpkg.com"),
-        'style-src': ("'self'", "cdn.jsdelivr.net", "unpkg.com"),
-        'img-src': ("'self'", "data:", "https:"),
-    }
-    
-    # Prevent clickjacking
-    X_FRAME_OPTIONS = 'DENY'
-    
-    # Force HTTPS
-    SECURE_SSL_REDIRECT = False  # Railway handles HTTPS
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# HSTS — tell browsers to only connect via HTTPS for 1 year
+SECURE_HSTS_SECONDS           = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD           = True
 
+# Secure cookies — True in production (DEBUG=False), relaxed locally
+SESSION_COOKIE_SECURE    = not DEBUG
+CSRF_COOKIE_SECURE       = not DEBUG
+LANGUAGE_COOKIE_SAMESITE = 'Lax'
 
-# ── SÉCURITÉ EN PRODUCTION ───────────────────────────────────────────────────
-if not DEBUG:
-    SECURE_SSL_REDIRECT     = False   # Railway gère HTTPS — évite la boucle
-    SESSION_COOKIE_SECURE   = True
-    CSRF_COOKIE_SECURE      = True
-    LANGUAGE_COOKIE_SAMESITE = 'Lax'
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    _extra_csrf = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
-    if _extra_csrf:
-        CSRF_TRUSTED_ORIGINS = _extra_csrf
+SILENCED_SYSTEM_CHECKS = ['security.W008']  # SECURE_SSL_REDIRECT=False is intentional
 
+# ── ERREURS — notification silencieuse ───────────────────────────────────────
+ADMINS      = [('Roland', config('ADMIN_EMAIL', default='numeriainstitude@gmail.com'))]
+SERVER_EMAIL = config('DEFAULT_FROM_EMAIL', default='Numeria Institute <numeriainstitude@gmail.com>')
 
-# ── LOGGING — Écriture des erreurs vers stdout (visible dans Railway) ─────────
+# ── LOGGING — stdout pour Railway, security + axes auditables ─────────────────
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -342,6 +348,16 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'WARNING',
             'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+        'axes': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': True,
         },
     },
 }

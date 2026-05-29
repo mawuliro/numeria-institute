@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 from django.core.mail import BadHeaderError
 from smtplib import SMTPException
+from django_ratelimit.decorators import ratelimit
 from cours.models import Cours
 from blog.models import Article
 from numeria_project.emails import send_contact_form_emails
@@ -159,6 +160,7 @@ def a_propos(request):
     return render(request, 'pages/a_propos.html', contexte)
 
 
+@ratelimit(key='ip', rate='5/h', method='POST', block=True)
 def contact(request):
     """Vue de la page Contact avec formulaire fonctionnel."""
     from .forms import FormulaireContact

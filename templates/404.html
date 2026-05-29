@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block titre %}{% trans "Page introuvable" %} — Numeria Institute{% endblock %}
+{% block contenu %}
+<section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 flex items-center justify-center py-20">
+    <div class="max-w-lg mx-auto px-4 text-center">
+        <div class="text-8xl mb-6">🔭</div>
+        <h1 class="text-5xl font-bold text-numeria-bleu dark:text-numeria-or mb-4">404</h1>
+        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+            {% trans "Page introuvable" %}
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-8">
+            {% trans "La page que vous cherchez n'existe pas ou a été déplacée." %}
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/" class="bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
+                {% trans "Retour à l'accueil" %}
+            </a>
+            <a href="{% url 'cours:catalogue' %}" class="border border-numeria-bleu dark:border-numeria-or text-numeria-bleu dark:text-numeria-or font-bold px-8 py-3 rounded-xl hover:bg-numeria-bleu hover:text-white transition-colors">
+                {% trans "Voir les cours" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

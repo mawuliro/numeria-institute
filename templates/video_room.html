@@ -501,6 +501,13 @@
 
   /* ── DOM refs ───────────────────────────────────────────── */
   const $  = id => document.getElementById(id);
+
+  /* ── Security: escape user-controlled strings before DOM injection ── */
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(str != null ? String(str) : ''));
+    return d.innerHTML;
+  }
   const localVideo   = $('localVideo');
   const localAvatar  = $('localAvatar');
   const videoGrid    = $('videoGrid');
@@ -633,7 +640,7 @@
     if(!tile) return;
     let badge = tile.querySelector('.screen-badge');
     if(!badge) return;
-    badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> {% trans "Partage d\'écran" %}: ${name}`;
+    badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> {% trans "Partage d\'écran" %}: ${escapeHtml(name)}`;
   }
 
   const audioContext = window.AudioContext ? new AudioContext() : null;
@@ -813,10 +820,10 @@
     if(show && !badge){
       badge = document.createElement('div');
       badge.className = 'screen-badge';
-      badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> {% trans "Partage d'écran" %}${name ? ` — ${name}` : ''}`;
+      badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> {% trans "Partage d'écran" %}${name ? ` — ${escapeHtml(name)}` : ''}`;
       tile.appendChild(badge);
     } else if(show && badge && name){
-      badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> {% trans "Partage d'écran" %} — ${name}`;
+      badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> {% trans "Partage d'écran" %} — ${escapeHtml(name)}`;
     } else if(!show && badge){
       badge.remove();
     }
@@ -874,8 +881,8 @@
     const d = document.createElement('div');
     d.className = 'flex flex-col';
     d.innerHTML = `
-      <span style="color:${isSelf?'#8ab4f8':'#81c995'};font-size:12px;font-weight:500;">${sender}</span>
-      <div style="margin-top:4px;background:${isSelf?'#3c4043':'#284153'};border-radius:${isSelf?'1rem 1rem .25rem 1rem':'1rem 1rem 1rem .25rem'};padding:8px 12px;color:white;font-size:14px;word-break:break-word;">${msg.replace(/</g,'&lt;')}</div>
+      <span style="color:${isSelf?'#8ab4f8':'#81c995'};font-size:12px;font-weight:500;">${escapeHtml(sender)}</span>
+      <div style="margin-top:4px;background:${isSelf?'#3c4043':'#284153'};border-radius:${isSelf?'1rem 1rem .25rem 1rem':'1rem 1rem 1rem .25rem'};padding:8px 12px;color:white;font-size:14px;word-break:break-word;">${escapeHtml(msg)}</div>
     `;
     chatMessages.appendChild(d);
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -900,14 +907,14 @@
     tile = document.createElement('div');
     tile.id = `tile-${cid}`;
     tile.className = 'remote-tile';
-    const initial = displayName.charAt(0).toUpperCase();
+    const initial = escapeHtml(displayName.charAt(0).toUpperCase());
     tile.innerHTML = `
       <video autoplay playsinline style="width:100%;height:100%;object-fit:cover;"></video>
       <div class="remote-avatar" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
         <div style="width:80px;height:80px;border-radius:50%;background:#5f6368;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:white;">${initial}</div>
       </div>
       <div class="tile-label">
-        <span style="color:white;font-size:14px;font-weight:500;">${displayName}</span>
+        <span style="color:white;font-size:14px;font-weight:500;">${escapeHtml(displayName)}</span>
       </div>
       <div class="speak-ring"></div>
     `;

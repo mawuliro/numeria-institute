@@ -58,7 +58,7 @@ sitemaps = {
 
 # Routes hors i18n : admin, sitemap, i18n switcher, robots.txt, media debug
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('numeria-staff-portal/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
