@@ -184,6 +184,14 @@ EMAIL_USE_TLS=True
 EMAIL_HOST_USER=your-username
 EMAIL_HOST_PASSWORD=your-password
 
+# Brevo SMTP example
+EMAIL_SERVICE=brevo
+EMAIL_HOST=smtp-relay.brevo.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=apikey
+EMAIL_HOST_PASSWORD=your-brevo-smtp-password
+
 # Gmail Configuration (for 'gmail' service)
 GMAIL_EMAIL=your-email@gmail.com
 GMAIL_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx

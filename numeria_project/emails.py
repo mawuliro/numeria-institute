@@ -70,7 +70,13 @@ def send_verification_email(request, user, language=None):
         _send_html_email(subject, text_content, html_body, [user.email])
         logger.info('send_verification_email: sent OK to %s', user.email)
     except Exception as e:
-        logger.error('send_verification_email: FAILED for %s — %s', user.email, e)
+        logger.error(
+            'send_verification_email: FAILED for %s — %s; backend=%s; host=%s',
+            user.email,
+            e,
+            settings.EMAIL_BACKEND,
+            settings.EMAIL_HOST,
+        )
         raise
 
 
