@@ -15,6 +15,32 @@ from .service import (
 from .constants import PAYMENT_PROVIDERS
 
 
+def _post_payment_actions(user, paiement):
+    """Send notification + email after a successful payment."""
+    try:
+        from notifications.notifications import notify_user
+        from numeria_project.emails import send_payment_confirmation_email
+        if paiement.cours:
+            item = paiement.cours.titre
+        elif paiement.formation_inscription:
+            item = (
+                f"{paiement.formation_inscription.session.formation.titre}"
+                f" — {paiement.formation_inscription.session.nom}"
+            )
+        else:
+            item = 'Paiement'
+        notify_user(
+            user,
+            title="Paiement confirmé",
+            message=f"Votre paiement pour {item} a été reçu.",
+            notification_type='payment',
+            link=reverse('paiements:confirmation', args=[paiement.id]),
+        )
+        send_payment_confirmation_email(user, paiement)
+    except Exception:
+        pass
+
+
 @login_required
 def page_paiement(request, cours_id):
     """
@@ -91,6 +117,7 @@ def initier_paiement_formation(request, inscription_id):
 
     try:
         traiter_paiement(paiement, provider)
+        _post_payment_actions(request.user, paiement)
         messages.success(
             request,
             f"✅ Paiement réussi ! Tu es maintenant inscrit à la session '{inscription.session.nom}'."
@@ -134,6 +161,7 @@ def initier_paiement(request, cours_id):
     try:
         # Traiter le paiement avec le provider choisi
         traiter_paiement(paiement, provider)
+        _post_payment_actions(request.user, paiement)
 
         messages.success(
             request,

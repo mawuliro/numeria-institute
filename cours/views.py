@@ -9,7 +9,6 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.http import HttpResponse
 import uuid
-from numeria_project.emails import send_course_enrollment_email
 from .models import Cours, InscriptionCours, Lecon, ProgressionLecon
 
 
@@ -186,9 +185,16 @@ def inscrire_cours(request, cours_id):
             est_termine=False
         )
         try:
-            send_course_enrollment_email(request.user, cours, language=getattr(request, 'LANGUAGE_CODE', None))
+            from notifications.notifications import notify_user
+            notify_user(
+                request.user,
+                title=_("Inscription confirmée"),
+                message=_("Vous êtes inscrit au cours %(titre)s.") % {'titre': cours.titre},
+                notification_type='course',
+                link=reverse('cours:detail', kwargs={'cours_id': cours.id}),
+            )
         except Exception as e:
-            logger.error(f"Course enrollment email failed for {request.user.email}: {e}")
+            logger.error('Course enrollment notification failed: %s', e)
         messages.success(request, _("🎉 Bienvenue dans le cours « %(titre)s » !") % {'titre': cours.titre})
         return redirect('cours:detail', cours_id=cours_id)
     else:

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-28 22:41+0000\n"
+"POT-Creation-Date: 2026-05-29 23:25+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: admissions/templates/admissions/candidature.html:3
+#: notifications/models.py:15 templates/notifications/list.html:40
 msgid "Candidature"
 msgstr "Application"
 
@@ -378,7 +379,7 @@ msgstr "✅ Your application was submitted successfully!"
 msgid "❌ Veuillez corriger les erreurs ci-dessous."
 msgstr "Please correct the errors below."
 
-#: admissions/views.py:313
+#: admissions/views.py:324
 #, python-format
 msgid "✅ Statut mis à jour : %(statut)s"
 msgstr "✅ Status updated: %(statut)s"
@@ -549,7 +550,7 @@ msgstr "Create a category"
 #: communaute/templates/communaute/modifier_message.html:3
 #: communaute/templates/communaute/modifier_profil.html:3
 #: comptes/templates/comptes/inscription.html:248
-#: pages/templates/pages/contact.html:337 templates/base.html:418
+#: pages/templates/pages/contact.html:337 templates/base.html:420
 #: templates/includes/nav_items.html:9 templates/includes/nav_items.html:22
 msgid "Communauté"
 msgstr "Community"
@@ -698,7 +699,7 @@ msgid "Nouvelle catégorie"
 msgstr "New category"
 
 #: communaute/templates/communaute/detail_categorie.html:55 pages/forms.py:43
-#: pages/templates/pages/contact.html:121
+#: pages/models.py:102 pages/templates/pages/contact.html:121
 msgid "Sujet"
 msgstr "Topic"
 
@@ -728,6 +729,7 @@ msgstr "repl."
 #: communaute/templates/communaute/detail_sujet.html:256
 #: formation/templates/formation/voir_lecon.html:158
 #: mentorat/templates/mentorat/liste_mentors.html:180
+#: templates/notifications/list.html:95
 msgid "Précédent"
 msgstr "Previous"
 
@@ -735,6 +737,7 @@ msgstr "Previous"
 #: communaute/templates/communaute/detail_sujet.html:270
 #: formation/templates/formation/voir_lecon.html:166
 #: mentorat/templates/mentorat/liste_mentors.html:189
+#: templates/notifications/list.html:104
 msgid "Suivant"
 msgstr "Next"
 
@@ -824,7 +827,8 @@ msgstr "Log in to participate in the discussion."
 #: communaute/templates/communaute/detail_sujet.html:307
 #: communaute/templates/communaute/liste_categories.html:203
 #: comptes/templates/comptes/connexion.html:129
-#: comptes/templates/comptes/inscription.html:230 templates/base.html:366
+#: comptes/templates/comptes/inscription.html:230 templates/403.html:21
+#: templates/base.html:368
 #: templates/registration/password_reset_complete.html:8
 msgid "Se connecter"
 msgstr "Log in"
@@ -855,7 +859,6 @@ msgid "Sujets"
 msgstr "Topics"
 
 #: communaute/templates/communaute/liste_categories.html:55
-#: env/lib/python3.12/site-packages/django/contrib/messages/apps.py:16
 msgid "Messages"
 msgstr "Messages"
 
@@ -1220,7 +1223,7 @@ msgstr "Back to profile"
 msgid "Changer le mot de passe"
 msgstr "Change password"
 
-#: comptes/templates/comptes/connexion.html:3 templates/base.html:325
+#: comptes/templates/comptes/connexion.html:3 templates/base.html:327
 msgid "Connexion"
 msgstr "Login"
 
@@ -1246,12 +1249,14 @@ msgstr "Don't have an account?"
 
 #: comptes/templates/comptes/connexion.html:140
 #: cours/templates/cours/detail.html:52 pages/templates/pages/a_propos.html:409
-#: templates/base.html:367
+#: templates/base.html:369
 msgid "S'inscrire gratuitement"
 msgstr "Sign up for free"
 
 #: comptes/templates/comptes/connexion.html:149
 #: comptes/templates/comptes/inscription.html:255
+#: comptes/templates/comptes/locked.html:15 templates/403.html:17
+#: templates/404.html:17
 msgid "Retour à l'accueil"
 msgstr "Back to home"
 
@@ -1263,7 +1268,7 @@ msgstr "Join Numeria"
 msgid "Crée ton compte gratuitement et commence à apprendre"
 msgstr "Create your free account and start learning"
 
-#: comptes/templates/comptes/inscription.html:91
+#: comptes/templates/comptes/inscription.html:91 pages/models.py:100
 msgid "Nom"
 msgstr "Last name"
 
@@ -1284,6 +1289,20 @@ msgstr "Free courses"
 msgid "Certificats PDF"
 msgstr "PDF certificates"
 
+#: comptes/templates/comptes/locked.html:3
+msgid "Compte temporairement verrouillé"
+msgstr ""
+
+#: comptes/templates/comptes/locked.html:9
+msgid "Trop de tentatives de connexion"
+msgstr ""
+
+#: comptes/templates/comptes/locked.html:12
+msgid ""
+"Votre accès a été temporairement bloqué suite à plusieurs tentatives de "
+"connexion échouées. Réessayez dans 1 heure."
+msgstr ""
+
 #: comptes/templates/comptes/profil.html:110
 #: comptes/templates/comptes/supprimer_compte.html:19
 msgid "Supprimer mon compte"
@@ -1302,7 +1321,7 @@ msgstr "Hello, %(name)s"
 msgid "Nouveau cours"
 msgstr "New course"
 
-#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:363
+#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:365
 msgid "Mon profil"
 msgstr "My profile"
 
@@ -1359,84 +1378,62 @@ msgstr "Discover our catalogue and start learning today!"
 msgid "Pour toi"
 msgstr "For you"
 
-#: comptes/views.py:36
-msgid ""
-"✅ Ton compte a été créé. Vérifie ta boîte email pour activer ton accès."
-msgstr ""
+#: comptes/views.py:45
+#, fuzzy, python-brace-format
+#| msgid "Bienvenue sur Numeria, {first_name} ! 🎓"
+msgid "🎉 Bienvenue sur Numeria, {prenom} !"
+msgstr "Welcome to Numeria, {first_name}! 🎓"
 
-#: comptes/views.py:39 comptes/views.py:276
+#: comptes/views.py:48 comptes/views.py:236
 msgid "Veuillez corriger les erreurs ci-dessous."
 msgstr "Please correct the errors below."
 
-#: comptes/views.py:59
-msgid "Ton compte est déjà activé. Connecte-toi pour continuer."
-msgstr "Your account is already activated. Log in to continue."
-
-#: comptes/views.py:69
-msgid "🎉 Ton adresse email est confirmée. Bienvenue sur Numeria !"
-msgstr "🎉 Your email address is confirmed. Welcome to Numeria!"
-
-#: comptes/views.py:84
-#, python-brace-format
-msgid ""
-"Un nouvel email de confirmation a été envoyé à {email}. Vérifie ta boîte de "
-"réception."
-msgstr ""
-
-#: comptes/views.py:87
-msgid "Ce compte est déjà activé. Connecte-toi pour continuer."
-msgstr "This account is already activated. Log in to continue."
-
-#: comptes/views.py:89
-msgid "Aucun compte actif n'a été trouvé pour cette adresse email."
-msgstr "No active account was found for this email address."
-
-#: comptes/views.py:111
+#: comptes/views.py:71
 #, python-brace-format
 msgid "Bon retour, {first_name} ! 👋"
 msgstr "Welcome back, {first_name}! 👋"
 
-#: comptes/views.py:118
+#: comptes/views.py:78
 msgid "Nom d'utilisateur ou mot de passe incorrect."
 msgstr "Incorrect username or password."
 
-#: comptes/views.py:130
+#: comptes/views.py:90
 #, python-brace-format
 msgid "À bientôt, {prenom} ! 👋"
 msgstr "See you soon, {prenom}! 👋"
 
-#: comptes/views.py:196
+#: comptes/views.py:156
 msgid "Ton profil a été mis à jour ! ✅"
 msgstr "Your profile has been updated! ✅"
 
-#: comptes/views.py:212
+#: comptes/views.py:172
 msgid ""
 "Profil mis à jour, mais la photo n'a pas pu être enregistrée (Cloudinary non "
 "configuré)."
 msgstr ""
 
-#: comptes/views.py:218
+#: comptes/views.py:178
 msgid "Veuillez corriger les erreurs."
 msgstr "Please correct the errors."
 
-#: comptes/views.py:251
+#: comptes/views.py:211
 msgid "Ta photo de profil a été supprimée. ✅"
 msgstr "Your profile picture has been deleted. ✅"
 
-#: comptes/views.py:253
+#: comptes/views.py:213
 msgid "Tu n'as pas de photo de profil à supprimer."
 msgstr "You don't have a profile picture to delete."
 
-#: comptes/views.py:273
+#: comptes/views.py:233
 msgid "Ton mot de passe a été changé avec succès ! 🔐"
 msgstr "Your password has been changed successfully! 🔐"
 
-#: comptes/views.py:293
+#: comptes/views.py:253
 #, python-brace-format
 msgid "Ton compte a été supprimé, {prenom}. Nous espérons te revoir ! 👋"
 msgstr "Your account has been deleted, {prenom}. We hope to see you again! 👋"
 
-#: comptes/views.py:296
+#: comptes/views.py:256
 msgid "Mot de passe incorrect. Ton compte n'a pas été supprimé."
 msgstr "Incorrect password. Your account has not been deleted."
 
@@ -1477,7 +1474,7 @@ msgstr "View all courses"
 #: cours/templates/cours/detail.html:52 cours/templates/cours/detail.html:226
 #: cours/templates/cours/detail.html:297 cours/templates/cours/detail.html:786
 #: formation/templates/formation/detail_formation.html:194
-#: formation/templates/formation/detail_session.html:46 templates/base.html:329
+#: formation/templates/formation/detail_session.html:46 templates/base.html:331
 msgid "S'inscrire"
 msgstr "Sign up"
 
@@ -1540,1366 +1537,105 @@ msgstr "Verification code"
 msgid "Découvrir nos cours"
 msgstr "Discover our courses"
 
-#: cours/views.py:178
+#: cours/views.py:177
 #, python-format
 msgid "Tu es déjà inscrit au cours « %(titre)s » ! 📚"
 msgstr "You are already enrolled in the course « %(titre)s »! 📚"
 
+#: cours/views.py:191
+#| msgid "Inscriptions fermées"
+msgid "Inscription confirmée"
+msgstr "Enrollment confirmed"
+
 #: cours/views.py:192
+#, fuzzy, python-format
+#| msgid "Tu t'es désinscrit du cours « %(titre)s » ."
+msgid "Vous êtes inscrit au cours %(titre)s."
+msgstr "You have unenrolled from the course « %(titre)s »."
+
+#: cours/views.py:198
 #, python-format
 msgid "🎉 Bienvenue dans le cours « %(titre)s » !"
 msgstr "🎉 Welcome to the course « %(titre)s »!"
 
-#: cours/views.py:213
+#: cours/views.py:219
 #, python-format
 msgid "Tu t'es désinscrit du cours « %(titre)s » ."
 msgstr "You have unenrolled from the course « %(titre)s »."
 
-#: cours/views.py:215 cours/views.py:234 cours/views.py:334
+#: cours/views.py:221 cours/views.py:240 cours/views.py:340
 #, fuzzy
 #| msgid "Tu n'es inscrit à aucun cours"
 msgid "Tu n'es pas inscrit à ce cours."
 msgstr "You are not enrolled in any course"
 
-#: cours/views.py:256
+#: cours/views.py:262
 #, python-format
 msgid "🎉 Félicitations ! Tu as terminé le cours « %(titre)s » !"
 msgstr "🎉 Congratulations! You have completed the course « %(titre)s »!"
 
-#: cours/views.py:261
+#: cours/views.py:267
 #, python-format
 msgid "✅ Leçon terminée ! Progression : %(pct)s%%"
 msgstr "✅ Lesson completed! Progress: %(pct)s%%"
 
-#: cours/views.py:265
+#: cours/views.py:271
 msgid "Cette leçon était déjà marquée comme terminée."
 msgstr "This lesson was already marked as completed."
 
-#: cours/views.py:309
+#: cours/views.py:315
 #, fuzzy
 #| msgid "Marquer comme terminée"
 msgid "Leçon marquée comme non terminée."
 msgstr "Mark as completed"
 
-#: cours/views.py:341
+#: cours/views.py:347
 #, fuzzy
 #| msgid "Réponse le"
 msgid "Réponse invalide."
 msgstr "Response on"
 
-#: cours/views.py:396
+#: cours/views.py:402
 msgid "Les certificats sont réservés aux cours payants."
 msgstr "Certificates are only available for paid courses."
 
-#: cours/views.py:458
+#: cours/views.py:464
 msgid "Vous devez terminer le cours avant de le noter."
 msgstr "You must complete the course before rating it."
 
-#: cours/views.py:465
+#: cours/views.py:471
 msgid "La note doit être entre 1 et 5."
 msgstr "The rating must be between 1 and 5."
 
-#: cours/views.py:480
+#: cours/views.py:486
 msgid "✅ Merci pour votre évaluation !"
 msgstr "✅ Thank you for your review!"
 
-#: cours/views.py:482
+#: cours/views.py:488
 #, python-format
 msgid "Erreur lors de l'évaluation : %(err)s"
 msgstr "Error during rating: %(err)s"
 
-#: cours/views.py:501
+#: cours/views.py:507
 msgid "Vous devez être inscrit au cours pour poser une question."
 msgstr "You must be enrolled in the course to ask a question."
 
-#: cours/views.py:508
+#: cours/views.py:514
 msgid "La question doit contenir au moins 5 caractères."
 msgstr "The question must contain at least 5 characters."
 
-#: cours/views.py:511
+#: cours/views.py:517
 msgid "La question ne peut pas dépasser 500 caractères."
 msgstr "The question cannot exceed 500 characters."
 
-#: cours/views.py:523
+#: cours/views.py:529
 msgid "✅ Votre question a été soumise et sera modérée par un admin."
 msgstr "✅ Your question has been submitted and will be reviewed by an admin."
 
-#: cours/views.py:525
+#: cours/views.py:531
 #, python-format
 msgid "Erreur lors de la soumission : %(err)s"
 msgstr "Error during submission: %(err)s"
-
-#: env/lib/python3.12/site-packages/cloudinary/forms.py:55
-#: env/lib/python3.12/site-packages/cloudinary/forms.py:124
-msgid "No file selected!"
-msgstr "No file selected!"
-
-#: env/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
-msgid "Site Maps"
-msgstr "Site Maps"
-
-#: env/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
-msgid "Syndication"
-msgstr "Syndication"
-
-#. Translators: String used to replace omitted page numbers in elided page
-#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
-#: env/lib/python3.12/site-packages/django/core/paginator.py:33
-msgid "…"
-msgstr "…"
-
-#: env/lib/python3.12/site-packages/django/core/paginator.py:35
-msgid "That page number is not an integer"
-msgstr "That page number is not an integer"
-
-#: env/lib/python3.12/site-packages/django/core/paginator.py:36
-msgid "That page number is less than 1"
-msgstr "That page number is less than 1"
-
-#: env/lib/python3.12/site-packages/django/core/paginator.py:37
-msgid "That page contains no results"
-msgstr "That page contains no results"
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:22
-msgid "Enter a valid value."
-msgstr "Enter a valid value."
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:70
-msgid "Enter a valid domain name."
-msgstr "Enter a valid domain name."
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:153
-#: env/lib/python3.12/site-packages/django/forms/fields.py:773
-msgid "Enter a valid URL."
-msgstr "Enter a valid URL."
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:200
-msgid "Enter a valid integer."
-msgstr "Enter a valid integer."
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:211
-msgid "Enter a valid email address."
-msgstr "Enter a valid email address."
-
-#. Translators: "letters" means latin letters: a-z and A-Z.
-#: env/lib/python3.12/site-packages/django/core/validators.py:289
-msgid ""
-"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:297
-msgid ""
-"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
-"hyphens."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:309
-#: env/lib/python3.12/site-packages/django/core/validators.py:318
-#: env/lib/python3.12/site-packages/django/core/validators.py:332
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2220
-#, python-format
-msgid "Enter a valid %(protocol)s address."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:311
-msgid "IPv4"
-msgstr "IPv4"
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:320
-#: env/lib/python3.12/site-packages/django/utils/ipv6.py:43
-msgid "IPv6"
-msgstr "IPv6"
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:334
-msgid "IPv4 or IPv6"
-msgstr "IPv4 or IPv6"
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:375
-msgid "Enter only digits separated by commas."
-msgstr "Enter only digits separated by commas."
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:381
-#, python-format
-msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:416
-#, python-format
-msgid "Ensure this value is less than or equal to %(limit_value)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:425
-#, python-format
-msgid "Ensure this value is greater than or equal to %(limit_value)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:434
-#, python-format
-msgid "Ensure this value is a multiple of step size %(limit_value)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:441
-#, python-format
-msgid ""
-"Ensure this value is a multiple of step size %(limit_value)s, starting from "
-"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:473
-#, python-format
-msgid ""
-"Ensure this value has at least %(limit_value)d character (it has "
-"%(show_value)d)."
-msgid_plural ""
-"Ensure this value has at least %(limit_value)d characters (it has "
-"%(show_value)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:491
-#, python-format
-msgid ""
-"Ensure this value has at most %(limit_value)d character (it has "
-"%(show_value)d)."
-msgid_plural ""
-"Ensure this value has at most %(limit_value)d characters (it has "
-"%(show_value)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:514
-#: env/lib/python3.12/site-packages/django/forms/fields.py:364
-#: env/lib/python3.12/site-packages/django/forms/fields.py:403
-msgid "Enter a number."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:516
-#, python-format
-msgid "Ensure that there are no more than %(max)s digit in total."
-msgid_plural "Ensure that there are no more than %(max)s digits in total."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:521
-#, python-format
-msgid "Ensure that there are no more than %(max)s decimal place."
-msgid_plural "Ensure that there are no more than %(max)s decimal places."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:526
-#, python-format
-msgid ""
-"Ensure that there are no more than %(max)s digit before the decimal point."
-msgid_plural ""
-"Ensure that there are no more than %(max)s digits before the decimal point."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:597
-#, python-format
-msgid ""
-"File extension “%(extension)s” is not allowed. Allowed extensions are: "
-"%(allowed_extensions)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:659
-msgid "Null characters are not allowed."
-msgstr "Null characters are not allowed."
-
-#: env/lib/python3.12/site-packages/django/db/models/base.py:1633
-#: env/lib/python3.12/site-packages/django/forms/models.py:932
-msgid "and"
-msgstr "and"
-
-#: env/lib/python3.12/site-packages/django/db/models/base.py:1635
-#, python-format
-msgid "%(model_name)s with this %(field_labels)s already exists."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/constraints.py:20
-#, python-format
-msgid "Constraint “%(name)s” is violated."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:134
-#, python-format
-msgid "Value %(value)r is not a valid choice."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:135
-msgid "This field cannot be null."
-msgstr "This field cannot be null."
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:136
-msgid "This field cannot be blank."
-msgstr "This field cannot be blank."
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:137
-#, python-format
-msgid "%(model_name)s with this %(field_label)s already exists."
-msgstr ""
-
-#. Translators: The 'lookup_type' is one of 'date', 'year' or
-#. 'month'. Eg: "Title must be unique for pub_date year"
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:141
-#, python-format
-msgid ""
-"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:180
-#, python-format
-msgid "Field of type: %(field_type)s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1161
-#, python-format
-msgid "“%(value)s” value must be either True or False."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1162
-#, python-format
-msgid "“%(value)s” value must be either True, False, or None."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1164
-msgid "Boolean (Either True or False)"
-msgstr "Boolean (Either True or False)"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1214
-#, python-format
-msgid "String (up to %(max_length)s)"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1216
-msgid "String (unlimited)"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1325
-msgid "Comma-separated integers"
-msgstr "Comma-separated integers"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1426
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
-"format."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1430
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1565
-#, python-format
-msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
-"date."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1434
-msgid "Date (without time)"
-msgstr "Date (without time)"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1561
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
-"uuuuuu]][TZ] format."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1569
-#, python-format
-msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
-"[TZ]) but it is an invalid date/time."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1574
-msgid "Date (with time)"
-msgstr "Date (with time)"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1701
-#, python-format
-msgid "“%(value)s” value must be a decimal number."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1703
-msgid "Decimal number"
-msgstr "Decimal number"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1864
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
-"uuuuuu] format."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1868
-msgid "Duration"
-msgstr "Duration"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
-msgid "Email address"
-msgstr "Email address"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1945
-msgid "File path"
-msgstr "File path"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2023
-#, python-format
-msgid "“%(value)s” value must be a float."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2025
-msgid "Floating point number"
-msgstr "Floating point number"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2065
-#, python-format
-msgid "“%(value)s” value must be an integer."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2067
-msgid "Integer"
-msgstr "Integer"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2163
-msgid "Big (8 byte) integer"
-msgstr "Big (8 byte) integer"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2180
-msgid "Small integer"
-msgstr "Small integer"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2188
-msgid "IPv4 address"
-msgstr "IPv4 address"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2219
-msgid "IP address"
-msgstr "IP address"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2310
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2311
-#, python-format
-msgid "“%(value)s” value must be either None, True or False."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2313
-msgid "Boolean (Either True, False or None)"
-msgstr "Boolean (Either True, False or None)"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2364
-msgid "Positive big integer"
-msgstr "Positive big integer"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2379
-msgid "Positive integer"
-msgstr "Positive integer"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2394
-msgid "Positive small integer"
-msgstr "Positive small integer"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2410
-#, python-format
-msgid "Slug (up to %(max_length)s)"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2446
-msgid "Text"
-msgstr "Text"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2526
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
-"format."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2530
-#, python-format
-msgid ""
-"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
-"invalid time."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2534
-msgid "Time"
-msgstr "Time"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2642
-msgid "URL"
-msgstr "URL"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2666
-msgid "Raw binary data"
-msgstr "Raw binary data"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2731
-#, python-format
-msgid "“%(value)s” is not a valid UUID."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2733
-msgid "Universally unique identifier"
-msgstr "Universally unique identifier"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/files.py:244
-msgid "File"
-msgstr "File"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/files.py:420
-msgid "Image"
-msgstr "Image"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/json.py:24
-msgid "A JSON object"
-msgstr "A JSON object"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/json.py:26
-msgid "Value must be valid JSON."
-msgstr "Value must be valid JSON."
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:978
-#, python-format
-msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:981
-msgid "Foreign Key (type determined by related field)"
-msgstr "Foreign Key (type determined by related field)"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1275
-msgid "One-to-one relationship"
-msgstr "One-to-one relationship"
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1332
-#, python-format
-msgid "%(from)s-%(to)s relationship"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1334
-#, python-format
-msgid "%(from)s-%(to)s relationships"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1382
-msgid "Many-to-many relationship"
-msgstr "Many-to-many relationship"
-
-#. Translators: If found as last label character, these punctuation
-#. characters will prevent the default label_suffix to be appended to
-#. the label
-#: env/lib/python3.12/site-packages/django/forms/boundfield.py:188
-msgid ":?.!"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:91
-msgid "This field is required."
-msgstr "This field is required."
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:313
-msgid "Enter a whole number."
-msgstr "Enter a whole number."
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:484
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1241
-msgid "Enter a valid date."
-msgstr "Enter a valid date."
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:507
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1242
-msgid "Enter a valid time."
-msgstr "Enter a valid time."
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:534
-msgid "Enter a valid date/time."
-msgstr "Enter a valid date/time."
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:568
-msgid "Enter a valid duration."
-msgstr "Enter a valid duration."
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:569
-#, python-brace-format
-msgid "The number of days must be between {min_days} and {max_days}."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:638
-msgid "No file was submitted. Check the encoding type on the form."
-msgstr "No file was submitted. Check the encoding type on the form."
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:639
-msgid "No file was submitted."
-msgstr "No file was submitted."
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:640
-msgid "The submitted file is empty."
-msgstr "The submitted file is empty."
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:642
-#, python-format
-msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
-msgid_plural ""
-"Ensure this filename has at most %(max)d characters (it has %(length)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:647
-msgid "Please either submit a file or check the clear checkbox, not both."
-msgstr "Please either submit a file or check the clear checkbox, not both."
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:715
-msgid ""
-"Upload a valid image. The file you uploaded was either not an image or a "
-"corrupted image."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:862
-#: env/lib/python3.12/site-packages/django/forms/fields.py:949
-#: env/lib/python3.12/site-packages/django/forms/models.py:1621
-#, python-format
-msgid "Select a valid choice. %(value)s is not one of the available choices."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:951
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1070
-#: env/lib/python3.12/site-packages/django/forms/models.py:1619
-msgid "Enter a list of values."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1071
-msgid "Enter a complete value."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1313
-msgid "Enter a valid UUID."
-msgstr "Enter a valid UUID."
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1343
-msgid "Enter a valid JSON."
-msgstr "Enter a valid JSON."
-
-#. Translators: This is the default suffix added to form field labels
-#: env/lib/python3.12/site-packages/django/forms/forms.py:97
-msgid ":"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/forms.py:239
-#, python-format
-msgid "(Hidden field %(name)s) %(error)s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:61
-#, python-format
-msgid ""
-"ManagementForm data is missing or has been tampered with. Missing fields: "
-"%(field_names)s. You may need to file a bug report if the issue persists."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:65
-#, python-format
-msgid "Please submit at most %(num)d form."
-msgid_plural "Please submit at most %(num)d forms."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:70
-#, python-format
-msgid "Please submit at least %(num)d form."
-msgid_plural "Please submit at least %(num)d forms."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:484
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:491
-msgid "Order"
-msgstr "Order"
-
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:499
-msgid "Delete"
-msgstr "Delete"
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:925
-#, python-format
-msgid "Please correct the duplicate data for %(field)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:930
-#, python-format
-msgid "Please correct the duplicate data for %(field)s, which must be unique."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:937
-#, python-format
-msgid ""
-"Please correct the duplicate data for %(field_name)s which must be unique "
-"for the %(lookup)s in %(date_field)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:946
-msgid "Please correct the duplicate values below."
-msgstr "Please correct the duplicate values below."
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:1383
-msgid "The inline value did not match the parent instance."
-msgstr "The inline value did not match the parent instance."
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:1474
-msgid "Select a valid choice. That choice is not one of the available choices."
-msgstr ""
-"Select a valid choice. That choice is not one of the available choices."
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:1623
-#, python-format
-msgid "“%(pk)s” is not a valid value."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/utils.py:229
-#, python-format
-msgid ""
-"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
-"may be ambiguous or it may not exist."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:528
-msgid "Clear"
-msgstr "Clear"
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:529
-msgid "Currently"
-msgstr "Currently"
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:530
-msgid "Change"
-msgstr "Change"
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:869
-msgid "Unknown"
-msgstr "Unknown"
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:870
-msgid "Yes"
-msgstr "Yes"
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:871
-msgid "No"
-msgstr "No"
-
-#: env/lib/python3.12/site-packages/django/tasks/base.py:34
-msgctxt "Task"
-msgid "Ready"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/tasks/base.py:36
-msgctxt "Task"
-msgid "Running"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/tasks/base.py:38
-msgctxt "Task"
-msgid "Failed"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/tasks/base.py:40
-msgctxt "Task"
-msgid "Successful"
-msgstr ""
-
-#. Translators: Please do not add spaces around commas.
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:878
-msgid "yes,no,maybe"
-msgstr "yes,no,maybe"
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:908
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:925
-#, python-format
-msgid "%(size)d byte"
-msgid_plural "%(size)d bytes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:927
-#, python-format
-msgid "%s KB"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:929
-#, python-format
-msgid "%s MB"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:931
-#, python-format
-msgid "%s GB"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:933
-#, python-format
-msgid "%s TB"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:935
-#, python-format
-msgid "%s PB"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:74
-msgid "p.m."
-msgstr "p.m."
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:75
-msgid "a.m."
-msgstr "a.m."
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:80
-msgid "PM"
-msgstr "PM"
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:81
-msgid "AM"
-msgstr "AM"
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:153
-msgid "midnight"
-msgstr "midnight"
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:155
-msgid "noon"
-msgstr "noon"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:7
-msgid "Monday"
-msgstr "Monday"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:8
-msgid "Tuesday"
-msgstr "Tuesday"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:9
-msgid "Wednesday"
-msgstr "Wednesday"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:10
-msgid "Thursday"
-msgstr "Thursday"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:11
-msgid "Friday"
-msgstr "Friday"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:12
-msgid "Saturday"
-msgstr "Saturday"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:13
-msgid "Sunday"
-msgstr "Sunday"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:16
-msgid "Mon"
-msgstr "Mon"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:17
-msgid "Tue"
-msgstr "Tue"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:18
-msgid "Wed"
-msgstr "Wed"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:19
-msgid "Thu"
-msgstr "Thu"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:20
-msgid "Fri"
-msgstr "Fri"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:21
-msgid "Sat"
-msgstr "Sat"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:22
-msgid "Sun"
-msgstr "Sun"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:25
-msgid "January"
-msgstr "January"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:26
-msgid "February"
-msgstr "February"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:27
-msgid "March"
-msgstr "March"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:28
-msgid "April"
-msgstr "April"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:29
-msgid "May"
-msgstr "May"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:30
-msgid "June"
-msgstr "June"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:31
-msgid "July"
-msgstr "July"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:32
-msgid "August"
-msgstr "August"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:33
-msgid "September"
-msgstr "September"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:34
-msgid "October"
-msgstr "October"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:35
-msgid "November"
-msgstr "November"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:36
-msgid "December"
-msgstr "December"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:39
-msgid "jan"
-msgstr "jan"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:40
-msgid "feb"
-msgstr "feb"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:41
-msgid "mar"
-msgstr "mar"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:42
-msgid "apr"
-msgstr "apr"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:43
-msgid "may"
-msgstr "may"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:44
-msgid "jun"
-msgstr "jun"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:45
-msgid "jul"
-msgstr "jul"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:46
-msgid "aug"
-msgstr "aug"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:47
-msgid "sep"
-msgstr "sep"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:48
-msgid "oct"
-msgstr "oct"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:49
-msgid "nov"
-msgstr "nov"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:50
-msgid "dec"
-msgstr "dec"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:53
-msgctxt "abbrev. month"
-msgid "Jan."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:54
-msgctxt "abbrev. month"
-msgid "Feb."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:55
-msgctxt "abbrev. month"
-msgid "March"
-msgstr "March"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:56
-msgctxt "abbrev. month"
-msgid "April"
-msgstr "April"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:57
-msgctxt "abbrev. month"
-msgid "May"
-msgstr "May"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:58
-msgctxt "abbrev. month"
-msgid "June"
-msgstr "June"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:59
-msgctxt "abbrev. month"
-msgid "July"
-msgstr "July"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:60
-msgctxt "abbrev. month"
-msgid "Aug."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:61
-msgctxt "abbrev. month"
-msgid "Sept."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:62
-msgctxt "abbrev. month"
-msgid "Oct."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:63
-msgctxt "abbrev. month"
-msgid "Nov."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:64
-msgctxt "abbrev. month"
-msgid "Dec."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:67
-msgctxt "alt. month"
-msgid "January"
-msgstr "January"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:68
-msgctxt "alt. month"
-msgid "February"
-msgstr "February"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:69
-msgctxt "alt. month"
-msgid "March"
-msgstr "March"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:70
-msgctxt "alt. month"
-msgid "April"
-msgstr "April"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:71
-msgctxt "alt. month"
-msgid "May"
-msgstr "May"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:72
-msgctxt "alt. month"
-msgid "June"
-msgstr "June"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:73
-msgctxt "alt. month"
-msgid "July"
-msgstr "July"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:74
-msgctxt "alt. month"
-msgid "August"
-msgstr "August"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:75
-msgctxt "alt. month"
-msgid "September"
-msgstr "September"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:76
-msgctxt "alt. month"
-msgid "October"
-msgstr "October"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:77
-msgctxt "alt. month"
-msgid "November"
-msgstr "November"
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:78
-msgctxt "alt. month"
-msgid "December"
-msgstr "December"
-
-#: env/lib/python3.12/site-packages/django/utils/ipv6.py:20
-msgid "This is not a valid IPv6 address."
-msgstr "This is not a valid IPv6 address."
-
-#: env/lib/python3.12/site-packages/django/utils/text.py:76
-#, python-format
-msgctxt "String to return when truncating text"
-msgid "%(truncated_text)s…"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/text.py:282
-msgid "or"
-msgstr "or"
-
-#. Translators: This string is used as a separator between list elements
-#: env/lib/python3.12/site-packages/django/utils/text.py:301
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:135
-msgid ", "
-msgstr ", "
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:8
-#, python-format
-msgid "%(num)d year"
-msgid_plural "%(num)d years"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:9
-#, python-format
-msgid "%(num)d month"
-msgid_plural "%(num)d months"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:10
-#, python-format
-msgid "%(num)d week"
-msgid_plural "%(num)d weeks"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:11
-#, python-format
-msgid "%(num)d day"
-msgid_plural "%(num)d days"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:12
-#, python-format
-msgid "%(num)d hour"
-msgid_plural "%(num)d hours"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:13
-#, python-format
-msgid "%(num)d minute"
-msgid_plural "%(num)d minutes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:29
-msgid "Forbidden"
-msgstr "Forbidden"
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:30
-msgid "CSRF verification failed. Request aborted."
-msgstr "CSRF verification failed. Request aborted."
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:34
-msgid ""
-"You are seeing this message because this HTTPS site requires a “Referer "
-"header” to be sent by your web browser, but none was sent. This header is "
-"required for security reasons, to ensure that your browser is not being "
-"hijacked by third parties."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:40
-msgid ""
-"If you have configured your browser to disable “Referer” headers, please re-"
-"enable them, at least for this site, or for HTTPS connections, or for “same-"
-"origin” requests."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:45
-msgid ""
-"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
-"including the “Referrer-Policy: no-referrer” header, please remove them. The "
-"CSRF protection requires the “Referer” header to do strict referer checking. "
-"If you’re concerned about privacy, use alternatives like <a "
-"rel=\"noreferrer\" …> for links to third-party sites."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:54
-msgid ""
-"You are seeing this message because this site requires a CSRF cookie when "
-"submitting forms. This cookie is required for security reasons, to ensure "
-"that your browser is not being hijacked by third parties."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:60
-msgid ""
-"If you have configured your browser to disable cookies, please re-enable "
-"them, at least for this site, or for “same-origin” requests."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:66
-msgid "More information is available with DEBUG=True."
-msgstr "More information is available with DEBUG=True."
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:44
-msgid "No year specified"
-msgstr "No year specified"
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:64
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:115
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:214
-msgid "Date out of range"
-msgstr "Date out of range"
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:94
-msgid "No month specified"
-msgstr "No month specified"
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:147
-msgid "No day specified"
-msgstr "No day specified"
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:194
-msgid "No week specified"
-msgstr "No week specified"
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:353
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:384
-#, python-format
-msgid "No %(verbose_name_plural)s available"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:680
-#, python-format
-msgid ""
-"Future %(verbose_name_plural)s not available because %(class_name)s."
-"allow_future is False."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:720
-#, python-format
-msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/detail.py:56
-#, python-format
-msgid "No %(verbose_name)s found matching the query"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/list.py:70
-msgid "Page is not “last”, nor can it be converted to an int."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/list.py:77
-#, python-format
-msgid "Invalid page (%(page_number)s): %(message)s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/list.py:173
-#, python-format
-msgid "Empty list and “%(class_name)s.allow_empty” is False."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/static.py:49
-msgid "Directory indexes are not allowed here."
-msgstr "Directory indexes are not allowed here."
-
-#: env/lib/python3.12/site-packages/django/views/static.py:51
-#, python-format
-msgid "“%(path)s” does not exist"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/static.py:68
-#: env/lib/python3.12/site-packages/django/views/templates/directory_index.html:8
-#: env/lib/python3.12/site-packages/django/views/templates/directory_index.html:11
-#, python-format
-msgid "Index of %(directory)s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:7
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:204
-msgid "The install worked successfully! Congratulations!"
-msgstr "The install worked successfully! Congratulations!"
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:206
-#, python-format
-msgid ""
-"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
-"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:208
-#, python-format
-msgid ""
-"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
-"%(version)s/ref/settings/#debug\" target=\"_blank\" "
-"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
-"configured any URLs."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:217
-msgid "Django Documentation"
-msgstr "Django Documentation"
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:218
-msgid "Topics, references, &amp; how-to’s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:226
-msgid "Tutorial: A Polling App"
-msgstr "Tutorial: A Polling App"
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:227
-msgid "Get started with Django"
-msgstr "Get started with Django"
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:235
-msgid "Django Community"
-msgstr "Django Community"
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:236
-msgid "Connect, get help, or contribute"
-msgstr "Connect, get help, or contribute"
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:407
-#, python-format
-msgid "Content purported to be compressed with %s but failed to decompress."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:571
-#, python-format
-msgid "Unsupported value for qop: %s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:575
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:653
-#, python-format
-msgid "Unsupported value for algorithm: %s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:648
-msgid "The challenge doesn't contain a server nonce, or this one is empty."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:658
-#, python-format
-msgid "Unsupported value for pw-algorithm: %s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:1471
-msgid "Redirected but the response is missing a Location: header."
-msgstr ""
 
 #: formation/templates/formation/detail_formation.html:39
 msgid "Étudiants"
@@ -3224,11 +1960,11 @@ msgstr "Enrolment details"
 msgid "Session"
 msgstr "Session"
 
-#: formation/templates/formation/paiement.html:59 templates/video_room.html:619
-#: templates/video_room.html:668 templates/video_room.html:892
-#: templates/video_room.html:897 templates/video_room.html:1079
-#: templates/video_room.html:1095 templates/video_room.html:1103
-#: templates/video_room.html:1116
+#: formation/templates/formation/paiement.html:59 templates/video_room.html:626
+#: templates/video_room.html:675 templates/video_room.html:899
+#: templates/video_room.html:904 templates/video_room.html:1086
+#: templates/video_room.html:1102 templates/video_room.html:1110
+#: templates/video_room.html:1123
 msgid "Participant"
 msgstr "Participant"
 
@@ -3759,6 +2495,8 @@ msgid "Tarif par séance (FCFA)"
 msgstr "Session fee"
 
 #: mentorat/models.py:94
+#, fuzzy, python-format
+#| msgid "0 = mentorat gratuit. Numeria prélevé 20% de commission."
 msgid "0 = mentorat gratuit. Numeria prélevé 20% de commission."
 msgstr "0 = free mentorship. Numeria charges 20% commission."
 
@@ -4027,7 +2765,8 @@ msgstr "In person"
 msgid "Visioconférence"
 msgstr "Video Conference"
 
-#: mentorat/models.py:476 pages/templates/pages/a_propos.html:350
+#: mentorat/models.py:476 pages/models.py:101
+#: pages/templates/pages/a_propos.html:350
 #: pages/templates/pages/contact.html:85 pages/templates/pages/contact.html:210
 msgid "Email"
 msgstr "Email"
@@ -4368,8 +3107,9 @@ msgstr "Back to mentoring"
 
 #: mentorat/templates/mentorat/devenir_mentee.html:18
 #: mentorat/templates/mentorat/devenir_mentor.html:18
-#: mentorat/templates/mentorat/index.html:4
+#: mentorat/templates/mentorat/index.html:4 notifications/models.py:14
 #: templates/includes/nav_items.html:10 templates/includes/nav_items.html:23
+#: templates/notifications/list.html:36
 msgid "Mentorat"
 msgstr "Mentorship"
 
@@ -5017,7 +3757,7 @@ msgid "Initialisation..."
 msgstr "Specialisation"
 
 #: mentorat/templates/mentorat/video_seance.html:41
-#: templates/video_room.html:80 templates/video_room.html:868
+#: templates/video_room.html:80 templates/video_room.html:875
 msgid "Vous"
 msgstr "You"
 
@@ -5045,8 +3785,8 @@ msgstr "Stay on this page until the end of the session."
 msgid "L'audio et la vidéo sont envoyés directement entre vos navigateurs."
 msgstr "Audio and video are sent directly between your browsers."
 
-#: mentorat/templates/mentorat/video_seance.html:63
-#: paiements/templates/paiements/confirmation.html:52
+#: mentorat/templates/mentorat/video_seance.html:63 notifications/models.py:38
+#: pages/models.py:104 paiements/templates/paiements/confirmation.html:52
 #, fuzzy
 #| msgid "Dates"
 msgid "Date"
@@ -5179,8 +3919,8 @@ msgstr "The application has been rejected."
 msgid "Vous n'êtes pas inscrit en tant que mentoré."
 msgstr "Register as a mentee"
 
-#: mentorat/views.py:483 mentorat/views.py:517 mentorat/views.py:562
-#: mentorat/views.py:588 mentorat/views.py:629 mentorat/views.py:654
+#: mentorat/views.py:483 mentorat/views.py:530 mentorat/views.py:575
+#: mentorat/views.py:601 mentorat/views.py:642 mentorat/views.py:667
 msgid "Accès non autorisé."
 msgstr "Unauthorized access."
 
@@ -5188,52 +3928,183 @@ msgstr "Unauthorized access."
 msgid "Cette demande ne vous concerne pas."
 msgstr "This request does not concern you."
 
-#: mentorat/views.py:496
+#: mentorat/views.py:509
 #, fuzzy, python-format
 #| msgid "Demande de mentorat"
 msgid "Demande de %(mentee)s acceptée !"
 msgstr "Mentoring request"
 
-#: mentorat/views.py:499
+#: mentorat/views.py:512
 #, fuzzy, python-format
 #| msgid "Demande de mentorat"
 msgid "Demande de %(mentee)s refusée."
 msgstr "Mentoring request"
 
-#: mentorat/views.py:535
+#: mentorat/views.py:548
 msgid "Séance planifiée. Veuillez procéder au paiement pour la confirmer."
 msgstr "Session scheduled. Please proceed to payment to confirm it."
 
-#: mentorat/views.py:537
+#: mentorat/views.py:550
 msgid "Séance planifiée avec succès !"
 msgstr "Session scheduled successfully!"
 
-#: mentorat/views.py:605
+#: mentorat/views.py:618
 msgid "Séance terminée avec succès !"
 msgstr "Session completed successfully!"
 
-#: mentorat/views.py:634
+#: mentorat/views.py:647
 #, fuzzy
 #| msgid "Relation de mentorat"
 msgid "Relation de mentorat terminée."
 msgstr "Mentoring relationship"
 
-#: mentorat/views.py:668
+#: mentorat/views.py:681
 #, fuzzy
 #| msgid "Paiement confirmé"
 msgid "Ce paiement est déjà confirmé."
 msgstr "Payment confirmed"
 
-#: mentorat/views.py:713
+#: mentorat/views.py:726
 msgid ""
 "Preuve de paiement envoyée. Votre séance sera confirmée après vérification."
 msgstr ""
 
-#: numeria_project/settings.py:146
+#: notifications/models.py:8
+#, fuzzy
+#| msgid "Informations"
+msgid "Information"
+msgstr "Information"
+
+#: notifications/models.py:9
+msgid "Succès"
+msgstr ""
+
+#: notifications/models.py:10
+#, fuzzy
+#| msgid "Dernier établissement"
+msgid "Avertissement"
+msgstr "Last institution attended"
+
+#: notifications/models.py:11
+msgid "Alerte"
+msgstr ""
+
+#: notifications/models.py:12
+#: paiements/templates/paiements/confirmation.html:42
+#: templates/includes/nav_items.html:5 templates/includes/nav_items.html:18
+#: templates/notifications/list.html:28
+msgid "Cours"
+msgstr "Courses"
+
+#: notifications/models.py:13
+#: paiements/templates/paiements/page_paiement.html:3
+#: templates/notifications/list.html:32
+msgid "Paiement"
+msgstr "Payment"
+
+#: notifications/models.py:16
+#, fuzzy
+#| msgid "Moyenne générale"
+msgid "Annonce générale"
+msgstr "Overall average"
+
+#: notifications/models.py:26
+#, fuzzy
+#| msgid "Devenir Mentor"
+msgid "Destinataire"
+msgstr "Become a Mentor"
+
+#: notifications/models.py:32 templates/notifications/send.html:42
+msgid "Type"
+msgstr ""
+
+#: notifications/models.py:34 templates/notifications/send.html:28
+msgid "Titre"
+msgstr ""
+
+#: notifications/models.py:35 pages/forms.py:48 pages/models.py:103
+#: pages/templates/pages/contact.html:145 templates/notifications/send.html:35
+#, fuzzy
+#| msgid "Messages"
+msgid "Message"
+msgstr "Messages"
+
+#: notifications/models.py:36
+msgid "Lien (CTA)"
+msgstr ""
+
+#: notifications/models.py:37 pages/models.py:105
+msgid "Lu"
+msgstr ""
+
+#: notifications/models.py:45
+#, fuzzy
+#| msgid "Envoyée le"
+msgid "Envoyé par"
+msgstr "Sent on"
+
+#: notifications/models.py:50
+#| msgid "Motivation"
+msgid "Notification"
+msgstr "Notification"
+
+#: notifications/models.py:51 templates/notifications/bell.html:8
+#: templates/notifications/bell.html:27
+#| msgid "Motivation"
+msgid "Notifications"
+msgstr "Notifications"
+
+#: notifications/views.py:59
+msgid "Toutes les notifications ont été marquées comme lues."
+msgstr "All notifications have been marked as read."
+
+#: notifications/views.py:85
+msgid "Le titre et le message sont obligatoires."
+msgstr "Title and message are required."
+
+#: notifications/views.py:140
+#, python-format
+msgid "Utilisateur introuvable : %(u)s"
+msgstr "User not found: %(u)s"
+
+#: notifications/views.py:148
+#, python-format
+msgid "Notification envoyée à %(count)s utilisateur(s)"
+msgstr "Notification sent to %(count)s user(s)"
+
+#: notifications/views.py:153
+msgid "Tout le monde (broadcast)"
+msgstr "Everyone (broadcast)"
+
+#: notifications/views.py:154
+#| msgid "Tu n'es inscrit à aucun cours"
+msgid "Tous les étudiants inscrits à au moins un cours"
+msgstr "All students enrolled in at least one course"
+
+#: notifications/views.py:155
+#| msgid "Mentorés actifs"
+msgid "Tous les mentorés actifs"
+msgstr "All active mentees"
+
+#: notifications/views.py:156
+#| msgid "Mentors actifs"
+msgid "Tous les mentors actifs"
+msgstr "All active mentors"
+
+#: notifications/views.py:157
+#| msgid "Aucune candidature soumise"
+msgid "Tous les candidats (soumis/acceptés)"
+msgstr "All applicants (submitted/accepted)"
+
+#: notifications/views.py:158
+msgid "Utilisateur spécifique (par username ou email)"
+msgstr "Specific user (by username or email)"
+
+#: numeria_project/settings.py:150
 msgid "Français"
 msgstr "French"
 
-#: numeria_project/settings.py:147
+#: numeria_project/settings.py:151
 msgid "English"
 msgstr "English"
 
@@ -5283,12 +4154,6 @@ msgstr "Organisation / University"
 msgid "Optionnel — Ex: Université de Lomé"
 msgstr "University of Lomé"
 
-#: pages/forms.py:48 pages/templates/pages/contact.html:145
-#, fuzzy
-#| msgid "Messages"
-msgid "Message"
-msgstr "Messages"
-
 #: pages/forms.py:51
 msgid "Écrivez votre message ici..."
 msgstr "Write your message here..."
@@ -5299,7 +4164,17 @@ msgstr "Write your message here..."
 msgid "Je souhaite discuter d'un partenariat avec Numeria Institute"
 msgstr "Schedule a mentoring session on Numeria Institute."
 
-#: pages/templates/pages/a_propos.html:42 templates/base.html:406
+#: pages/models.py:109
+#| msgid "Message initial"
+msgid "Message de contact"
+msgstr "Contact message"
+
+#: pages/models.py:110
+#| msgid "Message initial"
+msgid "Messages de contact"
+msgstr "Contact messages"
+
+#: pages/templates/pages/a_propos.html:42 templates/base.html:408
 msgid "Rayonnement CEDEAO"
 msgstr "ECOWAS Reach"
 
@@ -5603,8 +4478,8 @@ msgstr "Email address"
 msgid "Quartier étudiant, zone à accès facile"
 msgstr "Student district, easily accessible area"
 
-#: pages/templates/pages/a_propos.html:363 templates/base.html:417
-#: templates/base.html:424 templates/includes/nav_items.html:12
+#: pages/templates/pages/a_propos.html:363 templates/base.html:419
+#: templates/base.html:426 templates/includes/nav_items.html:12
 #: templates/includes/nav_items.html:25
 msgid "Contact"
 msgstr "Contact"
@@ -5652,7 +4527,7 @@ msgstr ""
 msgid "Devenir partenaire"
 msgstr "Become a Mentor"
 
-#: pages/templates/pages/accueil.html:54
+#: pages/templates/pages/accueil.html:54 templates/404.html:20
 msgid "Voir les cours"
 msgstr "View courses"
 
@@ -6385,7 +5260,7 @@ msgstr "News & Knowledge"
 msgid "Vie du campus"
 msgstr "Course price"
 
-#: pages/views.py:48 templates/base.html:21 templates/base.html:24
+#: pages/views.py:46 templates/base.html:21 templates/base.html:24
 #: templates/base.html:33
 msgid ""
 "Éducation scientifique accessible en Afrique. Cours de mathématiques, "
@@ -6394,7 +5269,7 @@ msgstr ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses for African and French-speaking learners."
 
-#: pages/views.py:69
+#: pages/views.py:67
 msgid ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses for African and French-speaking learners."
@@ -6402,7 +5277,7 @@ msgstr ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses for African and French-speaking learners."
 
-#: pages/views.py:134
+#: pages/views.py:132
 msgid ""
 "Découvrez Numeria Institute, notre mission et notre équipe pour l'éducation "
 "scientifique en Afrique."
@@ -6410,7 +5285,7 @@ msgstr ""
 "Discover Numeria Institute, our mission and team for scientific education in "
 "Africa."
 
-#: pages/views.py:149
+#: pages/views.py:147
 msgid ""
 "Discover Numeria Institute, our mission and team for scientific education in "
 "Africa."
@@ -6418,18 +5293,21 @@ msgstr ""
 "Discover Numeria Institute, our mission and team for scientific education in "
 "Africa."
 
-#: pages/views.py:250
-#, python-brace-format
+#: pages/views.py:203
+#| msgid "Nous contacter"
+msgid "Nouveau message de contact"
+msgstr "New contact message"
+
+#: pages/views.py:213
+#, fuzzy, python-brace-format
+#| msgid ""
+#| "✅ Merci {nom} ! Ton message a bien été envoyé. Nous te répondrons dans "
+#| "24-48h."
 msgid ""
-"✅ Merci {nom} ! Ton message a bien été envoyé. Nous te répondrons dans "
+"✅ Merci {nom} ! Votre message a bien été reçu. Nous vous répondrons sous "
 "24-48h."
 msgstr ""
 "✅ Thank you {nom}! Your message has been sent. We'll reply within 24-48h."
-
-#: pages/views.py:255
-#, python-brace-format
-msgid "✅ Message reçu {nom} ! Nous te répondrons bientôt."
-msgstr "✅ Message received {nom}! We'll reply soon."
 
 #: paiements/templates/paiements/confirmation.html:16
 #, fuzzy
@@ -6453,11 +5331,6 @@ msgstr ""
 msgid "Bonne apprentissage ! 🎓"
 msgstr "Happy learning! 🎓"
 
-#: paiements/templates/paiements/confirmation.html:42
-#: templates/includes/nav_items.html:5 templates/includes/nav_items.html:18
-msgid "Cours"
-msgstr "Courses"
-
 #: paiements/templates/paiements/confirmation.html:63
 #, fuzzy
 #| msgid "Voir les cours →"
@@ -6470,8 +5343,8 @@ msgstr "View courses →"
 msgid "Voir la session →"
 msgstr "View courses →"
 
-#: paiements/templates/paiements/confirmation.html:73 templates/base.html:309
-#: templates/base.html:362
+#: paiements/templates/paiements/confirmation.html:73 templates/base.html:311
+#: templates/base.html:364
 msgid "Tableau de bord"
 msgstr "Dashboard"
 
@@ -6486,10 +5359,6 @@ msgstr "Payment method"
 #| msgid "Inscris-toi à un cours payant pour voir ton historique ici."
 msgid "Inscris-toi à un contenu payant pour voir ton historique ici."
 msgstr "Sign up for a paid course to see your history here."
-
-#: paiements/templates/paiements/page_paiement.html:3
-msgid "Paiement"
-msgstr "Payment"
 
 #: paiements/templates/paiements/page_paiement.html:15
 msgid "Retour au cours"
@@ -6572,6 +5441,24 @@ msgstr "Official certificate"
 msgid "Support par email"
 msgstr "Email support"
 
+#: templates/403.html:3 templates/403.html:10
+#, fuzzy
+#| msgid "Accès caméra/micro refusé"
+msgid "Accès refusé"
+msgstr "Camera/mic access denied"
+
+#: templates/403.html:13
+msgid "Vous n'avez pas la permission d'accéder à cette page."
+msgstr ""
+
+#: templates/404.html:3 templates/404.html:10
+msgid "Page introuvable"
+msgstr ""
+
+#: templates/404.html:13
+msgid "La page que vous cherchez n'existe pas ou a été déplacée."
+msgstr ""
+
 #: templates/base.html:49
 msgid ""
 "Éducation scientifique accessible en Afrique. Cours de mathématiques, "
@@ -6580,11 +5467,11 @@ msgstr ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses."
 
-#: templates/base.html:364
+#: templates/base.html:366
 msgid "Se déconnecter"
 msgstr "Log out"
 
-#: templates/base.html:404
+#: templates/base.html:406
 msgid ""
 "L'éducation scientifique accessible, engageante et gratuite pour tous les "
 "apprenants africains et francophones du monde entier."
@@ -6592,41 +5479,41 @@ msgstr ""
 "Accessible, engaging and free scientific education for all African and "
 "French-speaking learners worldwide."
 
-#: templates/base.html:411
+#: templates/base.html:413
 msgid "Navigation"
 msgstr "Navigation"
 
-#: templates/base.html:413
+#: templates/base.html:415
 msgid "Nos cours"
 msgstr "Our courses"
 
-#: templates/base.html:414
+#: templates/base.html:416
 msgid "Le blog"
 msgstr "The blog"
 
-#: templates/base.html:415 templates/includes/nav_items.html:8
+#: templates/base.html:417 templates/includes/nav_items.html:8
 #: templates/includes/nav_items.html:21
 msgid "Candidatures"
 msgstr "Applications"
 
-#: templates/base.html:416 templates/includes/nav_items.html:11
+#: templates/base.html:418 templates/includes/nav_items.html:11
 #: templates/includes/nav_items.html:24
 msgid "À propos"
 msgstr "About"
 
-#: templates/base.html:431
+#: templates/base.html:433
 msgid "Afrique de l'Ouest"
 msgstr "West Africa"
 
-#: templates/base.html:455
+#: templates/base.html:457
 msgid "Tous droits réservés"
 msgstr "All rights reserved"
 
-#: templates/base.html:457
+#: templates/base.html:459
 msgid "Confidentialité"
 msgstr "Privacy Policy"
 
-#: templates/base.html:458
+#: templates/base.html:460
 msgid "CGU"
 msgstr "Terms of Service"
 
@@ -6715,6 +5602,89 @@ msgstr "Training Programmes"
 #: templates/includes/nav_items.html:14 templates/includes/nav_items.html:27
 msgid "Analytics"
 msgstr "Analytics"
+
+#: templates/notifications/bell.html:29
+msgid "non lues"
+msgstr "unread"
+
+#: templates/notifications/bell.html:56
+#| msgid "aug"
+msgid "ago"
+msgstr "ago"
+
+#: templates/notifications/bell.html:63 templates/notifications/list.html:113
+#| msgid "certificats"
+msgid "Aucune notification"
+msgstr "No notifications"
+
+#: templates/notifications/bell.html:71
+#| msgid "Voir toutes les formations"
+msgid "Voir toutes les notifications"
+msgstr "See all notifications"
+
+#: templates/notifications/list.html:4 templates/notifications/list.html:10
+#| msgid "Mes formations"
+msgid "Mes notifications"
+msgstr "My notifications"
+
+#: templates/notifications/list.html:15
+msgid "Tout marquer comme lu"
+msgstr "Mark all as read"
+
+#: templates/notifications/list.html:24
+msgid "Tous"
+msgstr "All"
+
+#: templates/notifications/list.html:44
+msgid "Annonces"
+msgstr "Announcements"
+
+#: templates/notifications/list.html:99
+msgid "Page"
+msgstr "Page"
+
+#: templates/notifications/list.html:114
+#| msgid "Aucune catégorie disponible pour le moment."
+msgid "Vous n'avez aucune notification pour le moment."
+msgstr "You don't have any notifications yet."
+
+#: templates/notifications/send.html:4 templates/notifications/send.html:10
+#| msgid "Enregistrer les modifications"
+msgid "Envoyer une notification"
+msgstr "Send a notification"
+
+#: templates/notifications/send.html:11
+msgid "Réservé aux membres du staff."
+msgstr "For staff members only."
+
+#: templates/notifications/send.html:31
+#| msgid "Titre de la séance"
+msgid "Titre de la notification"
+msgstr "Notification title"
+
+#: templates/notifications/send.html:38
+#| msgid "Code de vérification"
+msgid "Contenu de la notification..."
+msgstr "Notification content..."
+
+#: templates/notifications/send.html:52
+msgid "Destinataires"
+msgstr "Recipients"
+
+#: templates/notifications/send.html:65
+#| msgid "Nom d'utilisateur unique"
+msgid "Nom d'utilisateur ou email"
+msgstr "Username or email"
+
+#: templates/notifications/send.html:73
+#| msgid "Optionnel"
+msgid "Lien CTA (optionnel)"
+msgstr "CTA link (optional)"
+
+#: templates/notifications/send.html:81
+#| msgid "Code de vérification"
+msgid "Envoyer la notification"
+msgstr "Send notification"
 
 #: templates/registration/password_reset_complete.html:6
 #, fuzzy
@@ -6880,180 +5850,664 @@ msgstr "Leave"
 msgid "Quitter l'appel"
 msgstr "Leave call"
 
-#: templates/video_room.html:560 templates/video_room.html:1044
+#: templates/video_room.html:567 templates/video_room.html:1051
 msgid "Non supporté par ce navigateur"
 msgstr "Not supported by this browser"
 
-#: templates/video_room.html:567 templates/video_room.html:742
+#: templates/video_room.html:574 templates/video_room.html:749
 #, fuzzy
 #| msgid "Catalogue des cours"
 msgid "Partage en cours par"
 msgstr "Course catalogue"
 
-#: templates/video_room.html:568
+#: templates/video_room.html:575
 #, fuzzy
 #| msgid "Catalogue des cours"
 msgid "Partage en cours"
 msgstr "Course catalogue"
 
-#: templates/video_room.html:572 templates/video_room.html:573
-#: templates/video_room.html:769
+#: templates/video_room.html:579 templates/video_room.html:580
+#: templates/video_room.html:776
 msgid "Arrêter le partage"
 msgstr "Stop sharing"
 
-#: templates/video_room.html:572 templates/video_room.html:573
+#: templates/video_room.html:579 templates/video_room.html:580
 #, fuzzy
 #| msgid "Partager"
 msgid "Partager l\\'écran"
 msgstr "Share"
 
-#: templates/video_room.html:636
+#: templates/video_room.html:643
 #, fuzzy
 #| msgid "Partager"
 msgid "Partage d\\'écran"
 msgstr "Share"
 
-#: templates/video_room.html:698
+#: templates/video_room.html:705
 msgid "Micro activé"
 msgstr "Mic on"
 
-#: templates/video_room.html:698
+#: templates/video_room.html:705
 msgid "Micro coupé"
 msgstr "Mic off"
 
-#: templates/video_room.html:712
+#: templates/video_room.html:719
 msgid "Caméra activée"
 msgstr "Camera on"
 
-#: templates/video_room.html:712
+#: templates/video_room.html:719
 msgid "Caméra désactivée"
 msgstr "Camera off"
 
-#: templates/video_room.html:721 templates/video_room.html:732
+#: templates/video_room.html:728 templates/video_room.html:739
 msgid "Main levée"
 msgstr "Hand raised"
 
-#: templates/video_room.html:721
+#: templates/video_room.html:728
 msgid "Main baissée"
 msgstr "Hand lowered"
 
-#: templates/video_room.html:749
+#: templates/video_room.html:756
 msgid "Impossible d\\"
 msgstr ""
 
-#: templates/video_room.html:772 templates/video_room.html:807
+#: templates/video_room.html:779 templates/video_room.html:814
 #, fuzzy
 #| msgid "Partager"
 msgid "Partage d\\"
 msgstr "Share"
 
-#: templates/video_room.html:778
+#: templates/video_room.html:785
 msgid "Impossible de partager l\\"
 msgstr ""
 
-#: templates/video_room.html:803
+#: templates/video_room.html:810
 #, fuzzy
 #| msgid "Partager"
 msgid "Partager l\\"
 msgstr "Share"
 
-#: templates/video_room.html:816 templates/video_room.html:819
+#: templates/video_room.html:823 templates/video_room.html:826
 #, fuzzy
 #| msgid "Partager"
 msgid "Partage d'écran"
 msgstr "Share"
 
-#: templates/video_room.html:865
+#: templates/video_room.html:872
 #, fuzzy
 #| msgid "Se connecter"
 msgid "Non connecté"
 msgstr "Log in"
 
-#: templates/video_room.html:947
+#: templates/video_room.html:954
 #, fuzzy
 #| msgid "Connectez-vous"
 msgid "Connecté"
 msgstr "Connect"
 
-#: templates/video_room.html:948
+#: templates/video_room.html:955
 #, fuzzy
 #| msgid "Connexion"
 msgid "Reconnexion…"
 msgstr "Login"
 
-#: templates/video_room.html:953
+#: templates/video_room.html:960
 msgid "Recherche du réseau…"
 msgstr "Searching for network…"
 
-#: templates/video_room.html:954
+#: templates/video_room.html:961
 msgid "Problème de réseau"
 msgstr "Network problem"
 
-#: templates/video_room.html:959
+#: templates/video_room.html:966
 msgid "Traversée du réseau réussie"
 msgstr "Network traversal successful"
 
-#: templates/video_room.html:999
+#: templates/video_room.html:1006
 #, fuzzy
 #| msgid "En attente de confirmation"
 msgid "En attente des participants…"
 msgstr "Awaiting confirmation"
 
-#: templates/video_room.html:1002
+#: templates/video_room.html:1009
 msgid "Accès caméra/micro refusé"
 msgstr "Camera/mic access denied"
 
-#: templates/video_room.html:1005
+#: templates/video_room.html:1012
 msgid "Accès caméra/micro refusé. Vérifiez les permissions."
 msgstr "Camera/mic access denied. Check permissions."
 
-#: templates/video_room.html:1017
+#: templates/video_room.html:1024
 msgid "Impossible de démarrer la session vidéo."
 msgstr "Unable to start the video session."
 
-#: templates/video_room.html:1029
+#: templates/video_room.html:1036
 msgid "Impossible de répondre à l\\"
 msgstr ""
 
-#: templates/video_room.html:1051 templates/video_room.html:1079
+#: templates/video_room.html:1058 templates/video_room.html:1086
 msgid "a rejoint la réunion"
 msgstr "joined the meeting"
 
-#: templates/video_room.html:1051 templates/video_room.html:1096
+#: templates/video_room.html:1058 templates/video_room.html:1103
 msgid "a quitté la réunion"
 msgstr "left the meeting"
 
-#: templates/video_room.html:1062
+#: templates/video_room.html:1069
 #, fuzzy
 #| msgid "Connexion"
 msgid "Connexion établie"
 msgstr "Login"
 
-#: templates/video_room.html:1067
+#: templates/video_room.html:1074
 msgid "Erreur WebSocket"
 msgstr "WebSocket error"
 
-#: templates/video_room.html:1068
+#: templates/video_room.html:1075
 #, fuzzy
 #| msgid "Se déconnecter"
 msgid "Déconnecté"
 msgstr "Log out"
 
-#: templates/video_room.html:1129
+#: templates/video_room.html:1136
 #, fuzzy
 #| msgid "Continuer le cours"
 msgid "Connexion en cours…"
 msgstr "Continue the course"
 
+#~ msgid "Ton compte est déjà activé. Connecte-toi pour continuer."
+#~ msgstr "Your account is already activated. Log in to continue."
+
+#~ msgid "🎉 Ton adresse email est confirmée. Bienvenue sur Numeria !"
+#~ msgstr "🎉 Your email address is confirmed. Welcome to Numeria!"
+
+#~ msgid "Ce compte est déjà activé. Connecte-toi pour continuer."
+#~ msgstr "This account is already activated. Log in to continue."
+
+#~ msgid "Aucun compte actif n'a été trouvé pour cette adresse email."
+#~ msgstr "No active account was found for this email address."
+
+#~ msgid "No file selected!"
+#~ msgstr "No file selected!"
+
+#~ msgid "Site Maps"
+#~ msgstr "Site Maps"
+
+#~ msgid "Syndication"
+#~ msgstr "Syndication"
+
+#~ msgid "…"
+#~ msgstr "…"
+
+#~ msgid "That page number is not an integer"
+#~ msgstr "That page number is not an integer"
+
+#~ msgid "That page number is less than 1"
+#~ msgstr "That page number is less than 1"
+
+#~ msgid "That page contains no results"
+#~ msgstr "That page contains no results"
+
+#~ msgid "Enter a valid value."
+#~ msgstr "Enter a valid value."
+
+#~ msgid "Enter a valid domain name."
+#~ msgstr "Enter a valid domain name."
+
+#~ msgid "Enter a valid URL."
+#~ msgstr "Enter a valid URL."
+
+#~ msgid "Enter a valid integer."
+#~ msgstr "Enter a valid integer."
+
+#~ msgid "Enter a valid email address."
+#~ msgstr "Enter a valid email address."
+
+#~ msgid "IPv4"
+#~ msgstr "IPv4"
+
+#~ msgid "IPv6"
+#~ msgstr "IPv6"
+
+#~ msgid "IPv4 or IPv6"
+#~ msgstr "IPv4 or IPv6"
+
+#~ msgid "Enter only digits separated by commas."
+#~ msgstr "Enter only digits separated by commas."
+
+#~ msgid "Null characters are not allowed."
+#~ msgstr "Null characters are not allowed."
+
+#~ msgid "and"
+#~ msgstr "and"
+
+#~ msgid "This field cannot be null."
+#~ msgstr "This field cannot be null."
+
+#~ msgid "This field cannot be blank."
+#~ msgstr "This field cannot be blank."
+
+#~ msgid "Boolean (Either True or False)"
+#~ msgstr "Boolean (Either True or False)"
+
+#~ msgid "Comma-separated integers"
+#~ msgstr "Comma-separated integers"
+
+#~ msgid "Date (without time)"
+#~ msgstr "Date (without time)"
+
+#~ msgid "Date (with time)"
+#~ msgstr "Date (with time)"
+
+#~ msgid "Decimal number"
+#~ msgstr "Decimal number"
+
+#~ msgid "Duration"
+#~ msgstr "Duration"
+
+#~ msgid "Email address"
+#~ msgstr "Email address"
+
+#~ msgid "File path"
+#~ msgstr "File path"
+
+#~ msgid "Floating point number"
+#~ msgstr "Floating point number"
+
+#~ msgid "Integer"
+#~ msgstr "Integer"
+
+#~ msgid "Big (8 byte) integer"
+#~ msgstr "Big (8 byte) integer"
+
+#~ msgid "Small integer"
+#~ msgstr "Small integer"
+
+#~ msgid "IPv4 address"
+#~ msgstr "IPv4 address"
+
+#~ msgid "IP address"
+#~ msgstr "IP address"
+
+#~ msgid "Boolean (Either True, False or None)"
+#~ msgstr "Boolean (Either True, False or None)"
+
+#~ msgid "Positive big integer"
+#~ msgstr "Positive big integer"
+
+#~ msgid "Positive integer"
+#~ msgstr "Positive integer"
+
+#~ msgid "Positive small integer"
+#~ msgstr "Positive small integer"
+
+#~ msgid "Text"
+#~ msgstr "Text"
+
+#~ msgid "Time"
+#~ msgstr "Time"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "Raw binary data"
+#~ msgstr "Raw binary data"
+
+#~ msgid "Universally unique identifier"
+#~ msgstr "Universally unique identifier"
+
+#~ msgid "File"
+#~ msgstr "File"
+
+#~ msgid "Image"
+#~ msgstr "Image"
+
+#~ msgid "A JSON object"
+#~ msgstr "A JSON object"
+
+#~ msgid "Value must be valid JSON."
+#~ msgstr "Value must be valid JSON."
+
+#~ msgid "Foreign Key (type determined by related field)"
+#~ msgstr "Foreign Key (type determined by related field)"
+
+#~ msgid "One-to-one relationship"
+#~ msgstr "One-to-one relationship"
+
+#~ msgid "Many-to-many relationship"
+#~ msgstr "Many-to-many relationship"
+
+#~ msgid "This field is required."
+#~ msgstr "This field is required."
+
+#~ msgid "Enter a whole number."
+#~ msgstr "Enter a whole number."
+
+#~ msgid "Enter a valid date."
+#~ msgstr "Enter a valid date."
+
+#~ msgid "Enter a valid time."
+#~ msgstr "Enter a valid time."
+
+#~ msgid "Enter a valid date/time."
+#~ msgstr "Enter a valid date/time."
+
+#~ msgid "Enter a valid duration."
+#~ msgstr "Enter a valid duration."
+
+#~ msgid "No file was submitted. Check the encoding type on the form."
+#~ msgstr "No file was submitted. Check the encoding type on the form."
+
+#~ msgid "No file was submitted."
+#~ msgstr "No file was submitted."
+
+#~ msgid "The submitted file is empty."
+#~ msgstr "The submitted file is empty."
+
+#~ msgid "Please either submit a file or check the clear checkbox, not both."
+#~ msgstr "Please either submit a file or check the clear checkbox, not both."
+
+#~ msgid "Enter a valid UUID."
+#~ msgstr "Enter a valid UUID."
+
+#~ msgid "Enter a valid JSON."
+#~ msgstr "Enter a valid JSON."
+
+#~ msgid "Order"
+#~ msgstr "Order"
+
+#~ msgid "Delete"
+#~ msgstr "Delete"
+
+#~ msgid "Please correct the duplicate values below."
+#~ msgstr "Please correct the duplicate values below."
+
+#~ msgid "The inline value did not match the parent instance."
+#~ msgstr "The inline value did not match the parent instance."
+
+#~ msgid ""
+#~ "Select a valid choice. That choice is not one of the available choices."
+#~ msgstr ""
+#~ "Select a valid choice. That choice is not one of the available choices."
+
+#~ msgid "Clear"
+#~ msgstr "Clear"
+
+#~ msgid "Currently"
+#~ msgstr "Currently"
+
+#~ msgid "Change"
+#~ msgstr "Change"
+
+#~ msgid "Unknown"
+#~ msgstr "Unknown"
+
+#~ msgid "Yes"
+#~ msgstr "Yes"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "yes,no,maybe"
+#~ msgstr "yes,no,maybe"
+
+#~ msgid "p.m."
+#~ msgstr "p.m."
+
+#~ msgid "a.m."
+#~ msgstr "a.m."
+
+#~ msgid "PM"
+#~ msgstr "PM"
+
+#~ msgid "AM"
+#~ msgstr "AM"
+
+#~ msgid "midnight"
+#~ msgstr "midnight"
+
+#~ msgid "noon"
+#~ msgstr "noon"
+
+#~ msgid "Monday"
+#~ msgstr "Monday"
+
+#~ msgid "Tuesday"
+#~ msgstr "Tuesday"
+
+#~ msgid "Wednesday"
+#~ msgstr "Wednesday"
+
+#~ msgid "Thursday"
+#~ msgstr "Thursday"
+
+#~ msgid "Friday"
+#~ msgstr "Friday"
+
+#~ msgid "Saturday"
+#~ msgstr "Saturday"
+
+#~ msgid "Sunday"
+#~ msgstr "Sunday"
+
+#~ msgid "Mon"
+#~ msgstr "Mon"
+
+#~ msgid "Tue"
+#~ msgstr "Tue"
+
+#~ msgid "Wed"
+#~ msgstr "Wed"
+
+#~ msgid "Thu"
+#~ msgstr "Thu"
+
+#~ msgid "Fri"
+#~ msgstr "Fri"
+
+#~ msgid "Sat"
+#~ msgstr "Sat"
+
+#~ msgid "Sun"
+#~ msgstr "Sun"
+
+#~ msgid "January"
+#~ msgstr "January"
+
+#~ msgid "February"
+#~ msgstr "February"
+
+#~ msgid "March"
+#~ msgstr "March"
+
+#~ msgid "April"
+#~ msgstr "April"
+
+#~ msgid "May"
+#~ msgstr "May"
+
+#~ msgid "June"
+#~ msgstr "June"
+
+#~ msgid "July"
+#~ msgstr "July"
+
+#~ msgid "August"
+#~ msgstr "August"
+
+#~ msgid "September"
+#~ msgstr "September"
+
+#~ msgid "October"
+#~ msgstr "October"
+
+#~ msgid "November"
+#~ msgstr "November"
+
+#~ msgid "December"
+#~ msgstr "December"
+
+#~ msgid "jan"
+#~ msgstr "jan"
+
+#~ msgid "feb"
+#~ msgstr "feb"
+
+#~ msgid "mar"
+#~ msgstr "mar"
+
+#~ msgid "apr"
+#~ msgstr "apr"
+
+#~ msgid "may"
+#~ msgstr "may"
+
+#~ msgid "jun"
+#~ msgstr "jun"
+
+#~ msgid "jul"
+#~ msgstr "jul"
+
+#~ msgid "sep"
+#~ msgstr "sep"
+
+#~ msgid "oct"
+#~ msgstr "oct"
+
+#~ msgid "nov"
+#~ msgstr "nov"
+
+#~ msgid "dec"
+#~ msgstr "dec"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "March"
+#~ msgstr "March"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "April"
+#~ msgstr "April"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "May"
+#~ msgstr "May"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "June"
+#~ msgstr "June"
+
+#~ msgctxt "abbrev. month"
+#~ msgid "July"
+#~ msgstr "July"
+
+#~ msgctxt "alt. month"
+#~ msgid "January"
+#~ msgstr "January"
+
+#~ msgctxt "alt. month"
+#~ msgid "February"
+#~ msgstr "February"
+
+#~ msgctxt "alt. month"
+#~ msgid "March"
+#~ msgstr "March"
+
+#~ msgctxt "alt. month"
+#~ msgid "April"
+#~ msgstr "April"
+
+#~ msgctxt "alt. month"
+#~ msgid "May"
+#~ msgstr "May"
+
+#~ msgctxt "alt. month"
+#~ msgid "June"
+#~ msgstr "June"
+
+#~ msgctxt "alt. month"
+#~ msgid "July"
+#~ msgstr "July"
+
+#~ msgctxt "alt. month"
+#~ msgid "August"
+#~ msgstr "August"
+
+#~ msgctxt "alt. month"
+#~ msgid "September"
+#~ msgstr "September"
+
+#~ msgctxt "alt. month"
+#~ msgid "October"
+#~ msgstr "October"
+
+#~ msgctxt "alt. month"
+#~ msgid "November"
+#~ msgstr "November"
+
+#~ msgctxt "alt. month"
+#~ msgid "December"
+#~ msgstr "December"
+
+#~ msgid "This is not a valid IPv6 address."
+#~ msgstr "This is not a valid IPv6 address."
+
+#~ msgid "or"
+#~ msgstr "or"
+
+#~ msgid ", "
+#~ msgstr ", "
+
+#~ msgid "Forbidden"
+#~ msgstr "Forbidden"
+
+#~ msgid "CSRF verification failed. Request aborted."
+#~ msgstr "CSRF verification failed. Request aborted."
+
+#~ msgid "More information is available with DEBUG=True."
+#~ msgstr "More information is available with DEBUG=True."
+
+#~ msgid "No year specified"
+#~ msgstr "No year specified"
+
+#~ msgid "Date out of range"
+#~ msgstr "Date out of range"
+
+#~ msgid "No month specified"
+#~ msgstr "No month specified"
+
+#~ msgid "No day specified"
+#~ msgstr "No day specified"
+
+#~ msgid "No week specified"
+#~ msgstr "No week specified"
+
+#~ msgid "Directory indexes are not allowed here."
+#~ msgstr "Directory indexes are not allowed here."
+
+#~ msgid "The install worked successfully! Congratulations!"
+#~ msgstr "The install worked successfully! Congratulations!"
+
+#~ msgid "Django Documentation"
+#~ msgstr "Django Documentation"
+
+#~ msgid "Tutorial: A Polling App"
+#~ msgstr "Tutorial: A Polling App"
+
+#~ msgid "Get started with Django"
+#~ msgstr "Get started with Django"
+
+#~ msgid "Django Community"
+#~ msgstr "Django Community"
+
+#~ msgid "Connect, get help, or contribute"
+#~ msgstr "Connect, get help, or contribute"
+
 #, python-brace-format
-#~ msgid "Bienvenue sur Numeria, {first_name} ! 🎓"
-#~ msgstr "Welcome to Numeria, {first_name}! 🎓"
+#~ msgid "✅ Message reçu {nom} ! Nous te répondrons bientôt."
+#~ msgstr "✅ Message received {nom}! We'll reply soon."
 
 #~ msgid "Static Files"
 #~ msgstr "Static Files"
-
-#~ msgid "certificats"
-#~ msgstr "certificates"
 
 #~ msgid "Contenu du cours"
 #~ msgstr "Course content"

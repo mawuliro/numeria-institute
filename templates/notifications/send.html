@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block titre %}{% trans "Envoyer une notification" %} — Staff{% endblock %}
+
+{% block contenu %}
+<div class="max-w-2xl mx-auto px-4 py-10">
+
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">📣 {% trans "Envoyer une notification" %}</h1>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{% trans "Réservé aux membres du staff." %}</p>
+  </div>
+
+  {% if messages %}
+  <div class="mb-4">
+    {% for msg in messages %}
+    <div class="p-3 rounded-lg {% if msg.tags == 'success' %}bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300{% elif msg.tags == 'error' %}bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300{% endif %} text-sm mb-2">
+      {{ msg }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post" class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 space-y-5">
+    {% csrf_token %}
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">{% trans "Titre" %} *</label>
+      <input type="text" name="title" required maxlength="300"
+             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-numeria-teal"
+             placeholder="{% trans 'Titre de la notification' %}">
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">{% trans "Message" %} *</label>
+      <textarea name="message" required rows="4"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-numeria-teal"
+                placeholder="{% trans 'Contenu de la notification...' %}"></textarea>
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">{% trans "Type" %}</label>
+      <select name="notification_type"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+        {% for value, label in types %}
+        <option value="{{ value }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">{% trans "Destinataires" %}</label>
+      <div class="space-y-2">
+        {% for val, label in recipient_choices %}
+        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300">
+          <input type="radio" name="recipient_mode" value="{{ val }}"
+                 {% if val == 'everyone' %}checked{% endif %}
+                 class="text-numeria-teal"
+                 onchange="toggleSpecific(this)">
+          {{ label }}
+        </label>
+        {% endfor %}
+      </div>
+      <div id="specific-user-field" class="mt-3 hidden">
+        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{% trans "Nom d'utilisateur ou email" %}</label>
+        <input type="text" name="specific_user"
+               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-numeria-teal"
+               placeholder="username ou email@example.com">
+      </div>
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">{% trans "Lien CTA (optionnel)" %}</label>
+      <input type="text" name="link"
+             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-numeria-teal"
+             placeholder="/fr/cours/ ou https://...">
+    </div>
+
+    <button type="submit"
+            class="w-full bg-numeria-bleu text-white font-bold py-3 rounded-xl hover:bg-blue-800 transition-colors">
+      📣 {% trans "Envoyer la notification" %}
+    </button>
+  </form>
+</div>
+
+<script>
+function toggleSpecific(radio) {
+  var field = document.getElementById('specific-user-field');
+  if (radio.value === 'specific' && radio.checked) {
+    field.classList.remove('hidden');
+  } else {
+    field.classList.add('hidden');
+  }
+}
+// Init on load
+document.addEventListener('DOMContentLoaded', function() {
+  var checked = document.querySelector('input[name="recipient_mode"]:checked');
+  if (checked && checked.value === 'specific') {
+    document.getElementById('specific-user-field').classList.remove('hidden');
+  }
+});
+</script>
+{% endblock %}

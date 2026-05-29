@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block titre %}{% trans "Mes notifications" %} — Numeria{% endblock %}
+
+{% block contenu %}
+<div class="max-w-3xl mx-auto px-4 py-10">
+
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">🔔 {% trans "Mes notifications" %}</h1>
+    <form method="post" action="{% url 'notifications:mark_all_read' %}">
+      {% csrf_token %}
+      <button type="submit"
+              class="text-sm bg-numeria-bleu text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors">
+        ✓ {% trans "Tout marquer comme lu" %}
+      </button>
+    </form>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="flex flex-wrap gap-2 mb-6">
+    <a href="{% url 'notifications:list' %}"
+       class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors {% if not filter_type %}bg-numeria-bleu text-white{% else %}bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200{% endif %}">
+      {% trans "Tous" %}
+    </a>
+    <a href="?type=course"
+       class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors {% if filter_type == 'course' %}bg-numeria-bleu text-white{% else %}bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200{% endif %}">
+      📚 {% trans "Cours" %}
+    </a>
+    <a href="?type=payment"
+       class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors {% if filter_type == 'payment' %}bg-numeria-bleu text-white{% else %}bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200{% endif %}">
+      💳 {% trans "Paiement" %}
+    </a>
+    <a href="?type=mentorship"
+       class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors {% if filter_type == 'mentorship' %}bg-numeria-bleu text-white{% else %}bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200{% endif %}">
+      🤝 {% trans "Mentorat" %}
+    </a>
+    <a href="?type=candidacy"
+       class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors {% if filter_type == 'candidacy' %}bg-numeria-bleu text-white{% else %}bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200{% endif %}">
+      📋 {% trans "Candidature" %}
+    </a>
+    <a href="?type=broadcast"
+       class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors {% if filter_type == 'broadcast' %}bg-numeria-bleu text-white{% else %}bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200{% endif %}">
+      📣 {% trans "Annonces" %}
+    </a>
+  </div>
+
+  <!-- Notification list -->
+  {% if page_obj.object_list %}
+    <div class="space-y-2">
+      {% for notif in page_obj %}
+      <div class="flex items-start gap-4 p-4 rounded-xl border {% if not notif.is_read %}bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800{% else %}bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700{% endif %} transition-colors">
+        <!-- Unread indicator -->
+        <div class="mt-1 flex-shrink-0">
+          {% if not notif.is_read %}
+            <span class="block w-2.5 h-2.5 bg-blue-500 rounded-full"></span>
+          {% else %}
+            <span class="block w-2.5 h-2.5 bg-gray-200 dark:bg-gray-600 rounded-full"></span>
+          {% endif %}
+        </div>
+        <!-- Type icon -->
+        <div class="text-xl flex-shrink-0">
+          {% if notif.notification_type == 'success' %}✅
+          {% elif notif.notification_type == 'warning' %}⚠️
+          {% elif notif.notification_type == 'alert' %}🚨
+          {% elif notif.notification_type == 'course' %}📚
+          {% elif notif.notification_type == 'payment' %}💳
+          {% elif notif.notification_type == 'mentorship' %}🤝
+          {% elif notif.notification_type == 'candidacy' %}📋
+          {% elif notif.notification_type == 'broadcast' %}📣
+          {% else %}ℹ️{% endif %}
+        </div>
+        <!-- Content -->
+        <div class="flex-1">
+          {% if notif.link %}
+          <a href="{{ notif.link }}" class="font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400">
+            {{ notif.title }}
+          </a>
+          {% else %}
+          <p class="font-semibold text-gray-900 dark:text-gray-100">{{ notif.title }}</p>
+          {% endif %}
+          <p class="text-sm text-gray-600 dark:text-gray-300 mt-0.5">{{ notif.message }}</p>
+          <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">{{ notif.created_at|date:"d/m/Y H:i" }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="flex justify-center gap-2 mt-8">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if filter_type %}&type={{ filter_type }}{% endif %}"
+           class="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors">
+          ← {% trans "Précédent" %}
+        </a>
+      {% endif %}
+      <span class="px-4 py-2 text-sm text-gray-500">
+        {% trans "Page" %} {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+      </span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if filter_type %}&type={{ filter_type }}{% endif %}"
+           class="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors">
+          {% trans "Suivant" %} →
+        </a>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  {% else %}
+    <div class="text-center py-16 text-gray-400 dark:text-gray-500">
+      <div class="text-5xl mb-4">🔕</div>
+      <p class="text-lg font-medium">{% trans "Aucune notification" %}</p>
+      <p class="text-sm mt-1">{% trans "Vous n'avez aucune notification pour le moment." %}</p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

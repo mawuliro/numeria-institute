@@ -81,6 +81,7 @@ urlpatterns += i18n_patterns(
     path('paiements/', include('paiements.urls')),
     path('communaute/', include('communaute.urls')),
     path('mentorat/', include('mentorat.urls')),
+    path('notifications/', include('notifications.urls')),
 )
 
 if settings.DEBUG or not settings.USE_CLOUDINARY:

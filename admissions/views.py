@@ -309,6 +309,17 @@ def changer_statut(request, candidature_id):
                     send_candidacy_acceptance_email(candidature, language=getattr(request, 'LANGUAGE_CODE', None))
                 except Exception:
                     pass
+                try:
+                    from notifications.notifications import notify_user
+                    notify_user(
+                        candidature.utilisateur,
+                        title="Candidature acceptée",
+                        message=f"Votre candidature pour {candidature.campagne.filiere} a été acceptée.",
+                        notification_type='candidacy',
+                        link=f"/admissions/mes-candidatures/",
+                    )
+                except Exception:
+                    pass
 
             messages.success(request, _("✅ Statut mis à jour : %(statut)s") % {'statut': dict(Candidature.STATUTS)[nouveau_statut]})
     

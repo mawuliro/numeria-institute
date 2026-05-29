@@ -2,11 +2,12 @@ import logging
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core import signing
-from django.core.mail import EmailMultiAlternatives, send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django.utils import translation
+from django.utils.translation import gettext_lazy as _
 
 logger = logging.getLogger(__name__)
 
@@ -46,140 +47,143 @@ def verify_email_token(token):
     return User.objects.get(pk=user_id)
 
 
-def send_verification_email(request, user, language=None):
-    if not user.email:
-        logger.warning('send_verification_email: utilisateur sans email %s', user.pk)
-        return
+# ─── TRANSACTIONAL EMAILS (Gmail SMTP) ────────────────────────────────────────
 
-    language = _get_language(language or getattr(request, 'LANGUAGE_CODE', None))
-    token = make_email_verification_token(user)
-    verification_url = request.build_absolute_uri(reverse('comptes:verify_email', args=[token]))
-    logger.info('send_verification_email: sending to %s, url=%s', user.email, verification_url)
-    subject = 'Confirm your Numeria account' if language == 'en' else 'Confirme ton compte Numeria'
-    html_body = _render_template(
-        f'emails/verify_email_{language}.html',
-        {
-            'user': user,
-            'verification_url': verification_url,
-            'site_name': 'Numeria Institute',
-        },
-        language=language,
-    )
-    text_content = strip_tags(html_body)
+def send_payment_confirmation_email(user, payment):
+    """
+    Send a payment receipt email after a successful payment.
+    Called from paiements/views.py when a payment is confirmed.
+    """
+    if not user.email:
+        logger.warning('send_payment_confirmation_email: user %s has no email', user.pk)
+        return
     try:
+        subject = 'Confirmation de paiement — Numeria Institute'
+        if payment.cours:
+            item_name = payment.cours.titre
+        elif payment.formation_inscription:
+            item_name = (
+                f"{payment.formation_inscription.session.formation.titre}"
+                f" — {payment.formation_inscription.session.nom}"
+            )
+        else:
+            item_name = 'Paiement Numeria'
+        html_body = render_to_string('emails/payment_confirmation.html', {
+            'user': user,
+            'payment': payment,
+            'item_name': item_name,
+            'site_name': 'Numeria Institute',
+        })
+        text_content = strip_tags(html_body)
         _send_html_email(subject, text_content, html_body, [user.email])
-        logger.info('send_verification_email: sent OK to %s', user.email)
+        logger.info('send_payment_confirmation_email: sent OK to %s', user.email)
     except Exception as e:
-        logger.error(
-            'send_verification_email: FAILED for %s — %s; backend=%s; host=%s',
-            user.email,
-            e,
-            settings.EMAIL_BACKEND,
-            settings.EMAIL_HOST,
-        )
-        raise
-
-
-def send_welcome_email(request, user, language=None):
-    if not user.email:
-        logger.warning('send_welcome_email: utilisateur sans email %s', user.pk)
-        return
-
-    language = _get_language(language or getattr(request, 'LANGUAGE_CODE', None))
-    subject = 'Welcome to Numeria Institute!' if language == 'en' else 'Bienvenue sur Numeria Institute !'
-    html_body = _render_template(
-        f'emails/welcome_email_{language}.html',
-        {
-            'user': user,
-            'cours_url': request.build_absolute_uri(reverse('cours:catalogue')),
-            'site_name': 'Numeria Institute',
-        },
-        language=language,
-    )
-    text_content = strip_tags(html_body)
-    _send_html_email(subject, text_content, html_body, [user.email])
-
-
-def send_course_enrollment_email(user, cours, language=None):
-    if not user.email:
-        logger.warning('send_course_enrollment_email: utilisateur sans email %s', user.pk)
-        return
-
-    language = _get_language(language)
-    subject = 'Course enrollment confirmed' if language == 'en' else f'Inscription au cours « {cours.titre} » confirmée'
-    html_body = _render_template(
-        f'emails/course_enrollment_{language}.html',
-        {
-            'user': user,
-            'cours': cours,
-            'site_name': 'Numeria Institute',
-        },
-        language=language,
-    )
-    text_content = strip_tags(html_body)
-    _send_html_email(subject, text_content, html_body, [user.email])
-
-
-def send_contact_form_emails(request, name, email, organisation, subject, message, is_partner=False, language=None):
-    language = _get_language(language or getattr(request, 'LANGUAGE_CODE', None))
-    admin_subject = f"[Numeria] Nouveau message : {subject} — {name}"
-    admin_body = (
-        f"Nouveau message depuis le site Numeria Institute\n\n"
-        f"De : {name}\n"
-        f"Email : {email}\n"
-        f"Organisation : {organisation or 'Non renseignée'}\n"
-        f"Sujet : {subject}\n"
-        f"Partenariat : {'Oui' if is_partner else 'Non'}\n\n"
-        f"Message :\n{message}\n"
-        "\n---\nNumeria Institute"
-    )
-    send_mail(admin_subject, admin_body, settings.DEFAULT_FROM_EMAIL, [settings.CONTACT_EMAIL], fail_silently=False)
-
-    html_body = _render_template(
-        f'emails/contact_autoreply_{language}.html',
-        {
-            'name': name,
-            'subject': subject,
-            'organisation': organisation,
-            'is_partner': is_partner,
-            'site_name': 'Numeria Institute',
-        },
-        language=language,
-    )
-    text_content = strip_tags(html_body)
-    user_subject = 'We received your message' if language == 'en' else 'Nous avons bien reçu votre message'
-    _send_html_email(user_subject, text_content, html_body, [email])
+        logger.error('send_payment_confirmation_email: FAILED for %s — %s', user.email, e)
 
 
 def send_candidacy_acceptance_email(candidature, language=None):
+    """
+    Send an acceptance email when an admin accepts a candidacy application.
+    Called from admissions/views.py.
+    """
     user = candidature.utilisateur
     if not user.email:
-        logger.warning('send_candidacy_acceptance_email: utilisateur sans email %s', user.pk)
+        logger.warning('send_candidacy_acceptance_email: user %s has no email', user.pk)
         return
-
-    language = _get_language(language)
-    subject = 'Your application has been accepted' if language == 'en' else 'Ta candidature a été acceptée'
-    html_body = _render_template(
-        f'emails/candidacy_accepted_{language}.html',
-        {'candidature': candidature, 'site_name': 'Numeria Institute'},
-        language=language,
-    )
-    text_content = strip_tags(html_body)
-    _send_html_email(subject, text_content, html_body, [user.email])
+    try:
+        language = _get_language(language)
+        subject = (
+            'Your application has been accepted'
+            if language == 'en'
+            else 'Ta candidature a été acceptée — Numeria Institute'
+        )
+        html_body = _render_template(
+            f'emails/candidacy_accepted_{language}.html',
+            {'candidature': candidature, 'site_name': 'Numeria Institute'},
+            language=language,
+        )
+        text_content = strip_tags(html_body)
+        _send_html_email(subject, text_content, html_body, [user.email])
+        logger.info('send_candidacy_acceptance_email: sent OK to %s', user.email)
+    except Exception as e:
+        logger.error('send_candidacy_acceptance_email: FAILED for %s — %s', user.email, e)
 
 
 def send_mentorship_acceptance_email(demande, language=None):
-    user = demande.mentee.profil.utilisateur
-    if not user.email:
-        logger.warning('send_mentorship_acceptance_email: utilisateur sans email %s', user.pk)
+    """
+    Notify the mentee that their mentorship request was accepted.
+    Called from mentorat/views.py when a mentor accepts a request.
+    """
+    mentee_user = demande.mentee.profil.utilisateur
+    if not mentee_user.email:
+        logger.warning('send_mentorship_acceptance_email: user %s has no email', mentee_user.pk)
         return
+    try:
+        language = _get_language(language)
+        subject = (
+            'Your mentoring request has been accepted'
+            if language == 'en'
+            else 'Ta demande de mentorat a été acceptée — Numeria Institute'
+        )
+        html_body = _render_template(
+            f'emails/mentorship_accepted_{language}.html',
+            {'demande': demande, 'site_name': 'Numeria Institute'},
+            language=language,
+        )
+        text_content = strip_tags(html_body)
+        _send_html_email(subject, text_content, html_body, [mentee_user.email])
+        logger.info('send_mentorship_acceptance_email: sent OK to %s', mentee_user.email)
+    except Exception as e:
+        logger.error('send_mentorship_acceptance_email: FAILED for %s — %s', mentee_user.email, e)
 
-    language = _get_language(language)
-    subject = 'Your mentoring request has been accepted' if language == 'en' else 'Ta demande de mentorat a été acceptée'
-    html_body = _render_template(
-        f'emails/mentorship_accepted_{language}.html',
-        {'demande': demande, 'site_name': 'Numeria Institute'},
-        language=language,
-    )
-    text_content = strip_tags(html_body)
-    _send_html_email(subject, text_content, html_body, [user.email])
+
+def send_mentorship_confirmation_to_mentor(mentor, mentee, language=None):
+    """
+    Notify the mentor when a mentee accepts their invitation.
+    """
+    mentor_user = mentor.profil.utilisateur
+    if not mentor_user.email:
+        logger.warning('send_mentorship_confirmation_to_mentor: user %s has no email', mentor_user.pk)
+        return
+    try:
+        language = _get_language(language)
+        subject = (
+            'A mentee accepted your invitation'
+            if language == 'en'
+            else 'Un mentoré a accepté votre invitation — Numeria Institute'
+        )
+        html_body = render_to_string('emails/mentorship_confirmation_mentor.html', {
+            'mentor': mentor,
+            'mentee': mentee,
+            'site_name': 'Numeria Institute',
+        })
+        text_content = strip_tags(html_body)
+        _send_html_email(subject, text_content, html_body, [mentor_user.email])
+        logger.info('send_mentorship_confirmation_to_mentor: sent OK to %s', mentor_user.email)
+    except Exception as e:
+        logger.error(
+            'send_mentorship_confirmation_to_mentor: FAILED for %s — %s', mentor_user.email, e
+        )
+
+
+# ─── KEPT FOR REFERENCE — no longer called from views ─────────────────────────
+
+def send_verification_email(request, user, language=None):
+    """No longer called — registration now activates accounts immediately."""
+    pass
+
+
+def send_welcome_email(request, user, language=None):
+    """No longer called — removed from registration flow."""
+    pass
+
+
+def send_course_enrollment_email(user, cours, language=None):
+    """No longer called — replaced by in-app notification."""
+    pass
+
+
+def send_contact_form_emails(request, name, email, organisation, subject, message,
+                              is_partner=False, language=None):
+    """No longer called — contact form now saves to DB only."""
+    pass

@@ -1,15 +1,12 @@
 import logging
 from django.conf import settings
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
-from django.core.mail import BadHeaderError
-from smtplib import SMTPException
 from django_ratelimit.decorators import ratelimit
 from cours.models import Cours
 from blog.models import Article
-from numeria_project.emails import send_contact_form_emails
-from .models import HomePage, AboutPage, ContactPage
+from .models import HomePage, AboutPage, ContactPage, ContactMessage
 
 logger = logging.getLogger(__name__)
 
@@ -162,10 +159,9 @@ def a_propos(request):
 
 @ratelimit(key='ip', rate='5/h', method='POST', block=True)
 def contact(request):
-    """Vue de la page Contact avec formulaire fonctionnel."""
+    """Vue de la page Contact — sauvegarde en base uniquement, aucun email."""
     from .forms import FormulaireContact
-    from django.core.mail import send_mail
-    from django.conf import settings
+    from django.contrib import messages
 
     contactpage = ContactPage.objects.first()
     if not contactpage:
@@ -185,79 +181,38 @@ def contact(request):
 
     if request.method == 'POST':
         formulaire = FormulaireContact(request.POST)
-
         if formulaire.is_valid():
             nom = formulaire.cleaned_data['nom_complet']
             email_utilisateur = formulaire.cleaned_data['email']
-            organisation = formulaire.cleaned_data.get('organisation', '')
             sujet = formulaire.cleaned_data['sujet']
-            message = formulaire.cleaned_data['message']
-            est_partenaire = formulaire.cleaned_data.get('est_partenaire', False)
+            message_text = formulaire.cleaned_data['message']
 
-            # Message to admin
-            contenu_email_admin = f"""
-Nouveau message depuis le site Numeria Institute
-================================================
+            ContactMessage.objects.create(
+                name=nom,
+                email=email_utilisateur,
+                subject=sujet,
+                message=message_text,
+            )
 
-De : {nom}
-Email : {email_utilisateur}
-Organisation : {organisation or 'Non renseignée'}
-Sujet : {sujet}
-Partenariat : {'Oui' if est_partenaire else 'Non'}
-
-Message :
----------
-{message}
-
-================================================
-Envoyé depuis numeriainstitute.com
-            """
-
-            # Confirmation message to user
-            contenu_email_utilisateur = f"""
-Bonjour {nom},
-
-Merci beaucoup d'avoir contacté Numeria Institute ! ✨
-
-Nous avons bien reçu votre message concernant : {sujet}
-
-Notre équipe vous répondra dans les 24 à 48 heures.
-
-Si vous avez une question urgente, vous pouvez nous appeler directement à {settings.CONTACT_EMAIL}
-
-Cordialement,
-L'équipe Numeria Institute
-Lomé, Togo 🇹🇬
-            """
-
+            # Notify all staff members via in-app notification
             try:
-                send_contact_form_emails(
-                    request=request,
-                    name=nom,
-                    email=email_utilisateur,
-                    organisation=organisation,
-                    subject=sujet,
-                    message=message,
-                    is_partner=est_partenaire,
+                from notifications.notifications import notify_group
+                staff_qs = User.objects.filter(is_staff=True)
+                notify_group(
+                    staff_qs,
+                    title=_("Nouveau message de contact"),
+                    message=f"{nom} a envoyé un message : {sujet}",
+                    notification_type='info',
+                    link='/numeria-staff-portal/pages/contactmessage/',
                 )
-                email_sent = True
-            except (SMTPException, BadHeaderError, ConnectionError, TimeoutError, OSError) as e:
-                email_sent = False
-                logger.error(f'Email error: {str(e)}')
+            except Exception as e:
+                logger.error('Contact notification failed: %s', e)
 
-            from django.contrib import messages
-            if email_sent:
-                messages.success(
-                    request,
-                    _("✅ Merci {nom} ! Ton message a bien été envoyé. Nous te répondrons dans 24-48h.").format(nom=nom)
-                )
-            else:
-                messages.success(
-                    request,
-                    _("✅ Message reçu {nom} ! Nous te répondrons bientôt.").format(nom=nom)
-                )
+            messages.success(
+                request,
+                _("✅ Merci {nom} ! Votre message a bien été reçu. Nous vous répondrons sous 24-48h.").format(nom=nom)
+            )
             return redirect('contact')
-
     else:
         formulaire = FormulaireContact()
 

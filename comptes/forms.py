@@ -136,7 +136,7 @@ class FormulaireInscription(UserCreationForm):
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
-        user.is_active = False
+        user.is_active = True
         if commit:
             user.save()
             Profil.objects.create(

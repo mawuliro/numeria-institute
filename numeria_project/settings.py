@@ -10,7 +10,6 @@ Structure :
 from pathlib import Path
 from decouple import config, Csv
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ImproperlyConfigured
 import dj_database_url
 import os
 import re
@@ -55,6 +54,7 @@ INSTALLED_APPS = [
     'communaute',
     'mentorat',
     'formation',  # ← NOUVEAU: Formations payantes
+    'notifications',
 ]
 
 
@@ -258,66 +258,17 @@ RATELIMIT_ENABLE    = True
 RATELIMIT_USE_CACHE = 'default'
 
 
-# ── EMAIL ─────────────────────────────────────────────────────────────────────
-# Email backend selection: 'smtp', 'gmail', 'mailgun', 'brevo' or 'console'
-EMAIL_SERVICE = config('EMAIL_SERVICE', default='smtp').strip().lower()
-
-
-def _require_email_setting(name, value, service_name):
-    if not value:
-        raise ImproperlyConfigured(
-            f"EMAIL_SERVICE={service_name} requires {name} to be set in the environment."
-        )
-    return value
-
-if EMAIL_SERVICE == 'mailgun':
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.mailgun.org'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = _require_email_setting('MAILGUN_SMTP_USER', config('MAILGUN_SMTP_USER', default=''), 'mailgun')
-    EMAIL_HOST_PASSWORD = _require_email_setting('MAILGUN_SMTP_PASSWORD', config('MAILGUN_SMTP_PASSWORD', default=''), 'mailgun')
-elif EMAIL_SERVICE == 'gmail':
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = _require_email_setting('GMAIL_EMAIL', config('GMAIL_EMAIL', default=''), 'gmail')
-    EMAIL_HOST_PASSWORD = _require_email_setting('GMAIL_APP_PASSWORD', config('GMAIL_APP_PASSWORD', default=''), 'gmail')
-elif EMAIL_SERVICE == 'brevo':
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = config('EMAIL_HOST', default='smtp-relay.brevo.com')
-    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-    EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
-    EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='apikey')
-    EMAIL_HOST_PASSWORD = _require_email_setting('EMAIL_HOST_PASSWORD', config('EMAIL_HOST_PASSWORD', default=''), 'brevo')
-elif EMAIL_SERVICE == 'console':
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    EMAIL_HOST = config('EMAIL_HOST', default='')
-    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-    EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
-    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-elif EMAIL_SERVICE == 'smtp':
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
-    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-    EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
-    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-else:
-    EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
-    EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
-    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-    EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
-    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Numeria Institute <numeriainstitude@gmail.com>')
-CONTACT_EMAIL = config('CONTACT_EMAIL', default='numeriainstitude@gmail.com')
-ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@numeriainstitute.com')
-EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
+# ── EMAIL — Gmail SMTP pour les emails transactionnels ───────────────────────
+EMAIL_BACKEND    = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST       = 'smtp.gmail.com'
+EMAIL_PORT       = 587
+EMAIL_USE_TLS    = True
+EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL  = 'Numeria Institute <numeriainstitude@gmail.com>'
+CONTACT_EMAIL    = config('CONTACT_EMAIL', default='numeriainstitude@gmail.com')
+ADMIN_EMAIL      = config('ADMIN_EMAIL', default='admin@numeriainstitute.com')
+EMAIL_TIMEOUT    = config('EMAIL_TIMEOUT', default=10, cast=int)
 
 
 # ── SÉCURITÉ — EN-TÊTES ───────────────────────────────────────────────────────

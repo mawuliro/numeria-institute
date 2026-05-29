@@ -2,7 +2,7 @@
 <html lang="{{ LANGUAGE_CODE }}">
 
 <head>
-    {% load static i18n %}
+    {% load static i18n notification_tags %}
     <!-- ⚡ Mode sombre — EN PREMIER pour éviter le flash -->
     <script>
         const modeSombre = localStorage.getItem('mode-sombre');
@@ -302,6 +302,8 @@
                         <span class="text-base dark:hidden">🌙</span>
                         <span class="text-base hidden dark:block">☀️</span>
                     </button>
+
+                    {% notification_bell %}
 
                     {% if user.is_authenticated %}
                         <a href="{% url 'comptes:tableau_de_bord' %}"

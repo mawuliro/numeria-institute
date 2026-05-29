@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HomePage, AboutPage, ContactPage
+from .models import HomePage, AboutPage, ContactPage, ContactMessage
 
 
 @admin.register(HomePage)
@@ -54,3 +54,19 @@ class ContactPageAdmin(admin.ModelAdmin):
             'fields': ('meta_title', 'meta_description')
         }),
     )
+
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'subject', 'created_at', 'is_read')
+    list_filter = ('is_read', 'created_at')
+    search_fields = ('name', 'email', 'subject', 'message')
+    readonly_fields = ('name', 'email', 'subject', 'message', 'created_at')
+    ordering = ('-created_at',)
+
+    def get_object(self, request, object_id, from_field=None):
+        obj = super().get_object(request, object_id, from_field)
+        if obj and not obj.is_read:
+            obj.is_read = True
+            obj.save(update_fields=['is_read'])
+        return obj

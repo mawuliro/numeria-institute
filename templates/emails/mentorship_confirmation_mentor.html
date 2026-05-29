@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Nouveau mentoré</title></head>
+<body style="font-family: Arial, sans-serif; background: #f4f6f8; padding: 20px;">
+  <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; padding: 32px; border: 1px solid #e0e0e0;">
+    <h2 style="color: #1A3C6E;">🎉 Un mentoré a rejoint votre programme</h2>
+    <p>Bonjour {{ mentor.profil.utilisateur.first_name }},</p>
+    <p>
+      <strong>{{ mentee.profil.utilisateur.get_full_name }}</strong> a accepté votre invitation
+      de mentorat sur Numeria Institute.
+    </p>
+    <p>Connectez-vous à votre tableau de bord mentor pour planifier votre première séance.</p>
+    <p style="margin-top:24px; color:#666; font-size:0.85em;">
+      © 2026 {{ site_name }} — Lomé, Togo
+    </p>
+  </div>
+</body>
+</html>

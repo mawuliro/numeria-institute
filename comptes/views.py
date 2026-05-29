@@ -5,7 +5,6 @@ from django.contrib.auth import login, logout, authenticate, update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
-from django.core.signing import BadSignature, SignatureExpired
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -28,18 +27,13 @@ class RatelimitedPasswordResetView(PasswordResetView):
     @ratelimit(key='ip', rate='5/h', method='POST', block=True)
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
-from .forms import FormulaireInscription, FormulaireConnexion, FormulaireProfil, VerificationResendForm
+from .forms import FormulaireInscription, FormulaireConnexion, FormulaireProfil
 from .models import Profil
-from numeria_project.emails import (
-    verify_email_token,
-    send_verification_email,
-    send_welcome_email,
-)
 
 
 @ratelimit(key='ip', rate='10/h', method='POST', block=True)
 def inscription(request):
-    """Inscription d'un nouvel utilisateur."""
+    """Inscription d'un nouvel utilisateur — connexion immédiate, sans email de confirmation."""
     if request.user.is_authenticated:
         return redirect('comptes:tableau_de_bord')
 
@@ -47,73 +41,15 @@ def inscription(request):
         formulaire = FormulaireInscription(request.POST)
         if formulaire.is_valid():
             user = formulaire.save()
-            try:
-                send_verification_email(request, user)
-            except Exception as e:
-                logger.error(f"Verification email failed for {user.email}: {e}")
-                messages.error(request, _(
-                    "Une erreur est survenue lors de l'envoi de l'email de confirmation. "
-                    "Merci de réessayer plus tard ou de contacter le support."
-                ))
-                return render(request, 'comptes/inscription.html', {'formulaire': formulaire})
-            messages.success(request, _("✅ Ton compte a été créé. Vérifie ta boîte email pour activer ton accès."))
-            return redirect('comptes:verification_sent')
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            messages.success(request, _("🎉 Bienvenue sur Numeria, {prenom} !").format(prenom=user.first_name))
+            return redirect('comptes:tableau_de_bord')
         else:
             messages.error(request, _("Veuillez corriger les erreurs ci-dessous."))
     else:
         formulaire = FormulaireInscription()
 
     return render(request, 'comptes/inscription.html', {'formulaire': formulaire})
-
-
-def verification_sent(request):
-    return render(request, 'comptes/verification_sent.html')
-
-
-def verify_email(request, token):
-    try:
-        user = verify_email_token(token)
-    except SignatureExpired:
-        return render(request, 'comptes/verification_expired.html')
-    except (BadSignature, User.DoesNotExist, ValueError):
-        return render(request, 'comptes/verification_invalid.html')
-
-    if user.is_active:
-        messages.info(request, _("Ton compte est déjà activé. Connecte-toi pour continuer."))
-        return redirect('comptes:connexion')
-
-    user.is_active = True
-    user.save(update_fields=['is_active'])
-    try:
-        send_welcome_email(request, user)
-    except Exception as e:
-        logger.error(f"Welcome email failed for {user.email}: {e}")
-    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-    messages.success(request, _("🎉 Ton adresse email est confirmée. Bienvenue sur Numeria !"))
-    return redirect('comptes:tableau_de_bord')
-
-
-def resend_verification_email(request):
-    if request.method == 'POST':
-        formulaire = VerificationResendForm(request.POST)
-        if formulaire.is_valid():
-            email = formulaire.cleaned_data['email']
-            user = User.objects.filter(email__iexact=email).first()
-            if user and not user.is_active:
-                try:
-                    send_verification_email(request, user)
-                except Exception as e:
-                    logger.error(f"Resend verification email failed for {user.email}: {e}")
-                messages.success(request, _("Un nouvel email de confirmation a été envoyé à {email}. Vérifie ta boîte de réception.").format(email=email))
-                return redirect('comptes:verification_sent')
-            elif user and user.is_active:
-                messages.info(request, _("Ce compte est déjà activé. Connecte-toi pour continuer."))
-            else:
-                messages.error(request, _("Aucun compte actif n'a été trouvé pour cette adresse email."))
-    else:
-        formulaire = VerificationResendForm()
-
-    return render(request, 'comptes/verification_resend.html', {'formulaire': formulaire})
 
 
 @ratelimit(key='ip', rate='20/h', method='POST', block=True)
