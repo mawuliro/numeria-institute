@@ -276,8 +276,10 @@ elif _email_service == 'gmail':
     EMAIL_HOST_USER = config('GMAIL_EMAIL', default='')
     EMAIL_HOST_PASSWORD = config('GMAIL_APP_PASSWORD', default='')
 else:  # default SMTP
-    EMAIL_BACKEND = config('EMAIL_BACKEND',
-                            default='django.core.mail.backends.console.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend')
+    EMAIL_BACKEND = os.environ.get(
+        'EMAIL_BACKEND',
+        'django.core.mail.backends.smtp.EmailBackend'
+    )
     EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
     EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
     EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
