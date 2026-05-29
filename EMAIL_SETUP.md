@@ -176,7 +176,7 @@ python manage.py test_email --to your@email.com
 # Email Service Selection
 EMAIL_SERVICE=smtp|gmail|mailgun|brevo|console
 
-# SMTP Configuration (for 'smtp', 'brevo' or 'console' services)
+# SMTP Configuration (for 'smtp' or 'console' services)
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 EMAIL_HOST=smtp.provider.com
 EMAIL_PORT=587
@@ -189,8 +189,9 @@ EMAIL_SERVICE=brevo
 EMAIL_HOST=smtp-relay.brevo.com
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
-EMAIL_HOST_USER=apikey
+EMAIL_HOST_USER=your-brevo-login@smtp-brevo.com
 EMAIL_HOST_PASSWORD=your-brevo-smtp-password
+EMAIL_TIMEOUT=10
 
 # Gmail Configuration (for 'gmail' service)
 GMAIL_EMAIL=your-email@gmail.com
