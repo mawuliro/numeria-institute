@@ -8,7 +8,7 @@ Structure :
 """
 
 from pathlib import Path
-from decouple import Config, Csv, RepositoryEnv
+from decouple import config, Config, Csv, RepositoryEnv
 from django.utils.translation import gettext_lazy as _
 import dj_database_url
 import os
