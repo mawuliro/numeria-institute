@@ -182,14 +182,15 @@
           <div id="lecon-video-field" class="hidden">
             <label class="block text-xs font-semibold text-slate-600 mb-1">URL vidéo</label>
             <input type="url" id="lecon-video" placeholder="https://youtu.be/…" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
-          <div id="lecon-content-field">
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Contenu</label>
-            <div id="edit-area"><textarea id="lecon-contenu-editor"></textarea></div>
-            <div id="preview-area" class="hidden border border-slate-200 rounded-lg p-4 min-h-48 prose prose-sm max-w-none"></div>
-            <div id="split-area" class="hidden" style="display:none;">
-              <div class="grid grid-cols-2 gap-3">
-                <div><textarea id="lecon-contenu-split"></textarea></div>
-                <div id="split-preview" class="border border-slate-200 rounded-lg p-3 min-h-48 overflow-y-auto prose prose-sm max-w-none text-sm"></div>
+          <!-- ── BLOCK BUILDER ─────────────────────────────────────── -->
+          <div class="pt-3 border-t border-slate-100">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-semibold text-slate-600">📦 Blocs de contenu</span>
+              <span id="lb-autosave-indicator" class="text-xs text-slate-400"></span>
+            </div>
+            <div id="lb-container" class="min-h-24">
+              <div class="text-xs text-slate-400 text-center py-6">
+                Sauvegarde la leçon pour charger ses blocs.
               </div>
             </div>
           </div>
@@ -351,21 +352,15 @@ async function selectLecon(id, el) {
   document.getElementById('lecon-video').value = data.video_url;
   document.getElementById('editor-lecon-title-display').textContent = data.titre;
   if(mdeEditor) mdeEditor.value(data.contenu||'');
-  else document.getElementById('lecon-contenu-editor').value = data.contenu||'';
-  updateLeconTypeUI();
+  // Load block builder
+  loadLessonBlocks(id, 'formation');
   document.getElementById('lesson-editor-empty').classList.add('hidden');
   document.getElementById('lesson-editor-panel').classList.remove('hidden');
 }
-function updateLeconTypeUI() {
-  const ct = document.getElementById('lecon-content-type').value;
-  document.getElementById('lecon-video-field').classList.toggle('hidden',ct!=='video'&&ct!=='mixed');
-  document.getElementById('lecon-content-field').classList.toggle('hidden',ct!=='text'&&ct!=='mixed');
-}
+function updateLeconTypeUI() { /* no-op: blocks replace type-based UI */ }
 async function saveLecon(silent) {
   if(!currentLeconId) return;
   const body={titre:document.getElementById('lecon-titre').value,
-    contenu:mdeEditor?mdeEditor.value():document.getElementById('lecon-contenu-editor').value,
-    video_url:document.getElementById('lecon-video').value||null,
     content_type:document.getElementById('lecon-content-type').value,
     duree_minutes:document.getElementById('lecon-duree').value,
     is_free_preview:document.getElementById('lecon-free-preview').checked,
@@ -426,8 +421,63 @@ function initMDE() {
   });
   mdeEditor.codemirror.on('change',()=>markDirty());
 }
+/* ── BLOCK BUILDER (shared logic with cours_edit) ── */
+var lbMdes={},lbCms={},lbDragId=null,lbAutoSaveTm=null,lbLessonId=null,lbLessonType=null;
+async function loadLessonBlocks(lessonId,lessonType){
+  lbLessonId=lessonId;lbLessonType=lessonType;
+  const url=lessonType==='formation'?`/fr/admin-panel/formation-lessons/${lessonId}/blocks/`:`/fr/admin-panel/lessons/${lessonId}/blocks/`;
+  const r=await fetch(url,{headers:{'X-CSRFToken':CSRF}});
+  const data=await r.json();
+  const cont=document.getElementById('lb-container');
+  if(cont){cont.innerHTML=data.html||'';lbInitAll();lbStartAutoSave();}
+}
+function lbInitAll(){
+  document.querySelectorAll('.lb-mde-target').forEach(function(ta){
+    const bid=ta.dataset.blockId;if(!bid||lbMdes[bid])return;
+    const mde=new EasyMDE({element:ta,spellChecker:false,minHeight:'200px',
+      toolbar:['bold','italic','heading-2','|','unordered-list','ordered-list','|','link','image','code','quote','|',{name:'latex',action:function(e){e.codemirror.replaceSelection('$$\n\n$$');},className:'fa',title:'∑ LaTeX'},'|','preview','side-by-side'],
+      imageUploadFunction:function(file,onS,onE){var fd=new FormData();fd.append('file',file);fetch(IMG_URL,{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd}).then(r=>r.json()).then(d=>{if(d.ok)onS(d.url);else onE('Erreur');}).catch(()=>onE('Erreur'));}});
+    mde.codemirror.on('change',function(){lbSetSaveStatus(bid,'');});lbMdes[bid]=mde;
+  });
+  document.querySelectorAll('.lb-cm-target').forEach(function(wrap){
+    const bid=wrap.dataset.blockId;if(!bid||lbCms[bid])return;
+    var ta=document.getElementById('lb-cm-ta-'+bid);if(!ta||!window.CodeMirror)return;
+    var cm=CodeMirror(wrap,{value:ta.value,mode:'python',theme:'dracula',lineNumbers:true,indentUnit:4,tabSize:4,indentWithTabs:false,lineWrapping:true,viewportMargin:Infinity,autoCloseBrackets:true,extraKeys:{Tab:function(c){c.replaceSelection('    ','end');}}});
+    cm.getWrapperElement().style.minHeight='120px';cm.on('change',function(){lbSetSaveStatus(bid,'');});lbCms[bid]=cm;
+  });
+  document.querySelectorAll('.lb-field').forEach(function(input){input.addEventListener('input',function(){var card=input.closest('[data-block-id]');if(card)lbSetSaveStatus(card.dataset.blockId,'');});});
+}
+function lbSetSaveStatus(bid,msg){var el=document.querySelector('.lb-save-status[data-block-id="'+bid+'"]');if(el)el.textContent=msg;}
+async function lbSaveBlock(blockId){
+  var body={};var card=document.querySelector('.lb-card[data-block-id="'+blockId+'"]');if(!card)return;
+  card.querySelectorAll('.lb-field').forEach(function(f){body[f.dataset.field]=f.value;});
+  if(lbMdes[blockId])body.text_content=lbMdes[blockId].value();
+  if(lbCms[blockId])body.sandbox_initial_code=lbCms[blockId].getValue();
+  const r=await fetch(`/fr/admin-panel/blocks/${blockId}/update/`,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify(body)});
+  const d=await r.json();if(d.success){lbSetSaveStatus(blockId,'✓ sauvegardé');}
+}
+async function lbAddBlock(blockType,position){
+  if(!lbLessonId)return;
+  const url=lbLessonType==='formation'?`/fr/admin-panel/formation-lessons/${lbLessonId}/blocks/add/`:`/fr/admin-panel/lessons/${lbLessonId}/blocks/add/`;
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify({block_type:blockType,position:position})});
+  const data=await r.json();const list=document.getElementById('lb-list');const empty=document.getElementById('lb-empty');
+  if(empty)empty.remove();if(list){const tmp=document.createElement('div');tmp.innerHTML=data.html;list.appendChild(tmp.firstElementChild);lbInitAll();}
+}
+async function lbDeleteBlock(blockId){
+  if(!confirm('Supprimer ce bloc ?'))return;
+  const r=await fetch(`/fr/admin-panel/blocks/${blockId}/delete/`,{method:'POST',headers:{'X-CSRFToken':CSRF,'Content-Type':'application/json'},body:'{}'});
+  const d=await r.json();if(d.success){document.querySelector('.lb-card[data-block-id="'+blockId+'"]')?.remove();if(lbMdes[blockId])delete lbMdes[blockId];if(lbCms[blockId])delete lbCms[blockId];}
+}
+function lbToggle(header){const body=header.nextElementSibling;const icon=header.querySelector('.lb-collapse-icon');if(body)body.classList.toggle('hidden');if(icon)icon.textContent=body?.classList.contains('hidden')?'▶':'▼';}
+function lbDragStart(e,id){lbDragId=id;e.dataTransfer.effectAllowed='move';}
+function lbDragOver(e){e.preventDefault();e.currentTarget.classList.add('ring-2','ring-sky-400');}
+function lbDragLeave(e){e.currentTarget.classList.remove('ring-2','ring-sky-400');}
+function lbDrop(e,targetId){e.preventDefault();e.currentTarget.classList.remove('ring-2','ring-sky-400');if(!lbDragId||lbDragId===targetId)return;const src=document.querySelector('.lb-card[data-block-id="'+lbDragId+'"]');const tgt=document.querySelector('.lb-card[data-block-id="'+targetId+'"]');if(src&&tgt)tgt.parentNode.insertBefore(src,tgt);lbSaveBlockOrder();}
+async function lbSaveBlockOrder(){if(!lbLessonId)return;const order=[];document.querySelectorAll('.lb-card[data-block-id]').forEach(function(c){order.push(+c.dataset.blockId);});const url=lbLessonType==='formation'?`/fr/admin-panel/formation-lessons/${lbLessonId}/blocks/reorder/`:`/fr/admin-panel/lessons/${lbLessonId}/blocks/reorder/`;await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify({order:order})});if(window.nbToast)nbToast('Ordre sauvegardé ✓','success');}
+function lbUpdatePreview(blockId,url){var wrap=document.getElementById('lb-vid-preview-'+blockId);var frame=wrap?wrap.querySelector('iframe'):null;if(!wrap||!frame)return;if(url){frame.src=url;wrap.classList.remove('hidden');}else{wrap.classList.add('hidden');}}
+function lbStartAutoSave(){if(lbAutoSaveTm)clearInterval(lbAutoSaveTm);lbAutoSaveTm=setInterval(function(){document.querySelectorAll('.lb-card[data-block-id]').forEach(function(card){lbSaveBlock(+card.dataset.blockId);});},60000);}
+
 document.addEventListener('DOMContentLoaded',()=>{
-  if(document.getElementById('step-2').classList.contains('active'))initMDE();
   setInterval(()=>{const step=document.querySelector('.step-panel.active')?.id?.replace('step-','');if(step==='1')saveStep1(true);else if(step==='3')saveStep3(true);},60000);
 });
 </script>

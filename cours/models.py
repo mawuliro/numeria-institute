@@ -884,3 +884,65 @@ class UserScript(models.Model):
 
     def __str__(self):
         return f"{self.user.username} — {self.titre}"
+
+# =============================================================================
+# LESSON BLOCKS — Système de blocs ordonnés pour les leçons
+# =============================================================================
+
+class LessonBlock(models.Model):
+    """Ordered content block inside a Course Lesson or Formation Lesson."""
+    BLOCK_TYPES = [
+        ('text',     _('Texte / Markdown / LaTeX')),
+        ('video',    _('Vidéo')),
+        ('sandbox',  _('Sandbox Python libre')),
+        ('exercise', _('Exercice évalué')),
+    ]
+
+    # Belongs to one of these two (exactly one must be set)
+    lesson = models.ForeignKey(
+        'Lecon', on_delete=models.CASCADE,
+        related_name='blocks', null=True, blank=True,
+        verbose_name=_('Leçon de cours'),
+    )
+    formation_lesson = models.ForeignKey(
+        'formation.FormationLesson', on_delete=models.CASCADE,
+        related_name='blocks', null=True, blank=True,
+        verbose_name=_('Leçon de formation'),
+    )
+
+    block_type = models.CharField(max_length=20, choices=BLOCK_TYPES, verbose_name=_('Type'))
+    order      = models.IntegerField(default=0, verbose_name=_('Ordre'))
+
+    # ── TEXT block ────────────────────────────────────────────────────────
+    text_content = models.TextField(blank=True, verbose_name=_('Contenu Markdown / LaTeX'))
+
+    # ── VIDEO block ───────────────────────────────────────────────────────
+    video_url     = models.URLField(blank=True, null=True, verbose_name=_('URL vidéo'))
+    video_caption = models.CharField(max_length=300, blank=True, verbose_name=_('Légende'))
+
+    # ── SANDBOX block ─────────────────────────────────────────────────────
+    sandbox_title        = models.CharField(max_length=300, blank=True, default='Essaie toi-même')
+    sandbox_initial_code = models.TextField(blank=True, default='# Écris ton code ici\n')
+
+    # ── EXERCISE block ────────────────────────────────────────────────────
+    exercise = models.ForeignKey(
+        'CodeExercise', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='lesson_blocks',
+        verbose_name=_('Exercice'),
+    )
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = _('Bloc de leçon')
+        verbose_name_plural = _('Blocs de leçon')
+
+    def __str__(self):
+        parent = self.lesson or self.formation_lesson
+        return f'[{self.block_type}] {parent}'
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if not self.lesson and not self.formation_lesson:
+            raise ValidationError(
+                'Un bloc doit appartenir à une leçon de cours ou de formation.'
+            )

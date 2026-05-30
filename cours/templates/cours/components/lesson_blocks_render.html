@@ -1,0 +1,51 @@
+{% load i18n %}
+{#
+  Renders all LessonBlocks for a lesson in student view.
+  Context variable: lesson_blocks — list of sanitised block dicts from detail_cours view.
+  Load Pyodide + CodeMirror CDNs are included at the bottom of detail.html
+  when code_exercises or lesson_blocks are present.
+#}
+
+{% for block in lesson_blocks %}
+
+{% if block.type == 'text' %}
+<div class="lesson-block lesson-block--text mb-8
+            prose prose-sm dark:prose-invert max-w-none
+            text-gray-700 dark:text-gray-200 leading-relaxed">
+  {{ block.text_content|safe }}
+</div>
+
+{% elif block.type == 'video' %}
+<div class="lesson-block lesson-block--video mb-8">
+  {% if block.embed_url %}
+  <div class="rounded-2xl overflow-hidden aspect-video bg-black shadow-md">
+    <iframe src="{{ block.embed_url }}" class="w-full h-full"
+            allowfullscreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+    </iframe>
+  </div>
+  {% if block.video_caption %}
+  <p class="text-xs text-gray-400 dark:text-gray-500 text-center mt-2 italic">{{ block.video_caption }}</p>
+  {% endif %}
+  {% endif %}
+</div>
+
+{% elif block.type == 'sandbox' %}
+<div class="lesson-block lesson-block--sandbox mb-8">
+  {% include 'sandbox/sandbox_widget.html' with
+      sandbox_id="sb_blk_"|add:block.id|stringformat:"s"
+      title=block.title
+      initial_code=block.initial_code
+      height=250
+      show_save=False
+      show_packages=False %}
+</div>
+
+{% elif block.type == 'exercise' and block.exercise_id %}
+<div class="lesson-block lesson-block--exercise mb-8">
+  {% include 'cours/components/code_sandbox.html' with exercise=block %}
+</div>
+
+{% endif %}
+
+{% endfor %}

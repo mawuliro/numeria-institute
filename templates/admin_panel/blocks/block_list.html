@@ -1,0 +1,56 @@
+{% load i18n %}
+{#
+  Full block list with drag-and-drop reorder + add-block UI.
+  Context: blocks, lesson_id, lesson_type, all_exercises
+#}
+
+<div id="lb-root" data-lesson-id="{{ lesson_id }}" data-lesson-type="{{ lesson_type }}">
+
+  {# ── Block list (drag-and-drop container) ── #}
+  <div id="lb-list" class="space-y-3 mb-4">
+    {% if blocks %}
+      {% for block in blocks %}
+        {% include 'admin_panel/blocks/block_card.html' with block=block all_exercises=all_exercises %}
+        {# "Add between" button #}
+        <div class="lb-add-between flex justify-center opacity-0 hover:opacity-100 transition-opacity -my-1"
+             data-position="{{ forloop.counter }}">
+          <button type="button"
+                  onclick="lbShowAddMenu({{ forloop.counter }}, event)"
+                  class="text-xs text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-900/30 hover:bg-sky-100 px-3 py-1 rounded-full border border-sky-200 dark:border-sky-700 transition-colors">
+            + Insérer un bloc ici
+          </button>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div id="lb-empty" class="text-center py-10 text-slate-400 text-sm border-2 border-dashed border-slate-200 dark:border-slate-600 rounded-xl">
+        <div class="text-3xl mb-2">📝</div>
+        <p>Cette leçon n'a pas encore de blocs.</p>
+        <p class="text-xs mt-1">Cliquez sur « Ajouter un bloc » ci-dessous pour commencer.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  {# ── Add block footer ── #}
+  <div class="border-t border-slate-200 dark:border-slate-600 pt-4">
+    <p class="text-xs text-slate-500 dark:text-slate-400 mb-2 font-semibold">➕ Ajouter un bloc</p>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <button type="button" onclick="lbAddBlock('text', null)"
+              class="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors text-xs font-medium text-slate-600 dark:text-slate-300">
+        <span class="text-2xl">📝</span>Texte
+      </button>
+      <button type="button" onclick="lbAddBlock('video', null)"
+              class="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors text-xs font-medium text-slate-600 dark:text-slate-300">
+        <span class="text-2xl">🎬</span>Vidéo
+      </button>
+      <button type="button" onclick="lbAddBlock('sandbox', null)"
+              class="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors text-xs font-medium text-slate-600 dark:text-slate-300">
+        <span class="text-2xl">🐍</span>Sandbox
+      </button>
+      <button type="button" onclick="lbAddBlock('exercise', null)"
+              class="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors text-xs font-medium text-slate-600 dark:text-slate-300">
+        <span class="text-2xl">💻</span>Exercice
+      </button>
+    </div>
+  </div>
+
+</div>

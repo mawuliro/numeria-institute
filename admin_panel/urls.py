@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from . import views_cours, views_blog, views_media, views_formation, views_sandbox
+from . import views_cours, views_blog, views_media, views_formation, views_sandbox, views_blocks
 
 app_name = 'admin_panel'
 
@@ -108,4 +108,17 @@ urlpatterns = [
     path('api/formations/<slug:slug>/modules/', views_cours.api_formation_modules, name='api_formation_modules'),
     path('api/formation-modules/<int:module_id>/lessons/', views_cours.api_formation_module_lessons, name='api_formation_module_lessons'),
     path('api/formation-lessons/<int:lesson_id>/insert-sandbox/', views_cours.api_formation_lesson_insert_sandbox, name='api_formation_lesson_insert_sandbox'),
+
+    # ── Lesson block builder ───────────────────────────────────────────────────
+    # Course lesson blocks
+    path('lessons/<int:lesson_id>/blocks/', views_blocks.get_lesson_blocks, name='lesson_blocks'),
+    path('lessons/<int:lesson_id>/blocks/add/', views_blocks.add_lesson_block, name='lesson_block_add'),
+    path('lessons/<int:lesson_id>/blocks/reorder/', views_blocks.reorder_lesson_blocks, name='lesson_blocks_reorder'),
+    # Formation lesson blocks
+    path('formation-lessons/<int:lesson_id>/blocks/', views_blocks.get_formation_lesson_blocks, name='flesson_blocks'),
+    path('formation-lessons/<int:lesson_id>/blocks/add/', views_blocks.add_formation_lesson_block, name='flesson_block_add'),
+    path('formation-lessons/<int:lesson_id>/blocks/reorder/', views_blocks.reorder_formation_lesson_blocks, name='flesson_blocks_reorder'),
+    # Shared block update/delete
+    path('blocks/<int:block_id>/update/', views_blocks.update_block, name='block_update'),
+    path('blocks/<int:block_id>/delete/', views_blocks.delete_block, name='block_delete'),
 ]

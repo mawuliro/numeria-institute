@@ -274,12 +274,18 @@
                         </div>
                     </div>
 
-                    <!-- Contenu texte + LaTeX + code -->
+                    <!-- ── LESSON BLOCKS (new system) or legacy text ── -->
                     {% if est_inscrit %}
+                    {% if lesson_blocks %}
+                    {# New block-based rendering #}
+                    {% include 'cours/components/lesson_blocks_render.html' with lesson_blocks=lesson_blocks %}
+                    {% else %}
+                    {# Legacy: single contenu field #}
                     <div class="contenu-article prose dark:prose-invert max-w-none
                                 text-gray-700 dark:text-gray-200 leading-relaxed mb-8">
                         {{ lecon_active.contenu|safe }}
                     </div>
+                    {% endif %}
                     {% else %}
                     <!-- Aperçu pour non-inscrits -->
                     <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-8 text-center mb-8">
@@ -492,7 +498,7 @@
                     {% endif %}
 
                     <!-- ===== EXERCICES DE CODE (Pyodide) ===== -->
-                    {% if code_exercises and est_inscrit %}
+                    {% if code_exercises and est_inscrit and not lesson_blocks %}
                     <div class="border-t border-gray-200 dark:border-gray-700 pt-8 mb-8">
                         <h2 class="text-xl font-bold text-numeria-bleu dark:text-numeria-or mb-2 flex items-center gap-2">
                             <span>💻</span> {% trans "Exercices de code" %}
@@ -820,7 +826,7 @@
     </div>
 </div>
 
-{% if code_exercises and est_inscrit %}
+{% if est_inscrit and code_exercises or est_inscrit and lesson_blocks %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>

@@ -152,37 +152,87 @@ def detail_cours(request, cours_id):
 
     # ── Code exercises (Pyodide) ───────────────────────────────────────────
     code_exercises_data = []
+    lesson_blocks_data  = []   # populated when lesson has LessonBlocks
+
     if lecon_active and est_inscrit:
-        from .models import CodeExercise, StudentCodeSubmission
-        raw_exs = CodeExercise.objects.filter(
-            lecon=lecon_active, is_active=True
-        ).order_by('order')
-        solved_ids = set(
-            StudentCodeSubmission.objects.filter(
-                student=request.user,
-                exercise__lecon=lecon_active,
-                is_correct=True,
-            ).values_list('exercise_id', flat=True)
-        )
-        for ex in raw_exs:
-            # test_code passed as base64 to keep it out of plain HTML
-            tc_b64 = base64.b64encode(ex.test_code.encode()).decode() if ex.test_code else ''
-            code_exercises_data.append({
-                'id':               ex.id,
-                'title':            ex.title,
-                'instructions':     ex.instructions,
-                'starter_code':     ex.starter_code,
-                'expected_output':  ex.expected_output,
-                'evaluation_mode':  ex.evaluation_mode,
-                'difficulty':       ex.difficulty,
-                'hint':             ex.hint,
-                'max_attempts':     ex.max_attempts,
-                'points':           ex.points,
-                'order':            ex.order,
-                'test_code_b64':    tc_b64,
-                'is_solved':        ex.id in solved_ids,
-                # solution_code intentionally omitted
-            })
+        from .models import CodeExercise, StudentCodeSubmission, LessonBlock
+
+        # ── LessonBlocks (new system) ─────────────────────────────────────
+        blocks_qs = LessonBlock.objects.filter(lesson=lecon_active).order_by('order')
+        if blocks_qs.exists():
+            solved_ids = set(
+                StudentCodeSubmission.objects.filter(
+                    student=request.user,
+                    exercise__lesson_blocks__lesson=lecon_active,
+                    is_correct=True,
+                ).values_list('exercise_id', flat=True)
+            )
+            for block in blocks_qs:
+                bd = {
+                    'id':         block.id,
+                    'type':       block.block_type,
+                    'order':      block.order,
+                }
+                if block.block_type == 'text':
+                    bd['text_content'] = block.text_content
+                elif block.block_type == 'video':
+                    bd['video_url']    = block.video_url
+                    bd['video_caption']= block.video_caption
+                    if block.video_url:
+                        from .models import convertir_url_youtube
+                        bd['embed_url'] = convertir_url_youtube(block.video_url)
+                elif block.block_type == 'sandbox':
+                    bd['title']        = block.sandbox_title or 'Essaie toi-même'
+                    bd['initial_code'] = block.sandbox_initial_code
+                elif block.block_type == 'exercise' and block.exercise:
+                    ex    = block.exercise
+                    tc_b64 = base64.b64encode(ex.test_code.encode()).decode() if ex.test_code else ''
+                    bd.update({
+                        'exercise_id':    ex.id,
+                        'title':          ex.title,
+                        'instructions':   ex.instructions,
+                        'starter_code':   ex.starter_code,
+                        'expected_output':ex.expected_output,
+                        'evaluation_mode':ex.evaluation_mode,
+                        'difficulty':     ex.difficulty,
+                        'hint':           ex.hint,
+                        'max_attempts':   ex.max_attempts,
+                        'points':         ex.points,
+                        'test_code_b64':  tc_b64,
+                        'is_solved':      ex.id in solved_ids,
+                        # solution_code intentionally omitted
+                    })
+                lesson_blocks_data.append(bd)
+
+        else:
+            # ── Legacy: CodeExercise only (no blocks yet) ─────────────────
+            raw_exs = CodeExercise.objects.filter(
+                lecon=lecon_active, is_active=True
+            ).order_by('order')
+            solved_ids = set(
+                StudentCodeSubmission.objects.filter(
+                    student=request.user,
+                    exercise__lecon=lecon_active,
+                    is_correct=True,
+                ).values_list('exercise_id', flat=True)
+            )
+            for ex in raw_exs:
+                tc_b64 = base64.b64encode(ex.test_code.encode()).decode() if ex.test_code else ''
+                code_exercises_data.append({
+                    'id':               ex.id,
+                    'title':            ex.title,
+                    'instructions':     ex.instructions,
+                    'starter_code':     ex.starter_code,
+                    'expected_output':  ex.expected_output,
+                    'evaluation_mode':  ex.evaluation_mode,
+                    'difficulty':       ex.difficulty,
+                    'hint':             ex.hint,
+                    'max_attempts':     ex.max_attempts,
+                    'points':           ex.points,
+                    'order':            ex.order,
+                    'test_code_b64':    tc_b64,
+                    'is_solved':        ex.id in solved_ids,
+                })
 
     contexte = {
         'cours':                  cours,
@@ -202,6 +252,7 @@ def detail_cours(request, cours_id):
         'reponse_choisie':        reponse_choisie,
         'evaluation_utilisateur': evaluation_utilisateur,
         'certificat_utilisateur': certificat_utilisateur,
+        'lesson_blocks':          lesson_blocks_data,
         'code_exercises':         code_exercises_data,
     }
     return render(request, 'cours/detail.html', contexte)
