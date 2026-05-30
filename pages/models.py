@@ -97,12 +97,22 @@ class ContactPage(models.Model):
 
 
 class ContactMessage(models.Model):
+    STATUS_CHOICES = [
+        ('unread',   _('Non lu')),
+        ('read',     _('Lu')),
+        ('replied',  _('Répondu')),
+    ]
+
     name = models.CharField(max_length=200, verbose_name=_('Nom'))
     email = models.EmailField(verbose_name=_('Email'))
     subject = models.CharField(max_length=300, verbose_name=_('Sujet'))
     message = models.TextField(verbose_name=_('Message'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Date'))
     is_read = models.BooleanField(default=False, verbose_name=_('Lu'))
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='unread',
+        verbose_name=_('Statut'),
+    )
 
     class Meta:
         ordering = ['-created_at']

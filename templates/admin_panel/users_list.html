@@ -1,0 +1,88 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Utilisateurs" %}{% endblock %}
+{% block page_heading %}👥 {% trans "Utilisateurs" %}{% endblock %}
+
+{% block content %}
+<div class="flex flex-wrap gap-3 mb-4">
+  <div class="flex gap-1 bg-white rounded-lg border border-slate-200 p-1">
+    {% for val, label in role_choices %}
+    <a href="?role={{ val }}{% if q %}&q={{ q }}{% endif %}"
+       class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {% if role_filter == val %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">{{ label }}</a>
+    {% endfor %}
+  </div>
+  <form method="get" class="flex gap-2 flex-1 min-w-48">
+    {% if role_filter %}<input type="hidden" name="role" value="{{ role_filter }}">{% endif %}
+    <input type="text" name="q" value="{{ q }}" placeholder="{% trans 'Nom, email, username…' %}"
+           class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+    <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm hover:bg-sky-700">{% trans "Chercher" %}</button>
+  </form>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+  {% if page_obj.object_list %}
+  <table class="w-full text-sm">
+    <thead class="bg-slate-50 text-xs text-slate-500 uppercase tracking-wide">
+      <tr>
+        <th class="px-4 py-3 text-left">{% trans "Nom" %}</th>
+        <th class="px-4 py-3 text-left hidden md:table-cell">{% trans "Email" %}</th>
+        <th class="px-4 py-3 text-left hidden lg:table-cell">{% trans "Inscription" %}</th>
+        <th class="px-4 py-3 text-center">{% trans "Actif" %}</th>
+        <th class="px-4 py-3 text-center">{% trans "Staff" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Actions" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for u in page_obj %}
+      <tr class="hover:bg-slate-50 transition-colors {% if not u.is_active %}opacity-60{% endif %}">
+        <td class="px-4 py-3">
+          <div class="font-medium text-slate-800">{{ u.get_full_name|default:u.username }}</div>
+          <div class="text-xs text-slate-400 md:hidden">{{ u.email }}</div>
+        </td>
+        <td class="px-4 py-3 text-slate-600 hidden md:table-cell">{{ u.email }}</td>
+        <td class="px-4 py-3 text-slate-500 hidden lg:table-cell whitespace-nowrap">{{ u.date_joined|date:"d/m/Y" }}</td>
+        <td class="px-4 py-3 text-center">{% if u.is_active %}<span class="text-green-600">✓</span>{% else %}<span class="text-slate-400">—</span>{% endif %}</td>
+        <td class="px-4 py-3 text-center">{% if u.is_staff %}<span class="text-blue-600">✓</span>{% else %}<span class="text-slate-400">—</span>{% endif %}</td>
+        <td class="px-4 py-3 text-right">
+          <div class="flex justify-end gap-1">
+            <a href="{% url 'admin_panel:user_detail' u.id %}" class="text-sky-600 text-xs px-2 py-1 bg-sky-50 hover:bg-sky-100 rounded-md font-medium">{% trans "Voir" %}</a>
+            <button type="button" onclick="openNotifModal({{ u.id }})" class="text-purple-600 text-xs px-2 py-1 bg-purple-50 hover:bg-purple-100 rounded-md font-medium">🔔</button>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="px-5 py-12 text-center text-slate-400"><div class="text-4xl mb-3">👥</div><p>{% trans "Aucun utilisateur trouvé." %}</p></div>
+  {% endif %}
+</div>
+
+{% include "admin_panel/includes/pagination.html" %}
+
+<!-- Send notification modal -->
+<div class="modal-overlay" id="modal-notif">
+  <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+    <h3 class="font-bold text-slate-800 mb-4">🔔 {% trans "Envoyer une notification" %}</h3>
+    <form method="post" id="notif-form" action="">
+      {% csrf_token %}<input type="hidden" name="action" value="send_notification">
+      <input type="text" name="notif_title" required placeholder="{% trans 'Titre' %}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-3">
+      <textarea name="notif_message" rows="3" required placeholder="{% trans 'Message' %}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-4"></textarea>
+      <div class="flex gap-2 justify-end">
+        <button type="button" onclick="closeModal('modal-notif')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm">{% trans "Annuler" %}</button>
+        <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm hover:bg-sky-700">{% trans "Envoyer" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function openNotifModal(userId) {
+  document.getElementById('notif-form').action = '/admin-panel/utilisateurs/' + userId + '/action/';
+  openModal('modal-notif');
+}
+</script>
+{% endblock %}

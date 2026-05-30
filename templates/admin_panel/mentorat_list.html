@@ -1,0 +1,61 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Mentorat" %}{% endblock %}
+{% block page_heading %}🤝 {% trans "Demandes de mentorat" %}{% endblock %}
+
+{% block content %}
+<div class="flex flex-wrap gap-3 mb-4">
+  <div class="flex flex-wrap gap-1 bg-white rounded-lg border border-slate-200 p-1">
+    <a href="{% url 'admin_panel:mentorat_list' %}" class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {% if not statut_filter %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">{% trans "Toutes" %}</a>
+    {% for val, label in statuts %}
+    <a href="?statut={{ val }}" class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {% if statut_filter == val %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">{{ label }}</a>
+    {% endfor %}
+  </div>
+  <form method="get" class="flex gap-2 flex-1 min-w-48">
+    {% if statut_filter %}<input type="hidden" name="statut" value="{{ statut_filter }}">{% endif %}
+    <input type="text" name="q" value="{{ q }}" placeholder="{% trans 'Mentee, email, message…' %}"
+           class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+    <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm hover:bg-sky-700">{% trans "Chercher" %}</button>
+  </form>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+  {% if page_obj.object_list %}
+  <table class="w-full text-sm">
+    <thead class="bg-slate-50 text-xs text-slate-500 uppercase tracking-wide">
+      <tr>
+        <th class="px-4 py-3 text-left">{% trans "Mentee" %}</th>
+        <th class="px-4 py-3 text-left hidden md:table-cell">{% trans "Mentor demandé" %}</th>
+        <th class="px-4 py-3 text-left hidden lg:table-cell">{% trans "Message" %}</th>
+        <th class="px-4 py-3 text-left hidden lg:table-cell">{% trans "Date" %}</th>
+        <th class="px-4 py-3 text-left">{% trans "Statut" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Actions" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for d in page_obj %}
+      <tr class="hover:bg-slate-50 transition-colors">
+        <td class="px-4 py-3">
+          <div class="font-medium text-slate-800">{{ d.mentee.profil.utilisateur.get_full_name|default:d.mentee.profil.utilisateur.username }}</div>
+          <div class="text-xs text-slate-400">{{ d.mentee.profil.utilisateur.email }}</div>
+        </td>
+        <td class="px-4 py-3 text-slate-700 hidden md:table-cell">{{ d.mentor.profil.utilisateur.get_full_name|default:d.mentor.profil.utilisateur.username }}</td>
+        <td class="px-4 py-3 text-slate-500 hidden lg:table-cell max-w-xs truncate">{{ d.message|truncatechars:50 }}</td>
+        <td class="px-4 py-3 text-slate-500 hidden lg:table-cell whitespace-nowrap">{{ d.date_creation|date:"d/m/Y" }}</td>
+        <td class="px-4 py-3">
+          <span class="badge-{{ d.statut }} text-xs font-semibold px-2 py-1 rounded-full">{{ d.get_statut_display }}</span>
+        </td>
+        <td class="px-4 py-3 text-right">
+          <a href="{% url 'admin_panel:mentorat_detail' d.id %}" class="text-sky-600 text-xs px-2 py-1 bg-sky-50 hover:bg-sky-100 rounded-md transition-colors font-medium">{% trans "Voir" %}</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="px-5 py-12 text-center text-slate-400"><div class="text-4xl mb-3">🤝</div><p>{% trans "Aucune demande trouvée." %}</p></div>
+  {% endif %}
+</div>
+{% include "admin_panel/includes/pagination.html" %}
+{% endblock %}

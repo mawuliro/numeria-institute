@@ -340,6 +340,7 @@ class DemandeMentorat(models.Model):
     # Dates
     date_creation = models.DateTimeField(auto_now_add=True)
     date_reponse = models.DateTimeField(blank=True, null=True)
+    admin_notes = models.TextField(blank=True, verbose_name=_('Notes admin'))
 
     class Meta:
         verbose_name=_('Demande de mentorat')

@@ -82,6 +82,7 @@ urlpatterns += i18n_patterns(
     path('communaute/', include('communaute.urls')),
     path('mentorat/', include('mentorat.urls')),
     path('notifications/', include('notifications.urls')),
+    path('admin-panel/', include('admin_panel.urls')),
 )
 
 if settings.DEBUG or not settings.USE_CLOUDINARY:

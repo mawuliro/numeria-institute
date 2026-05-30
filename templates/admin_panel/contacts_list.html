@@ -1,0 +1,100 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Contacts" %} ({{ unread_count }} {% trans "non lus" %}){% endblock %}
+{% block page_heading %}📩 {% trans "Messages de contact" %} {% if unread_count %}<span class="ml-2 text-sm bg-blue-100 text-blue-700 font-medium px-2 py-0.5 rounded-full">{{ unread_count }} {% trans "non lus" %}</span>{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Filters + Search -->
+<div class="flex flex-wrap gap-3 mb-4">
+  <div class="flex gap-1 bg-white rounded-lg border border-slate-200 p-1">
+    {% for val, label in status_choices %}
+    <a href="?status={{ val }}{% if q %}&q={{ q }}{% endif %}"
+       class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {% if status_filter == val %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+      {{ label }}
+    </a>
+    {% endfor %}
+  </div>
+  <form method="get" class="flex gap-2 flex-1 min-w-48">
+    {% if status_filter %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
+    <input type="text" name="q" value="{{ q }}" placeholder="{% trans 'Rechercher nom, email, sujet…' %}"
+           class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+    <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm hover:bg-sky-700">{% trans "Chercher" %}</button>
+  </form>
+</div>
+
+<!-- Bulk action form -->
+<form method="post" id="bulk-form">
+  {% csrf_token %}
+  <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+    <!-- Table header with bulk action bar -->
+    <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+      <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
+        <input type="checkbox" id="select-all" class="rounded"> {% trans "Tout sélectionner" %}
+      </label>
+      <button type="submit" class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">
+        ✓ {% trans "Marquer lu" %}
+      </button>
+    </div>
+
+    {% if page_obj.object_list %}
+    <table class="w-full text-sm">
+      <thead class="bg-slate-50 text-xs text-slate-500 uppercase tracking-wide">
+        <tr>
+          <th class="px-4 py-3 text-left w-8"></th>
+          <th class="px-4 py-3 text-left">{% trans "Nom" %}</th>
+          <th class="px-4 py-3 text-left hidden md:table-cell">{% trans "Email" %}</th>
+          <th class="px-4 py-3 text-left">{% trans "Sujet" %}</th>
+          <th class="px-4 py-3 text-left hidden lg:table-cell">{% trans "Date" %}</th>
+          <th class="px-4 py-3 text-left">{% trans "Statut" %}</th>
+          <th class="px-4 py-3 text-right">{% trans "Actions" %}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        {% for msg in page_obj %}
+        <tr class="{% if msg.status == 'unread' %}bg-blue-50/40{% else %}hover:bg-slate-50{% endif %} transition-colors">
+          <td class="px-4 py-3">
+            <input type="checkbox" name="selected" value="{{ msg.id }}" class="rounded msg-checkbox">
+          </td>
+          <td class="px-4 py-3 font-medium text-slate-800 {% if msg.status == 'unread' %}font-semibold{% endif %}">{{ msg.name }}</td>
+          <td class="px-4 py-3 text-slate-600 hidden md:table-cell">{{ msg.email }}</td>
+          <td class="px-4 py-3 text-slate-700 max-w-xs truncate">{{ msg.subject }}</td>
+          <td class="px-4 py-3 text-slate-500 hidden lg:table-cell whitespace-nowrap">{{ msg.created_at|date:"d/m/Y H:i" }}</td>
+          <td class="px-4 py-3">
+            <span class="badge-{{ msg.status }} text-xs font-semibold px-2 py-1 rounded-full">
+              {% if msg.status == 'unread' %}{% trans "Non lu" %}
+              {% elif msg.status == 'read' %}{% trans "Lu" %}
+              {% else %}{% trans "Répondu" %}{% endif %}
+            </span>
+          </td>
+          <td class="px-4 py-3 text-right">
+            <a href="{% url 'admin_panel:contact_detail' msg.id %}"
+               class="text-sky-600 hover:text-sky-800 font-medium text-xs px-2 py-1 bg-sky-50 hover:bg-sky-100 rounded-lg transition-colors">
+              {% trans "Voir" %}
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="px-5 py-12 text-center text-slate-400">
+      <div class="text-4xl mb-3">📭</div>
+      <p>{% trans "Aucun message trouvé." %}</p>
+    </div>
+    {% endif %}
+  </div>
+</form>
+
+<!-- Pagination -->
+{% include "admin_panel/includes/pagination.html" %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('select-all').addEventListener('change', function() {
+  document.querySelectorAll('.msg-checkbox').forEach(cb => cb.checked = this.checked);
+});
+</script>
+{% endblock %}

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 23:25+0000\n"
+"POT-Creation-Date: 2026-05-30 01:22+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -15,8 +15,390 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: admin_panel/models.py:8 admin_panel/models.py:59
+#| msgid "Nous contacter"
+msgid "Réponse contact"
+msgstr "Contact reply"
+
+#: admin_panel/models.py:9
+#| msgid "Candidature"
+msgid "Candidature acceptée"
+msgstr "Application accepted"
+
+#: admin_panel/models.py:10
+#| msgid "Candidatures"
+msgid "Candidature rejetée"
+msgstr "Application rejected"
+
+#: admin_panel/models.py:11
+#| msgid "Candidature"
+msgid "Candidature en attente"
+msgstr "Application waitlisted"
+
+#: admin_panel/models.py:12
+#| msgid "Candidature"
+msgid "Candidature en revue"
+msgstr "Application under review"
+
+#: admin_panel/models.py:13
+#| msgid "Mentor actif"
+msgid "Mentorat accepté"
+msgstr "Mentorship accepted"
+
+#: admin_panel/models.py:14
+#| msgid "Mentorat"
+msgid "Mentorat rejeté"
+msgstr "Mentorship rejected"
+
+#: admin_panel/models.py:15
+#| msgid "Micro activé"
+msgid "Utilisateur activé"
+msgstr "User activated"
+
+#: admin_panel/models.py:16
+#| msgid "Caméra désactivée"
+msgid "Utilisateur désactivé"
+msgstr "User deactivated"
+
+#: admin_panel/models.py:17
+#| msgid "Notification"
+msgid "Notification envoyée"
+msgstr "Notification sent"
+
+#: admin_panel/models.py:22
+msgid "Effectué par"
+msgstr ""
+
+#: admin_panel/models.py:25
+#, fuzzy
+#| msgid "Type de formation"
+msgid "Type d'action"
+msgstr "Type of training"
+
+#: admin_panel/models.py:27
+#: communaute/templates/communaute/creer_categorie.html:47
+#: mentorat/models.py:448 mentorat/templates/mentorat/planifier_seance.html:53
+msgid "Description"
+msgstr "Description"
+
+#: admin_panel/models.py:30
+#, fuzzy
+#| msgid "2. Utilisation des données"
+msgid "Utilisateur concerné"
+msgstr "2. Data Usage"
+
+#: admin_panel/models.py:32 mentorat/templates/mentorat/video_seance.html:63
+#: notifications/models.py:38 pages/models.py:110
+#: paiements/templates/paiements/confirmation.html:52
+#: templates/admin_panel/contacts_list.html:48
+#: templates/admin_panel/mentorat_list.html:31
+#| msgid "Dates"
+msgid "Date"
+msgstr "Date"
+
+#: admin_panel/models.py:36 templates/admin_panel/activity_log.html:4
+#: templates/admin_panel/activity_log.html:5
+#| msgid "Dernières activités"
+msgid "Journal d'activité"
+msgstr "Activity log"
+
+#: admin_panel/models.py:37
+#, fuzzy
+#| msgid "Dernières activités"
+msgid "Journal d'activités"
+msgstr "Recent activity"
+
+#: admin_panel/models.py:47 pages/models.py:119
+msgid "Message de contact"
+msgstr "Contact message"
+
+#: admin_panel/models.py:51
+#, fuzzy
+#| msgid "Répondre"
+msgid "Répondu par"
+msgstr "Reply"
+
+#: admin_panel/models.py:53
+#: communaute/templates/communaute/detail_categorie.html:55 pages/forms.py:43
+#: pages/models.py:108 pages/templates/pages/contact.html:121
+#: templates/admin_panel/contact_detail.html:24
+#: templates/admin_panel/contact_detail.html:57
+#: templates/admin_panel/contacts_list.html:47
+msgid "Sujet"
+msgstr "Topic"
+
+#: admin_panel/models.py:54 notifications/models.py:35 pages/forms.py:48
+#: pages/models.py:109 pages/templates/pages/contact.html:145
+#: templates/admin_panel/contact_detail.html:4
+#: templates/admin_panel/contact_detail.html:63
+#: templates/admin_panel/mentorat_list.html:30
+#: templates/admin_panel/user_detail.html:142
+#: templates/admin_panel/users_list.html:71
+#: templates/notifications/send.html:35
+#| msgid "Messages"
+msgid "Message"
+msgstr "Message"
+
+#: admin_panel/models.py:55
+#, fuzzy
+#| msgid "Envoyée le"
+msgid "Envoyé le"
+msgstr "Sent on"
+
+#: admin_panel/models.py:60
+#, fuzzy
+#| msgid "Réponses"
+msgid "Réponses contact"
+msgstr "Replies"
+
+#: admin_panel/views.py:77
+#| msgid "Tout marquer comme lu"
+msgid "Messages marqués comme lus."
+msgstr "Messages marked as read."
+
+#: admin_panel/views.py:89 admin_panel/views.py:502
+#: templates/notifications/list.html:24
+msgid "Tous"
+msgstr "All"
+
+#: admin_panel/views.py:90
+#| msgid "non lues"
+msgid "Non lus"
+msgstr "Unread"
+
+#: admin_panel/views.py:91
+msgid "Lus"
+msgstr "Read"
+
+#: admin_panel/views.py:92
+#| msgid "Répondre"
+msgid "Répondus"
+msgstr "Replied"
+
+#: admin_panel/views.py:116
+msgid "Le message de réponse ne peut pas être vide."
+msgstr "Reply message cannot be empty."
+
+#: admin_panel/views.py:139
+#| msgid "Réponse le"
+msgid "Réponse envoyée"
+msgstr "Reply sent"
+
+#: admin_panel/views.py:150
+#| msgid "Séance terminée avec succès !"
+msgid "Réponse envoyée avec succès."
+msgstr "Reply sent successfully."
+
+#: admin_panel/views.py:154
+#, fuzzy, python-format
+#| msgid "Erreur lors de l'évaluation : %(err)s"
+msgid "Erreur lors de l'envoi de l'email : %(err)s"
+msgstr "Error during rating: %(err)s"
+
+#: admin_panel/views.py:194
+#| msgid "Soumise le"
+msgid "Soumise"
+msgstr "Submitted"
+
+#: admin_panel/views.py:195 templates/admin_panel/candidature_detail.html:17
+msgid "En revue"
+msgstr "Under review"
+
+#: admin_panel/views.py:196 admin_panel/views.py:358 mentorat/models.py:322
+#| msgid "Accepter"
+msgid "Acceptée"
+msgstr "Accepted"
+
+#: admin_panel/views.py:197 admin_panel/views.py:359 mentorat/models.py:323
+#| msgid "Refuser"
+msgid "Refusée"
+msgstr "Rejected"
+
+#: admin_panel/views.py:198 admin_panel/views.py:310
+#: templates/admin_panel/candidature_detail.html:23
+#| msgid "Paiement en attente"
+msgid "Liste d'attente"
+msgstr "Waitlist"
+
+#: admin_panel/views.py:199
+msgid "Brouillon"
+msgstr "Draft"
+
+#: admin_panel/views.py:242
+#| msgid "Candidatures"
+msgid "Candidature acceptée !"
+msgstr "Application accepted!"
+
+#: admin_panel/views.py:243
+#, python-format
+msgid "Votre candidature pour %(prog)s a été acceptée ! 🎉"
+msgstr ""
+
+#: admin_panel/views.py:253
+#, fuzzy, python-format
+#| msgid "Demande de mentorat"
+msgid "✅ Candidature de %(name)s acceptée."
+msgstr "Mentoring request"
+
+#: admin_panel/views.py:259 admin_panel/views.py:441
+#| msgid "Le titre et le message sont obligatoires."
+msgid "La raison de refus est obligatoire."
+msgstr "Rejection reason is required."
+
+#: admin_panel/views.py:278
+#, fuzzy
+#| msgid "Soumettre ma candidature"
+msgid "Résultat de votre candidature"
+msgstr "Submit my application"
+
+#: admin_panel/views.py:279
+#, python-format
+msgid "Nous avons examiné votre candidature pour %(prog)s."
+msgstr ""
+
+#: admin_panel/views.py:288
+#, fuzzy, python-format
+#| msgid "Demande de mentorat"
+msgid "Candidature de %(name)s refusée."
+msgstr "Mentoring request"
+
+#: admin_panel/views.py:299
+msgid "Candidature marquée comme en cours de révision."
+msgstr "Application marked as under review."
+
+#: admin_panel/views.py:311
+#, fuzzy, python-format
+#| msgid "Tu t'es désinscrit du cours « %(titre)s » ."
+msgid "Vous êtes sur la liste d'attente pour %(prog)s."
+msgstr "You have unenrolled from the course « %(titre)s »."
+
+#: admin_panel/views.py:320
+msgid "Candidature mise en liste d'attente."
+msgstr "Application waitlisted."
+
+#: admin_panel/views.py:357 mentorat/models.py:122 mentorat/models.py:321
+#| msgid "Paiement en attente"
+msgid "En attente"
+msgstr "Pending"
+
+#: admin_panel/views.py:360 mentorat/models.py:324 mentorat/models.py:462
+#| msgid "Terminées"
+msgid "Terminée"
+msgstr "Completed"
+
+#: admin_panel/views.py:415
+#| msgid "Demande de mentorat"
+msgid "Demande de mentorat acceptée"
+msgstr "Mentorship request accepted"
+
+#: admin_panel/views.py:416
+#, python-format
+msgid "%(mentor)s va vous accompagner comme mentor. 🤝"
+msgstr ""
+
+#: admin_panel/views.py:425
+msgid "Nouveau mentee assigné"
+msgstr ""
+
+#: admin_panel/views.py:426
+#, python-format
+msgid "%(mentee)s vous a été assigné comme mentee."
+msgstr ""
+
+#: admin_panel/views.py:436
+#| msgid "Demande de mentorat"
+msgid "✅ Demande de mentorat acceptée."
+msgstr "✅ Mentorship request accepted."
+
+#: admin_panel/views.py:448 mentorat/models.py:346
+#: mentorat/templates/mentorat/demander_mentorat.html:18
+#: templates/admin_panel/mentorat_detail.html:5
+msgid "Demande de mentorat"
+msgstr "Mentorship request"
+
+#: admin_panel/views.py:449
+#, fuzzy
+#| msgid "Votre demande de mentorat a été envoyée !"
+msgid "Votre demande de mentorat n'a pas pu être satisfaite pour le moment."
+msgstr "Your mentorship request has been sent!"
+
+#: admin_panel/views.py:456
+#| msgid "Demande de mentorat"
+msgid "Demande de mentorat refusée."
+msgstr "Mentorship request rejected."
+
+#: admin_panel/views.py:465
+#, fuzzy
+#| msgid "Séance terminée avec succès !"
+msgid "Mentor réassigné avec succès."
+msgstr "Session completed successfully!"
+
+#: admin_panel/views.py:467
+#| msgid "Mentors disponibles"
+msgid "Mentor introuvable."
+msgstr "Mentor not found."
+
+#: admin_panel/views.py:503
+#| msgid "actif(s)"
+msgid "Actifs"
+msgstr "Active"
+
+#: admin_panel/views.py:504
+#| msgid "actif(s)"
+msgid "Inactifs"
+msgstr "Inactive"
+
+#: admin_panel/views.py:505 templates/admin_panel/users_list.html:32
+msgid "Staff"
+msgstr "Staff"
+
+#: admin_panel/views.py:553
+msgid "Vous ne pouvez pas vous désactiver vous-même."
+msgstr "You cannot deactivate your own account."
+
+#: admin_panel/views.py:560
+#| msgid "Caméra activée"
+msgid "Compte activé."
+msgstr "Account activated."
+
+#: admin_panel/views.py:564
+#| msgid "Caméra désactivée"
+msgid "Compte désactivé."
+msgstr "Account deactivated."
+
+#: admin_panel/views.py:568
+msgid "Vous ne pouvez pas modifier votre propre statut staff."
+msgstr "You cannot modify your own staff status."
+
+#: admin_panel/views.py:572
+#| msgid "✅ Statut mis à jour : %(statut)s"
+msgid "Statut staff mis à jour."
+msgstr "Staff status updated."
+
+#: admin_panel/views.py:583
+#| msgid "Notification"
+msgid "Notification envoyée."
+msgstr "Notification sent."
+
+#: admin_panel/views.py:585
+#| msgid "Le titre et le message sont obligatoires."
+msgid "Titre et message requis."
+msgstr "Title and message required."
+
+#: admin_panel/views.py:599
+#, fuzzy, python-format
+#| msgid "Lien de réinitialisation envoyé"
+msgid "Email de réinitialisation envoyé à %(email)s"
+msgstr "Password reset email sent to %(email)s"
+
+#: admin_panel/views.py:602
+msgid "Impossible d'envoyer l'email (adresse invalide ?)"
+msgstr "Couldn't send the email (invalid address?)"
+
 #: admissions/templates/admissions/candidature.html:3
-#: notifications/models.py:15 templates/notifications/list.html:40
+#: notifications/models.py:15 templates/admin_panel/candidature_detail.html:4
+#: templates/admin_panel/candidature_detail.html:44
+#: templates/notifications/list.html:40
 msgid "Candidature"
 msgstr "Application"
 
@@ -44,6 +426,7 @@ msgid "Parcours académique"
 msgstr "Academic background"
 
 #: admissions/templates/admissions/candidature.html:162
+#: templates/admin_panel/candidature_detail.html:67
 msgid "Documents"
 msgstr "Documents"
 
@@ -95,6 +478,7 @@ msgstr "Amount paid"
 #: admissions/templates/admissions/confirmation_paiement.html:37
 #: cours/templates/cours/verifier_certificat.html:112
 #: paiements/templates/paiements/confirmation.html:34
+#: templates/admin_panel/candidature_detail.html:46
 msgid "Référence"
 msgstr "Reference"
 
@@ -111,7 +495,10 @@ msgid "Retour à mes candidatures"
 msgstr "Back to my applications"
 
 #: admissions/templates/admissions/detail_candidature.html:27
-#: mentorat/models.py:330 mentorat/models.py:468
+#: mentorat/models.py:330 mentorat/models.py:469 pages/models.py:114
+#: templates/admin_panel/candidatures_list.html:39
+#: templates/admin_panel/contacts_list.html:49
+#: templates/admin_panel/mentorat_list.html:32
 msgid "Statut"
 msgstr "Status"
 
@@ -142,6 +529,7 @@ msgstr "We are sorry, your application was not selected this year."
 #: admissions/templates/admissions/detail_candidature.html:65
 #: mentorat/models.py:132 pages/forms.py:19
 #: pages/templates/pages/contact.html:67
+#: templates/admin_panel/user_detail.html:37
 msgid "Nom complet"
 msgstr "Full name"
 
@@ -150,13 +538,15 @@ msgid "Date de naissance"
 msgstr "Date of birth"
 
 #: admissions/templates/admissions/detail_candidature.html:67
-#: mentorat/models.py:475 pages/templates/pages/contact.html:223
+#: mentorat/models.py:476 pages/templates/pages/contact.html:223
+#: templates/admin_panel/candidature_detail.html:36
 msgid "Téléphone"
 msgstr "Phone"
 
 #: admissions/templates/admissions/detail_candidature.html:69
 #: comptes/forms.py:114 comptes/forms.py:213
 #: mentorat/templates/mentorat/detail_mentor.html:136
+#: templates/admin_panel/candidature_detail.html:37
 msgid "Pays"
 msgstr "Country"
 
@@ -580,11 +970,6 @@ msgstr "Only moderators can add new discussion categories."
 msgid "Nom de la catégorie"
 msgstr "Category name"
 
-#: communaute/templates/communaute/creer_categorie.html:47
-#: mentorat/models.py:447 mentorat/templates/mentorat/planifier_seance.html:53
-msgid "Description"
-msgstr "Description"
-
 #: communaute/templates/communaute/creer_categorie.html:58
 msgid "Ordre d'affichage"
 msgstr "Display order"
@@ -610,6 +995,21 @@ msgstr "Save category"
 #: mentorat/templates/mentorat/planifier_seance.html:110
 #: mentorat/templates/mentorat/terminer_relation.html:79
 #: mentorat/templates/mentorat/terminer_seance.html:66
+#: templates/admin_panel/candidature_detail.html:105
+#: templates/admin_panel/candidature_detail.html:121
+#: templates/admin_panel/candidature_detail.html:138
+#: templates/admin_panel/candidature_detail.html:153
+#: templates/admin_panel/candidatures_list.html:99
+#: templates/admin_panel/candidatures_list.html:119
+#: templates/admin_panel/mentorat_detail.html:71
+#: templates/admin_panel/mentorat_detail.html:87
+#: templates/admin_panel/mentorat_detail.html:107
+#: templates/admin_panel/user_detail.html:102
+#: templates/admin_panel/user_detail.html:116
+#: templates/admin_panel/user_detail.html:129
+#: templates/admin_panel/user_detail.html:144
+#: templates/admin_panel/user_detail.html:158
+#: templates/admin_panel/users_list.html:73
 msgid "Annuler"
 msgstr "Cancel"
 
@@ -698,16 +1098,12 @@ msgstr "New topic"
 msgid "Nouvelle catégorie"
 msgstr "New category"
 
-#: communaute/templates/communaute/detail_categorie.html:55 pages/forms.py:43
-#: pages/models.py:102 pages/templates/pages/contact.html:121
-msgid "Sujet"
-msgstr "Topic"
-
 #: communaute/templates/communaute/detail_categorie.html:56
 msgid "Réponses"
 msgstr "Replies"
 
 #: communaute/templates/communaute/detail_categorie.html:57
+#: templates/admin_panel/base_staff.html:110
 msgid "Activité"
 msgstr "Activity"
 
@@ -729,6 +1125,7 @@ msgstr "repl."
 #: communaute/templates/communaute/detail_sujet.html:256
 #: formation/templates/formation/voir_lecon.html:158
 #: mentorat/templates/mentorat/liste_mentors.html:180
+#: templates/admin_panel/includes/pagination.html:6
 #: templates/notifications/list.html:95
 msgid "Précédent"
 msgstr "Previous"
@@ -737,6 +1134,7 @@ msgstr "Previous"
 #: communaute/templates/communaute/detail_sujet.html:270
 #: formation/templates/formation/voir_lecon.html:166
 #: mentorat/templates/mentorat/liste_mentors.html:189
+#: templates/admin_panel/includes/pagination.html:11
 #: templates/notifications/list.html:104
 msgid "Suivant"
 msgstr "Next"
@@ -903,6 +1301,10 @@ msgid "Soyez le premier à poster"
 msgstr "Be the first to post"
 
 #: communaute/templates/communaute/liste_categories.html:156
+#: templates/admin_panel/candidatures_list.html:60
+#: templates/admin_panel/contacts_list.html:73
+#: templates/admin_panel/mentorat_list.html:50
+#: templates/admin_panel/users_list.html:49
 msgid "Voir"
 msgstr "View"
 
@@ -1056,6 +1458,7 @@ msgstr "Member since"
 
 #: communaute/templates/communaute/profil_utilisateur.html:83
 #: mentorat/templates/mentorat/detail_mentor.html:131
+#: templates/admin_panel/user_detail.html:35
 msgid "Informations"
 msgstr "Information"
 
@@ -1268,7 +1671,12 @@ msgstr "Join Numeria"
 msgid "Crée ton compte gratuitement et commence à apprendre"
 msgstr "Create your free account and start learning"
 
-#: comptes/templates/comptes/inscription.html:91 pages/models.py:100
+#: comptes/templates/comptes/inscription.html:91 pages/models.py:106
+#: templates/admin_panel/candidature_detail.html:34
+#: templates/admin_panel/contacts_list.html:45
+#: templates/admin_panel/mentorat_detail.html:29
+#: templates/admin_panel/mentorat_detail.html:38
+#: templates/admin_panel/users_list.html:28
 msgid "Nom"
 msgstr "Last name"
 
@@ -1326,11 +1734,12 @@ msgid "Mon profil"
 msgstr "My profile"
 
 #: comptes/templates/comptes/tableau_de_bord.html:53
+#: templates/admin_panel/user_detail.html:45
 msgid "Cours inscrits"
 msgstr "Enrolled courses"
 
 #: comptes/templates/comptes/tableau_de_bord.html:65
-#: formation/templates/formation/mes_formations.html:65 mentorat/models.py:460
+#: formation/templates/formation/mes_formations.html:65 mentorat/models.py:461
 msgid "En cours"
 msgstr "In progress"
 
@@ -1522,6 +1931,8 @@ msgstr "has successfully completed the course"
 
 #: cours/templates/cours/verifier_certificat.html:94
 #: formation/templates/formation/liste.html:62
+#: templates/admin_panel/candidature_detail.html:54
+#: templates/admin_panel/mentorat_detail.html:32
 msgid "Niveau"
 msgstr "Level"
 
@@ -1543,7 +1954,6 @@ msgid "Tu es déjà inscrit au cours « %(titre)s » ! 📚"
 msgstr "You are already enrolled in the course « %(titre)s »! 📚"
 
 #: cours/views.py:191
-#| msgid "Inscriptions fermées"
 msgid "Inscription confirmée"
 msgstr "Enrollment confirmed"
 
@@ -2008,7 +2418,8 @@ msgstr ""
 "I accept the terms of use and confirm that I will proceed with payment for "
 "this enrolment."
 
-#: formation/templates/formation/paiement.html:150 templates/video_room.html:26
+#: formation/templates/formation/paiement.html:150
+#: templates/admin_panel/contact_detail.html:75 templates/video_room.html:26
 msgid "Retour"
 msgstr "Back"
 
@@ -2342,13 +2753,13 @@ msgstr "Session fee"
 msgid "Vos notes sur la séance..."
 msgstr "End the session"
 
-#: mentorat/forms.py:239 mentorat/models.py:488
+#: mentorat/forms.py:239 mentorat/models.py:489
 #: mentorat/templates/mentorat/detail_relation.html:197
 #: mentorat/templates/mentorat/terminer_seance.html:39
 msgid "Notes du mentor"
 msgstr "Mentor notes"
 
-#: mentorat/forms.py:248 mentorat/models.py:492
+#: mentorat/forms.py:248 mentorat/models.py:493
 #: mentorat/templates/mentorat/detail_relation.html:203
 #: mentorat/templates/mentorat/terminer_seance.html:50
 msgid "Notes du mentoré"
@@ -2519,12 +2930,6 @@ msgstr "Mentor"
 msgid "Mentors"
 msgstr "Mentor"
 
-#: mentorat/models.py:122 mentorat/models.py:321
-#, fuzzy
-#| msgid "Paiement en attente"
-msgid "En attente"
-msgstr "Payment pending"
-
 #: mentorat/models.py:123
 msgid "Approuvé"
 msgstr "Approved"
@@ -2676,24 +3081,6 @@ msgstr "Mentee"
 msgid "Mentorés"
 msgstr "Mentee"
 
-#: mentorat/models.py:322
-#, fuzzy
-#| msgid "Accepter"
-msgid "Acceptée"
-msgstr "Accept"
-
-#: mentorat/models.py:323
-#, fuzzy
-#| msgid "Refuser"
-msgid "Refusée"
-msgstr "Decline"
-
-#: mentorat/models.py:324 mentorat/models.py:461
-#, fuzzy
-#| msgid "Terminées"
-msgid "Terminée"
-msgstr "Completed"
-
 #: mentorat/models.py:336
 #, fuzzy
 #| msgid "Mes mentors"
@@ -2706,201 +3093,210 @@ msgstr "My mentors"
 msgid "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor..."
 msgstr "Introduce yourself and explain why you want this mentor."
 
-#: mentorat/models.py:345 mentorat/templates/mentorat/demander_mentorat.html:18
-msgid "Demande de mentorat"
-msgstr "Mentoring request"
+#: mentorat/models.py:343 templates/admin_panel/candidature_detail.html:79
+#: templates/admin_panel/mentorat_detail.html:55
+#| msgid "Notes du mentor"
+msgid "Notes admin"
+msgstr "Admin notes"
 
-#: mentorat/models.py:346
+#: mentorat/models.py:347
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:81
+#: templates/admin_panel/mentorat_list.html:5
 msgid "Demandes de mentorat"
-msgstr "Mentoring requests"
+msgstr "Mentorship requests"
 
-#: mentorat/models.py:406
+#: mentorat/models.py:407
 #, fuzzy
 #| msgid "Terminer la relation"
 msgid "Objectifs de la relation"
 msgstr "End the relationship"
 
-#: mentorat/models.py:410 mentorat/templates/mentorat/detail_relation.html:3
+#: mentorat/models.py:411 mentorat/templates/mentorat/detail_relation.html:3
 #: mentorat/templates/mentorat/detail_relation.html:29
 msgid "Relation de mentorat"
 msgstr "Mentoring relationship"
 
-#: mentorat/models.py:411
+#: mentorat/models.py:412
 #, fuzzy
 #| msgid "Relation de mentorat"
 msgid "Relations de mentorat"
 msgstr "Mentoring relationship"
 
-#: mentorat/models.py:443 mentorat/templates/mentorat/planifier_seance.html:41
+#: mentorat/models.py:444 mentorat/templates/mentorat/planifier_seance.html:41
 msgid "Titre de la séance"
 msgstr "Session title"
 
-#: mentorat/models.py:451 mentorat/templates/mentorat/planifier_seance.html:66
+#: mentorat/models.py:452 mentorat/templates/mentorat/planifier_seance.html:66
 msgid "Date et heure"
 msgstr "Date and time"
 
-#: mentorat/models.py:454 mentorat/templates/mentorat/planifier_seance.html:76
+#: mentorat/models.py:455 mentorat/templates/mentorat/planifier_seance.html:76
 msgid "Durée (minutes)"
 msgstr "Duration (minutes)"
 
-#: mentorat/models.py:459
+#: mentorat/models.py:460
 #, fuzzy
 #| msgid "Planifier la séance"
 msgid "Planifiée"
 msgstr "Schedule the session"
 
-#: mentorat/models.py:462
+#: mentorat/models.py:463
 #, fuzzy
 #| msgid "Annuler"
 msgid "Annulée"
 msgstr "Cancel"
 
-#: mentorat/models.py:473
+#: mentorat/models.py:474
 msgid "Présentiel"
 msgstr "In person"
 
-#: mentorat/models.py:474 mentorat/templates/mentorat/video_seance.html:4
+#: mentorat/models.py:475 mentorat/templates/mentorat/video_seance.html:4
 #: mentorat/templates/mentorat/video_seance.html:16
 msgid "Visioconférence"
 msgstr "Video Conference"
 
-#: mentorat/models.py:476 pages/models.py:101
+#: mentorat/models.py:477 pages/models.py:107
 #: pages/templates/pages/a_propos.html:350
 #: pages/templates/pages/contact.html:85 pages/templates/pages/contact.html:210
+#: templates/admin_panel/candidature_detail.html:35
+#: templates/admin_panel/contacts_list.html:46
+#: templates/admin_panel/mentorat_detail.html:30
+#: templates/admin_panel/mentorat_detail.html:39
+#: templates/admin_panel/user_detail.html:39
+#: templates/admin_panel/users_list.html:29
 msgid "Email"
 msgstr "Email"
 
-#: mentorat/models.py:482 mentorat/templates/mentorat/planifier_seance.html:86
+#: mentorat/models.py:483 mentorat/templates/mentorat/planifier_seance.html:86
 #: mentorat/templates/mentorat/video_seance.html:66
 msgid "Modalité"
 msgstr "Format"
 
-#: mentorat/models.py:500
+#: mentorat/models.py:501
 #, fuzzy
 #| msgid "Demande de mentorat"
 msgid "Séance de mentorat"
 msgstr "Mentoring request"
 
-#: mentorat/models.py:501
+#: mentorat/models.py:502
 #, fuzzy
 #| msgid "Demandes de mentorat"
 msgid "Séances de mentorat"
 msgstr "Mentoring requests"
 
-#: mentorat/models.py:543
+#: mentorat/models.py:544
 msgid "Montant total (FCFA)"
 msgstr "Total amount (FCFA)"
 
-#: mentorat/models.py:544
+#: mentorat/models.py:545
 #, fuzzy
 #| msgid "Commission Numeria (20%%)"
 msgid "Commission Numeria (FCFA)"
 msgstr "Numeria commission (20%%)"
 
-#: mentorat/models.py:545
+#: mentorat/models.py:546
 msgid "Part mentor (FCFA)"
 msgstr "Mentor share (FCFA)"
 
-#: mentorat/models.py:549
+#: mentorat/models.py:550
 #, fuzzy
 #| msgid "Moyen de paiement"
 msgid "En attente de paiement"
 msgstr "Payment method"
 
-#: mentorat/models.py:550
+#: mentorat/models.py:551
 #, fuzzy
 #| msgid "Preuve actuelle"
 msgid "Preuve soumise"
 msgstr "Current proof"
 
-#: mentorat/models.py:551
+#: mentorat/models.py:552
 msgid "Confirmé"
 msgstr "Confirmed"
 
-#: mentorat/models.py:552
+#: mentorat/models.py:553
 msgid "Échec / Annulé"
 msgstr "Failed / Cancelled"
 
-#: mentorat/models.py:559
+#: mentorat/models.py:560
 #, fuzzy
 #| msgid "Référence"
 msgid "Référence mobile money"
 msgstr "Reference"
 
-#: mentorat/models.py:560
+#: mentorat/models.py:561
 #, fuzzy
 #| msgid "Numéro de transaction fourni par votre opérateur mobile money"
 msgid "Numéro de transaction TMoney / Flooz / autre"
 msgstr "Transaction number provided by your mobile money operator"
 
-#: mentorat/models.py:565 mentorat/templates/mentorat/paiement_seance.html:193
+#: mentorat/models.py:566 mentorat/templates/mentorat/paiement_seance.html:193
 msgid "Capture d'écran du paiement"
 msgstr "Payment screenshot"
 
-#: mentorat/models.py:571
+#: mentorat/models.py:572
 msgid "Paiement flaggé comme suspect"
 msgstr "Payment flagged as suspicious"
 
-#: mentorat/models.py:572
+#: mentorat/models.py:573
 #, fuzzy
 #| msgid "À propos de la vérification"
 msgid "En escrow pour vérification admin"
 msgstr "Verification code"
 
-#: mentorat/models.py:576
+#: mentorat/models.py:577
 msgid "Raisons du flagging"
 msgstr "Flagging reasons"
 
-#: mentorat/models.py:577
+#: mentorat/models.py:578
 msgid "Séparées par |"
 msgstr "Separated by |"
 
-#: mentorat/models.py:581
+#: mentorat/models.py:582
 #, fuzzy
 #| msgid "Date de délivrance"
 msgid "Date de déblocage (escrow)"
 msgstr "Issue date"
 
-#: mentorat/models.py:582
+#: mentorat/models.py:583
 msgid "Après cette date, si pas de contestation, débloquer"
 msgstr "After this date, if no dispute, unlock"
 
-#: mentorat/models.py:586
+#: mentorat/models.py:587
 msgid "Date de soumission de preuve"
 msgstr "Proof submission date"
 
-#: mentorat/models.py:590
+#: mentorat/models.py:591
 msgid "Raison de l'échec/contestation"
 msgstr "Reason for failure/dispute"
 
-#: mentorat/models.py:594
+#: mentorat/models.py:595
 #, fuzzy
 #| msgid "Notes du mentoré"
 msgid "Signature HMAC du mentoré"
 msgstr "Mentee notes"
 
-#: mentorat/models.py:595
+#: mentorat/models.py:596
 msgid "Empêche modification du montant"
 msgstr "Prevents amount modification"
 
-#: mentorat/models.py:601
+#: mentorat/models.py:602
 #, fuzzy
 #| msgid "Notes du mentoré"
 msgid "IP du mentoré (audit)"
 msgstr "Mentee notes"
 
-#: mentorat/models.py:605
+#: mentorat/models.py:606
 msgid "User-Agent (audit)"
 msgstr "User-Agent (audit)"
 
-#: mentorat/models.py:613
+#: mentorat/models.py:614
 #, fuzzy
 #| msgid "Paiement de la séance"
 msgid "Paiement de séance"
 msgstr "Session payment"
 
-#: mentorat/models.py:614
+#: mentorat/models.py:615
 #, fuzzy
 #| msgid "Paiement de la séance"
 msgid "Paiements de séances"
@@ -2924,6 +3320,8 @@ msgid "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor."
 msgstr "Introduce yourself and explain why you want this mentor."
 
 #: mentorat/templates/mentorat/demander_mentorat.html:45
+#: templates/admin_panel/mentorat_detail.html:36
+#: templates/admin_panel/mentorat_list.html:29
 msgid "Mentor demandé"
 msgstr "Requested mentor"
 
@@ -3049,11 +3447,13 @@ msgid "Terminer la relation"
 msgstr "End the relationship"
 
 #: mentorat/templates/mentorat/detail_relation.html:118
+#: templates/admin_panel/mentorat_detail.html:31
 msgid "Objectifs"
 msgstr "Goals"
 
 #: mentorat/templates/mentorat/detail_relation.html:135
 #: mentorat/templates/mentorat/liste_mentors.html:55
+#: templates/admin_panel/mentorat_detail.html:41
 msgid "Expérience"
 msgstr "Experience"
 
@@ -3108,6 +3508,9 @@ msgstr "Back to mentoring"
 #: mentorat/templates/mentorat/devenir_mentee.html:18
 #: mentorat/templates/mentorat/devenir_mentor.html:18
 #: mentorat/templates/mentorat/index.html:4 notifications/models.py:14
+#: templates/admin_panel/base_staff.html:92
+#: templates/admin_panel/mentorat_detail.html:6
+#: templates/admin_panel/mentorat_list.html:4
 #: templates/includes/nav_items.html:10 templates/includes/nav_items.html:23
 #: templates/notifications/list.html:36
 msgid "Mentorat"
@@ -3682,12 +4085,23 @@ msgid "Séances payées"
 msgstr "Paid sessions"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:104
+#: templates/admin_panel/candidature_detail.html:19
+#: templates/admin_panel/candidature_detail.html:122
+#: templates/admin_panel/candidatures_list.html:65
+#: templates/admin_panel/mentorat_detail.html:17
+#: templates/admin_panel/mentorat_detail.html:72
 msgid "Accepter"
 msgstr "Accept"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:108
+#: templates/admin_panel/candidature_detail.html:21
+#: templates/admin_panel/candidature_detail.html:139
+#: templates/admin_panel/candidatures_list.html:69
+#: templates/admin_panel/candidatures_list.html:120
+#: templates/admin_panel/mentorat_detail.html:18
+#: templates/admin_panel/mentorat_detail.html:88
 msgid "Refuser"
-msgstr "Decline"
+msgstr "Reject"
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:117
 msgid "Aucune demande en attente"
@@ -3784,13 +4198,6 @@ msgstr "Stay on this page until the end of the session."
 #: mentorat/templates/mentorat/video_seance.html:59
 msgid "L'audio et la vidéo sont envoyés directement entre vos navigateurs."
 msgstr "Audio and video are sent directly between your browsers."
-
-#: mentorat/templates/mentorat/video_seance.html:63 notifications/models.py:38
-#: pages/models.py:104 paiements/templates/paiements/confirmation.html:52
-#, fuzzy
-#| msgid "Dates"
-msgid "Date"
-msgstr "Dates"
 
 #: mentorat/templates/mentorat/video_seance.html:64
 msgid "Heure"
@@ -4018,24 +4425,22 @@ msgstr "Become a Mentor"
 msgid "Type"
 msgstr ""
 
-#: notifications/models.py:34 templates/notifications/send.html:28
+#: notifications/models.py:34 templates/admin_panel/user_detail.html:141
+#: templates/admin_panel/users_list.html:70
+#: templates/notifications/send.html:28
 msgid "Titre"
-msgstr ""
-
-#: notifications/models.py:35 pages/forms.py:48 pages/models.py:103
-#: pages/templates/pages/contact.html:145 templates/notifications/send.html:35
-#, fuzzy
-#| msgid "Messages"
-msgid "Message"
-msgstr "Messages"
+msgstr "Title"
 
 #: notifications/models.py:36
 msgid "Lien (CTA)"
 msgstr ""
 
-#: notifications/models.py:37 pages/models.py:105
+#: notifications/models.py:37 pages/models.py:102 pages/models.py:111
+#: templates/admin_panel/contact_detail.html:20
+#: templates/admin_panel/contacts_list.html:66
+#: templates/admin_panel/user_detail.html:83
 msgid "Lu"
-msgstr ""
+msgstr "Read"
 
 #: notifications/models.py:45
 #, fuzzy
@@ -4043,14 +4448,12 @@ msgstr ""
 msgid "Envoyé par"
 msgstr "Sent on"
 
-#: notifications/models.py:50
-#| msgid "Motivation"
+#: notifications/models.py:50 templates/admin_panel/user_detail.html:22
 msgid "Notification"
 msgstr "Notification"
 
-#: notifications/models.py:51 templates/notifications/bell.html:8
-#: templates/notifications/bell.html:27
-#| msgid "Motivation"
+#: notifications/models.py:51 templates/admin_panel/base_staff.html:105
+#: templates/notifications/bell.html:8 templates/notifications/bell.html:27
 msgid "Notifications"
 msgstr "Notifications"
 
@@ -4077,22 +4480,18 @@ msgid "Tout le monde (broadcast)"
 msgstr "Everyone (broadcast)"
 
 #: notifications/views.py:154
-#| msgid "Tu n'es inscrit à aucun cours"
 msgid "Tous les étudiants inscrits à au moins un cours"
 msgstr "All students enrolled in at least one course"
 
 #: notifications/views.py:155
-#| msgid "Mentorés actifs"
 msgid "Tous les mentorés actifs"
 msgstr "All active mentees"
 
 #: notifications/views.py:156
-#| msgid "Mentors actifs"
 msgid "Tous les mentors actifs"
 msgstr "All active mentors"
 
 #: notifications/views.py:157
-#| msgid "Aucune candidature soumise"
 msgid "Tous les candidats (soumis/acceptés)"
 msgstr "All applicants (submitted/accepted)"
 
@@ -4100,11 +4499,11 @@ msgstr "All applicants (submitted/accepted)"
 msgid "Utilisateur spécifique (par username ou email)"
 msgstr "Specific user (by username or email)"
 
-#: numeria_project/settings.py:150
+#: numeria_project/settings.py:152
 msgid "Français"
 msgstr "French"
 
-#: numeria_project/settings.py:151
+#: numeria_project/settings.py:153
 msgid "English"
 msgstr "English"
 
@@ -4164,13 +4563,20 @@ msgstr "Write your message here..."
 msgid "Je souhaite discuter d'un partenariat avec Numeria Institute"
 msgstr "Schedule a mentoring session on Numeria Institute."
 
-#: pages/models.py:109
-#| msgid "Message initial"
-msgid "Message de contact"
-msgstr "Contact message"
+#: pages/models.py:101 templates/admin_panel/contact_detail.html:19
+#: templates/admin_panel/contacts_list.html:65
+#: templates/admin_panel/user_detail.html:83
+#| msgid "non lues"
+msgid "Non lu"
+msgstr "Unread"
 
-#: pages/models.py:110
-#| msgid "Message initial"
+#: pages/models.py:103 templates/admin_panel/contact_detail.html:21
+#: templates/admin_panel/contacts_list.html:67
+#| msgid "Répondre"
+msgid "Répondu"
+msgstr "Replied"
+
+#: pages/models.py:120 templates/admin_panel/contacts_list.html:5
 msgid "Messages de contact"
 msgstr "Contact messages"
 
@@ -5294,7 +5700,6 @@ msgstr ""
 "Africa."
 
 #: pages/views.py:203
-#| msgid "Nous contacter"
 msgid "Nouveau message de contact"
 msgstr "New contact message"
 
@@ -5343,7 +5748,8 @@ msgstr "View courses →"
 msgid "Voir la session →"
 msgstr "View courses →"
 
-#: paiements/templates/paiements/confirmation.html:73 templates/base.html:311
+#: paiements/templates/paiements/confirmation.html:73
+#: templates/admin_panel/dashboard.html:5 templates/base.html:311
 #: templates/base.html:364
 msgid "Tableau de bord"
 msgstr "Dashboard"
@@ -5459,6 +5865,518 @@ msgstr ""
 msgid "La page que vous cherchez n'existe pas ou a été déplacée."
 msgstr ""
 
+#: templates/admin_panel/activity_log.html:10
+msgid "Les 50 dernières actions effectuées par le staff."
+msgstr "The last 50 actions performed by staff."
+
+#: templates/admin_panel/activity_log.html:37
+#| msgid "Aucune catégorie disponible pour le moment."
+msgid "Aucune activité enregistrée pour le moment."
+msgstr "No activity recorded yet."
+
+#: templates/admin_panel/base_staff.html:7
+msgid "Staff — Numeria"
+msgstr "Staff — Numeria"
+
+#: templates/admin_panel/base_staff.html:71
+#: templates/admin_panel/dashboard.html:4
+msgid "Dashboard"
+msgstr ""
+
+#: templates/admin_panel/base_staff.html:76
+#: templates/admin_panel/contact_detail.html:6
+#: templates/admin_panel/contacts_list.html:4
+#, fuzzy
+#| msgid "Contact"
+msgid "Contacts"
+msgstr "Contact"
+
+#: templates/admin_panel/base_staff.html:84
+#: templates/admin_panel/candidature_detail.html:6
+#: templates/admin_panel/candidatures_list.html:4
+#: templates/admin_panel/candidatures_list.html:5
+#: templates/admin_panel/user_detail.html:62 templates/base.html:417
+#: templates/includes/nav_items.html:8 templates/includes/nav_items.html:21
+msgid "Candidatures"
+msgstr "Applications"
+
+#: templates/admin_panel/base_staff.html:100
+#: templates/admin_panel/user_detail.html:6
+#: templates/admin_panel/users_list.html:4
+#: templates/admin_panel/users_list.html:5
+#| msgid "Nom d'utilisateur"
+msgid "Utilisateurs"
+msgstr "Users"
+
+#: templates/admin_panel/base_staff.html:117
+#| msgid "Django Community"
+msgid "Django Admin"
+msgstr "Django Admin"
+
+#: templates/admin_panel/base_staff.html:121
+#| msgid "Voir le cours"
+msgid "Voir le site"
+msgstr "View site"
+
+#: templates/admin_panel/base_staff.html:134 templates/base.html:366
+msgid "Se déconnecter"
+msgstr "Sign out"
+
+#: templates/admin_panel/base_staff.html:149
+msgid "Staff Dashboard"
+msgstr "Staff Dashboard"
+
+#: templates/admin_panel/candidature_detail.html:32
+#: templates/admin_panel/candidatures_list.html:36
+#| msgid "Candidature"
+msgid "Candidat"
+msgstr "Applicant"
+
+#: templates/admin_panel/candidature_detail.html:38
+msgid "Né(e) le"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:47
+#: templates/admin_panel/candidatures_list.html:37
+#| msgid "Filière A"
+msgid "Filière"
+msgstr "Programme"
+
+#: templates/admin_panel/candidature_detail.html:48
+#, fuzzy
+#| msgid "Campagne fermée"
+msgid "Campagne"
+msgstr "Campaign closed"
+
+#: templates/admin_panel/candidature_detail.html:49
+#: templates/admin_panel/candidatures_list.html:38
+#: templates/admin_panel/mentorat_detail.html:50
+#| msgid "Soumise le"
+msgid "Soumis le"
+msgstr "Submitted on"
+
+#: templates/admin_panel/candidature_detail.html:51
+msgid "Traité par"
+msgstr "Reviewed by"
+
+#: templates/admin_panel/candidature_detail.html:53
+msgid "Diplôme"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:61
+#: templates/admin_panel/candidature_detail.html:70
+#| msgid "En attente de confirmation"
+msgid "Lettre de motivation"
+msgstr "Motivation letter"
+
+#: templates/admin_panel/candidature_detail.html:71
+msgid "Relevés de notes"
+msgstr "Academic transcripts"
+
+#: templates/admin_panel/candidature_detail.html:72
+#, fuzzy
+#| msgid "Autre"
+msgid "Autres"
+msgstr "Other"
+
+#: templates/admin_panel/candidature_detail.html:86
+#: templates/admin_panel/candidature_detail.html:134
+msgid "Raison de refus"
+msgstr "Rejection reason"
+
+#: templates/admin_panel/candidature_detail.html:100
+#| msgid "Marquer comme terminée"
+msgid "Marquer en revue"
+msgstr "Mark as reviewing"
+
+#: templates/admin_panel/candidature_detail.html:103
+#: templates/admin_panel/candidature_detail.html:119
+#: templates/admin_panel/candidature_detail.html:136
+#: templates/admin_panel/candidature_detail.html:151
+#: templates/admin_panel/candidatures_list.html:96
+#: templates/admin_panel/candidatures_list.html:116
+#: templates/admin_panel/mentorat_detail.html:69
+#, fuzzy
+#| msgid "Lien CTA (optionnel)"
+msgid "Notes admin (optionnel)"
+msgstr "CTA link (optional)"
+
+#: templates/admin_panel/candidature_detail.html:106
+#: templates/admin_panel/candidature_detail.html:154
+#: templates/admin_panel/candidatures_list.html:100
+#: templates/admin_panel/user_detail.html:130
+#| msgid "Confirmé"
+msgid "Confirmer"
+msgstr "Confirm"
+
+#: templates/admin_panel/candidature_detail.html:115
+#, fuzzy
+#| msgid "Soumettre ma candidature"
+msgid "Accepter la candidature"
+msgstr "Submit my application"
+
+#: templates/admin_panel/candidature_detail.html:116
+msgid "Un email et une notification seront envoyés à"
+msgstr "An email and notification will be sent to"
+
+#: templates/admin_panel/candidature_detail.html:131
+#: templates/admin_panel/candidatures_list.html:109
+#| msgid "Voir mes candidatures"
+msgid "Refuser la candidature"
+msgstr "Reject application"
+
+#: templates/admin_panel/candidature_detail.html:135
+msgid "Obligatoire — sera visible dans l\\"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:148
+msgid "Mettre en liste d'attente"
+msgstr "Put on waitlist"
+
+#: templates/admin_panel/candidatures_list.html:13
+#: templates/admin_panel/mentorat_list.html:10
+#| msgid "Durée (minutes)"
+msgid "Toutes"
+msgstr "All"
+
+#: templates/admin_panel/candidatures_list.html:24
+msgid "Nom, email, filière, référence…"
+msgstr ""
+
+#: templates/admin_panel/candidatures_list.html:26
+#: templates/admin_panel/contacts_list.html:22
+#: templates/admin_panel/mentorat_list.html:19
+#: templates/admin_panel/users_list.html:19
+#| msgid "Recherche"
+msgid "Chercher"
+msgstr "Search"
+
+#: templates/admin_panel/candidatures_list.html:35
+msgid "Réf."
+msgstr "Ref."
+
+#: templates/admin_panel/candidatures_list.html:40
+#: templates/admin_panel/contacts_list.html:50
+#: templates/admin_panel/mentorat_list.html:33
+#: templates/admin_panel/users_list.html:33
+#, fuzzy
+#| msgid "Instructeurs"
+msgid "Actions"
+msgstr "Instructors"
+
+#: templates/admin_panel/candidatures_list.html:81
+#| msgid "Aucune candidature soumise"
+msgid "Aucune candidature trouvée."
+msgstr "No applications found."
+
+#: templates/admin_panel/candidatures_list.html:91
+#| msgid "Confirmer la fin de cette relation ?"
+msgid "Confirmer l'acceptation"
+msgstr "Confirm acceptance"
+
+#: templates/admin_panel/candidatures_list.html:92
+msgid "Cette action enverra un email et une notification au candidat."
+msgstr "This will send an email and notification to the applicant."
+
+#: templates/admin_panel/candidatures_list.html:110
+msgid "Indiquez la raison (obligatoire). Un email sera envoyé au candidat."
+msgstr "Please provide a reason (required). An email will be sent."
+
+#: templates/admin_panel/candidatures_list.html:114
+msgid "Raison de refus (obligatoire)…"
+msgstr "Reason for rejection (required)..."
+
+#: templates/admin_panel/contact_detail.html:31
+msgid "Réponses précédentes"
+msgstr "Previous replies"
+
+#: templates/admin_panel/contact_detail.html:46
+#, fuzzy
+#| msgid "Votre réponse"
+msgid "Envoyer une réponse"
+msgstr "Your reply"
+
+#: templates/admin_panel/contact_detail.html:52
+msgid "À"
+msgstr "To"
+
+#: templates/admin_panel/contact_detail.html:65
+#| msgid "Votre réponse"
+msgid "Votre réponse…"
+msgstr "Your reply..."
+
+#: templates/admin_panel/contact_detail.html:71
+#| msgid "Publier la réponse"
+msgid "Envoyer la réponse"
+msgstr "Send reply"
+
+#: templates/admin_panel/contacts_list.html:4
+#: templates/admin_panel/contacts_list.html:5
+#, fuzzy
+#| msgid "non lues"
+msgid "non lus"
+msgstr "unread"
+
+#: templates/admin_panel/contacts_list.html:20
+#, fuzzy
+#| msgid "Recherche du réseau…"
+msgid "Rechercher nom, email, sujet…"
+msgstr "Searching for network…"
+
+#: templates/admin_panel/contacts_list.html:33
+#| msgid "Sélectionner"
+msgid "Tout sélectionner"
+msgstr "Select all"
+
+#: templates/admin_panel/contacts_list.html:36
+msgid "Marquer lu"
+msgstr "Mark as read"
+
+#: templates/admin_panel/contacts_list.html:83
+#, fuzzy
+#| msgid "Aucun mentor trouvé"
+msgid "Aucun message trouvé."
+msgstr "No mentor found"
+
+#: templates/admin_panel/dashboard.html:16
+#| msgid "Messages postés"
+msgid "Messages non lus"
+msgstr "Unread messages"
+
+#: templates/admin_panel/dashboard.html:25
+#| msgid "Demandes en attente"
+msgid "Candidatures en attente"
+msgstr "Pending applications"
+
+#: templates/admin_panel/dashboard.html:34
+#| msgid "Demandes de mentorat"
+msgid "Demandes mentorat"
+msgstr "Mentorship requests"
+
+#: templates/admin_panel/dashboard.html:43
+#| msgid "Mentors actifs"
+msgid "Utilisateurs actifs"
+msgstr "Active users"
+
+#: templates/admin_panel/dashboard.html:52
+#| msgid "Cours populaires"
+msgid "Cours publiés"
+msgstr "Published courses"
+
+#: templates/admin_panel/dashboard.html:60
+#| msgid "Paiement mobile"
+msgid "Paiements ce mois"
+msgstr "Payments this month"
+
+#: templates/admin_panel/dashboard.html:69
+#| msgid "Activité"
+msgid "Activité récente"
+msgstr "Recent activity"
+
+#: templates/admin_panel/dashboard.html:70
+msgid "Tout voir"
+msgstr "See all"
+
+#: templates/admin_panel/dashboard.html:81 templates/notifications/bell.html:56
+msgid "ago"
+msgstr "ago"
+
+#: templates/admin_panel/dashboard.html:87
+#| msgid "Aucune information renseignée."
+msgid "Aucune activité enregistrée."
+msgstr "No activity recorded."
+
+#: templates/admin_panel/includes/pagination.html:8
+#: templates/notifications/list.html:99
+msgid "Page"
+msgstr "Page"
+
+#: templates/admin_panel/mentorat_detail.html:4
+#, fuzzy
+#| msgid "Demande de mentorat"
+msgid "Demande mentorat"
+msgstr "Mentoring request"
+
+#: templates/admin_panel/mentorat_detail.html:19
+#| msgid "Demande de mentorat"
+msgid "Réassigner mentor"
+msgstr "Reassign mentor"
+
+#: templates/admin_panel/mentorat_detail.html:27
+#: templates/admin_panel/mentorat_list.html:28
+#| msgid "Mentor"
+msgid "Mentee"
+msgstr "Mentee"
+
+#: templates/admin_panel/mentorat_detail.html:40
+#, fuzzy
+#| msgid "Expert"
+msgid "Expertise"
+msgstr "Expert"
+
+#: templates/admin_panel/mentorat_detail.html:48
+#| msgid "Mes mentors"
+msgid "Message du mentee"
+msgstr "Mentee message"
+
+#: templates/admin_panel/mentorat_detail.html:65
+#| msgid "Demande de mentorat"
+msgid "Accepter la demande de mentorat"
+msgstr "Accept mentorship request"
+
+#: templates/admin_panel/mentorat_detail.html:66
+msgid "Le mentee et le mentor recevront chacun un email et une notification."
+msgstr "Both mentee and mentor will receive an email and notification."
+
+#: templates/admin_panel/mentorat_detail.html:81
+#| msgid "Envoyer la demande"
+msgid "Refuser la demande"
+msgstr "Reject request"
+
+#: templates/admin_panel/mentorat_detail.html:84
+msgid "Raison (obligatoire)"
+msgstr "Reason (required)"
+
+#: templates/admin_panel/mentorat_detail.html:97
+#| msgid "Demande de mentorat"
+msgid "Réassigner le mentor"
+msgstr "Reassign mentor"
+
+#: templates/admin_panel/mentorat_detail.html:100
+#| msgid "Trouver un mentor"
+msgid "Nouveau mentor"
+msgstr "New mentor"
+
+#: templates/admin_panel/mentorat_detail.html:108
+msgid "Réassigner"
+msgstr "Reassign"
+
+#: templates/admin_panel/mentorat_list.html:17
+#, fuzzy
+#| msgid "Envoyer la demande"
+msgid "Mentee, email, message…"
+msgstr "Send the request"
+
+#: templates/admin_panel/mentorat_list.html:57
+#| msgid "Aucune demande envoyée"
+msgid "Aucune demande trouvée."
+msgstr "No requests found."
+
+#: templates/admin_panel/user_detail.html:15
+#: templates/admin_panel/user_detail.html:117
+msgid "Désactiver"
+msgstr "Deactivate"
+
+#: templates/admin_panel/user_detail.html:17
+#: templates/admin_panel/user_detail.html:103
+#| msgid "Activité"
+msgid "Activer"
+msgstr "Activate"
+
+#: templates/admin_panel/user_detail.html:20
+msgid "Retirer staff"
+msgstr "Remove staff"
+
+#: templates/admin_panel/user_detail.html:20
+msgid "Rendre staff"
+msgstr "Make staff"
+
+#: templates/admin_panel/user_detail.html:23
+#| msgid "Réinitialiser"
+msgid "Réinitialiser MDP"
+msgstr "Reset password"
+
+#: templates/admin_panel/user_detail.html:26
+#: templates/admin_panel/users_list.html:31
+#| msgid "actif(s)"
+msgid "Actif"
+msgstr "Active"
+
+#: templates/admin_panel/user_detail.html:26
+#| msgid "actif(s)"
+msgid "Inactif"
+msgstr "Inactive"
+
+#: templates/admin_panel/user_detail.html:38
+msgid "Username"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:40
+#: templates/admin_panel/users_list.html:30
+#| msgid "Inscriptions:"
+msgid "Inscription"
+msgstr "Registered"
+
+#: templates/admin_panel/user_detail.html:41
+#, fuzzy
+#| msgid "Connexion"
+msgid "Dernière connexion"
+msgstr "Login"
+
+#: templates/admin_panel/user_detail.html:55
+#| msgid "Aucun cours trouvé"
+msgid "Aucun cours."
+msgstr "No courses."
+
+#: templates/admin_panel/user_detail.html:78
+#| msgid "Certifications reconnues"
+msgid "Notifications récentes"
+msgstr "Recent notifications"
+
+#: templates/admin_panel/user_detail.html:97
+#| msgid "Activer cette catégorie"
+msgid "Activer ce compte ?"
+msgstr "Activate this account?"
+
+#: templates/admin_panel/user_detail.html:111
+#| msgid "Déjà un compte ?"
+msgid "Désactiver ce compte ?"
+msgstr "Deactivate this account?"
+
+#: templates/admin_panel/user_detail.html:125
+msgid "Retirer le statut staff ?"
+msgstr "Remove staff status?"
+
+#: templates/admin_panel/user_detail.html:125
+msgid "Rendre staff ?"
+msgstr "Make staff?"
+
+#: templates/admin_panel/user_detail.html:138
+#: templates/admin_panel/users_list.html:67 templates/notifications/send.html:4
+#: templates/notifications/send.html:10
+msgid "Envoyer une notification"
+msgstr "Send a notification"
+
+#: templates/admin_panel/user_detail.html:145
+#: templates/admin_panel/users_list.html:74
+#| msgid "Renvoyer"
+msgid "Envoyer"
+msgstr "Send"
+
+#: templates/admin_panel/user_detail.html:153
+#: templates/registration/password_reset_form.html:6
+#| msgid "Réinitialiser les filtres"
+msgid "Réinitialiser le mot de passe"
+msgstr "Reset password"
+
+#: templates/admin_panel/user_detail.html:154
+msgid "Un email sera envoyé à"
+msgstr "An email will be sent to"
+
+#: templates/admin_panel/user_detail.html:159
+#| msgid "Envoyer la demande"
+msgid "Envoyer l'email"
+msgstr "Send email"
+
+#: templates/admin_panel/users_list.html:17
+msgid "Nom, email, username…"
+msgstr ""
+
+#: templates/admin_panel/users_list.html:58
+#| msgid "Aucun cours trouvé"
+msgid "Aucun utilisateur trouvé."
+msgstr "No users found."
+
 #: templates/base.html:49
 msgid ""
 "Éducation scientifique accessible en Afrique. Cours de mathématiques, "
@@ -5466,10 +6384,6 @@ msgid ""
 msgstr ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses."
-
-#: templates/base.html:366
-msgid "Se déconnecter"
-msgstr "Log out"
 
 #: templates/base.html:406
 msgid ""
@@ -5490,11 +6404,6 @@ msgstr "Our courses"
 #: templates/base.html:416
 msgid "Le blog"
 msgstr "The blog"
-
-#: templates/base.html:417 templates/includes/nav_items.html:8
-#: templates/includes/nav_items.html:21
-msgid "Candidatures"
-msgstr "Applications"
 
 #: templates/base.html:418 templates/includes/nav_items.html:11
 #: templates/includes/nav_items.html:24
@@ -5607,23 +6516,15 @@ msgstr "Analytics"
 msgid "non lues"
 msgstr "unread"
 
-#: templates/notifications/bell.html:56
-#| msgid "aug"
-msgid "ago"
-msgstr "ago"
-
 #: templates/notifications/bell.html:63 templates/notifications/list.html:113
-#| msgid "certificats"
 msgid "Aucune notification"
 msgstr "No notifications"
 
 #: templates/notifications/bell.html:71
-#| msgid "Voir toutes les formations"
 msgid "Voir toutes les notifications"
 msgstr "See all notifications"
 
 #: templates/notifications/list.html:4 templates/notifications/list.html:10
-#| msgid "Mes formations"
 msgid "Mes notifications"
 msgstr "My notifications"
 
@@ -5631,39 +6532,23 @@ msgstr "My notifications"
 msgid "Tout marquer comme lu"
 msgstr "Mark all as read"
 
-#: templates/notifications/list.html:24
-msgid "Tous"
-msgstr "All"
-
 #: templates/notifications/list.html:44
 msgid "Annonces"
 msgstr "Announcements"
 
-#: templates/notifications/list.html:99
-msgid "Page"
-msgstr "Page"
-
 #: templates/notifications/list.html:114
-#| msgid "Aucune catégorie disponible pour le moment."
 msgid "Vous n'avez aucune notification pour le moment."
 msgstr "You don't have any notifications yet."
-
-#: templates/notifications/send.html:4 templates/notifications/send.html:10
-#| msgid "Enregistrer les modifications"
-msgid "Envoyer une notification"
-msgstr "Send a notification"
 
 #: templates/notifications/send.html:11
 msgid "Réservé aux membres du staff."
 msgstr "For staff members only."
 
 #: templates/notifications/send.html:31
-#| msgid "Titre de la séance"
 msgid "Titre de la notification"
 msgstr "Notification title"
 
 #: templates/notifications/send.html:38
-#| msgid "Code de vérification"
 msgid "Contenu de la notification..."
 msgstr "Notification content..."
 
@@ -5672,17 +6557,14 @@ msgid "Destinataires"
 msgstr "Recipients"
 
 #: templates/notifications/send.html:65
-#| msgid "Nom d'utilisateur unique"
 msgid "Nom d'utilisateur ou email"
 msgstr "Username or email"
 
 #: templates/notifications/send.html:73
-#| msgid "Optionnel"
 msgid "Lien CTA (optionnel)"
 msgstr "CTA link (optional)"
 
 #: templates/notifications/send.html:81
-#| msgid "Code de vérification"
 msgid "Envoyer la notification"
 msgstr "Send notification"
 
@@ -5741,12 +6623,6 @@ msgstr "If you did not make this request, simply ignore this message."
 #| msgid "Rejoins Numeria Institute"
 msgid "À bientôt,\\nL'équipe Numeria Institute"
 msgstr "Join Numeria Institute"
-
-#: templates/registration/password_reset_form.html:6
-#, fuzzy
-#| msgid "Réinitialiser les filtres"
-msgid "Réinitialiser le mot de passe"
-msgstr "Reset filters"
 
 #: templates/registration/password_reset_form.html:7
 msgid "Entrez votre adresse email pour recevoir un lien de réinitialisation."
@@ -6495,9 +7371,6 @@ msgstr "Continue the course"
 
 #~ msgid "Get started with Django"
 #~ msgstr "Get started with Django"
-
-#~ msgid "Django Community"
-#~ msgstr "Django Community"
 
 #~ msgid "Connect, get help, or contribute"
 #~ msgstr "Connect, get help, or contribute"

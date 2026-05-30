@@ -191,7 +191,13 @@ class Candidature(models.Model):
     date_soumission = models.DateTimeField(auto_now_add=True)
     date_decision = models.DateTimeField(null=True, blank=True)
     commentaire_admin = models.TextField(blank=True, verbose_name="Commentaire interne")
-    
+    reviewed_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='reviewed_candidatures', verbose_name="Traité par",
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True, verbose_name="Traité le")
+    rejection_reason = models.TextField(blank=True, verbose_name="Raison de refus")
+
     # Paiement
     paiement = models.OneToOneField(
         'paiements.Paiement',

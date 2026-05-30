@@ -1,0 +1,138 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Candidatures" %}{% endblock %}
+{% block page_heading %}📋 {% trans "Candidatures" %}{% endblock %}
+
+{% block content %}
+<!-- Filters -->
+<div class="flex flex-wrap gap-3 mb-4">
+  <div class="flex flex-wrap gap-1 bg-white rounded-lg border border-slate-200 p-1">
+    <a href="{% url 'admin_panel:candidatures_list' %}{% if q %}?q={{ q }}{% endif %}"
+       class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {% if not statut_filter %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+      {% trans "Toutes" %}
+    </a>
+    {% for val, label in statuts %}
+    <a href="?statut={{ val }}{% if q %}&q={{ q }}{% endif %}"
+       class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {% if statut_filter == val %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+      {{ label }}
+    </a>
+    {% endfor %}
+  </div>
+  <form method="get" class="flex gap-2 flex-1 min-w-48">
+    {% if statut_filter %}<input type="hidden" name="statut" value="{{ statut_filter }}">{% endif %}
+    <input type="text" name="q" value="{{ q }}" placeholder="{% trans 'Nom, email, filière, référence…' %}"
+           class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+    <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm hover:bg-sky-700">{% trans "Chercher" %}</button>
+  </form>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+  {% if page_obj.object_list %}
+  <table class="w-full text-sm">
+    <thead class="bg-slate-50 text-xs text-slate-500 uppercase tracking-wide">
+      <tr>
+        <th class="px-4 py-3 text-left">{% trans "Réf." %}</th>
+        <th class="px-4 py-3 text-left">{% trans "Candidat" %}</th>
+        <th class="px-4 py-3 text-left hidden md:table-cell">{% trans "Filière" %}</th>
+        <th class="px-4 py-3 text-left hidden lg:table-cell">{% trans "Soumis le" %}</th>
+        <th class="px-4 py-3 text-left">{% trans "Statut" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Actions" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for c in page_obj %}
+      <tr class="hover:bg-slate-50 transition-colors">
+        <td class="px-4 py-3 font-mono text-xs text-slate-500">{{ c.reference }}</td>
+        <td class="px-4 py-3">
+          <div class="font-medium text-slate-800">{{ c.prenom }} {{ c.nom }}</div>
+          <div class="text-xs text-slate-400">{{ c.email_personnel }}</div>
+        </td>
+        <td class="px-4 py-3 text-slate-700 hidden md:table-cell">{{ c.campagne.filiere }}</td>
+        <td class="px-4 py-3 text-slate-500 hidden lg:table-cell whitespace-nowrap">{{ c.date_soumission|date:"d/m/Y" }}</td>
+        <td class="px-4 py-3">
+          <span class="badge-{{ c.statut }} text-xs font-semibold px-2 py-1 rounded-full">{{ c.get_statut_display }}</span>
+        </td>
+        <td class="px-4 py-3 text-right">
+          <div class="flex justify-end gap-1">
+            <a href="{% url 'admin_panel:candidature_detail' c.id %}"
+               class="text-sky-600 text-xs px-2 py-1 bg-sky-50 hover:bg-sky-100 rounded-md transition-colors font-medium">
+              {% trans "Voir" %}
+            </a>
+            {% if c.statut == 'soumise' or c.statut == 'en_revue' %}
+            <button type="button" onclick="quickAccept({{ c.id }})"
+                    class="text-green-700 text-xs px-2 py-1 bg-green-50 hover:bg-green-100 rounded-md transition-colors font-medium">
+              {% trans "Accepter" %}
+            </button>
+            <button type="button" onclick="openRejectModal({{ c.id }})"
+                    class="text-red-700 text-xs px-2 py-1 bg-red-50 hover:bg-red-100 rounded-md transition-colors font-medium">
+              {% trans "Refuser" %}
+            </button>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="px-5 py-12 text-center text-slate-400">
+    <div class="text-4xl mb-3">📭</div>
+    <p>{% trans "Aucune candidature trouvée." %}</p>
+  </div>
+  {% endif %}
+</div>
+
+{% include "admin_panel/includes/pagination.html" %}
+
+<!-- Quick accept confirmation modal -->
+<div class="modal-overlay" id="modal-accept">
+  <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+    <h3 class="font-bold text-slate-800 mb-2">✅ {% trans "Confirmer l'acceptation" %}</h3>
+    <p class="text-sm text-slate-600 mb-4">{% trans "Cette action enverra un email et une notification au candidat." %}</p>
+    <form method="post" id="accept-form" action="">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="accept">
+      <textarea name="notes" rows="2" placeholder="{% trans 'Notes admin (optionnel)' %}"
+                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+      <div class="flex gap-2 justify-end">
+        <button type="button" onclick="closeModal('modal-accept')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm hover:bg-slate-200">{% trans "Annuler" %}</button>
+        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">{% trans "Confirmer" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Reject modal -->
+<div class="modal-overlay" id="modal-reject">
+  <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+    <h3 class="font-bold text-slate-800 mb-2">❌ {% trans "Refuser la candidature" %}</h3>
+    <p class="text-sm text-slate-600 mb-4">{% trans "Indiquez la raison (obligatoire). Un email sera envoyé au candidat." %}</p>
+    <form method="post" id="reject-form" action="">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="reject">
+      <textarea name="rejection_reason" rows="3" required placeholder="{% trans 'Raison de refus (obligatoire)…' %}"
+                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-red-400"></textarea>
+      <textarea name="notes" rows="2" placeholder="{% trans 'Notes admin (optionnel)' %}"
+                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+      <div class="flex gap-2 justify-end">
+        <button type="button" onclick="closeModal('modal-reject')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm hover:bg-slate-200">{% trans "Annuler" %}</button>
+        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700">{% trans "Refuser" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function quickAccept(id) {
+  document.getElementById('accept-form').action = '/admin-panel/candidatures/' + id + '/action/';
+  openModal('modal-accept');
+}
+function openRejectModal(id) {
+  document.getElementById('reject-form').action = '/admin-panel/candidatures/' + id + '/action/';
+  openModal('modal-reject');
+}
+</script>
+{% endblock %}

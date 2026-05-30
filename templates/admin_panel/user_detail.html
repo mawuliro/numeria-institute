@@ -1,0 +1,164 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}{{ target.get_full_name|default:target.username }}{% endblock %}
+{% block page_heading %}👤 {{ target.get_full_name|default:target.username }}{% endblock %}
+{% block breadcrumb %}<p class="text-xs text-slate-400 mt-0.5"><a href="{% url 'admin_panel:users_list' %}" class="hover:underline">{% trans "Utilisateurs" %}</a> › {{ target.username }}</p>{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl space-y-5">
+
+  <!-- Action bar -->
+  <div class="bg-white rounded-xl border border-slate-200 p-5 flex flex-wrap gap-3 items-center">
+    <div class="flex gap-2 flex-wrap">
+      {% if target.is_active %}
+      <button type="button" onclick="openModal('modal-deactivate')" class="text-red-700 text-sm px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg font-medium">🚫 {% trans "Désactiver" %}</button>
+      {% else %}
+      <button type="button" onclick="openModal('modal-activate')" class="text-green-700 text-sm px-3 py-2 bg-green-50 hover:bg-green-100 rounded-lg font-medium">✅ {% trans "Activer" %}</button>
+      {% endif %}
+      <button type="button" onclick="openModal('modal-staff')" class="text-blue-700 text-sm px-3 py-2 bg-blue-50 hover:bg-blue-100 rounded-lg font-medium">
+        {% if target.is_staff %}👤 {% trans "Retirer staff" %}{% else %}⭐ {% trans "Rendre staff" %}{% endif %}
+      </button>
+      <button type="button" onclick="openModal('modal-notif')" class="text-purple-700 text-sm px-3 py-2 bg-purple-50 hover:bg-purple-100 rounded-lg font-medium">🔔 {% trans "Notification" %}</button>
+      <button type="button" onclick="openModal('modal-reset')" class="text-orange-700 text-sm px-3 py-2 bg-orange-50 hover:bg-orange-100 rounded-lg font-medium">🔑 {% trans "Réinitialiser MDP" %}</button>
+    </div>
+    <div class="ml-auto flex gap-2">
+      {% if target.is_active %}<span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">{% trans "Actif" %}</span>{% else %}<span class="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full">{% trans "Inactif" %}</span>{% endif %}
+      {% if target.is_staff %}<span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-full">Staff</span>{% endif %}
+      {% if target.is_superuser %}<span class="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-1 rounded-full">Superuser</span>{% endif %}
+    </div>
+  </div>
+
+  <!-- User info -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div class="bg-white rounded-xl border border-slate-200 p-5">
+      <h3 class="font-semibold text-slate-700 mb-3 pb-2 border-b border-slate-100">ℹ️ {% trans "Informations" %}</h3>
+      <dl class="space-y-2 text-sm">
+        <div class="flex gap-2"><dt class="text-slate-500 w-28 shrink-0">{% trans "Nom complet" %}</dt><dd class="font-medium">{{ target.get_full_name|default:"—" }}</dd></div>
+        <div class="flex gap-2"><dt class="text-slate-500 w-28 shrink-0">{% trans "Username" %}</dt><dd class="font-mono">{{ target.username }}</dd></div>
+        <div class="flex gap-2"><dt class="text-slate-500 w-28 shrink-0">{% trans "Email" %}</dt><dd>{{ target.email }}</dd></div>
+        <div class="flex gap-2"><dt class="text-slate-500 w-28 shrink-0">{% trans "Inscription" %}</dt><dd>{{ target.date_joined|date:"d/m/Y H:i" }}</dd></div>
+        <div class="flex gap-2"><dt class="text-slate-500 w-28 shrink-0">{% trans "Dernière connexion" %}</dt><dd>{{ target.last_login|date:"d/m/Y H:i"|default:"—" }}</dd></div>
+      </dl>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-5">
+      <h3 class="font-semibold text-slate-700 mb-3 pb-2 border-b border-slate-100">📚 {% trans "Cours inscrits" %}</h3>
+      {% if inscriptions %}
+      <ul class="space-y-2 text-sm">
+        {% for i in inscriptions %}
+        <li class="flex items-center justify-between">
+          <span class="truncate text-slate-700">{{ i.cours.titre }}</span>
+          <span class="text-xs {% if i.est_termine %}text-green-600{% else %}text-slate-500{% endif %} ml-2 shrink-0">{{ i.progression }}%</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}<p class="text-sm text-slate-400">{% trans "Aucun cours." %}</p>{% endif %}
+    </div>
+  </div>
+
+  <!-- Candidatures -->
+  {% if candidatures %}
+  <div class="bg-white rounded-xl border border-slate-200 p-5">
+    <h3 class="font-semibold text-slate-700 mb-3">📋 {% trans "Candidatures" %}</h3>
+    <ul class="space-y-2 text-sm">
+      {% for c in candidatures %}
+      <li class="flex items-center justify-between">
+        <a href="{% url 'admin_panel:candidature_detail' c.id %}" class="text-sky-700 hover:underline font-mono">{{ c.reference }}</a>
+        <span>{{ c.campagne.filiere }}</span>
+        <span class="badge-{{ c.statut }} text-xs font-semibold px-2 py-1 rounded-full">{{ c.get_statut_display }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Recent notifications -->
+  {% if recent_notifications %}
+  <div class="bg-white rounded-xl border border-slate-200 p-5">
+    <h3 class="font-semibold text-slate-700 mb-3">🔔 {% trans "Notifications récentes" %}</h3>
+    <ul class="space-y-2 text-sm divide-y divide-slate-100">
+      {% for n in recent_notifications %}
+      <li class="pt-2 first:pt-0">
+        <div class="font-medium text-slate-700">{{ n.title }}</div>
+        <div class="text-xs text-slate-400 mt-0.5">{{ n.created_at|date:"d/m/Y H:i" }} · {% if n.is_read %}{% trans "Lu" %}{% else %}{% trans "Non lu" %}{% endif %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- Modals -->
+{% for modal_id, action, title, btn_class, btn_label in actions %}{% endfor %}
+
+<div class="modal-overlay" id="modal-activate">
+  <div class="bg-white rounded-xl p-6 w-full max-w-sm mx-4">
+    <h3 class="font-bold mb-4">✅ {% trans "Activer ce compte ?" %}</h3>
+    <p class="text-sm text-slate-600 mb-4">{{ target.get_full_name|default:target.username }}</p>
+    <form method="post" action="{% url 'admin_panel:user_action' target.id %}">
+      {% csrf_token %}<input type="hidden" name="action" value="toggle_active">
+      <div class="flex gap-2 justify-end">
+        <button type="button" onclick="closeModal('modal-activate')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm">{% trans "Annuler" %}</button>
+        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm">{% trans "Activer" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-deactivate">
+  <div class="bg-white rounded-xl p-6 w-full max-w-sm mx-4">
+    <h3 class="font-bold mb-4">🚫 {% trans "Désactiver ce compte ?" %}</h3>
+    <p class="text-sm text-slate-600 mb-4">{{ target.get_full_name|default:target.username }}</p>
+    <form method="post" action="{% url 'admin_panel:user_action' target.id %}">
+      {% csrf_token %}<input type="hidden" name="action" value="toggle_active">
+      <div class="flex gap-2 justify-end">
+        <button type="button" onclick="closeModal('modal-deactivate')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm">{% trans "Annuler" %}</button>
+        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm">{% trans "Désactiver" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-staff">
+  <div class="bg-white rounded-xl p-6 w-full max-w-sm mx-4">
+    <h3 class="font-bold mb-4">{% if target.is_staff %}{% trans "Retirer le statut staff ?" %}{% else %}{% trans "Rendre staff ?" %}{% endif %}</h3>
+    <form method="post" action="{% url 'admin_panel:user_action' target.id %}">
+      {% csrf_token %}<input type="hidden" name="action" value="toggle_staff">
+      <div class="flex gap-2 justify-end">
+        <button type="button" onclick="closeModal('modal-staff')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm">{% trans "Annuler" %}</button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">{% trans "Confirmer" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-notif">
+  <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+    <h3 class="font-bold mb-4">🔔 {% trans "Envoyer une notification" %}</h3>
+    <form method="post" action="{% url 'admin_panel:user_action' target.id %}">
+      {% csrf_token %}<input type="hidden" name="action" value="send_notification">
+      <input type="text" name="notif_title" required placeholder="{% trans 'Titre' %}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-3">
+      <textarea name="notif_message" rows="3" required placeholder="{% trans 'Message' %}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-4"></textarea>
+      <div class="flex gap-2 justify-end">
+        <button type="button" onclick="closeModal('modal-notif')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm">{% trans "Annuler" %}</button>
+        <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm">{% trans "Envoyer" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-reset">
+  <div class="bg-white rounded-xl p-6 w-full max-w-sm mx-4">
+    <h3 class="font-bold mb-4">🔑 {% trans "Réinitialiser le mot de passe" %}</h3>
+    <p class="text-sm text-slate-600 mb-4">{% trans "Un email sera envoyé à" %} {{ target.email }}.</p>
+    <form method="post" action="{% url 'admin_panel:user_action' target.id %}">
+      {% csrf_token %}<input type="hidden" name="action" value="reset_password">
+      <div class="flex gap-2 justify-end">
+        <button type="button" onclick="closeModal('modal-reset')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm">{% trans "Annuler" %}</button>
+        <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm">{% trans "Envoyer l'email" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

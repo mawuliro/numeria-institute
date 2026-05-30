@@ -166,6 +166,61 @@ def send_mentorship_confirmation_to_mentor(mentor, mentee, language=None):
         )
 
 
+def send_candidacy_rejection_email(user, programme_name, rejection_reason=None, language=None):
+    """
+    Send a polite rejection email when an admin rejects a candidacy.
+    Called from admin_panel/views.py.
+    """
+    if not user.email:
+        logger.warning('send_candidacy_rejection_email: user %s has no email', user.pk)
+        return
+    try:
+        language = _get_language(language)
+        subject = (
+            'Your application result — Numeria Institute'
+            if language == 'en'
+            else 'Résultat de votre candidature — Numeria Institute'
+        )
+        html_body = _render_template(
+            f'emails/candidacy_rejection_{language}.html',
+            {
+                'user': user,
+                'programme_name': programme_name,
+                'rejection_reason': rejection_reason,
+                'site_name': 'Numeria Institute',
+            },
+            language=language,
+        )
+        text_content = strip_tags(html_body)
+        _send_html_email(subject, text_content, html_body, [user.email])
+        logger.info('send_candidacy_rejection_email: sent OK to %s', user.email)
+    except Exception as e:
+        logger.error('send_candidacy_rejection_email: FAILED for %s — %s', user.email, e)
+
+
+def send_contact_reply_email(to_email, to_name, subject, reply_message, staff_name):
+    """
+    Send a reply email to a contact message sender.
+    Called from admin_panel/views.py when staff replies to a contact message.
+    """
+    if not to_email:
+        return
+    try:
+        html_body = render_to_string('emails/contact_reply.html', {
+            'to_name': to_name,
+            'subject': subject,
+            'reply_message': reply_message,
+            'staff_name': staff_name,
+            'site_name': 'Numeria Institute',
+        })
+        text_content = strip_tags(html_body)
+        _send_html_email(subject, text_content, html_body, [to_email])
+        logger.info('send_contact_reply_email: sent OK to %s', to_email)
+    except Exception as e:
+        logger.error('send_contact_reply_email: FAILED for %s — %s', to_email, e)
+        raise
+
+
 # ─── KEPT FOR REFERENCE — no longer called from views ─────────────────────────
 
 def send_verification_email(request, user, language=None):

@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'mentorat',
     'formation',  # ← NOUVEAU: Formations payantes
     'notifications',
+    'admin_panel',
 ]
 
 
@@ -87,6 +88,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
+                'admin_panel.context_processors.staff_counts',
             ],
         },
     },
