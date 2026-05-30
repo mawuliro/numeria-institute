@@ -472,3 +472,109 @@ def image_upload(request):
         file_size=f.size,
     )
     return JsonResponse({'ok': True, 'url': media.file.url, 'name': media.name, 'id': media.id})
+
+
+# ─── INSERT-IN-LESSON API ENDPOINTS ───────────────────────────────────────────
+
+@staff_only
+def api_courses(request):
+    """GET /api/courses/ — list all courses for the insert-in-lesson modal."""
+    from cours.models import Cours
+    courses = list(
+        Cours.objects.order_by('titre').values('id', 'titre', 'slug', 'status')
+    )
+    for c in courses:
+        c['title'] = c.pop('titre')
+    return JsonResponse({'courses': courses})
+
+
+@staff_only
+def api_course_modules(request, slug):
+    """GET /api/courses/<slug>/modules/ — list modules for a course."""
+    from cours.models import Cours, Module
+    cours = get_object_or_404(Cours, slug=slug)
+    modules = list(
+        Module.objects.filter(cours=cours).order_by('ordre').values('id', 'titre', 'ordre')
+    )
+    return JsonResponse({'modules': modules})
+
+
+@staff_only
+def api_module_lessons(request, module_id):
+    """GET /api/modules/<id>/lessons/ — list lessons for a module."""
+    from cours.models import Module, Lecon
+    module = get_object_or_404(Module, id=module_id)
+    lessons = list(
+        Lecon.objects.filter(module=module).order_by('ordre').values('id', 'titre', 'ordre')
+    )
+    return JsonResponse({'lessons': lessons})
+
+
+@staff_only
+@require_POST
+def api_lesson_insert_sandbox(request, lesson_id):
+    """POST /api/lessons/<id>/insert-sandbox/ — append [SANDBOX] marker to lesson content."""
+    from cours.models import Lecon
+    lesson = get_object_or_404(Lecon, id=lesson_id)
+    try:
+        body   = json.loads(request.body)
+        marker = body.get('marker', '').strip()
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    if not marker:
+        return JsonResponse({'error': 'Empty marker'}, status=400)
+    lesson.contenu = (lesson.contenu or '') + '\n\n' + marker
+    lesson.save(update_fields=['contenu'])
+    return JsonResponse({'success': True, 'lesson_title': lesson.titre})
+
+
+@staff_only
+def api_formations(request):
+    """GET /api/formations/ — list all formations."""
+    from formation.models import Formation
+    formations = list(
+        Formation.objects.order_by('titre').values('id', 'titre', 'slug')
+    )
+    for f in formations:
+        f['title'] = f.pop('titre')
+    return JsonResponse({'formations': formations})
+
+
+@staff_only
+def api_formation_modules(request, slug):
+    """GET /api/formations/<slug>/modules/ — list modules for a formation."""
+    from formation.models import Formation, FormationModule
+    formation = get_object_or_404(Formation, slug=slug)
+    modules = list(
+        FormationModule.objects.filter(formation=formation).order_by('ordre').values('id', 'titre', 'ordre')
+    )
+    return JsonResponse({'modules': modules})
+
+
+@staff_only
+def api_formation_module_lessons(request, module_id):
+    """GET /api/formation-modules/<id>/lessons/ — list lessons for a formation module."""
+    from formation.models import FormationModule, FormationLesson
+    module = get_object_or_404(FormationModule, id=module_id)
+    lessons = list(
+        FormationLesson.objects.filter(module=module).order_by('ordre').values('id', 'titre', 'ordre')
+    )
+    return JsonResponse({'lessons': lessons})
+
+
+@staff_only
+@require_POST
+def api_formation_lesson_insert_sandbox(request, lesson_id):
+    """POST /api/formation-lessons/<id>/insert-sandbox/ — append [SANDBOX] to formation lesson."""
+    from formation.models import FormationLesson
+    lesson = get_object_or_404(FormationLesson, id=lesson_id)
+    try:
+        body   = json.loads(request.body)
+        marker = body.get('marker', '').strip()
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    if not marker:
+        return JsonResponse({'error': 'Empty marker'}, status=400)
+    lesson.contenu = (lesson.contenu or '') + '\n\n' + marker
+    lesson.save(update_fields=['contenu'])
+    return JsonResponse({'success': True, 'lesson_title': lesson.titre})

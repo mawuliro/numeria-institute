@@ -1,0 +1,607 @@
+{% load i18n sandbox_tags %}
+{#
+  Full Python IDE — shared component used by both admin sandbox and dashboard.
+
+  Parameters (via {% include 'sandbox/full_sandbox.html' with ... %}):
+    sandbox_id          : unique string ID, no spaces (required)
+    height              : CodeMirror min-height px (default 350)
+    auto_load_pkgs      : True = pre-load all packages at init (admin mode)
+    show_insert_lesson  : True = show "Insérer dans leçon" button (staff only)
+    initial_code        : pre-filled Python code (optional)
+#}
+{% with sid=sandbox_id|default:"sandbox" h=height|default:350 %}
+<div class="fsbx-root rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+
+  {# ── HEADER ─────────────────────────────────────────────────────────── #}
+  <div class="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+    <span class="font-bold text-numeria-bleu dark:text-numeria-teal text-sm">🐍 Sandbox Python</span>
+    <div id="fsbx-{{ sid }}-status"
+         class="text-xs text-sky-600 bg-sky-50 dark:bg-sky-900/30 dark:text-sky-400 px-2 py-0.5 rounded-full flex items-center gap-1.5">
+      <svg class="animate-spin w-2.5 h-2.5" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+      </svg>
+      <span id="fsbx-{{ sid }}-status-msg">
+        {% if auto_load_pkgs %}Chargement numpy, matplotlib, pandas…{% else %}{% trans "Chargement de Python…" %}{% endif %}
+      </span>
+    </div>
+    <div class="ml-auto">
+      <a href="{% url 'sandbox_page' %}" target="_blank" rel="noopener"
+         class="text-xs text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+         title="{% trans 'Ouvrir en plein écran' %}">↗️</a>
+    </div>
+  </div>
+
+  {# ── SCRIPTS + PACKAGES bar ─────────────────────────────────────────── #}
+  <div class="flex flex-wrap items-center gap-3 px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+    {# Script manager #}
+    <div class="flex items-center gap-2 flex-1 min-w-0">
+      <span class="text-xs text-gray-400 flex-shrink-0">📁</span>
+      <select id="fsbx-{{ sid }}-scripts-sel"
+              class="flex-1 min-w-0 text-xs bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-1.5">
+        <option value="">— {% trans "Mes scripts" %} —</option>
+      </select>
+      <input type="text" id="fsbx-{{ sid }}-script-name"
+             placeholder="{% trans 'Nom du script…' %}"
+             class="w-28 flex-shrink-0 text-xs bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-1.5 focus:border-sky-400 focus:outline-none">
+      <button type="button" onclick="fsbx_{{ sid }}.newScript()"
+              class="flex-shrink-0 text-xs text-sky-600 dark:text-sky-400 hover:underline">+ {% trans "Nouveau" %}</button>
+    </div>
+
+    {# Package toggles (always shown; if auto_load_pkgs they start checked/loaded) #}
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 flex-shrink-0">
+      <span class="text-xs text-gray-400">📦</span>
+      {% for pkg in "numpy,matplotlib,pandas,scipy,sympy"|split:"," %}
+      <label class="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300 cursor-pointer hover:text-sky-600 dark:hover:text-sky-400">
+        <input type="checkbox" id="fsbx-{{ sid }}-pkg-cb-{{ pkg }}"
+               {% if auto_load_pkgs %}checked{% endif %}
+               onchange="fsbx_{{ sid }}.togglePkg('{{ pkg }}',this.checked)">
+        {{ pkg }}<span id="fsbx-{{ sid }}-pkg-st-{{ pkg }}" class="text-gray-400">{% if auto_load_pkgs %} ⏳{% endif %}</span>
+      </label>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# ── CODE EDITOR ─────────────────────────────────────────────────────── #}
+  <div id="fsbx-{{ sid }}-cm-wrap" style="min-height:{{ h }}px;"></div>
+
+  {# ── TOOLBAR ─────────────────────────────────────────────────────────── #}
+  <div class="flex flex-wrap items-center gap-2 px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+    <button type="button" id="fsbx-{{ sid }}-run-btn" disabled
+            onclick="fsbx_{{ sid }}.run()"
+            class="flex items-center gap-1.5 bg-numeria-bleu hover:bg-blue-800 text-white text-xs font-bold px-3 py-2 rounded-lg disabled:opacity-50 transition-colors">
+      ▶ {% trans "Exécuter" %}
+    </button>
+    <button type="button" onclick="fsbx_{{ sid }}.save()"
+            class="text-xs bg-slate-100 dark:bg-gray-700 hover:bg-slate-200 dark:hover:bg-gray-600 text-slate-700 dark:text-gray-200 px-3 py-2 rounded-lg font-semibold transition-colors">
+      💾 {% trans "Sauvegarder" %}
+    </button>
+    <button type="button" onclick="fsbx_{{ sid }}.clear()"
+            class="text-xs text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 px-2 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            title="{% trans 'Effacer le code' %}">🗑️</button>
+    <button type="button" onclick="fsbx_{{ sid }}.copy()"
+            id="fsbx-{{ sid }}-copy-btn"
+            class="text-xs text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 px-2 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            title="{% trans 'Copier le code' %}">📋</button>
+    {% if show_insert_lesson %}
+    <button type="button" onclick="fsbx_{{ sid }}.openInsertModal()"
+            class="text-xs bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-400 px-3 py-2 rounded-lg font-semibold transition-colors">
+      📌 {% trans "Insérer dans leçon" %}
+    </button>
+    {% endif %}
+    {# Snippet buttons #}
+    <div class="ml-auto flex gap-1">
+      <button type="button" onclick="fsbx_{{ sid }}.snippet('for i in range(10):\n    print(i)\n')"
+              class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-1.5 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">for</button>
+      <button type="button" onclick="fsbx_{{ sid }}.snippet('def f(x):\n    return x\n')"
+              class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-1.5 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">def</button>
+      <button type="button" onclick="fsbx_{{ sid }}.snippet('import numpy as np\n')"
+              class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-1.5 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">np</button>
+      <button type="button" onclick="fsbx_{{ sid }}.snippet('import matplotlib.pyplot as plt\nplt.figure()\nplt.plot([1,2,3],[4,5,6])\nplt.show()\n')"
+              class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-1.5 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">plt</button>
+      <button type="button" onclick="fsbx_{{ sid }}.snippet('class MyClass:\n    def __init__(self):\n        pass\n')"
+              class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-1.5 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">class</button>
+    </div>
+  </div>
+
+  {# ── OUTPUT PANEL ────────────────────────────────────────────────────── #}
+  <div id="fsbx-{{ sid }}-out-wrap" style="display:none;" class="border-t border-gray-200 dark:border-gray-700">
+    <div class="flex items-center px-4 py-1.5 bg-gray-800">
+      <span class="text-xs text-gray-400 font-mono">OUTPUT</span>
+      <button type="button" onclick="document.getElementById('fsbx-{{ sid }}-out-wrap').style.display='none'"
+              class="ml-auto text-gray-500 hover:text-gray-300 text-xs transition-colors">✕</button>
+    </div>
+    <pre id="fsbx-{{ sid }}-out"
+         class="bg-gray-900 text-green-400 font-mono text-sm px-4 py-3 overflow-auto max-h-48 whitespace-pre-wrap min-h-8"></pre>
+    <div id="fsbx-{{ sid }}-plot-wrap" class="hidden bg-gray-900 px-4 pb-3">
+      <img id="fsbx-{{ sid }}-plot-img" src="" alt="plot" class="max-w-full rounded-lg">
+    </div>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════════════════════════════════
+   INSERT-IN-LESSON MODAL (staff only)
+══════════════════════════════════════════════════════════════════════════ #}
+{% if show_insert_lesson %}
+<div id="fsbx-{{ sid }}-insert-modal"
+     role="dialog" aria-modal="true" aria-label="Insérer sandbox dans une leçon"
+     style="display:none;"
+     class="fixed inset-0 z-[10050] flex items-center justify-center p-4">
+  {# Backdrop #}
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+       onclick="fsbx_{{ sid }}.closeInsertModal()"></div>
+
+  {# Modal panel #}
+  <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
+
+    {# Header #}
+    <div class="flex items-center gap-3 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+      <span class="text-base">📋</span>
+      <h2 class="font-bold text-gray-900 dark:text-gray-100 text-sm">Insérer ce sandbox dans une leçon</h2>
+      <button type="button" onclick="fsbx_{{ sid }}.closeInsertModal()"
+              class="ml-auto text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-lg transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              aria-label="Fermer">✕</button>
+    </div>
+
+    <div class="px-6 py-5 space-y-5">
+
+      {# Marker display #}
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+          Copie ce marqueur et colle-le dans le contenu d'une leçon via l'éditeur EasyMDE :
+        </p>
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600 p-3 relative">
+          <code id="fsbx-{{ sid }}-marker-text"
+                class="text-xs text-sky-700 dark:text-sky-400 font-mono break-all select-all block"></code>
+          <button type="button" id="fsbx-{{ sid }}-copy-marker-btn"
+                  onclick="fsbx_{{ sid }}.copyMarker()"
+                  class="absolute top-2 right-2 text-xs bg-sky-600 hover:bg-sky-500 text-white px-2.5 py-1 rounded-lg transition-colors font-medium">
+            📋 Copier
+          </button>
+        </div>
+      </div>
+
+      {# Divider #}
+      <div class="flex items-center gap-3">
+        <div class="flex-1 border-t border-gray-200 dark:border-gray-700"></div>
+        <span class="text-xs text-gray-400">ou insère directement</span>
+        <div class="flex-1 border-t border-gray-200 dark:border-gray-700"></div>
+      </div>
+
+      {# Toggle: Cours / Formation #}
+      <div class="flex gap-1 bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
+        <button type="button" id="fsbx-{{ sid }}-tab-cours"
+                onclick="fsbx_{{ sid }}.switchInsertTab('cours')"
+                class="flex-1 text-xs font-semibold px-3 py-2 rounded-lg transition-colors bg-white dark:bg-gray-700 text-sky-700 dark:text-sky-400 shadow-sm">
+          📚 Cours
+        </button>
+        <button type="button" id="fsbx-{{ sid }}-tab-formation"
+                onclick="fsbx_{{ sid }}.switchInsertTab('formation')"
+                class="flex-1 text-xs font-semibold px-3 py-2 rounded-lg transition-colors text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+          🎓 Formation
+        </button>
+      </div>
+
+      {# Selectors #}
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1"
+                 id="fsbx-{{ sid }}-content-label">Sélectionne un cours :</label>
+          <select id="fsbx-{{ sid }}-ins-content"
+                  onchange="fsbx_{{ sid }}.loadInsertModules(this.value)"
+                  class="w-full text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 focus:border-sky-400 focus:outline-none">
+            <option value="">— Choisir… —</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">Sélectionne un module :</label>
+          <select id="fsbx-{{ sid }}-ins-module"
+                  onchange="fsbx_{{ sid }}.loadInsertLessons(this.value)"
+                  class="w-full text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 focus:border-sky-400 focus:outline-none"
+                  disabled>
+            <option value="">— Choisir d'abord un cours —</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">Sélectionne une leçon :</label>
+          <select id="fsbx-{{ sid }}-ins-lesson"
+                  class="w-full text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 focus:border-sky-400 focus:outline-none"
+                  disabled>
+            <option value="">— Choisir d'abord un module —</option>
+          </select>
+        </div>
+      </div>
+
+      {# Insert button #}
+      <button type="button" id="fsbx-{{ sid }}-insert-btn"
+              onclick="fsbx_{{ sid }}.doInsert()"
+              class="w-full bg-sky-600 hover:bg-sky-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-colors text-sm">
+        ✅ Insérer automatiquement dans cette leçon
+      </button>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{# ══════════════════════════════════════════════════════════════════════════
+   JAVASCRIPT — IIFE scoped to sandbox_id
+══════════════════════════════════════════════════════════════════════════ #}
+<script>
+(function(){
+'use strict';
+
+var SID          = "{{ sid|escapejs }}";
+var HEIGHT       = {{ h }};
+var AUTO_PKGS    = {% if auto_load_pkgs %}true{% else %}false{% endif %};
+var LS_CODE_KEY  = 'nb_fsbx_' + SID + '_code';
+var LS_PKG_KEY   = 'nb_fsbx_' + SID + '_pkgs';
+var CSRF         = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+var INSERT_MODE  = 'cours';
+
+var cm       = null;
+var pyReady  = false;
+var currentScriptId = null;
+
+function g(id){ return document.getElementById('fsbx-'+SID+'-'+id); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── Pyodide init ── */
+function initPyodide(){
+  if(!window._numeriaPyodideReady){
+    window._numeriaPyodideReady = (typeof loadPyodide === 'function')
+      ? (AUTO_PKGS
+          ? loadPyodide().then(function(py){ return py.loadPackage(['numpy','matplotlib','pandas','scipy','sympy']).then(function(){return py;}); })
+          : loadPyodide())
+      : new Promise(function(resolve){
+          var s=document.createElement('script');
+          s.src='https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js';
+          s.onload=function(){
+            var p=AUTO_PKGS
+              ? loadPyodide().then(function(py){return py.loadPackage(['numpy','matplotlib','pandas','scipy','sympy']).then(function(){return py;});})
+              : loadPyodide();
+            p.then(resolve);
+          };
+          document.head.appendChild(s);
+        });
+  }
+  window._numeriaPyodideReady.then(function(){
+    pyReady=true;
+    var st=g('status'); if(st) st.style.display='none';
+    var btn=g('run-btn'); if(btn) btn.disabled=false;
+    if(AUTO_PKGS){
+      ['numpy','matplotlib','pandas','scipy','sympy'].forEach(function(p){
+        var st=g('pkg-st-'+p); if(st) st.textContent=' ✓';
+      });
+    }
+  }).catch(function(e){
+    var msg=g('status-msg'); if(msg) msg.textContent='Erreur Python: '+e;
+  });
+}
+
+/* ── CodeMirror init ── */
+function initCM(){
+  if(!window.CodeMirror){ setTimeout(initCM,100); return; }
+  var wrap = g('cm-wrap');
+  if(!wrap||cm) return;
+  var savedCode = localStorage.getItem(LS_CODE_KEY);
+  var initCode  = savedCode || '{{ initial_code|default:"# Sandbox Python\\nprint(\\"Hello Numeria ! 🎓\\")"| escapejs }}';
+  cm = CodeMirror(wrap, {
+    value: initCode,
+    mode:'python', theme:'dracula', lineNumbers:true,
+    indentUnit:4, tabSize:4, indentWithTabs:false,
+    lineWrapping:true, viewportMargin:Infinity, autoCloseBrackets:true,
+    extraKeys:{
+      Tab:function(c){c.replaceSelection('    ','end');},
+      'Ctrl-Enter':function(){obj.run();},
+      'Cmd-Enter':function(){obj.run();},
+    },
+  });
+  cm.getWrapperElement().style.minHeight = HEIGHT + 'px';
+  cm.on('change',function(){
+    localStorage.setItem(LS_CODE_KEY, cm.getValue());
+  });
+  restorePkgs();
+  loadScripts();
+}
+
+/* ── Public API — accessed as fsbx_{sid}.method() from HTML ── */
+var obj = window['fsbx_'+SID] = {
+
+  run: async function() {
+    if(!pyReady){ initPyodide(); setTimeout(obj.run, 500); return; }
+    var code = cm ? cm.getValue() : '';
+    var out  = g('out');
+    var wrap = g('out-wrap');
+    var btn  = g('run-btn');
+    btn.disabled=true; btn.innerHTML='⏳ …';
+    wrap.style.display='block';
+    out.textContent='…'; out.style.color='#9ca3af';
+    try {
+      var py = await window._numeriaPyodideReady;
+      await py.loadPackagesFromImports(code);
+      py.globals.set('_fsbx_code_'+SID.replace(/[^a-zA-Z0-9]/g,'_'), code);
+      var vn = '_fsbx_code_'+SID.replace(/[^a-zA-Z0-9]/g,'_');
+      var r = await py.runPythonAsync(
+        'import sys\nfrom io import StringIO\n_o=StringIO()\nsys.stdout=_o\n' +
+        'try:\n    exec('+vn+',{})\nexcept Exception as e:\n    print(f"❌ {type(e).__name__}: {e}")\n' +
+        'finally:\n    sys.stdout=sys.__stdout__\n_o.getvalue()'
+      );
+      out.textContent = r || '(aucun output)';
+      out.style.color  = String(r).startsWith('❌') ? '#f87171' : '#4ade80';
+      // Matplotlib capture
+      try {
+        var b64 = String(await py.runPythonAsync(
+          'import matplotlib.pyplot as _p,io as _i,base64 as _b\n' +
+          '_buf=_i.BytesIO()\n_p.savefig(_buf,format="png",bbox_inches="tight")\n' +
+          '_buf.seek(0)\n_b.b64encode(_buf.read()).decode()'
+        ));
+        g('plot-img').src = 'data:image/png;base64,' + b64;
+        g('plot-wrap').classList.remove('hidden');
+        await py.runPythonAsync('import matplotlib.pyplot as _p\n_p.clf()');
+      } catch(_){ g('plot-wrap').classList.add('hidden'); }
+    } catch(e){
+      out.innerHTML = '<span style="color:#f87171">'+esc(String(e))+'</span>';
+      out.style.color = '';
+    }
+    btn.disabled=false; btn.innerHTML='▶ {% trans "Exécuter" %}';
+  },
+
+  save: function() {
+    var titleEl = g('script-name');
+    var title   = titleEl ? titleEl.value.trim() : '';
+    if(!title) title = 'Script ' + new Date().toLocaleDateString('fr-FR');
+    var code = cm ? cm.getValue() : '';
+    fetch('{% url "sandbox_save_script" %}', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+      body: JSON.stringify({id: currentScriptId||null, titre: title, code: code}),
+    }).then(function(r){return r.json();}).then(function(d){
+      if(d.ok){
+        currentScriptId = d.id;
+        if(titleEl) titleEl.value = d.titre;
+        loadScripts();
+        if(window.nbToast) nbToast('Script «'+d.titre+'» sauvegardé ✓','success');
+      }
+    }).catch(function(){});
+  },
+
+  clear: function(){
+    if(cm) cm.setValue('');
+    localStorage.removeItem(LS_CODE_KEY);
+  },
+
+  copy: function(){
+    var code = cm ? cm.getValue() : '';
+    var btn  = g('copy-btn');
+    navigator.clipboard.writeText(code).then(function(){
+      if(btn){ btn.textContent='✅'; setTimeout(function(){ btn.textContent='📋'; },2000); }
+    }).catch(function(){});
+  },
+
+  snippet: function(code){
+    if(cm) cm.replaceSelection(code.replace(/\\n/g,'\n').replace(/\\t/g,'\t'));
+  },
+
+  newScript: function(){
+    currentScriptId = null;
+    var nameEl = g('script-name');
+    if(nameEl) nameEl.value = '';
+    var sel = g('scripts-sel');
+    if(sel) sel.value = '';
+    if(cm) cm.setValue('# Nouveau script\n');
+  },
+
+  togglePkg: function(pkg, load){
+    var st = g('pkg-st-'+pkg);
+    if(!load){ if(st) st.textContent=''; savePkgs(); return; }
+    if(st) st.textContent=' ⏳';
+    if(!window._numeriaPyodideReady){ initPyodide(); }
+    window._numeriaPyodideReady && window._numeriaPyodideReady.then(function(py){
+      py.loadPackage(pkg).then(function(){
+        if(st) st.textContent=' ✓';
+        savePkgs();
+      }).catch(function(){ if(st) st.textContent=' ❌'; });
+    });
+  },
+
+  /* ── Insert-in-lesson modal ── */
+  openInsertModal: function(){
+    var modal = g('insert-modal');
+    if(!modal) return;
+    var code   = cm ? cm.getValue() : '';
+    var marker = '[SANDBOX title="Essaie toi-même" code="' +
+                 code.replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\n/g,'\\n').replace(/\r/g,'\\r')
+                 + '"]';
+    var markerEl = g('marker-text');
+    if(markerEl) markerEl.textContent = marker;
+    modal.style.display = 'flex';
+    obj.switchInsertTab('cours');
+    obj.loadInsertContents();
+    // Focus trap
+    setTimeout(function(){ var b=g('copy-marker-btn'); if(b) b.focus(); },50);
+  },
+
+  closeInsertModal: function(){
+    var modal = g('insert-modal'); if(modal) modal.style.display='none';
+  },
+
+  copyMarker: function(){
+    var markerEl = g('marker-text');
+    var btn      = g('copy-marker-btn');
+    if(!markerEl) return;
+    navigator.clipboard.writeText(markerEl.textContent).then(function(){
+      if(btn){ btn.textContent='✅ Copié !'; setTimeout(function(){ btn.textContent='📋 Copier'; },2000); }
+    }).catch(function(){
+      // Fallback: select text
+      var range = document.createRange(); range.selectNode(markerEl);
+      window.getSelection().removeAllRanges(); window.getSelection().addRange(range);
+    });
+  },
+
+  switchInsertTab: function(mode){
+    INSERT_MODE = mode;
+    var lbl = g('content-label');
+    var tabC = g('tab-cours'), tabF = g('tab-formation');
+    var active   = 'bg-white dark:bg-gray-700 text-sky-700 dark:text-sky-400 shadow-sm';
+    var inactive = 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700';
+    if(mode==='cours'){
+      tabC.className = tabC.className.replace(/text-gray-500[^"]*|hover:[^"]+/g,'') + ' ' + active;
+      tabF.className = tabF.className.replace(/bg-white[^"]*|shadow-sm[^"]*|text-sky-700[^"]*|dark:text-sky-400/g,'') + ' ' + inactive;
+      if(lbl) lbl.textContent = 'Sélectionne un cours :';
+    } else {
+      tabF.className = tabF.className.replace(/text-gray-500[^"]*|hover:[^"]+/g,'') + ' ' + active;
+      tabC.className = tabC.className.replace(/bg-white[^"]*|shadow-sm[^"]*|text-sky-700[^"]*|dark:text-sky-400/g,'') + ' ' + inactive;
+      if(lbl) lbl.textContent = 'Sélectionne une formation :';
+    }
+    obj.loadInsertContents();
+  },
+
+  loadInsertContents: function(){
+    var sel = g('ins-content');
+    if(!sel) return;
+    var url = INSERT_MODE==='cours'
+      ? '/fr/admin-panel/api/courses/'
+      : '/fr/admin-panel/api/formations/';
+    sel.innerHTML = '<option value="">— Chargement… —</option>';
+    sel.disabled  = true;
+    fetch(url).then(function(r){return r.json();}).then(function(d){
+      var items = INSERT_MODE==='cours' ? d.courses : d.formations;
+      sel.innerHTML = '<option value="">— Choisir… —</option>';
+      (items||[]).forEach(function(c){
+        sel.add(new Option(c.title||c.titre, c.id + '|' + (c.slug||'')));
+      });
+      sel.disabled = false;
+      g('ins-module').innerHTML = '<option value="">— Choisir d\'abord un cours —</option>';
+      g('ins-module').disabled  = true;
+      g('ins-lesson').innerHTML = '<option value="">— Choisir d\'abord un module —</option>';
+      g('ins-lesson').disabled  = true;
+    }).catch(function(){ sel.disabled=false; });
+  },
+
+  loadInsertModules: function(val){
+    if(!val) return;
+    var parts = val.split('|');
+    var slug  = parts[1] || parts[0];
+    var sel   = g('ins-module');
+    sel.innerHTML = '<option value="">— Chargement… —</option>';
+    sel.disabled = true;
+    var url = INSERT_MODE==='cours'
+      ? '/fr/admin-panel/api/courses/'+slug+'/modules/'
+      : '/fr/admin-panel/api/formations/'+slug+'/modules/';
+    fetch(url).then(function(r){return r.json();}).then(function(d){
+      sel.innerHTML = '<option value="">— Choisir un module —</option>';
+      (d.modules||[]).forEach(function(m){ sel.add(new Option(m.titre||m.title, m.id)); });
+      sel.disabled = false;
+      g('ins-lesson').innerHTML = '<option value="">— Choisir d\'abord un module —</option>';
+      g('ins-lesson').disabled  = true;
+    }).catch(function(){ sel.disabled=false; });
+  },
+
+  loadInsertLessons: function(moduleId){
+    if(!moduleId) return;
+    var sel = g('ins-lesson');
+    sel.innerHTML = '<option value="">— Chargement… —</option>';
+    sel.disabled = true;
+    var url = INSERT_MODE==='cours'
+      ? '/fr/admin-panel/api/modules/'+moduleId+'/lessons/'
+      : '/fr/admin-panel/api/formation-modules/'+moduleId+'/lessons/';
+    fetch(url).then(function(r){return r.json();}).then(function(d){
+      sel.innerHTML = '<option value="">— Choisir une leçon —</option>';
+      (d.lessons||[]).forEach(function(l){ sel.add(new Option(l.titre||l.title, l.id)); });
+      sel.disabled = false;
+    }).catch(function(){ sel.disabled=false; });
+  },
+
+  doInsert: function(){
+    var lessonSel = g('ins-lesson');
+    var lessonId  = lessonSel ? lessonSel.value : '';
+    if(!lessonId){ if(window.nbToast) nbToast('Sélectionne une leçon d\'abord.','warning'); return; }
+    var markerEl = g('marker-text');
+    var marker   = markerEl ? markerEl.textContent : '';
+    var url = INSERT_MODE==='cours'
+      ? '/fr/admin-panel/api/lessons/'+lessonId+'/insert-sandbox/'
+      : '/fr/admin-panel/api/formation-lessons/'+lessonId+'/insert-sandbox/';
+    var btn = g('insert-btn');
+    if(btn){ btn.disabled=true; btn.textContent='⏳ Insertion…'; }
+    fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+      body: JSON.stringify({marker: marker}),
+    }).then(function(r){return r.json();}).then(function(d){
+      if(d.success){
+        if(window.nbToast) nbToast('✅ Sandbox inséré dans «'+d.lesson_title+'»','success');
+        obj.closeInsertModal();
+      } else {
+        if(window.nbToast) nbToast('Erreur lors de l\'insertion.','error');
+      }
+    }).catch(function(){
+      if(window.nbToast) nbToast('Erreur réseau.','error');
+    }).finally(function(){
+      if(btn){ btn.disabled=false; btn.textContent='✅ Insérer automatiquement dans cette leçon'; }
+    });
+  },
+};
+
+/* ── Script manager helpers ── */
+function loadScripts(){
+  fetch('{% url "sandbox_list_scripts" %}').then(function(r){return r.json();}).then(function(d){
+    var sel = g('scripts-sel'); if(!sel) return;
+    while(sel.options.length>1) sel.remove(1);
+    (d.scripts||[]).forEach(function(s){
+      var opt = new Option(s.titre, s.id);
+      sel.add(opt);
+      if(currentScriptId && s.id==currentScriptId) sel.value = s.id;
+    });
+  }).catch(function(){});
+}
+
+// Wire the scripts select onchange
+document.addEventListener('DOMContentLoaded', function(){
+  var sel = g('scripts-sel');
+  if(sel) sel.addEventListener('change', function(){
+    var id = sel.value;
+    if(!id){ currentScriptId=null; return; }
+    fetch('{% url "sandbox_load_script" 0 %}'.replace('/0/','/'+id+'/'))
+      .then(function(r){return r.json();}).then(function(d){
+        if(cm) cm.setValue(d.code);
+        currentScriptId = d.id;
+        var nameEl = g('script-name'); if(nameEl) nameEl.value = d.titre;
+      }).catch(function(){});
+  });
+});
+
+/* ── Package state persistence ── */
+function savePkgs(){
+  var pkgs=[];
+  document.querySelectorAll('#fsbx-'+SID+'-pkg-cb-numpy, #fsbx-'+SID+'-pkg-cb-matplotlib, #fsbx-'+SID+'-pkg-cb-pandas, #fsbx-'+SID+'-pkg-cb-scipy, #fsbx-'+SID+'-pkg-cb-sympy').forEach(function(cb){
+    if(cb.checked) pkgs.push(cb.dataset.pkg||cb.id.split('-pkg-cb-').pop());
+  });
+  localStorage.setItem(LS_PKG_KEY, JSON.stringify(pkgs));
+}
+function restorePkgs(){
+  if(AUTO_PKGS) return;
+  var pkgs = JSON.parse(localStorage.getItem(LS_PKG_KEY)||'[]');
+  pkgs.forEach(function(p){
+    var cb = document.getElementById('fsbx-'+SID+'-pkg-cb-'+p);
+    if(cb && !cb.checked){ cb.checked=true; obj.togglePkg(p,true); }
+  });
+}
+
+/* ── Escape key closes modal ── */
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    var modal=g('insert-modal');
+    if(modal&&modal.style.display!=='none') obj.closeInsertModal();
+  }
+});
+
+/* ── Init on DOMContentLoaded ── */
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', initCM);
+} else { initCM(); }
+
+initPyodide();
+
+})();
+</script>
+{% endwith %}

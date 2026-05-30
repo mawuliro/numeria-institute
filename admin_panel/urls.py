@@ -98,4 +98,14 @@ urlpatterns = [
 
     # ── Admin sandbox ─────────────────────────────────────────────────────────
     path('sandbox/', views_sandbox.admin_sandbox, name='admin_sandbox'),
+
+    # ── Insert-in-lesson API ───────────────────────────────────────────────────
+    path('api/courses/', views_cours.api_courses, name='api_courses'),
+    path('api/courses/<slug:slug>/modules/', views_cours.api_course_modules, name='api_course_modules'),
+    path('api/modules/<int:module_id>/lessons/', views_cours.api_module_lessons, name='api_module_lessons'),
+    path('api/lessons/<int:lesson_id>/insert-sandbox/', views_cours.api_lesson_insert_sandbox, name='api_lesson_insert_sandbox'),
+    path('api/formations/', views_cours.api_formations, name='api_formations'),
+    path('api/formations/<slug:slug>/modules/', views_cours.api_formation_modules, name='api_formation_modules'),
+    path('api/formation-modules/<int:module_id>/lessons/', views_cours.api_formation_module_lessons, name='api_formation_module_lessons'),
+    path('api/formation-lessons/<int:lesson_id>/insert-sandbox/', views_cours.api_formation_lesson_insert_sandbox, name='api_formation_lesson_insert_sandbox'),
 ]
