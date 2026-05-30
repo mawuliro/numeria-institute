@@ -1,8 +1,8 @@
 import logging
 from django.conf import settings
 from django.contrib.auth import get_user_model
+import resend
 from django.core import signing
-from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.html import strip_tags
@@ -27,12 +27,42 @@ def _render_template(template_name, context, language=None):
         return render_to_string(template_name, context)
 
 
+def send_email(to_email, subject, html_content):
+    """
+    Central email sending function using Resend API.
+    Use this everywhere instead of Django's send_mail().
+    """
+    if not settings.RESEND_API_KEY:
+        logger.error('send_email: missing RESEND_API_KEY')
+        return False
+
+    try:
+        resend.api_key = settings.RESEND_API_KEY
+        response = resend.Emails.send({
+            'from': settings.DEFAULT_FROM_EMAIL,
+            'to': [to_email],
+            'subject': subject,
+            'html': html_content,
+        })
+        logger.info("Email sent to %s — ID: %s", to_email, response.get('id'))
+        return True
+    except Exception as e:
+        logger.error('Resend email failed to %s: %s', to_email, e)
+        return False
+
+
 def _send_html_email(subject, text_content, html_content, recipient_list, from_email=None):
     from_email = from_email or settings.DEFAULT_FROM_EMAIL
-    message = EmailMultiAlternatives(subject, text_content, from_email, recipient_list)
-    if html_content:
-        message.attach_alternative(html_content, 'text/html')
-    message.send(fail_silently=False)
+    if not html_content:
+        raise ValueError('HTML content is required')
+
+    failures = []
+    for recipient in recipient_list:
+        if not send_email(recipient, subject, html_content):
+            failures.append(recipient)
+
+    if failures:
+        raise RuntimeError(f'Failed to send email to: {", ".join(failures)}')
 
 
 def make_email_verification_token(user):

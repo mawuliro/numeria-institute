@@ -260,14 +260,9 @@ RATELIMIT_ENABLE    = True
 RATELIMIT_USE_CACHE = 'default'
 
 
-# ── EMAIL — Gmail SMTP pour les emails transactionnels ───────────────────────
-EMAIL_BACKEND    = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST       = 'smtp.gmail.com'
-EMAIL_PORT       = 587
-EMAIL_USE_TLS    = True
-EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL  = 'Numeria Institute <numeriainstitude@gmail.com>'
+# ── EMAIL — Resend API for transactional emails ─────────────────────────────
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY')
+DEFAULT_FROM_EMAIL  = 'Numeria Institute <onboarding@resend.dev>'
 CONTACT_EMAIL    = config('CONTACT_EMAIL', default='numeriainstitude@gmail.com')
 ADMIN_EMAIL      = config('ADMIN_EMAIL', default='admin@numeriainstitute.com')
 EMAIL_TIMEOUT    = config('EMAIL_TIMEOUT', default=10, cast=int)
