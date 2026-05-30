@@ -82,6 +82,12 @@
       {% if sidebar_draft_courses %}<span class="ml-auto bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_draft_courses }}</span>{% endif %}
     </a>
 
+    <a href="{% url 'admin_panel:formation_list' %}"
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'formation' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>🎓</span> Formations
+      {% if sidebar_draft_formations %}<span class="ml-auto bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_draft_formations }}</span>{% endif %}
+    </a>
+
     <a href="{% url 'admin_panel:blog_list' %}"
        class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'blog' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
       <span>📝</span> Blog / Articles
@@ -134,6 +140,11 @@
     <a href="{% url 'notifications:send' %}"
        class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 text-slate-300">
       <span>🔔</span> Notifications
+    </a>
+
+    <a href="{% url 'admin_panel:admin_sandbox' %}"
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if request.resolver_match.url_name == 'admin_sandbox' %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>🐍</span> Sandbox Admin
     </a>
 
     <a href="{% url 'admin_panel:activity_log' %}"

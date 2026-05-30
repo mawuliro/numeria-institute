@@ -83,6 +83,7 @@ urlpatterns += i18n_patterns(
     path('mentorat/', include('mentorat.urls')),
     path('notifications/', include('notifications.urls')),
     path('admin-panel/', include('admin_panel.urls')),
+    path('sandbox/', include('admin_panel.urls_sandbox')),
 )
 
 if settings.DEBUG or not settings.USE_CLOUDINARY:

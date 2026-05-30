@@ -1,0 +1,434 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}{{ formation.titre }} — Éditeur{% endblock %}
+{% block page_heading %}✏️ {{ formation.titre|truncatechars:40 }}{% endblock %}
+{% block breadcrumb %}
+<p class="text-xs text-slate-400 mt-0.5">
+  <a href="{% url 'admin_panel:formation_list' %}" class="hover:underline">Formations</a> ›
+  <span class="{% if formation.est_publiee %}text-green-600{% else %}text-slate-500{% endif %} font-medium">
+    {% if formation.est_publiee %}Publiée{% elif formation.est_archivee %}Archivée{% else %}Brouillon{% endif %}
+  </span>
+</p>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+.step-tab { cursor: pointer; transition: all .2s; }
+.step-tab.active { background: #0ea5e9; color: #fff; }
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+.tree-item { cursor: pointer; border-radius: 8px; transition: background .15s; }
+.tree-item:hover { background: #f1f5f9; }
+.tree-item.selected { background: #e0f2fe; }
+.drag-over { background: #bae6fd !important; }
+[draggable] { cursor: grab; }
+.EasyMDEContainer .CodeMirror { min-height: 280px; border-radius: 0 0 8px 8px; }
+</style>
+
+<!-- Step tabs -->
+<div class="flex flex-wrap gap-1 bg-white border border-slate-200 rounded-xl p-1 mb-5">
+  {% for step_num, step_label in steps %}
+  <button type="button"
+          class="step-tab flex-1 text-center text-sm font-medium px-3 py-2 rounded-lg transition-colors {% if active_step == step_num %}active{% else %}text-slate-600 hover:bg-slate-100{% endif %}"
+          data-step="{{ step_num }}" onclick="goToStep('{{ step_num }}')">{{ step_label }}</button>
+  {% endfor %}
+</div>
+<div id="autosave-indicator" class="text-xs text-slate-400 mb-3 h-5"><span id="autosave-text">Prêt</span></div>
+
+<!-- ── STEP 1 ────────────────────────────────────────────────────────────── -->
+<div id="step-1" class="step-panel {% if active_step == '1' %}active{% endif %}">
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
+    <h2 class="font-bold text-slate-700 text-base">① Informations générales</h2>
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
+      <input type="text" id="f-titre" value="{{ formation.titre }}" maxlength="200"
+             class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"></div>
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Description courte</label>
+      <input type="text" id="f-desc-courte" value="{{ formation.description_courte }}" maxlength="300"
+             class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"></div>
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Description complète</label>
+      <textarea id="f-desc-longue" rows="4">{{ formation.description_longue }}</textarea></div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Type</label>
+        <select id="f-type" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+          {% for val, label in types %}<option value="{{ val }}" {% if formation.type_formation == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+        </select></div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Niveau</label>
+        <select id="f-niveau" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+          {% for val, label in niveaux %}<option value="{{ val }}" {% if formation.niveau == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+        </select></div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Durée (heures)</label>
+        <input type="number" id="f-duree" min="0" value="{{ formation.duree_heures }}"
+               class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"></div>
+    </div>
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Prérequis</label>
+      <textarea id="f-prerequis" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono">{{ formation.prerequis }}</textarea></div>
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Compétences visées</label>
+      <textarea id="f-competences" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono">{{ formation.competences_visees }}</textarea></div>
+    <div class="flex gap-3 pt-2">
+      <button type="button" onclick="saveStep1().then(()=>goToStep('2'))"
+              class="bg-sky-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-sky-700 text-sm">Sauvegarder et continuer →</button>
+      <button type="button" onclick="saveStep1()"
+              class="bg-slate-100 text-slate-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-slate-200 text-sm">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 2 ────────────────────────────────────────────────────────────── -->
+<div id="step-2" class="step-panel {% if active_step == '2' %}active{% endif %}">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4" style="min-height:600px;">
+    <!-- Tree -->
+    <div class="lg:col-span-1 bg-white rounded-2xl border border-slate-200 flex flex-col">
+      <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+        <span class="font-semibold text-slate-700 text-sm">📦 Structure</span>
+        <button type="button" onclick="addModule()" class="text-xs bg-sky-50 text-sky-700 hover:bg-sky-100 px-2.5 py-1 rounded-lg font-medium">+ Module</button>
+      </div>
+      <div id="structure-tree" class="flex-1 overflow-y-auto p-3 space-y-1">
+        {% for module in modules %}
+        <div class="tree-item font-semibold" draggable="true" data-type="module" data-id="{{ module.id }}" data-order="{{ module.ordre }}"
+             ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)" ondragleave="dragLeave(event)">
+          <div class="flex items-center gap-2 px-3 py-2">
+            <span class="text-slate-400 text-xs">⠿</span><span class="text-base">📁</span>
+            <span class="flex-1 text-sm text-slate-700" id="module-title-{{ module.id }}" ondblclick="renameModule({{ module.id }})">{{ module.titre }}</span>
+            <button type="button" onclick="addLecon({{ module.id }})" class="text-xs text-sky-600 px-1">+</button>
+            <button type="button" onclick="deleteModule({{ module.id }})" class="text-xs text-red-400 px-1">✕</button>
+          </div>
+        </div>
+        <div id="module-lessons-{{ module.id }}" class="pl-5 space-y-0.5">
+          {% for lesson in module.lessons.all %}
+          <div class="tree-item" draggable="true" data-type="lecon" data-id="{{ lesson.id }}" data-order="{{ lesson.ordre }}" data-module="{{ module.id }}"
+               ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)" ondragleave="dragLeave(event)"
+               onclick="selectLecon({{ lesson.id }}, this)">
+            <div class="flex items-center gap-2 px-3 py-1.5">
+              <span class="text-slate-400 text-xs">⠿</span>
+              <span class="text-sm">{% if lesson.content_type == 'video' %}🎥{% elif lesson.content_type == 'exercise' %}💻{% else %}📄{% endif %}</span>
+              <span class="flex-1 text-xs text-slate-700 truncate">{{ lesson.titre }}</span>
+              {% if lesson.is_free_preview %}<span class="text-green-600 text-xs">🔓</span>{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+        {% if standalone_lecons %}
+        <div class="text-xs text-slate-400 px-3 py-1 mt-2">Leçons sans module :</div>
+        {% for lesson in standalone_lecons %}
+        <div class="tree-item" draggable="true" data-type="lecon" data-id="{{ lesson.id }}" data-order="{{ lesson.ordre }}"
+             ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)" ondragleave="dragLeave(event)"
+             onclick="selectLecon({{ lesson.id }}, this)">
+          <div class="flex items-center gap-2 px-3 py-1.5">
+            <span class="text-slate-400 text-xs">⠿</span><span class="text-sm">📄</span>
+            <span class="flex-1 text-xs text-slate-700 truncate">{{ lesson.titre }}</span>
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+      <div class="px-3 py-2 border-t border-slate-100">
+        <button type="button" onclick="addLecon(null)" class="w-full text-xs text-slate-500 hover:text-sky-700 py-1.5 hover:bg-sky-50 rounded-lg transition-colors">+ Ajouter une leçon</button>
+      </div>
+    </div>
+
+    <!-- Lesson editor -->
+    <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 flex flex-col">
+      <div id="lesson-editor-empty" class="flex-1 flex items-center justify-center text-slate-400 text-sm p-8">
+        <div class="text-center"><div class="text-4xl mb-3">👈</div><p>Sélectionne une leçon pour l'éditer.</p></div>
+      </div>
+      <div id="lesson-editor-panel" class="flex-1 flex flex-col hidden">
+        <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-3">
+          <span class="font-semibold text-slate-700 text-sm" id="editor-lecon-title-display">—</span>
+          <div class="ml-auto flex gap-2">
+            <div class="flex gap-0.5 bg-slate-100 rounded-lg p-0.5 text-xs">
+              <button type="button" id="tab-edit" onclick="setEditorMode('edit')" class="px-2.5 py-1 rounded-md bg-white font-medium shadow-sm">✏️ Éditer</button>
+              <button type="button" id="tab-preview" onclick="setEditorMode('preview')" class="px-2.5 py-1 rounded-md text-slate-600">👁️ Aperçu</button>
+              <button type="button" id="tab-split" onclick="setEditorMode('split')" class="px-2.5 py-1 rounded-md text-slate-600">⬛ Split</button>
+            </div>
+            <button type="button" onclick="saveLecon()" class="text-xs bg-sky-600 text-white px-3 py-1.5 rounded-lg hover:bg-sky-700 font-medium">💾 Sauvegarder</button>
+            <button type="button" onclick="deleteLeconUI()" class="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-2 py-1.5 rounded-lg">🗑️</button>
+          </div>
+        </div>
+        <div class="p-4 space-y-3 overflow-y-auto flex-1">
+          <input type="hidden" id="current-lecon-id" value="">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Titre</label>
+              <input type="text" id="lecon-titre" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Type</label>
+              <select id="lecon-content-type" onchange="updateLeconTypeUI()" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+                <option value="text">📄 Texte</option>
+                <option value="video">🎥 Vidéo</option>
+                <option value="mixed">🎬 Mixte</option>
+                <option value="exercise">💻 Exercice</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="block text-xs font-semibold text-slate-600 mb-1">Durée (min)</label>
+              <input type="number" id="lecon-duree" min="1" value="10" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+            <div class="flex items-end pb-1 gap-4">
+              <label class="flex items-center gap-2 cursor-pointer text-sm text-slate-700"><input type="checkbox" id="lecon-free-preview" class="rounded">🔓 Aperçu gratuit</label>
+              <label class="flex items-center gap-2 cursor-pointer text-sm text-slate-700"><input type="checkbox" id="lecon-active" checked class="rounded">Active</label>
+            </div>
+          </div>
+          <div id="lecon-video-field" class="hidden">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">URL vidéo</label>
+            <input type="url" id="lecon-video" placeholder="https://youtu.be/…" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+          <div id="lecon-content-field">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Contenu</label>
+            <div id="edit-area"><textarea id="lecon-contenu-editor"></textarea></div>
+            <div id="preview-area" class="hidden border border-slate-200 rounded-lg p-4 min-h-48 prose prose-sm max-w-none"></div>
+            <div id="split-area" class="hidden" style="display:none;">
+              <div class="grid grid-cols-2 gap-3">
+                <div><textarea id="lecon-contenu-split"></textarea></div>
+                <div id="split-preview" class="border border-slate-200 rounded-lg p-3 min-h-48 overflow-y-auto prose prose-sm max-w-none text-sm"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 3 ────────────────────────────────────────────────────────────── -->
+<div id="step-3" class="step-panel {% if active_step == '3' %}active{% endif %}">
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
+    <h2 class="font-bold text-slate-700 text-base">③ Paramètres</h2>
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Statut</label>
+      <select id="f-statut" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+        <option value="brouillon" {% if not formation.est_publiee and not formation.est_archivee %}selected{% endif %}>Brouillon</option>
+        <option value="publie" {% if formation.est_publiee %}selected{% endif %}>Publiée</option>
+        <option value="archive" {% if formation.est_archivee %}selected{% endif %}>Archivée</option>
+      </select>
+    </div>
+    <div class="flex gap-3"><button type="button" onclick="saveStep3().then(()=>goToStep('4'))"
+            class="bg-sky-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-sky-700 text-sm">Sauvegarder et continuer →</button></div>
+  </div>
+</div>
+
+<!-- ── STEP 4 ────────────────────────────────────────────────────────────── -->
+<div id="step-4" class="step-panel {% if active_step == '4' %}active{% endif %}">
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
+    <h2 class="font-bold text-slate-700 text-base">④ SEO & Publication</h2>
+    <div class="flex flex-wrap gap-3">
+      <button type="button" onclick="publishFormation()" class="bg-green-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-green-700 text-sm">🚀 Publier</button>
+      <button type="button" onclick="saveStep3()" class="bg-slate-100 text-slate-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-slate-200 text-sm">💾 Sauvegarder brouillon</button>
+      <a href="{% url 'admin_panel:formation_preview' formation.slug %}" target="_blank"
+         class="flex items-center gap-1.5 bg-slate-100 text-slate-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-slate-200 text-sm">👁️ Prévisualiser</a>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const FORMATION_SLUG = "{{ formation.slug }}";
+const CSRF    = "{{ csrf_token }}";
+const SAVE_URL    = "{% url 'admin_panel:ajax_formation_save' formation.slug %}";
+const MODULE_URL  = "{% url 'admin_panel:ajax_fmodule_create' formation.slug %}";
+const LECON_URL   = "{% url 'admin_panel:ajax_flesson_create' formation.slug %}";
+const REORDER_URL = "{% url 'admin_panel:ajax_freorder' formation.slug %}";
+const IMG_URL     = "{% url 'admin_panel:image_upload' %}";
+
+let unsavedChanges = false, currentLeconId = null, mdeEditor = null, dragSource = null;
+
+window.addEventListener('beforeunload', e => { if(unsavedChanges) e.returnValue='Non sauvegardé.'; });
+function markDirty() { unsavedChanges=true; setSaveStatus('Modifié'); }
+function setSaveStatus(t) { document.getElementById('autosave-text').textContent = t; }
+function now() { return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }
+
+function goToStep(n) {
+  document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.step-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('step-'+n)?.classList.add('active');
+  document.querySelector('[data-step="'+n+'"]')?.classList.add('active');
+  if(n==='2'&&!mdeEditor) initMDE();
+  window.history.replaceState({},'','?step='+n);
+}
+
+async function post(url, body) {
+  const r = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify(body)});
+  return r.json();
+}
+
+async function saveStep1(silent) {
+  const fd = new FormData();
+  ['titre','description_courte','description_longue','prerequis','competences_visees'].forEach(id=>{
+    fd.append(id, document.getElementById('f-'+id.replace('_','-').replace('_','-'))?.value || document.getElementById('f-'+id)?.value || '');
+  });
+  fd.append('type_formation', document.getElementById('f-type').value);
+  fd.append('niveau', document.getElementById('f-niveau').value);
+  fd.append('duree_heures', document.getElementById('f-duree').value);
+  // Map field IDs correctly
+  fd.set('description_courte', document.getElementById('f-desc-courte').value);
+  fd.set('description_longue', document.getElementById('f-desc-longue').value);
+  fd.set('prerequis', document.getElementById('f-prerequis').value);
+  fd.set('competences_visees', document.getElementById('f-competences').value);
+  fd.set('titre', document.getElementById('f-titre').value);
+  setSaveStatus('Sauvegarde…');
+  const resp = await fetch(SAVE_URL,{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd});
+  const data = await resp.json();
+  if(data.ok){unsavedChanges=false;setSaveStatus('Sauvegardé ✓ — '+now());}
+  return data;
+}
+
+async function saveStep3(silent) {
+  const r = await post(SAVE_URL, {statut: document.getElementById('f-statut').value});
+  if(r.ok){unsavedChanges=false;setSaveStatus('Sauvegardé ✓ — '+now());}
+  return r;
+}
+
+async function publishFormation() {
+  document.getElementById('f-statut').value = 'publie';
+  await saveStep3();
+  setSaveStatus('🚀 Publiée ✓');
+}
+
+// Module/Lesson CRUD mirrors cours_edit.html exactly
+async function addModule() {
+  const titre = prompt('Titre du module :'); if(!titre) return;
+  const data = await post(MODULE_URL, {titre});
+  if(!data.id) return;
+  const tree = document.getElementById('structure-tree');
+  tree.insertAdjacentHTML('beforeend',`
+    <div class="tree-item font-semibold" draggable="true" data-type="module" data-id="${data.id}" data-order="${data.ordre}"
+         ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)" ondragleave="dragLeave(event)">
+      <div class="flex items-center gap-2 px-3 py-2">
+        <span class="text-slate-400 text-xs">⠿</span><span class="text-base">📁</span>
+        <span class="flex-1 text-sm text-slate-700" id="module-title-${data.id}" ondblclick="renameModule(${data.id})">${data.titre}</span>
+        <button type="button" onclick="addLecon(${data.id})" class="text-xs text-sky-600 px-1">+</button>
+        <button type="button" onclick="deleteModule(${data.id})" class="text-xs text-red-400 px-1">✕</button>
+      </div>
+    </div>
+    <div id="module-lessons-${data.id}" class="pl-5 space-y-0.5"></div>`);
+}
+async function renameModule(id) {
+  const span = document.getElementById('module-title-'+id);
+  const titre = prompt('Nouveau titre :', span.textContent); if(!titre||titre===span.textContent) return;
+  const r = await post(`/fr/admin-panel/formations/ajax/module/${id}/update/`,{titre});
+  if(r.ok) span.textContent = titre;
+}
+async function deleteModule(id) {
+  if(!confirm('Supprimer ce module ?')) return;
+  const r = await post(`/fr/admin-panel/formations/ajax/module/${id}/delete/`,{});
+  if(r.ok){document.querySelector(`[data-type="module"][data-id="${id}"]`)?.remove();document.getElementById('module-lessons-'+id)?.remove();}
+}
+async function addLecon(moduleId) {
+  const titre = prompt('Titre de la leçon :'); if(!titre) return;
+  const data = await post(LECON_URL,{titre,module_id:moduleId});
+  if(!data.id) return;
+  const html = `<div class="tree-item" draggable="true" data-type="lecon" data-id="${data.id}" data-order="${data.ordre}" ${moduleId?'data-module="'+moduleId+'"':''}
+    ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)" ondragleave="dragLeave(event)"
+    onclick="selectLecon(${data.id}, this)">
+    <div class="flex items-center gap-2 px-3 py-1.5"><span class="text-slate-400 text-xs">⠿</span><span class="text-sm">📄</span>
+    <span class="flex-1 text-xs text-slate-700 truncate">${data.titre}</span></div></div>`;
+  if(moduleId){document.getElementById('module-lessons-'+moduleId)?.insertAdjacentHTML('beforeend',html);}
+  else{document.getElementById('structure-tree').insertAdjacentHTML('beforeend',html);}
+  selectLecon(data.id, document.querySelector(`[data-type="lecon"][data-id="${data.id}"]`));
+}
+async function selectLecon(id, el) {
+  if(currentLeconId&&currentLeconId!==id){try{await saveLecon(true);}catch(_){}}
+  document.querySelectorAll('.tree-item.selected').forEach(e=>e.classList.remove('selected'));
+  el?.classList.add('selected');
+  const r = await fetch(`/fr/admin-panel/formations/ajax/lecon/${id}/`,{headers:{'X-CSRFToken':CSRF}});
+  const data = await r.json();
+  currentLeconId = id;
+  document.getElementById('current-lecon-id').value = id;
+  document.getElementById('lecon-titre').value = data.titre;
+  document.getElementById('lecon-duree').value = data.duree_minutes;
+  document.getElementById('lecon-content-type').value = data.content_type;
+  document.getElementById('lecon-free-preview').checked = data.is_free_preview;
+  document.getElementById('lecon-active').checked = data.est_active;
+  document.getElementById('lecon-video').value = data.video_url;
+  document.getElementById('editor-lecon-title-display').textContent = data.titre;
+  if(mdeEditor) mdeEditor.value(data.contenu||'');
+  else document.getElementById('lecon-contenu-editor').value = data.contenu||'';
+  updateLeconTypeUI();
+  document.getElementById('lesson-editor-empty').classList.add('hidden');
+  document.getElementById('lesson-editor-panel').classList.remove('hidden');
+}
+function updateLeconTypeUI() {
+  const ct = document.getElementById('lecon-content-type').value;
+  document.getElementById('lecon-video-field').classList.toggle('hidden',ct!=='video'&&ct!=='mixed');
+  document.getElementById('lecon-content-field').classList.toggle('hidden',ct!=='text'&&ct!=='mixed');
+}
+async function saveLecon(silent) {
+  if(!currentLeconId) return;
+  const body={titre:document.getElementById('lecon-titre').value,
+    contenu:mdeEditor?mdeEditor.value():document.getElementById('lecon-contenu-editor').value,
+    video_url:document.getElementById('lecon-video').value||null,
+    content_type:document.getElementById('lecon-content-type').value,
+    duree_minutes:document.getElementById('lecon-duree').value,
+    is_free_preview:document.getElementById('lecon-free-preview').checked,
+    est_active:document.getElementById('lecon-active').checked};
+  const r = await post(`/fr/admin-panel/formations/ajax/lecon/${currentLeconId}/save/`,body);
+  if(r.ok&&!silent)setSaveStatus('Leçon sauvegardée ✓ — '+now());
+  const tEl=document.querySelector(`[data-type="lecon"][data-id="${currentLeconId}"] span.truncate`);
+  if(tEl)tEl.textContent=body.titre;
+  document.getElementById('editor-lecon-title-display').textContent=body.titre;
+  return r;
+}
+async function deleteLeconUI() {
+  if(!currentLeconId||!confirm('Supprimer ?')) return;
+  await post(`/fr/admin-panel/formations/ajax/lecon/${currentLeconId}/delete/`,{});
+  document.querySelector(`[data-type="lecon"][data-id="${currentLeconId}"]`)?.remove();
+  currentLeconId=null;
+  document.getElementById('lesson-editor-panel').classList.add('hidden');
+  document.getElementById('lesson-editor-empty').classList.remove('hidden');
+}
+function setEditorMode(mode) {
+  ['edit','preview','split'].forEach(m=>{
+    document.getElementById(m+'-area').classList.toggle('hidden',m!==mode);
+    const tab=document.getElementById('tab-'+m);
+    if(tab){tab.classList.toggle('bg-white',m===mode);tab.classList.toggle('shadow-sm',m===mode);}
+  });
+  if(mode==='preview'||mode==='split'){
+    const md=mdeEditor?mdeEditor.value():'';
+    let html=md.replace(/\n/g,'<br>');
+    if(window.EasyMDE&&EasyMDE.prototype.markdown)html=EasyMDE.prototype.markdown(md);
+    const pEl=document.getElementById('preview-area'),spEl=document.getElementById('split-preview');
+    if(pEl)pEl.innerHTML=html;if(spEl)spEl.innerHTML=html;
+    if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([pEl,spEl].filter(Boolean));
+  }
+}
+// Drag & drop
+function dragStart(e,el){dragSource=el;e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',el.dataset.id);}
+function dragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');e.dataTransfer.dropEffect='move';}
+function dragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function dropItem(e,target){e.preventDefault();target.classList.remove('drag-over');if(!dragSource||dragSource===target)return;target.parentNode.insertBefore(dragSource,target);saveOrder();}
+async function saveOrder() {
+  const items=[];
+  document.querySelectorAll('[data-type="module"]').forEach((el,i)=>items.push({type:'module',id:+el.dataset.id,order:i}));
+  document.querySelectorAll('[data-type="lecon"]').forEach((el,i)=>items.push({type:'lecon',id:+el.dataset.id,order:i,module_id:+el.dataset.module||null}));
+  const r=await post(REORDER_URL,{items});
+  if(r.ok)setSaveStatus('Ordre sauvegardé ✓');
+}
+// EasyMDE
+function initMDE() {
+  const ta=document.getElementById('lecon-contenu-editor'); if(!ta||mdeEditor) return;
+  mdeEditor=new EasyMDE({element:ta,spellChecker:false,minHeight:'280px',
+    toolbar:['bold','italic','heading-2','|','unordered-list','ordered-list','|','link','image','code','quote','|',
+      {name:'latex',action:e=>{e.codemirror.replaceSelection('$$\n\n$$');},className:'fa',title:'∑ LaTeX'},
+      {name:'python',action:e=>{e.codemirror.replaceSelection('```python\n# code\n```');},className:'fa',title:'🐍 Python'},
+      {name:'sandbox',action:e=>{e.codemirror.replaceSelection('[SANDBOX title="Essaie toi-même" code="# Ton code ici\\n"]');},className:'fa',title:'🐍 Insérer Sandbox'},
+      '|','preview','side-by-side','fullscreen'],
+    imageUploadFunction:(file,onS,onE)=>{const fd=new FormData();fd.append('file',file);fetch(IMG_URL,{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd}).then(r=>r.json()).then(d=>{if(d.ok)onS(d.url);else onE('Erreur');}).catch(()=>onE('Erreur'));},
+    previewRender:function(md){const h=this.parent.markdown(md);setTimeout(()=>{if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise();},100);return h;},
+  });
+  mdeEditor.codemirror.on('change',()=>markDirty());
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  if(document.getElementById('step-2').classList.contains('active'))initMDE();
+  setInterval(()=>{const step=document.querySelector('.step-panel.active')?.id?.replace('step-','');if(step==='1')saveStep1(true);else if(step==='3')saveStep3(true);},60000);
+});
+</script>
+{% endblock %}

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-30 13:04+0000\n"
+"POT-Creation-Date: 2026-05-30 18:51+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -1500,7 +1500,7 @@ msgid "Messages postés"
 msgstr "Messages posted"
 
 #: communaute/templates/communaute/profil_utilisateur.html:72
-#: comptes/templates/comptes/tableau_de_bord.html:25
+#: comptes/templates/comptes/tableau_de_bord.html:26
 #: mentorat/templates/mentorat/detail_mentor.html:104
 msgid "Membre depuis"
 msgstr "Member since"
@@ -1755,72 +1755,118 @@ msgstr "Delete my account"
 msgid "Pour confirmer la suppression, entre ton mot de passe actuel :"
 msgstr "To confirm deletion, enter your current password:"
 
-#: comptes/templates/comptes/tableau_de_bord.html:22
+#: comptes/templates/comptes/tableau_de_bord.html:23
 #, python-format
 msgid "Bonjour, %(name)s"
 msgstr "Hello, %(name)s"
 
-#: comptes/templates/comptes/tableau_de_bord.html:33
+#: comptes/templates/comptes/tableau_de_bord.html:34
 msgid "Nouveau cours"
 msgstr "New course"
 
-#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:374
+#: comptes/templates/comptes/tableau_de_bord.html:38 templates/base.html:374
 msgid "Mon profil"
 msgstr "My profile"
 
-#: comptes/templates/comptes/tableau_de_bord.html:53
+#: comptes/templates/comptes/tableau_de_bord.html:54
 #: templates/admin_panel/user_detail.html:45
 msgid "Cours inscrits"
 msgstr "Enrolled courses"
 
-#: comptes/templates/comptes/tableau_de_bord.html:65
+#: comptes/templates/comptes/tableau_de_bord.html:66
 #: formation/templates/formation/mes_formations.html:65 mentorat/models.py:461
 msgid "En cours"
 msgstr "In progress"
 
-#: comptes/templates/comptes/tableau_de_bord.html:77
+#: comptes/templates/comptes/tableau_de_bord.html:78
 msgid "Terminés"
 msgstr "Completed"
 
-#: comptes/templates/comptes/tableau_de_bord.html:89
+#: comptes/templates/comptes/tableau_de_bord.html:90
 msgid "Progression globale"
 msgstr "Overall progress"
 
-#: comptes/templates/comptes/tableau_de_bord.html:110
+#: comptes/templates/comptes/tableau_de_bord.html:111
 msgid "Mes cours"
 msgstr "My courses"
 
-#: comptes/templates/comptes/tableau_de_bord.html:113
+#: comptes/templates/comptes/tableau_de_bord.html:114
 msgid "Voir tout"
 msgstr "View all"
 
-#: comptes/templates/comptes/tableau_de_bord.html:133
+#: comptes/templates/comptes/tableau_de_bord.html:134
 msgid "Terminé"
 msgstr "Completed"
 
-#: comptes/templates/comptes/tableau_de_bord.html:136
+#: comptes/templates/comptes/tableau_de_bord.html:137
 msgid "Payant"
 msgstr "Paid"
 
-#: comptes/templates/comptes/tableau_de_bord.html:159
+#: comptes/templates/comptes/tableau_de_bord.html:160
 msgid "Revoir"
 msgstr "Review"
 
-#: comptes/templates/comptes/tableau_de_bord.html:159
+#: comptes/templates/comptes/tableau_de_bord.html:160
 msgid "Continuer"
 msgstr "Continue"
 
-#: comptes/templates/comptes/tableau_de_bord.html:177
+#: comptes/templates/comptes/tableau_de_bord.html:178
 msgid "Tu n'es inscrit à aucun cours"
 msgstr "You are not enrolled in any course"
 
-#: comptes/templates/comptes/tableau_de_bord.html:178
+#: comptes/templates/comptes/tableau_de_bord.html:179
 msgid "Découvre notre catalogue et commence à apprendre dès aujourd'hui !"
 msgstr "Discover our catalogue and start learning today!"
 
-#: comptes/templates/comptes/tableau_de_bord.html:262
+#: comptes/templates/comptes/tableau_de_bord.html:263
 msgid "Pour toi"
 msgstr "For you"
+
+#: comptes/templates/comptes/tableau_de_bord.html:346
+#| msgid "Chargement de Python…"
+msgid "Chargement…"
+msgstr "Loading..."
+
+#: comptes/templates/comptes/tableau_de_bord.html:349
+#| msgid "Voir le sujet complet"
+msgid "Ouvrir le sandbox complet"
+msgstr "Open full sandbox"
+
+#: comptes/templates/comptes/tableau_de_bord.html:355
+#: comptes/templates/comptes/tableau_de_bord.html:406
+#: cours/templates/cours/components/code_sandbox.html:77
+#: cours/templates/cours/components/code_sandbox.html:310
+#: cours/templates/cours/components/code_sandbox.html:319
+#: cours/templates/cours/components/code_sandbox.html:325
+#: templates/sandbox/sandbox_page.html:98
+#: templates/sandbox/sandbox_page.html:203
+#: templates/sandbox/sandbox_widget.html:46
+#: templates/sandbox/sandbox_widget.html:262
+#: templates/sandbox/sandbox_widget.html:330
+msgid "Exécuter"
+msgstr "Run"
+
+#: comptes/templates/comptes/tableau_de_bord.html:359
+#: templates/sandbox/sandbox_page.html:101
+#: templates/sandbox/sandbox_widget.html:51
+msgid "Sauvegarder"
+msgstr "Save"
+
+#: comptes/templates/comptes/tableau_de_bord.html:410
+#: templates/sandbox/sandbox_page.html:243
+msgid "Nom du script"
+msgstr "Script name"
+
+#: comptes/templates/comptes/tableau_de_bord.html:410
+#: templates/sandbox/sandbox_page.html:93
+#: templates/sandbox/sandbox_page.html:228
+#: templates/sandbox/sandbox_page.html:242
+msgid "Sans titre"
+msgstr "Untitled"
+
+#: comptes/templates/comptes/tableau_de_bord.html:416
+msgid "Script sauvegardé"
+msgstr "Script saved"
 
 #: comptes/views.py:45
 #, fuzzy, python-brace-format
@@ -1914,7 +1960,12 @@ msgstr "Unit tests"
 msgid "Leçon"
 msgstr "Lesson"
 
-#: cours/models.py:786 notifications/models.py:34
+#: cours/models.py:789
+#| msgid "Session de formation"
+msgid "Leçon de formation"
+msgstr "Training lesson"
+
+#: cours/models.py:792 notifications/models.py:34
 #: templates/admin_panel/exercise_form.html:26
 #: templates/admin_panel/user_detail.html:141
 #: templates/admin_panel/users_list.html:70
@@ -1922,148 +1973,148 @@ msgstr "Lesson"
 msgid "Titre"
 msgstr "Title"
 
-#: cours/models.py:788 mentorat/templates/mentorat/video_seance.html:55
+#: cours/models.py:794 mentorat/templates/mentorat/video_seance.html:55
 #: templates/admin_panel/exercise_form.html:72
 #, fuzzy
 #| msgid "Instructeurs"
 msgid "Instructions"
 msgstr "Instructors"
 
-#: cours/models.py:789
+#: cours/models.py:795
 #, fuzzy
 #| msgid "Instructeurs"
 msgid "Instructions en Markdown"
 msgstr "Instructors"
 
-#: cours/models.py:792 templates/admin_panel/exercise_form.html:89
+#: cours/models.py:798 templates/admin_panel/exercise_form.html:89
 msgid "Code de départ"
 msgstr "Starter code"
 
-#: cours/models.py:793
+#: cours/models.py:799
 msgid "Code affiché à l'étudiant"
 msgstr ""
 
-#: cours/models.py:796 templates/admin_panel/exercise_form.html:95
+#: cours/models.py:802 templates/admin_panel/exercise_form.html:95
 msgid "Solution"
 msgstr "Solution"
 
-#: cours/models.py:797
+#: cours/models.py:803
 msgid "Jamais montrée à l'étudiant"
 msgstr ""
 
-#: cours/models.py:800 templates/admin_panel/exercise_form.html:102
+#: cours/models.py:806 templates/admin_panel/exercise_form.html:102
 msgid "Output attendu"
 msgstr "Expected output"
 
-#: cours/models.py:801
+#: cours/models.py:807
 msgid "Pour comparaison exacte ou contient"
 msgstr ""
 
-#: cours/models.py:804 templates/admin_panel/exercise_form.html:109
+#: cours/models.py:810 templates/admin_panel/exercise_form.html:109
 msgid "Code de tests"
 msgstr "Test code"
 
-#: cours/models.py:805
+#: cours/models.py:811
 msgid "Assertions cachées (mode tests unitaires)"
 msgstr ""
 
-#: cours/models.py:809 templates/admin_panel/exercise_form.html:31
+#: cours/models.py:815 templates/admin_panel/exercise_form.html:31
 msgid "Mode d'évaluation"
 msgstr "Evaluation mode"
 
-#: cours/models.py:813 templates/admin_panel/exercise_form.html:40
+#: cours/models.py:819 templates/admin_panel/exercise_form.html:40
 #: templates/admin_panel/exercises_list.html:34
 msgid "Difficulté"
 msgstr "Difficulty"
 
-#: cours/models.py:816 cours/templates/cours/components/code_sandbox.html:90
+#: cours/models.py:822 cours/templates/cours/components/code_sandbox.html:90
 #: cours/templates/cours/components/code_sandbox.html:109
 #: templates/admin_panel/exercise_form.html:78
 msgid "Indice"
 msgstr "Hint"
 
-#: cours/models.py:817
+#: cours/models.py:823
 msgid "Affiché après 3 tentatives échouées"
 msgstr ""
 
-#: cours/models.py:820 templates/admin_panel/exercise_form.html:53
+#: cours/models.py:826 templates/admin_panel/exercise_form.html:53
 msgid "Tentatives max"
 msgstr "Max attempts"
 
-#: cours/models.py:821
+#: cours/models.py:827
 msgid "0 = illimité"
 msgstr ""
 
-#: cours/models.py:823 templates/admin_panel/exercise_form.html:48
+#: cours/models.py:829 templates/admin_panel/exercise_form.html:48
 #: templates/admin_panel/exercise_results.html:95
 msgid "Points"
 msgstr ""
 
-#: cours/models.py:824 templates/admin_panel/exercise_form.html:58
+#: cours/models.py:830 templates/admin_panel/exercise_form.html:58
 msgid "Ordre"
 msgstr "Order"
 
-#: cours/models.py:825 templates/admin_panel/exercises_list.html:37
+#: cours/models.py:831 templates/admin_panel/exercises_list.html:37
 #: templates/admin_panel/user_detail.html:26
 #: templates/admin_panel/users_list.html:31
 msgid "Actif"
 msgstr "Active"
 
-#: cours/models.py:829
+#: cours/models.py:835
 msgid "Exercice de code"
 msgstr "Code exercise"
 
-#: cours/models.py:830 cours/templates/cours/detail.html:498
+#: cours/models.py:836 cours/templates/cours/detail.html:498
 #: templates/admin_panel/exercises_list.html:4
 #: templates/admin_panel/exercises_list.html:5
 msgid "Exercices de code"
 msgstr "Code exercises"
 
-#: cours/models.py:839 templates/admin_panel/exercise_results.html:49
+#: cours/models.py:845 templates/admin_panel/exercise_results.html:49
 #: templates/admin_panel/exercise_results.html:93
 msgid "Étudiant"
 msgstr "Student"
 
-#: cours/models.py:843 templates/admin_panel/exercise_results.html:50
+#: cours/models.py:849 templates/admin_panel/exercise_results.html:50
 #: templates/admin_panel/exercises_list.html:31
 #, fuzzy
 #| msgid "Exercice pratique"
 msgid "Exercice"
 msgstr "Practical exercise"
 
-#: cours/models.py:845
+#: cours/models.py:851
 #, fuzzy
 #| msgid "Preuve actuelle"
 msgid "Code soumis"
 msgstr "Current proof"
 
-#: cours/models.py:846
+#: cours/models.py:852
 msgid "Output reçu"
 msgstr ""
 
-#: cours/models.py:847
+#: cours/models.py:853
 msgid "Correct"
 msgstr ""
 
-#: cours/models.py:848
+#: cours/models.py:854
 msgid "Tentative n°"
 msgstr "Attempt #"
 
-#: cours/models.py:849
+#: cours/models.py:855
 msgid "Temps (s)"
 msgstr "Time (s)"
 
-#: cours/models.py:850 templates/admin_panel/candidature_detail.html:99
+#: cours/models.py:856 templates/admin_panel/candidature_detail.html:99
 #: templates/admin_panel/candidatures_list.html:38
 #: templates/admin_panel/mentorat_detail.html:80
 msgid "Soumis le"
 msgstr "Submitted on"
 
-#: cours/models.py:854
+#: cours/models.py:860
 msgid "Soumission de code"
 msgstr "Code submission"
 
-#: cours/models.py:855
+#: cours/models.py:861
 msgid "Soumissions de code"
 msgstr "Code submissions"
 
@@ -2103,19 +2154,15 @@ msgstr "View all courses"
 
 #: cours/templates/cours/components/code_sandbox.html:46
 #: cours/templates/cours/components/code_sandbox.html:301
+#: templates/sandbox/sandbox_widget.html:249
 msgid "Réussi"
 msgstr "Passed"
 
 #: cours/templates/cours/components/code_sandbox.html:65
+#: templates/sandbox/sandbox_page.html:27
+#: templates/sandbox/sandbox_widget.html:34
 msgid "Chargement de Python…"
 msgstr "Loading Python..."
-
-#: cours/templates/cours/components/code_sandbox.html:77
-#: cours/templates/cours/components/code_sandbox.html:310
-#: cours/templates/cours/components/code_sandbox.html:319
-#: cours/templates/cours/components/code_sandbox.html:325
-msgid "Exécuter"
-msgstr "Run"
 
 #: cours/templates/cours/components/code_sandbox.html:81
 #: mentorat/templates/mentorat/liste_mentors.html:73
@@ -2125,6 +2172,8 @@ msgstr "Reset"
 
 #: cours/templates/cours/components/code_sandbox.html:85
 #: cours/templates/cours/components/code_sandbox.html:435
+#: templates/sandbox/sandbox_widget.html:60
+#: templates/sandbox/sandbox_widget.html:368
 msgid "Copier"
 msgstr "Copy"
 
@@ -2139,6 +2188,7 @@ msgid "Voir la solution"
 msgstr "Show solution"
 
 #: cours/templates/cours/components/code_sandbox.html:210
+#: templates/sandbox/sandbox_widget.html:179
 msgid "En cours d\\'exécution…"
 msgstr ""
 
@@ -2147,14 +2197,17 @@ msgid "Temps d\\'exécution dépassé (10s)"
 msgstr ""
 
 #: cours/templates/cours/components/code_sandbox.html:263
+#: templates/sandbox/sandbox_widget.html:212
 msgid "aucun output"
 msgstr "no output"
 
 #: cours/templates/cours/components/code_sandbox.html:305
+#: templates/sandbox/sandbox_widget.html:254
 msgid "Tentatives épuisées"
 msgstr "Attempts exhausted"
 
 #: cours/templates/cours/components/code_sandbox.html:345
+#: templates/sandbox/sandbox_widget.html:278
 msgid "Bonne réponse !"
 msgstr "Correct answer!"
 
@@ -2163,6 +2216,7 @@ msgid "points"
 msgstr ""
 
 #: cours/templates/cours/components/code_sandbox.html:350
+#: templates/sandbox/sandbox_widget.html:282
 msgid "Ce n\\'est pas la bonne réponse. Réessaie !"
 msgstr ""
 
@@ -2187,6 +2241,7 @@ msgid "Réinitialiser le code ?"
 msgstr "Reset the code?"
 
 #: cours/templates/cours/components/code_sandbox.html:434
+#: templates/sandbox/sandbox_widget.html:367
 msgid "Copié !"
 msgstr "Copied!"
 
@@ -6238,11 +6293,11 @@ msgstr "No activity recorded yet."
 msgid "Staff — Numeria"
 msgstr "Staff — Numeria"
 
-#: templates/admin_panel/base_staff.html:165 templates/base.html:375
+#: templates/admin_panel/base_staff.html:176 templates/base.html:375
 msgid "Se déconnecter"
 msgstr "Sign out"
 
-#: templates/admin_panel/base_staff.html:180
+#: templates/admin_panel/base_staff.html:191
 msgid "Staff Dashboard"
 msgstr "Staff Dashboard"
 
@@ -7148,6 +7203,48 @@ msgstr "Send the request"
 #| msgid "Répète ton mot de passe"
 msgid "Réinitialisation du mot de passe Numeria"
 msgstr "Repeat your password"
+
+#: templates/sandbox/sandbox_page.html:4 templates/sandbox/sandbox_page.html:20
+msgid "Sandbox Python"
+msgstr "Python Sandbox"
+
+#: templates/sandbox/sandbox_page.html:36
+#| msgid "Mes cours"
+msgid "Mes scripts"
+msgstr "My scripts"
+
+#: templates/sandbox/sandbox_page.html:39
+#| msgid "Niveau"
+msgid "Nouveau"
+msgstr "New"
+
+#: templates/sandbox/sandbox_page.html:54
+msgid "Aucun script sauvegardé."
+msgstr "No scripts saved yet."
+
+#: templates/sandbox/sandbox_page.html:114
+#: templates/sandbox/sandbox_widget.html:56
+msgid "Effacer"
+msgstr "Clear"
+
+#: templates/sandbox/sandbox_page.html:116
+msgid "Output apparaîtra ici…"
+msgstr ""
+
+#: templates/sandbox/sandbox_widget.html:66
+msgid "Charger bibliothèque"
+msgstr "Load library"
+
+#: templates/sandbox/sandbox_widget.html:362
+#| msgid "Réinitialiser le code ?"
+msgid "Effacer le code ?"
+msgstr "Clear the code?"
+
+#: templates/sandbox/sandbox_widget.html:372
+#, fuzzy
+#| msgid "Titre du sujet"
+msgid "Titre du script"
+msgstr "Topic title"
 
 #: templates/video_room.html:42
 #, fuzzy

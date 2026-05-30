@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from . import views_cours, views_blog, views_media
+from . import views_cours, views_blog, views_media, views_formation, views_sandbox
 
 app_name = 'admin_panel'
 
@@ -75,4 +75,27 @@ urlpatterns = [
     path('mediatheque/', views_media.media_list, name='media_list'),
     path('mediatheque/upload/', views_media.media_upload, name='media_upload'),
     path('mediatheque/<int:media_id>/supprimer/', views_media.media_delete, name='media_delete'),
+
+    # ── Formations (CMS) ──────────────────────────────────────────────────────
+    path('formations/', views_formation.formation_list, name='formation_list'),
+    path('formations/nouveau/', views_formation.formation_create, name='formation_create'),
+    path('formations/<slug:slug>/modifier/', views_formation.formation_edit, name='formation_edit'),
+    path('formations/<slug:slug>/supprimer/', views_formation.formation_delete, name='formation_delete'),
+    path('formations/<slug:slug>/preview/', views_formation.formation_preview, name='formation_preview'),
+    path('formations/<slug:slug>/statistiques/', views_formation.formation_analytics, name='formation_analytics'),
+    # AJAX — formation meta
+    path('formations/<slug:slug>/ajax/save/', views_formation.ajax_formation_save, name='ajax_formation_save'),
+    # AJAX — modules
+    path('formations/<slug:slug>/ajax/module/create/', views_formation.ajax_fmodule_create, name='ajax_fmodule_create'),
+    path('formations/ajax/module/<int:module_id>/update/', views_formation.ajax_fmodule_update, name='ajax_fmodule_update'),
+    path('formations/ajax/module/<int:module_id>/delete/', views_formation.ajax_fmodule_delete, name='ajax_fmodule_delete'),
+    # AJAX — lessons
+    path('formations/<slug:slug>/ajax/lecon/create/', views_formation.ajax_flesson_create, name='ajax_flesson_create'),
+    path('formations/ajax/lecon/<int:lesson_id>/', views_formation.ajax_flesson_get, name='ajax_flesson_get'),
+    path('formations/ajax/lecon/<int:lesson_id>/save/', views_formation.ajax_flesson_save, name='ajax_flesson_save'),
+    path('formations/ajax/lecon/<int:lesson_id>/delete/', views_formation.ajax_flesson_delete, name='ajax_flesson_delete'),
+    path('formations/<slug:slug>/ajax/reorder/', views_formation.ajax_freorder, name='ajax_freorder'),
+
+    # ── Admin sandbox ─────────────────────────────────────────────────────────
+    path('sandbox/', views_sandbox.admin_sandbox, name='admin_sandbox'),
 ]

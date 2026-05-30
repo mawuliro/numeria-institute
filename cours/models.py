@@ -782,6 +782,12 @@ class CodeExercise(models.Model):
     lecon = models.ForeignKey(
         'Lecon', on_delete=models.CASCADE,
         related_name='code_exercises', verbose_name=_('Leçon'),
+        null=True, blank=True,
+    )
+    formation_lesson = models.ForeignKey(
+        'formation.FormationLesson', on_delete=models.CASCADE,
+        related_name='code_exercises', verbose_name=_('Leçon de formation'),
+        null=True, blank=True,
     )
     title = models.CharField(max_length=300, verbose_name=_('Titre'))
     instructions = models.TextField(
@@ -857,3 +863,24 @@ class StudentCodeSubmission(models.Model):
     def __str__(self):
         status = '✅' if self.is_correct else '❌'
         return f"{status} {self.student.username} — {self.exercise.title} (#{self.attempt_number})"
+
+
+# =============================================================================
+# SANDBOX — Scripts sauvegardés par les utilisateurs
+# =============================================================================
+
+class UserScript(models.Model):
+    """Script Python personnel sauvegardé dans le sandbox utilisateur."""
+    user  = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saved_scripts')
+    titre = models.CharField(max_length=200, default='Sans titre', verbose_name='Titre')
+    code  = models.TextField(default='', verbose_name='Code')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Créé le')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Modifié le')
+
+    class Meta:
+        ordering = ['-updated_at']
+        verbose_name = 'Script utilisateur'
+        verbose_name_plural = 'Scripts utilisateurs'
+
+    def __str__(self):
+        return f"{self.user.username} — {self.titre}"

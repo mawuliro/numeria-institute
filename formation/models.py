@@ -593,3 +593,63 @@ class CertificatFormation(models.Model):
         if not self.date_expiration:
             return True
         return timezone.now().date() <= self.date_expiration
+
+
+# =============================================================================
+# FORMATION CMS — Structure Module → Leçon (ajoutée pour le panneau admin)
+# Séparée de LeconFormation existante pour éviter tout conflit.
+# =============================================================================
+
+class FormationModule(models.Model):
+    """Regroupe des leçons dans une formation — couche facultative."""
+    formation   = models.ForeignKey(Formation, on_delete=models.CASCADE, related_name='modules')
+    titre       = models.CharField(max_length=300, verbose_name='Titre')
+    description = models.TextField(blank=True, verbose_name='Description')
+    ordre       = models.IntegerField(default=0, verbose_name='Ordre')
+    est_actif   = models.BooleanField(default=True, verbose_name='Actif')
+
+    class Meta:
+        ordering = ['ordre']
+        verbose_name = 'Module de formation'
+        verbose_name_plural = 'Modules de formation'
+
+    def __str__(self):
+        return f'[{self.formation.titre}] {self.titre}'
+
+
+class FormationLesson(models.Model):
+    """Leçon CMS dans un module de formation — supporte EasyMDE, LaTeX, code."""
+    CONTENT_TYPE_CHOICES = [
+        ('text',     'Texte / Article'),
+        ('video',    'Vidéo'),
+        ('mixed',    'Mixte (Texte + Vidéo)'),
+        ('exercise', 'Exercice pratique'),
+    ]
+
+    module      = models.ForeignKey(FormationModule, on_delete=models.CASCADE, related_name='lessons')
+    formation   = models.ForeignKey(Formation, on_delete=models.CASCADE, related_name='formation_lessons')
+    titre       = models.CharField(max_length=300, verbose_name='Titre')
+    slug        = models.SlugField(blank=True, max_length=300)
+    contenu     = models.TextField(blank=True, verbose_name='Contenu',
+                                   help_text='Supporte HTML, LaTeX, Markdown.')
+    video_url   = models.URLField(blank=True, null=True, verbose_name='URL vidéo')
+    content_type = models.CharField(max_length=20, choices=CONTENT_TYPE_CHOICES,
+                                    default='text', verbose_name='Type de contenu')
+    ordre       = models.IntegerField(default=0, verbose_name='Ordre')
+    is_free_preview = models.BooleanField(default=False, verbose_name='Aperçu gratuit')
+    duree_minutes = models.IntegerField(default=10, verbose_name='Durée (minutes)')
+    est_active  = models.BooleanField(default=True, verbose_name='Active')
+
+    class Meta:
+        ordering = ['ordre']
+        verbose_name = 'Leçon de formation'
+        verbose_name_plural = 'Leçons de formation'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.titre)[:300]
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'[{self.formation.titre}] {self.titre}'

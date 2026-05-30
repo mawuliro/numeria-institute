@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load sandbox_tags %}
 {% block titre %}Tableau de bord — Numeria Institute{% endblock %}
 {% block contenu %}
 
@@ -328,5 +329,94 @@
 
     </div>
 </section>
+
+<!-- ── Mini Sandbox Python ── -->
+{% if user.is_authenticated %}
+<section class="w-full bg-numeria-blanc dark:bg-gray-900 pb-12">
+  <div class="w-full px-4 sm:px-8 lg:px-16">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden bg-white dark:bg-gray-800">
+      <div class="flex items-center gap-3 px-5 py-3.5 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+        <span class="font-bold text-numeria-bleu dark:text-numeria-teal text-sm">🐍 Sandbox Python</span>
+        <div id="mini-py-status" class="text-xs text-sky-600 bg-sky-50 px-2 py-0.5 rounded-full flex items-center gap-1.5">
+          <svg class="animate-spin w-2.5 h-2.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
+          {% trans "Chargement…" %}
+        </div>
+        <a href="{% url 'sandbox_page' %}" target="_blank"
+           class="ml-auto text-xs text-slate-400 hover:text-sky-600 transition-colors" title="{% trans 'Ouvrir le sandbox complet' %}">↗️</a>
+      </div>
+      <div id="mini-cm-wrapper"></div>
+      <div class="flex flex-wrap items-center gap-2 px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+        <button id="mini-run-btn" disabled type="button" onclick="runMiniSandbox()"
+                class="flex items-center gap-1.5 bg-numeria-bleu text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-blue-800 disabled:opacity-50 transition-colors">
+          ▶ {% trans "Exécuter" %}
+        </button>
+        <button type="button" onclick="saveMiniScript()"
+                class="text-xs bg-slate-100 dark:bg-gray-600 text-slate-700 dark:text-gray-200 px-3 py-1.5 rounded-lg hover:bg-slate-200 font-semibold">
+          💾 {% trans "Sauvegarder" %}
+        </button>
+      </div>
+      <div id="mini-output-wrapper" style="display:none;" class="border-t border-gray-200 dark:border-gray-700">
+        <pre id="mini-output" class="bg-gray-900 text-green-400 font-mono text-xs px-4 py-3 overflow-auto max-h-36 whitespace-pre-wrap"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  var CSRF_MINI = document.cookie.match(/csrftoken=([^;]+)/)?.[1]||'';
+  var miniCM = null;
+
+  window._numeriaPyodideReady = window._numeriaPyodideReady || (async function() {
+    await new Promise(function(resolve,reject){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js';s.onload=resolve;s.onerror=reject;document.head.appendChild(s);});
+    return await loadPyodide();
+  })();
+
+  document.addEventListener('DOMContentLoaded', function() {
+    miniCM = CodeMirror(document.getElementById('mini-cm-wrapper'), {
+      value: localStorage.getItem('numeria_mini_sandbox_code') || '# Écris ton code Python ici\nprint("Bonjour Numeria !")\n',
+      mode:'python', theme:'dracula', lineNumbers:true, indentUnit:4, tabSize:4, indentWithTabs:false,
+      lineWrapping:true, viewportMargin:Infinity,
+      extraKeys:{Tab:c=>c.replaceSelection('    ','end'),'Ctrl-Enter':runMiniSandbox,'Cmd-Enter':runMiniSandbox},
+    });
+    miniCM.getWrapperElement().style.minHeight = '150px';
+    miniCM.on('change', function(){ localStorage.setItem('numeria_mini_sandbox_code', miniCM.getValue()); });
+  });
+
+  window._numeriaPyodideReady.then(function(){
+    document.getElementById('mini-py-status').style.display='none';
+    document.getElementById('mini-run-btn').disabled=false;
+  });
+
+  async function runMiniSandbox() {
+    var code   = miniCM ? miniCM.getValue() : '';
+    var outEl  = document.getElementById('mini-output');
+    var outWr  = document.getElementById('mini-output-wrapper');
+    var btn    = document.getElementById('mini-run-btn');
+    btn.disabled=true; btn.textContent='⏳ …';
+    outWr.style.display='block'; outEl.textContent='…'; outEl.style.color='#9ca3af';
+    try {
+      var py = await window._numeriaPyodideReady;
+      py.globals.set('_mini_code', code);
+      var r = await py.runPythonAsync('import sys;from io import StringIO;_o=StringIO();sys.stdout=_o\ntry:exec(_mini_code,{})\nexcept Exception as e:print(f"❌ {type(e).__name__}: {e}")\nfinally:sys.stdout=sys.__stdout__\n_o.getvalue()');
+      outEl.textContent=r||'(aucun output)'; outEl.style.color=String(r).startsWith('❌')?'#f87171':'#4ade80';
+    } catch(e){outEl.innerHTML='<span style="color:#f87171">'+e+'</span>';outEl.style.color='';}
+    btn.disabled=false; btn.innerHTML='▶ {% trans "Exécuter" %}';
+  }
+
+  async function saveMiniScript() {
+    var title = prompt('{% trans "Nom du script" %} :', '{% trans "Sans titre" %}');
+    if (!title) return;
+    await fetch('/sandbox/scripts/save/', {
+      method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF_MINI},
+      body:JSON.stringify({titre:title, code:miniCM?miniCM.getValue():''}),
+    });
+    alert('{% trans "Script sauvegardé" %} ✓');
+  }
+  </script>
+</section>
+{% endif %}
 
 {% endblock %}

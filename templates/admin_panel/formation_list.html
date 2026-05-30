@@ -1,0 +1,93 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n humanize %}
+
+{% block page_title %}Formations{% endblock %}
+{% block page_heading %}🎓 Formations
+  {% if draft_count %}<span class="ml-2 text-sm bg-amber-100 text-amber-700 font-medium px-2 py-0.5 rounded-full">{{ draft_count }} brouillon{{ draft_count|pluralize }}</span>{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-wrap items-center gap-3 mb-6">
+  <a href="{% url 'admin_panel:formation_create' %}"
+     class="flex items-center gap-2 bg-sky-600 text-white font-bold px-4 py-2.5 rounded-xl hover:bg-sky-700 transition-colors text-sm">
+    + Créer une formation
+  </a>
+  <form method="get" class="flex gap-2 flex-1 min-w-64">
+    {% if status_f %}<input type="hidden" name="status" value="{{ status_f }}">{% endif %}
+    <input type="text" name="q" value="{{ q }}" placeholder="Rechercher une formation…"
+           class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+    <button type="submit" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm">🔍</button>
+  </form>
+</div>
+
+<div class="flex flex-wrap gap-2 mb-6">
+  <div class="flex gap-1 bg-white border border-slate-200 rounded-lg p-1">
+    {% for val, label in statut_choices %}
+    <a href="?status={{ val }}{% if q %}&q={{ q }}{% endif %}"
+       class="px-3 py-1.5 rounded-md text-sm font-medium {% if status_f == val %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">{{ label }}</a>
+    {% endfor %}
+  </div>
+  <select onchange="window.location.href='?sort='+this.value+'{% if q %}&q={{ q }}{% endif %}{% if status_f %}&status={{ status_f }}{% endif %}'"
+          class="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white ml-auto">
+    <option value="-date_creation" {% if sort == '-date_creation' %}selected{% endif %}>Plus récentes</option>
+    <option value="-nb_inscrits"   {% if sort == '-nb_inscrits'   %}selected{% endif %}>Plus inscrites</option>
+    <option value="titre"          {% if sort == 'titre'          %}selected{% endif %}>Alphabétique</option>
+  </select>
+</div>
+
+{% if page_obj.object_list %}
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+  {% for f in page_obj %}
+  <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
+    <div class="h-36 bg-gradient-to-br from-indigo-100 to-purple-200 flex items-center justify-center text-5xl relative">
+      {% if f.image_couverture %}
+      <img src="{{ f.image_couverture.url }}" alt="{{ f.titre }}" class="w-full h-full object-cover absolute inset-0">
+      {% else %}🎓{% endif %}
+      <span class="absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full
+        {% if f.est_publiee and not f.est_archivee %}bg-green-500 text-white
+        {% elif f.est_archivee %}bg-red-100 text-red-700
+        {% else %}bg-slate-200 text-slate-600{% endif %}">
+        {% if f.est_publiee and not f.est_archivee %}Publiée
+        {% elif f.est_archivee %}Archivée
+        {% else %}Brouillon{% endif %}
+      </span>
+    </div>
+    <div class="p-4 flex flex-col flex-1">
+      <div class="flex flex-wrap gap-1 mb-2">
+        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ f.get_type_formation_display }}</span>
+        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ f.get_niveau_display }}</span>
+      </div>
+      <h3 class="font-bold text-slate-800 text-sm leading-snug mb-1 line-clamp-2">{{ f.titre }}</h3>
+      <p class="text-xs text-slate-500 line-clamp-2 flex-1 mb-3">{{ f.description_courte }}</p>
+      <div class="flex items-center gap-3 text-xs text-slate-400 mb-3">
+        <span>📦 {{ f.nb_modules }}</span>
+        <span>📄 {{ f.nb_lessons }}</span>
+        <span>👥 {{ f.nb_inscrits }}</span>
+        <span class="ml-auto">{{ f.date_modification|date:"d/m/y" }}</span>
+      </div>
+      <div class="flex gap-2 flex-wrap">
+        <a href="{% url 'admin_panel:formation_edit' f.slug %}"
+           class="flex-1 text-center text-sky-700 text-xs px-2 py-1.5 bg-sky-50 hover:bg-sky-100 rounded-lg font-medium">✏️ Modifier</a>
+        <a href="{% url 'admin_panel:formation_preview' f.slug %}" target="_blank"
+           class="text-slate-600 text-xs px-2 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg font-medium">👁️</a>
+        <a href="{% url 'admin_panel:formation_analytics' f.slug %}"
+           class="text-slate-600 text-xs px-2 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg font-medium">📊</a>
+        <form method="post" action="{% url 'admin_panel:formation_delete' f.slug %}" class="inline"
+              onsubmit="return confirm('Supprimer «{{ f.titre }}» ?')">
+          {% csrf_token %}
+          <button type="submit" class="text-red-600 text-xs px-2 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg font-medium">🗑️</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="bg-white rounded-2xl border border-slate-200 px-6 py-16 text-center">
+  <div class="text-5xl mb-4">🎓</div>
+  <p class="text-slate-500 mb-2">Aucune formation trouvée.</p>
+  <a href="{% url 'admin_panel:formation_create' %}" class="text-sky-600 hover:underline text-sm">Créer la première formation →</a>
+</div>
+{% endif %}
+{% include "admin_panel/includes/pagination.html" %}
+{% endblock %}
