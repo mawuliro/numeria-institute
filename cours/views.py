@@ -1,14 +1,18 @@
+import base64
+import json
 import logging
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-
-logger = logging.getLogger(__name__)
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from django.http import HttpResponse
+from django.views.decorators.http import require_POST
 import uuid
+
+logger = logging.getLogger(__name__)
+
 from .models import Cours, InscriptionCours, Lecon, ProgressionLecon
 
 
@@ -146,6 +150,40 @@ def detail_cours(request, cours_id):
     total_lecons           = lecons.count()
     lecons_terminees_count = len(lecons_terminees_ids)
 
+    # ── Code exercises (Pyodide) ───────────────────────────────────────────
+    code_exercises_data = []
+    if lecon_active and est_inscrit:
+        from .models import CodeExercise, StudentCodeSubmission
+        raw_exs = CodeExercise.objects.filter(
+            lecon=lecon_active, is_active=True
+        ).order_by('order')
+        solved_ids = set(
+            StudentCodeSubmission.objects.filter(
+                student=request.user,
+                exercise__lecon=lecon_active,
+                is_correct=True,
+            ).values_list('exercise_id', flat=True)
+        )
+        for ex in raw_exs:
+            # test_code passed as base64 to keep it out of plain HTML
+            tc_b64 = base64.b64encode(ex.test_code.encode()).decode() if ex.test_code else ''
+            code_exercises_data.append({
+                'id':               ex.id,
+                'title':            ex.title,
+                'instructions':     ex.instructions,
+                'starter_code':     ex.starter_code,
+                'expected_output':  ex.expected_output,
+                'evaluation_mode':  ex.evaluation_mode,
+                'difficulty':       ex.difficulty,
+                'hint':             ex.hint,
+                'max_attempts':     ex.max_attempts,
+                'points':           ex.points,
+                'order':            ex.order,
+                'test_code_b64':    tc_b64,
+                'is_solved':        ex.id in solved_ids,
+                # solution_code intentionally omitted
+            })
+
     contexte = {
         'cours':                  cours,
         'lecons':                 lecons,
@@ -164,6 +202,7 @@ def detail_cours(request, cours_id):
         'reponse_choisie':        reponse_choisie,
         'evaluation_utilisateur': evaluation_utilisateur,
         'certificat_utilisateur': certificat_utilisateur,
+        'code_exercises':         code_exercises_data,
     }
     return render(request, 'cours/detail.html', contexte)
 
@@ -533,3 +572,89 @@ def poser_question(request, cours_id):
         return redirect('cours:detail', cours_id=cours_id)
     
     return redirect('cours:detail', cours_id=cours_id)
+
+# ─── CODE EXERCISE (Pyodide) ──────────────────────────────────────────────────
+
+@login_required
+@require_POST
+def submit_code_exercise(request, exercise_id):
+    """
+    Receive a code submission from the browser (Pyodide ran the code client-side).
+    Saves the result and awards points on first correct submission.
+    """
+    from .models import CodeExercise, StudentCodeSubmission
+
+    exercise = get_object_or_404(CodeExercise, id=exercise_id, is_active=True)
+
+    try:
+        body = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    code        = body.get('code', '')
+    output      = body.get('output', '')
+    is_correct  = bool(body.get('is_correct', False))
+    attempt_num = int(body.get('attempt_number', 1))
+    time_spent  = int(body.get('time_spent', 0))
+
+    StudentCodeSubmission.objects.create(
+        student=request.user,
+        exercise=exercise,
+        code_submitted=code,
+        output_received=output,
+        is_correct=is_correct,
+        attempt_number=attempt_num,
+        time_spent_seconds=time_spent,
+    )
+
+    points_earned = 0
+    if is_correct:
+        first_correct = StudentCodeSubmission.objects.filter(
+            student=request.user, exercise=exercise, is_correct=True
+        ).count() == 1
+
+        if first_correct:
+            points_earned = exercise.points
+            try:
+                from notifications.notifications import notify_user
+                notify_user(
+                    request.user,
+                    title=_("Exercice réussi ! 🎉"),
+                    message=_("Tu as réussi l'exercice '%(title)s' (+%(pts)s pts)") % {
+                        'title': exercise.title, 'pts': exercise.points
+                    },
+                    notification_type='success',
+                    link=reverse('cours:detail', kwargs={'cours_id': exercise.lecon.cours_id})
+                         + f'?lecon={exercise.lecon_id}',
+                )
+            except Exception:
+                pass
+
+    solved_count = StudentCodeSubmission.objects.filter(
+        student=request.user,
+        exercise__lecon__cours=exercise.lecon.cours,
+        is_correct=True,
+    ).values('exercise').distinct().count()
+
+    return JsonResponse({
+        'success': True,
+        'points_earned': points_earned,
+        'total_points': solved_count,
+    })
+
+
+@login_required
+def get_exercise_solution(request, exercise_id):
+    """Return solution code only when the student has exhausted attempts."""
+    from .models import CodeExercise, StudentCodeSubmission
+
+    exercise = get_object_or_404(CodeExercise, id=exercise_id, is_active=True)
+
+    if exercise.max_attempts > 0:
+        attempts = StudentCodeSubmission.objects.filter(
+            student=request.user, exercise=exercise
+        ).count()
+        if attempts < exercise.max_attempts:
+            return JsonResponse({'error': 'Attempts not exhausted'}, status=403)
+
+    return JsonResponse({'solution': exercise.solution_code})

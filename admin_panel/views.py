@@ -241,6 +241,10 @@ def candidature_action(request, candidature_id):
     action = request.POST.get('action')
     notes = request.POST.get('notes', '').strip()
 
+    if action in ['accept', 'reject'] and candidature.statut in ['acceptee', 'refusee']:
+        messages.warning(request, _("Cette candidature a déjà été traitée et ne peut plus être modifiée."))
+        return redirect('admin_panel:candidature_detail', candidature_id=candidature_id)
+
     if action == 'accept':
         candidature.statut = 'acceptee'
         candidature.commentaire_admin = notes
@@ -411,6 +415,10 @@ def mentorat_action(request, demande_id):
 
     mentee_user = demande.mentee.profil.utilisateur
     mentor_user = demande.mentor.profil.utilisateur
+
+    if action in ['accept', 'reject'] and demande.statut in ['acceptee', 'refusee', 'terminee']:
+        messages.warning(request, _("Cette demande a déjà été traitée et ne peut plus être modifiée."))
+        return redirect('admin_panel:mentorat_detail', demande_id=demande_id)
 
     if action == 'accept':
         demande.accepter()
@@ -628,3 +636,223 @@ def activity_log(request):
         'performed_by', 'target_user'
     )[:50]
     return render(request, 'admin_panel/activity_log.html', {'logs': logs})
+
+
+# ─── EXERCISE MANAGEMENT ──────────────────────────────────────────────────────
+
+@staff_only
+def exercises_list(request):
+    """List all code exercises with submissions stats and filters."""
+    from cours.models import CodeExercise, StudentCodeSubmission, Lecon, Cours
+
+    qs = CodeExercise.objects.select_related('lecon__cours').order_by(
+        'lecon__cours__titre', 'lecon__ordre', 'order'
+    )
+
+    cours_filter = request.GET.get('cours', '')
+    if cours_filter:
+        qs = qs.filter(lecon__cours_id=cours_filter)
+
+    lecon_filter = request.GET.get('lecon', '')
+    if lecon_filter:
+        qs = qs.filter(lecon_id=lecon_filter)
+
+    # Annotate with submission counts
+    exercises = list(qs)
+    submission_counts = {
+        ex.id: StudentCodeSubmission.objects.filter(exercise=ex, is_correct=True).values('student').distinct().count()
+        for ex in exercises
+    }
+
+    return render(request, 'admin_panel/exercises_list.html', {
+        'exercises': exercises,
+        'submission_counts': submission_counts,
+        'cours_list': Cours.objects.filter(est_publie=True).order_by('titre'),
+        'cours_filter': cours_filter,
+    })
+
+
+@staff_only
+def exercise_create(request, lecon_id):
+    """Create a new code exercise for a lesson."""
+    from cours.models import CodeExercise, Lecon
+
+    lecon = get_object_or_404(Lecon, id=lecon_id)
+
+    if request.method == 'POST':
+        title        = request.POST.get('title', '').strip()
+        instructions = request.POST.get('instructions', '').strip()
+        starter      = request.POST.get('starter_code', '').strip()
+        solution     = request.POST.get('solution_code', '').strip()
+        expected     = request.POST.get('expected_output', '').strip()
+        test_code    = request.POST.get('test_code', '').strip()
+        eval_mode    = request.POST.get('evaluation_mode', 'exact')
+        difficulty   = request.POST.get('difficulty', 'easy')
+        hint         = request.POST.get('hint', '').strip()
+        max_att      = int(request.POST.get('max_attempts', 0) or 0)
+        points       = int(request.POST.get('points', 10) or 10)
+        order        = int(request.POST.get('order', 0) or 0)
+
+        if not title or not starter or not solution:
+            messages.error(request, _("Titre, code de départ et solution sont obligatoires."))
+        else:
+            CodeExercise.objects.create(
+                lecon=lecon, title=title, instructions=instructions,
+                starter_code=starter, solution_code=solution,
+                expected_output=expected, test_code=test_code,
+                evaluation_mode=eval_mode, difficulty=difficulty,
+                hint=hint, max_attempts=max_att, points=points, order=order,
+            )
+            log_staff_action(request.user, 'notification_sent',
+                             f"Exercice de code créé: '{title}' pour {lecon.titre}")
+            messages.success(request, _("Exercice créé avec succès."))
+            return redirect('admin_panel:exercises_list')
+
+    next_order = CodeExercise.objects.filter(lecon=lecon).count()
+    return render(request, 'admin_panel/exercise_form.html', {
+        'lecon': lecon,
+        'next_order': next_order,
+        'action': 'create',
+        'eval_modes': CodeExercise.EVAL_MODES,
+        'difficulties': CodeExercise.DIFFICULTY_CHOICES,
+    })
+
+
+@staff_only
+def exercise_edit(request, exercise_id):
+    """Edit an existing code exercise."""
+    from cours.models import CodeExercise
+
+    ex = get_object_or_404(CodeExercise, id=exercise_id)
+
+    if request.method == 'POST':
+        ex.title            = request.POST.get('title', '').strip()
+        ex.instructions     = request.POST.get('instructions', '').strip()
+        ex.starter_code     = request.POST.get('starter_code', '').strip()
+        ex.solution_code    = request.POST.get('solution_code', '').strip()
+        ex.expected_output  = request.POST.get('expected_output', '').strip()
+        ex.test_code        = request.POST.get('test_code', '').strip()
+        ex.evaluation_mode  = request.POST.get('evaluation_mode', 'exact')
+        ex.difficulty       = request.POST.get('difficulty', 'easy')
+        ex.hint             = request.POST.get('hint', '').strip()
+        ex.max_attempts     = int(request.POST.get('max_attempts', 0) or 0)
+        ex.points           = int(request.POST.get('points', 10) or 10)
+        ex.order            = int(request.POST.get('order', 0) or 0)
+        ex.is_active        = 'is_active' in request.POST
+        ex.save()
+        messages.success(request, _("Exercice mis à jour."))
+        return redirect('admin_panel:exercises_list')
+
+    from cours.models import CodeExercise as CE
+    return render(request, 'admin_panel/exercise_form.html', {
+        'exercise': ex,
+        'lecon': ex.lecon,
+        'action': 'edit',
+        'eval_modes': CE.EVAL_MODES,
+        'difficulties': CE.DIFFICULTY_CHOICES,
+    })
+
+
+@staff_only
+@require_POST
+def exercise_delete(request, exercise_id):
+    from cours.models import CodeExercise
+    ex = get_object_or_404(CodeExercise, id=exercise_id)
+    title = ex.title
+    ex.delete()
+    messages.success(request, _("Exercice « %(title)s » supprimé.") % {'title': title})
+    return redirect('admin_panel:exercises_list')
+
+
+@staff_only
+@require_POST
+def exercise_reorder(request, exercise_id):
+    """AJAX endpoint to update exercise order."""
+    from cours.models import CodeExercise
+    import json as _json
+    ex = get_object_or_404(CodeExercise, id=exercise_id)
+    try:
+        body = _json.loads(request.body)
+        ex.order = int(body.get('order', ex.order))
+        ex.save(update_fields=['order'])
+        from django.http import JsonResponse
+        return JsonResponse({'ok': True})
+    except Exception:
+        from django.http import JsonResponse
+        return JsonResponse({'ok': False}, status=400)
+
+
+@staff_only
+def exercise_results(request):
+    """Student submission results table with filters and leaderboard."""
+    from cours.models import StudentCodeSubmission, CodeExercise
+    from django.db.models import Count, Sum
+
+    qs = StudentCodeSubmission.objects.select_related(
+        'student', 'exercise__lecon__cours'
+    ).order_by('-submitted_at')
+
+    correct_filter = request.GET.get('correct', '')
+    if correct_filter == '1':
+        qs = qs.filter(is_correct=True)
+    elif correct_filter == '0':
+        qs = qs.filter(is_correct=False)
+
+    ex_filter = request.GET.get('exercise', '')
+    if ex_filter:
+        qs = qs.filter(exercise_id=ex_filter)
+
+    paginator = Paginator(qs, 30)
+    page_obj  = paginator.get_page(request.GET.get('page'))
+
+    # Leaderboard: top students by distinct correct exercises * points
+    leaderboard = (
+        StudentCodeSubmission.objects
+        .filter(is_correct=True)
+        .values('student__id', 'student__first_name', 'student__last_name',
+                'student__username')
+        .annotate(solved=Count('exercise', distinct=True),
+                  total_pts=Sum('exercise__points'))
+        .order_by('-total_pts')[:20]
+    )
+
+    all_exercises = CodeExercise.objects.select_related('lecon').order_by('lecon__cours__titre', 'order')
+
+    return render(request, 'admin_panel/exercise_results.html', {
+        'page_obj': page_obj,
+        'leaderboard': leaderboard,
+        'all_exercises': all_exercises,
+        'correct_filter': correct_filter,
+        'ex_filter': ex_filter,
+    })
+
+
+@staff_only
+def exercise_results_csv(request):
+    """Export submissions as CSV."""
+    from cours.models import StudentCodeSubmission
+    import csv
+    from django.http import HttpResponse as _HttpResponse
+
+    response = _HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="submissions.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Student', 'Email', 'Exercise', 'Lesson', 'Course',
+                     'Correct', 'Attempts', 'Time(s)', 'Date'])
+
+    for sub in StudentCodeSubmission.objects.select_related(
+        'student', 'exercise__lecon__cours'
+    ).order_by('-submitted_at')[:5000]:
+        writer.writerow([
+            sub.student.get_full_name() or sub.student.username,
+            sub.student.email,
+            sub.exercise.title,
+            sub.exercise.lecon.titre,
+            sub.exercise.lecon.cours.titre,
+            sub.is_correct,
+            sub.attempt_number,
+            sub.time_spent_seconds,
+            sub.submitted_at.strftime('%Y-%m-%d %H:%M'),
+        ])
+    return response

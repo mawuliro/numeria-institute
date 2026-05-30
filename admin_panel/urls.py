@@ -28,4 +28,13 @@ urlpatterns = [
 
     # Activity log
     path('activite/', views.activity_log, name='activity_log'),
+
+    # Code exercises
+    path('exercices/', views.exercises_list, name='exercises_list'),
+    path('exercices/resultats/', views.exercise_results, name='exercise_results'),
+    path('exercices/resultats/csv/', views.exercise_results_csv, name='exercise_results_csv'),
+    path('exercices/lecon/<int:lecon_id>/ajouter/', views.exercise_create, name='exercise_create'),
+    path('exercices/<int:exercise_id>/modifier/', views.exercise_edit, name='exercise_edit'),
+    path('exercices/<int:exercise_id>/supprimer/', views.exercise_delete, name='exercise_delete'),
+    path('exercices/<int:exercise_id>/reorder/', views.exercise_reorder, name='exercise_reorder'),
 ]

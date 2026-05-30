@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 import uuid
 
 # =============================================================================
@@ -686,3 +688,99 @@ class Certificat(models.Model):
         verbose_name = 'Certificat'
         verbose_name_plural = 'Certificats'
         ordering = ['-date_emission']
+
+
+# =============================================================================
+# EXERCICES DE CODE (Pyodide — exécution dans le navigateur)
+# =============================================================================
+
+class CodeExercise(models.Model):
+    DIFFICULTY_CHOICES = [
+        ('easy',   _('Facile')),
+        ('medium', _('Moyen')),
+        ('hard',   _('Difficile')),
+    ]
+    EVAL_MODES = [
+        ('exact',    _('Output exact')),
+        ('contains', _('Output contient')),
+        ('tests',    _('Tests unitaires')),
+    ]
+
+    lecon = models.ForeignKey(
+        'Lecon', on_delete=models.CASCADE,
+        related_name='code_exercises', verbose_name=_('Leçon'),
+    )
+    title = models.CharField(max_length=300, verbose_name=_('Titre'))
+    instructions = models.TextField(
+        verbose_name=_('Instructions'),
+        help_text=_('Instructions en Markdown'),
+    )
+    starter_code = models.TextField(
+        verbose_name=_('Code de départ'),
+        help_text=_('Code affiché à l\'étudiant'),
+    )
+    solution_code = models.TextField(
+        verbose_name=_('Solution'),
+        help_text=_('Jamais montrée à l\'étudiant'),
+    )
+    expected_output = models.TextField(
+        blank=True, verbose_name=_('Output attendu'),
+        help_text=_('Pour comparaison exacte ou contient'),
+    )
+    test_code = models.TextField(
+        blank=True, verbose_name=_('Code de tests'),
+        help_text=_('Assertions cachées (mode tests unitaires)'),
+    )
+    evaluation_mode = models.CharField(
+        max_length=20, choices=EVAL_MODES, default='exact',
+        verbose_name=_('Mode d\'évaluation'),
+    )
+    difficulty = models.CharField(
+        max_length=10, choices=DIFFICULTY_CHOICES, default='easy',
+        verbose_name=_('Difficulté'),
+    )
+    hint = models.TextField(
+        blank=True, verbose_name=_('Indice'),
+        help_text=_('Affiché après 3 tentatives échouées'),
+    )
+    max_attempts = models.IntegerField(
+        default=0, verbose_name=_('Tentatives max'),
+        help_text=_('0 = illimité'),
+    )
+    points = models.IntegerField(default=10, verbose_name=_('Points'))
+    order = models.IntegerField(default=0, verbose_name=_('Ordre'))
+    is_active = models.BooleanField(default=True, verbose_name=_('Actif'))
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = _('Exercice de code')
+        verbose_name_plural = _('Exercices de code')
+
+    def __str__(self):
+        return f"[{self.lecon.titre}] {self.title}"
+
+
+class StudentCodeSubmission(models.Model):
+    student = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='code_submissions', verbose_name=_('Étudiant'),
+    )
+    exercise = models.ForeignKey(
+        CodeExercise, on_delete=models.CASCADE,
+        related_name='submissions', verbose_name=_('Exercice'),
+    )
+    code_submitted = models.TextField(verbose_name=_('Code soumis'))
+    output_received = models.TextField(blank=True, verbose_name=_('Output reçu'))
+    is_correct = models.BooleanField(default=False, verbose_name=_('Correct'))
+    attempt_number = models.IntegerField(default=1, verbose_name=_('Tentative n°'))
+    time_spent_seconds = models.IntegerField(default=0, verbose_name=_('Temps (s)'))
+    submitted_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Soumis le'))
+
+    class Meta:
+        ordering = ['-submitted_at']
+        verbose_name = _('Soumission de code')
+        verbose_name_plural = _('Soumissions de code')
+
+    def __str__(self):
+        status = '✅' if self.is_correct else '❌'
+        return f"{status} {self.student.username} — {self.exercise.title} (#{self.attempt_number})"

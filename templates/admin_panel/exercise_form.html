@@ -1,0 +1,185 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}{% if action == 'create' %}{% trans "Nouvel exercice" %}{% else %}{% trans "Modifier exercice" %}{% endif %}{% endblock %}
+{% block page_heading %}💻 {% if action == 'create' %}{% trans "Nouvel exercice" %}{% else %}{% trans "Modifier" %}: {{ exercise.title }}{% endif %}{% endblock %}
+{% block breadcrumb %}<p class="text-xs text-slate-400 mt-0.5"><a href="{% url 'admin_panel:exercises_list' %}" class="hover:underline">{% trans "Exercices" %}</a> › {% if action == 'create' %}{% trans "Créer" %}{% else %}{{ exercise.title }}{% endif %}</p>{% endblock %}
+
+{% block content %}
+<!-- CodeMirror for the admin form -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+
+<div class="max-w-4xl">
+  <form method="post" id="exercise-form">
+    {% csrf_token %}
+    <div class="space-y-5">
+
+      <!-- Title + metadata -->
+      <div class="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+        <h3 class="font-semibold text-slate-700">{% trans "Informations de base" %}</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="md:col-span-2">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">{% trans "Titre" %} *</label>
+            <input type="text" name="title" required value="{{ exercise.title|default:'' }}" maxlength="300"
+                   class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">{% trans "Mode d'évaluation" %}</label>
+            <select name="evaluation_mode" id="eval-mode-select"
+                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+              {% for val, label in eval_modes %}
+              <option value="{{ val }}" {% if exercise.evaluation_mode == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">{% trans "Difficulté" %}</label>
+            <select name="difficulty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+              {% for val, label in difficulties %}
+              <option value="{{ val }}" {% if exercise.difficulty == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">{% trans "Points" %}</label>
+            <input type="number" name="points" min="0" value="{{ exercise.points|default:10 }}"
+                   class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">{% trans "Tentatives max" %} <span class="font-normal text-slate-400">(0 = illimité)</span></label>
+            <input type="number" name="max_attempts" min="0" value="{{ exercise.max_attempts|default:0 }}"
+                   class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">{% trans "Ordre" %}</label>
+            <input type="number" name="order" min="0" value="{{ exercise.order|default:next_order|default:0 }}"
+                   class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+          </div>
+          {% if action == 'edit' %}
+          <div class="flex items-center gap-2">
+            <input type="checkbox" name="is_active" id="is-active-cb" {% if exercise.is_active %}checked{% endif %}
+                   class="rounded">
+            <label for="is-active-cb" class="text-sm text-slate-700">{% trans "Exercice actif" %}</label>
+          </div>
+          {% endif %}
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">{% trans "Instructions" %} <span class="font-normal text-slate-400">({% trans "Markdown supporté" %})</span></label>
+          <textarea name="instructions" rows="4"
+                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500">{{ exercise.instructions|default:'' }}</textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">💡 {% trans "Indice" %} <span class="font-normal text-slate-400">({% trans "affiché après 3 tentatives échouées" %})</span></label>
+          <textarea name="hint" rows="2"
+                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">{{ exercise.hint|default:'' }}</textarea>
+        </div>
+      </div>
+
+      <!-- Code sections -->
+      <div class="bg-white rounded-xl border border-slate-200 p-6 space-y-5">
+        <h3 class="font-semibold text-slate-700">{% trans "Code" %}</h3>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">▶ {% trans "Code de départ" %} * <span class="font-normal text-slate-400">({% trans "affiché à l'étudiant" %})</span></label>
+          <textarea id="cm-starter" name="starter_code" class="hidden-cm">{{ exercise.starter_code|default:'# Écris ton code ici\n' }}</textarea>
+          <div id="cm-wrapper-starter" class="border border-slate-300 rounded-lg overflow-hidden"></div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">🔑 {% trans "Solution" %} * <span class="font-normal text-slate-400">({% trans "jamais montrée à l'étudiant" %})</span></label>
+          <textarea id="cm-solution" name="solution_code" class="hidden-cm">{{ exercise.solution_code|default:'' }}</textarea>
+          <div id="cm-wrapper-solution" class="border border-slate-300 rounded-lg overflow-hidden"></div>
+        </div>
+
+        <!-- Expected output (shown for exact/contains modes) -->
+        <div id="expected-section">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">📤 {% trans "Output attendu" %}</label>
+          <textarea name="expected_output" rows="3"
+                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500">{{ exercise.expected_output|default:'' }}</textarea>
+        </div>
+
+        <!-- Test code (shown for tests mode) -->
+        <div id="test-section" class="hidden">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">🧪 {% trans "Code de tests" %} <span class="font-normal text-slate-400">(assert statements — {% trans "caché à l'étudiant" %})</span></label>
+          <textarea id="cm-tests" name="test_code" class="hidden-cm">{{ exercise.test_code|default:'' }}</textarea>
+          <div id="cm-wrapper-tests" class="border border-slate-300 rounded-lg overflow-hidden"></div>
+        </div>
+      </div>
+
+      <!-- Leçon info -->
+      <div class="bg-slate-50 rounded-xl border border-slate-200 p-4 text-sm text-slate-600">
+        <span class="font-medium">{% trans "Leçon" %} :</span> {{ lecon.cours.titre }} › {{ lecon.titre }}
+      </div>
+
+      <!-- Submit -->
+      <div class="flex gap-3">
+        <button type="submit"
+                class="bg-sky-600 text-white font-bold px-6 py-3 rounded-xl hover:bg-sky-700 transition-colors text-sm">
+          {% if action == 'create' %}➕ {% trans "Créer l'exercice" %}{% else %}💾 {% trans "Enregistrer" %}{% endif %}
+        </button>
+        <a href="{% url 'admin_panel:exercises_list' %}"
+           class="bg-slate-100 text-slate-700 font-semibold px-6 py-3 rounded-xl hover:bg-slate-200 transition-colors text-sm">
+          {% trans "Annuler" %}
+        </a>
+      </div>
+
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Show/hide fields based on eval mode
+function updateEvalFields() {
+  var mode = document.getElementById('eval-mode-select').value;
+  var expSec  = document.getElementById('expected-section');
+  var testSec = document.getElementById('test-section');
+  if (mode === 'tests') {
+    expSec.classList.add('hidden');
+    testSec.classList.remove('hidden');
+  } else {
+    expSec.classList.remove('hidden');
+    testSec.classList.add('hidden');
+  }
+}
+document.getElementById('eval-mode-select').addEventListener('change', updateEvalFields);
+updateEvalFields();
+
+// Init CodeMirror editors
+function makeCM(textareaId, wrapperId) {
+  var ta = document.getElementById(textareaId);
+  var wrapper = document.getElementById(wrapperId);
+  if (!ta || !wrapper) return null;
+  var cm = CodeMirror(wrapper, {
+    value: ta.value,
+    mode: 'python',
+    theme: 'material-darker',
+    lineNumbers: true,
+    indentUnit: 4,
+    tabSize: 4,
+    indentWithTabs: false,
+    extraKeys: { Tab: function(cm) { cm.replaceSelection('    ', 'end'); } },
+    lineWrapping: true,
+    viewportMargin: Infinity,
+  });
+  cm.getWrapperElement().style.minHeight = '180px';
+  // Sync back to textarea on form submit
+  document.getElementById('exercise-form').addEventListener('submit', function() {
+    ta.value = cm.getValue();
+  });
+  return cm;
+}
+document.addEventListener('DOMContentLoaded', function() {
+  makeCM('cm-starter', 'cm-wrapper-starter');
+  makeCM('cm-solution', 'cm-wrapper-solution');
+  makeCM('cm-tests', 'cm-wrapper-tests');
+});
+</script>
+{% endblock %}

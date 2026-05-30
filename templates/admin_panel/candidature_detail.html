@@ -9,19 +9,69 @@
 <div class="max-w-4xl space-y-5">
 
   <!-- Header bar with status + actions -->
-  <div class="bg-white rounded-xl border border-slate-200 p-5 flex flex-wrap items-center gap-4">
-    <span class="badge-{{ c.statut }} text-sm font-bold px-3 py-1.5 rounded-full">{{ c.get_statut_display }}</span>
-    <div class="ml-auto flex flex-wrap gap-2">
-      {% if c.statut in "soumise,en_revue" %}
-      <button type="button" onclick="openModal('modal-review')"
-              class="text-blue-700 text-sm px-3 py-2 bg-blue-50 hover:bg-blue-100 rounded-lg font-medium">{% trans "En revue" %}</button>
-      <button type="button" onclick="openModal('modal-accept')"
-              class="text-green-700 text-sm px-3 py-2 bg-green-50 hover:bg-green-100 rounded-lg font-medium">✅ {% trans "Accepter" %}</button>
-      <button type="button" onclick="openModal('modal-reject')"
-              class="text-red-700 text-sm px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg font-medium">❌ {% trans "Refuser" %}</button>
-      <button type="button" onclick="openModal('modal-waitlist')"
-              class="text-orange-700 text-sm px-3 py-2 bg-orange-50 hover:bg-orange-100 rounded-lg font-medium">⏳ {% trans "Liste d'attente" %}</button>
-      {% endif %}
+  <div class="bg-white rounded-xl border border-slate-200 p-5 space-y-5">
+    <div class="flex flex-wrap items-center gap-4">
+      <div class="min-w-0">
+        {% if c.statut == 'acceptee' %}
+        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-3 py-1.5 text-sm font-semibold">✅ {% trans "Candidature acceptée" %}</span>
+        {% elif c.statut == 'refusee' %}
+        <span class="inline-flex items-center gap-2 rounded-full bg-red-600 text-white px-3 py-1.5 text-sm font-semibold">❌ {% trans "Candidature rejetée" %}</span>
+        {% elif c.statut == 'en_revue' %}
+        <span class="inline-flex items-center gap-2 rounded-full bg-sky-600 text-white px-3 py-1.5 text-sm font-semibold">🔍 {% trans "En cours de révision" %}</span>
+        {% elif c.statut == 'liste_attente' %}
+        <span class="inline-flex items-center gap-2 rounded-full bg-orange-500 text-white px-3 py-1.5 text-sm font-semibold">⏳ {% trans "Liste d'attente" %}</span>
+        {% else %}
+        <span class="inline-flex items-center gap-2 rounded-full bg-amber-400 text-slate-900 px-3 py-1.5 text-sm font-semibold">⏳ {% trans "En attente" %}</span>
+        {% endif %}
+        {% if c.reviewed_by and c.reviewed_at %}
+        <p class="text-sm text-slate-500 mt-2">
+          {% if c.statut == 'acceptee' %}
+            {% trans "Approuvée par" %}
+          {% elif c.statut == 'refusee' %}
+            {% trans "Rejetée par" %}
+          {% elif c.statut == 'liste_attente' %}
+            {% trans "Mise en liste d'attente par" %}
+          {% else %}
+            {% trans "Traité par" %}
+          {% endif %}
+          {{ c.reviewed_by.get_full_name|default:c.reviewed_by.username }} • {{ c.reviewed_at|date:"d/m/Y à H:i" }}
+        </p>
+        {% endif %}
+      </div>
+      <div class="ml-auto flex flex-wrap gap-2">
+        {% if c.statut == 'soumise' %}
+        <button type="button" onclick="openModal('modal-review')"
+                class="text-blue-700 text-sm px-3 py-2 bg-blue-50 hover:bg-blue-100 rounded-lg font-medium">{% trans "En revue" %}</button>
+        <button type="button" onclick="openModal('modal-accept')"
+                class="text-green-700 text-sm px-3 py-2 bg-green-50 hover:bg-green-100 rounded-lg font-medium">✅ {% trans "Accepter" %}</button>
+        <button type="button" onclick="openModal('modal-reject')"
+                class="text-red-700 text-sm px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg font-medium">❌ {% trans "Refuser" %}</button>
+        <button type="button" onclick="openModal('modal-waitlist')"
+                class="text-orange-700 text-sm px-3 py-2 bg-orange-50 hover:bg-orange-100 rounded-lg font-medium">⏳ {% trans "Liste d'attente" %}</button>
+        {% elif c.statut == 'en_revue' %}
+        <button type="button" onclick="openModal('modal-accept')"
+                class="text-green-700 text-sm px-3 py-2 bg-green-50 hover:bg-green-100 rounded-lg font-medium">✅ {% trans "Accepter" %}</button>
+        <button type="button" onclick="openModal('modal-reject')"
+                class="text-red-700 text-sm px-3 py-2 bg-red-50 hover:bg-red-100 rounded-lg font-medium">❌ {% trans "Refuser" %}</button>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+      <div class="flex items-center gap-2">
+        <span class="h-3.5 w-3.5 rounded-full {% if c.statut == 'soumise' %}bg-sky-400 animate-pulse{% else %}bg-slate-900{% endif %}"></span>
+        <span class="{% if c.statut == 'soumise' %}text-slate-900{% else %}text-slate-600{% endif %}">Soumise{% if c.date_soumission %} • {{ c.date_soumission|date:"d/m/Y" }}{% endif %}</span>
+      </div>
+      <span class="text-slate-400">→</span>
+      <div class="flex items-center gap-2">
+        <span class="h-3.5 w-3.5 rounded-full {% if c.statut == 'soumise' %}border border-slate-300 bg-white text-slate-400{% elif c.statut == 'en_revue' %}bg-sky-400 animate-pulse{% else %}bg-slate-900{% endif %}"></span>
+        <span class="{% if c.statut == 'soumise' %}text-slate-500{% elif c.statut == 'en_revue' %}text-slate-900{% else %}text-slate-600{% endif %}">En révision</span>
+      </div>
+      <span class="text-slate-400">→</span>
+      <div class="flex items-center gap-2">
+        <span class="h-3.5 w-3.5 rounded-full {% if c.statut in 'acceptee,refusee,liste_attente' %}bg-sky-400 animate-pulse{% else %}border border-slate-300 bg-white{% endif %}"></span>
+        <span class="{% if c.statut in 'acceptee,refusee,liste_attente' %}text-slate-900{% else %}text-slate-500{% endif %}">Décision finale</span>
+      </div>
     </div>
   </div>
 

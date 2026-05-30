@@ -1,0 +1,471 @@
+{% load i18n %}
+{% comment %}
+  Props (passed via {% include ... with exercise=ex %}):
+    exercise  — sanitised dict from detail_cours view (NO solution_code or test_code in plain text)
+{% endcomment %}
+
+{# Unique prefix for all DOM IDs on this exercise #}
+{% with eid=exercise.id %}
+
+<style>
+/* Confetti animation — defined once, reused by all sandboxes */
+@keyframes confetti-fall {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(300px) rotate(720deg); opacity: 0; }
+}
+.cm-editor-sandbox .CodeMirror {
+  height: auto;
+  min-height: 200px;
+  max-height: 400px;
+  font-size: 0.875rem;
+  font-family: 'Courier New', Courier, monospace;
+  border-radius: 0 0 8px 8px;
+}
+.cm-editor-sandbox .CodeMirror-scroll { min-height: 200px; }
+</style>
+
+<div id="sandbox-{{ eid }}"
+     class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
+
+  <!-- ── HEADER ─────────────────────────────────────────────────────── -->
+  <div class="flex items-center justify-between px-5 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+    <div class="flex items-center gap-3">
+      <span class="w-7 h-7 rounded-full bg-numeria-bleu text-numeria-or font-bold text-xs flex items-center justify-center">{{ exercise.order }}</span>
+      <span class="font-semibold text-gray-800 dark:text-gray-100 text-sm">{{ exercise.title }}</span>
+      <!-- Difficulty badge -->
+      {% if exercise.difficulty == 'easy' %}
+        <span class="text-xs font-medium bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{% trans "Facile" %}</span>
+      {% elif exercise.difficulty == 'medium' %}
+        <span class="text-xs font-medium bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">{% trans "Moyen" %}</span>
+      {% else %}
+        <span class="text-xs font-medium bg-red-100 text-red-700 px-2 py-0.5 rounded-full">{% trans "Difficile" %}</span>
+      {% endif %}
+    </div>
+    <div class="flex items-center gap-2">
+      {% if exercise.is_solved %}
+        <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">✅ {% trans "Réussi" %}</span>
+      {% endif %}
+      <span class="text-xs text-gray-400 dark:text-gray-500">{{ exercise.points }} pts</span>
+    </div>
+  </div>
+
+  <!-- ── INSTRUCTIONS ────────────────────────────────────────────────── -->
+  <div id="sandbox-{{ eid }}-instructions"
+       class="px-5 py-4 text-sm text-gray-700 dark:text-gray-200 leading-relaxed prose prose-sm dark:prose-invert max-w-none border-b border-gray-100 dark:border-gray-700">
+    {{ exercise.instructions }}
+  </div>
+
+  <!-- ── PYODIDE LOADING INDICATOR ───────────────────────────────────── -->
+  <div id="sandbox-{{ eid }}-pyodide-status"
+       class="px-5 py-2 text-xs text-sky-600 bg-sky-50 dark:bg-sky-900/20 dark:text-sky-400 flex items-center gap-2">
+    <svg class="animate-spin w-3 h-3" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+    </svg>
+    <span id="sandbox-{{ eid }}-pyodide-msg">{% trans "Chargement de Python…" %}</span>
+  </div>
+
+  <!-- ── CODE EDITOR ─────────────────────────────────────────────────── -->
+  <div class="cm-editor-sandbox">
+    <textarea id="sandbox-{{ eid }}-code" style="display:none;">{{ exercise.starter_code }}</textarea>
+  </div>
+
+  <!-- ── CONTROL BAR ────────────────────────────────────────────────── -->
+  <div class="flex flex-wrap items-center gap-2 px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+    <button id="sandbox-{{ eid }}-run-btn" disabled
+            class="flex items-center gap-1.5 bg-numeria-bleu text-white font-bold text-sm px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      ▶ {% trans "Exécuter" %}
+    </button>
+    <button id="sandbox-{{ eid }}-reset-btn"
+            class="flex items-center gap-1.5 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm px-3 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
+      🔄 {% trans "Réinitialiser" %}
+    </button>
+    <button id="sandbox-{{ eid }}-copy-btn"
+            class="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 text-sm px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+      📋 {% trans "Copier" %}
+    </button>
+    {% if exercise.hint %}
+    <button id="sandbox-{{ eid }}-hint-btn"
+            class="hidden items-center gap-1.5 text-yellow-700 text-sm px-3 py-2 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors font-medium">
+      💡 {% trans "Indice" %}
+    </button>
+    {% endif %}
+    {% if exercise.max_attempts > 0 %}
+    <span id="sandbox-{{ eid }}-attempts-counter"
+          class="ml-auto text-xs text-gray-400 dark:text-gray-500">
+      {% trans "Tentative" %} <span id="sandbox-{{ eid }}-attempt-num">0</span> / {{ exercise.max_attempts }}
+    </span>
+    {% endif %}
+    <button id="sandbox-{{ eid }}-solution-btn"
+            class="hidden items-center gap-1.5 text-purple-700 text-sm px-3 py-2 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors font-medium">
+      👁 {% trans "Voir la solution" %}
+    </button>
+  </div>
+
+  <!-- ── HINT PANEL ───────────────────────────────────────────────────── -->
+  {% if exercise.hint %}
+  <div id="sandbox-{{ eid }}-hint-panel"
+       class="hidden px-5 py-3 bg-yellow-50 dark:bg-yellow-900/20 border-t border-yellow-200 dark:border-yellow-700 text-sm text-yellow-800 dark:text-yellow-300">
+    💡 <strong>{% trans "Indice" %} :</strong> {{ exercise.hint }}
+  </div>
+  {% endif %}
+
+  <!-- ── OUTPUT PANEL ────────────────────────────────────────────────── -->
+  <div id="sandbox-{{ eid }}-output-wrapper"
+       class="hidden border-t border-gray-200 dark:border-gray-700">
+    <div class="px-4 py-2 bg-gray-800 text-xs text-gray-400 font-mono flex items-center justify-between">
+      <span>OUTPUT</span>
+      <button onclick="document.getElementById('sandbox-{{ eid }}-output-wrapper').classList.add('hidden')"
+              class="text-gray-500 hover:text-gray-300 text-xs">✕</button>
+    </div>
+    <pre id="sandbox-{{ eid }}-output"
+         class="bg-gray-900 text-green-400 font-mono text-sm px-4 py-3 overflow-auto max-h-48 whitespace-pre-wrap"></pre>
+    <div id="sandbox-{{ eid }}-plot-wrapper" class="bg-gray-900 px-4 pb-3 hidden">
+      <img id="sandbox-{{ eid }}-plot-img" src="" alt="plot" class="max-w-full rounded">
+    </div>
+  </div>
+
+  <!-- ── FEEDBACK BANNER ─────────────────────────────────────────────── -->
+  <div id="sandbox-{{ eid }}-feedback" class="hidden px-5 py-4 relative overflow-hidden border-t border-gray-100 dark:border-gray-700">
+    <div id="sandbox-{{ eid }}-confetti" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+    <div id="sandbox-{{ eid }}-feedback-content"></div>
+  </div>
+
+</div><!-- /sandbox -->
+
+<!-- ── PER-EXERCISE JAVASCRIPT (IIFE) ──────────────────────────────────────── -->
+<script>
+(function() {
+  'use strict';
+
+  /* ── Config (server-rendered, safe subset — no solution/test in plain text) */
+  var EID            = {{ exercise.id }};
+  var EVAL_MODE      = "{{ exercise.evaluation_mode|escapejs }}";
+  var EXPECTED       = "{{ exercise.expected_output|escapejs }}";
+  var TEST_B64       = "{{ exercise.test_code_b64|escapejs }}";
+  var MAX_ATTEMPTS   = {{ exercise.max_attempts }};
+  var HINT_TEXT      = "{{ exercise.hint|escapejs }}";
+  var POINTS         = {{ exercise.points }};
+  var STARTER        = "{{ exercise.starter_code|escapejs }}";
+  var IS_SOLVED      = {% if exercise.is_solved %}true{% else %}false{% endif %};
+  var SUBMIT_URL     = "{% url 'cours:submit_code_exercise' exercise.id %}";
+  var SOLUTION_URL   = "{% url 'cours:get_exercise_solution' exercise.id %}";
+  var CSRF           = "{{ csrf_token }}";
+
+  /* ── State */
+  var attemptCount   = 0;
+  var solved         = IS_SOLVED;
+  var editor         = null;
+  var startTime      = Date.now();
+
+  /* ── Helpers */
+  function g(suffix) { return document.getElementById('sandbox-' + EID + '-' + suffix); }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function setStatus(msg, done) {
+    var el = g('pyodide-status');
+    var msgEl = g('pyodide-msg');
+    if (msgEl) msgEl.textContent = msg;
+    if (done && el) el.style.display = 'none';
+  }
+
+  /* ── CodeMirror init */
+  function initEditor() {
+    var textarea = g('code');
+    if (!textarea || !window.CodeMirror) return;
+    editor = CodeMirror.fromTextArea(textarea, {
+      mode: 'python',
+      theme: 'material-darker',
+      lineNumbers: true,
+      indentUnit: 4,
+      tabSize: 4,
+      indentWithTabs: false,
+      extraKeys: { Tab: function(cm) { cm.replaceSelection('    ', 'end'); } },
+      lineWrapping: true,
+      viewportMargin: Infinity,
+    });
+    editor.getWrapperElement().style.minHeight = '200px';
+    if (solved) {
+      var runBtn = g('run-btn');
+      if (runBtn) { runBtn.textContent = '✅ Déjà réussi'; runBtn.disabled = true; }
+    }
+  }
+
+  /* ── Run code */
+  async function runCode() {
+    if (solved) return;
+    if (MAX_ATTEMPTS > 0 && attemptCount >= MAX_ATTEMPTS) return;
+
+    var code   = editor ? editor.getValue() : '';
+    var runBtn = g('run-btn');
+    var outEl  = g('output');
+    var outWr  = g('output-wrapper');
+    var fbEl   = g('feedback');
+
+    runBtn.disabled  = true;
+    runBtn.innerHTML = '<svg class="animate-spin inline w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg> …';
+    outEl.textContent = '{% trans "En cours d\'exécution…" %}';
+    outEl.style.color = '#9ca3af';
+    outWr.classList.remove('hidden');
+    fbEl.classList.add('hidden');
+
+    try {
+      var pyodide = await window._numeriaPyodideReady;
+
+      /* Redirect stdout */
+      await pyodide.runPythonAsync(
+        'import sys\nfrom io import StringIO\n_numeria_buf = StringIO()\nsys.stdout = _numeria_buf'
+      );
+
+      var output  = '';
+      var runErr  = null;
+      var plotB64 = null;
+
+      /* Run with 10s timeout */
+      var execProm = pyodide.runPythonAsync(code);
+      var timeoutProm = new Promise(function(_, rej) {
+        setTimeout(function() { rej(new Error('__TIMEOUT__')); }, 10000);
+      });
+
+      try {
+        await Promise.race([execProm, timeoutProm]);
+      } catch(e) { runErr = e; }
+
+      /* Capture output */
+      try {
+        output = String(await pyodide.runPythonAsync('_numeria_buf.getvalue()'));
+      } catch(_) {}
+
+      /* Reset stdout */
+      try { await pyodide.runPythonAsync('sys.stdout = sys.__stdout__'); } catch(_) {}
+
+      /* Capture matplotlib plot if any */
+      try {
+        plotB64 = String(await pyodide.runPythonAsync(
+          'import matplotlib.pyplot as _plt\nimport io as _io, base64 as _b64\n' +
+          '_buf = _io.BytesIO()\n_plt.savefig(_buf, format="png", bbox_inches="tight")\n' +
+          '_buf.seek(0)\n_b64.b64encode(_buf.read()).decode()\n'
+        ));
+        _plt_clear: try { await pyodide.runPythonAsync('import matplotlib.pyplot as _plt\n_plt.clf()'); } catch(_) {}
+      } catch(_) { plotB64 = null; }
+
+      /* Display output */
+      if (runErr) {
+        var msg = runErr.message === '__TIMEOUT__'
+          ? '{% trans "Temps d\'exécution dépassé (10s)" %}'
+          : String(runErr);
+        outEl.innerHTML = '<span style="color:#f87171;">' + escHtml(msg) + '</span>';
+        outEl.style.color = '';
+      } else {
+        outEl.textContent = output || '({% trans "aucun output" %})';
+        outEl.style.color = '#4ade80';
+      }
+
+      /* Plot image */
+      var plotWr  = g('plot-wrapper');
+      var plotImg = g('plot-img');
+      if (plotB64 && plotWr && plotImg) {
+        plotImg.src = 'data:image/png;base64,' + plotB64;
+        plotWr.classList.remove('hidden');
+      } else if (plotWr) {
+        plotWr.classList.add('hidden');
+      }
+
+      /* Evaluate */
+      if (!runErr) {
+        var isCorrect = false;
+
+        if (EVAL_MODE === 'exact') {
+          isCorrect = output.trim() === EXPECTED.trim();
+        } else if (EVAL_MODE === 'contains') {
+          isCorrect = output.indexOf(EXPECTED.trim()) !== -1;
+        } else if (EVAL_MODE === 'tests') {
+          var testCode = atob(TEST_B64);
+          try {
+            await pyodide.runPythonAsync(code + '\n' + testCode);
+            isCorrect = true;
+          } catch(_) { isCorrect = false; }
+        }
+
+        attemptCount++;
+        updateAttemptCounter();
+        showFeedback(isCorrect, output);
+
+        if (isCorrect && !solved) {
+          solved = true;
+          submitResult(code, output, attemptCount);
+          runBtn.disabled = true;
+          runBtn.textContent = '✅ {% trans "Réussi" %}';
+        } else if (!isCorrect) {
+          if (MAX_ATTEMPTS > 0 && attemptCount >= MAX_ATTEMPTS) {
+            runBtn.disabled = true;
+            runBtn.textContent = '{% trans "Tentatives épuisées" %}';
+            var solBtn = g('solution-btn');
+            if (solBtn) solBtn.classList.replace('hidden', 'flex');
+          } else {
+            runBtn.disabled = false;
+            runBtn.textContent = '▶ {% trans "Exécuter" %}';
+          }
+          if (attemptCount >= 3 && HINT_TEXT) {
+            var hintBtn = g('hint-btn');
+            if (hintBtn) hintBtn.classList.replace('hidden', 'flex');
+          }
+        }
+      } else {
+        runBtn.disabled = false;
+        runBtn.textContent = '▶ {% trans "Exécuter" %}';
+      }
+
+    } catch(e) {
+      console.error('[Sandbox ' + EID + ']', e);
+      runBtn.disabled = false;
+      runBtn.textContent = '▶ {% trans "Exécuter" %}';
+    }
+  }
+
+  function updateAttemptCounter() {
+    var numEl = g('attempt-num');
+    if (numEl) numEl.textContent = attemptCount;
+  }
+
+  function showFeedback(isCorrect, output) {
+    var fbEl   = g('feedback');
+    var fbBody = g('feedback-content');
+    var confEl = g('confetti');
+    fbEl.classList.remove('hidden');
+
+    if (isCorrect) {
+      fbEl.className = fbEl.className.replace(/\bpx-5.*?border-gray[^"]*/, '');
+      fbEl.style.backgroundColor = '#f0fdf4';
+      fbEl.style.borderTop = '1px solid #bbf7d0';
+      fbBody.innerHTML =
+        '<p class="font-bold text-green-700 text-sm">✅ {% trans "Bonne réponse !" %} +' + POINTS + ' {% trans "points" %}</p>';
+      triggerConfetti(confEl);
+    } else {
+      fbEl.style.backgroundColor = '#fef2f2';
+      fbEl.style.borderTop = '1px solid #fecaca';
+      var html = '<p class="font-bold text-red-700 text-sm">❌ {% trans "Ce n\'est pas la bonne réponse. Réessaie !" %}</p>';
+      if (EVAL_MODE === 'exact' && EXPECTED) {
+        html += '<div class="mt-2 text-xs font-mono space-y-1">';
+        html += '<div><span class="text-slate-500">{% trans "Attendu" %} :</span> <span class="bg-green-50 text-green-800 px-1 rounded">' + escHtml(EXPECTED.trim()) + '</span></div>';
+        html += '<div><span class="text-slate-500">{% trans "Reçu" %} :</span> <span class="bg-red-50 text-red-800 px-1 rounded">' + escHtml(output.trim()) + '</span></div>';
+        html += '</div>';
+      }
+      if (MAX_ATTEMPTS > 0) {
+        var remaining = MAX_ATTEMPTS - attemptCount;
+        html += '<p class="text-xs text-red-500 mt-1">{% trans "Tentative" %} ' + attemptCount + ' / ' + MAX_ATTEMPTS;
+        if (remaining > 0) html += ' — ' + remaining + ' {% trans "restante(s)" %}';
+        html += '</p>';
+      }
+      fbBody.innerHTML = html;
+    }
+  }
+
+  function triggerConfetti(container) {
+    if (!container) return;
+    container.innerHTML = '';
+    var colors = ['#ffd700', '#2dd4bf', '#1a3c6e', '#ef4444', '#22c55e', '#a78bfa'];
+    for (var i = 0; i < 35; i++) {
+      var p = document.createElement('div');
+      var color = colors[i % colors.length];
+      p.style.cssText = [
+        'position:absolute',
+        'width:8px',
+        'height:8px',
+        'background:' + color,
+        'left:' + (Math.random() * 100) + '%',
+        'top:-10px',
+        'border-radius:2px',
+        'animation:confetti-fall ' + (0.7 + Math.random() * 1.3) + 's ease-in ' + (Math.random() * 0.4) + 's forwards',
+        'transform:rotate(' + (Math.random() * 360) + 'deg)',
+      ].join(';');
+      container.appendChild(p);
+    }
+    setTimeout(function() { container.innerHTML = ''; }, 3500);
+  }
+
+  function submitResult(code, output, attempts) {
+    var timeSpent = Math.round((Date.now() - startTime) / 1000);
+    fetch(SUBMIT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+      body: JSON.stringify({
+        code: code, output: output, is_correct: true,
+        attempt_number: attempts, time_spent: timeSpent,
+      }),
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var fbBody = g('feedback-content');
+      if (data.points_earned > 0 && fbBody) {
+        fbBody.innerHTML += '<p class="text-xs text-green-600 mt-1">🌟 {% trans "Exercices réussis ce cours" %} : <strong>' + data.total_points + '</strong></p>';
+      }
+    })
+    .catch(function() {});
+  }
+
+  /* ── Init */
+  function init() {
+    initEditor();
+
+    var runBtn     = g('run-btn');
+    var resetBtn   = g('reset-btn');
+    var copyBtn    = g('copy-btn');
+    var hintBtn    = g('hint-btn');
+    var hintPanel  = g('hint-panel');
+    var solBtn     = g('solution-btn');
+
+    if (runBtn) runBtn.addEventListener('click', runCode);
+
+    if (resetBtn) resetBtn.addEventListener('click', function() {
+      if (confirm('{% trans "Réinitialiser le code ?" %}')) {
+        if (editor) editor.setValue(STARTER);
+        g('feedback').classList.add('hidden');
+        g('output-wrapper').classList.add('hidden');
+      }
+    });
+
+    if (copyBtn) copyBtn.addEventListener('click', function() {
+      var code = editor ? editor.getValue() : '';
+      navigator.clipboard.writeText(code).then(function() {
+        copyBtn.textContent = '✓ {% trans "Copié !" %}';
+        setTimeout(function() { copyBtn.textContent = '📋 {% trans "Copier" %}'; }, 2000);
+      });
+    });
+
+    if (hintBtn && hintPanel) hintBtn.addEventListener('click', function() {
+      hintPanel.classList.toggle('hidden');
+    });
+
+    if (solBtn) solBtn.addEventListener('click', function() {
+      fetch(SOLUTION_URL, { headers: { 'X-CSRFToken': CSRF } })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.solution && editor) editor.setValue(data.solution);
+        });
+    });
+
+    /* Wait for Pyodide then enable Run */
+    if (window._numeriaPyodideReady) {
+      window._numeriaPyodideReady.then(function() {
+        setStatus('Python prêt ✓', true);
+        if (runBtn && !solved) runBtn.disabled = false;
+      }).catch(function(e) {
+        setStatus('Erreur Python: ' + e, false);
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+
+{% endwith %}

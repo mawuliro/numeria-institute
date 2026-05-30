@@ -491,6 +491,24 @@
                     </div>
                     {% endif %}
 
+                    <!-- ===== EXERCICES DE CODE (Pyodide) ===== -->
+                    {% if code_exercises and est_inscrit %}
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-8 mb-8">
+                        <h2 class="text-xl font-bold text-numeria-bleu dark:text-numeria-or mb-2 flex items-center gap-2">
+                            <span>💻</span> {% trans "Exercices de code" %}
+                            <span class="text-sm font-normal text-gray-400 dark:text-gray-500">
+                                ({% for ex in code_exercises %}{% if ex.is_solved %}{% with solved_count=forloop.counter %}{% endwith %}{% endif %}{% endfor %}Python — Pyodide)
+                            </span>
+                        </h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                            {% trans "Le code s'exécute directement dans ton navigateur — aucune installation requise." %}
+                        </p>
+                        {% for exercise in code_exercises %}
+                            {% include 'cours/components/code_sandbox.html' with exercise=exercise %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
                     <!-- NAVIGATION ET ACTIONS -->
                     {% if est_inscrit %}
                     <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
@@ -802,4 +820,24 @@
     </div>
 </div>
 
+{% if code_exercises and est_inscrit %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+<script>
+window._numeriaPyodideReady = (async function() {
+  var pyodide = await loadPyodide();
+  try { await pyodide.loadPackage(['numpy', 'matplotlib']); } catch(_) {}
+  document.querySelectorAll('[id$="-run-btn"][id^="sandbox-"]').forEach(function(btn) {
+    if (!btn.disabled || btn.textContent.includes('Exécuter')) btn.disabled = false;
+  });
+  document.querySelectorAll('[id$="-pyodide-status"][id^="sandbox-"]').forEach(function(el) {
+    el.style.display = 'none';
+  });
+  return pyodide;
+})();
+</script>
+{% endif %}
 {% endblock %}
