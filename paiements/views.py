@@ -16,10 +16,9 @@ from .constants import PAYMENT_PROVIDERS
 
 
 def _post_payment_actions(user, paiement):
-    """Send notification + email after a successful payment."""
+    """Send an in-app notification after a successful payment."""
     try:
         from notifications.notifications import notify_user
-        from numeria_project.emails import send_payment_confirmation_email
         if paiement.cours:
             item = paiement.cours.titre
         elif paiement.formation_inscription:
@@ -36,7 +35,6 @@ def _post_payment_actions(user, paiement):
             notification_type='payment',
             link=reverse('paiements:confirmation', args=[paiement.id]),
         )
-        send_payment_confirmation_email(user, paiement)
     except Exception:
         pass
 

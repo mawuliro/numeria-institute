@@ -13,20 +13,29 @@ class Paiement(models.Model):
     # ── STATUTS ────────────────────────────────────────────────────
     STATUTS = [
         ('en_attente', 'En attente'),
+        ('en_cours',   'En cours'),
         ('reussi',     'Réussi'),
         ('echoue',     'Échoué'),
-        ('rembourse',  'Remboursé'),
         ('annule',     'Annulé'),
+        ('rembourse',  'Remboursé'),
     ]
 
-    # ── PROVIDERS ──────────────────────────────────────────────────
+    # ── MÉTHODES DE PAIEMENT ────────────────────────────────────────
+    METHOD_CHOICES = [
+        ('mixx', 'Mixx by Yas (T-Money)'),
+        ('moov', 'Moov Money (Flooz)'),
+        ('card', 'Carte bancaire / VISA'),
+    ]
+
+    # ── PROVIDERS INTERNES ─────────────────────────────────────────
     PROVIDERS = [
-        ('sandbox',  'Sandbox (test)'),
-        ('stripe',   'Stripe'),
-        ('fedapay',  'FedaPay'),
-        ('cinetpay', 'CinetPay'),
-        ('mixx',     'Mixx by YAS'),
-        ('paydunya', 'PayDunya'),
+        ('sandbox', 'Sandbox (test)'),
+        ('paygate', 'PayGate Global'),
+        ('stripe',  'Stripe'),
+        ('mixx',    'Mixx by YAS'),
+        ('moov',    'Moov Money'),
+        ('fedapay', 'FedaPay'),
+        ('cinetpay','CinetPay'),
     ]
 
     # ── DEVISES ────────────────────────────────────────────────────
@@ -59,11 +68,51 @@ class Paiement(models.Model):
         related_name='paiements'
     )
     
-    # ── MONTANT ────────────────────┬────────────────────────────────
+    # ── MÉTHODE / PROVIDER ─────────────────────────────────────────
+    method = models.CharField(
+        max_length=20,
+        choices=METHOD_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name='Méthode de paiement'
+    )
+    provider = models.CharField(
+        max_length=20,
+        choices=PROVIDERS,
+        default='sandbox',
+        verbose_name='Provider de paiement'
+    )
+
+    # ── DEVISE & RÉFÉRENCES ─────────────────────────────────────────
     devise = models.CharField(
-        max_length=3, choices=DEVISES, default='XOF',
+        max_length=10,
+        choices=DEVISES,
+        default='XOF',
         verbose_name='Devise'
     )
+    reference_numeria = models.CharField(
+        max_length=200,
+        unique=True,
+        verbose_name='Référence Numeria'
+    )
+    external_id = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+        verbose_name='ID externe'
+    )
+    phone_number = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        verbose_name='Numéro de téléphone'
+    )
+    metadata = models.JSONField(
+        default=dict,
+        blank=True,
+        verbose_name='Métadonnées'
+    )
+
     montant_initial = models.DecimalField(
         max_digits=12, decimal_places=2, default=0,
         verbose_name='Montant initial'
@@ -77,19 +126,12 @@ class Paiement(models.Model):
         verbose_name='Frais plateforme'
     )
     
-    # ── STATUT et PROVIDER ─────────────────────────────────────────
+    # ── STATUT ──────────────────────────────────────────────────────
     statut = models.CharField(
         max_length=20,
         choices=STATUTS,
         default='en_attente',
         verbose_name='Statut'
-    )
-    
-    provider = models.CharField(
-        max_length=20,
-        choices=PROVIDERS,
-        default='sandbox',
-        verbose_name='Provider de paiement'
     )
 
     # Identifiant unique du paiement chez le provider
@@ -98,13 +140,6 @@ class Paiement(models.Model):
         blank=True,
         null=True,
         verbose_name='Reference provider'
-    )
-
-    # Reference interne Numeria
-    reference_numeria = models.CharField(
-        max_length=50,
-        unique=True,
-        verbose_name='Reference Numeria'
     )
 
     # ── METADONNEES ────────────────────────────────────────────────
@@ -131,7 +166,31 @@ class Paiement(models.Model):
                 item_titre = f"Séance {paiement_seance.seance.titre}"
             else:
                 item_titre = 'Paiement'
-        return f"{self.reference_numeria} — {self.etudiant.username} — {item_titre} — {self.statut}"
+        return f"{self.reference} — {self.etudiant.username} — {item_titre} — {self.status}"
+
+    @property
+    def reference(self):
+        return self.reference_numeria
+
+    @property
+    def currency(self):
+        return self.devise
+
+    @property
+    def status(self):
+        return self.statut
+
+    @property
+    def amount(self):
+        return self.montant_final
+
+    @property
+    def user(self):
+        return self.etudiant
+
+    @property
+    def course(self):
+        return self.cours
 
     @property
     def montant(self):

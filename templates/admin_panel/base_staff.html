@@ -65,73 +65,91 @@
   </div>
 
   <!-- Nav -->
-  <nav class="flex-1 py-4 overflow-y-auto">
+  <nav class="flex-1 py-2 overflow-y-auto text-xs">
+    {% load i18n %}
+    <!-- Dashboard -->
     <a href="{% url 'admin_panel:dashboard' %}"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 {% if request.resolver_match.url_name == 'dashboard' %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
-      <span class="text-base">🏠</span> {% trans "Dashboard" %}
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if request.resolver_match.url_name == 'dashboard' %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>🏠</span> Dashboard
     </a>
 
+    <!-- ── CONTENU ── -->
+    <div class="px-5 py-1.5 text-slate-500 text-[10px] uppercase tracking-wider mt-2">Contenu</div>
+
+    <a href="{% url 'admin_panel:cours_list' %}"
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'cours' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>📚</span> Cours
+      {% if sidebar_draft_courses %}<span class="ml-auto bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_draft_courses }}</span>{% endif %}
+    </a>
+
+    <a href="{% url 'admin_panel:blog_list' %}"
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'blog' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>📝</span> Blog / Articles
+    </a>
+
+    <a href="{% url 'admin_panel:media_list' %}"
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'media' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>🖼️</span> Médiathèque
+    </a>
+
+    <!-- ── ÉTUDIANTS ── -->
+    <div class="px-5 py-1.5 text-slate-500 text-[10px] uppercase tracking-wider mt-2">Étudiants</div>
+
     <a href="{% url 'admin_panel:contacts_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 {% if 'contact' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
-      <span class="text-base">📩</span> {% trans "Contacts" %}
-      {% if sidebar_unread_contacts %}
-      <span class="ml-auto bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{{ sidebar_unread_contacts }}</span>
-      {% endif %}
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'contact' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>📩</span> Contacts
+      {% if sidebar_unread_contacts %}<span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_unread_contacts }}</span>{% endif %}
     </a>
 
     <a href="{% url 'admin_panel:candidatures_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 {% if 'candidature' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
-      <span class="text-base">📋</span> {% trans "Candidatures" %}
-      {% if sidebar_pending_candidacies %}
-      <span class="ml-auto bg-yellow-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{{ sidebar_pending_candidacies }}</span>
-      {% endif %}
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'candidature' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>📋</span> Candidatures
+      {% if sidebar_pending_candidacies %}<span class="ml-auto bg-yellow-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_pending_candidacies }}</span>{% endif %}
     </a>
 
     <a href="{% url 'mentorat:applications_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 {% if request.resolver_match.namespace == 'mentorat' and request.resolver_match.url_name == 'applications_list' or request.resolver_match.namespace == 'mentorat' and request.resolver_match.url_name == 'application_detail' or request.resolver_match.namespace == 'mentorat' and request.resolver_match.url_name == 'admin_dashboard' %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
-      <span class="text-base">🧑‍🏫</span> {% trans "Candidatures mentor" %}
-      {% if sidebar_pending_mentor_applications %}
-      <span class="ml-auto bg-emerald-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{{ sidebar_pending_mentor_applications }}</span>
-      {% endif %}
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 text-slate-300">
+      <span>🎓</span> Candidatures Mentor
     </a>
 
     <a href="{% url 'admin_panel:mentorat_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 {% if 'mentorat' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
-      <span class="text-base">🤝</span> {% trans "Mentorat" %}
-      {% if sidebar_pending_mentorships %}
-      <span class="ml-auto bg-orange-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{{ sidebar_pending_mentorships }}</span>
-      {% endif %}
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'mentorat' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>🤝</span> Mentorat
+      {% if sidebar_pending_mentorships %}<span class="ml-auto bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_pending_mentorships }}</span>{% endif %}
     </a>
 
     <a href="{% url 'admin_panel:users_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 {% if 'user' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
-      <span class="text-base">👥</span> {% trans "Utilisateurs" %}
-    </a>
-
-    <a href="{% url 'notifications:send' %}"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 text-slate-300">
-      <span class="text-base">🔔</span> {% trans "Notifications" %}
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'user' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>👥</span> Utilisateurs
     </a>
 
     <a href="{% url 'admin_panel:exercises_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 {% if 'exercise' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
-      <span class="text-base">💻</span> {% trans "Exercices de code" %}
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'exercise' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>💻</span> Exercices &amp; Résultats
+    </a>
+
+    <!-- ── SYSTÈME ── -->
+    <div class="px-5 py-1.5 text-slate-500 text-[10px] uppercase tracking-wider mt-2">Système</div>
+
+    <a href="{% url 'notifications:send' %}"
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 text-slate-300">
+      <span>🔔</span> Notifications
     </a>
 
     <a href="{% url 'admin_panel:activity_log' %}"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 {% if request.resolver_match.url_name == 'activity_log' %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
-      <span class="text-base">📊</span> {% trans "Activité" %}
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if request.resolver_match.url_name == 'activity_log' %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>📊</span> Activité
     </a>
 
-    <div class="border-t border-white/10 my-3"></div>
+    <div class="border-t border-white/10 my-2"></div>
 
     <a href="/numeria-staff-portal/" target="_blank"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 text-slate-400">
-      <span class="text-base">⚙️</span> {% trans "Django Admin" %}
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 text-slate-500">
+      <span>⚙️</span> Django Admin
     </a>
     <a href="{% url 'accueil' %}"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 text-slate-400">
-      <span class="text-base">🌐</span> {% trans "Voir le site" %}
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 text-slate-500">
+      <span>🌐</span> Voir le site
     </a>
   </nav>
 

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-30 12:38+0000\n"
+"POT-Creation-Date: 2026-05-30 13:04+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -138,6 +138,54 @@ msgstr "Sent on"
 #| msgid "Réponses"
 msgid "Réponses contact"
 msgstr "Replies"
+
+#: admin_panel/models.py:69
+msgid "Image"
+msgstr "Image"
+
+#: admin_panel/models.py:70
+msgid "PDF"
+msgstr ""
+
+#: admin_panel/models.py:71 comptes/models.py:41 mentorat/models.py:30
+#: mentorat/models.py:259 pages/forms.py:15
+msgid "Autre"
+msgstr "Other"
+
+#: admin_panel/models.py:73
+msgid "Fichier"
+msgstr ""
+
+#: admin_panel/models.py:74 comptes/templates/comptes/inscription.html:91
+#: pages/models.py:106 templates/admin_panel/candidature_detail.html:84
+#: templates/admin_panel/contacts_list.html:45
+#: templates/admin_panel/mentorat_detail.html:59
+#: templates/admin_panel/mentorat_detail.html:68
+#: templates/admin_panel/users_list.html:28
+msgid "Nom"
+msgstr "Last name"
+
+#: admin_panel/models.py:78
+#, fuzzy
+#| msgid "Approuvé"
+msgid "Uploadé par"
+msgstr "Approved"
+
+#: admin_panel/models.py:80
+msgid "Uploadé le"
+msgstr ""
+
+#: admin_panel/models.py:81
+msgid "Taille (octets)"
+msgstr ""
+
+#: admin_panel/models.py:85
+msgid "Média uploadé"
+msgstr ""
+
+#: admin_panel/models.py:86
+msgid "Médias uploadés"
+msgstr ""
 
 #: admin_panel/views.py:80
 msgid "Messages marqués comme lus."
@@ -378,12 +426,10 @@ msgid "Impossible d'envoyer l'email (adresse invalide ?)"
 msgstr "Couldn't send the email (invalid address?)"
 
 #: admin_panel/views.py:697
-#| msgid "Le titre et le message sont obligatoires."
 msgid "Titre, code de départ et solution sont obligatoires."
 msgstr "Title, starter code and solution are required."
 
 #: admin_panel/views.py:708
-#| msgid "Séance terminée avec succès !"
 msgid "Exercice créé avec succès."
 msgstr "Exercise created successfully."
 
@@ -1105,7 +1151,6 @@ msgid "Réponses"
 msgstr "Replies"
 
 #: communaute/templates/communaute/detail_categorie.html:57
-#: templates/admin_panel/base_staff.html:123
 msgid "Activité"
 msgstr "Activity"
 
@@ -1605,11 +1650,6 @@ msgstr "PhD"
 msgid "Professionnel"
 msgstr "Professional"
 
-#: comptes/models.py:41 mentorat/models.py:30 mentorat/models.py:259
-#: pages/forms.py:15
-msgid "Autre"
-msgstr "Other"
-
 #: comptes/models.py:112
 msgid "Profil"
 msgstr "Profile"
@@ -1674,15 +1714,6 @@ msgstr "Join Numeria"
 #: comptes/templates/comptes/inscription.html:46
 msgid "Crée ton compte gratuitement et commence à apprendre"
 msgstr "Create your free account and start learning"
-
-#: comptes/templates/comptes/inscription.html:91 pages/models.py:106
-#: templates/admin_panel/candidature_detail.html:84
-#: templates/admin_panel/contacts_list.html:45
-#: templates/admin_panel/mentorat_detail.html:59
-#: templates/admin_panel/mentorat_detail.html:68
-#: templates/admin_panel/users_list.html:28
-msgid "Nom"
-msgstr "Last name"
 
 #: comptes/templates/comptes/inscription.html:219
 #: pages/templates/pages/accueil.html:356
@@ -1850,41 +1881,40 @@ msgstr "Your account has been deleted, {prenom}. We hope to see you again! 👋"
 msgid "Mot de passe incorrect. Ton compte n'a pas été supprimé."
 msgstr "Incorrect password. Your account has not been deleted."
 
-#: cours/models.py:699 cours/templates/cours/components/code_sandbox.html:37
+#: cours/models.py:772 cours/templates/cours/components/code_sandbox.html:37
 #: templates/admin_panel/exercises_list.html:56
 msgid "Facile"
 msgstr "Easy"
 
-#: cours/models.py:700 cours/templates/cours/components/code_sandbox.html:39
+#: cours/models.py:773 cours/templates/cours/components/code_sandbox.html:39
 #: templates/admin_panel/exercises_list.html:57
 msgid "Moyen"
 msgstr "Medium"
 
-#: cours/models.py:701 cours/templates/cours/components/code_sandbox.html:41
+#: cours/models.py:774 cours/templates/cours/components/code_sandbox.html:41
 #: templates/admin_panel/exercises_list.html:58
 msgid "Difficile"
 msgstr "Hard"
 
-#: cours/models.py:704
+#: cours/models.py:777
 msgid "Output exact"
 msgstr "Exact output"
 
-#: cours/models.py:705
+#: cours/models.py:778
 msgid "Output contient"
 msgstr "Output contains"
 
-#: cours/models.py:706
-#| msgid "Destinataires"
+#: cours/models.py:779
 msgid "Tests unitaires"
 msgstr "Unit tests"
 
-#: cours/models.py:711 formation/templates/formation/voir_lecon.html:14
+#: cours/models.py:784 formation/templates/formation/voir_lecon.html:14
 #: templates/admin_panel/exercise_form.html:117
 #: templates/admin_panel/exercise_results.html:51
 msgid "Leçon"
 msgstr "Lesson"
 
-#: cours/models.py:713 notifications/models.py:34
+#: cours/models.py:786 notifications/models.py:34
 #: templates/admin_panel/exercise_form.html:26
 #: templates/admin_panel/user_detail.html:141
 #: templates/admin_panel/users_list.html:70
@@ -1892,157 +1922,148 @@ msgstr "Lesson"
 msgid "Titre"
 msgstr "Title"
 
-#: cours/models.py:715 mentorat/templates/mentorat/video_seance.html:55
+#: cours/models.py:788 mentorat/templates/mentorat/video_seance.html:55
 #: templates/admin_panel/exercise_form.html:72
 #, fuzzy
 #| msgid "Instructeurs"
 msgid "Instructions"
 msgstr "Instructors"
 
-#: cours/models.py:716
+#: cours/models.py:789
 #, fuzzy
 #| msgid "Instructeurs"
 msgid "Instructions en Markdown"
 msgstr "Instructors"
 
-#: cours/models.py:719 templates/admin_panel/exercise_form.html:89
-#| msgid "Code de vérification"
+#: cours/models.py:792 templates/admin_panel/exercise_form.html:89
 msgid "Code de départ"
 msgstr "Starter code"
 
-#: cours/models.py:720
+#: cours/models.py:793
 msgid "Code affiché à l'étudiant"
 msgstr ""
 
-#: cours/models.py:723 templates/admin_panel/exercise_form.html:95
-#| msgid "Complétion"
+#: cours/models.py:796 templates/admin_panel/exercise_form.html:95
 msgid "Solution"
 msgstr "Solution"
 
-#: cours/models.py:724
+#: cours/models.py:797
 msgid "Jamais montrée à l'étudiant"
 msgstr ""
 
-#: cours/models.py:727 templates/admin_panel/exercise_form.html:102
+#: cours/models.py:800 templates/admin_panel/exercise_form.html:102
 msgid "Output attendu"
 msgstr "Expected output"
 
-#: cours/models.py:728
+#: cours/models.py:801
 msgid "Pour comparaison exacte ou contient"
 msgstr ""
 
-#: cours/models.py:731 templates/admin_panel/exercise_form.html:109
+#: cours/models.py:804 templates/admin_panel/exercise_form.html:109
 msgid "Code de tests"
 msgstr "Test code"
 
-#: cours/models.py:732
+#: cours/models.py:805
 msgid "Assertions cachées (mode tests unitaires)"
 msgstr ""
 
-#: cours/models.py:736 templates/admin_panel/exercise_form.html:31
-#| msgid "Code de vérification"
+#: cours/models.py:809 templates/admin_panel/exercise_form.html:31
 msgid "Mode d'évaluation"
 msgstr "Evaluation mode"
 
-#: cours/models.py:740 templates/admin_panel/exercise_form.html:40
+#: cours/models.py:813 templates/admin_panel/exercise_form.html:40
 #: templates/admin_panel/exercises_list.html:34
 msgid "Difficulté"
 msgstr "Difficulty"
 
-#: cours/models.py:743 cours/templates/cours/components/code_sandbox.html:90
+#: cours/models.py:816 cours/templates/cours/components/code_sandbox.html:90
 #: cours/templates/cours/components/code_sandbox.html:109
 #: templates/admin_panel/exercise_form.html:78
 msgid "Indice"
 msgstr "Hint"
 
-#: cours/models.py:744
+#: cours/models.py:817
 msgid "Affiché après 3 tentatives échouées"
 msgstr ""
 
-#: cours/models.py:747 templates/admin_panel/exercise_form.html:53
+#: cours/models.py:820 templates/admin_panel/exercise_form.html:53
 msgid "Tentatives max"
 msgstr "Max attempts"
 
-#: cours/models.py:748
+#: cours/models.py:821
 msgid "0 = illimité"
 msgstr ""
 
-#: cours/models.py:750 templates/admin_panel/exercise_form.html:48
+#: cours/models.py:823 templates/admin_panel/exercise_form.html:48
 #: templates/admin_panel/exercise_results.html:95
 msgid "Points"
 msgstr ""
 
-#: cours/models.py:751 templates/admin_panel/exercise_form.html:58
+#: cours/models.py:824 templates/admin_panel/exercise_form.html:58
 msgid "Ordre"
 msgstr "Order"
 
-#: cours/models.py:752 templates/admin_panel/exercises_list.html:37
+#: cours/models.py:825 templates/admin_panel/exercises_list.html:37
 #: templates/admin_panel/user_detail.html:26
 #: templates/admin_panel/users_list.html:31
 msgid "Actif"
 msgstr "Active"
 
-#: cours/models.py:756
-#| msgid "Exercice pratique"
+#: cours/models.py:829
 msgid "Exercice de code"
 msgstr "Code exercise"
 
-#: cours/models.py:757 cours/templates/cours/detail.html:498
-#: templates/admin_panel/base_staff.html:118
+#: cours/models.py:830 cours/templates/cours/detail.html:498
 #: templates/admin_panel/exercises_list.html:4
 #: templates/admin_panel/exercises_list.html:5
-#| msgid "Exercices interactifs"
 msgid "Exercices de code"
 msgstr "Code exercises"
 
-#: cours/models.py:766 templates/admin_panel/exercise_results.html:49
+#: cours/models.py:839 templates/admin_panel/exercise_results.html:49
 #: templates/admin_panel/exercise_results.html:93
-#| msgid "Étudiants"
 msgid "Étudiant"
 msgstr "Student"
 
-#: cours/models.py:770 templates/admin_panel/exercise_results.html:50
+#: cours/models.py:843 templates/admin_panel/exercise_results.html:50
 #: templates/admin_panel/exercises_list.html:31
 #, fuzzy
 #| msgid "Exercice pratique"
 msgid "Exercice"
 msgstr "Practical exercise"
 
-#: cours/models.py:772
+#: cours/models.py:845
 #, fuzzy
 #| msgid "Preuve actuelle"
 msgid "Code soumis"
 msgstr "Current proof"
 
-#: cours/models.py:773
+#: cours/models.py:846
 msgid "Output reçu"
 msgstr ""
 
-#: cours/models.py:774
+#: cours/models.py:847
 msgid "Correct"
 msgstr ""
 
-#: cours/models.py:775
+#: cours/models.py:848
 msgid "Tentative n°"
 msgstr "Attempt #"
 
-#: cours/models.py:776
+#: cours/models.py:849
 msgid "Temps (s)"
 msgstr "Time (s)"
 
-#: cours/models.py:777 templates/admin_panel/candidature_detail.html:99
+#: cours/models.py:850 templates/admin_panel/candidature_detail.html:99
 #: templates/admin_panel/candidatures_list.html:38
 #: templates/admin_panel/mentorat_detail.html:80
 msgid "Soumis le"
 msgstr "Submitted on"
 
-#: cours/models.py:781
-#| msgid "Soumise le"
+#: cours/models.py:854
 msgid "Soumission de code"
 msgstr "Code submission"
 
-#: cours/models.py:782
-#| msgid "Soumise le"
+#: cours/models.py:855
 msgid "Soumissions de code"
 msgstr "Code submissions"
 
@@ -2114,7 +2135,6 @@ msgid "Tentative"
 msgstr "Attempt"
 
 #: cours/templates/cours/components/code_sandbox.html:101
-#| msgid "Voir les cours →"
 msgid "Voir la solution"
 msgstr "Show solution"
 
@@ -2135,7 +2155,6 @@ msgid "Tentatives épuisées"
 msgstr "Attempts exhausted"
 
 #: cours/templates/cours/components/code_sandbox.html:345
-#| msgid "Votre réponse"
 msgid "Bonne réponse !"
 msgstr "Correct answer!"
 
@@ -2156,7 +2175,6 @@ msgid "Reçu"
 msgstr "Received"
 
 #: cours/templates/cours/components/code_sandbox.html:360
-#| msgid "Places restantes"
 msgid "restante(s)"
 msgstr "remaining"
 
@@ -2165,7 +2183,6 @@ msgid "Exercices réussis ce cours"
 msgstr "Exercises completed in this course"
 
 #: cours/templates/cours/components/code_sandbox.html:424
-#| msgid "Réinitialiser le mot de passe"
 msgid "Réinitialiser le code ?"
 msgstr "Reset the code?"
 
@@ -3855,7 +3872,6 @@ msgstr "Back to mentoring"
 #: mentorat/templates/mentorat/devenir_mentee.html:18
 #: mentorat/templates/mentorat/devenir_mentor.html:18
 #: mentorat/templates/mentorat/index.html:4 notifications/models.py:14
-#: templates/admin_panel/base_staff.html:100
 #: templates/admin_panel/mentorat_detail.html:6
 #: templates/admin_panel/mentorat_list.html:4
 #: templates/includes/nav_items.html:10 templates/includes/nav_items.html:23
@@ -4799,8 +4815,8 @@ msgstr "Sent on"
 msgid "Notification"
 msgstr "Notification"
 
-#: notifications/models.py:51 templates/admin_panel/base_staff.html:113
-#: templates/notifications/bell.html:8 templates/notifications/bell.html:27
+#: notifications/models.py:51 templates/notifications/bell.html:8
+#: templates/notifications/bell.html:27
 msgid "Notifications"
 msgstr "Notifications"
 
@@ -6222,20 +6238,14 @@ msgstr "No activity recorded yet."
 msgid "Staff — Numeria"
 msgstr "Staff — Numeria"
 
-#: templates/admin_panel/base_staff.html:71
-#: templates/admin_panel/dashboard.html:4
-msgid "Dashboard"
-msgstr ""
+#: templates/admin_panel/base_staff.html:165 templates/base.html:375
+msgid "Se déconnecter"
+msgstr "Sign out"
 
-#: templates/admin_panel/base_staff.html:76
-#: templates/admin_panel/contact_detail.html:6
-#: templates/admin_panel/contacts_list.html:4
-#, fuzzy
-#| msgid "Contact"
-msgid "Contacts"
-msgstr "Contact"
+#: templates/admin_panel/base_staff.html:180
+msgid "Staff Dashboard"
+msgstr "Staff Dashboard"
 
-#: templates/admin_panel/base_staff.html:84
 #: templates/admin_panel/candidature_detail.html:6
 #: templates/admin_panel/candidatures_list.html:4
 #: templates/admin_panel/candidatures_list.html:5
@@ -6243,36 +6253,6 @@ msgstr "Contact"
 #: templates/includes/nav_items.html:8 templates/includes/nav_items.html:21
 msgid "Candidatures"
 msgstr "Applications"
-
-#: templates/admin_panel/base_staff.html:92
-#: templates/admin_panel/dashboard.html:34
-#, fuzzy
-#| msgid "Candidatures"
-msgid "Candidatures mentor"
-msgstr "Applications"
-
-#: templates/admin_panel/base_staff.html:108
-#: templates/admin_panel/user_detail.html:6
-#: templates/admin_panel/users_list.html:4
-#: templates/admin_panel/users_list.html:5
-msgid "Utilisateurs"
-msgstr "Users"
-
-#: templates/admin_panel/base_staff.html:130
-msgid "Django Admin"
-msgstr "Django Admin"
-
-#: templates/admin_panel/base_staff.html:134
-msgid "Voir le site"
-msgstr "View site"
-
-#: templates/admin_panel/base_staff.html:147 templates/base.html:375
-msgid "Se déconnecter"
-msgstr "Sign out"
-
-#: templates/admin_panel/base_staff.html:162
-msgid "Staff Dashboard"
-msgstr "Staff Dashboard"
 
 #: templates/admin_panel/candidature_detail.html:20
 msgid "En cours de révision"
@@ -6441,6 +6421,13 @@ msgstr "Please provide a reason (required). An email will be sent."
 msgid "Raison de refus (obligatoire)…"
 msgstr "Reason for rejection (required)..."
 
+#: templates/admin_panel/contact_detail.html:6
+#: templates/admin_panel/contacts_list.html:4
+#, fuzzy
+#| msgid "Contact"
+msgid "Contacts"
+msgstr "Contact"
+
 #: templates/admin_panel/contact_detail.html:31
 msgid "Réponses précédentes"
 msgstr "Previous replies"
@@ -6490,6 +6477,10 @@ msgstr "Mark as read"
 msgid "Aucun message trouvé."
 msgstr "No mentor found"
 
+#: templates/admin_panel/dashboard.html:4
+msgid "Dashboard"
+msgstr ""
+
 #: templates/admin_panel/dashboard.html:16
 msgid "Messages non lus"
 msgstr "Unread messages"
@@ -6497,6 +6488,12 @@ msgstr "Unread messages"
 #: templates/admin_panel/dashboard.html:25
 msgid "Candidatures en attente"
 msgstr "Pending applications"
+
+#: templates/admin_panel/dashboard.html:34
+#, fuzzy
+#| msgid "Candidatures"
+msgid "Candidatures mentor"
+msgstr "Applications"
 
 #: templates/admin_panel/dashboard.html:43
 msgid "Demandes mentorat"
@@ -6536,7 +6533,6 @@ msgid "Nouvel exercice"
 msgstr "New exercise"
 
 #: templates/admin_panel/exercise_form.html:4
-#| msgid "Modifier le message"
 msgid "Modifier exercice"
 msgstr "Edit exercise"
 
@@ -6552,12 +6548,10 @@ msgid "Créer"
 msgstr "Create"
 
 #: templates/admin_panel/exercise_form.html:22
-#| msgid "Informations"
 msgid "Informations de base"
 msgstr "Basic information"
 
 #: templates/admin_panel/exercise_form.html:66
-#| msgid "Exercices interactifs"
 msgid "Exercice actif"
 msgstr "Active exercise"
 
@@ -6586,22 +6580,18 @@ msgid "caché à l'étudiant"
 msgstr "hidden from the student"
 
 #: templates/admin_panel/exercise_form.html:124
-#| msgid "Démarrer l'exercice"
 msgid "Créer l'exercice"
 msgstr "Create exercise"
 
 #: templates/admin_panel/exercise_form.html:124
-#| msgid "Enregistrer la catégorie"
 msgid "Enregistrer"
 msgstr "Save"
 
 #: templates/admin_panel/exercise_results.html:4
-#| msgid "Soumettre ma candidature"
 msgid "Résultats exercices"
 msgstr "Exercise results"
 
 #: templates/admin_panel/exercise_results.html:5
-#| msgid "Soumettre ma candidature"
 msgid "Résultats des exercices de code"
 msgstr "Code exercise results"
 
@@ -6610,12 +6600,10 @@ msgid "Résultats"
 msgstr "Results"
 
 #: templates/admin_panel/exercise_results.html:13
-#| msgid "Soumise"
 msgid "Soumissions"
 msgstr "Submissions"
 
 #: templates/admin_panel/exercise_results.html:17
-#| msgid "Paiement"
 msgid "Classement"
 msgstr "Leaderboard"
 
@@ -6628,42 +6616,34 @@ msgid "Incorrects"
 msgstr "Incorrect"
 
 #: templates/admin_panel/exercise_results.html:31
-#| msgid "Tous les cycles"
 msgid "Tous les exercices"
 msgstr "All exercises"
 
 #: templates/admin_panel/exercise_results.html:79
-#| msgid "Aucune formation trouvée"
 msgid "Aucune soumission trouvée."
 msgstr "No submissions found."
 
 #: templates/admin_panel/exercise_results.html:87
-#| msgid "étudiants"
 msgid "Top 20 étudiants"
 msgstr "Top 20 students"
 
 #: templates/admin_panel/exercise_results.html:94
-#| msgid "Exercices interactifs"
 msgid "Exercices réussis"
 msgstr "Exercises passed"
 
 #: templates/admin_panel/exercise_results.html:115
-#| msgid "Aucune catégorie disponible pour le moment."
 msgid "Aucun exercice réussi pour le moment."
 msgstr "No exercises passed yet."
 
 #: templates/admin_panel/exercises_list.html:12
-#| msgid "Tous nos cours"
 msgid "Tous les cours"
 msgstr "All courses"
 
 #: templates/admin_panel/exercises_list.html:22
-#| msgid "Voir le détail"
 msgid "Voir les résultats étudiants"
 msgstr "View student results"
 
 #: templates/admin_panel/exercises_list.html:32
-#| msgid "Leçon"
 msgid "Leçon / Cours"
 msgstr "Lesson / Course"
 
@@ -6702,12 +6682,10 @@ msgid "Ajouter un exercice à une leçon"
 msgstr "Add an exercise to a lesson"
 
 #: templates/admin_panel/exercises_list.html:92
-#| msgid "— Choisir un sujet —"
 msgid "— Choisir une leçon —"
 msgstr "— Choose a lesson —"
 
 #: templates/admin_panel/exercises_list.html:101
-#| msgid "Toutes"
 msgid "Ajouter"
 msgstr "Add"
 
@@ -6796,6 +6774,12 @@ msgstr "Send the request"
 #: templates/admin_panel/mentorat_list.html:57
 msgid "Aucune demande trouvée."
 msgstr "No requests found."
+
+#: templates/admin_panel/user_detail.html:6
+#: templates/admin_panel/users_list.html:4
+#: templates/admin_panel/users_list.html:5
+msgid "Utilisateurs"
+msgstr "Users"
 
 #: templates/admin_panel/user_detail.html:15
 #: templates/admin_panel/user_detail.html:117
@@ -7416,6 +7400,12 @@ msgstr "Log out"
 msgid "Connexion en cours…"
 msgstr "Continue the course"
 
+#~ msgid "Django Admin"
+#~ msgstr "Django Admin"
+
+#~ msgid "Voir le site"
+#~ msgstr "View site"
+
 #~ msgid "Ton compte est déjà activé. Connecte-toi pour continuer."
 #~ msgstr "Your account is already activated. Log in to continue."
 
@@ -7559,9 +7549,6 @@ msgstr "Continue the course"
 
 #~ msgid "File"
 #~ msgstr "File"
-
-#~ msgid "Image"
-#~ msgstr "Image"
 
 #~ msgid "A JSON object"
 #~ msgstr "A JSON object"

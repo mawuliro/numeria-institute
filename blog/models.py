@@ -96,6 +96,36 @@ class Article(models.Model):
     # Date de publication choisie manuellement
     date_publication = models.DateTimeField(null=True, blank=True)
 
+    # ── CHAMPS CMS ────────────────────────────────────────────────────────
+    STATUS_ARTICLE = [
+        ('brouillon', 'Brouillon'),
+        ('publie',    'Publié'),
+        ('archive',   'Archivé'),
+    ]
+    status = models.CharField(
+        max_length=20, choices=STATUS_ARTICLE, default='brouillon',
+        verbose_name='Statut',
+    )
+    meta_description = models.CharField(
+        max_length=160, blank=True, verbose_name='Meta description',
+    )
+    reading_time_minutes = models.IntegerField(
+        default=5, verbose_name='Temps de lecture (min)',
+    )
+    tags = models.CharField(
+        max_length=500, blank=True,
+        verbose_name='Tags', help_text='Tags séparés par des virgules',
+    )
+
+    def save(self, *args, **kwargs):
+        # Synchronise est_publie avec status
+        self.est_publie = (self.status == 'publie')
+        # Auto-calculate reading time (~200 words/min)
+        if self.contenu:
+            words = len(self.contenu.split())
+            self.reading_time_minutes = max(1, words // 200)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.titre
 

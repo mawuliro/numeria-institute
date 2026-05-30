@@ -1,0 +1,74 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n humanize %}
+
+{% block page_title %}Statistiques — {{ cours.titre }}{% endblock %}
+{% block page_heading %}📊 {{ cours.titre }} — Statistiques{% endblock %}
+{% block breadcrumb %}<p class="text-xs text-slate-400 mt-0.5"><a href="{% url 'admin_panel:cours_list' %}" class="hover:underline">Cours</a> › <a href="{% url 'admin_panel:cours_edit' cours.slug %}" class="hover:underline">{{ cours.titre|truncatechars:30 }}</a> › Statistiques</p>{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<!-- Summary cards -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <div class="bg-white rounded-xl border border-slate-200 p-4">
+    <div class="text-2xl font-bold text-slate-800">{{ total_inscrits|intcomma }}</div>
+    <div class="text-xs text-slate-500 mt-0.5">Étudiants inscrits</div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-4">
+    <div class="text-2xl font-bold {% if completion_rate >= 50 %}text-green-700{% else %}text-amber-700{% endif %}">{{ completion_rate }}%</div>
+    <div class="text-xs text-slate-500 mt-0.5">Taux de complétion</div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-4">
+    <div class="text-2xl font-bold text-slate-800">{{ total_termines|intcomma }}</div>
+    <div class="text-xs text-slate-500 mt-0.5">Cours terminés</div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-4">
+    <div class="text-2xl font-bold text-green-700">{{ revenus|intcomma }} FCFA</div>
+    <div class="text-xs text-slate-500 mt-0.5">Revenus générés</div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+  <!-- Enrollment chart -->
+  <div class="bg-white rounded-xl border border-slate-200 p-5">
+    <h3 class="font-semibold text-slate-700 mb-4 text-sm">📈 Inscriptions par semaine</h3>
+    <canvas id="enrollChart" height="200"></canvas>
+  </div>
+
+  <!-- Most dropped lesson -->
+  <div class="bg-white rounded-xl border border-slate-200 p-5">
+    <h3 class="font-semibold text-slate-700 mb-4 text-sm">⚠️ Leçon avec le moins de complétion</h3>
+    {% if most_dropped %}
+    <div class="bg-amber-50 rounded-lg p-3 text-sm">
+      <p class="font-medium text-amber-800">{{ most_dropped.lecon.titre }}</p>
+      <p class="text-amber-600 text-xs mt-1">{{ most_dropped.done }} complétion{{ most_dropped.done|pluralize }}</p>
+    </div>
+    {% else %}
+    <p class="text-slate-400 text-sm">Aucune donnée.</p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+var weeksData = {{ weeks_data_json|safe }};
+new Chart(document.getElementById('enrollChart'), {
+  type: 'line',
+  data: {
+    labels: weeksData.map(function(d) { return d.label; }),
+    datasets: [{
+      label: 'Inscriptions',
+      data: weeksData.map(function(d) { return d.count; }),
+      borderColor: '#0ea5e9',
+      backgroundColor: 'rgba(14,165,233,0.1)',
+      tension: 0.4,
+      fill: true,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+  }
+});
+</script>
+{% endblock %}

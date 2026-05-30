@@ -19,6 +19,8 @@ Logique commerciale:
   - Accès limité dans le temps (3 ans après fin session)
 """
 
+import os
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -405,7 +407,21 @@ class InscriptionFormation(models.Model):
     def est_acces_expire(self):
         """L'accès a-t-il expiré?"""
         return timezone.now().date() > self.acces_expire()
-    
+
+    @property
+    def progression_pct(self):
+        return self.progression or 0
+
+    @property
+    def session_formation(self):
+        return self.session
+
+    @property
+    def date_completion(self):
+        if self.statut == 'terminee':
+            return self.session.date_fin
+        return None
+
     @property
     def prochaine_lecon(self):
         """Retourne la prochaine leçon à faire (non terminée)."""
@@ -475,6 +491,27 @@ class LeconFormation(models.Model):
     
     def __str__(self):
         return f"{self.formation.titre} > {self.titre}"
+
+    @property
+    def url_video(self):
+        return self.video_youtube
+
+    @property
+    def ressources(self):
+        if not self.ressources_telechargeables:
+            return []
+        return [{
+            'url': self.ressources_telechargeables.url,
+            'nom': os.path.basename(self.ressources_telechargeables.name)
+        }]
+
+    @property
+    def exercice_code(self):
+        return self.exercice_code_html
+
+    @property
+    def duree_estimee(self):
+        return self.duree_minutes
     
     def get_next(self):
         """Leçon suivante."""

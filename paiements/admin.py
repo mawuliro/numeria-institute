@@ -10,10 +10,11 @@ class PaiementAdmin(admin.ModelAdmin):
         'montant_initial',
         'devise',
         'provider',
+        'method',
         'statut',
         'date_creation',
     ]
-    list_filter = ['statut', 'provider', 'devise']
+    list_filter = ['statut', 'provider', 'method', 'devise']
     search_fields = [
         'reference_numeria',
         'etudiant__username',
@@ -38,6 +39,7 @@ class PaiementAdmin(admin.ModelAdmin):
         ('Provider', {
             'fields': [
                 'provider',
+                'method',
                 'reference_numeria',
                 'reference_provider',
             ]

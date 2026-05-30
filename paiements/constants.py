@@ -28,6 +28,13 @@ PAYMENT_PROVIDERS = [
         'disponible': False,
     },
     {
+        'id': 'moov',
+        'nom': 'Moov Money',
+        'description': 'Moov Money / Flooz (Côte d’Ivoire)',
+        'icone': '📱',
+        'disponible': False,
+    },
+    {
         'id': 'stripe',
         'nom': 'Stripe',
         'description': 'Carte bancaire internationale (Visa, Mastercard)',

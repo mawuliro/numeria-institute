@@ -62,3 +62,50 @@ class ContactReply(models.Model):
     def __str__(self):
         by = self.replied_by.get_full_name() if self.replied_by else '?'
         return f"Réponse de {by} à #{self.contact_message_id}"
+
+
+class UploadedMedia(models.Model):
+    MEDIA_TYPES = [
+        ('image', _('Image')),
+        ('pdf',   _('PDF')),
+        ('other', _('Autre')),
+    ]
+    file        = models.FileField(upload_to='uploads/media/', verbose_name=_('Fichier'))
+    name        = models.CharField(max_length=200, verbose_name=_('Nom'))
+    media_type  = models.CharField(max_length=20, choices=MEDIA_TYPES, default='image')
+    uploaded_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        verbose_name=_('Uploadé par'),
+    )
+    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Uploadé le'))
+    file_size   = models.BigIntegerField(default=0, verbose_name=_('Taille (octets)'))
+
+    class Meta:
+        ordering = ['-uploaded_at']
+        verbose_name = _('Média uploadé')
+        verbose_name_plural = _('Médias uploadés')
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def url(self):
+        return self.file.url if self.file else ''
+
+
+class ContentVersion(models.Model):
+    """Snapshot pour la récupération de brouillon (auto-save)."""
+    CONTENT_TYPES = [('cours', 'Cours'), ('article', 'Article'), ('lecon', 'Leçon')]
+    content_type = models.CharField(max_length=20, choices=CONTENT_TYPES)
+    object_id    = models.IntegerField()
+    version_data = models.JSONField()
+    created_by   = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at   = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Version de contenu'
+        verbose_name_plural = 'Versions de contenu'
+
+    def __str__(self):
+        return f"{self.content_type} #{self.object_id} — {self.created_at:%Y-%m-%d %H:%M}"

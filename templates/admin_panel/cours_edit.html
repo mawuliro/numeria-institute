@@ -1,0 +1,878 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}{{ cours.titre }} — Éditeur{% endblock %}
+{% block page_heading %}✏️ {{ cours.titre|truncatechars:40 }}{% endblock %}
+{% block breadcrumb %}
+<p class="text-xs text-slate-400 mt-0.5">
+  <a href="{% url 'admin_panel:cours_list' %}" class="hover:underline">Cours</a> ›
+  <span class="
+    {% if cours.status == 'publie' %}text-green-600
+    {% elif cours.status == 'revision' %}text-yellow-600
+    {% elif cours.status == 'archive' %}text-red-600
+    {% else %}text-slate-500{% endif %}
+    font-medium">{{ cours.get_status_display }}</span>
+</p>
+{% endblock %}
+
+{% block content %}
+<!-- EasyMDE + CodeMirror CDNs -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+.step-tab { cursor: pointer; transition: all .2s; }
+.step-tab.active { background: #0ea5e9; color: #fff; }
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+/* Structure tree */
+.tree-item { cursor: pointer; border-radius: 8px; transition: background .15s; }
+.tree-item:hover { background: #f1f5f9; }
+.tree-item.selected { background: #e0f2fe; }
+.tree-module-header { font-weight: 600; }
+.drag-over { background: #bae6fd !important; }
+[draggable] { cursor: grab; }
+[draggable]:active { cursor: grabbing; }
+/* EasyMDE overrides */
+.EasyMDEContainer .CodeMirror { min-height: 300px; border-radius: 0 0 8px 8px; }
+.editor-toolbar { border-radius: 8px 8px 0 0; }
+</style>
+
+<!-- ── STEP TABS ────────────────────────────────────────────────────────────── -->
+<div class="flex flex-wrap gap-1 bg-white border border-slate-200 rounded-xl p-1 mb-5">
+  {% for step_num, step_label in steps %}
+  <button type="button"
+          class="step-tab flex-1 text-center text-sm font-medium px-3 py-2 rounded-lg transition-colors
+                 {% if active_step == step_num %}active{% else %}text-slate-600 hover:bg-slate-100{% endif %}"
+          data-step="{{ step_num }}" onclick="goToStep('{{ step_num }}')">
+    {{ step_label }}
+  </button>
+  {% endfor %}
+</div>
+
+<!-- Auto-save indicator -->
+<div id="autosave-indicator"
+     class="text-xs text-slate-400 mb-3 flex items-center gap-1.5 h-5">
+  <span id="autosave-text">Pas encore sauvegardé</span>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!--  STEP 1 — Informations générales                                          -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div id="step-1" class="step-panel {% if active_step == '1' %}active{% endif %}">
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
+    <h2 class="font-bold text-slate-700 text-base">① Informations générales</h2>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
+      <input type="text" id="f-titre" value="{{ cours.titre }}" maxlength="200"
+             class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Résumé court <span class="text-slate-400 font-normal">(max 300 caractères)</span></label>
+      <div class="relative">
+        <input type="text" id="f-resume" value="{{ cours.resume }}" maxlength="300"
+               oninput="updateCounter(this,'resume-count')"
+               class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 pr-16">
+        <span id="resume-count" class="absolute right-3 top-2 text-xs text-slate-400">{{ cours.resume|length }}/300</span>
+      </div>
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Description complète</label>
+      <textarea id="f-description" rows="4">{{ cours.description }}</textarea>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Matière</label>
+        <select id="f-matiere" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+          {% for val, label in matieres %}
+          <option value="{{ val }}" {% if cours.matiere == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Niveau</label>
+        <select id="f-niveau" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+          {% for val, label in niveaux %}
+          <option value="{{ val }}" {% if cours.niveau == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Langue</label>
+        <select id="f-langue" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+          <option value="fr" {% if cours.langue == 'fr' %}selected{% endif %}>🇫🇷 Français</option>
+          <option value="en" {% if cours.langue == 'en' %}selected{% endif %}>🇬🇧 English</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Durée estimée (heures)</label>
+        <input type="number" id="f-duree" min="0" step="0.5" value="{{ cours.duree_estimee_heures }}"
+               class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Miniature</label>
+        <input type="file" id="f-thumbnail" accept="image/*"
+               class="w-full text-sm text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100">
+        {% if cours.thumbnail %}
+        <img src="{{ cours.thumbnail.url }}" class="mt-2 h-16 rounded-lg object-cover" id="thumb-preview">
+        {% else %}
+        <img id="thumb-preview" class="mt-2 h-16 rounded-lg object-cover hidden">
+        {% endif %}
+      </div>
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">URL vidéo d'introduction (YouTube/Vimeo)</label>
+      <input type="url" id="f-video" value="{{ cours.video_youtube|default:'' }}"
+             placeholder="https://youtu.be/…"
+             class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Prérequis <span class="font-normal text-slate-400">(un par ligne)</span></label>
+      <textarea id="f-prerequisites" rows="3"
+                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500">{{ cours.prerequisites }}</textarea>
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Objectifs d'apprentissage <span class="font-normal text-slate-400">(un par ligne)</span></label>
+      <textarea id="f-objectifs" rows="3"
+                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500">{{ cours.competences_visees }}</textarea>
+    </div>
+
+    <div class="flex gap-3 pt-2">
+      <button type="button" onclick="saveStep1().then(()=>goToStep('2'))"
+              class="bg-sky-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-sky-700 transition-colors text-sm">
+        Sauvegarder et continuer →
+      </button>
+      <button type="button" onclick="saveStep1()"
+              class="bg-slate-100 text-slate-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-slate-200 transition-colors text-sm">
+        Sauvegarder
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!--  STEP 2 — Structure du cours                                              -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div id="step-2" class="step-panel {% if active_step == '2' %}active{% endif %}">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4" style="min-height: 600px;">
+
+    <!-- ── LEFT: Structure tree ─────────────────────────────────────────── -->
+    <div class="lg:col-span-1 bg-white rounded-2xl border border-slate-200 flex flex-col">
+      <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+        <span class="font-semibold text-slate-700 text-sm">📦 Structure</span>
+        <button type="button" onclick="addModule()"
+                class="text-xs bg-sky-50 text-sky-700 hover:bg-sky-100 px-2.5 py-1 rounded-lg font-medium">
+          + Module
+        </button>
+      </div>
+
+      <div id="structure-tree" class="flex-1 overflow-y-auto p-3 space-y-1">
+        {% for module in modules %}
+        <!-- Module header -->
+        <div class="tree-item tree-module-header"
+             draggable="true"
+             data-type="module" data-id="{{ module.id }}" data-order="{{ module.ordre }}"
+             ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)"
+             ondragleave="dragLeave(event)">
+          <div class="flex items-center gap-2 px-3 py-2">
+            <span class="text-slate-400 cursor-grab text-xs">⠿</span>
+            <span class="text-base">📁</span>
+            <span class="flex-1 text-sm text-slate-700" id="module-title-{{ module.id }}"
+                  ondblclick="renameModule({{ module.id }})">{{ module.titre }}</span>
+            <button type="button" onclick="addLecon({{ module.id }})"
+                    class="text-xs text-sky-600 hover:text-sky-800 px-1">+</button>
+            <button type="button" onclick="deleteModule({{ module.id }})"
+                    class="text-xs text-red-400 hover:text-red-600 px-1">✕</button>
+          </div>
+        </div>
+
+        <!-- Module's lessons -->
+        <div id="module-lessons-{{ module.id }}" class="pl-5 space-y-0.5">
+          {% for lecon in module.lecons_module.all %}
+          <div class="tree-item"
+               draggable="true"
+               data-type="lecon" data-id="{{ lecon.id }}" data-order="{{ lecon.ordre }}" data-module="{{ module.id }}"
+               ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)"
+               ondragleave="dragLeave(event)"
+               onclick="selectLecon({{ lecon.id }}, this)">
+            <div class="flex items-center gap-2 px-3 py-1.5">
+              <span class="text-slate-400 cursor-grab text-xs">⠿</span>
+              <span class="text-sm">{% if lecon.content_type == 'video' %}🎥{% elif lecon.content_type == 'exercise' %}💻{% else %}📄{% endif %}</span>
+              <span class="flex-1 text-xs text-slate-700 truncate">{{ lecon.titre }}</span>
+              {% if lecon.is_free_preview %}<span class="text-xs text-green-600" title="Aperçu gratuit">🔓</span>{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+
+        <!-- Standalone lessons (no module) -->
+        {% if standalone_lecons %}
+        <div class="text-xs text-slate-400 px-3 py-1 mt-2">Leçons sans module :</div>
+        {% for lecon in standalone_lecons %}
+        <div class="tree-item"
+             draggable="true"
+             data-type="lecon" data-id="{{ lecon.id }}" data-order="{{ lecon.ordre }}"
+             ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)"
+             ondragleave="dragLeave(event)"
+             onclick="selectLecon({{ lecon.id }}, this)">
+          <div class="flex items-center gap-2 px-3 py-1.5">
+            <span class="text-slate-400 cursor-grab text-xs">⠿</span>
+            <span class="text-sm">📄</span>
+            <span class="flex-1 text-xs text-slate-700 truncate">{{ lecon.titre }}</span>
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Add standalone lesson -->
+      <div class="px-3 py-2 border-t border-slate-100">
+        <button type="button" onclick="addLecon(null)"
+                class="w-full text-xs text-slate-500 hover:text-sky-700 py-1.5 hover:bg-sky-50 rounded-lg transition-colors">
+          + Ajouter une leçon
+        </button>
+      </div>
+    </div>
+
+    <!-- ── RIGHT: Lesson editor ──────────────────────────────────────────── -->
+    <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 flex flex-col">
+      <div id="lesson-editor-empty" class="flex-1 flex items-center justify-center text-slate-400 text-sm p-8">
+        <div class="text-center">
+          <div class="text-4xl mb-3">👈</div>
+          <p>Sélectionne une leçon dans l'arbre pour l'éditer.</p>
+          <p class="text-xs mt-1">Ou crée une nouvelle leçon avec le bouton +</p>
+        </div>
+      </div>
+
+      <div id="lesson-editor-panel" class="flex-1 flex flex-col hidden">
+        <!-- Lesson editor header -->
+        <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-3">
+          <span class="font-semibold text-slate-700 text-sm" id="editor-lecon-title-display">—</span>
+          <div class="ml-auto flex gap-2">
+            <!-- Preview toggle -->
+            <div class="flex gap-0.5 bg-slate-100 rounded-lg p-0.5 text-xs">
+              <button type="button" id="tab-edit" onclick="setEditorMode('edit')"
+                      class="px-2.5 py-1 rounded-md bg-white font-medium shadow-sm">✏️ Éditer</button>
+              <button type="button" id="tab-preview" onclick="setEditorMode('preview')"
+                      class="px-2.5 py-1 rounded-md text-slate-600">👁️ Aperçu</button>
+              <button type="button" id="tab-split" onclick="setEditorMode('split')"
+                      class="px-2.5 py-1 rounded-md text-slate-600">⬛ Split</button>
+            </div>
+            <button type="button" onclick="saveLecon()"
+                    class="text-xs bg-sky-600 text-white px-3 py-1.5 rounded-lg hover:bg-sky-700 font-medium">
+              💾 Sauvegarder
+            </button>
+            <button type="button" onclick="deleteLeconUI()"
+                    class="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-2 py-1.5 rounded-lg font-medium">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <!-- Lesson fields -->
+        <div class="p-4 space-y-3 overflow-y-auto flex-1">
+          <input type="hidden" id="current-lecon-id" value="">
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Titre de la leçon</label>
+              <input type="text" id="lecon-titre"
+                     class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Type</label>
+              <select id="lecon-content-type" onchange="updateLeconTypeUI()"
+                      class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+                <option value="text">📄 Texte</option>
+                <option value="video">🎥 Vidéo</option>
+                <option value="mixed">🎬 Mixte</option>
+                <option value="exercise">💻 Exercice</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Durée (min)</label>
+              <input type="number" id="lecon-duree" min="1" value="10"
+                     class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+            </div>
+            <div class="flex items-end pb-1 gap-4">
+              <label class="flex items-center gap-2 cursor-pointer text-sm text-slate-700">
+                <input type="checkbox" id="lecon-free-preview" class="rounded">
+                🔓 Aperçu gratuit
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer text-sm text-slate-700">
+                <input type="checkbox" id="lecon-publiee" checked class="rounded">
+                Publiée
+              </label>
+            </div>
+          </div>
+
+          <!-- Video URL (only for video/mixed) -->
+          <div id="lecon-video-field" class="hidden">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">URL vidéo</label>
+            <input type="url" id="lecon-video" placeholder="https://youtu.be/…"
+                   class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+          </div>
+
+          <!-- Content editor (text/mixed) -->
+          <div id="lecon-content-field">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Contenu</label>
+            <!-- Edit mode -->
+            <div id="edit-area">
+              <textarea id="lecon-contenu-editor"></textarea>
+            </div>
+            <!-- Preview mode -->
+            <div id="preview-area" class="hidden border border-slate-200 rounded-lg p-4 min-h-48 prose prose-sm max-w-none">
+            </div>
+            <!-- Split mode -->
+            <div id="split-area" class="hidden grid grid-cols-2 gap-3">
+              <div><textarea id="lecon-contenu-split"></textarea></div>
+              <div id="split-preview" class="border border-slate-200 rounded-lg p-3 min-h-48 overflow-y-auto prose prose-sm max-w-none text-sm"></div>
+            </div>
+          </div>
+
+          <!-- Code exercises section -->
+          <div id="lecon-exercises-section" class="hidden pt-4 border-t border-slate-100">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-slate-600">💻 Exercices de code</span>
+              <a id="add-exercise-link" href="#"
+                 class="text-xs bg-sky-50 text-sky-700 hover:bg-sky-100 px-2 py-1 rounded-lg font-medium">
+                + Ajouter
+              </a>
+            </div>
+            <div id="exercises-list" class="text-xs text-slate-400">Chargement…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!--  STEP 3 — Paramètres & Prix                                               -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div id="step-3" class="step-panel {% if active_step == '3' %}active{% endif %}">
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
+    <h2 class="font-bold text-slate-700 text-base">③ Paramètres & Prix</h2>
+
+    <div class="flex items-center gap-3">
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" id="f-est-gratuit" {% if cours.est_gratuit %}checked{% endif %}
+               class="sr-only peer" onchange="togglePrix()">
+        <div class="w-11 h-6 bg-slate-200 peer-focus:ring-2 peer-focus:ring-sky-400 rounded-full peer peer-checked:bg-sky-500 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
+      </label>
+      <span class="text-sm text-slate-700 font-medium">Cours gratuit</span>
+    </div>
+
+    <div id="prix-field" class="{% if cours.est_gratuit %}hidden{% endif %}">
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Prix (FCFA)</label>
+      <input type="number" id="f-prix" min="0" step="100" value="{{ cours.prix }}"
+             class="w-full max-w-xs px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Statut de publication</label>
+      <select id="f-status" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+        {% for val, label in status_choices %}
+        <option value="{{ val }}" {% if cours.status == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="flex gap-3 pt-2">
+      <button type="button" onclick="saveStep3().then(()=>goToStep('4'))"
+              class="bg-sky-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-sky-700 transition-colors text-sm">
+        Sauvegarder et continuer →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!--  STEP 4 — SEO & Publication                                               -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div id="step-4" class="step-panel {% if active_step == '4' %}active{% endif %}">
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
+    <h2 class="font-bold text-slate-700 text-base">④ SEO & Publication</h2>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">
+        Meta description <span class="font-normal text-slate-400" id="meta-count">({{ cours.meta_description|length }}/160)</span>
+      </label>
+      <textarea id="f-meta" rows="2" maxlength="160"
+                oninput="document.getElementById('meta-count').textContent='('+this.value.length+'/160)'"
+                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">{{ cours.meta_description }}</textarea>
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Slug (URL)</label>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-slate-400">numeria.com/fr/cours/</span>
+        <input type="text" id="f-slug" value="{{ cours.slug }}"
+               class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 pt-2">
+      <button type="button" onclick="publishCours()"
+              class="bg-green-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-green-700 transition-colors text-sm">
+        🚀 Publier le cours
+      </button>
+      <button type="button" onclick="saveStep4()"
+              class="bg-slate-100 text-slate-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-slate-200 transition-colors text-sm">
+        💾 Sauvegarder brouillon
+      </button>
+      <a href="{% url 'admin_panel:cours_preview' cours.slug %}" target="_blank"
+         class="flex items-center gap-1.5 bg-slate-100 text-slate-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-slate-200 transition-colors text-sm">
+        👁️ Prévisualiser
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!--  JAVASCRIPT                                                               -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+const COURS_SLUG   = "{{ cours.slug }}";
+const CSRF         = "{{ csrf_token }}";
+const SAVE_URL     = "{% url 'admin_panel:ajax_cours_save' cours.slug %}";
+const MODULE_URL   = "{% url 'admin_panel:ajax_module_create' cours.slug %}";
+const LECON_URL    = "{% url 'admin_panel:ajax_lecon_create' cours.slug %}";
+const REORDER_URL  = "{% url 'admin_panel:ajax_reorder' cours.slug %}";
+const IMG_URL      = "{% url 'admin_panel:image_upload' %}";
+const EX_CREATE_URL = "/fr/admin-panel/exercices/lecon/";
+
+let unsavedChanges = false;
+let currentLeconId = null;
+let mdeEditor      = null;
+let autosaveTimer  = null;
+let lastSaved      = null;
+let dragSource     = null;
+
+/* ── STEPS ────────────────────────────────────────────────────────────────── */
+const steps = [
+  ['1', '① Infos'],
+  ['2', '② Structure'],
+  ['3', '③ Paramètres'],
+  ['4', '④ SEO'],
+];
+
+function goToStep(n) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.step-tab').forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById('step-' + n);
+  if (panel) panel.classList.add('active');
+  const tab = document.querySelector('[data-step="'+n+'"]');
+  if (tab) tab.classList.add('active');
+  if (n === '2' && !mdeEditor) { initMDE(); }
+  window.history.replaceState({}, '', '?step=' + n);
+}
+
+/* ── UNSAVED WARNING ──────────────────────────────────────────────────────── */
+window.addEventListener('beforeunload', function(e) {
+  if (unsavedChanges) { e.returnValue = 'Modifications non sauvegardées.'; }
+});
+function markDirty() { unsavedChanges = true; setAutosaveText('Modifié — non sauvegardé'); }
+
+/* ── AUTO-SAVE ────────────────────────────────────────────────────────────── */
+function setAutosaveText(t) { document.getElementById('autosave-text').textContent = t; }
+function startAutosave() {
+  if (autosaveTimer) clearInterval(autosaveTimer);
+  autosaveTimer = setInterval(function() {
+    autoSaveAll();
+  }, 60000);
+}
+async function autoSaveAll() {
+  setAutosaveText('Sauvegarde automatique…');
+  const step = document.querySelector('.step-panel.active')?.id?.replace('step-','') || '1';
+  if (step === '1') await saveStep1(true);
+  else if (step === '3') await saveStep3(true);
+  else if (step === '4') await saveStep4(true);
+  else { setAutosaveText('Sauvegarde auto — Étape ' + step + ' : pas de sauvegarde auto'); }
+}
+
+/* ── SAVE STEP 1 ──────────────────────────────────────────────────────────── */
+async function saveStep1(silent) {
+  const fd = new FormData();
+  fd.append('titre',           document.getElementById('f-titre').value);
+  fd.append('resume',          document.getElementById('f-resume').value);
+  fd.append('description',     document.getElementById('f-description').value);
+  fd.append('matiere',         document.getElementById('f-matiere').value);
+  fd.append('niveau',          document.getElementById('f-niveau').value);
+  fd.append('langue',          document.getElementById('f-langue').value);
+  fd.append('duree_estimee_heures', document.getElementById('f-duree').value);
+  fd.append('prerequisites',   document.getElementById('f-prerequisites').value);
+  fd.append('competences_visees', document.getElementById('f-objectifs').value);
+  const thumb = document.getElementById('f-thumbnail').files[0];
+  if (thumb) fd.append('thumbnail', thumb);
+
+  setAutosaveText('Sauvegarde…');
+  const resp = await fetch(SAVE_URL, { method:'POST', headers:{'X-CSRFToken':CSRF}, body:fd });
+  const data = await resp.json();
+  if (data.ok) { unsavedChanges = false; setAutosaveText('Sauvegardé ✓ — ' + now()); }
+  return data;
+}
+
+/* ── SAVE STEP 3 ──────────────────────────────────────────────────────────── */
+async function saveStep3(silent) {
+  const body = {
+    est_gratuit: document.getElementById('f-est-gratuit').checked,
+    prix:        document.getElementById('f-prix')?.value || '0',
+    status:      document.getElementById('f-status').value,
+  };
+  setAutosaveText('Sauvegarde…');
+  const r = await post(SAVE_URL, body);
+  if (r.ok) { unsavedChanges = false; setAutosaveText('Sauvegardé ✓ — ' + now()); }
+  return r;
+}
+
+/* ── SAVE STEP 4 ──────────────────────────────────────────────────────────── */
+async function saveStep4(silent) {
+  const body = {
+    meta_description: document.getElementById('f-meta').value,
+    slug_new:         document.getElementById('f-slug').value,
+  };
+  const r = await post(SAVE_URL, body);
+  if (r.ok) { unsavedChanges = false; setAutosaveText('Sauvegardé ✓ — ' + now()); }
+  return r;
+}
+
+async function publishCours() {
+  document.getElementById('f-status').value = 'publie';
+  await saveStep4();
+  await saveStep3();
+  setAutosaveText('🚀 Publié ✓');
+}
+
+/* ── MODULE MANAGEMENT ────────────────────────────────────────────────────── */
+async function addModule() {
+  const titre = prompt('Titre du module :');
+  if (!titre) return;
+  const data = await post(MODULE_URL, { titre });
+  if (data.id) {
+    const tree = document.getElementById('structure-tree');
+    const html = `
+      <div class="tree-item tree-module-header" draggable="true"
+           data-type="module" data-id="${data.id}" data-order="${data.ordre}"
+           ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)"
+           ondragleave="dragLeave(event)">
+        <div class="flex items-center gap-2 px-3 py-2">
+          <span class="text-slate-400 text-xs">⠿</span>
+          <span class="text-base">📁</span>
+          <span class="flex-1 text-sm text-slate-700" id="module-title-${data.id}"
+                ondblclick="renameModule(${data.id})">${data.titre}</span>
+          <button type="button" onclick="addLecon(${data.id})" class="text-xs text-sky-600 hover:text-sky-800 px-1">+</button>
+          <button type="button" onclick="deleteModule(${data.id})" class="text-xs text-red-400 hover:text-red-600 px-1">✕</button>
+        </div>
+      </div>
+      <div id="module-lessons-${data.id}" class="pl-5 space-y-0.5"></div>`;
+    tree.insertAdjacentHTML('beforeend', html);
+  }
+}
+
+async function renameModule(id) {
+  const span = document.getElementById('module-title-' + id);
+  const old  = span.textContent;
+  const titre = prompt('Nouveau titre :', old);
+  if (!titre || titre === old) return;
+  const r = await post(`/fr/admin-panel/cours/ajax/module/${id}/update/`, { titre });
+  if (r.ok) span.textContent = titre;
+}
+
+async function deleteModule(id) {
+  if (!confirm('Supprimer ce module ? Les leçons seront déplacées hors module.')) return;
+  const r = await post(`/fr/admin-panel/cours/ajax/module/${id}/delete/`, {});
+  if (r.ok) {
+    document.querySelector(`[data-type="module"][data-id="${id}"]`)?.remove();
+    document.getElementById('module-lessons-' + id)?.remove();
+  }
+}
+
+/* ── LESSON MANAGEMENT ───────────────────────────────────────────────────── */
+async function addLecon(moduleId) {
+  const titre = prompt('Titre de la leçon :');
+  if (!titre) return;
+  const data = await post(LECON_URL, { titre, module_id: moduleId });
+  if (!data.id) return;
+  const icon = '📄';
+  const html = `
+    <div class="tree-item" draggable="true"
+         data-type="lecon" data-id="${data.id}" data-order="${data.ordre}"
+         ${moduleId ? 'data-module="'+moduleId+'"' : ''}
+         ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)"
+         ondragleave="dragLeave(event)"
+         onclick="selectLecon(${data.id}, this)">
+      <div class="flex items-center gap-2 px-3 py-1.5">
+        <span class="text-slate-400 text-xs">⠿</span>
+        <span class="text-sm">${icon}</span>
+        <span class="flex-1 text-xs text-slate-700 truncate">${data.titre}</span>
+      </div>
+    </div>`;
+  if (moduleId) {
+    const container = document.getElementById('module-lessons-' + moduleId);
+    if (container) container.insertAdjacentHTML('beforeend', html);
+  } else {
+    document.getElementById('structure-tree').insertAdjacentHTML('beforeend', html);
+  }
+  selectLecon(data.id, document.querySelector(`[data-type="lecon"][data-id="${data.id}"]`));
+}
+
+async function selectLecon(id, el) {
+  if (currentLeconId && currentLeconId !== id) {
+    // Auto-save previous
+    try { await saveLecon(true); } catch(_) {}
+  }
+  document.querySelectorAll('.tree-item.selected').forEach(e => e.classList.remove('selected'));
+  if (el) el.classList.add('selected');
+
+  const r = await fetch(`/fr/admin-panel/cours/ajax/lecon/${id}/`, { headers:{'X-CSRFToken':CSRF} });
+  const data = await r.json();
+
+  currentLeconId = id;
+  document.getElementById('current-lecon-id').value  = id;
+  document.getElementById('lecon-titre').value        = data.titre;
+  document.getElementById('lecon-duree').value        = data.duree_minutes;
+  document.getElementById('lecon-content-type').value = data.content_type;
+  document.getElementById('lecon-free-preview').checked = data.is_free_preview;
+  document.getElementById('lecon-publiee').checked    = data.est_publiee;
+  document.getElementById('lecon-video').value        = data.video_youtube;
+  document.getElementById('editor-lecon-title-display').textContent = data.titre;
+
+  // Set EasyMDE content
+  if (mdeEditor) { mdeEditor.value(data.contenu || ''); }
+  else { document.getElementById('lecon-contenu-editor').value = data.contenu || ''; }
+
+  updateLeconTypeUI();
+  loadExercisesForLecon(id);
+
+  document.getElementById('lesson-editor-empty').classList.add('hidden');
+  document.getElementById('lesson-editor-panel').classList.remove('hidden');
+}
+
+function updateLeconTypeUI() {
+  const ct = document.getElementById('lecon-content-type').value;
+  const showVideo   = ct === 'video' || ct === 'mixed';
+  const showContent = ct === 'text'  || ct === 'mixed';
+  document.getElementById('lecon-video-field').classList.toggle('hidden', !showVideo);
+  document.getElementById('lecon-content-field').classList.toggle('hidden', !showContent);
+  document.getElementById('lecon-exercises-section').classList.toggle('hidden', ct !== 'exercise');
+}
+
+async function saveLecon(silent) {
+  if (!currentLeconId) return;
+  const body = {
+    titre:           document.getElementById('lecon-titre').value,
+    contenu:         mdeEditor ? mdeEditor.value() : document.getElementById('lecon-contenu-editor').value,
+    video_youtube:   document.getElementById('lecon-video').value || null,
+    content_type:    document.getElementById('lecon-content-type').value,
+    duree_minutes:   document.getElementById('lecon-duree').value,
+    is_free_preview: document.getElementById('lecon-free-preview').checked,
+    est_publiee:     document.getElementById('lecon-publiee').checked,
+  };
+  const r = await post(`/fr/admin-panel/cours/ajax/lecon/${currentLeconId}/save/`, body);
+  if (r.ok && !silent) setAutosaveText('Leçon sauvegardée ✓ — ' + now());
+  // Update tree label
+  const treeEl = document.querySelector(`[data-type="lecon"][data-id="${currentLeconId}"] span.truncate`);
+  if (treeEl) treeEl.textContent = body.titre;
+  const header = document.getElementById('editor-lecon-title-display');
+  if (header) header.textContent = body.titre;
+  return r;
+}
+
+async function deleteLeconUI() {
+  if (!currentLeconId) return;
+  if (!confirm('Supprimer cette leçon ?')) return;
+  await post(`/fr/admin-panel/cours/ajax/lecon/${currentLeconId}/delete/`, {});
+  document.querySelector(`[data-type="lecon"][data-id="${currentLeconId}"]`)?.remove();
+  currentLeconId = null;
+  document.getElementById('lesson-editor-panel').classList.add('hidden');
+  document.getElementById('lesson-editor-empty').classList.remove('hidden');
+}
+
+function loadExercisesForLecon(leconId) {
+  const el = document.getElementById('exercises-list');
+  const link = document.getElementById('add-exercise-link');
+  link.href = `/fr/admin-panel/exercices/lecon/${leconId}/ajouter/`;
+  // Simple: show link to exercise management
+  el.innerHTML = `<a href="/fr/admin-panel/exercices/?lecon=${leconId}" class="text-sky-600 hover:underline">
+    Gérer les exercices de cette leçon →
+  </a>`;
+}
+
+/* ── EDITOR MODE (edit / preview / split) ────────────────────────────────── */
+function setEditorMode(mode) {
+  ['edit','preview','split'].forEach(m => {
+    document.getElementById(m+'-area').classList.toggle('hidden', m !== mode);
+    document.getElementById('tab-'+m)?.classList.toggle('bg-white', m === mode);
+    document.getElementById('tab-'+m)?.classList.toggle('shadow-sm', m === mode);
+    document.getElementById('tab-'+m)?.classList.toggle('font-medium', m === mode);
+  });
+  if (mode === 'preview' || mode === 'split') {
+    const content = mdeEditor ? mdeEditor.value() : document.getElementById('lecon-contenu-editor').value;
+    renderPreview(content);
+  }
+}
+
+function renderPreview(md) {
+  // Use EasyMDE's markdown parser if available
+  let html = '';
+  if (window.EasyMDE && EasyMDE.prototype.markdown) {
+    html = EasyMDE.prototype.markdown(md);
+  } else {
+    html = md.replace(/\n/g, '<br>');
+  }
+  const pEl  = document.getElementById('preview-area');
+  const spEl = document.getElementById('split-preview');
+  if (pEl)  pEl.innerHTML  = html;
+  if (spEl) spEl.innerHTML = html;
+  // Retrigger MathJax
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([pEl, spEl].filter(Boolean));
+  }
+}
+
+/* ── DRAG & DROP ─────────────────────────────────────────────────────────── */
+function dragStart(e, el) {
+  dragSource = el;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', el.dataset.id);
+}
+function dragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+  e.dataTransfer.dropEffect = 'move';
+}
+function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function dropItem(e, target) {
+  e.preventDefault();
+  target.classList.remove('drag-over');
+  if (!dragSource || dragSource === target) return;
+  // Simple DOM swap — insert dragSource before target
+  target.parentNode.insertBefore(dragSource, target);
+  saveOrder();
+}
+async function saveOrder() {
+  const items = [];
+  document.querySelectorAll('[data-type="module"]').forEach((el, i) => {
+    items.push({ type:'module', id:+el.dataset.id, order:i });
+  });
+  document.querySelectorAll('[data-type="lecon"]').forEach((el, i) => {
+    items.push({ type:'lecon', id:+el.dataset.id, order:i, module_id:+el.dataset.module||null });
+  });
+  const r = await post(REORDER_URL, { items });
+  if (r.ok) setAutosaveText('Ordre sauvegardé ✓');
+}
+
+/* ── EasyMDE INIT ────────────────────────────────────────────────────────── */
+function initMDE() {
+  const ta = document.getElementById('lecon-contenu-editor');
+  if (!ta || mdeEditor) return;
+  mdeEditor = new EasyMDE({
+    element: ta,
+    spellChecker: false,
+    minHeight: '280px',
+    toolbar: [
+      'bold','italic','heading-2','heading-3','|',
+      'unordered-list','ordered-list','|',
+      'link','image','code','quote','|',
+      { name: 'latex',
+        action: function(ed) { ed.codemirror.replaceSelection('$$\n\n$$'); },
+        className: 'fa fa-superscript',
+        title: '∑ LaTeX Block',
+      },
+      { name: 'python',
+        action: function(ed) { ed.codemirror.replaceSelection('```python\n# votre code ici\n```'); },
+        className: 'fa fa-code',
+        title: '🐍 Code Python',
+      },
+      '|','preview','side-by-side','fullscreen',
+    ],
+    previewRender: function(md) {
+      let html = this.parent.markdown(md);
+      setTimeout(function() {
+        if (window.MathJax && MathJax.typesetPromise) {
+          MathJax.typesetPromise();
+        }
+      }, 100);
+      return html;
+    },
+    imageUploadFunction: function(file, onSuccess, onError) {
+      const fd = new FormData();
+      fd.append('file', file);
+      fetch(IMG_URL, { method:'POST', headers:{'X-CSRFToken':CSRF}, body:fd })
+        .then(r=>r.json())
+        .then(d => { if(d.ok) onSuccess(d.url); else onError('Erreur upload'); })
+        .catch(() => onError('Erreur réseau'));
+    },
+  });
+  mdeEditor.codemirror.on('change', function() { markDirty(); });
+}
+
+/* ── HELPERS ─────────────────────────────────────────────────────────────── */
+async function post(url, body) {
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+    body: JSON.stringify(body),
+  });
+  return r.json();
+}
+
+function now() {
+  return new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+}
+
+function updateCounter(el, countId) {
+  document.getElementById(countId).textContent = el.value.length + '/' + el.maxLength;
+}
+
+function togglePrix() {
+  const isFree = document.getElementById('f-est-gratuit').checked;
+  document.getElementById('prix-field').classList.toggle('hidden', isFree);
+}
+
+/* ── THUMBNAIL PREVIEW ────────────────────────────────────────────────────── */
+document.getElementById('f-thumbnail').addEventListener('change', function() {
+  const file = this.files[0];
+  if (!file) return;
+  const preview = document.getElementById('thumb-preview');
+  preview.src = URL.createObjectURL(file);
+  preview.classList.remove('hidden');
+  markDirty();
+});
+
+/* ── INIT ────────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  if (document.getElementById('step-2').classList.contains('active')) {
+    initMDE();
+  }
+  document.querySelectorAll('#step-1 input, #step-1 select, #step-1 textarea').forEach(function(el) {
+    el.addEventListener('change', markDirty);
+    el.addEventListener('input', markDirty);
+  });
+  startAutosave();
+  setAutosaveText('Prêt');
+});
+</script>
+{% endblock %}

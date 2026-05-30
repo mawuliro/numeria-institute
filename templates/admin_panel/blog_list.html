@@ -1,0 +1,86 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n humanize %}
+
+{% block page_title %}Blog{% endblock %}
+{% block page_heading %}📝 Articles de blog{% endblock %}
+
+{% block content %}
+<div class="flex flex-wrap items-center gap-3 mb-5">
+  <a href="{% url 'admin_panel:blog_create' %}"
+     class="flex items-center gap-2 bg-sky-600 text-white font-bold px-4 py-2.5 rounded-xl hover:bg-sky-700 transition-colors text-sm">
+    + Nouvel article
+  </a>
+  <form method="get" class="flex gap-2 flex-1 min-w-48">
+    {% if status_f %}<input type="hidden" name="status" value="{{ status_f }}">{% endif %}
+    {% if mine %}<input type="hidden" name="mine" value="1">{% endif %}
+    <input type="text" name="q" value="{{ q }}" placeholder="Rechercher…"
+           class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+    <button type="submit" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm">🔍</button>
+  </form>
+</div>
+
+<div class="flex flex-wrap gap-2 mb-5">
+  <div class="flex gap-1 bg-white border border-slate-200 rounded-lg p-1">
+    <a href="?{% if q %}q={{ q }}{% endif %}" class="px-3 py-1.5 rounded-md text-sm font-medium {% if not status_f %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">Tous</a>
+    {% for val, label in statuts %}
+    <a href="?status={{ val }}{% if q %}&q={{ q }}{% endif %}" class="px-3 py-1.5 rounded-md text-sm font-medium {% if status_f == val %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">{{ label }}</a>
+    {% endfor %}
+  </div>
+  <a href="?{% if status_f %}status={{ status_f }}&{% endif %}mine=1{% if q %}&q={{ q }}{% endif %}"
+     class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm {% if mine %}bg-sky-100 text-sky-700 border-sky-300{% else %}text-slate-600 hover:bg-slate-50{% endif %}">
+    Mes articles
+  </a>
+</div>
+
+{% if page_obj.object_list %}
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+  {% for article in page_obj %}
+  <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
+    {% if article.image_couverture %}
+    <img src="{{ article.image_couverture }}" alt="{{ article.titre }}" class="h-36 w-full object-cover">
+    {% else %}
+    <div class="h-36 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-4xl">📝</div>
+    {% endif %}
+    <div class="p-4 flex flex-col flex-1">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-xs font-bold px-2 py-0.5 rounded-full
+          {% if article.status == 'publie' %}bg-green-100 text-green-700
+          {% elif article.status == 'archive' %}bg-red-100 text-red-700
+          {% else %}bg-slate-100 text-slate-600{% endif %}">
+          {{ article.get_status_display }}
+        </span>
+        <span class="text-xs text-slate-400 ml-auto">{{ article.reading_time_minutes }} min</span>
+      </div>
+      <h3 class="font-bold text-slate-800 text-sm leading-snug mb-1 line-clamp-2">{{ article.titre }}</h3>
+      <p class="text-xs text-slate-500 line-clamp-2 flex-1 mb-3">{{ article.resume }}</p>
+      <div class="flex items-center gap-2 text-xs text-slate-400 mb-3">
+        <span>{{ article.auteur.get_full_name|default:article.auteur.username|default:"?" }}</span>
+        <span>·</span>
+        <span>{{ article.date_modification|date:"d/m/y" }}</span>
+      </div>
+      <div class="flex gap-2">
+        <a href="{% url 'admin_panel:blog_edit' article.slug %}"
+           class="flex-1 text-center text-sky-700 text-xs px-2 py-1.5 bg-sky-50 hover:bg-sky-100 rounded-lg font-medium">
+          ✏️ Modifier
+        </a>
+        <a href="{% url 'admin_panel:blog_preview' article.slug %}" target="_blank"
+           class="text-slate-600 text-xs px-2 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg font-medium">👁️</a>
+        <form method="post" action="{% url 'admin_panel:blog_delete' article.slug %}" class="inline"
+              onsubmit="return confirm('Supprimer «{{ article.titre }}» ?')">
+          {% csrf_token %}
+          <button type="submit" class="text-red-600 text-xs px-2 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg font-medium">🗑️</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="bg-white rounded-2xl border border-slate-200 px-6 py-16 text-center">
+  <div class="text-5xl mb-4">📝</div>
+  <p class="text-slate-500 mb-2">Aucun article trouvé.</p>
+  <a href="{% url 'admin_panel:blog_create' %}" class="text-sky-600 hover:underline text-sm">Créer le premier article →</a>
+</div>
+{% endif %}
+{% include "admin_panel/includes/pagination.html" %}
+{% endblock %}

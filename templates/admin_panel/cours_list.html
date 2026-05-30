@@ -1,0 +1,183 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n humanize %}
+
+{% block page_title %}Cours{% endblock %}
+{% block page_heading %}📚 Cours
+  {% if draft_count %}<span class="ml-2 text-sm bg-amber-100 text-amber-700 font-medium px-2 py-0.5 rounded-full">{{ draft_count }} brouillon{{ draft_count|pluralize }}</span>{% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Top bar -->
+<div class="flex flex-wrap items-center gap-3 mb-6">
+  <a href="{% url 'admin_panel:cours_create' %}"
+     class="flex items-center gap-2 bg-sky-600 text-white font-bold px-4 py-2.5 rounded-xl hover:bg-sky-700 transition-colors text-sm">
+    + Créer un cours
+  </a>
+
+  <!-- Search -->
+  <form method="get" class="flex gap-2 flex-1 min-w-64" id="filter-form">
+    {% if status_f %}<input type="hidden" name="status" value="{{ status_f }}">{% endif %}
+    {% if categorie_f %}<input type="hidden" name="categorie" value="{{ categorie_f }}">{% endif %}
+    {% if niveau_f %}<input type="hidden" name="niveau" value="{{ niveau_f }}">{% endif %}
+    {% if mine_only %}<input type="hidden" name="mine" value="1">{% endif %}
+    <input type="text" name="q" value="{{ q }}" id="search-input"
+           placeholder="Rechercher un cours…"
+           class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+    <button type="submit" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm">🔍</button>
+  </form>
+</div>
+
+<!-- Filters bar -->
+<div class="flex flex-wrap gap-2 mb-6">
+  <!-- Mine / All toggle -->
+  <div class="flex gap-1 bg-white border border-slate-200 rounded-lg p-1">
+    <a href="?{% if q %}q={{ q }}&{% endif %}{% if status_f %}status={{ status_f }}&{% endif %}"
+       class="px-3 py-1.5 rounded-md text-sm font-medium {% if not mine_only %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+      Tous les cours
+    </a>
+    <a href="?mine=1{% if q %}&q={{ q }}{% endif %}{% if status_f %}&status={{ status_f }}{% endif %}"
+       class="px-3 py-1.5 rounded-md text-sm font-medium {% if mine_only %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+      Mes cours
+    </a>
+  </div>
+
+  <!-- Status filter -->
+  <select onchange="applyFilter('status', this.value)"
+          class="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white">
+    <option value="">Tous les statuts</option>
+    {% for val, label in status_choices %}
+    <option value="{{ val }}" {% if status_f == val %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+
+  <!-- Category filter -->
+  <select onchange="applyFilter('categorie', this.value)"
+          class="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white">
+    <option value="">Toutes les matières</option>
+    {% for val, label in matieres %}
+    <option value="{{ val }}" {% if categorie_f == val %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+
+  <!-- Level filter -->
+  <select onchange="applyFilter('niveau', this.value)"
+          class="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white">
+    <option value="">Tous les niveaux</option>
+    {% for val, label in niveaux %}
+    <option value="{{ val }}" {% if niveau_f == val %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+
+  <!-- Sort -->
+  <select onchange="applyFilter('sort', this.value)"
+          class="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white ml-auto">
+    <option value="-date_creation" {% if sort == '-date_creation' %}selected{% endif %}>Plus récents</option>
+    <option value="-nb_inscrits"   {% if sort == '-nb_inscrits'   %}selected{% endif %}>Plus inscrits</option>
+    <option value="titre"          {% if sort == 'titre'          %}selected{% endif %}>Alphabétique</option>
+  </select>
+</div>
+
+<!-- Course grid -->
+{% if page_obj.object_list %}
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+  {% for cours in page_obj %}
+  <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
+
+    <!-- Thumbnail -->
+    <div class="h-36 bg-gradient-to-br
+      {% if cours.matiere == 'mathematiques' %}from-blue-100 to-blue-200
+      {% elif cours.matiere == 'physique' %}from-purple-100 to-purple-200
+      {% elif cours.matiere == 'informatique' or cours.matiere == 'python' %}from-green-100 to-green-200
+      {% elif cours.matiere == 'ia' or cours.matiere == 'data' %}from-orange-100 to-orange-200
+      {% else %}from-slate-100 to-slate-200{% endif %}
+      flex items-center justify-center text-5xl relative">
+      {% if cours.thumbnail %}
+        <img src="{{ cours.thumbnail.url }}" alt="{{ cours.titre }}" class="w-full h-full object-cover absolute inset-0">
+      {% else %}
+        {% if cours.matiere == 'mathematiques' %}🔢
+        {% elif cours.matiere == 'physique' %}⚛️
+        {% elif cours.matiere == 'python' %}🐍
+        {% elif cours.matiere == 'informatique' %}💻
+        {% elif cours.matiere == 'ia' %}🤖
+        {% elif cours.matiere == 'data' %}📊
+        {% else %}📚{% endif %}
+      {% endif %}
+      <!-- Status badge -->
+      <span class="absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full
+        {% if cours.status == 'publie' %}bg-green-500 text-white
+        {% elif cours.status == 'revision' %}bg-yellow-400 text-slate-900
+        {% elif cours.status == 'archive' %}bg-red-100 text-red-700
+        {% else %}bg-slate-200 text-slate-600{% endif %}">
+        {{ cours.get_status_display }}
+      </span>
+    </div>
+
+    <!-- Info -->
+    <div class="p-4 flex flex-col flex-1">
+      <div class="flex flex-wrap gap-1 mb-2">
+        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ cours.get_matiere_display }}</span>
+        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ cours.get_niveau_display }}</span>
+        {% if cours.langue == 'en' %}<span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">EN</span>{% endif %}
+      </div>
+      <h3 class="font-bold text-slate-800 text-sm leading-snug mb-1 line-clamp-2">{{ cours.titre }}</h3>
+      <p class="text-xs text-slate-500 line-clamp-2 mb-3 flex-1">{{ cours.resume }}</p>
+
+      <!-- Stats -->
+      <div class="flex items-center gap-3 text-xs text-slate-400 mb-3">
+        <span>📦 {{ cours.nb_modules }}</span>
+        <span>📄 {{ cours.nb_lecons }}</span>
+        <span>👥 {{ cours.nb_inscrits }}</span>
+        <span class="ml-auto">{{ cours.date_modification|date:"d/m/y" }}</span>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-2 flex-wrap">
+        <a href="{% url 'admin_panel:cours_edit' cours.slug %}"
+           class="flex-1 text-center text-sky-700 text-xs px-2 py-1.5 bg-sky-50 hover:bg-sky-100 rounded-lg font-medium transition-colors">
+          ✏️ Modifier
+        </a>
+        <a href="{% url 'admin_panel:cours_preview' cours.slug %}" target="_blank"
+           class="text-slate-600 text-xs px-2 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg font-medium transition-colors">
+          👁️
+        </a>
+        <a href="{% url 'admin_panel:cours_analytics' cours.slug %}"
+           class="text-slate-600 text-xs px-2 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg font-medium transition-colors">
+          📊
+        </a>
+        <form method="post" action="{% url 'admin_panel:cours_delete' cours.slug %}" class="inline"
+              onsubmit="return confirm('Supprimer «{{ cours.titre }}» ?')">
+          {% csrf_token %}
+          <button type="submit"
+                  class="text-red-600 text-xs px-2 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition-colors">
+            🗑️
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="bg-white rounded-2xl border border-slate-200 px-6 py-16 text-center">
+  <div class="text-5xl mb-4">📚</div>
+  <p class="text-slate-500 text-lg mb-2">Aucun cours trouvé.</p>
+  <a href="{% url 'admin_panel:cours_create' %}" class="text-sky-600 hover:underline text-sm">
+    Créer le premier cours →
+  </a>
+</div>
+{% endif %}
+
+{% include "admin_panel/includes/pagination.html" %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function applyFilter(key, value) {
+  var url = new URL(window.location.href);
+  if (value) url.searchParams.set(key, value);
+  else url.searchParams.delete(key);
+  url.searchParams.delete('page');
+  window.location.href = url.toString();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}Prévisualisation — {{ article.titre }}{% endblock %}
+{% block page_heading %}👁️ Prévisualisation : {{ article.titre }}{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
+<div class="bg-amber-50 border border-amber-300 rounded-xl px-4 py-3 mb-5 flex items-center justify-between">
+  <span class="text-amber-800 text-sm font-medium">⚠️ MODE PRÉVISUALISATION</span>
+  <a href="{% url 'admin_panel:blog_edit' article.slug %}"
+     class="text-xs bg-sky-600 text-white px-3 py-1.5 rounded-lg hover:bg-sky-700 font-medium">
+    ✏️ Retour à l'éditeur
+  </a>
+</div>
+
+<div class="max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 p-8">
+  {% if article.image_couverture %}
+  <img src="{{ article.image_couverture }}" class="w-full rounded-xl object-cover h-48 mb-6" alt="{{ article.titre }}">
+  {% endif %}
+  <h1 class="text-3xl font-bold text-slate-800 mb-2">{{ article.titre }}</h1>
+  <p class="text-slate-500 text-sm mb-6">{{ article.auteur.get_full_name|default:article.auteur.username }} · {{ article.date_modification|date:"d/m/Y" }} · {{ article.reading_time_minutes }} min de lecture</p>
+  <div class="prose prose-sm max-w-none text-slate-700 leading-relaxed">
+    {{ article.contenu|safe }}
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.Prism) Prism.highlightAll();
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+});
+</script>
+{% endblock %}

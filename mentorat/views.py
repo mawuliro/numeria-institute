@@ -365,6 +365,9 @@ def application_detail(request, application_pk):
     if request.method == 'POST':
         action = request.POST.get('action')
         notes = request.POST.get('rejection_notes', '')
+        if action in ['approve', 'reject'] and application.status in ['approved', 'rejected']:
+            messages.warning(request, _('Cette candidature a déjà été traitée et ne peut plus être modifiée.'))
+            return redirect('mentorat:application_detail', application_pk=application.pk)
         if action == 'approve':
             application.approve()
             try:

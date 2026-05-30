@@ -26,7 +26,7 @@ def generer_reference():
     return f"NIM-{annee}-{code}"
 
 
-def creer_paiement(etudiant, cours=None, formation_inscription=None, paiement_seance=None, provider='sandbox'):
+def creer_paiement(etudiant, cours=None, formation_inscription=None, paiement_seance=None, provider='sandbox', method=None):
     """
     Crée un enregistrement de paiement en attente.
     Appelé quand l'étudiant clique sur "Payer".
@@ -75,6 +75,12 @@ def creer_paiement(etudiant, cours=None, formation_inscription=None, paiement_se
     else:
         montant = formation_inscription.prix_paye_fcfa
 
+    if method is None:
+        if provider == 'stripe':
+            method = 'card'
+        elif provider in ('mixx', 'moov'):
+            method = provider
+
     paiement = Paiement.objects.create(
         etudiant=etudiant,
         cours=cours,
@@ -84,6 +90,7 @@ def creer_paiement(etudiant, cours=None, formation_inscription=None, paiement_se
         devise='XOF',
         statut='en_attente',
         provider=provider,
+        method=method,
         reference_numeria=generer_reference(),
     )
 
@@ -213,6 +220,14 @@ def process_mixx(paiement, donnees=None):
     raise NotImplementedError("Mixx by YAS pas encore configuré")
 
 
+def process_moov(paiement, donnees=None):
+    """
+    Provider Moov Money — à implémenter quand le compte sera créé.
+    """
+    # TODO: Implémenter Moov Money
+    raise NotImplementedError("Moov Money pas encore configuré")
+
+
 # Dictionnaire des providers disponibles
 PROVIDERS_DISPONIBLES = {
     'sandbox':  process_sandbox,
@@ -220,6 +235,7 @@ PROVIDERS_DISPONIBLES = {
     'fedapay':  process_fedapay,
     'cinetpay': process_cinetpay,
     'mixx':     process_mixx,
+    'moov':     process_moov,
 }
 
 

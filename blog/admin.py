@@ -1,50 +1,12 @@
+"""
+blog/admin.py — Articles are managed at /fr/admin-panel/blog/.
+Only Categorie is kept here for quick management.
+"""
 from django.contrib import admin
-from .models import Article, Categorie
+from .models import Categorie
 
 
-class ArticleAdmin(admin.ModelAdmin):
-
-    # Colonnes dans la liste des articles
-    list_display = [
-        'titre',
-        'auteur',
-        'categorie',
-        'est_publie',
-        'nombre_vues',
-        'date_creation',
-    ]
-
-    # Filtres à droite
-    list_filter = [
-        'est_publie',
-        'categorie',
-        'auteur',
-    ]
-
-    # Barre de recherche
-    search_fields = [
-        'titre',
-        'resume',
-        'contenu',
-    ]
-
-    # Champs éditables dans la liste
-    list_editable = [
-        'est_publie',
-    ]
-
-    # Remplissage automatique du slug depuis le titre
-    # Quand tu tapes le titre, le slug se remplit automatiquement
-    prepopulated_fields = {'slug': ('titre',)}
-
-
+@admin.register(Categorie)
 class CategorieAdmin(admin.ModelAdmin):
-
-    list_display = ['nom', 'slug']
-
-    # Slug auto-rempli depuis le nom
+    list_display       = ['nom', 'slug']
     prepopulated_fields = {'slug': ('nom',)}
-
-
-admin.site.register(Article, ArticleAdmin)
-admin.site.register(Categorie, CategorieAdmin)

@@ -8,7 +8,7 @@ Structure :
 """
 
 from pathlib import Path
-from decouple import config, Csv
+from decouple import Config, Csv, RepositoryEnv
 from django.utils.translation import gettext_lazy as _
 import dj_database_url
 import os
@@ -16,6 +16,11 @@ import re
 
 # ── CHEMINS ────────────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load local .env explicitly so config() works in development
+_dotenv_path = BASE_DIR / '.env'
+if _dotenv_path.exists():
+    config = Config(RepositoryEnv(str(_dotenv_path)))
 
 
 # ── SÉCURITÉ ───────────────────────────────────────────────────────────────
@@ -261,7 +266,7 @@ RATELIMIT_USE_CACHE = 'default'
 
 
 # ── EMAIL — Resend API for transactional emails ─────────────────────────────
-RESEND_API_KEY = os.environ.get('RESEND_API_KEY')
+RESEND_API_KEY = config('RESEND_API_KEY', default='')
 DEFAULT_FROM_EMAIL  = 'Numeria Institute <onboarding@resend.dev>'
 CONTACT_EMAIL    = config('CONTACT_EMAIL', default='numeriainstitude@gmail.com')
 ADMIN_EMAIL      = config('ADMIN_EMAIL', default='admin@numeriainstitute.com')

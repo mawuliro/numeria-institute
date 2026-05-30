@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden, Http404
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from .models import (
@@ -245,6 +246,22 @@ def voir_lecon(request, lecon_id):
         lecon=lecon
     )
     progression.est_commencee = True
+
+    if request.method == 'POST':
+        if 'mark_complete' in request.POST or 'complete_formation' in request.POST:
+            progression.est_terminees = True
+            if not progression.date_completion:
+                progression.date_completion = timezone.now()
+            progression.save()
+            if 'complete_formation' in request.POST:
+                inscription.statut = 'terminee'
+                inscription.progression = 100
+                inscription.save()
+                messages.success(request, _("Formation terminée."))
+                return redirect('formation:mes_formations')
+            messages.success(request, _("Leçon marquée comme complétée."))
+            return redirect('formation:voir_lecon', lecon_id=lecon.id)
+
     progression.save()
     
     # Leçons adjacentes
@@ -264,6 +281,7 @@ def voir_lecon(request, lecon_id):
     # Calculer la position actuelle
     lecon_actuelle = list(autres_lecons).index(lecon) + 1
     total_lecons = autres_lecons.count()
+    progression_pct = inscription.progression or 0
     
     context = {
         'lecon': lecon,
@@ -271,9 +289,12 @@ def voir_lecon(request, lecon_id):
         'inscription': inscription,
         'lecon_suivante': lecon_suivante,
         'lecon_precedente': lecon_precedente,
+        'lecon_next': lecon_suivante,
+        'lecon_prev': lecon_precedente,
         'autres_lecons': autres_lecons,
         'lecon_actuelle': lecon_actuelle,
         'total_lecons': total_lecons,
+        'progression_pct': progression_pct,
         'date_expiration': inscription.acces_expire(),
     }
     return render(request, 'formation/voir_lecon.html', context)

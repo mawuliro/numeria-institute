@@ -318,6 +318,37 @@ class Cours(models.Model):
         verbose_name='Mots-clés SEO'
     )
 
+    # ── CHAMPS CMS (ajoutés pour le panneau admin custom) ──────────────────
+    STATUS_COURS = [
+        ('brouillon', 'Brouillon'),
+        ('revision',  'En révision'),
+        ('publie',    'Publié'),
+        ('archive',   'Archivé'),
+    ]
+    status = models.CharField(
+        max_length=20, choices=STATUS_COURS, default='brouillon',
+        verbose_name='Statut CMS',
+    )
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='created_courses', verbose_name='Créé par',
+    )
+    published_at = models.DateTimeField(
+        null=True, blank=True, verbose_name='Publié le',
+    )
+    meta_description = models.CharField(
+        max_length=160, blank=True, verbose_name='Meta description SEO',
+        help_text='160 caractères max',
+    )
+    prerequisites = models.TextField(
+        blank=True, verbose_name='Prérequis',
+        help_text='Un prérequis par ligne',
+    )
+    thumbnail = models.ImageField(
+        upload_to='courses/thumbnails/', blank=True, null=True,
+        verbose_name='Miniature',
+    )
+
     def get_video_embed_url(self):
         """Retourne l'URL embed prête pour l'<iframe>."""
         return convertir_url_youtube(self.video_youtube)
@@ -342,11 +373,14 @@ class Cours(models.Model):
         if not self.slug:
             from django.utils.text import slugify
             self.slug = slugify(self.titre)
-        
+
+        # Synchronise est_publie avec status pour la compatibilité
+        self.est_publie = (self.status == 'publie')
+
         self.nombre_etudiants_inscrits = self.inscriptions.count()
         self.note_moyenne = self.get_note_moyenne()
         self.taux_completion = int(self.get_taux_completion())
-        
+
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -364,19 +398,54 @@ class Cours(models.Model):
         ]
 
 
+class Module(models.Model):
+    """Regroupe des leçons dans un cours — couche facultative."""
+    cours       = models.ForeignKey(Cours, on_delete=models.CASCADE, related_name='modules')
+    titre       = models.CharField(max_length=300, verbose_name='Titre')
+    description = models.TextField(blank=True, verbose_name='Description')
+    ordre       = models.IntegerField(default=0, verbose_name='Ordre')
+    est_actif   = models.BooleanField(default=True, verbose_name='Actif')
+
+    class Meta:
+        ordering = ['ordre']
+        verbose_name = 'Module'
+        verbose_name_plural = 'Modules'
+
+    def __str__(self):
+        return f'[{self.cours.titre}] {self.titre}'
+
+
 class Lecon(models.Model):
     """Une leçon dans un cours."""
 
-    cours = models.ForeignKey(
-        Cours, on_delete=models.CASCADE, related_name='lecons'
+    CONTENT_TYPE_CHOICES = [
+        ('text',     'Texte / Article'),
+        ('video',    'Vidéo'),
+        ('mixed',    'Mixte (Texte + Vidéo)'),
+        ('exercise', 'Exercice pratique'),
+    ]
+
+    cours  = models.ForeignKey(Cours,  on_delete=models.CASCADE, related_name='lecons')
+    module = models.ForeignKey(
+        'Module', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='lecons_module', verbose_name='Module',
     )
     titre   = models.CharField(max_length=200, verbose_name='Titre')
+    slug    = models.SlugField(blank=True, max_length=300, verbose_name='Slug')
     contenu = models.TextField(
         blank=True, verbose_name='Contenu',
         help_text='Supporte le LaTeX ($...$) et le code (<pre><code>...)'
     )
+    content_type = models.CharField(
+        max_length=20, choices=CONTENT_TYPE_CHOICES, default='text',
+        verbose_name='Type de contenu',
+    )
     ordre         = models.IntegerField(default=1, verbose_name='Ordre')
     duree_minutes = models.IntegerField(default=10, verbose_name='Durée (minutes)')
+    is_free_preview = models.BooleanField(
+        default=False, verbose_name='Aperçu gratuit',
+        help_text='Accessible sans inscription ni paiement',
+    )
 
     # URL originale de la leçon — jamais convertie en base
     video_youtube = models.URLField(
@@ -386,10 +455,14 @@ class Lecon(models.Model):
     )
     est_publiee = models.BooleanField(default=True, verbose_name='Publiée')
 
-    # SUPPRIMÉ : le save() ne convertit plus l'URL automatiquement.
-
     def get_video_embed_url(self):
         return convertir_url_youtube(self.video_youtube)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.titre)[:300]
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.cours.titre} — Leçon {self.ordre} : {self.titre}'

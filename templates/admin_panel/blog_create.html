@@ -1,0 +1,28 @@
+{% extends "admin_panel/base_staff.html" %}
+{% block page_title %}Nouvel article{% endblock %}
+{% block page_heading %}📝 Nouvel article{% endblock %}
+{% block breadcrumb %}<p class="text-xs text-slate-400 mt-0.5"><a href="{% url 'admin_panel:blog_list' %}" class="hover:underline">Blog</a> › Créer</p>{% endblock %}
+
+{% block content %}
+<div class="max-w-xl">
+  <div class="bg-white rounded-2xl border border-slate-200 p-6">
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
+        <input type="text" name="titre" required autofocus maxlength="200"
+               class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Résumé</label>
+        <input type="text" name="resume" maxlength="300"
+               class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+      </div>
+      <div class="flex gap-3">
+        <button type="submit" class="bg-sky-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-sky-700 text-sm">Créer →</button>
+        <a href="{% url 'admin_panel:blog_list' %}" class="bg-slate-100 text-slate-700 font-semibold px-6 py-2.5 rounded-xl hover:bg-slate-200 text-sm">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

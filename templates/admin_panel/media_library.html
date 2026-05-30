@@ -1,0 +1,121 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n humanize %}
+
+{% block page_title %}Médiathèque{% endblock %}
+{% block page_heading %}🖼️ Médiathèque{% endblock %}
+
+{% block content %}
+<style>
+.media-card:hover .media-overlay { opacity: 1; }
+.media-overlay { opacity: 0; transition: opacity .2s; }
+.drop-zone.dragover { background: #e0f2fe; border-color: #0ea5e9; }
+</style>
+
+<!-- Upload zone -->
+<div id="drop-zone"
+     class="drop-zone border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center mb-6 cursor-pointer transition-colors hover:border-sky-400 hover:bg-sky-50"
+     onclick="document.getElementById('file-input').click()"
+     ondragover="event.preventDefault(); this.classList.add('dragover')"
+     ondragleave="this.classList.remove('dragover')"
+     ondrop="handleDrop(event)">
+  <div class="text-4xl mb-2">📁</div>
+  <p class="text-slate-600 font-medium">Glisser-déposer ou cliquer pour uploader</p>
+  <p class="text-sm text-slate-400 mt-1">Images, PDFs — plusieurs fichiers à la fois</p>
+  <input type="file" id="file-input" class="hidden" multiple accept="image/*,.pdf"
+         onchange="uploadFiles(this.files)">
+</div>
+
+<!-- Upload progress -->
+<div id="upload-progress" class="hidden mb-4 bg-sky-50 rounded-xl p-3 text-sm text-sky-700"></div>
+
+<!-- Filters -->
+<div class="flex gap-2 mb-4">
+  <a href="?" class="px-3 py-1.5 rounded-lg text-sm {% if not type_f %}bg-sky-600 text-white{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">Tous</a>
+  <a href="?type=image" class="px-3 py-1.5 rounded-lg text-sm {% if type_f == 'image' %}bg-sky-600 text-white{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">🖼️ Images</a>
+  <a href="?type=pdf" class="px-3 py-1.5 rounded-lg text-sm {% if type_f == 'pdf' %}bg-sky-600 text-white{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">📄 PDFs</a>
+</div>
+
+<!-- Media grid -->
+{% if page_obj.object_list %}
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+  {% for media in page_obj %}
+  <div class="media-card relative group rounded-xl overflow-hidden border border-slate-200 bg-white aspect-square">
+    {% if media.media_type == 'image' %}
+    <img src="{{ media.url }}" alt="{{ media.name }}" class="w-full h-full object-cover">
+    {% else %}
+    <div class="w-full h-full flex items-center justify-center text-4xl bg-slate-50">
+      {% if media.media_type == 'pdf' %}📄{% else %}📁{% endif %}
+    </div>
+    {% endif %}
+    <div class="media-overlay absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2 p-2">
+      <button type="button" onclick="copyUrl('{{ media.url }}')"
+              class="w-full text-xs bg-white text-slate-800 font-medium py-1.5 rounded-lg hover:bg-slate-100 transition-colors">
+        📋 Copier URL
+      </button>
+      <form method="post" action="{% url 'admin_panel:media_delete' media.id %}"
+            onsubmit="return confirm('Supprimer ?')" class="w-full">
+        {% csrf_token %}
+        <button type="submit" class="w-full text-xs bg-red-500 text-white font-medium py-1.5 rounded-lg hover:bg-red-600 transition-colors">
+          🗑️ Supprimer
+        </button>
+      </form>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1.5 truncate">
+      {{ media.name|truncatechars:20 }}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="bg-white rounded-2xl border border-slate-200 px-6 py-16 text-center">
+  <div class="text-5xl mb-3">🖼️</div>
+  <p class="text-slate-400">Aucun fichier uploadé pour le moment.</p>
+</div>
+{% endif %}
+
+{% include "admin_panel/includes/pagination.html" %}
+
+<!-- Copy URL toast -->
+<div id="copy-toast" class="hidden fixed bottom-6 right-6 bg-green-600 text-white text-sm font-medium px-4 py-2.5 rounded-xl shadow-lg z-50">
+  ✓ URL copiée dans le presse-papiers
+</div>
+
+<script>
+const CSRF      = "{{ csrf_token }}";
+const UPLOAD_URL = "{% url 'admin_panel:media_upload' %}";
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('dragover');
+  uploadFiles(e.dataTransfer.files);
+}
+
+function uploadFiles(files) {
+  if (!files || files.length === 0) return;
+  const fd = new FormData();
+  Array.from(files).forEach(function(f) { fd.append('files', f); });
+  const prog = document.getElementById('upload-progress');
+  prog.textContent = 'Upload en cours…';
+  prog.classList.remove('hidden');
+  fetch(UPLOAD_URL, { method:'POST', headers:{'X-CSRFToken':CSRF}, body:fd })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.ok) {
+        prog.textContent = data.files.length + ' fichier(s) uploadé(s) ✓';
+        setTimeout(function() { window.location.reload(); }, 800);
+      } else {
+        prog.textContent = 'Erreur lors de l\'upload.';
+      }
+    })
+    .catch(function() { prog.textContent = 'Erreur réseau.'; });
+}
+
+function copyUrl(url) {
+  navigator.clipboard.writeText(url).then(function() {
+    var toast = document.getElementById('copy-toast');
+    toast.classList.remove('hidden');
+    setTimeout(function() { toast.classList.add('hidden'); }, 2000);
+  });
+}
+</script>
+{% endblock %}
