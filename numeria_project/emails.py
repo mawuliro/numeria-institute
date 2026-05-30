@@ -221,11 +221,56 @@ def send_contact_reply_email(to_email, to_name, subject, reply_message, staff_na
         raise
 
 
-# ─── KEPT FOR REFERENCE — no longer called from views ─────────────────────────
+def send_mentor_application_approval_email(application, language=None):
+    if not application.profil.utilisateur.email:
+        logger.warning('send_mentor_application_approval_email: user %s has no email', application.profil.utilisateur.pk)
+        return
+    try:
+        language = _get_language(language)
+        subject = (
+            'Mentor application approved — Numeria Institute'
+            if language == 'en'
+            else 'Votre candidature mentor a été approuvée — Numeria Institute'
+        )
+        html_body = _render_template(
+            f'emails/mentor_application_approved_{language}.html',
+            {
+                'application': application,
+                'site_name': 'Numeria Institute',
+            },
+            language=language,
+        )
+        text_content = strip_tags(html_body)
+        _send_html_email(subject, text_content, html_body, [application.profil.utilisateur.email])
+        logger.info('send_mentor_application_approval_email: sent OK to %s', application.profil.utilisateur.email)
+    except Exception as e:
+        logger.error('send_mentor_application_approval_email: FAILED for %s — %s', application.profil.utilisateur.email, e)
 
-def send_verification_email(request, user, language=None):
-    """No longer called — registration now activates accounts immediately."""
-    pass
+
+def send_mentor_application_rejection_email(application, language=None):
+    if not application.profil.utilisateur.email:
+        logger.warning('send_mentor_application_rejection_email: user %s has no email', application.profil.utilisateur.pk)
+        return
+    try:
+        language = _get_language(language)
+        subject = (
+            'Mentor application decision — Numeria Institute'
+            if language == 'en'
+            else 'Résultat de votre candidature mentor — Numeria Institute'
+        )
+        html_body = _render_template(
+            f'emails/mentor_application_rejected_{language}.html',
+            {
+                'application': application,
+                'site_name': 'Numeria Institute',
+            },
+            language=language,
+        )
+        text_content = strip_tags(html_body)
+        _send_html_email(subject, text_content, html_body, [application.profil.utilisateur.email])
+        logger.info('send_mentor_application_rejection_email: sent OK to %s', application.profil.utilisateur.email)
+    except Exception as e:
+        logger.error('send_mentor_application_rejection_email: FAILED for %s — %s', application.profil.utilisateur.email, e)
 
 
 def send_welcome_email(request, user, language=None):

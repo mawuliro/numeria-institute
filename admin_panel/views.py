@@ -3,7 +3,9 @@ from datetime import date
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordResetForm
+from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
+from django.core.validators import validate_email
 from django.db.models import Q, Sum, Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -23,7 +25,7 @@ logger = logging.getLogger(__name__)
 def dashboard(request):
     from pages.models import ContactMessage
     from admissions.models import Candidature
-    from mentorat.models import DemandeMentorat
+    from mentorat.models import DemandeMentorat, MentorApplication
     from cours.models import Cours
     from paiements.models import Paiement
 
@@ -38,6 +40,7 @@ def dashboard(request):
         'unread_contacts': ContactMessage.objects.filter(status='unread').count(),
         'pending_candidacies': Candidature.objects.filter(statut='soumise').count(),
         'pending_mentorships': DemandeMentorat.objects.filter(statut='en_attente').count(),
+        'pending_mentor_applications': MentorApplication.objects.filter(status='pending').count(),
         'total_users': User.objects.filter(is_active=True).count(),
         'total_courses': Cours.objects.filter(est_publie=True).count(),
         'payments_this_month': payments_qs.count(),
@@ -115,6 +118,18 @@ def contact_detail(request, message_id):
         if not reply_text:
             messages.error(request, _("Le message de réponse ne peut pas être vide."))
         else:
+            try:
+                validate_email(to_field)
+                subject = subject.replace('\n', ' ').replace('\r', ' ')
+            except ValidationError:
+                messages.error(request, _("L'adresse email de destination n'est pas valide."))
+                return render(request, 'admin_panel/contact_detail.html', {
+                    'msg': msg,
+                    'replies': msg.replies.select_related('replied_by').all(),
+                    'reply_subject': subject,
+                    'reply_to': to_field,
+                    'reply_message': reply_text,
+                })
             try:
                 send_contact_reply_email(
                     to_email=to_field,

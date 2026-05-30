@@ -12,11 +12,12 @@ def staff_counts(request):
     try:
         from pages.models import ContactMessage
         from admissions.models import Candidature
-        from mentorat.models import DemandeMentorat
+        from mentorat.models import DemandeMentorat, MentorApplication
         return {
             'sidebar_unread_contacts': ContactMessage.objects.filter(status='unread').count(),
             'sidebar_pending_candidacies': Candidature.objects.filter(statut='soumise').count(),
             'sidebar_pending_mentorships': DemandeMentorat.objects.filter(statut='en_attente').count(),
+            'sidebar_pending_mentor_applications': MentorApplication.objects.filter(status='pending').count(),
         }
     except Exception:
         return {}

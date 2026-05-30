@@ -50,7 +50,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">{% trans "À" %}</label>
-            <input type="email" name="to" value="{{ msg.email }}"
+            <input type="email" name="to" value="{{ reply_to|default:msg.email }}"
                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
           </div>
           <div>
@@ -63,7 +63,7 @@
           <label class="block text-xs font-semibold text-slate-600 mb-1">{% trans "Message" %} *</label>
           <textarea name="message" rows="6" required
                     placeholder="{% trans 'Votre réponse…' %}"
-                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-y"></textarea>
+                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-y">{{ reply_message|default:'' }}</textarea>
         </div>
         <div class="flex gap-3">
           <button type="submit"

@@ -26,6 +26,15 @@
     </div>
   </a>
 
+  <a href="{% url 'mentorat:applications_list' %}"
+     class="stat-card bg-white rounded-xl p-5 border border-slate-200 flex items-center gap-4 hover:border-sky-300">
+    <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl">🧑‍🏫</div>
+    <div>
+      <div class="text-2xl font-bold text-slate-800">{{ cards.pending_mentor_applications }}</div>
+      <div class="text-sm text-slate-500">{% trans "Candidatures mentor" %}</div>
+    </div>
+  </a>
+
   <a href="{% url 'admin_panel:mentorat_list' %}?statut=en_attente"
      class="stat-card bg-white rounded-xl p-5 border border-slate-200 flex items-center gap-4 hover:border-sky-300">
     <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-2xl">🤝</div>

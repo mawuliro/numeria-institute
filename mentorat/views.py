@@ -1,16 +1,22 @@
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.conf import settings
-from numeria_project.emails import send_mentorship_acceptance_email
+from numeria_project.emails import (
+    send_mentorship_acceptance_email,
+    send_mentor_application_approval_email,
+    send_mentor_application_rejection_email,
+)
 from django.db.models import Q, Sum
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from paiements.service import creer_paiement, traiter_paiement
 from paiements.constants import PAYMENT_PROVIDERS
 from django.utils import timezone
+from notifications.notifications import notify_user
 from datetime import timedelta
 from django.http import Http404
 from .models import (
@@ -361,9 +367,33 @@ def application_detail(request, application_pk):
         notes = request.POST.get('rejection_notes', '')
         if action == 'approve':
             application.approve()
+            try:
+                send_mentor_application_approval_email(application)
+            except Exception as e:
+                logger.error('mentor application approval email failed: %s', e)
+            notify_user(
+                application.profil.utilisateur,
+                title=_('Candidature mentor approuvée'),
+                message=_('Votre candidature pour devenir mentor a été approuvée.'),
+                notification_type='mentorship',
+                link=reverse('mentorat:applications_list'),
+                created_by=request.user,
+            )
             messages.success(request, _('La candidature a été approuvée et le mentor a été activé.'))
         elif action == 'reject':
             application.reject(notes=notes)
+            try:
+                send_mentor_application_rejection_email(application)
+            except Exception as e:
+                logger.error('mentor application rejection email failed: %s', e)
+            notify_user(
+                application.profil.utilisateur,
+                title=_('Candidature mentor rejetée'),
+                message=_('Votre candidature pour devenir mentor a été refusée.'),
+                notification_type='mentorship',
+                link=reverse('mentorat:applications_list'),
+                created_by=request.user,
+            )
             messages.success(request, _('La candidature a été rejetée.'))
         return redirect('mentorat:application_detail', application_pk=application.pk)
     return render(request, 'mentorat/admin_application_detail.html', {
