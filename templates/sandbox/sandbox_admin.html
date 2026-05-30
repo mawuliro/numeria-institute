@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
 
 <div class="space-y-4">
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
   adminCM = CodeMirror(document.getElementById('admin-cm-wrapper'), {
     value: document.getElementById('admin-editor').value,
     mode:'python', theme:'dracula', lineNumbers:true, indentUnit:4, tabSize:4, indentWithTabs:false,
-    lineWrapping:true, viewportMargin:Infinity,
+    lineWrapping:true, viewportMargin:Infinity, autoCloseBrackets:true,
     extraKeys:{Tab:c=>c.replaceSelection('    ','end'),'Ctrl-Enter':runCode,'Cmd-Enter':runCode},
   });
   adminCM.getWrapperElement().style.minHeight = '350px';

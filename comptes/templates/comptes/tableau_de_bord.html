@@ -330,7 +330,8 @@
     </div>
 </section>
 
-<!-- ── Mini Sandbox Python ── -->
+<!-- ── Sandbox Python (version complète) ── -->
+{% load sandbox_tags %}
 {% if user.is_authenticated %}
 <section class="w-full bg-numeria-blanc dark:bg-gray-900 pb-12">
   <div class="w-full px-4 sm:px-8 lg:px-16">
@@ -338,84 +339,171 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
-    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden bg-white dark:bg-gray-800">
-      <div class="flex items-center gap-3 px-5 py-3.5 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+
+    <div class="rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+      <!-- Header -->
+      <div class="flex items-center gap-3 px-5 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <span class="font-bold text-numeria-bleu dark:text-numeria-teal text-sm">🐍 Sandbox Python</span>
-        <div id="mini-py-status" class="text-xs text-sky-600 bg-sky-50 px-2 py-0.5 rounded-full flex items-center gap-1.5">
+        <div id="db-py-status" class="text-xs text-sky-600 bg-sky-50 dark:bg-sky-900/30 dark:text-sky-400 px-2 py-0.5 rounded-full flex items-center gap-1.5">
           <svg class="animate-spin w-2.5 h-2.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
           {% trans "Chargement…" %}
         </div>
-        <a href="{% url 'sandbox_page' %}" target="_blank"
-           class="ml-auto text-xs text-slate-400 hover:text-sky-600 transition-colors" title="{% trans 'Ouvrir le sandbox complet' %}">↗️</a>
+        <div class="ml-auto flex items-center gap-2">
+          <a href="{% url 'sandbox_page' %}" target="_blank" rel="noopener"
+             class="text-xs text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors" title="{% trans 'Ouvrir en plein écran' %}">↗️</a>
+        </div>
       </div>
-      <div id="mini-cm-wrapper"></div>
-      <div class="flex flex-wrap items-center gap-2 px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
-        <button id="mini-run-btn" disabled type="button" onclick="runMiniSandbox()"
-                class="flex items-center gap-1.5 bg-numeria-bleu text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-blue-800 disabled:opacity-50 transition-colors">
+
+      <!-- Script manager + packages -->
+      <div class="flex flex-wrap items-center gap-3 px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+        <div class="flex items-center gap-2 flex-1 min-w-48">
+          <span class="text-xs text-gray-400">📁</span>
+          <select id="db-scripts" onchange="dbLoadScript(this.value)"
+                  class="flex-1 text-xs bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-1.5 min-w-0">
+            <option value="">— {% trans "Mes scripts" %} —</option>
+          </select>
+          <button type="button" onclick="dbNewScript()" class="text-xs text-sky-600 dark:text-sky-400 hover:underline">{% trans "Nouveau" %}</button>
+        </div>
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span class="text-xs text-gray-400">📦</span>
+          {% for pkg in "numpy,matplotlib,pandas,scipy,sympy"|split:"," %}
+          <label class="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300 cursor-pointer hover:text-sky-600 dark:hover:text-sky-400">
+            <input type="checkbox" class="db-pkg-cb" data-pkg="{{ pkg }}" onchange="dbTogglePkg('{{ pkg }}',this.checked)">
+            {{ pkg }}<span id="db-pkg-{{ pkg }}" class="text-gray-400"></span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Editor -->
+      <div id="db-cm-wrapper" style="min-height:200px;"></div>
+
+      <!-- Toolbar -->
+      <div class="flex flex-wrap items-center gap-2 px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+        <button id="db-run-btn" disabled type="button" onclick="dbRun()"
+                class="flex items-center gap-1.5 bg-numeria-bleu hover:bg-blue-800 text-white text-xs font-bold px-3 py-2 rounded-lg disabled:opacity-50 transition-colors">
           ▶ {% trans "Exécuter" %}
         </button>
-        <button type="button" onclick="saveMiniScript()"
-                class="text-xs bg-slate-100 dark:bg-gray-600 text-slate-700 dark:text-gray-200 px-3 py-1.5 rounded-lg hover:bg-slate-200 font-semibold">
+        <button type="button" onclick="dbSave()"
+                class="text-xs bg-slate-100 dark:bg-gray-700 hover:bg-slate-200 dark:hover:bg-gray-600 text-slate-700 dark:text-gray-200 px-3 py-2 rounded-lg font-semibold transition-colors">
           💾 {% trans "Sauvegarder" %}
         </button>
+        <button type="button" onclick="if(dbCM)dbCM.setValue('')"
+                class="text-xs text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 px-2 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">🗑️</button>
+        <button type="button" onclick="navigator.clipboard.writeText(dbCM?dbCM.getValue():'')"
+                class="text-xs text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 px-2 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">📋</button>
+        <div class="ml-auto flex gap-1">
+          <button type="button" onclick="dbSnippet('for i in range(10):\n    print(i)\n')" class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-1.5 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">for</button>
+          <button type="button" onclick="dbSnippet('def f(x):\n    return x\n')" class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-1.5 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">def</button>
+          <button type="button" onclick="dbSnippet('import numpy as np\n')" class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-1.5 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">np</button>
+          <button type="button" onclick="dbSnippet('import matplotlib.pyplot as plt\nplt.plot([1,2,3])\nplt.show()\n')" class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-1.5 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">plt</button>
+        </div>
       </div>
-      <div id="mini-output-wrapper" style="display:none;" class="border-t border-gray-200 dark:border-gray-700">
-        <pre id="mini-output" class="bg-gray-900 text-green-400 font-mono text-xs px-4 py-3 overflow-auto max-h-36 whitespace-pre-wrap"></pre>
+
+      <!-- Output -->
+      <div id="db-out-wrap" style="display:none;" class="border-t border-gray-200 dark:border-gray-700">
+        <div class="flex items-center px-4 py-1.5 bg-gray-800">
+          <span class="text-xs text-gray-400 font-mono">OUTPUT</span>
+          <button type="button" onclick="document.getElementById('db-out-wrap').style.display='none'"
+                  class="ml-auto text-gray-500 hover:text-gray-300 text-xs">✕</button>
+        </div>
+        <pre id="db-out" class="bg-gray-900 text-green-400 font-mono text-sm px-4 py-3 overflow-auto max-h-48 whitespace-pre-wrap"></pre>
+        <div id="db-plot-wrap" class="hidden bg-gray-900 px-4 pb-3">
+          <img id="db-plot-img" src="" alt="plot" class="max-w-full rounded-lg">
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-  var CSRF_MINI = document.cookie.match(/csrftoken=([^;]+)/)?.[1]||'';
-  var miniCM = null;
+  (function(){
+  'use strict';
+  var CSRF = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+  var dbCM = null;
 
-  window._numeriaPyodideReady = window._numeriaPyodideReady || (async function() {
-    await new Promise(function(resolve,reject){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js';s.onload=resolve;s.onerror=reject;document.head.appendChild(s);});
-    return await loadPyodide();
-  })();
+  window._numeriaPyodideReady = window._numeriaPyodideReady || loadPyodide();
 
   document.addEventListener('DOMContentLoaded', function() {
-    miniCM = CodeMirror(document.getElementById('mini-cm-wrapper'), {
-      value: localStorage.getItem('numeria_mini_sandbox_code') || '# Écris ton code Python ici\nprint("Bonjour Numeria !")\n',
+    dbCM = CodeMirror(document.getElementById('db-cm-wrapper'), {
+      value: localStorage.getItem('nb_db_sandbox_code') || '# Sandbox Python — Dashboard\nprint("Bonjour Numeria ! 🎓")\n',
       mode:'python', theme:'dracula', lineNumbers:true, indentUnit:4, tabSize:4, indentWithTabs:false,
-      lineWrapping:true, viewportMargin:Infinity,
-      extraKeys:{Tab:c=>c.replaceSelection('    ','end'),'Ctrl-Enter':runMiniSandbox,'Cmd-Enter':runMiniSandbox},
+      lineWrapping:true, viewportMargin:Infinity, autoCloseBrackets:true,
+      extraKeys:{Tab:function(c){c.replaceSelection('    ','end');},'Ctrl-Enter':dbRun,'Cmd-Enter':dbRun},
     });
-    miniCM.getWrapperElement().style.minHeight = '150px';
-    miniCM.on('change', function(){ localStorage.setItem('numeria_mini_sandbox_code', miniCM.getValue()); });
+    dbCM.getWrapperElement().style.minHeight='220px';
+    dbCM.on('change',function(){localStorage.setItem('nb_db_sandbox_code',dbCM.getValue());});
+    loadDbScripts();
+    restoreDbPkgs();
   });
 
   window._numeriaPyodideReady.then(function(){
-    document.getElementById('mini-py-status').style.display='none';
-    document.getElementById('mini-run-btn').disabled=false;
+    document.getElementById('db-py-status').style.display='none';
+    document.getElementById('db-run-btn').disabled=false;
   });
 
-  async function runMiniSandbox() {
-    var code   = miniCM ? miniCM.getValue() : '';
-    var outEl  = document.getElementById('mini-output');
-    var outWr  = document.getElementById('mini-output-wrapper');
-    var btn    = document.getElementById('mini-run-btn');
-    btn.disabled=true; btn.textContent='⏳ …';
-    outWr.style.display='block'; outEl.textContent='…'; outEl.style.color='#9ca3af';
-    try {
-      var py = await window._numeriaPyodideReady;
+  window.dbRun = async function() {
+    var code = dbCM?dbCM.getValue():'';
+    var out  = document.getElementById('db-out');
+    var wrap = document.getElementById('db-out-wrap');
+    var btn  = document.getElementById('db-run-btn');
+    btn.disabled=true;btn.textContent='⏳ …';
+    wrap.style.display='block';out.textContent='…';out.style.color='#9ca3af';
+    try{
+      var py=await window._numeriaPyodideReady;
       await py.loadPackagesFromImports(code);
-      py.globals.set('_mini_code', code);
-      var r = await py.runPythonAsync('import sys;from io import StringIO;_o=StringIO();sys.stdout=_o\ntry:exec(_mini_code,{})\nexcept Exception as e:print(f"❌ {type(e).__name__}: {e}")\nfinally:sys.stdout=sys.__stdout__\n_o.getvalue()');
-      outEl.textContent=r||'(aucun output)'; outEl.style.color=String(r).startsWith('❌')?'#f87171':'#4ade80';
-    } catch(e){outEl.innerHTML='<span style="color:#f87171">'+e+'</span>';outEl.style.color='';}
-    btn.disabled=false; btn.innerHTML='▶ {% trans "Exécuter" %}';
-  }
+      py.globals.set('_db_code',code);
+      var r=await py.runPythonAsync('import sys\nfrom io import StringIO\n_o=StringIO()\nsys.stdout=_o\ntry:\n    exec(_db_code,{})\nexcept Exception as e:\n    print(f"❌ {type(e).__name__}: {e}")\nfinally:\n    sys.stdout=sys.__stdout__\n_o.getvalue()');
+      out.textContent=r||'(aucun output)';out.style.color=String(r).startsWith('❌')?'#f87171':'#4ade80';
+      try{
+        var b64=String(await py.runPythonAsync('import matplotlib.pyplot as _p,io as _i,base64 as _b\n_buf=_i.BytesIO()\n_p.savefig(_buf,format="png",bbox_inches="tight")\n_buf.seek(0)\n_b.b64encode(_buf.read()).decode()'));
+        var pw=document.getElementById('db-plot-wrap'),pi=document.getElementById('db-plot-img');
+        if(pw&&pi&&b64){pi.src='data:image/png;base64,'+b64;pw.classList.remove('hidden');}
+        await py.runPythonAsync('import matplotlib.pyplot as _p\n_p.clf()');
+      }catch(_){var pw=document.getElementById('db-plot-wrap');if(pw)pw.classList.add('hidden');}
+    }catch(e){out.innerHTML='<span style="color:#f87171">'+e+'</span>';out.style.color='';}
+    btn.disabled=false;btn.innerHTML='▶ {% trans "Exécuter" %}';
+  };
 
-  async function saveMiniScript() {
-    var title = prompt('{% trans "Nom du script" %} :', '{% trans "Sans titre" %}');
-    if (!title) return;
-    await fetch('/sandbox/scripts/save/', {
-      method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF_MINI},
-      body:JSON.stringify({titre:title, code:miniCM?miniCM.getValue():''}),
-    });
-    alert('{% trans "Script sauvegardé" %} ✓');
+  function loadDbScripts(){
+    fetch('{% url "sandbox_list_scripts" %}').then(function(r){return r.json();}).then(function(d){
+      var sel=document.getElementById('db-scripts');if(!sel)return;
+      while(sel.options.length>1)sel.remove(1);
+      (d.scripts||[]).forEach(function(s){sel.add(new Option(s.titre,s.id));});
+    }).catch(function(){});
   }
+  window.dbLoadScript=function(id){
+    if(!id)return;
+    fetch('{% url "sandbox_load_script" 0 %}'.replace('/0/','/'+id+'/'))
+      .then(function(r){return r.json();}).then(function(d){if(dbCM)dbCM.setValue(d.code);}).catch(function(){});
+  };
+  window.dbNewScript=function(){if(dbCM)dbCM.setValue('');document.getElementById('db-scripts').value='';};
+  window.dbSave=function(){
+    var title=prompt('{% trans "Nom du script" %}:','{% trans "Sans titre" %}');if(!title)return;
+    var sid=document.getElementById('db-scripts').value;
+    fetch('{% url "sandbox_save_script" %}',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+      body:JSON.stringify({id:sid||null,titre:title,code:dbCM?dbCM.getValue():''})})
+    .then(function(r){return r.json();}).then(function(d){if(d.ok){loadDbScripts();if(window.nbToast)nbToast('Script «'+d.titre+'» sauvegardé ✓','success');}}).catch(function(){});
+  };
+  window.dbTogglePkg=function(pkg,load){
+    var st=document.getElementById('db-pkg-'+pkg);
+    if(!load){if(st)st.textContent='';savePkgState();return;}
+    if(st)st.textContent=' ⏳';
+    window._numeriaPyodideReady&&window._numeriaPyodideReady.then(function(py){
+      py.loadPackage(pkg).then(function(){if(st)st.textContent=' ✓';savePkgState();}).catch(function(){if(st)st.textContent=' ❌';});
+    });
+  };
+  function savePkgState(){
+    var pkgs=[];document.querySelectorAll('.db-pkg-cb:checked').forEach(function(cb){pkgs.push(cb.dataset.pkg);});
+    localStorage.setItem('nb_db_pkgs',JSON.stringify(pkgs));
+  }
+  function restoreDbPkgs(){
+    var pkgs=JSON.parse(localStorage.getItem('nb_db_pkgs')||'[]');
+    pkgs.forEach(function(p){var cb=document.querySelector('.db-pkg-cb[data-pkg="'+p+'"]');if(cb&&!cb.checked){cb.checked=true;dbTogglePkg(p,true);}});
+  }
+  window.dbSnippet=function(code){if(dbCM)dbCM.replaceSelection(code);};
+  })();
   </script>
 </section>
 {% endif %}

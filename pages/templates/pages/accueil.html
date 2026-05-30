@@ -127,15 +127,21 @@
     <div class="w-full px-4 sm:px-8 lg:px-16 py-8">
         <div class="grid grid-cols-3 gap-4 text-center">
             <div class="py-2">
-                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ nb_etudiants }}+</div>
+                <div style="font-family:'Outfit',sans-serif; font-weight:800;"
+                     class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl"
+                     data-nb-count="{{ nb_etudiants }}" data-nb-count-dur="1400">{{ nb_etudiants }}</div>
                 <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Étudiants inscrits" %}</div>
             </div>
             <div class="py-2 border-x border-white/10">
-                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ nb_cours }}</div>
+                <div style="font-family:'Outfit',sans-serif; font-weight:800;"
+                     class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl"
+                     data-nb-count="{{ nb_cours }}" data-nb-count-dur="1000">{{ nb_cours }}</div>
                 <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Cours disponibles" %}</div>
             </div>
             <div class="py-2">
-                <div style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl">{{ nb_pays }}</div>
+                <div style="font-family:'Outfit',sans-serif; font-weight:800;"
+                     class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl"
+                     data-nb-count="{{ nb_pays }}" data-nb-count-dur="800">{{ nb_pays }}</div>
                 <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Pays représentés" %}</div>
             </div>
         </div>
@@ -152,7 +158,7 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             {% for feature in homepage.features %}
-            <div class="text-center">
+            <div class="text-center nb-card rounded-2xl p-6 bg-transparent hover:bg-white dark:hover:bg-gray-700 transition-colors">
                 <div class="w-16 h-16 bg-numeria-teal rounded-full flex items-center justify-center mx-auto mb-4">
                     <span class="text-2xl">{{ feature.icon }}</span>
                 </div>

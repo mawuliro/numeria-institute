@@ -2,7 +2,7 @@
 <html lang="{{ LANGUAGE_CODE }}">
 
 <head>
-    {% load static i18n notification_tags %}
+    {% load static i18n notification_tags sandbox_tags %}
     <!-- ⚡ Mode sombre — EN PREMIER pour éviter le flash -->
     <script>
         const modeSombre = localStorage.getItem('mode-sombre');
@@ -233,11 +233,125 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
-        .bouton-analytics {
-            animation: pulse 2s ease-in-out infinite;
+        .bouton-analytics { animation: pulse 2s ease-in-out infinite; }
+        .bouton-analytics:hover { animation: none; }
+
+        /* ═══════════════ NUMERIA UI SYSTEM ═══════════════ */
+        :root {
+            --nb-accent:#0ea5e9; --nb-teal:#2DD4BF; --nb-success:#10b981;
+            --nb-warning:#f59e0b; --nb-error:#ef4444;
+            --nb-focus:0 0 0 3px rgba(14,165,233,0.25);
         }
-        .bouton-analytics:hover {
-            animation: none;
+
+        /* Page entrance */
+        @keyframes nb-page-in { from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);} }
+        main { animation: nb-page-in 0.22s ease-out both; }
+
+        /* Card hover */
+        .nb-card { transition:transform 0.2s ease,box-shadow 0.2s ease; }
+        .nb-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.12); }
+        .dark .nb-card:hover { box-shadow:0 8px 24px rgba(0,0,0,0.45); }
+
+        /* Focus rings (keyboard nav only) */
+        *:focus-visible { outline:2px solid #0ea5e9; outline-offset:2px; border-radius:4px; }
+        *:focus:not(:focus-visible) { outline:none; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar{width:5px;height:5px;}
+        ::-webkit-scrollbar-track{background:transparent;}
+        ::-webkit-scrollbar-thumb{background:rgba(148,163,184,.45);border-radius:3px;}
+        ::-webkit-scrollbar-thumb:hover{background:rgba(100,116,139,.7);}
+        .dark ::-webkit-scrollbar-thumb{background:rgba(71,85,105,.6);}
+
+        /* Toast notifications */
+        #nb-toasts{position:fixed;bottom:88px;right:24px;z-index:10001;display:flex;flex-direction:column;gap:10px;max-width:360px;width:calc(100vw - 48px);pointer-events:none;}
+        .nb-toast{display:flex;align-items:flex-start;gap:12px;background:#1e293b;color:#f1f5f9;border-radius:12px;padding:14px 16px;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:all;position:relative;overflow:hidden;animation:nb-toast-in .28s cubic-bezier(.33,1,.68,1) both;border:1px solid rgba(255,255,255,.08);font-size:.875rem;line-height:1.4;}
+        .nb-toast-prog{position:absolute;bottom:0;left:0;height:2px;background:var(--nb-accent);animation:nb-toast-shrink linear forwards;}
+        @keyframes nb-toast-in{from{opacity:0;transform:translateX(110%);}to{opacity:1;transform:translateX(0);}}
+        @keyframes nb-toast-out{to{opacity:0;transform:translateX(110%);max-height:0;padding:0;}}
+        @keyframes nb-toast-shrink{from{width:100%;}to{width:0%;}}
+
+        /* Floating sandbox FAB */
+        #nb-sandbox-fab{position:fixed;bottom:24px;right:80px;z-index:9990;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#2DD4BF);color:white;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:1.35rem;box-shadow:0 4px 18px rgba(14,165,233,.45);transition:transform .2s ease,box-shadow .2s ease;user-select:none;}
+        #nb-sandbox-fab.nb-visible{display:flex;}
+        #nb-sandbox-fab:hover{transform:scale(1.1);box-shadow:0 6px 26px rgba(14,165,233,.6);}
+        #nb-sandbox-fab.nb-open-state{background:linear-gradient(135deg,#2DD4BF,#0ea5e9);}
+        @keyframes nb-fab-ring{0%,100%{box-shadow:0 4px 18px rgba(14,165,233,.45);}50%{box-shadow:0 4px 30px rgba(14,165,233,.7),0 0 0 10px rgba(14,165,233,.1);}}
+        #nb-sandbox-fab.nb-pulse{animation:nb-fab-ring 1.1s ease-out .5s 3;}
+        .nb-fab-badge{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;background:#ef4444;color:white;border-radius:9px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2.5px solid white;line-height:1;}
+
+        /* Sandbox sliding panel */
+        #nb-sandbox-panel{position:fixed;inset:0;z-index:9995;visibility:hidden;pointer-events:none;}
+        #nb-sandbox-panel.nb-open{visibility:visible;pointer-events:all;}
+        #nb-panel-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);opacity:0;transition:opacity .3s ease;}
+        #nb-sandbox-panel.nb-open #nb-panel-backdrop{opacity:1;}
+        #nb-panel-drawer{position:absolute;top:0;right:0;bottom:0;width:620px;max-width:100vw;background:#0f172a;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.32,0,.67,0);box-shadow:-8px 0 40px rgba(0,0,0,.5);overflow:hidden;}
+        #nb-sandbox-panel.nb-open #nb-panel-drawer{transform:translateX(0);transition-timing-function:cubic-bezier(.33,1,.68,1);}
+        @media(max-width:640px){#nb-panel-drawer{width:100vw;}}
+        #nb-panel-drawer .CodeMirror{height:100%;font-size:.85rem;}
+        #nb-panel-editor-wrap{flex:1;overflow:hidden;position:relative;}
+        #nb-panel-editor-wrap .CodeMirror{position:absolute;inset:0;height:100%;}
+
+        /* Skeleton */
+        .nb-skeleton{background:linear-gradient(90deg,#e2e8f0 25%,#f8fafc 50%,#e2e8f0 75%);background-size:200% 100%;animation:nb-shimmer 1.5s infinite;border-radius:6px;}
+        .dark .nb-skeleton{background:linear-gradient(90deg,#1e293b 25%,#334155 50%,#1e293b 75%);background-size:200% 100%;}
+        @keyframes nb-shimmer{from{background-position:200% 0;}to{background-position:-200% 0;}}
+
+        /* Bell wiggle */
+        @keyframes nb-wiggle{0%,100%{transform:rotate(0);}25%{transform:rotate(-12deg);}75%{transform:rotate(12deg);}}
+        .nb-bell-ring{animation:nb-wiggle .4s ease;}
+
+        /* Count-up target */
+        [data-nb-count]{display:inline;}
+
+        /* Accordion */
+        .nb-accordion-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease;overflow:hidden;}
+        .nb-accordion-body.nb-open{grid-template-rows:1fr;}
+        .nb-accordion-inner{min-height:0;}
+
+        /* Animated progress */
+        .nb-prog-bar{transition:width .9s cubic-bezier(.4,0,.2,1) .1s;}
+
+        /* Dark mode: code:not(.hljs) */
+        .dark code:not(.hljs){background:#374151;color:#2DD4BF;}
+
+        /* ── Global form polish ── */
+        input[type="text"]:focus,input[type="email"]:focus,input[type="password"]:focus,
+        input[type="url"]:focus,input[type="number"]:focus,textarea:focus,select:focus {
+            outline:none;
+            box-shadow:var(--nb-focus);
+            border-color:#0ea5e9 !important;
+        }
+        /* ── Success / Error message polish ── */
+        .nb-alert{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;border-radius:10px;font-size:.875rem;line-height:1.5;border-width:1px;border-style:solid;}
+        .nb-alert-success{background:#f0fdf4;color:#166534;border-color:#bbf7d0;}
+        .nb-alert-error{background:#fef2f2;color:#991b1b;border-color:#fecaca;}
+        .nb-alert-warning{background:#fffbeb;color:#92400e;border-color:#fde68a;}
+        .dark .nb-alert-success{background:#052e16;color:#4ade80;border-color:#166534;}
+        .dark .nb-alert-error{background:#450a0a;color:#fca5a5;border-color:#7f1d1d;}
+        .dark .nb-alert-warning{background:#451a03;color:#fcd34d;border-color:#92400e;}
+
+        /* ── Card improvements ── */
+        .dark .bg-gray-800{background-color:#1e293b !important;}
+        .dark .bg-gray-700{background-color:#1e293b !important;}
+        .dark .border-gray-200{border-color:#334155 !important;}
+        .dark .border-gray-100{border-color:#1e293b !important;}
+
+        /* ── Table dark mode ── */
+        .dark table thead{background-color:#1e293b;}
+        .dark table tr:nth-child(even){background-color:#0f172a;}
+        .dark table tr:hover{background-color:#334155;}
+        .dark table th,.dark table td{border-color:#334155;}
+
+        /* ── Better link transitions ── */
+        a{transition:color .15s ease,opacity .15s ease;}
+
+        /* ── Button base ── */
+        button,a[role="button"]{cursor:pointer;}
+
+        /* Prefers-reduced-motion */
+        @media(prefers-reduced-motion:reduce){
+            *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important;}
         }
     </style>
     <script src="{% url 'javascript-catalog' %}"></script>
@@ -306,6 +420,16 @@
                     {% notification_bell %}
 
                     {% if user.is_authenticated %}
+                        <button id="nb-nav-sandbox-btn" type="button"
+                                onclick="toggleSandboxPanel()"
+                                title="{% trans 'Sandbox Python' %} (Ctrl+Shift+P)"
+                                class="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-base"
+                                aria-label="Sandbox Python">
+                            🐍
+                        </button>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
                         {% if user.is_staff %}
                         <a href="{% url 'admin_panel:dashboard' %}"
                            class="hidden sm:flex items-center gap-1.5 bg-yellow-400 text-gray-900 font-bold text-xs px-3 py-2 rounded-xl hover:bg-yellow-300 transition-colors">
@@ -370,6 +494,10 @@
                     {% if user.is_staff %}
                     <a href="{% url 'admin_panel:dashboard' %}" class="py-3 px-4 rounded-xl text-sm font-bold bg-yellow-400 text-gray-900 text-center">⚙️ {% trans "Admin Panel" %}</a>
                     {% endif %}
+                    <button type="button" onclick="toggleSandboxPanel();closeMobileMenu();"
+                            class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-numeria-teal hover:bg-white/10 transition-colors text-left">
+                        🐍 {% trans "Sandbox Python" %}
+                    </button>
                     <a href="{% url 'comptes:tableau_de_bord' %}" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-numeria-teal hover:bg-white/10 transition-colors">🎓 {% trans "Tableau de bord" %}</a>
                     <a href="{% url 'comptes:profil' %}" class="py-3 px-4 rounded-xl text-sm font-medium text-blue-200 hover:text-numeria-teal hover:bg-white/10 transition-colors">👤 {% trans "Mon profil" %}</a>
                     <a href="{% url 'comptes:deconnexion' %}" class="border border-white/20 text-gray-300 font-semibold text-sm px-4 py-3 rounded-xl text-center hover:bg-white/10 transition-colors">👋 {% trans "Se déconnecter" %}</a>
@@ -472,6 +600,113 @@
         </div>
     </footer>
 
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div id="nb-toasts" aria-live="polite" aria-atomic="false"></div>
+
+    <!-- ===== FLOATING PYTHON SANDBOX ===== -->
+    {% if user.is_authenticated %}
+    <button id="nb-sandbox-fab" type="button" aria-label="{% trans 'Sandbox Python' %} (Ctrl+Shift+P)"
+            title="{% trans 'Sandbox Python' %} (Ctrl+Shift+P)" onclick="toggleSandboxPanel()">
+        🐍
+        <span id="nb-fab-badge" class="nb-fab-badge" style="display:none"></span>
+    </button>
+
+    <!-- Sliding sandbox panel -->
+    <div id="nb-sandbox-panel" role="dialog" aria-label="{% trans 'Sandbox Python' %}" aria-modal="true">
+        <div id="nb-panel-backdrop" onclick="closeSandboxPanel()"></div>
+        <div id="nb-panel-drawer">
+            <!-- Panel header -->
+            <div class="flex items-center gap-3 px-4 py-3 border-b border-white/10 flex-shrink-0">
+                <span class="font-bold text-white text-sm">🐍 {% trans "Sandbox Python" %}</span>
+                <kbd class="hidden sm:block text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded font-mono">Ctrl+Shift+P</kbd>
+                <div class="ml-auto flex items-center gap-2">
+                    <a href="{% url 'sandbox_page' %}" target="_blank" rel="noopener"
+                       class="text-slate-400 hover:text-sky-400 transition-colors text-sm" title="{% trans 'Ouvrir en plein écran' %}">↗️</a>
+                    <button type="button" onclick="closeSandboxPanel()"
+                            class="text-slate-400 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 text-lg"
+                            aria-label="{% trans 'Fermer' %}">✕</button>
+                </div>
+            </div>
+
+            <!-- Init state (before Pyodide loads) -->
+            <div id="nb-panel-init" class="flex flex-col flex-1 items-center justify-center text-slate-400 gap-4 px-6">
+                <div class="text-6xl">🐍</div>
+                <p class="text-sm text-center">{% trans "Cliquez sur ▶ Exécuter pour initialiser Python dans votre navigateur." %}</p>
+                <button type="button" onclick="initPanelSandbox(true)"
+                        class="bg-sky-600 hover:bg-sky-500 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-colors">
+                    ▶ {% trans "Initialiser Python" %}
+                </button>
+            </div>
+
+            <!-- Full sandbox (shown after init) -->
+            <div id="nb-panel-content" class="flex flex-col flex-1 overflow-hidden hidden">
+                <!-- Script manager -->
+                <div class="flex items-center gap-2 px-3 py-2 bg-slate-800 border-b border-white/5 flex-shrink-0">
+                    <span class="text-xs text-slate-400 flex-shrink-0">📁</span>
+                    <select id="nb-panel-scripts" onchange="loadPanelScript(this.value)"
+                            class="flex-1 text-xs bg-slate-700 text-slate-200 border-0 rounded-lg px-2 py-1.5 min-w-0 truncate">
+                        <option value="">— {% trans "Mes scripts" %} —</option>
+                    </select>
+                    <button type="button" onclick="newPanelScript()"
+                            class="text-xs text-sky-400 hover:text-sky-300 px-2 py-1 rounded-lg hover:bg-white/5 transition-colors flex-shrink-0">
+                        + {% trans "Nouveau" %}
+                    </button>
+                </div>
+                <!-- Packages -->
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2 bg-slate-800 border-b border-white/5 flex-shrink-0">
+                    <span class="text-xs text-slate-400 flex-shrink-0">📦</span>
+                    {% for pkg in "numpy,matplotlib,pandas,scipy,sympy"|split:"," %}
+                    <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer hover:text-white transition-colors">
+                        <input type="checkbox" class="nb-panel-pkg" data-pkg="{{ pkg }}"
+                               onchange="togglePanelPkg('{{ pkg }}',this.checked)">
+                        {{ pkg }}<span id="nb-pp-{{ pkg }}" class="text-slate-500"></span>
+                    </label>
+                    {% endfor %}
+                </div>
+                <!-- Editor -->
+                <div id="nb-panel-editor-wrap" class="flex-1 overflow-hidden">
+                    <textarea id="nb-panel-ta" style="display:none;"></textarea>
+                </div>
+                <!-- Toolbar -->
+                <div class="flex flex-wrap items-center gap-1.5 px-3 py-2.5 bg-slate-800 border-t border-white/5 flex-shrink-0">
+                    <button type="button" id="nb-panel-run" onclick="runPanelCode()"
+                            class="flex items-center gap-1.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors">
+                        ▶ {% trans "Exécuter" %}
+                    </button>
+                    <button type="button" onclick="savePanelScript()"
+                            class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-2 rounded-lg transition-colors font-semibold">💾 {% trans "Sauvegarder" %}</button>
+                    <button type="button" onclick="if(nb_panel_cm)nb_panel_cm.setValue('')"
+                            class="text-xs text-slate-400 hover:text-white px-2 py-2 rounded-lg hover:bg-white/5 transition-colors">🗑️</button>
+                    <button type="button" onclick="navigator.clipboard.writeText(nb_panel_cm?nb_panel_cm.getValue():'')"
+                            class="text-xs text-slate-400 hover:text-white px-2 py-2 rounded-lg hover:bg-white/5 transition-colors">📋</button>
+                    <div class="ml-auto flex gap-1">
+                        <button type="button" onclick="panelSnippet('for i in range(10):\n    print(i)\n')"
+                                class="text-xs text-slate-500 hover:text-slate-200 px-1.5 py-1 rounded hover:bg-white/5 transition-colors">for</button>
+                        <button type="button" onclick="panelSnippet('def f(x):\n    return x\n')"
+                                class="text-xs text-slate-500 hover:text-slate-200 px-1.5 py-1 rounded hover:bg-white/5 transition-colors">def</button>
+                        <button type="button" onclick="panelSnippet('import numpy as np\n')"
+                                class="text-xs text-slate-500 hover:text-slate-200 px-1.5 py-1 rounded hover:bg-white/5 transition-colors">np</button>
+                        <button type="button" onclick="panelSnippet('import matplotlib.pyplot as plt\nplt.figure()\nplt.plot([1,2,3],[4,5,6])\nplt.show()\n')"
+                                class="text-xs text-slate-500 hover:text-slate-200 px-1.5 py-1 rounded hover:bg-white/5 transition-colors">plt</button>
+                    </div>
+                </div>
+                <!-- Output -->
+                <div class="border-t border-white/10 flex-shrink-0" style="max-height:220px;">
+                    <div class="flex items-center px-3 py-1.5 bg-gray-900">
+                        <span class="text-xs text-gray-400 font-mono">OUTPUT</span>
+                        <button type="button" onclick="document.getElementById('nb-panel-out').textContent='';document.getElementById('nb-panel-plot-wrap').classList.add('hidden');"
+                                class="ml-auto text-gray-500 hover:text-gray-300 text-xs">✕</button>
+                    </div>
+                    <pre id="nb-panel-out" class="bg-gray-950 text-green-400 font-mono text-xs px-3 py-2 max-h-36 overflow-auto whitespace-pre-wrap min-h-8">{% trans "Output apparaîtra ici…" %}</pre>
+                    <div id="nb-panel-plot-wrap" class="hidden bg-gray-950 px-3 pb-3">
+                        <img id="nb-panel-plot-img" src="" alt="plot" class="max-w-full rounded-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- ===== BOUTON FLOTTANT ANALYTICS (seulement pour admins) ===== -->
     {% if user.is_authenticated and user.is_staff %}
     <a href="{% url 'analytics:dashboard' %}" 
@@ -561,6 +796,14 @@
             }
         }
 
+        /* ── mobile menu helper ── */
+        function closeMobileMenu() {
+            menuMobile.classList.remove('ouvert');
+            menuOuvert = false;
+            barre1.style.transform = barre3.style.transform = 'none';
+            barre2.style.opacity = '1';
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             hljs.highlightAll();
             document.querySelectorAll('pre code').forEach(function(bloc) {
@@ -592,6 +835,230 @@
             });
         });
     </script>
+
+    {% if user.is_authenticated %}
+    <!-- ===== SANDBOX PANEL JS ===== -->
+    <script>
+    (function(){
+    'use strict';
+    var CSRF = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+    var nb_panel_cm = null;
+    window.nb_panel_cm = null;
+    var panelOpen = false, pyodideInited = false;
+
+    /* ── CDN loader ── */
+    function loadScript(src,cb){var s=document.createElement('script');s.src=src;s.onload=cb;document.head.appendChild(s);}
+    function loadLink(href){var l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l);}
+
+    /* ── Open / Close ── */
+    window.toggleSandboxPanel=function(){panelOpen?closeSandboxPanel():openSandboxPanel();};
+    window.closeSandboxPanel=function(){
+        var p=document.getElementById('nb-sandbox-panel');if(!p)return;
+        p.classList.remove('nb-open');
+        document.body.style.overflow='';panelOpen=false;
+        sessionStorage.removeItem('nb_sandbox_open');
+        var fab=document.getElementById('nb-sandbox-fab');if(fab)fab.classList.remove('nb-open-state');
+    };
+    function openSandboxPanel(){
+        var p=document.getElementById('nb-sandbox-panel');if(!p)return;
+        p.classList.add('nb-open');
+        document.body.style.overflow='hidden';panelOpen=true;
+        sessionStorage.setItem('nb_sandbox_open','1');
+        var fab=document.getElementById('nb-sandbox-fab');
+        if(fab){fab.classList.remove('nb-pulse');fab.classList.add('nb-open-state');localStorage.setItem('nb_sb_seen','1');}
+        if(!pyodideInited)loadPanelScripts();
+        restorePanelPkgs();
+    }
+
+    /* ── Init Pyodide ── */
+    window.initPanelSandbox=function(autoRun){
+        if(pyodideInited)return;
+        var init=document.getElementById('nb-panel-init');
+        var btn=init&&init.querySelector('button');
+        if(btn){btn.disabled=true;btn.textContent='⏳ Chargement…';}
+        function proceed(){
+            if(!window.loadPyodide){loadScript('https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js',proceed);return;}
+            if(!window._numeriaPyodideReady){
+                window._numeriaPyodideReady=(async function(){var py=await loadPyodide();return py;})();
+            }
+            window._numeriaPyodideReady.then(function(){
+                pyodideInited=true;
+                var i=document.getElementById('nb-panel-init'),c=document.getElementById('nb-panel-content');
+                if(i)i.classList.add('hidden');if(c)c.classList.remove('hidden');
+                initPanelCM();
+                if(autoRun)runPanelCode();
+            });
+        }
+        /* Load CodeMirror then Pyodide */
+        if(!window.CodeMirror){
+            loadLink('https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css');
+            loadLink('https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css');
+            loadLink('https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.css');
+            loadScript('https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js',function(){
+                loadScript('https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js',function(){
+                    loadScript('https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js',function(){proceed();});
+                });
+            });
+        } else { proceed(); }
+    };
+
+    function initPanelCM(){
+        if(nb_panel_cm)return;
+        var ta=document.getElementById('nb-panel-ta');
+        var wr=document.getElementById('nb-panel-editor-wrap');
+        if(!ta||!wr||!window.CodeMirror)return;
+        nb_panel_cm=CodeMirror(wr,{
+            value:localStorage.getItem('nb_panel_code')||'# Sandbox Python\nprint("Hello Numeria! 🎓")\n',
+            mode:'python',theme:'dracula',lineNumbers:true,indentUnit:4,tabSize:4,indentWithTabs:false,
+            lineWrapping:true,viewportMargin:Infinity,autoCloseBrackets:true,
+            extraKeys:{Tab:function(c){c.replaceSelection('    ','end');},'Ctrl-Enter':runPanelCode,'Cmd-Enter':runPanelCode},
+        });
+        nb_panel_cm.setSize('100%','100%');
+        nb_panel_cm.on('change',function(){localStorage.setItem('nb_panel_code',nb_panel_cm.getValue());});
+        window.nb_panel_cm=nb_panel_cm;
+    }
+
+    /* ── Run code ── */
+    window.runPanelCode=function(){
+        if(!pyodideInited){initPanelSandbox(true);return;}
+        var code=nb_panel_cm?nb_panel_cm.getValue():'';
+        var out=document.getElementById('nb-panel-out');
+        var btn=document.getElementById('nb-panel-run');
+        if(btn){btn.disabled=true;btn.innerHTML='⏳ …';}
+        if(out){out.textContent='…';out.style.color='#9ca3af';}
+        (async function(){
+            try{
+                var py=await window._numeriaPyodideReady;
+                await py.loadPackagesFromImports(code);
+                py.globals.set('_nb_code',code);
+                var r=await py.runPythonAsync('import sys\nfrom io import StringIO\n_o=StringIO()\nsys.stdout=_o\ntry:\n    exec(_nb_code,{})\nexcept Exception as e:\n    print(f"❌ {type(e).__name__}: {e}")\nfinally:\n    sys.stdout=sys.__stdout__\n_o.getvalue()');
+                if(out){out.textContent=r||'(aucun output)';out.style.color=String(r).startsWith('❌')?'#f87171':'#4ade80';}
+                /* Matplotlib */
+                try{
+                    var b64=String(await py.runPythonAsync('import matplotlib.pyplot as _p,io as _i,base64 as _b\n_buf=_i.BytesIO()\n_p.savefig(_buf,format="png",bbox_inches="tight")\n_buf.seek(0)\n_b.b64encode(_buf.read()).decode()'));
+                    var pw=document.getElementById('nb-panel-plot-wrap'),pi=document.getElementById('nb-panel-plot-img');
+                    if(pw&&pi&&b64){pi.src='data:image/png;base64,'+b64;pw.classList.remove('hidden');}
+                    await py.runPythonAsync('import matplotlib.pyplot as _p\n_p.clf()');
+                }catch(_){var pw=document.getElementById('nb-panel-plot-wrap');if(pw)pw.classList.add('hidden');}
+            }catch(e){if(out){out.innerHTML='<span style="color:#f87171">'+e+'</span>';out.style.color='';}}
+            if(btn){btn.disabled=false;btn.innerHTML='▶ {% trans "Exécuter" %}';}
+        })();
+    };
+
+    /* ── Scripts ── */
+    function loadPanelScripts(){
+        fetch('{% url "sandbox_list_scripts" %}').then(function(r){return r.json();}).then(function(d){
+            var sel=document.getElementById('nb-panel-scripts');
+            if(!sel)return;
+            while(sel.options.length>1)sel.remove(1);
+            (d.scripts||[]).forEach(function(s){sel.add(new Option(s.titre,s.id));});
+            var badge=document.getElementById('nb-fab-badge');
+            if(badge){if(d.scripts&&d.scripts.length>0){badge.textContent=d.scripts.length>9?'9+':d.scripts.length;badge.style.display='flex';}else{badge.style.display='none';}}
+        }).catch(function(){});
+    }
+    window.loadPanelScript=function(id){
+        if(!id)return;
+        fetch('{% url "sandbox_load_script" 0 %}'.replace('/0/','/'+id+'/'),{headers:{'X-CSRFToken':CSRF}}).then(function(r){return r.json();}).then(function(d){
+            if(nb_panel_cm)nb_panel_cm.setValue(d.code);
+            document.getElementById('nb-panel-scripts').value=id;
+        }).catch(function(){});
+    };
+    window.newPanelScript=function(){if(nb_panel_cm)nb_panel_cm.setValue('');document.getElementById('nb-panel-scripts').value='';};
+    window.savePanelScript=function(){
+        var title=prompt('{% trans "Nom du script" %}:','{% trans "Sans titre" %}');if(!title)return;
+        var sid=document.getElementById('nb-panel-scripts').value;
+        fetch('{% url "sandbox_save_script" %}',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+            body:JSON.stringify({id:sid||null,titre:title,code:nb_panel_cm?nb_panel_cm.getValue():''})})
+        .then(function(r){return r.json();}).then(function(d){if(d.ok){loadPanelScripts();nbToast('Script «'+d.titre+'» sauvegardé ✓','success');}}).catch(function(){});
+    };
+
+    /* ── Packages ── */
+    window.togglePanelPkg=function(pkg,load){
+        var st=document.getElementById('nb-pp-'+pkg);if(!st)return;
+        if(!load){if(st)st.textContent='';savePkgState();return;}
+        st.textContent=' ⏳';
+        window._numeriaPyodideReady&&window._numeriaPyodideReady.then(function(py){
+            py.loadPackage(pkg).then(function(){st.textContent=' ✓';savePkgState();}).catch(function(){st.textContent=' ❌';});
+        });
+    };
+    function savePkgState(){
+        var pkgs=[];document.querySelectorAll('.nb-panel-pkg:checked').forEach(function(cb){pkgs.push(cb.dataset.pkg);});
+        localStorage.setItem('nb_panel_pkgs',JSON.stringify(pkgs));
+    }
+    function restorePanelPkgs(){
+        var pkgs=JSON.parse(localStorage.getItem('nb_panel_pkgs')||'[]');
+        pkgs.forEach(function(p){var cb=document.querySelector('.nb-panel-pkg[data-pkg="'+p+'"]');if(cb&&!cb.checked){cb.checked=true;togglePanelPkg(p,true);}});
+    }
+
+    /* ── Snippets ── */
+    window.panelSnippet=function(code){if(nb_panel_cm)nb_panel_cm.replaceSelection(code);};
+
+    /* ── Global toast system ── */
+    window.nbToast=function(msg,type,dur){
+        dur=dur||4000;type=type||'info';
+        var icons={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+        var colors={success:'#10b981',error:'#ef4444',warning:'#f59e0b',info:'#0ea5e9'};
+        var c=document.getElementById('nb-toasts');if(!c)return;
+        var t=document.createElement('div');t.className='nb-toast';
+        t.innerHTML='<span>'+icons[type]+'</span><span style="flex:1">'+msg+'</span><div class="nb-toast-prog" style="animation-duration:'+dur+'ms"></div>';
+        c.appendChild(t);
+        setTimeout(function(){t.style.animation='nb-toast-out .3s ease forwards';setTimeout(function(){t.remove();},320);},dur);
+    };
+
+    /* ── Keyboard shortcut ── */
+    document.addEventListener('keydown',function(e){
+        if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key==='P'){e.preventDefault();toggleSandboxPanel();}
+        if(e.key==='Escape'&&panelOpen)closeSandboxPanel();
+    });
+
+    /* ── Init FAB visibility + pulse ── */
+    document.addEventListener('DOMContentLoaded',function(){
+        var fab=document.getElementById('nb-sandbox-fab');
+        if(fab){
+            fab.classList.add('nb-visible');
+            if(!localStorage.getItem('nb_sb_seen'))fab.classList.add('nb-pulse');
+        }
+        /* Restore panel if it was open */
+        if(sessionStorage.getItem('nb_sandbox_open'))openSandboxPanel();
+        loadPanelScripts();
+    });
+
+    /* ── Count-up animation ── */
+    document.addEventListener('DOMContentLoaded',function(){
+        var els=document.querySelectorAll('[data-nb-count]');
+        if(!els.length)return;
+        var observer=new IntersectionObserver(function(entries){
+            entries.forEach(function(entry){
+                if(!entry.isIntersecting)return;
+                var el=entry.target;
+                var target=parseInt(el.dataset.nbCount,10)||0;
+                var dur=parseInt(el.dataset.nbCountDur||1200,10);
+                var start=performance.now();
+                var from=0;
+                function step(now){
+                    var p=Math.min((now-start)/dur,1);
+                    var ease=1-Math.pow(1-p,3);
+                    el.textContent=Math.round(from+(target-from)*ease).toLocaleString();
+                    if(p<1)requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+                observer.unobserve(el);
+            });
+        },{threshold:0.4});
+        els.forEach(function(el){observer.observe(el);});
+    });
+
+    /* ── Replace Django messages with toasts ── */
+    document.addEventListener('DOMContentLoaded',function(){
+        document.querySelectorAll('[data-nb-toast]').forEach(function(el){
+            nbToast(el.dataset.nbToast,el.dataset.nbToastType||'info');
+            el.remove();
+        });
+    });
+
+    })();
+    </script>
+    {% endif %}
 
 </body>
 </html>
