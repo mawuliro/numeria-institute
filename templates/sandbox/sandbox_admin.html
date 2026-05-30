@@ -84,6 +84,7 @@ async function runCode() {
   outEl.textContent = 'Exécution…'; outEl.style.color='#9ca3af';
   try {
     var py = await window._numeriaPyodideReady;
+    await py.loadPackagesFromImports(code);
     py.globals.set('_admin_code', code);
     var result = await py.runPythonAsync(`
 import sys; from io import StringIO

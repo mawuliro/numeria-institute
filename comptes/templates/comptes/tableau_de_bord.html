@@ -399,6 +399,7 @@
     outWr.style.display='block'; outEl.textContent='…'; outEl.style.color='#9ca3af';
     try {
       var py = await window._numeriaPyodideReady;
+      await py.loadPackagesFromImports(code);
       py.globals.set('_mini_code', code);
       var r = await py.runPythonAsync('import sys;from io import StringIO;_o=StringIO();sys.stdout=_o\ntry:exec(_mini_code,{})\nexcept Exception as e:print(f"❌ {type(e).__name__}: {e}")\nfinally:sys.stdout=sys.__stdout__\n_o.getvalue()');
       outEl.textContent=r||'(aucun output)'; outEl.style.color=String(r).startsWith('❌')?'#f87171':'#4ade80';

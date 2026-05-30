@@ -183,6 +183,8 @@
       if (!window._numeriaPyodideReady) { initGlobalPyodide(); }
       var pyodide = await window._numeriaPyodideReady;
 
+      // Auto-load any packages imported in user code (numpy, matplotlib, etc.)
+      await pyodide.loadPackagesFromImports(code);
       // Pass code safely to avoid any escaping issues
       pyodide.globals.set('_sw_code_' + SID.replace(/[^a-zA-Z0-9]/g,'_'), code);
 

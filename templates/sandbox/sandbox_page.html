@@ -173,6 +173,7 @@ async function runMainCode() {
   outEl.style.color = '#9ca3af';
   try {
     var pyodide = await window._numeriaPyodideReady;
+    await pyodide.loadPackagesFromImports(code);
     pyodide.globals.set('_main_sandbox_code', code);
     var result = await pyodide.runPythonAsync(`
 import sys
