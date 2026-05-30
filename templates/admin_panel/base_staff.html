@@ -88,7 +88,7 @@
     </a>
 
     <a href="{% url 'mentorat:applications_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 {% if request.resolver_match.namespace == 'mentorat' and (request.resolver_match.url_name == 'applications_list' or request.resolver_match.url_name == 'application_detail' or request.resolver_match.url_name == 'admin_dashboard') %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white/10 {% if request.resolver_match.namespace == 'mentorat' and request.resolver_match.url_name == 'applications_list' or request.resolver_match.namespace == 'mentorat' and request.resolver_match.url_name == 'application_detail' or request.resolver_match.namespace == 'mentorat' and request.resolver_match.url_name == 'admin_dashboard' %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
       <span class="text-base">🧑‍🏫</span> {% trans "Candidatures mentor" %}
       {% if sidebar_pending_mentor_applications %}
       <span class="ml-auto bg-emerald-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{{ sidebar_pending_mentor_applications }}</span>
