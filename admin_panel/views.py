@@ -1050,7 +1050,7 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
                 elif ex_type == 'qcm':
                     allow_multi = 'allow_multiple_correct' in request.POST
                     mcq = MCQExercise.objects.create(
-                        lecon=lecon, formation_lesson=fl,
+                        lesson=lecon, formation_lesson=fl,
                         title=title,
                         question=request.POST.get('question', '').strip(),
                         explanation=request.POST.get('explanation', '').strip(),
@@ -1081,7 +1081,7 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
                         raw = request.POST.get(f'answer_{blank}', '')
                         answers[blank] = [a.strip() for a in raw.split(',') if a.strip()]
                     FillBlankExercise.objects.create(
-                        lecon=lecon, formation_lesson=fl, title=title,
+                        lesson=lecon, formation_lesson=fl, title=title,
                         instructions=request.POST.get('instructions', '').strip(),
                         text_with_blanks=text,
                         answers=answers,
@@ -1103,7 +1103,7 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
                                 'explanation': request.POST.getlist('stmt_explanation')[i] if i < len(request.POST.getlist('stmt_explanation')) else '',
                             })
                     TrueFalseExercise.objects.create(
-                        lecon=lecon, formation_lesson=fl, title=title,
+                        lesson=lecon, formation_lesson=fl, title=title,
                         statements=stmts,
                         points_per_statement=int(request.POST.get('points_per_statement', 2) or 2),
                         difficulty=request.POST.get('difficulty', 'easy'),
@@ -1119,7 +1119,7 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
                     distractors_raw = request.POST.get('distractor_lines', '')
                     distractors = [l.strip() for l in distractors_raw.split('\n') if l.strip()]
                     CodeOrderExercise.objects.create(
-                        lecon=lecon, formation_lesson=fl, title=title,
+                        lesson=lecon, formation_lesson=fl, title=title,
                         instructions=request.POST.get('instructions', '').strip(),
                         correct_order=correct_order,
                         distractor_lines=distractors,
@@ -1136,7 +1136,7 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
                     pairs  = [{'left': l.strip(), 'right': r.strip()}
                               for l, r in zip(lefts, rights) if l.strip() and r.strip()]
                     MatchingExercise.objects.create(
-                        lecon=lecon, formation_lesson=fl, title=title,
+                        lesson=lecon, formation_lesson=fl, title=title,
                         instructions=request.POST.get('instructions', '').strip(),
                         pairs=pairs,
                         difficulty=request.POST.get('difficulty', 'easy'),
@@ -1149,7 +1149,7 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
                     raw = request.POST.get('accepted_answers', '')
                     accepted = [a.strip() for a in raw.split(',') if a.strip()]
                     ShortAnswerExercise.objects.create(
-                        lecon=lecon, formation_lesson=fl, title=title,
+                        lesson=lecon, formation_lesson=fl, title=title,
                         question=request.POST.get('question', '').strip(),
                         accepted_answers=accepted,
                         case_sensitive='case_sensitive' in request.POST,
