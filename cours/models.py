@@ -391,7 +391,6 @@ class Course(models.Model):
         return self.titre
 
     class Meta:
-        db_table = 'cours_cours'
         verbose_name = 'Cours'
         verbose_name_plural = 'Cours'
         ordering = ['-date_creation']
