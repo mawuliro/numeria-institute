@@ -1,11 +1,11 @@
-{% load i18n %}
+{% load i18n sandbox_tags %}
 <div class="grouped-exercise-widget bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm mb-8">
   <div class="px-5 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
     <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ block.group_title }}</h3>
         {% if block.group_instructions %}
-        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ block.group_instructions }}</p>
+        <div class="text-sm text-gray-600 dark:text-gray-300 mt-1 prose prose-sm dark:prose-invert max-w-none">{{ block.group_instructions|render_content }}</div>
         {% endif %}
       </div>
       <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">

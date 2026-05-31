@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n humanize %}
+{% load i18n humanize sandbox_tags %}
 
 {% block titre %}{{ formation.titre }} — Numeria Institute{% endblock %}
 
@@ -28,9 +28,9 @@
             {{ formation.titre }}
           </h1>
 
-          <p class="text-xl text-blue-100 mb-8 leading-relaxed">
-            {{ formation.description_longue }}
-          </p>
+          <div class="contenu-article text-xl text-blue-100 mb-8 leading-relaxed">
+            {{ formation.description_longue|render_content }}
+          </div>
 
           <!-- Stats -->
           <div class="grid grid-cols-3 gap-6 mb-8">

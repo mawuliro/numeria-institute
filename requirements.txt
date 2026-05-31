@@ -36,6 +36,8 @@ httpx==0.28.1
 idna==3.17
 jiter==0.13.0
 license-expression==30.4.4
+bleach==6.2.0
+Markdown==3.8
 markdown-it-py==4.2.0
 mdurl==0.1.2
 msgpack==1.1.2

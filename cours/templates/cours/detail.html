@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n sandbox_tags %}
 {% load video_tags %}
 {% block titre %}{{ cours.titre }} — Numeria Institute{% endblock %}
 {% block meta_description %}{{ cours.resume|truncatechars:160 }}{% endblock %}
@@ -797,9 +797,9 @@
                         {% endif %}
                     </div>
 
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-lg mb-8">
-                        {{ cours.description }}
-                    </p>
+                    <div class="text-gray-600 dark:text-gray-300 leading-relaxed text-lg mb-8">
+                        {{ cours.description|render_content }}
+                    </div>
 
                     <!-- Bouton inscription -->
                     {% if not est_inscrit %}

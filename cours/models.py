@@ -909,6 +909,7 @@ class LessonBlock(models.Model):
         ('code_order',   _('Ordonner le code')),
         ('matching',     _('Associations')),
         ('short_answer', _('Réponse courte')),
+        ('grouped_exercise', _('Exercice groupé')),
     ]
 
     # Belongs to one of these two (exactly one must be set)
@@ -971,6 +972,11 @@ class LessonBlock(models.Model):
     short_answer_exercise = models.ForeignKey(
         'ShortAnswerExercise', on_delete=models.SET_NULL,
         null=True, blank=True, related_name='lesson_blocks',
+    )
+    grouped_exercise = models.ForeignKey(
+        'GroupedExercise', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='lesson_blocks',
+        verbose_name=_('Exercice groupé'),
     )
 
     class Meta:
@@ -1251,6 +1257,35 @@ class ShortAnswerExercise(models.Model):
     order            = models.IntegerField(default=0)
     class Meta: ordering = ['order']
     def __str__(self): return self.title
+
+
+class GroupedExercise(models.Model):
+    QUESTION_TYPES = [
+        ('qcm', _('QCM')),
+        ('fill_blank', _('Texte à trous')),
+        ('true_false', _('Vrai ou Faux')),
+        ('short_answer', _('Réponse courte')),
+    ]
+
+    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='grouped_exercises')
+    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='grouped_exercises')
+    title            = models.CharField(max_length=300)
+    instructions     = models.TextField(blank=True)
+    question_type    = models.CharField(max_length=20, choices=QUESTION_TYPES, default='qcm')
+    questions        = models.JSONField(default=list)
+    created_by       = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='created_grouped_exercises', verbose_name=_('Créé par'),
+    )
+    created_at       = models.DateTimeField(auto_now_add=True, verbose_name=_('Créé le'))
+    is_active        = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _('Exercice groupé')
+        verbose_name_plural = _('Exercices groupés')
+
+    def __str__(self):
+        return self.title
 
 
 class ShortAnswerGrade(models.Model):

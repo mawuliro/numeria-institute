@@ -70,14 +70,14 @@
 
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">{% trans "Instructions" %} <span class="font-normal text-slate-400">({% trans "Markdown supporté" %})</span></label>
-          <textarea name="instructions" rows="4"
-                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500">{{ exercise.instructions|default:'' }}</textarea>
+          <textarea id="ex-instructions" name="instructions" rows="4" data-rich-editor data-editor-height="220px"
+                    class="w-full">{{ exercise.instructions|default:'' }}</textarea>
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">💡 {% trans "Indice" %} <span class="font-normal text-slate-400">({% trans "affiché après 3 tentatives échouées" %})</span></label>
-          <textarea name="hint" rows="2"
-                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">{{ exercise.hint|default:'' }}</textarea>
+          <textarea id="ex-hint" name="hint" rows="2" data-rich-editor data-compact-editor="1" data-editor-height="120px"
+                    class="w-full">{{ exercise.hint|default:'' }}</textarea>
         </div>
       </div>
 
@@ -180,6 +180,8 @@ document.addEventListener('DOMContentLoaded', function() {
   makeCM('cm-starter', 'cm-wrapper-starter');
   makeCM('cm-solution', 'cm-wrapper-solution');
   makeCM('cm-tests', 'cm-wrapper-tests');
+  window.NumeriaMarkdown.initEditor('ex-instructions', { height: '220px' });
+  window.NumeriaMarkdown.initEditor('ex-hint', { compact: true, height: '120px' });
 });
 </script>
 {% endblock %}

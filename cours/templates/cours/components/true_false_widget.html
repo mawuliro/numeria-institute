@@ -13,7 +13,7 @@
     {% for stmt in ex.statements %}
     <div class="flex items-center gap-4 p-3 rounded-xl border border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
       <span id="tf-{{ ex.true_false_id }}-icon-{{ forloop.counter0 }}" class="text-lg w-6 flex-shrink-0">○</span>
-      <div class="flex-1 text-sm text-gray-800 dark:text-gray-100 prose prose-sm dark:prose-invert max-w-none">{{ stmt.statement|render_markdown_latex }}</div>
+      <div class="flex-1 text-sm text-gray-800 dark:text-gray-100 prose prose-sm dark:prose-invert max-w-none">{{ stmt.statement|render_content }}</div>
       <div class="flex gap-3 flex-shrink-0">
         <label class="flex items-center gap-1 text-xs cursor-pointer">
           <input type="radio" name="tf-{{ ex.true_false_id }}-{{ forloop.counter0 }}" value="true"
@@ -47,7 +47,7 @@
 var TID = {{ ex.true_false_id }};
 var COUNT = {{ ex.statements|length }};
 var CSRF = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
-var URL = '/fr/cours/vrai-faux/' + TID + '/soumettre/';
+var URL = '{% url "cours:submit_true_false" ex.true_false_id %}';
 
 window['tfSubmit_' + TID] = async function() {
   var answers = [];

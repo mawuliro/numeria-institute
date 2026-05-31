@@ -1,14 +1,10 @@
 {% extends "admin_panel/base_staff.html" %}
-{% load i18n %}
+{% load i18n sandbox_tags %}
 
 {% block page_title %}Prévisualisation — {{ article.titre }}{% endblock %}
 {% block page_heading %}👁️ Prévisualisation : {{ article.titre }}{% endblock %}
 
 {% block content %}
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-
 <div class="bg-amber-50 border border-amber-300 rounded-xl px-4 py-3 mb-5 flex items-center justify-between">
   <span class="text-amber-800 text-sm font-medium">⚠️ MODE PRÉVISUALISATION</span>
   <a href="{% url 'admin_panel:blog_edit' article.slug %}"
@@ -24,7 +20,7 @@
   <h1 class="text-3xl font-bold text-slate-800 mb-2">{{ article.titre }}</h1>
   <p class="text-slate-500 text-sm mb-6">{{ article.auteur.get_full_name|default:article.auteur.username }} · {{ article.date_modification|date:"d/m/Y" }} · {{ article.reading_time_minutes }} min de lecture</p>
   <div class="prose prose-sm max-w-none text-slate-700 leading-relaxed">
-    {{ article.contenu|safe }}
+    {{ article.contenu|render_content }}
   </div>
 </div>
 <script>

@@ -11,7 +11,7 @@
   </div>
   <div class="px-5 py-4">
     <div class="prose prose-sm dark:prose-invert max-w-none text-gray-800 dark:text-gray-100 mb-5">
-      {{ ex.question|render_markdown_latex }}
+      {{ ex.question|render_content }}
     </div>
     {% if ex.hint %}
     <div id="sa-{{ ex.short_answer_id }}-hint" style="display:none" class="mb-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 px-4 py-3 rounded-xl text-sm text-amber-800 dark:text-amber-300">
@@ -50,7 +50,7 @@ var MAX = {{ ex.max_attempts }};
 var PTS = {{ ex.points }};
 var ATT = {{ ex.attempts_used }};
 var CSRF = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
-var URL = '/fr/cours/reponse-courte/' + SID + '/soumettre/';
+var URL = '{% url "cours:submit_short_answer" ex.short_answer_id %}';
 
 window['saSubmit_' + SID] = async function() {
   var inp = document.getElementById('sa-' + SID + '-input');

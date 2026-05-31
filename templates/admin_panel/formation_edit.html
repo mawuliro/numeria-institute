@@ -13,13 +13,10 @@
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <style>
 .step-tab { cursor: pointer; transition: all .2s; }
@@ -55,7 +52,7 @@
       <input type="text" id="f-desc-courte" value="{{ formation.description_courte }}" maxlength="300"
              class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"></div>
     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Description complète</label>
-      <textarea id="f-desc-longue" rows="4">{{ formation.description_longue }}</textarea></div>
+      <textarea id="f-desc-longue" rows="4" data-rich-editor data-editor-height="280px">{{ formation.description_longue }}</textarea></div>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div><label class="block text-xs font-semibold text-slate-600 mb-1">Type</label>
         <select id="f-type" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
@@ -240,7 +237,7 @@ const LECON_URL   = "{% url 'admin_panel:ajax_flesson_create' formation.slug %}"
 const REORDER_URL = "{% url 'admin_panel:ajax_freorder' formation.slug %}";
 const IMG_URL     = "{% url 'admin_panel:image_upload' %}";
 
-let unsavedChanges = false, currentLeconId = null, mdeEditor = null, dragSource = null;
+let unsavedChanges = false, currentLeconId = null, mdeEditor = null, descMdeEditor = null, dragSource = null;
 
 window.addEventListener('beforeunload', e => { if(unsavedChanges) e.returnValue='Non sauvegardé.'; });
 function markDirty() { unsavedChanges=true; setSaveStatus('Modifié'); }
@@ -271,7 +268,7 @@ async function saveStep1(silent) {
   fd.append('duree_heures', document.getElementById('f-duree').value);
   // Map field IDs correctly
   fd.set('description_courte', document.getElementById('f-desc-courte').value);
-  fd.set('description_longue', document.getElementById('f-desc-longue').value);
+  fd.set('description_longue', descMdeEditor ? descMdeEditor.value() : document.getElementById('f-desc-longue').value);
   fd.set('prerequis', document.getElementById('f-prerequis').value);
   fd.set('competences_visees', document.getElementById('f-competences').value);
   fd.set('titre', document.getElementById('f-titre').value);
@@ -409,17 +406,19 @@ async function saveOrder() {
 }
 // EasyMDE
 function initMDE() {
-  const ta=document.getElementById('lecon-contenu-editor'); if(!ta||mdeEditor) return;
-  mdeEditor=new EasyMDE({element:ta,spellChecker:false,minHeight:'280px',
+  const ta = document.getElementById('lecon-contenu-editor'); if (!ta || mdeEditor) return;
+  mdeEditor = window.NumeriaMarkdown.createMarkdownEditor(ta, {
+    imageUploadUrl: IMG_URL,
+    csrfToken: CSRF,
     toolbar:['bold','italic','heading-2','|','unordered-list','ordered-list','|','link','image','code','quote','|',
       {name:'latex',action:e=>{e.codemirror.replaceSelection('$$\n\n$$');},className:'fa',title:'∑ LaTeX'},
       {name:'python',action:e=>{e.codemirror.replaceSelection('```python\n# code\n```');},className:'fa',title:'🐍 Python'},
       {name:'sandbox',action:e=>{e.codemirror.replaceSelection('[SANDBOX title="Essaie toi-même" code="# Ton code ici\\n"]');},className:'fa',title:'🐍 Insérer Sandbox'},
-      '|','preview','side-by-side','fullscreen'],
-    imageUploadFunction:(file,onS,onE)=>{const fd=new FormData();fd.append('file',file);fetch(IMG_URL,{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd}).then(r=>r.json()).then(d=>{if(d.ok)onS(d.url);else onE('Erreur');}).catch(()=>onE('Erreur'));},
-    previewRender:function(plainText,preview){const h=this.parent.markdown(plainText);setTimeout(function(){if(preview&&window.MathJax){MathJax.typesetClear([preview]);MathJax.typesetPromise([preview]).catch(e=>console.log('MathJax:',e));}},60);return h;},
+      '|','preview','side-by-side','fullscreen']
   });
-  mdeEditor.codemirror.on('change',()=>markDirty());
+  if (mdeEditor && mdeEditor.codemirror) {
+    mdeEditor.codemirror.on('change', ()=>markDirty());
+  }
 }
 /* ── BLOCK BUILDER (shared logic with cours_edit) ── */
 var lbMdes={},lbCms={},lbDragId=null,lbAutoSaveTm=null,lbLessonId=null,lbLessonType=null;
@@ -434,10 +433,15 @@ async function loadLessonBlocks(lessonId,lessonType){
 function lbInitAll(){
   document.querySelectorAll('.lb-mde-target').forEach(function(ta){
     const bid=ta.dataset.blockId;if(!bid||lbMdes[bid])return;
-    const mde=new EasyMDE({element:ta,spellChecker:false,minHeight:'200px',
-      toolbar:['bold','italic','heading-2','|','unordered-list','ordered-list','|','link','image','code','quote','|',{name:'latex',action:function(e){e.codemirror.replaceSelection('$$\n\n$$');},className:'fa',title:'∑ LaTeX'},'|','preview','side-by-side'],
-      imageUploadFunction:function(file,onS,onE){var fd=new FormData();fd.append('file',file);fetch(IMG_URL,{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd}).then(r=>r.json()).then(d=>{if(d.ok)onS(d.url);else onE('Erreur');}).catch(()=>onE('Erreur'));},previewRender:function(plainText,preview){const h=this.parent.markdown(plainText);setTimeout(function(){if(preview&&window.MathJax){MathJax.typesetClear([preview]);MathJax.typesetPromise([preview]).catch(e=>console.log('MathJax:',e));}},60);return h;}});
-    mde.codemirror.on('change',function(){lbSetSaveStatus(bid,'');});lbMdes[bid]=mde;
+    const mde = window.NumeriaMarkdown.createMarkdownEditor(ta, {
+      imageUploadUrl: IMG_URL,
+      csrfToken: CSRF,
+      toolbar:['bold','italic','heading-2','|','unordered-list','ordered-list','|','link','image','code','quote','|',{name:'latex',action:function(e){e.codemirror.replaceSelection('$$\n\n$$');},className:'fa',title:'∑ LaTeX'},'|','preview','side-by-side']
+    });
+    if (mde && mde.codemirror) {
+      mde.codemirror.on('change', function(){lbSetSaveStatus(bid,'');});
+    }
+    lbMdes[bid] = mde;
   });
   document.querySelectorAll('.lb-cm-target').forEach(function(wrap){
     const bid=wrap.dataset.blockId;if(!bid||lbCms[bid])return;
@@ -558,6 +562,7 @@ async function lbCreateExerciseForBlock(blockId, lessonId) {
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
+  descMdeEditor = window.NumeriaMarkdown.initEditor('f-desc-longue', { imageUploadUrl: IMG_URL, csrfToken: CSRF, height: '280px' });
   setInterval(()=>{const step=document.querySelector('.step-panel.active')?.id?.replace('step-','');if(step==='1')saveStep1(true);else if(step==='3')saveStep3(true);},60000);
 });
 </script>

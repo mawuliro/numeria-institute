@@ -55,7 +55,7 @@
     </div>
     {% if exercise.instructions %}
     <div class="prose prose-sm dark:prose-invert max-w-none text-gray-700 dark:text-gray-200 text-sm">
-      {{ exercise.instructions|render_markdown_latex }}
+      {{ exercise.instructions|render_content }}
     </div>
     {% endif %}
   </div>
@@ -174,7 +174,7 @@ var MAX_ATTEMPTS = {% if exercise %}{{ exercise.max_attempts }}{% else %}0{% end
 var POINTS       = {% if exercise %}{{ exercise.points }}{% else %}0{% endif %};
 var IS_SOLVED    = {% if exercise and exercise.is_solved %}true{% else %}false{% endif %};
 var ATT_USED     = {% if exercise %}{{ exercise.attempts_used|default:0 }}{% else %}0{% endif %};
-var SUBMIT_URL   = EXERCISE_ID ? '/fr/cours/exercice/' + EXERCISE_ID + '/submit/' : null;
+var SUBMIT_URL   = EXERCISE_ID ? '{% url "cours:submit_code_exercise" 0 %}'.replace('/0/', '/' + EXERCISE_ID + '/') : null;
 var CSRF         = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
 var LS_KEY       = 'sw_code_' + SID;
 
@@ -421,7 +421,7 @@ function revealSolution() {
   if (!solWrap || solCm) return;
   solWrap.style.display = 'block';
   /* Fetch solution from server */
-  fetch('/fr/cours/exercice/' + EXERCISE_ID + '/solution/', {
+  fetch('{% url "cours:get_exercise_solution" 0 %}'.replace('/0/', '/' + EXERCISE_ID + '/'), {
     headers: { 'X-CSRFToken': CSRF },
   }).then(function(r){ return r.json(); }).then(function(d){
     if (d.solution && window.CodeMirror) {

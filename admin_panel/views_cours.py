@@ -176,7 +176,8 @@ def cours_delete(request, slug):
 
 @staff_only
 def cours_preview(request, slug):
-    from cours.models import Cours, Lecon
+    import base64
+    from cours.models import Cours, Lecon, LessonBlock
     cours = get_object_or_404(Cours, slug=slug)
     lecon_id = request.GET.get('lecon')
     lecon_active = None
@@ -184,11 +185,158 @@ def cours_preview(request, slug):
         lecon_active = Lecon.objects.filter(id=lecon_id, cours=cours).first()
     if not lecon_active:
         lecon_active = cours.lecons.filter(est_publiee=True).first()
+
+    lesson_blocks_data = []
+    if lecon_active:
+        blocks_qs = LessonBlock.objects.filter(lesson=lecon_active).order_by('order')
+        for block in blocks_qs:
+            bd = {'id': block.id, 'type': block.block_type, 'order': block.order}
+            if block.block_type == 'text':
+                bd['text_content'] = block.text_content
+            elif block.block_type == 'video':
+                bd['video_url'] = block.video_url
+                bd['video_caption'] = block.video_caption
+                if block.video_url:
+                    from cours.models import convertir_url_youtube
+                    bd['embed_url'] = convertir_url_youtube(block.video_url)
+            elif block.block_type == 'sandbox':
+                bd['title'] = block.sandbox_title or 'Essaie toi-même'
+                bd['initial_code'] = block.sandbox_initial_code
+            elif block.block_type == 'exercise' and block.exercise:
+                ex = block.exercise
+                tc_b64 = base64.b64encode(ex.test_code.encode()).decode() if ex.test_code else ''
+                bd.update({
+                    'exercise_id': ex.id,
+                    'title': ex.title,
+                    'instructions': ex.instructions,
+                    'starter_code': ex.starter_code,
+                    'expected_output': ex.expected_output,
+                    'evaluation_mode': ex.evaluation_mode,
+                    'difficulty': ex.difficulty,
+                    'hint': ex.hint,
+                    'max_attempts': ex.max_attempts,
+                    'points': ex.points,
+                    'test_code_b64': tc_b64,
+                    'is_solved': False,
+                    'attempts_used': 0,
+                })
+            elif block.block_type == 'mcq' and block.mcq_exercise:
+                mcq = block.mcq_exercise
+                choices = list(mcq.choices.order_by('order'))
+                bd.update({
+                    'mcq_id': mcq.id,
+                    'mcq_title': mcq.title,
+                    'question': mcq.question,
+                    'hint': mcq.hint,
+                    'allow_multiple': mcq.allow_multiple_correct,
+                    'shuffle': mcq.shuffle_choices,
+                    'max_attempts': mcq.max_attempts,
+                    'points': mcq.points,
+                    'difficulty': mcq.difficulty,
+                    'choices': [{'id': c.id, 'text': c.text, 'order': c.order} for c in choices],
+                    'is_solved': False,
+                    'points_earned': 0,
+                    'attempts_used': 0,
+                    'correct_ids': [],
+                    'explanation': '',
+                })
+            elif block.block_type == 'fill_blank' and block.fill_blank_exercise:
+                ex = block.fill_blank_exercise
+                bd.update({
+                    'fill_blank_id': ex.id,
+                    'title': ex.title,
+                    'instructions': ex.instructions,
+                    'text_rendered': ex.text_with_blanks,
+                    'blank_count': len(ex.answers or {}),
+                    'points': ex.points,
+                    'difficulty': ex.difficulty,
+                    'hint': ex.hint,
+                    'max_attempts': ex.max_attempts,
+                    'is_solved': False,
+                    'attempts_used': 0,
+                })
+            elif block.block_type == 'true_false' and block.true_false_exercise:
+                ex = block.true_false_exercise
+                stmts = [{'statement': s.get('statement', ''), 'is_true': s.get('is_true', True)} for s in (ex.statements or [])]
+                bd.update({
+                    'true_false_id': ex.id,
+                    'title': ex.title,
+                    'statements': stmts,
+                    'points_per_statement': ex.points_per_statement,
+                    'difficulty': ex.difficulty,
+                    'hint': ex.hint,
+                    'is_solved': False,
+                    'attempts_used': 0,
+                })
+            elif block.block_type == 'code_order' and block.code_order_exercise:
+                import random as _random
+                ex = block.code_order_exercise
+                all_lines = list(ex.correct_order) + list(ex.distractor_lines or [])
+                indices = list(range(len(all_lines)))
+                _random.seed(12345 + ex.id)
+                _random.shuffle(indices)
+                shuffled = [all_lines[i] for i in indices]
+                import json as _json
+                bd.update({
+                    'code_order_id': ex.id,
+                    'title': ex.title,
+                    'instructions': ex.instructions,
+                    'shuffled_lines': shuffled,
+                    'shuffled_indices_json': _json.dumps(indices),
+                    'points': ex.points,
+                    'difficulty': ex.difficulty,
+                    'hint': ex.hint,
+                    'max_attempts': ex.max_attempts,
+                    'is_solved': False,
+                    'attempts_used': 0,
+                })
+            elif block.block_type == 'matching' and block.matching_exercise:
+                import random as _random
+                ex = block.matching_exercise
+                pairs = ex.pairs or []
+                left = [p.get('left', '') for p in pairs]
+                right = [p.get('right', '') for p in pairs]
+                indices = list(range(len(right)))
+                _random.seed(12346 + ex.id)
+                _random.shuffle(indices)
+                shuffled_right = [right[i] for i in indices]
+                bd.update({
+                    'matching_id': ex.id,
+                    'title': ex.title,
+                    'instructions': ex.instructions,
+                    'left_items': left,
+                    'right_items': shuffled_right,
+                    'right_indices': list(range(len(pairs))),
+                    'pairs': pairs,
+                    'points': ex.points,
+                    'difficulty': ex.difficulty,
+                    'hint': ex.hint,
+                    'is_solved': False,
+                    'attempts_used': 0,
+                })
+            elif block.block_type == 'short_answer' and block.short_answer_exercise:
+                ex = block.short_answer_exercise
+                bd.update({
+                    'short_answer_id': ex.id,
+                    'title': ex.title,
+                    'question': ex.question,
+                    'points': ex.points,
+                    'difficulty': ex.difficulty,
+                    'hint': ex.hint,
+                    'max_attempts': ex.max_attempts,
+                    'is_code_answer': ex.is_code_answer,
+                    'is_solved': False,
+                    'attempts_used': 0,
+                })
+            lesson_blocks_data.append(bd)
+
     return render(request, 'admin_panel/cours_preview.html', {
         'cours':        cours,
         'lecon_active': lecon_active,
         'modules':      _get_cours_context(cours)['modules'],
         'is_preview':   True,
+        'lesson_blocks': lesson_blocks_data,
+        'has_blocks': bool(lesson_blocks_data),
     })
 
 

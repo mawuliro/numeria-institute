@@ -5,9 +5,6 @@
 {% block page_heading %}👁️ {{ formation.titre }}{% endblock %}
 
 {% block content %}
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 {% if has_blocks %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
@@ -34,7 +31,7 @@
     <h1 class="text-2xl font-bold text-slate-800 mb-2">{{ formation.titre }}</h1>
     <p class="text-slate-600">{{ formation.description_courte }}</p>
     {% if formation.description_longue %}
-    <div class="mt-4 text-sm text-slate-700 prose prose-sm max-w-none">{{ formation.description_longue|linebreaks }}</div>
+    <div class="mt-4 text-sm text-slate-700 prose prose-sm max-w-none">{{ formation.description_longue|render_content }}</div>
     {% endif %}
   </div>
 
@@ -68,7 +65,7 @@
         </div>
         {% endif %}
         {% if lecon_active.contenu %}
-        <div class="prose prose-sm max-w-none text-slate-700 leading-relaxed">{{ lecon_active.contenu|safe }}</div>
+        <div class="prose prose-sm max-w-none text-slate-700 leading-relaxed">{{ lecon_active.contenu|render_content }}</div>
         {% else %}
         <div class="text-slate-400 text-sm py-8 text-center">
           <div class="text-3xl mb-2">📭</div>

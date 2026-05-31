@@ -13,7 +13,7 @@
 <div class="lesson-block lesson-block--text mb-8
             prose prose-sm dark:prose-invert max-w-none
             text-gray-700 dark:text-gray-200 leading-relaxed">
-  {{ block.text_content|render_markdown_latex }}
+  {{ block.text_content|render_content }}
 </div>
 
 {% elif block.type == 'video' %}

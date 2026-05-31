@@ -29,8 +29,8 @@
       </div>
       <div>
         <label class="block text-xs font-semibold text-slate-600 mb-1">Instructions</label>
-        <textarea name="instructions" rows="3"
-                  class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+        <textarea id="group-instructions" name="instructions" rows="3" data-rich-editor data-editor-height="180px"
+                  class="w-full"></textarea>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
@@ -110,6 +110,7 @@ function renderQuestions() {
     html += renderQuestionCard(idx, type);
   }
   container.innerHTML = html;
+  window.NumeriaMarkdown.initRichEditors(container);
 }
 
 function renderQuestionCard(idx, type) {
@@ -125,7 +126,7 @@ function renderQuestionCard(idx, type) {
   if (type === 'qcm') {
     card += '<div class="space-y-3">';
     card += '<label class="block text-xs font-semibold text-slate-600">Question *</label>';
-    card += '<textarea name="question_text_' + idx + '" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></textarea>';
+    card += '<textarea name="question_text_' + idx + '" rows="3" data-rich-editor data-editor-height="160px" class="w-full"></textarea>';
     card += '<div class="grid grid-cols-2 gap-3">';
     for (var i = 0; i < 4; i++) {
       card += '<div class="flex items-center gap-2">';
@@ -135,12 +136,12 @@ function renderQuestionCard(idx, type) {
     }
     card += '</div>';
     card += '<label class="block text-xs font-semibold text-slate-600">Explication</label>';
-    card += '<textarea name="explanation_' + idx + '" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></textarea>';
+    card += '<textarea name="explanation_' + idx + '" rows="2" data-rich-editor data-compact-editor="1" data-editor-height="120px" class="w-full"></textarea>';
     card += '</div>';
   } else if (type === 'fill_blank') {
     card += '<div class="space-y-3">';
     card += '<label class="block text-xs font-semibold text-slate-600">Texte avec blancs *</label>';
-    card += '<textarea name="text_with_blanks_' + idx + '" rows="4" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" placeholder="Utilisez {{blank_1}}, {{blank_2}}, ..."></textarea>';
+    card += '<textarea name="text_with_blanks_' + idx + '" rows="4" data-rich-editor data-editor-height="160px" class="w-full" placeholder="Utilisez {{blank_1}}, {{blank_2}}, ..."></textarea>';
     card += '<div class="text-xs text-slate-500">Chaque champ de trou doit avoir une réponse correspondante.</div>';
     card += '<label class="block text-xs font-semibold text-slate-600">Réponses séparées par des virgules</label>';
     card += '<input type="text" name="answer_' + idx + '_blank_1" placeholder="Réponse 1" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">';
@@ -148,18 +149,18 @@ function renderQuestionCard(idx, type) {
   } else if (type === 'true_false') {
     card += '<div class="space-y-3">';
     card += '<label class="block text-xs font-semibold text-slate-600">Énoncé *</label>';
-    card += '<textarea name="statement_' + idx + '" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></textarea>';
+    card += '<textarea name="statement_' + idx + '" rows="2" data-rich-editor data-compact-editor="1" data-editor-height="100px" class="w-full"></textarea>';
     card += '<div class="flex items-center gap-2">';
     card += '<input type="checkbox" id="is_true_' + idx + '" name="is_true_' + idx + '" class="rounded">';
     card += '<label for="is_true_' + idx + '" class="text-sm text-slate-700">Vrai</label>';
     card += '</div>';
     card += '<label class="block text-xs font-semibold text-slate-600">Explication</label>';
-    card += '<textarea name="stmt_explanation_' + idx + '" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></textarea>';
+    card += '<textarea name="stmt_explanation_' + idx + '" rows="2" data-rich-editor data-compact-editor="1" data-editor-height="100px" class="w-full"></textarea>';
     card += '</div>';
   } else if (type === 'short_answer') {
     card += '<div class="space-y-3">';
     card += '<label class="block text-xs font-semibold text-slate-600">Question *</label>';
-    card += '<textarea name="question_text_' + idx + '" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></textarea>';
+    card += '<textarea name="question_text_' + idx + '" rows="3" data-rich-editor data-editor-height="160px" class="w-full"></textarea>';
     card += '<label class="block text-xs font-semibold text-slate-600">Réponses acceptées (séparées par des virgules)</label>';
     card += '<input type="text" name="accepted_answers_' + idx + '" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">';
     card += '<div class="flex items-center gap-2">';
@@ -199,6 +200,7 @@ function removeQuestion(idx) {
 }
 
 function initGroupedExerciseForm() {
+  window.NumeriaMarkdown.initEditor('group-instructions', { height: '180px' });
   questionCount = 3;
   document.getElementById('question-count').value = questionCount;
   renderQuestions();

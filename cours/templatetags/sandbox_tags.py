@@ -1,14 +1,17 @@
 """
 Template filters for lesson content:
 - split: split a string by separator
-- render_markdown_latex: Markdown → HTML with LaTeX preservation
+- render_content: Markdown + LaTeX + HTML + sandbox markers
 - process_sandbox_markers: replace [SANDBOX ...] markers with rendered widgets
 """
-import re
 import html as html_module
+import re
+
 from django import template
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
+
+from cours.templatetags.content_filters import render_markdown_content
 
 register = template.Library()
 
@@ -19,48 +22,20 @@ def split(value, separator=','):
     return str(value).split(separator)
 
 
-# ── LaTeX-safe Markdown renderer ──────────────────────────────────────────────
-
-_BLOCK_MATH  = re.compile(r'\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]')
-_INLINE_MATH = re.compile(r'(?<!\$)\$(?!\$)[^\$\n]+?\$(?!\$)|\\\(.+?\\\)')
-
-
-def _protect_latex(content):
-    """Replace LaTeX fragments with unique ASCII placeholders before Markdown processing."""
-    placeholders = {}
-    counter      = [0]
-
-    def save(m):
-        key = f'NUMERIAMATHSLOT{counter[0]}ENDSLOT'
-        placeholders[key] = m.group(0)
-        counter[0] += 1
-        return key
-
-    text = _BLOCK_MATH.sub(save, content)
-    text = _INLINE_MATH.sub(save, text)
-    return text, placeholders
-
-
 @register.filter(name='render_markdown_latex', is_safe=True)
 def render_markdown_latex(content):
-    """
-    Convert Markdown to HTML while preserving LaTeX delimiters for MathJax.
+    """Alias for render_markdown_content (backward compatibility)."""
+    return render_markdown_content(content)
 
-    Supports: $...$ inline, $$...$$ block, \\(...\\), \\[...\\]
-    Uses markdown-it-py (already in requirements.txt).
-    """
+
+@register.filter(name='render_content', is_safe=True)
+def render_content(content):
+    """Render content with Markdown, HTML, LaTeX and sandbox markers."""
     if not content:
         return mark_safe('')
-    try:
-        from markdown_it import MarkdownIt
-        protected, placeholders = _protect_latex(content)
-        md   = MarkdownIt()
-        html = md.render(protected)
-        for key, value in placeholders.items():
-            html = html.replace(key, value)
-        return mark_safe(html)
-    except ImportError:
-        return mark_safe(content)
+    content = process_sandbox_markers(content)
+    return render_markdown_content(content)
+
 
 _SANDBOX_RE = re.compile(
     r'\[SANDBOX(?:\s+title="([^"]*)")?(?:\s+code="((?:[^"\\]|\\.)*)")?\s*\]',
@@ -78,24 +53,31 @@ def process_sandbox_markers(content, counter_start=0):
 
     def replace_match(m):
         counter[0] += 1
-        sid         = f'lesson_inline_{counter[0]}'
-        title       = m.group(1) or 'Essaie toi-même'
-        raw_code    = m.group(2) or '# Écris ton code ici\n'
-        # Unescape any escaped quotes/backslashes from the marker
-        decoded_code = raw_code.replace('\\"', '"').replace('\\n', '\n').replace('\\t', '\t').replace('\\\\', '\\')
+        sid = f'lesson_inline_{counter[0]}'
+        title = m.group(1) or 'Essaie toi-même'
+        raw_code = m.group(2) or '# Écris ton code ici\n'
+        decoded_code = (
+            raw_code.replace('\\"', '"')
+            .replace('\\n', '\n')
+            .replace('\\t', '\t')
+            .replace('\\\\', '\\')
+        )
 
         try:
             rendered = render_to_string('sandbox/sandbox_widget.html', {
-                'sandbox_id':   sid,
-                'title':        title,
+                'sandbox_id': sid,
+                'title': title,
                 'initial_code': decoded_code,
-                'height':       200,
-                'show_save':    False,
+                'height': 200,
+                'show_save': False,
                 'show_packages': False,
-                'readonly':     False,
+                'readonly': False,
             })
             return rendered
         except Exception:
-            return f'<div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-700">🐍 Sandbox: {html.escape(title)}</div>'
+            return (
+                f'<div class="bg-amber-50 border border-amber-200 rounded-lg p-3 '
+                f'text-sm text-amber-700">🐍 Sandbox: {html_module.escape(title)}</div>'
+            )
 
     return _SANDBOX_RE.sub(replace_match, content)

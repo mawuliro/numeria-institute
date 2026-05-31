@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n sandbox_tags %}
 {% block titre %}{{ article.titre }} — Numeria Institute{% endblock %}
 {% block meta_description %}{{ article.resume|truncatechars:160 }}{% endblock %}
 {% block og_titre %}{{ article.titre }} — Numeria Institute{% endblock %}
@@ -120,7 +120,7 @@
                     .dark .contenu-article code:not(.hljs) { background: #374151; color: #FCD34D; padding: 0.35rem 0.55rem; border-radius: 0.25rem; font-weight: 600; font-size: 0.98rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; }
                 </style>
                 <div class="contenu-article text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2rem] p-10 shadow-sm mx-auto max-w-7xl">
-                    {{ article.contenu|safe }}
+                    {{ article.contenu|render_content }}
                 </div>
 
                 <!-- Tags / Partage -->

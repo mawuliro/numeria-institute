@@ -68,7 +68,8 @@
     <form method="post" id="notif-form" action="">
       {% csrf_token %}<input type="hidden" name="action" value="send_notification">
       <input type="text" name="notif_title" required placeholder="{% trans 'Titre' %}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-3">
-      <textarea name="notif_message" rows="3" required placeholder="{% trans 'Message' %}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-4"></textarea>
+      <textarea id="notif-message-field" name="notif_message" rows="3" required data-rich-editor data-compact-editor="1" data-editor-height="140px"
+                placeholder="{% trans 'Message' %}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-4"></textarea>
       <div class="flex gap-2 justify-end">
         <button type="button" onclick="closeModal('modal-notif')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm">{% trans "Annuler" %}</button>
         <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm hover:bg-sky-700">{% trans "Envoyer" %}</button>
@@ -83,6 +84,10 @@
 function openNotifModal(userId) {
   document.getElementById('notif-form').action = '/admin-panel/utilisateurs/' + userId + '/action/';
   openModal('modal-notif');
+  var ta = document.getElementById('notif-message-field');
+  if (ta && !ta.dataset.numeriaEditorInit && window.NumeriaMarkdown) {
+    window.NumeriaMarkdown.initEditor(ta, { compact: true, height: '140px' });
+  }
 }
 </script>
 {% endblock %}

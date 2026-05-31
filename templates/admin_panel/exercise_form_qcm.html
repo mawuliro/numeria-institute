@@ -28,8 +28,8 @@
       </div>
       <div>
         <label class="block text-xs font-semibold text-slate-600 mb-1">Question * <span class="font-normal text-slate-400">(Markdown + LaTeX supportés)</span></label>
-        <textarea name="question" required rows="4"
-                  class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono"
+        <textarea id="qcm-question" name="question" required rows="4" data-rich-editor data-editor-height="200px"
+                  class="w-full"
                   placeholder="Ex: Quelle est la valeur de $\int_0^1 x\,dx$ ?"></textarea>
       </div>
       <div class="grid grid-cols-3 gap-3">
@@ -71,8 +71,9 @@
           <input type="{% if i == '0' or i == '1' %}radio{% else %}radio{% endif %}"
                  name="choice_correct" value="{{ i }}"
                  id="correct-{{ i }}" class="flex-shrink-0 accent-green-600">
-          <input type="text" name="choice_text" placeholder="Choix {{ forloop.counter }}"
-                 class="flex-1 px-2 py-1.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+          <textarea name="choice_text" rows="2" placeholder="Choix {{ forloop.counter }}"
+                    data-compact-editor="1" data-editor-height="80px"
+                    class="flex-1 choice-text-input"></textarea>
           <button type="button" onclick="removeChoice(this)"
                   class="text-red-400 hover:text-red-600 text-xs px-1 flex-shrink-0">✕</button>
         </div>
@@ -85,8 +86,8 @@
       <h3 class="font-semibold text-slate-700">Optionnel</h3>
       <div>
         <label class="block text-xs font-semibold text-slate-600 mb-1">Explication (affichée après réponse)</label>
-        <textarea name="explanation" rows="3"
-                  class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+        <textarea id="qcm-explanation" name="explanation" rows="3" data-rich-editor data-compact-editor="1" data-editor-height="140px"
+                  class="w-full"></textarea>
       </div>
       <div>
         <label class="block text-xs font-semibold text-slate-600 mb-1">Indice (après 3 mauvaises réponses)</label>
@@ -111,15 +112,23 @@
 {% block extra_js %}
 <script>
 var choiceCount = 4;
+function initChoiceEditors() {
+  document.querySelectorAll('.choice-text-input').forEach(function(ta) {
+    if (!ta.dataset.numeriaEditorInit) {
+      window.NumeriaMarkdown.initEditor(ta, { compact: true, height: '80px' });
+    }
+  });
+}
 function addChoice() {
   var c = document.getElementById('choices-container');
   var row = document.createElement('div');
   row.className = 'flex items-center gap-3 choice-row';
   row.innerHTML = '<input type="radio" name="choice_correct" value="' + choiceCount + '" class="flex-shrink-0 accent-green-600">' +
-    '<input type="text" name="choice_text" placeholder="Nouveau choix" class="flex-1 px-2 py-1.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">' +
+    '<textarea name="choice_text" placeholder="Nouveau choix" class="choice-text-input flex-1" data-compact-editor="1" data-editor-height="80px"></textarea>' +
     '<button type="button" onclick="removeChoice(this)" class="text-red-400 hover:text-red-600 text-xs px-1 flex-shrink-0">✕</button>';
   c.appendChild(row);
-  // Re-number values
+  var ta = row.querySelector('textarea');
+  window.NumeriaMarkdown.initEditor(ta, { compact: true, height: '80px' });
   renumberChoices();
   choiceCount++;
 }
@@ -139,6 +148,9 @@ function renumberChoices() {
 document.addEventListener('DOMContentLoaded', function() {
   var rows = document.querySelectorAll('.choice-row');
   rows.forEach(function(row, i) { if (i >= 2) row.remove(); });
+  window.NumeriaMarkdown.initEditor('qcm-question', { height: '200px' });
+  window.NumeriaMarkdown.initEditor('qcm-explanation', { compact: true, height: '140px' });
+  initChoiceEditors();
 });
 </script>
 {% endblock %}

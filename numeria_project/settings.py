@@ -169,7 +169,7 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 # ── FICHIERS STATIQUES ───────────────────────────────────────────────────────
 STATIC_URL       = '/static/'
 STATIC_ROOT      = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = []
+STATICFILES_DIRS = [BASE_DIR / 'static']
 # Django 6 uses STORAGES dict — configured below after Cloudinary detection
 
 

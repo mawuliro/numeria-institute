@@ -31,7 +31,7 @@
   {# Question #}
   <div class="px-5 py-4">
     <div class="mcq-question prose prose-sm dark:prose-invert max-w-none text-gray-800 dark:text-gray-100 mb-5 leading-relaxed">
-      {{ mcq.question|render_markdown_latex }}
+      {{ mcq.question|render_content }}
     </div>
 
     {# Choices container (JS fills this) #}
@@ -55,7 +55,7 @@
     <div id="mcq-explanation-{{ mcq.mcq_id }}"
          class="{% if not mcq.is_solved %}hidden{% endif %} mb-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl px-4 py-3 text-sm text-blue-800 dark:text-blue-300 prose prose-sm dark:prose-invert max-w-none">
       <strong>💡 {% trans "Explication" %} :</strong>
-      {{ mcq.explanation|render_markdown_latex }}
+      {{ mcq.explanation|render_content }}
     </div>
     {% endif %}
 
@@ -92,10 +92,10 @@ var IS_SOLVED   = {% if mcq.is_solved %}true{% else %}false{% endif %};
 var ATT_USED    = {{ mcq.attempts_used }};
 var CORRECT_IDS = [{% for cid in mcq.correct_ids %}{{ cid }}{% if not forloop.last %},{% endif %}{% endfor %}];
 var CSRF        = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
-var SUBMIT_URL  = '{% url "cours:submit_mcq" 0 %}'.replace('/0/', '/' + MID + '/');
+var SUBMIT_URL  = '{% url "cours:submit_mcq" mcq.mcq_id %}';
 var CHOICES_RAW = [
   {% for ch in mcq.choices %}
-  { id: {{ ch.id }}, text: {{ ch.text|json_script:"" }}{% comment %}we'll handle text below{% endcomment %}, order: {{ ch.order }} }{% if not forloop.last %},{% endif %}
+  { id: {{ ch.id }}, order: {{ ch.order }} }{% if not forloop.last %},{% endif %}
   {% endfor %}
 ];
 
