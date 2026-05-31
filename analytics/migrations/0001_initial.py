@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
                 ('revenus_totaux', models.DecimalField(decimal_places=2, default=0, max_digits=12)),
                 ('nombre_transactions', models.IntegerField(default=0)),
                 ('derniere_mise_a_jour', models.DateTimeField(auto_now=True)),
-                ('cours', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='analytics', to='cours.cours')),
+                ('cours', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='analytics', to='cours.Cours')),
             ],
             options={
                 'verbose_name': 'Analytique cours',
@@ -89,7 +89,7 @@ class Migration(migrations.Migration):
                 ('date_creation', models.DateTimeField(auto_now_add=True)),
                 ('ip_adresse', models.GenericIPAddressField(blank=True, null=True)),
                 ('user_agent', models.TextField(blank=True)),
-                ('cours', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='evenements', to='cours.cours')),
+                ('cours', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='evenements', to='cours.Cours')),
                 ('utilisateur', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='evenements', to=settings.AUTH_USER_MODEL)),
             ],
             options={

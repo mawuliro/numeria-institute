@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='cours',
             name='cours_prerequises',
-            field=models.ManyToManyField(blank=True, related_name='cours_suivants', to='cours.cours', verbose_name='Cours préalables'),
+            field=models.ManyToManyField(blank=True, related_name='cours_suivants', to='cours.Cours', verbose_name='Cours préalables'),
         ),
         migrations.AddField(
             model_name='cours',
@@ -87,7 +87,7 @@ class Migration(migrations.Migration):
                 ('statut', models.CharField(choices=[('en_cours', 'En cours'), ('gagne', 'Gagné'), ('expire', 'Expiré')], default='gagne', max_length=20, verbose_name='Statut')),
                 ('numero_certificat', models.CharField(max_length=50, unique=True, verbose_name='Numéro de certificat')),
                 ('score_final', models.IntegerField(default=100, verbose_name='Score final (%)')),
-                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='certificats', to='cours.cours')),
+                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='certificats', to='cours.Cours')),
                 ('etudiant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='certificats', to=settings.AUTH_USER_MODEL)),
             ],
             options={
@@ -103,7 +103,7 @@ class Migration(migrations.Migration):
                 ('note', models.IntegerField(choices=[(1, '1/5 ⭐'), (2, '2/5 ⭐'), (3, '3/5 ⭐'), (4, '4/5 ⭐'), (5, '5/5 ⭐')], verbose_name='Note')),
                 ('commentaire', models.TextField(blank=True, max_length=500, verbose_name='Commentaire')),
                 ('date_creation', models.DateTimeField(auto_now_add=True)),
-                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='evaluations', to='cours.cours')),
+                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='evaluations', to='cours.Cours')),
                 ('etudiant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='evaluations_cours', to=settings.AUTH_USER_MODEL)),
             ],
             options={
@@ -122,7 +122,7 @@ class Migration(migrations.Migration):
                 ('approuvee_par_admin', models.BooleanField(default=False)),
                 ('votes_positifs', models.IntegerField(default=0)),
                 ('auteur', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='questions_faq', to=settings.AUTH_USER_MODEL)),
-                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='faq', to='cours.cours')),
+                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='faq', to='cours.Cours')),
             ],
             options={
                 'verbose_name': 'Question FAQ',

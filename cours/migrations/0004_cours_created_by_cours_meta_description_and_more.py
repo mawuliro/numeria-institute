@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(blank=True, verbose_name='Description')),
                 ('ordre', models.IntegerField(default=0, verbose_name='Ordre')),
                 ('est_actif', models.BooleanField(default=True, verbose_name='Actif')),
-                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='modules', to='cours.cours')),
+                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='modules', to='cours.Cours')),
             ],
             options={
                 'verbose_name': 'Module',

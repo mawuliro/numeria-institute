@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('date_creation', models.DateTimeField(auto_now_add=True)),
                 ('date_modification', models.DateTimeField(auto_now=True)),
                 ('notes', models.TextField(blank=True, null=True)),
-                ('cours', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='paiements', to='cours.cours')),
+                ('cours', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='paiements', to='cours.Cours')),
                 ('etudiant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='paiements', to=settings.AUTH_USER_MODEL)),
             ],
             options={

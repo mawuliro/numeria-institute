@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
                 ('progression', models.IntegerField(default=0)),
                 ('est_termine', models.BooleanField(default=False)),
                 ('date_fin', models.DateTimeField(blank=True, null=True)),
-                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='inscriptions', to='cours.cours')),
+                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='inscriptions', to='cours.Cours')),
                 ('etudiant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='inscriptions', to=settings.AUTH_USER_MODEL)),
             ],
             options={
@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
                 ('duree_minutes', models.IntegerField(default=10, verbose_name='Durée (minutes)')),
                 ('video_youtube', models.URLField(blank=True, help_text='URL YouTube ou Vimeo normale. Ex : https://youtu.be/ABC123', null=True, verbose_name='Vidéo YouTube / Vimeo')),
                 ('est_publiee', models.BooleanField(default=True, verbose_name='Publiée')),
-                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='lecons', to='cours.cours')),
+                ('cours', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='lecons', to='cours.Cours')),
             ],
             options={
                 'verbose_name': 'Leçon',
