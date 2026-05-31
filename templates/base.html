@@ -102,7 +102,37 @@
                 displayMath: [['$$', '$$'], ['\\[', '\\]']],
                 processEscapes: true,
                 processEnvironments: true,
-                packages: {'[+]': ['ams', 'boldsymbol']}
+                /* Add packages on top of the defaults that tex-chtml already includes.
+                   'base' set includes: action, ams, amssymbol, boldsymbol,
+                   autoload (handles cancel/color/mhchem/etc automatically),
+                   newcommand, require, configmacros, noundefined, noerrors */
+                packages: {'[+]': ['ams', 'boldsymbol', 'cancel', 'color', 'bbox', 'mhchem', 'newcommand', 'configmacros']},
+                /* Shorthand macros — use \R, \N, \Z etc. in any lesson */
+                macros: {
+                    /* Number sets */
+                    R:    '\\mathbb{R}',
+                    N:    '\\mathbb{N}',
+                    Z:    '\\mathbb{Z}',
+                    C:    '\\mathbb{C}',
+                    Q:    '\\mathbb{Q}',
+                    /* Norms, absolute value */
+                    norm: ['\\left\\lVert #1 \\right\\rVert', 1],
+                    abs:  ['\\left| #1 \\right|', 1],
+                    /* Vectors */
+                    vv:   ['\\mathbf{#1}', 1],
+                    /* Calculus */
+                    dd:   ['\\,\\mathrm{d}#1', 1],
+                    dv:   ['\\dfrac{\\mathrm{d}#1}{\\mathrm{d}#2}', 2],
+                    pdv:  ['\\dfrac{\\partial #1}{\\partial #2}', 2],
+                    /* Dirac notation */
+                    bra:  ['\\langle #1 |', 1],
+                    ket:  ['| #1 \\rangle', 1],
+                    braket: ['\\langle #1 | #2 \\rangle', 2],
+                    /* Probability / statistics */
+                    Prob: ['\\mathbb{P}\\left[#1\\right]', 1],
+                    E:    ['\\mathbb{E}\\left[#1\\right]', 1],
+                    Var:  ['\\mathrm{Var}\\left[#1\\right]', 1]
+                }
             },
             options: {
                 skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
