@@ -377,9 +377,11 @@ class Cours(models.Model):
         # Synchronise est_publie avec status pour la compatibilité
         self.est_publie = (self.status == 'publie')
 
-        self.nombre_etudiants_inscrits = self.inscriptions.count()
-        self.note_moyenne = self.get_note_moyenne()
-        self.taux_completion = int(self.get_taux_completion())
+        # These queries require a primary key — skip on initial create()
+        if self.pk:
+            self.nombre_etudiants_inscrits = self.inscriptions.count()
+            self.note_moyenne = self.get_note_moyenne()
+            self.taux_completion = int(self.get_taux_completion())
 
         super().save(*args, **kwargs)
 
