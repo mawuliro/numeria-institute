@@ -1,0 +1,210 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}Créer un exercice groupé{% endblock %}
+{% block page_heading %}🧩 Créer un exercice groupé{% endblock %}
+{% block breadcrumb %}
+<p class="text-xs text-slate-400 mt-0.5">
+  <a href="{% url 'admin_panel:exercises_list' %}" class="hover:underline">Exercices</a> › Exercice groupé › Créer
+</p>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl">
+  <div class="bg-slate-50 rounded-xl border border-slate-200 p-3 mb-5 text-sm text-slate-600">
+    Leçon : <span class="font-medium">{{ lecon.titre }}</span>
+  </div>
+
+  <form method="post" class="space-y-5">
+    {% csrf_token %}
+    <input type="hidden" name="back_url" value="{{ back_url }}">
+    <input type="hidden" name="question_count" id="question-count" value="3">
+
+    <div class="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+      <h3 class="font-semibold text-slate-700">Informations générales</h3>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Titre du groupe *</label>
+        <input type="text" name="title" required maxlength="300"
+               class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Instructions</label>
+        <textarea name="instructions" rows="3"
+                  class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Type de questions</label>
+          <select id="question-type" name="question_type" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white" onchange="renderQuestions()">
+            <option value="qcm">QCM</option>
+            <option value="fill_blank">Texte à trou</option>
+            <option value="true_false">Vrai / Faux</option>
+            <option value="short_answer">Question ouverte</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Difficulté par question</label>
+          <select name="difficulty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+            {% for val, label in difficulties %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Points par question</label>
+          <input type="number" name="points" value="5" min="0"
+                 class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Max tentatives <span class="font-normal text-slate-400">(0=∞)</span></label>
+          <input type="number" name="max_attempts" value="0" min="0"
+                 class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+        </div>
+        <div class="flex items-center gap-2 mt-7">
+          <input type="checkbox" name="allow_multiple_correct" id="allow-multiple-correct" class="rounded">
+          <label for="allow-multiple-correct" class="text-sm text-slate-700">Plusieurs bonnes réponses (pour QCM)</label>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Indice commun</label>
+        <input type="text" name="hint"
+               class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-semibold text-slate-700">Questions du groupe</h3>
+        <button type="button" onclick="addQuestion()"
+                class="text-xs text-sky-600 hover:text-sky-800 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg font-medium">
+          + Ajouter une question
+        </button>
+      </div>
+      <p class="text-xs text-slate-500">Chaque question du groupe utilise le même type et les mêmes paramètres de difficulté/points.</p>
+      <div id="questions-container" class="space-y-4"></div>
+    </div>
+
+    <div class="flex gap-3">
+      <button type="submit"
+              class="bg-sky-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-sky-700 text-sm">
+        🧩 Créer l'exercice groupé
+      </button>
+      <a href="{% url 'admin_panel:exercises_list' %}"
+         class="bg-slate-100 text-slate-700 font-semibold px-6 py-2.5 rounded-xl hover:bg-slate-200 text-sm">
+        Annuler
+      </a>
+    </div>
+  </form>
+</div>
+
+{% block extra_js %}
+<script>
+var questionCount = 0;
+var maxQuestions = 8;
+
+function renderQuestions() {
+  var container = document.getElementById('questions-container');
+  var type = document.getElementById('question-type').value;
+  var html = '';
+  for (var idx = 0; idx < questionCount; idx++) {
+    html += renderQuestionCard(idx, type);
+  }
+  container.innerHTML = html;
+}
+
+function renderQuestionCard(idx, type) {
+  var label = 'Question ' + (idx + 1);
+  var hidden = '<input type="hidden" name="question_label_' + idx + '" value="' + label + '">';
+  var card = '<div class="rounded-2xl border border-slate-200 p-4 bg-slate-50">';
+  card += '<div class="flex items-center justify-between gap-3 mb-4">';
+  card += '<div><div class="text-sm font-semibold text-slate-700">' + label + '</div>';
+  card += '<div class="text-xs text-slate-500">Entrez le contenu de la question ci-dessous.</div></div>';
+  card += '<button type="button" onclick="removeQuestion(' + idx + ')" class="text-red-500 hover:text-red-700 text-xs font-medium">Supprimer</button>';
+  card += '</div>';
+
+  if (type === 'qcm') {
+    card += '<div class="space-y-3">';
+    card += '<label class="block text-xs font-semibold text-slate-600">Question *</label>';
+    card += '<textarea name="question_text_' + idx + '" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></textarea>';
+    card += '<div class="grid grid-cols-2 gap-3">';
+    for (var i = 0; i < 4; i++) {
+      card += '<div class="flex items-center gap-2">';
+      card += '<input type="checkbox" name="choice_correct_' + idx + '" value="' + i + '" class="accent-green-600">';
+      card += '<input type="text" name="choice_text_' + idx + '" placeholder="Choix ' + (i + 1) + '" class="flex-1 px-2 py-2 border border-slate-300 rounded-lg text-sm">';
+      card += '</div>';
+    }
+    card += '</div>';
+    card += '<label class="block text-xs font-semibold text-slate-600">Explication</label>';
+    card += '<textarea name="explanation_' + idx + '" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></textarea>';
+    card += '</div>';
+  } else if (type === 'fill_blank') {
+    card += '<div class="space-y-3">';
+    card += '<label class="block text-xs font-semibold text-slate-600">Texte avec blancs *</label>';
+    card += '<textarea name="text_with_blanks_' + idx + '" rows="4" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" placeholder="Utilisez {{blank_1}}, {{blank_2}}, ..."></textarea>';
+    card += '<div class="text-xs text-slate-500">Chaque champ de trou doit avoir une réponse correspondante.</div>';
+    card += '<label class="block text-xs font-semibold text-slate-600">Réponses séparées par des virgules</label>';
+    card += '<input type="text" name="answer_' + idx + '_blank_1" placeholder="Réponse 1" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">';
+    card += '</div>';
+  } else if (type === 'true_false') {
+    card += '<div class="space-y-3">';
+    card += '<label class="block text-xs font-semibold text-slate-600">Énoncé *</label>';
+    card += '<textarea name="statement_' + idx + '" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></textarea>';
+    card += '<div class="flex items-center gap-2">';
+    card += '<input type="checkbox" id="is_true_' + idx + '" name="is_true_' + idx + '" class="rounded">';
+    card += '<label for="is_true_' + idx + '" class="text-sm text-slate-700">Vrai</label>';
+    card += '</div>';
+    card += '<label class="block text-xs font-semibold text-slate-600">Explication</label>';
+    card += '<textarea name="stmt_explanation_' + idx + '" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></textarea>';
+    card += '</div>';
+  } else if (type === 'short_answer') {
+    card += '<div class="space-y-3">';
+    card += '<label class="block text-xs font-semibold text-slate-600">Question *</label>';
+    card += '<textarea name="question_text_' + idx + '" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></textarea>';
+    card += '<label class="block text-xs font-semibold text-slate-600">Réponses acceptées (séparées par des virgules)</label>';
+    card += '<input type="text" name="accepted_answers_' + idx + '" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">';
+    card += '<div class="flex items-center gap-2">';
+    card += '<input type="checkbox" id="is_code_answer_' + idx + '" name="is_code_answer_' + idx + '" class="rounded">';
+    card += '<label for="is_code_answer_' + idx + '" class="text-sm text-slate-700">Réponse de code</label>';
+    card += '</div>';
+    card += '</div>';
+  }
+
+  card += hidden;
+  card += '</div>';
+  return card;
+}
+
+function addQuestion() {
+  if (questionCount >= maxQuestions) {
+    alert('Nombre maximum de questions atteint.');
+    return;
+  }
+  questionCount += 1;
+  document.getElementById('question-count').value = questionCount;
+  renderQuestions();
+}
+
+function removeQuestion(idx) {
+  if (questionCount <= 1) {
+    alert('Il faut au moins une question.');
+    return;
+  }
+  var current = [];
+  for (var i = 0; i < questionCount; i++) {
+    if (i !== idx) current.push(i);
+  }
+  questionCount = current.length;
+  document.getElementById('question-count').value = questionCount;
+  renderQuestions();
+}
+
+function initGroupedExerciseForm() {
+  questionCount = 3;
+  document.getElementById('question-count').value = questionCount;
+  renderQuestions();
+}
+
+window.addEventListener('DOMContentLoaded', initGroupedExerciseForm);
+</script>
+{% endblock %}
+{% endblock %}

@@ -978,6 +978,7 @@ EXERCISE_TYPES = {
     'code_order':   ('🧩', 'Ordre de code'),
     'matching':     ('🔗', 'Associations'),
     'short_answer': ('💬', 'Réponse courte'),
+    'grouped':      ('🧩', 'Exercice groupé'),
 }
 
 
@@ -1011,9 +1012,10 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
     lecon = Lecon instance or None, fl = FormationLesson instance or None.
     """
     from cours.models import (
-        CodeExercise, MCQExercise, MCQChoice,
+        CodeExercise, LessonBlock, MCQExercise, MCQChoice,
         FillBlankExercise, TrueFalseExercise,
         CodeOrderExercise, MatchingExercise, ShortAnswerExercise,
+        GroupedExercise,
     )
     import json as _json
 
@@ -1029,6 +1031,7 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
         'code_order':   'admin_panel/exercise_form_code_order.html',
         'matching':     'admin_panel/exercise_form_matching.html',
         'short_answer': 'admin_panel/exercise_form_short_answer.html',
+        'grouped':      'admin_panel/exercise_form_grouped.html',
     }
     template = template_map.get(ex_type, 'admin_panel/exercise_form.html')
 
@@ -1159,6 +1162,131 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
                         explanation=request.POST.get('explanation', '').strip(),
                         max_attempts=int(request.POST.get('max_attempts', 3) or 3),
                         is_code_answer='is_code_answer' in request.POST,
+                    )
+
+                elif ex_type == 'grouped':
+                    qtype = request.POST.get('question_type', 'qcm')
+                    question_count = int(request.POST.get('question_count', 0) or 0)
+                    if question_count <= 0:
+                        messages.error(request, 'Il faut au moins une question pour un exercice groupé.')
+                        return render(request, template, {'lecon': lesson_obj, 'lesson_type': lesson_type, 'action': 'create'})
+
+                    group_questions = []
+                    created_exercises = []
+                    for idx in range(question_count):
+                        label = request.POST.get(f'question_label_{idx}', f'Q{idx + 1}').strip() or f'Q{idx + 1}'
+                        if qtype == 'qcm':
+                            question_text = request.POST.get(f'question_text_{idx}', '').strip()
+                            if not question_text:
+                                continue
+                            mcq = MCQExercise.objects.create(
+                                lesson=lecon, formation_lesson=fl,
+                                title=f'{label} – {title}',
+                                question=question_text,
+                                explanation=request.POST.get(f'explanation_{idx}', '').strip(),
+                                hint=request.POST.get('hint', '').strip(),
+                                difficulty=request.POST.get('difficulty', 'easy'),
+                                points=int(request.POST.get('points', 5) or 5),
+                                max_attempts=int(request.POST.get('max_attempts', 0) or 0),
+                                allow_multiple_correct='allow_multiple_correct' in request.POST,
+                                shuffle_choices=True,
+                                created_by=request.user,
+                            )
+                            answers = request.POST.getlist(f'choice_text_{idx}')
+                            corrects = request.POST.getlist(f'choice_correct_{idx}')
+                            for cidx, text in enumerate(answers):
+                                if text.strip():
+                                    MCQChoice.objects.create(
+                                        exercise=mcq,
+                                        text=text.strip(),
+                                        is_correct=str(cidx) in corrects,
+                                        order=cidx,
+                                    )
+                            created_exercises.append({'question_type': 'qcm', 'exercise_id': mcq.id, 'label': label})
+
+                        elif qtype == 'fill_blank':
+                            text_with_blanks = request.POST.get(f'text_with_blanks_{idx}', '').strip()
+                            if not text_with_blanks:
+                                continue
+                            answers = {}
+                            import re
+                            blanks = re.findall(r'\{\{(blank_\w+)\}\}', text_with_blanks)
+                            for blank in blanks:
+                                raw = request.POST.get(f'answer_{idx}_{blank}', '')
+                                answers[blank] = [a.strip() for a in raw.split(',') if a.strip()]
+                            ex = FillBlankExercise.objects.create(
+                                lesson=lecon, formation_lesson=fl,
+                                title=f'{label} – {title}',
+                                instructions=request.POST.get('instructions', '').strip(),
+                                text_with_blanks=text_with_blanks,
+                                answers=answers,
+                                case_sensitive='case_sensitive' in request.POST,
+                                difficulty=request.POST.get('difficulty', 'easy'),
+                                points=int(request.POST.get('points', 5) or 5),
+                                hint=request.POST.get('hint', '').strip(),
+                                explanation=request.POST.get('explanation', '').strip(),
+                                max_attempts=int(request.POST.get('max_attempts', 0) or 0),
+                            )
+                            created_exercises.append({'question_type': 'fill_blank', 'exercise_id': ex.id, 'label': label})
+
+                        elif qtype == 'true_false':
+                            statement = request.POST.get(f'statement_{idx}', '').strip()
+                            if not statement:
+                                continue
+                            is_true = f'is_true_{idx}' in request.POST
+                            ex = TrueFalseExercise.objects.create(
+                                lesson=lecon, formation_lesson=fl,
+                                title=f'{label} – {title}',
+                                statements=[{
+                                    'statement': statement,
+                                    'is_true': is_true,
+                                    'explanation': request.POST.get(f'stmt_explanation_{idx}', '').strip(),
+                                }],
+                                points_per_statement=int(request.POST.get('points_per_statement', 2) or 2),
+                                difficulty=request.POST.get('difficulty', 'easy'),
+                                hint=request.POST.get('hint', '').strip(),
+                            )
+                            created_exercises.append({'question_type': 'true_false', 'exercise_id': ex.id, 'label': label})
+
+                        elif qtype == 'short_answer':
+                            question_text = request.POST.get(f'question_text_{idx}', '').strip()
+                            if not question_text:
+                                continue
+                            raw = request.POST.get(f'accepted_answers_{idx}', '')
+                            accepted = [a.strip() for a in raw.split(',') if a.strip()]
+                            ex = ShortAnswerExercise.objects.create(
+                                lesson=lecon, formation_lesson=fl,
+                                title=f'{label} – {title}',
+                                question=question_text,
+                                accepted_answers=accepted,
+                                case_sensitive='case_sensitive' in request.POST,
+                                difficulty=request.POST.get('difficulty', 'easy'),
+                                points=int(request.POST.get('points', 5) or 5),
+                                hint=request.POST.get('hint', '').strip(),
+                                explanation=request.POST.get('explanation', '').strip(),
+                                max_attempts=int(request.POST.get('max_attempts', 3) or 3),
+                                is_code_answer='is_code_answer' in request.POST,
+                            )
+                            created_exercises.append({'question_type': 'short_answer', 'exercise_id': ex.id, 'label': label})
+
+                    if not created_exercises:
+                        messages.error(request, 'Aucune question valide n’a été trouvée.')
+                        return render(request, template, {'lecon': lesson_obj, 'lesson_type': lesson_type, 'action': 'create'})
+
+                    group = GroupedExercise.objects.create(
+                        lesson=lecon, formation_lesson=fl,
+                        title=title,
+                        instructions=request.POST.get('instructions', '').strip(),
+                        question_type=qtype,
+                        questions=created_exercises,
+                        created_by=request.user,
+                    )
+                    existing_blocks = LessonBlock.objects.filter(lesson=lecon) if lecon else LessonBlock.objects.filter(formation_lesson=fl)
+                    LessonBlock.objects.create(
+                        lesson=lecon, formation_lesson=fl,
+                        block_type='grouped_exercise',
+                        grouped_exercise=group,
+                        order=existing_blocks.count(),
                     )
 
                 messages.success(request, f"Exercice '{title}' créé avec succès.")

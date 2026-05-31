@@ -77,6 +77,11 @@
   {% include 'cours/components/short_answer_widget.html' with block=block %}
 </div>
 
+{% elif block.type == 'grouped_exercise' and block.grouped_exercise_id %}
+<div class="lesson-block lesson-block--grouped-exercise mb-8">
+  {% include 'cours/components/grouped_exercise_widget.html' with block=block %}
+</div>
+
 {% endif %}
 
 {% endfor %}

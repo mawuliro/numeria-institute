@@ -1,0 +1,44 @@
+{% load i18n %}
+<div class="grouped-exercise-widget bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm mb-8">
+  <div class="px-5 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ block.group_title }}</h3>
+        {% if block.group_instructions %}
+        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ block.group_instructions }}</p>
+        {% endif %}
+      </div>
+      <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+        <span>{% trans "Questions" %} : {{ block.questions|length }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-6 p-5">
+    {% for question in block.questions %}
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-700 p-4 bg-slate-50 dark:bg-gray-900">
+      <div class="flex items-center justify-between gap-3 mb-4">
+        <div>
+          <div class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ question.label }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400">{{ question.type|upper }}</div>
+        </div>
+        {% if question.points %}
+        <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">{{ question.points }} pts</span>
+        {% endif %}
+      </div>
+
+      {% if question.type == 'mcq' %}
+        {% include 'cours/components/mcq_widget.html' with block=question %}
+      {% elif question.type == 'fill_blank' %}
+        {% include 'cours/components/fill_blank_widget.html' with block=question %}
+      {% elif question.type == 'true_false' %}
+        {% include 'cours/components/true_false_widget.html' with block=question %}
+      {% elif question.type == 'short_answer' %}
+        {% include 'cours/components/short_answer_widget.html' with block=question %}
+      {% else %}
+        <p class="text-sm text-slate-600 dark:text-slate-400">{% trans "Type de question non pris en charge." %}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>

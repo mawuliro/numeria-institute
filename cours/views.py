@@ -324,6 +324,106 @@ def detail_cours(request, cours_id):
                         # accepted_answers intentionally omitted for security
                     })
 
+                elif block.block_type == 'grouped_exercise' and block.grouped_exercise:
+                    group = block.grouped_exercise
+                    questions = []
+                    for idx, q in enumerate(group.questions or []):
+                        qt = q.get('question_type')
+                        qid = q.get('exercise_id')
+                        label = q.get('label', f'Q{idx + 1}')
+                        if qt == 'qcm':
+                            from .models import MCQExercise, MCQGrade
+                            ex = MCQExercise.objects.filter(id=qid).first()
+                            if not ex:
+                                continue
+                            gr = MCQGrade.objects.filter(student=request.user, exercise=ex).first()
+                            choices = list(ex.choices.order_by('order'))
+                            questions.append({
+                                'type': 'mcq',
+                                'label': label,
+                                'mcq_id': ex.id,
+                                'mcq_title': ex.title,
+                                'question': ex.question,
+                                'hint': ex.hint,
+                                'allow_multiple': ex.allow_multiple_correct,
+                                'shuffle': ex.shuffle_choices,
+                                'max_attempts': ex.max_attempts,
+                                'points': ex.points,
+                                'difficulty': ex.difficulty,
+                                'choices': [{'id': c.id, 'text': c.text, 'order': c.order} for c in choices],
+                                'is_solved': gr.is_solved if gr else False,
+                                'points_earned': gr.points_earned if gr else 0,
+                                'attempts_used': gr.attempts_count if gr else 0,
+                                'correct_ids': [c.id for c in choices if c.is_correct] if (gr and (gr.is_solved or (ex.max_attempts > 0 and gr.attempts_count >= ex.max_attempts))) else [],
+                                'explanation': ex.explanation if (gr and (gr.is_solved or (ex.max_attempts > 0 and gr.attempts_count >= ex.max_attempts))) else '',
+                            })
+                        elif qt == 'fill_blank':
+                            from .models import FillBlankExercise, FillBlankGrade
+                            ex = FillBlankExercise.objects.filter(id=qid).first()
+                            if not ex:
+                                continue
+                            gr = FillBlankGrade.objects.filter(student=request.user, exercise=ex).first()
+                            questions.append({
+                                'type': 'fill_blank',
+                                'label': label,
+                                'fill_blank_id': ex.id,
+                                'title': ex.title,
+                                'instructions': ex.instructions,
+                                'text_with_blanks': ex.text_with_blanks,
+                                'blank_count': len(ex.answers or {}),
+                                'points': ex.points,
+                                'difficulty': ex.difficulty,
+                                'hint': ex.hint,
+                                'max_attempts': ex.max_attempts,
+                                'is_solved': gr.is_solved if gr else False,
+                                'attempts_used': gr.attempts_count if gr else 0,
+                            })
+                        elif qt == 'true_false':
+                            from .models import TrueFalseExercise, TrueFalseGrade
+                            ex = TrueFalseExercise.objects.filter(id=qid).first()
+                            if not ex:
+                                continue
+                            gr = TrueFalseGrade.objects.filter(student=request.user, exercise=ex).first()
+                            questions.append({
+                                'type': 'true_false',
+                                'label': label,
+                                'true_false_id': ex.id,
+                                'title': ex.title,
+                                'statements': ex.statements or [],
+                                'points_per_statement': ex.points_per_statement,
+                                'difficulty': ex.difficulty,
+                                'hint': ex.hint,
+                                'is_solved': gr.is_solved if gr else False,
+                                'attempts_used': gr.attempts_count if gr else 0,
+                            })
+                        elif qt == 'short_answer':
+                            from .models import ShortAnswerExercise, ShortAnswerGrade
+                            ex = ShortAnswerExercise.objects.filter(id=qid).first()
+                            if not ex:
+                                continue
+                            gr = ShortAnswerGrade.objects.filter(student=request.user, exercise=ex).first()
+                            questions.append({
+                                'type': 'short_answer',
+                                'label': label,
+                                'short_answer_id': ex.id,
+                                'title': ex.title,
+                                'question': ex.question,
+                                'points': ex.points,
+                                'difficulty': ex.difficulty,
+                                'hint': ex.hint,
+                                'max_attempts': ex.max_attempts,
+                                'is_code_answer': ex.is_code_answer,
+                                'is_solved': gr.is_solved if gr else False,
+                                'attempts_used': gr.attempts_count if gr else 0,
+                            })
+                    bd.update({
+                        'grouped_exercise_id': group.id,
+                        'group_title': group.title,
+                        'group_instructions': group.instructions,
+                        'question_type': group.question_type,
+                        'questions': questions,
+                    })
+
                 lesson_blocks_data.append(bd)
 
         else:
