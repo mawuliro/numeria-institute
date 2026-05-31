@@ -35,6 +35,7 @@ urlpatterns = [
     path('exercices/resultats/', views.exercise_results, name='exercise_results'),
     path('exercices/resultats/csv/', views.exercise_results_csv, name='exercise_results_csv'),
     path('exercices/lecon/<int:lecon_id>/ajouter/', views.exercise_create, name='exercise_create'),
+    path('exercices/formation-lecon/<int:lecon_id>/ajouter/', views.exercise_create_formation, name='exercise_create_formation'),
     path('exercices/<int:exercise_id>/modifier/', views.exercise_edit, name='exercise_edit'),
     path('exercices/<int:exercise_id>/supprimer/', views.exercise_delete, name='exercise_delete'),
     path('exercices/<int:exercise_id>/reorder/', views.exercise_reorder, name='exercise_reorder'),
@@ -121,4 +122,7 @@ urlpatterns = [
     # Shared block update/delete
     path('blocks/<int:block_id>/update/', views_blocks.update_block, name='block_update'),
     path('blocks/<int:block_id>/delete/', views_blocks.delete_block, name='block_delete'),
+    # Formation lesson exercise API
+    path('formation-lessons/<int:lesson_id>/exercises/', views_blocks.get_formation_lesson_exercises, name='flesson_exercises'),
+    path('formation-lessons/<int:lesson_id>/blocks/<int:block_id>/create-exercise/', views_blocks.create_exercise_from_block, name='flesson_block_create_exercise'),
 ]

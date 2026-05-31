@@ -668,6 +668,14 @@ def submit_code_exercise(request, exercise_id):
             points_earned = exercise.points
             try:
                 from notifications.notifications import notify_user
+                # Build link only when we have a course lesson; formation lessons
+                # don't have a dedicated student page via the same URL pattern.
+                notif_link = None
+                if exercise.lecon_id and exercise.lecon:
+                    notif_link = (
+                        reverse('cours:detail', kwargs={'cours_id': exercise.lecon.cours_id})
+                        + f'?lecon={exercise.lecon_id}'
+                    )
                 notify_user(
                     request.user,
                     title=_("Exercice réussi ! 🎉"),
@@ -675,17 +683,29 @@ def submit_code_exercise(request, exercise_id):
                         'title': exercise.title, 'pts': exercise.points
                     },
                     notification_type='success',
-                    link=reverse('cours:detail', kwargs={'cours_id': exercise.lecon.cours_id})
-                         + f'?lecon={exercise.lecon_id}',
+                    link=notif_link,
                 )
             except Exception:
                 pass
 
-    solved_count = StudentCodeSubmission.objects.filter(
-        student=request.user,
-        exercise__lecon__cours=exercise.lecon.cours,
-        is_correct=True,
-    ).values('exercise').distinct().count()
+    # Count solved exercises in the same context (course or formation)
+    try:
+        if exercise.lecon_id and exercise.lecon:
+            solved_count = StudentCodeSubmission.objects.filter(
+                student=request.user,
+                exercise__lecon__cours=exercise.lecon.cours,
+                is_correct=True,
+            ).values('exercise').distinct().count()
+        elif exercise.formation_lesson_id and exercise.formation_lesson:
+            solved_count = StudentCodeSubmission.objects.filter(
+                student=request.user,
+                exercise__formation_lesson__formation=exercise.formation_lesson.formation,
+                is_correct=True,
+            ).values('exercise').distinct().count()
+        else:
+            solved_count = 0
+    except Exception:
+        solved_count = 0
 
     return JsonResponse({
         'success': True,

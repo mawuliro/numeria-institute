@@ -6,17 +6,39 @@
 
 {% block content %}
 <div class="flex flex-wrap gap-3 mb-5 items-center justify-between">
-  <div class="flex gap-2 flex-wrap">
-    <form method="get" class="flex gap-2">
-      <select name="cours" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
-        <option value="">{% trans "Tous les cours" %}</option>
-        {% for c in cours_list %}
-        <option value="{{ c.id }}" {% if cours_filter == c.id|stringformat:"s" %}selected{% endif %}>{{ c.titre }}</option>
-        {% endfor %}
-      </select>
-      <button type="submit" class="px-3 py-2 bg-sky-600 text-white rounded-lg text-sm">{% trans "Filtrer" %}</button>
-    </form>
-  </div>
+  <!-- Filters -->
+  <form method="get" class="flex flex-wrap gap-2">
+    <!-- Type: Cours / Formation / Tous -->
+    <select name="type" onchange="this.form.submit()"
+            class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+      <option value=""           {% if not type_filter %}selected{% endif %}>{% trans "Tous les types" %}</option>
+      <option value="cours"      {% if type_filter == 'cours' %}selected{% endif %}>📚 {% trans "Cours" %}</option>
+      <option value="formation"  {% if type_filter == 'formation' %}selected{% endif %}>🎓 {% trans "Formation" %}</option>
+    </select>
+    <!-- Filter by course (only shown when type=cours or all) -->
+    {% if type_filter != 'formation' %}
+    <select name="cours" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+      <option value="">{% trans "Tous les cours" %}</option>
+      {% for c in cours_list %}
+      <option value="{{ c.id }}" {% if cours_filter == c.id|stringformat:"s" %}selected{% endif %}>{{ c.titre }}</option>
+      {% endfor %}
+    </select>
+    {% endif %}
+    <!-- Filter by formation (only shown when type=formation or all) -->
+    {% if type_filter != 'cours' %}
+    <select name="formation" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+      <option value="">{% trans "Toutes les formations" %}</option>
+      {% for f in formation_list %}
+      <option value="{{ f.id }}" {% if formation_filter == f.id|stringformat:"s" %}selected{% endif %}>{{ f.titre }}</option>
+      {% endfor %}
+    </select>
+    {% endif %}
+    <button type="submit" class="px-3 py-2 bg-sky-600 text-white rounded-lg text-sm">{% trans "Filtrer" %}</button>
+    {% if type_filter or cours_filter or formation_filter %}
+    <a href="{% url 'admin_panel:exercises_list' %}" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm">✕ {% trans "Réinitialiser" %}</a>
+    {% endif %}
+  </form>
+
   <a href="{% url 'admin_panel:exercise_results' %}"
      class="flex items-center gap-2 text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg font-medium transition-colors">
     📊 {% trans "Voir les résultats étudiants" %}
@@ -29,12 +51,12 @@
     <thead class="bg-slate-50 text-xs text-slate-500 uppercase tracking-wide">
       <tr>
         <th class="px-4 py-3 text-left">{% trans "Exercice" %}</th>
-        <th class="px-4 py-3 text-left hidden md:table-cell">{% trans "Leçon / Cours" %}</th>
+        <th class="px-4 py-3 text-left hidden md:table-cell">{% trans "Leçon / Parent" %}</th>
+        <th class="px-4 py-3 text-center hidden sm:table-cell">{% trans "Type" %}</th>
         <th class="px-4 py-3 text-center hidden lg:table-cell">{% trans "Mode" %}</th>
         <th class="px-4 py-3 text-center hidden lg:table-cell">{% trans "Difficulté" %}</th>
         <th class="px-4 py-3 text-center">{% trans "Pts" %}</th>
         <th class="px-4 py-3 text-center hidden lg:table-cell">{% trans "Réussis" %}</th>
-        <th class="px-4 py-3 text-center">{% trans "Actif" %}</th>
         <th class="px-4 py-3 text-right">{% trans "Actions" %}</th>
       </tr>
     </thead>
@@ -43,11 +65,29 @@
       <tr class="hover:bg-slate-50 transition-colors {% if not ex.is_active %}opacity-50{% endif %}">
         <td class="px-4 py-3">
           <div class="font-medium text-slate-800">{{ ex.title }}</div>
-          <div class="text-xs text-slate-400 md:hidden">{{ ex.lecon.cours.titre }} › {{ ex.lecon.titre }}</div>
+          <div class="text-xs text-slate-400 md:hidden">
+            {% if ex.lecon %}{{ ex.lecon.cours.titre }} › {{ ex.lecon.titre }}
+            {% elif ex.formation_lesson %}{{ ex.formation_lesson.formation.titre }} › {{ ex.formation_lesson.titre }}
+            {% else %}—{% endif %}
+          </div>
         </td>
         <td class="px-4 py-3 text-slate-600 hidden md:table-cell">
+          {% if ex.lecon %}
           <div class="text-xs text-slate-400">{{ ex.lecon.cours.titre }}</div>
           <div>{{ ex.lecon.titre }}</div>
+          {% elif ex.formation_lesson %}
+          <div class="text-xs text-slate-400">{{ ex.formation_lesson.formation.titre }}</div>
+          <div>{{ ex.formation_lesson.titre }}</div>
+          {% else %}
+          <span class="text-slate-400">—</span>
+          {% endif %}
+        </td>
+        <td class="px-4 py-3 text-center hidden sm:table-cell">
+          {% if ex.formation_lesson %}
+          <span class="text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">🟩 {% trans "Formation" %}</span>
+          {% else %}
+          <span class="text-xs font-semibold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">🟦 {% trans "Cours" %}</span>
+          {% endif %}
         </td>
         <td class="px-4 py-3 text-center hidden lg:table-cell">
           <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ ex.get_evaluation_mode_display }}</span>
@@ -59,7 +99,6 @@
         </td>
         <td class="px-4 py-3 text-center font-semibold text-slate-700">{{ ex.points }}</td>
         <td class="px-4 py-3 text-center hidden lg:table-cell text-slate-600">{{ submission_counts|default_if_none:"0" }}</td>
-        <td class="px-4 py-3 text-center">{% if ex.is_active %}<span class="text-green-600">✓</span>{% else %}<span class="text-slate-400">—</span>{% endif %}</td>
         <td class="px-4 py-3 text-right">
           <div class="flex justify-end gap-1">
             <a href="{% url 'admin_panel:exercise_edit' ex.id %}"
@@ -78,37 +117,122 @@
   {% else %}
   <div class="px-5 py-12 text-center text-slate-400">
     <div class="text-4xl mb-3">💻</div>
-    <p class="mb-4">{% trans "Aucun exercice de code créé." %}</p>
-    <p class="text-sm">{% trans "Pour ajouter un exercice, naviguez vers une leçon et cliquez « Ajouter un exercice »." %}</p>
+    <p class="mb-2">{% trans "Aucun exercice trouvé." %}</p>
+    <p class="text-sm">{% trans "Créez un exercice depuis l'éditeur de leçon ou via le formulaire ci-dessous." %}</p>
   </div>
   {% endif %}
 </div>
 
-<!-- Quick add: lesson selector -->
+<!-- Quick add: lesson selector with Course / Formation tabs -->
 <div class="mt-6 bg-white rounded-xl border border-slate-200 p-5">
-  <h3 class="font-semibold text-slate-700 mb-3">➕ {% trans "Ajouter un exercice à une leçon" %}</h3>
-  <form method="get" id="goto-lecon-form" class="flex flex-wrap gap-3">
-    <select name="lecon_id" id="lecon-selector" class="flex-1 min-w-48 px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
-      <option value="">{% trans "— Choisir une leçon —" %}</option>
+  <h3 class="font-semibold text-slate-700 mb-4">➕ {% trans "Ajouter un exercice à une leçon" %}</h3>
+
+  <!-- Tab toggle -->
+  <div class="flex gap-1 bg-slate-100 rounded-lg p-1 mb-4 w-fit">
+    <button type="button" id="tab-cours-btn" onclick="switchAddTab('cours')"
+            class="px-4 py-1.5 rounded-md text-sm font-medium bg-white text-sky-700 shadow-sm transition-all">
+      📚 {% trans "Cours" %}
+    </button>
+    <button type="button" id="tab-formation-btn" onclick="switchAddTab('formation')"
+            class="px-4 py-1.5 rounded-md text-sm font-medium text-slate-600 hover:bg-white/60 transition-all">
+      🎓 {% trans "Formation" %}
+    </button>
+  </div>
+
+  <!-- Cours tab -->
+  <div id="add-cours-panel">
+    <select id="cours-lecon-selector" class="w-full max-w-xl px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white mb-3">
+      <option value="">{% trans "— Choisir une leçon de cours —" %}</option>
       {% for c in cours_list %}
         {% for lecon in c.lecons.all %}
         <option value="{{ lecon.id }}">{{ c.titre }} › {{ lecon.titre }}</option>
         {% endfor %}
       {% endfor %}
     </select>
-    <button type="button" onclick="goToLecon()"
+    <button type="button" onclick="goToCoursLecon()"
             class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm hover:bg-sky-700 font-medium">
       ➕ {% trans "Ajouter" %}
     </button>
-  </form>
+  </div>
+
+  <!-- Formation tab -->
+  <div id="add-formation-panel" class="hidden space-y-2">
+    <div class="flex flex-wrap gap-2">
+      <select id="formation-selector" onchange="loadFormationModules(this.value)"
+              class="flex-1 min-w-48 px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+        <option value="">{% trans "— Choisir une formation —" %}</option>
+        {% for f in formation_list %}
+        <option value="{{ f.slug }}">{{ f.titre }}</option>
+        {% endfor %}
+      </select>
+      <select id="formation-module-selector" onchange="loadFormationLessons(this.value)" disabled
+              class="flex-1 min-w-48 px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+        <option value="">{% trans "— Module —" %}</option>
+      </select>
+      <select id="formation-lesson-selector" disabled
+              class="flex-1 min-w-48 px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+        <option value="">{% trans "— Leçon —" %}</option>
+      </select>
+      <button type="button" onclick="goToFormationLecon()"
+              class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm hover:bg-sky-700 font-medium">
+        ➕ {% trans "Ajouter" %}
+      </button>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-function goToLecon() {
-  var id = document.getElementById('lecon-selector').value;
-  if (id) window.location.href = '/admin-panel/exercices/lecon/' + id + '/ajouter/';
+var CSRF = document.cookie.match(/csrftoken=([^;]+)/)?.[1]||'';
+
+function switchAddTab(tab) {
+  var isFormation = tab === 'formation';
+  document.getElementById('add-cours-panel').classList.toggle('hidden', isFormation);
+  document.getElementById('add-formation-panel').classList.toggle('hidden', !isFormation);
+  document.getElementById('tab-cours-btn').className = isFormation
+    ? 'px-4 py-1.5 rounded-md text-sm font-medium text-slate-600 hover:bg-white/60 transition-all'
+    : 'px-4 py-1.5 rounded-md text-sm font-medium bg-white text-sky-700 shadow-sm transition-all';
+  document.getElementById('tab-formation-btn').className = isFormation
+    ? 'px-4 py-1.5 rounded-md text-sm font-medium bg-white text-sky-700 shadow-sm transition-all'
+    : 'px-4 py-1.5 rounded-md text-sm font-medium text-slate-600 hover:bg-white/60 transition-all';
+}
+
+function goToCoursLecon() {
+  var id = document.getElementById('cours-lecon-selector').value;
+  if (id) window.location.href = '/fr/admin-panel/exercices/lecon/' + id + '/ajouter/';
+}
+
+async function loadFormationModules(slug) {
+  var modSel = document.getElementById('formation-module-selector');
+  var lesSel = document.getElementById('formation-lesson-selector');
+  modSel.innerHTML = '<option value="">Chargement…</option>';
+  modSel.disabled = true;
+  lesSel.innerHTML = '<option value="">— Leçon —</option>';
+  lesSel.disabled = true;
+  if (!slug) return;
+  var r = await fetch('/fr/admin-panel/api/formations/' + slug + '/modules/');
+  var d = await r.json();
+  modSel.innerHTML = '<option value="">— Module —</option>';
+  (d.modules||[]).forEach(m => modSel.add(new Option(m.titre, m.id)));
+  modSel.disabled = false;
+}
+
+async function loadFormationLessons(moduleId) {
+  var lesSel = document.getElementById('formation-lesson-selector');
+  lesSel.innerHTML = '<option value="">Chargement…</option>';
+  lesSel.disabled = true;
+  if (!moduleId) return;
+  var r = await fetch('/fr/admin-panel/api/formation-modules/' + moduleId + '/lessons/');
+  var d = await r.json();
+  lesSel.innerHTML = '<option value="">— Leçon —</option>';
+  (d.lessons||[]).forEach(l => lesSel.add(new Option(l.titre, l.id)));
+  lesSel.disabled = false;
+}
+
+function goToFormationLecon() {
+  var id = document.getElementById('formation-lesson-selector').value;
+  if (id) window.location.href = '/fr/admin-panel/exercices/formation-lecon/' + id + '/ajouter/';
 }
 </script>
 {% endblock %}

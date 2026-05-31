@@ -109,31 +109,110 @@
     {# ── EXERCISE block ── #}
     {% elif block.block_type == 'exercise' %}
     <div class="space-y-3">
+
+      {# Existing exercise selector #}
       <div class="flex flex-col gap-2">
         <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">
-          Exercice lié
+          Utiliser un exercice existant
         </label>
-        <select class="lb-field w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200"
-                data-field="exercise_id">
-          <option value="">— Aucun exercice —</option>
-          {% for ex in all_exercises %}
-          <option value="{{ ex.id }}" {% if block.exercise_id == ex.id %}selected{% endif %}>
-            {{ ex.title }} ({{ ex.get_difficulty_display }}, {{ ex.points }} pts)
-          </option>
-          {% endfor %}
-        </select>
+        <div class="flex gap-2">
+          <select id="ex-sel-{{ block.id }}"
+                  class="lb-field flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200"
+                  data-field="exercise_id">
+            <option value="">— Aucun exercice —</option>
+            {% for ex in all_exercises %}
+            <option value="{{ ex.id }}" {% if block.exercise_id == ex.id %}selected{% endif %}>
+              {{ ex.title }} ({{ ex.get_difficulty_display }}, {{ ex.points }} pts)
+            </option>
+            {% endfor %}
+          </select>
+          {% if lesson_type == 'formation' %}
+          <button type="button"
+                  onclick="lbRefreshFormationExercises({{ block.id }}, {{ block.formation_lesson_id }})"
+                  class="text-xs text-sky-600 hover:text-sky-800 px-2 py-1 border border-slate-200 rounded-lg hover:bg-sky-50 transition-colors"
+                  title="Recharger la liste depuis cette leçon de formation">🔄</button>
+          {% endif %}
+        </div>
       </div>
+
+      {# Current exercise preview #}
       {% if block.exercise %}
-      <div class="bg-slate-50 dark:bg-slate-700 rounded-lg p-3 text-xs">
-        <p class="font-semibold text-slate-700 dark:text-slate-200">{{ block.exercise.title }}</p>
-        <p class="text-slate-500 dark:text-slate-400 mt-0.5">{{ block.exercise.instructions|truncatechars:100 }}</p>
+      <div id="ex-preview-{{ block.id }}" class="bg-slate-50 dark:bg-slate-700 rounded-lg p-3 text-xs border border-slate-200 dark:border-slate-600">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="font-semibold text-slate-700 dark:text-slate-200">{{ block.exercise.title }}</span>
+          {% if block.exercise.difficulty == 'easy' %}<span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">Facile</span>
+          {% elif block.exercise.difficulty == 'medium' %}<span class="bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded-full">Moyen</span>
+          {% else %}<span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded-full">Difficile</span>{% endif %}
+          <span class="text-slate-500 ml-auto">{{ block.exercise.points }} pts</span>
+        </div>
+        <p class="text-slate-500 dark:text-slate-400">{{ block.exercise.instructions|truncatechars:100 }}</p>
         <div class="flex gap-3 mt-1 text-slate-400">
-          <span>{{ block.exercise.get_difficulty_display }}</span>
-          <span>{{ block.exercise.points }} pts</span>
           <span>{{ block.exercise.get_evaluation_mode_display }}</span>
         </div>
       </div>
+      {% else %}
+      <div id="ex-preview-{{ block.id }}" class="hidden"></div>
       {% endif %}
+
+      {# Create new exercise (Formation lessons only) #}
+      {% if lesson_type == 'formation' %}
+      <details class="text-xs">
+        <summary class="cursor-pointer text-sky-600 hover:text-sky-800 font-medium py-1 select-none">
+          ➕ Créer un nouvel exercice et le lier
+        </summary>
+        <div class="mt-3 space-y-3 border border-slate-200 dark:border-slate-600 rounded-xl p-4 bg-slate-50 dark:bg-slate-800">
+          <div class="grid grid-cols-2 gap-2">
+            <div class="col-span-2">
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
+              <input type="text" id="new-ex-title-{{ block.id }}" maxlength="300"
+                     class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Difficulté</label>
+              <select id="new-ex-diff-{{ block.id }}" class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs bg-white dark:bg-slate-700">
+                <option value="easy">Facile</option>
+                <option value="medium">Moyen</option>
+                <option value="hard">Difficile</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Points</label>
+              <input type="number" id="new-ex-pts-{{ block.id }}" value="10" min="0"
+                     class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+            </div>
+            <div class="col-span-2">
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Mode d'évaluation</label>
+              <select id="new-ex-mode-{{ block.id }}" class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs bg-white dark:bg-slate-700">
+                <option value="exact">Output exact</option>
+                <option value="contains">Output contient</option>
+                <option value="tests">Tests unitaires</option>
+              </select>
+            </div>
+            <div class="col-span-2">
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Code de départ *</label>
+              <textarea id="new-ex-starter-{{ block.id }}" rows="3"
+                        class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs font-mono bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200">{{ '# Écris ton code ici\n' }}</textarea>
+            </div>
+            <div class="col-span-2">
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Output attendu / Tests</label>
+              <textarea id="new-ex-expected-{{ block.id }}" rows="2"
+                        class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs font-mono bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200"></textarea>
+            </div>
+            <div class="col-span-2">
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Solution (jamais montrée)</label>
+              <textarea id="new-ex-solution-{{ block.id }}" rows="3"
+                        class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs font-mono bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200"></textarea>
+            </div>
+          </div>
+          <button type="button"
+                  onclick="lbCreateExerciseForBlock({{ block.id }}, {{ block.formation_lesson_id }})"
+                  class="w-full text-xs bg-green-600 hover:bg-green-500 text-white font-semibold py-2 rounded-lg transition-colors">
+            ✅ Créer et lier cet exercice
+          </button>
+        </div>
+      </details>
+      {% endif %}
+
     </div>
 
     {% endif %}

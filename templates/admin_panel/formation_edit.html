@@ -476,6 +476,62 @@ function lbDrop(e,targetId){e.preventDefault();e.currentTarget.classList.remove(
 async function lbSaveBlockOrder(){if(!lbLessonId)return;const order=[];document.querySelectorAll('.lb-card[data-block-id]').forEach(function(c){order.push(+c.dataset.blockId);});const url=lbLessonType==='formation'?`/fr/admin-panel/formation-lessons/${lbLessonId}/blocks/reorder/`:`/fr/admin-panel/lessons/${lbLessonId}/blocks/reorder/`;await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify({order:order})});if(window.nbToast)nbToast('Ordre sauvegardé ✓','success');}
 function lbUpdatePreview(blockId,url){var wrap=document.getElementById('lb-vid-preview-'+blockId);var frame=wrap?wrap.querySelector('iframe'):null;if(!wrap||!frame)return;if(url){frame.src=url;wrap.classList.remove('hidden');}else{wrap.classList.add('hidden');}}
 function lbStartAutoSave(){if(lbAutoSaveTm)clearInterval(lbAutoSaveTm);lbAutoSaveTm=setInterval(function(){document.querySelectorAll('.lb-card[data-block-id]').forEach(function(card){lbSaveBlock(+card.dataset.blockId);});},60000);}
+/* ── Formation exercise management in block card ── */
+async function lbRefreshFormationExercises(blockId, lessonId) {
+  var sel = document.getElementById('ex-sel-' + blockId);
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Chargement…</option>';
+  var r = await fetch('/fr/admin-panel/formation-lessons/' + lessonId + '/exercises/');
+  var d = await r.json();
+  sel.innerHTML = '<option value="">— Aucun exercice —</option>';
+  (d.exercises || []).forEach(function(ex) {
+    sel.add(new Option(ex.title + ' (' + ex.difficulty + ', ' + ex.points + ' pts)', ex.id));
+  });
+}
+
+async function lbCreateExerciseForBlock(blockId, lessonId) {
+  var title    = document.getElementById('new-ex-title-' + blockId)?.value.trim();
+  var diff     = document.getElementById('new-ex-diff-' + blockId)?.value;
+  var pts      = document.getElementById('new-ex-pts-' + blockId)?.value;
+  var mode     = document.getElementById('new-ex-mode-' + blockId)?.value;
+  var starter  = document.getElementById('new-ex-starter-' + blockId)?.value;
+  var expected = document.getElementById('new-ex-expected-' + blockId)?.value;
+  var solution = document.getElementById('new-ex-solution-' + blockId)?.value;
+
+  if (!title || !starter || !solution) {
+    if (window.nbToast) nbToast('Titre, code de départ et solution sont obligatoires.', 'error');
+    return;
+  }
+
+  var r = await fetch('/fr/admin-panel/formation-lessons/' + lessonId + '/blocks/' + blockId + '/create-exercise/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+    body: JSON.stringify({
+      title: title, difficulty: diff, points: pts,
+      evaluation_mode: mode, starter_code: starter,
+      expected_output: expected, solution_code: solution,
+    }),
+  });
+  var d = await r.json();
+  if (d.success) {
+    if (window.nbToast) nbToast('✅ Exercice «' + d.exercise_title + '» créé et lié.', 'success');
+    // Update the exercise select and preview
+    var sel = document.getElementById('ex-sel-' + blockId);
+    if (sel) {
+      var opt = new Option(d.exercise_title + ' (' + d.difficulty + ', ' + d.points + ' pts)', d.exercise_id, true, true);
+      sel.add(opt);
+    }
+    var preview = document.getElementById('ex-preview-' + blockId);
+    if (preview) {
+      preview.className = 'bg-slate-50 rounded-lg p-3 text-xs border border-slate-200';
+      preview.innerHTML = '<div class="flex items-center gap-2 mb-1"><span class="font-semibold text-slate-700">' + d.exercise_title + '</span><span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full text-xs">' + d.difficulty + '</span><span class="text-slate-500 ml-auto">' + d.points + ' pts</span></div><p class="text-slate-500 text-xs">' + d.evaluation_mode + '</p>';
+    }
+    // Save the block to persist the exercise link
+    await lbSaveBlock(blockId);
+  } else {
+    if (window.nbToast) nbToast('Erreur lors de la création.', 'error');
+  }
+}
 
 document.addEventListener('DOMContentLoaded',()=>{
   setInterval(()=>{const step=document.querySelector('.step-panel.active')?.id?.replace('step-','');if(step==='1')saveStep1(true);else if(step==='3')saveStep3(true);},60000);

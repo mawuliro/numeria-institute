@@ -642,69 +642,81 @@ def activity_log(request):
 
 @staff_only
 def exercises_list(request):
-    """List all code exercises with submissions stats and filters."""
-    from cours.models import CodeExercise, StudentCodeSubmission, Lecon, Cours
+    """List all code exercises (Course AND Formation) with filters."""
+    from cours.models import CodeExercise, StudentCodeSubmission, Cours
+    from formation.models import Formation
 
-    qs = CodeExercise.objects.select_related('lecon__cours').order_by(
-        'lecon__cours__titre', 'lecon__ordre', 'order'
+    type_filter = request.GET.get('type', '')        # 'cours' | 'formation' | ''
+    cours_filter = request.GET.get('cours', '')
+    formation_filter = request.GET.get('formation', '')
+
+    qs = CodeExercise.objects.select_related(
+        'lecon__cours', 'formation_lesson__formation'
     )
 
-    cours_filter = request.GET.get('cours', '')
+    if type_filter == 'cours':
+        qs = qs.filter(lecon__isnull=False)
+    elif type_filter == 'formation':
+        qs = qs.filter(formation_lesson__isnull=False)
+
     if cours_filter:
         qs = qs.filter(lecon__cours_id=cours_filter)
+    if formation_filter:
+        qs = qs.filter(formation_lesson__formation_id=formation_filter)
 
-    lecon_filter = request.GET.get('lecon', '')
-    if lecon_filter:
-        qs = qs.filter(lecon_id=lecon_filter)
-
-    # Annotate with submission counts
+    qs = qs.order_by('title')
     exercises = list(qs)
     submission_counts = {
-        ex.id: StudentCodeSubmission.objects.filter(exercise=ex, is_correct=True).values('student').distinct().count()
+        ex.id: StudentCodeSubmission.objects.filter(
+            exercise=ex, is_correct=True
+        ).values('student').distinct().count()
         for ex in exercises
     }
 
     return render(request, 'admin_panel/exercises_list.html', {
-        'exercises': exercises,
+        'exercises':        exercises,
         'submission_counts': submission_counts,
-        'cours_list': Cours.objects.filter(est_publie=True).order_by('titre'),
-        'cours_filter': cours_filter,
+        'cours_list':       Cours.objects.order_by('titre'),
+        'formation_list':   Formation.objects.order_by('titre'),
+        'type_filter':      type_filter,
+        'cours_filter':     cours_filter,
+        'formation_filter': formation_filter,
     })
+
+
+def _parse_exercise_fields(request):
+    """Extract and validate exercise fields from POST data."""
+    return {
+        'title':            request.POST.get('title', '').strip(),
+        'instructions':     request.POST.get('instructions', '').strip(),
+        'starter_code':     request.POST.get('starter_code', '').strip(),
+        'solution_code':    request.POST.get('solution_code', '').strip(),
+        'expected_output':  request.POST.get('expected_output', '').strip(),
+        'test_code':        request.POST.get('test_code', '').strip(),
+        'evaluation_mode':  request.POST.get('evaluation_mode', 'exact'),
+        'difficulty':       request.POST.get('difficulty', 'easy'),
+        'hint':             request.POST.get('hint', '').strip(),
+        'max_attempts':     int(request.POST.get('max_attempts', 0) or 0),
+        'points':           int(request.POST.get('points', 10) or 10),
+        'order':            int(request.POST.get('order', 0) or 0),
+    }
 
 
 @staff_only
 def exercise_create(request, lecon_id):
-    """Create a new code exercise for a lesson."""
+    """Create a new code exercise for a Course lesson."""
     from cours.models import CodeExercise, Lecon
 
     lecon = get_object_or_404(Lecon, id=lecon_id)
 
     if request.method == 'POST':
-        title        = request.POST.get('title', '').strip()
-        instructions = request.POST.get('instructions', '').strip()
-        starter      = request.POST.get('starter_code', '').strip()
-        solution     = request.POST.get('solution_code', '').strip()
-        expected     = request.POST.get('expected_output', '').strip()
-        test_code    = request.POST.get('test_code', '').strip()
-        eval_mode    = request.POST.get('evaluation_mode', 'exact')
-        difficulty   = request.POST.get('difficulty', 'easy')
-        hint         = request.POST.get('hint', '').strip()
-        max_att      = int(request.POST.get('max_attempts', 0) or 0)
-        points       = int(request.POST.get('points', 10) or 10)
-        order        = int(request.POST.get('order', 0) or 0)
-
-        if not title or not starter or not solution:
+        f = _parse_exercise_fields(request)
+        if not f['title'] or not f['starter_code'] or not f['solution_code']:
             messages.error(request, _("Titre, code de départ et solution sont obligatoires."))
         else:
-            CodeExercise.objects.create(
-                lecon=lecon, title=title, instructions=instructions,
-                starter_code=starter, solution_code=solution,
-                expected_output=expected, test_code=test_code,
-                evaluation_mode=eval_mode, difficulty=difficulty,
-                hint=hint, max_attempts=max_att, points=points, order=order,
-            )
+            CodeExercise.objects.create(lecon=lecon, **f)
             log_staff_action(request.user, 'notification_sent',
-                             f"Exercice de code créé: '{title}' pour {lecon.titre}")
+                             f"Exercice créé: '{f['title']}' pour {lecon.titre}")
             messages.success(request, _("Exercice créé avec succès."))
             return redirect('admin_panel:exercises_list')
 
@@ -713,7 +725,38 @@ def exercise_create(request, lecon_id):
         'lecon': lecon,
         'next_order': next_order,
         'action': 'create',
+        'lesson_type': 'cours',
         'eval_modes': CodeExercise.EVAL_MODES,
+        'difficulties': CodeExercise.DIFFICULTY_CHOICES,
+    })
+
+
+@staff_only
+def exercise_create_formation(request, lecon_id):
+    """Create a new code exercise for a Formation lesson."""
+    from cours.models import CodeExercise
+    from formation.models import FormationLesson
+
+    fl = get_object_or_404(FormationLesson, id=lecon_id)
+
+    if request.method == 'POST':
+        f = _parse_exercise_fields(request)
+        if not f['title'] or not f['starter_code'] or not f['solution_code']:
+            messages.error(request, _("Titre, code de départ et solution sont obligatoires."))
+        else:
+            CodeExercise.objects.create(formation_lesson=fl, lecon=None, **f)
+            log_staff_action(request.user, 'notification_sent',
+                             f"Exercice créé: '{f['title']}' pour {fl.titre}")
+            messages.success(request, _("Exercice créé avec succès."))
+            return redirect('admin_panel:exercises_list')
+
+    next_order = CodeExercise.objects.filter(formation_lesson=fl).count()
+    return render(request, 'admin_panel/exercise_form.html', {
+        'lecon':       fl,
+        'next_order':  next_order,
+        'action':      'create',
+        'lesson_type': 'formation',
+        'eval_modes':  CodeExercise.EVAL_MODES,
         'difficulties': CodeExercise.DIFFICULTY_CHOICES,
     })
 
@@ -744,11 +787,13 @@ def exercise_edit(request, exercise_id):
         return redirect('admin_panel:exercises_list')
 
     from cours.models import CodeExercise as CE
+    lesson_type = 'formation' if ex.formation_lesson_id else 'cours'
     return render(request, 'admin_panel/exercise_form.html', {
-        'exercise': ex,
-        'lecon': ex.lecon,
-        'action': 'edit',
-        'eval_modes': CE.EVAL_MODES,
+        'exercise':    ex,
+        'lecon':       ex.lecon or ex.formation_lesson,
+        'lesson_type': lesson_type,
+        'action':      'edit',
+        'eval_modes':  CE.EVAL_MODES,
         'difficulties': CE.DIFFICULTY_CHOICES,
     })
 

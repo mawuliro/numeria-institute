@@ -17,24 +17,46 @@ logger = logging.getLogger(__name__)
 
 # ─── HELPERS ──────────────────────────────────────────────────────────────────
 
+def _get_exercises_for_block(block):
+    """Return exercises scoped to the block's parent lesson."""
+    from cours.models import CodeExercise
+    if block.formation_lesson_id:
+        # Show exercises from the same formation lesson first, then all
+        return CodeExercise.objects.filter(
+            formation_lesson_id=block.formation_lesson_id, is_active=True
+        ).order_by('title')
+    elif block.lesson_id:
+        return CodeExercise.objects.filter(
+            lecon_id=block.lesson_id, is_active=True
+        ).order_by('title')
+    return CodeExercise.objects.none()
+
+
 def _render_block_card(request, block):
     """Render a single block card as HTML string."""
-    from cours.models import CodeExercise
-    all_exercises = CodeExercise.objects.select_related('lecon', 'formation_lesson').order_by('title')
+    exercises = _get_exercises_for_block(block)
     return render_to_string('admin_panel/blocks/block_card.html', {
-        'block': block,
-        'all_exercises': all_exercises,
+        'block':         block,
+        'all_exercises': exercises,
+        'lesson_type':   'formation' if block.formation_lesson_id else 'cours',
     }, request=request)
 
 
 def _render_block_list(request, blocks, lesson_id, lesson_type):
     """Render the full block list HTML."""
     from cours.models import CodeExercise
-    all_exercises = CodeExercise.objects.select_related('lecon', 'formation_lesson').order_by('title')
+    if lesson_type == 'formation':
+        all_exercises = CodeExercise.objects.filter(
+            formation_lesson_id=lesson_id, is_active=True
+        ).order_by('title')
+    else:
+        all_exercises = CodeExercise.objects.filter(
+            lecon_id__isnull=False
+        ).select_related('lecon').order_by('title')
     return render_to_string('admin_panel/blocks/block_list.html', {
-        'blocks': blocks,
-        'lesson_id': lesson_id,
-        'lesson_type': lesson_type,
+        'blocks':        blocks,
+        'lesson_id':     lesson_id,
+        'lesson_type':   lesson_type,
         'all_exercises': all_exercises,
     }, request=request)
 
@@ -181,3 +203,71 @@ def delete_block(request, block_id):
     block = get_object_or_404(LessonBlock, id=block_id)
     block.delete()
     return JsonResponse({'success': True})
+
+
+# ─── FORMATION LESSON: EXERCISES API ─────────────────────────────────────────
+
+@staff_only
+def get_formation_lesson_exercises(request, lesson_id):
+    """GET exercises linked to a specific FormationLesson (for block card dropdown)."""
+    from formation.models import FormationLesson
+    from cours.models import CodeExercise
+    fl  = get_object_or_404(FormationLesson, id=lesson_id)
+    exs = list(CodeExercise.objects.filter(
+        formation_lesson=fl, is_active=True
+    ).values('id', 'title', 'difficulty', 'points', 'evaluation_mode'))
+    return JsonResponse({'exercises': exs})
+
+
+@staff_only
+@require_POST
+def create_exercise_from_block(request, lesson_id, block_id):
+    """
+    Create a new CodeExercise linked to a FormationLesson and immediately
+    attach it to the given LessonBlock.
+    POST body: { title, instructions, difficulty, points, starter_code,
+                 evaluation_mode, expected_output, test_code,
+                 solution_code, hint, max_attempts }
+    """
+    from formation.models import FormationLesson
+    from cours.models import CodeExercise, LessonBlock
+
+    fl    = get_object_or_404(FormationLesson, id=lesson_id)
+    block = get_object_or_404(LessonBlock, id=block_id, formation_lesson=fl)
+
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    title = data.get('title', '').strip()
+    if not title:
+        return JsonResponse({'error': 'Title required'}, status=400)
+
+    ex = CodeExercise.objects.create(
+        formation_lesson=fl,
+        lecon=None,
+        title=title,
+        instructions=data.get('instructions', ''),
+        starter_code=data.get('starter_code', ''),
+        solution_code=data.get('solution_code', ''),
+        expected_output=data.get('expected_output', ''),
+        test_code=data.get('test_code', ''),
+        evaluation_mode=data.get('evaluation_mode', 'exact'),
+        difficulty=data.get('difficulty', 'easy'),
+        hint=data.get('hint', ''),
+        max_attempts=int(data.get('max_attempts', 0) or 0),
+        points=int(data.get('points', 10) or 10),
+        order=CodeExercise.objects.filter(formation_lesson=fl).count(),
+    )
+    block.exercise = ex
+    block.save(update_fields=['exercise'])
+
+    return JsonResponse({
+        'success': True,
+        'exercise_id': ex.id,
+        'exercise_title': ex.title,
+        'difficulty': ex.get_difficulty_display(),
+        'points': ex.points,
+        'evaluation_mode': ex.get_evaluation_mode_display(),
+    })

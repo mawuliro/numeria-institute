@@ -1025,6 +1025,48 @@ function lbStartAutoSave() {
   }, 60000);
 }
 
+/* ── Formation exercise management in block card ── */
+async function lbRefreshFormationExercises(blockId, lessonId) {
+  var sel = document.getElementById('ex-sel-' + blockId);
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Chargement…</option>';
+  var r = await fetch('/fr/admin-panel/formation-lessons/' + lessonId + '/exercises/');
+  var d = await r.json();
+  sel.innerHTML = '<option value="">— Aucun exercice —</option>';
+  (d.exercises || []).forEach(function(ex) {
+    sel.add(new Option(ex.title + ' (' + ex.difficulty + ', ' + ex.points + ' pts)', ex.id));
+  });
+}
+async function lbCreateExerciseForBlock(blockId, lessonId) {
+  var title    = document.getElementById('new-ex-title-' + blockId)?.value.trim();
+  var diff     = document.getElementById('new-ex-diff-' + blockId)?.value;
+  var pts      = document.getElementById('new-ex-pts-' + blockId)?.value;
+  var mode     = document.getElementById('new-ex-mode-' + blockId)?.value;
+  var starter  = document.getElementById('new-ex-starter-' + blockId)?.value;
+  var expected = document.getElementById('new-ex-expected-' + blockId)?.value;
+  var solution = document.getElementById('new-ex-solution-' + blockId)?.value;
+  if (!title || !starter || !solution) {
+    if (window.nbToast) nbToast('Titre, code de départ et solution sont obligatoires.', 'error'); return;
+  }
+  var r = await fetch('/fr/admin-panel/formation-lessons/' + lessonId + '/blocks/' + blockId + '/create-exercise/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+    body: JSON.stringify({
+      title, difficulty: diff, points: pts, evaluation_mode: mode,
+      starter_code: starter, expected_output: expected, solution_code: solution,
+    }),
+  });
+  var d = await r.json();
+  if (d.success) {
+    if (window.nbToast) nbToast('✅ Exercice «' + d.exercise_title + '» créé et lié.', 'success');
+    var sel = document.getElementById('ex-sel-' + blockId);
+    if (sel) sel.add(new Option(d.exercise_title + ' (' + d.difficulty + ', ' + d.points + ' pts)', d.exercise_id, true, true));
+    await lbSaveBlock(blockId);
+  } else {
+    if (window.nbToast) nbToast('Erreur lors de la création.', 'error');
+  }
+}
+
 /* ── INIT ────────────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('#step-1 input, #step-1 select, #step-1 textarea').forEach(function(el) {
