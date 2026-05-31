@@ -1,0 +1,78 @@
+{% load i18n %}
+{% with ex=block %}
+<div id="co-{{ ex.code_order_id }}" class="co-widget bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
+  <div class="flex items-center gap-3 px-5 py-3.5 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+    <span class="text-base">🧩</span>
+    <span class="font-bold text-numeria-bleu dark:text-numeria-teal text-sm">{{ ex.title }}</span>
+    <div class="ml-auto flex items-center gap-2">
+      <span class="text-xs text-gray-400">{{ ex.points }} pts</span>
+      {% if ex.is_solved %}<span class="text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">✅ {% trans "Résolu" %}</span>{% endif %}
+    </div>
+  </div>
+  <div class="px-5 py-4">
+    {% if ex.instructions %}<p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{ ex.instructions }}</p>{% endif %}
+    <p class="text-xs text-gray-400 mb-2">{% trans "Glisse les lignes pour les ordonner." %}</p>
+    <div id="co-{{ ex.code_order_id }}-list" class="space-y-1.5 mb-4">
+      {% for line in ex.shuffled_lines %}
+      <div class="co-line flex items-center gap-2 bg-gray-900 text-green-400 font-mono text-xs px-3 py-2 rounded-lg cursor-grab select-none"
+           data-index="{{ forloop.counter0 }}"
+           draggable="true"
+           ondragstart="coDragStart(event, {{ ex.code_order_id }})"
+           ondragover="event.preventDefault()"
+           ondrop="coDrop(event, {{ ex.code_order_id }})">
+        <span class="text-gray-500 flex-shrink-0">⠿</span>
+        <code>{{ line }}</code>
+      </div>
+      {% endfor %}
+    </div>
+    <div id="co-{{ ex.code_order_id }}-result" class="hidden mb-4 rounded-xl px-4 py-3 text-sm"></div>
+    <button id="co-{{ ex.code_order_id }}-btn" type="button" onclick="coSubmit_{{ ex.code_order_id }}()"
+            {% if ex.is_solved %}disabled{% endif %}
+            class="bg-numeria-bleu hover:bg-blue-800 text-white text-sm font-bold px-5 py-2.5 rounded-xl disabled:opacity-50 transition-colors">
+      {% if ex.is_solved %}✅ {% trans "Résolu" %}{% else %}{% trans "Valider l'ordre" %}{% endif %}
+    </button>
+  </div>
+</div>
+<script>
+(function(){
+var CID = {{ ex.code_order_id }};
+var SHUFFLED = {{ ex.shuffled_indices_json }};  // original indices in shuffled order
+var CSRF = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+var URL = '/fr/cours/ordre-code/' + CID + '/soumettre/';
+var dragSrc = null;
+
+window['coDragStart'] = function(e, id) { if (id !== CID) return; dragSrc = e.currentTarget; e.dataTransfer.effectAllowed='move'; };
+window['coDrop'] = function(e, id) {
+  if (id !== CID || !dragSrc || dragSrc === e.currentTarget) return;
+  e.preventDefault();
+  var list = document.getElementById('co-' + CID + '-list');
+  var items = Array.from(list.children);
+  var srcIdx = items.indexOf(dragSrc);
+  var tgtIdx = items.indexOf(e.currentTarget);
+  if (srcIdx < tgtIdx) list.insertBefore(dragSrc, e.currentTarget.nextSibling);
+  else list.insertBefore(dragSrc, e.currentTarget);
+};
+
+window['coSubmit_' + CID] = async function() {
+  var list = document.getElementById('co-' + CID + '-list');
+  var order = Array.from(list.children).map(function(el) { return parseInt(el.dataset.index, 10); });
+  // Map back through SHUFFLED to get original indices
+  var submitted = order.map(function(i) { return SHUFFLED[i]; });
+  var r = await fetch(URL, {method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':CSRF}, body:JSON.stringify({submitted_order:submitted})});
+  var d = await r.json();
+  var res = document.getElementById('co-' + CID + '-result');
+  res.classList.remove('hidden');
+  if (d.is_correct) {
+    res.className = 'rounded-xl px-4 py-3 text-sm bg-green-50 text-green-800 border border-green-200';
+    res.innerHTML = '✅ {% trans "Bonne réponse !" %} +{{ ex.points }} pts';
+    document.getElementById('co-' + CID + '-btn').disabled = true;
+    // Make dragging impossible
+    document.querySelectorAll('#co-' + CID + '-list .co-line').forEach(function(el){ el.draggable = false; el.style.cursor='default'; });
+  } else {
+    res.className = 'rounded-xl px-4 py-3 text-sm bg-red-50 text-red-800 border border-red-200';
+    res.innerHTML = '❌ {% trans "L\'ordre n\'est pas correct. Réessaie !" %}';
+  }
+};
+})();
+</script>
+{% endwith %}

@@ -21,14 +21,24 @@
       {% elif block.block_type == 'video' %}🎬
       {% elif block.block_type == 'sandbox' %}🐍
       {% elif block.block_type == 'exercise' %}💻
-      {% elif block.block_type == 'mcq' %}🔘{% endif %}
+      {% elif block.block_type == 'mcq' %}🔘
+      {% elif block.block_type == 'fill_blank' %}✏️
+      {% elif block.block_type == 'true_false' %}✅
+      {% elif block.block_type == 'code_order' %}🧩
+      {% elif block.block_type == 'matching' %}🔗
+      {% elif block.block_type == 'short_answer' %}💬{% endif %}
     </span>
     <span class="font-semibold text-sm text-slate-700 dark:text-slate-200">
       {% if block.block_type == 'text' %}Texte
       {% elif block.block_type == 'video' %}Vidéo
       {% elif block.block_type == 'sandbox' %}Sandbox Python
-      {% elif block.block_type == 'exercise' %}Exercice évalué
-      {% elif block.block_type == 'mcq' %}QCM{% endif %}
+      {% elif block.block_type == 'exercise' %}Exercice code
+      {% elif block.block_type == 'mcq' %}QCM
+      {% elif block.block_type == 'fill_blank' %}Texte à trous
+      {% elif block.block_type == 'true_false' %}Vrai ou Faux
+      {% elif block.block_type == 'code_order' %}Ordre de code
+      {% elif block.block_type == 'matching' %}Associations
+      {% elif block.block_type == 'short_answer' %}Réponse courte{% endif %}
       {% if block.block_type == 'text' and block.text_content %}
         <span class="font-normal text-slate-400 text-xs ml-1">— {{ block.text_content|truncatechars:40 }}</span>
       {% elif block.block_type == 'sandbox' and block.sandbox_title %}
@@ -325,6 +335,46 @@
         </div>
       </details>
 
+    </div>
+    {% endif %}
+
+    {# ── FILL BLANK block ── #}
+    {% if block.block_type == 'fill_blank' %}
+    <div class="text-xs text-slate-500 py-2">
+      {% if block.fill_blank_exercise %}<p class="font-medium text-slate-700 dark:text-slate-200">{{ block.fill_blank_exercise.title }}</p>
+      {% else %}<p>Aucun exercice lié. <a href="{% url 'admin_panel:exercises_list' %}" class="text-sky-600 hover:underline">Créer depuis la liste →</a></p>{% endif %}
+    </div>
+    {% endif %}
+
+    {# ── TRUE FALSE block ── #}
+    {% if block.block_type == 'true_false' %}
+    <div class="text-xs text-slate-500 py-2">
+      {% if block.true_false_exercise %}<p class="font-medium text-slate-700 dark:text-slate-200">{{ block.true_false_exercise.title }} — {{ block.true_false_exercise.statements|length }} affirmation(s)</p>
+      {% else %}<p>Aucun exercice lié. <a href="{% url 'admin_panel:exercises_list' %}" class="text-sky-600 hover:underline">Créer depuis la liste →</a></p>{% endif %}
+    </div>
+    {% endif %}
+
+    {# ── CODE ORDER block ── #}
+    {% if block.block_type == 'code_order' %}
+    <div class="text-xs text-slate-500 py-2">
+      {% if block.code_order_exercise %}<p class="font-medium text-slate-700 dark:text-slate-200">{{ block.code_order_exercise.title }} — {{ block.code_order_exercise.correct_order|length }} ligne(s)</p>
+      {% else %}<p>Aucun exercice lié. <a href="{% url 'admin_panel:exercises_list' %}" class="text-sky-600 hover:underline">Créer depuis la liste →</a></p>{% endif %}
+    </div>
+    {% endif %}
+
+    {# ── MATCHING block ── #}
+    {% if block.block_type == 'matching' %}
+    <div class="text-xs text-slate-500 py-2">
+      {% if block.matching_exercise %}<p class="font-medium text-slate-700 dark:text-slate-200">{{ block.matching_exercise.title }} — {{ block.matching_exercise.pairs|length }} paire(s)</p>
+      {% else %}<p>Aucun exercice lié. <a href="{% url 'admin_panel:exercises_list' %}" class="text-sky-600 hover:underline">Créer depuis la liste →</a></p>{% endif %}
+    </div>
+    {% endif %}
+
+    {# ── SHORT ANSWER block ── #}
+    {% if block.block_type == 'short_answer' %}
+    <div class="text-xs text-slate-500 py-2">
+      {% if block.short_answer_exercise %}<p class="font-medium text-slate-700 dark:text-slate-200">{{ block.short_answer_exercise.title }}</p>
+      {% else %}<p>Aucun exercice lié. <a href="{% url 'admin_panel:exercises_list' %}" class="text-sky-600 hover:underline">Créer depuis la liste →</a></p>{% endif %}
     </div>
     {% endif %}
 

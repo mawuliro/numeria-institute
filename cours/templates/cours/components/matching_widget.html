@@ -1,0 +1,75 @@
+{% load i18n sandbox_tags %}
+{% with ex=block %}
+<div id="ma-{{ ex.matching_id }}" class="ma-widget bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
+  <div class="flex items-center gap-3 px-5 py-3.5 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+    <span class="text-base">🔗</span>
+    <span class="font-bold text-numeria-bleu dark:text-numeria-teal text-sm">{{ ex.title }}</span>
+    <div class="ml-auto flex items-center gap-2">
+      <span class="text-xs text-gray-400">{{ ex.points }} pts</span>
+      {% if ex.is_solved %}<span class="text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">✅ {% trans "Résolu" %}</span>{% endif %}
+    </div>
+  </div>
+  <div class="px-5 py-4">
+    {% if ex.instructions %}<p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{ ex.instructions }}</p>{% endif %}
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <!-- Left column -->
+      <div class="space-y-2">
+        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{% trans "Éléments" %}</p>
+        {% for pair in ex.left_items %}
+        <div class="text-sm text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 prose prose-sm dark:prose-invert max-w-none">
+          {{ pair|render_markdown_latex }}
+        </div>
+        {% endfor %}
+      </div>
+      <!-- Right column — selects -->
+      <div class="space-y-2">
+        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{% trans "Correspondances" %}</p>
+        {% for i in ex.right_indices %}
+        <select id="ma-{{ ex.matching_id }}-right-{{ forloop.counter0 }}"
+                {% if ex.is_solved %}disabled{% endif %}
+                class="w-full text-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-2">
+          <option value="">— {% trans "Choisir" %} —</option>
+          {% for item in ex.right_items %}
+          <option value="{{ forloop.counter0 }}">{{ item }}</option>
+          {% endfor %}
+        </select>
+        {% endfor %}
+      </div>
+    </div>
+    <div id="ma-{{ ex.matching_id }}-result" class="hidden mb-4 rounded-xl px-4 py-3 text-sm"></div>
+    <button id="ma-{{ ex.matching_id }}-btn" type="button" onclick="maSubmit_{{ ex.matching_id }}()"
+            {% if ex.is_solved %}disabled{% endif %}
+            class="bg-numeria-bleu hover:bg-blue-800 text-white text-sm font-bold px-5 py-2.5 rounded-xl disabled:opacity-50 transition-colors">
+      {% if ex.is_solved %}✅ {% trans "Résolu" %}{% else %}{% trans "Valider" %}{% endif %}
+    </button>
+  </div>
+</div>
+<script>
+(function(){
+var MID = {{ ex.matching_id }};
+var COUNT = {{ ex.pairs|length }};
+var CSRF = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+var URL = '/fr/cours/associations/' + MID + '/soumettre/';
+
+window['maSubmit_' + MID] = async function() {
+  var pairs = [];
+  for (var i = 0; i < COUNT; i++) {
+    var sel = document.getElementById('ma-' + MID + '-right-' + i);
+    pairs.push({left_index: i, right_index: sel ? parseInt(sel.value, 10) : -1});
+  }
+  var r = await fetch(URL, {method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':CSRF}, body:JSON.stringify({pairs:pairs})});
+  var d = await r.json();
+  var res = document.getElementById('ma-' + MID + '-result');
+  res.classList.remove('hidden');
+  if (d.is_correct) {
+    res.className = 'rounded-xl px-4 py-3 text-sm bg-green-50 text-green-800 border border-green-200';
+    res.innerHTML = '✅ {% trans "Toutes les associations sont correctes !" %} +{{ ex.points }} pts';
+    document.getElementById('ma-' + MID + '-btn').disabled = true;
+  } else {
+    res.className = 'rounded-xl px-4 py-3 text-sm bg-amber-50 text-amber-800 border border-amber-200';
+    res.innerHTML = d.correct_count + '/' + d.total + ' {% trans "associations correctes" %}. {% trans "Réessaie !" %}';
+  }
+};
+})();
+</script>
+{% endwith %}

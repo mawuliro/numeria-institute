@@ -1,0 +1,77 @@
+{% load i18n sandbox_tags %}
+{# Props: block dict with fill_blank_id, title, text_with_blanks_rendered, blank_count, points, difficulty, hint, max_attempts, is_solved, attempts_used #}
+{% with ex=block %}
+<div id="fb-{{ ex.fill_blank_id }}" class="fb-widget bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
+  <div class="flex items-center gap-3 px-5 py-3.5 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+    <span class="text-base">✏️</span>
+    <span class="font-bold text-numeria-bleu dark:text-numeria-teal text-sm">{{ ex.title }}</span>
+    <div class="ml-auto flex items-center gap-2">
+      <span class="text-xs text-gray-400">{{ ex.points }} pts</span>
+      {% if ex.is_solved %}<span class="text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">✅ {% trans "Résolu" %}</span>{% endif %}
+    </div>
+  </div>
+  <div class="px-5 py-4">
+    <div id="fb-{{ ex.fill_blank_id }}-text" class="text-gray-800 dark:text-gray-100 text-sm leading-relaxed mb-5 prose prose-sm dark:prose-invert max-w-none">
+      {{ ex.text_rendered }}
+    </div>
+    <div id="fb-{{ ex.fill_blank_id }}-result" class="hidden mb-4 rounded-xl px-4 py-3 text-sm"></div>
+    <div class="flex items-center gap-3">
+      <button id="fb-{{ ex.fill_blank_id }}-btn" type="button"
+              onclick="fbSubmit_{{ ex.fill_blank_id }}()"
+              {% if ex.is_solved %}disabled{% endif %}
+              class="bg-numeria-bleu hover:bg-blue-800 text-white text-sm font-bold px-5 py-2.5 rounded-xl disabled:opacity-50 transition-colors">
+        {% if ex.is_solved %}✅ {% trans "Résolu" %}{% else %}{% trans "Valider" %}{% endif %}
+      </button>
+      <span id="fb-{{ ex.fill_blank_id }}-att" class="text-xs text-gray-400"></span>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+var FID = {{ ex.fill_blank_id }};
+var MAX = {{ ex.max_attempts }};
+var PTS = {{ ex.points }};
+var ATT = {{ ex.attempts_used }};
+var CSRF = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+var URL = '/fr/cours/fill-blank/' + FID + '/soumettre/';
+
+window['fbSubmit_' + FID] = async function() {
+  var answers = {};
+  document.querySelectorAll('#fb-' + FID + '-text input[data-blank]').forEach(function(inp) {
+    answers[inp.dataset.blank] = inp.value;
+  });
+  var r = await fetch(URL, {method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':CSRF}, body:JSON.stringify({answers:answers})});
+  var d = await r.json();
+  ATT++;
+  var res = document.getElementById('fb-' + FID + '-result');
+  res.classList.remove('hidden');
+  // Colour each blank
+  Object.keys(d.blank_results||{}).forEach(function(k) {
+    var inp = document.querySelector('#fb-' + FID + '-text input[data-blank="' + k + '"]');
+    if (inp) inp.style.borderColor = d.blank_results[k] ? '#22c55e' : '#ef4444';
+  });
+  if (d.is_correct) {
+    res.className = 'mb-4 rounded-xl px-4 py-3 text-sm bg-green-50 text-green-800 border border-green-200';
+    res.innerHTML = '✅ {% trans "Bonne réponse !" %} +' + PTS + ' pts';
+    document.getElementById('fb-' + FID + '-btn').disabled = true;
+    document.getElementById('fb-' + FID + '-btn').textContent = '✅ {% trans "Résolu" %}';
+  } else {
+    res.className = 'mb-4 rounded-xl px-4 py-3 text-sm bg-red-50 text-red-800 border border-red-200';
+    res.innerHTML = '❌ {% trans "Certains blancs sont incorrects." %}' + (MAX > 0 ? ' {% trans "Tentative" %} ' + ATT + '/' + MAX : '');
+  }
+  var attEl = document.getElementById('fb-' + FID + '-att');
+  if (attEl && MAX > 0) attEl.textContent = '{% trans "Tentative" %} ' + ATT + '/' + MAX;
+};
+
+// Init: replace blank markers with inputs in rendered HTML
+document.addEventListener('DOMContentLoaded', function() {
+  var textEl = document.getElementById('fb-' + FID + '-text');
+  if (!textEl) return;
+  textEl.innerHTML = textEl.innerHTML.replace(/\{\{blank_(\w+)\}\}/g, function(_, k) {
+    return '<input data-blank="blank_' + k + '" type="text" class="inline-block border-b-2 border-numeria-bleu px-2 py-0.5 mx-1 text-sm bg-transparent focus:outline-none focus:border-numeria-teal min-w-16">';
+  });
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([textEl]);
+});
+})();
+</script>
+{% endwith %}

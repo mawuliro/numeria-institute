@@ -831,6 +831,11 @@ class CodeExercise(models.Model):
     points = models.IntegerField(default=10, verbose_name=_('Points'))
     order = models.IntegerField(default=0, verbose_name=_('Ordre'))
     is_active = models.BooleanField(default=True, verbose_name=_('Actif'))
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='created_code_exercises', verbose_name=_('Créé par'),
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Créé le'), null=True)
 
     class Meta:
         ordering = ['order']
@@ -838,7 +843,7 @@ class CodeExercise(models.Model):
         verbose_name_plural = _('Exercices de code')
 
     def __str__(self):
-        return f"[{self.lecon.titre}] {self.title}"
+        return self.title
 
 
 class StudentCodeSubmission(models.Model):
@@ -894,11 +899,16 @@ class UserScript(models.Model):
 class LessonBlock(models.Model):
     """Ordered content block inside a Course Lesson or Formation Lesson."""
     BLOCK_TYPES = [
-        ('text',     _('Texte / Markdown / LaTeX')),
-        ('video',    _('Vidéo')),
-        ('sandbox',  _('Sandbox Python libre')),
-        ('exercise', _('Exercice de code évalué')),
-        ('mcq',      _('Question à choix multiples')),
+        ('text',         _('Texte / Markdown / LaTeX')),
+        ('video',        _('Vidéo')),
+        ('sandbox',      _('Sandbox Python libre')),
+        ('exercise',     _('Exercice de code Python')),
+        ('mcq',          _('Question à choix multiples')),
+        ('fill_blank',   _('Texte à trous')),
+        ('true_false',   _('Vrai ou Faux')),
+        ('code_order',   _('Ordonner le code')),
+        ('matching',     _('Associations')),
+        ('short_answer', _('Réponse courte')),
     ]
 
     # Belongs to one of these two (exactly one must be set)
@@ -939,6 +949,28 @@ class LessonBlock(models.Model):
         'MCQExercise', on_delete=models.SET_NULL,
         null=True, blank=True, related_name='lesson_blocks',
         verbose_name=_('QCM'),
+    )
+
+    # ── NEW EXERCISE TYPES ────────────────────────────────────────────────
+    fill_blank_exercise = models.ForeignKey(
+        'FillBlankExercise', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='lesson_blocks',
+    )
+    true_false_exercise = models.ForeignKey(
+        'TrueFalseExercise', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='lesson_blocks',
+    )
+    code_order_exercise = models.ForeignKey(
+        'CodeOrderExercise', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='lesson_blocks',
+    )
+    matching_exercise = models.ForeignKey(
+        'MatchingExercise', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='lesson_blocks',
+    )
+    short_answer_exercise = models.ForeignKey(
+        'ShortAnswerExercise', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='lesson_blocks',
     )
 
     class Meta:
@@ -1054,3 +1086,178 @@ class MCQGrade(models.Model):
 
     class Meta:
         unique_together = ('student', 'exercise')
+
+
+# =============================================================================
+# EXERCISE GRADE — Code exercises (parallel to MCQGrade)
+# =============================================================================
+
+class ExerciseGrade(models.Model):
+    """Tracks a student's best result on a CodeExercise."""
+    student        = models.ForeignKey(User, on_delete=models.CASCADE, related_name='exercise_grades')
+    exercise       = models.ForeignKey('CodeExercise', on_delete=models.CASCADE, related_name='grades')
+    is_solved      = models.BooleanField(default=False)
+    points_earned  = models.IntegerField(default=0)
+    attempts_count = models.IntegerField(default=0)
+    time_spent_seconds = models.IntegerField(default=0)
+    solved_at      = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('student', 'exercise')
+        verbose_name = _('Note exercice code')
+
+
+# =============================================================================
+# 5 NEW EXERCISE TYPES
+# All server-evaluated (no Pyodide needed for evaluation)
+# =============================================================================
+
+_DIFF = [('easy','Facile'),('medium','Moyen'),('hard','Difficile')]
+
+
+class FillBlankExercise(models.Model):
+    """Texte à trous — blanks marked {{blank_1}}, {{blank_2}} in text."""
+    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='fill_blank_exercises')
+    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='fill_blank_exercises')
+    title            = models.CharField(max_length=300)
+    instructions     = models.TextField(blank=True)
+    text_with_blanks = models.TextField(help_text='Use {{blank_1}}, {{blank_2}}, … markers')
+    # JSON: {"blank_1": ["nx", "n*x"], "blank_2": ["n-1"]}
+    answers          = models.JSONField(default=dict)
+    case_sensitive   = models.BooleanField(default=False)
+    difficulty       = models.CharField(max_length=10, choices=_DIFF, default='easy')
+    points           = models.IntegerField(default=5)
+    hint             = models.TextField(blank=True)
+    explanation      = models.TextField(blank=True)
+    max_attempts     = models.IntegerField(default=0)
+    is_active        = models.BooleanField(default=True)
+    order            = models.IntegerField(default=0)
+    class Meta: ordering = ['order']
+    def __str__(self): return self.title
+
+
+class FillBlankGrade(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fill_blank_grades')
+    exercise = models.ForeignKey(FillBlankExercise, on_delete=models.CASCADE, related_name='grades')
+    is_solved = models.BooleanField(default=False)
+    points_earned = models.IntegerField(default=0)
+    attempts_count = models.IntegerField(default=0)
+    solved_at = models.DateTimeField(null=True, blank=True)
+    class Meta: unique_together = ('student', 'exercise')
+
+
+class TrueFalseExercise(models.Model):
+    """Vrai ou Faux — list of statements each marked true/false."""
+    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='true_false_exercises')
+    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='true_false_exercises')
+    title            = models.CharField(max_length=300)
+    # JSON: [{"statement": "...", "is_true": true, "explanation": "..."}, ...]
+    statements       = models.JSONField(default=list)
+    points_per_statement = models.IntegerField(default=2)
+    difficulty       = models.CharField(max_length=10, choices=_DIFF, default='easy')
+    hint             = models.TextField(blank=True)
+    is_active        = models.BooleanField(default=True)
+    order            = models.IntegerField(default=0)
+    class Meta: ordering = ['order']
+    def __str__(self): return self.title
+
+
+class TrueFalseGrade(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='true_false_grades')
+    exercise = models.ForeignKey(TrueFalseExercise, on_delete=models.CASCADE, related_name='grades')
+    is_solved = models.BooleanField(default=False)
+    points_earned = models.IntegerField(default=0)
+    attempts_count = models.IntegerField(default=0)
+    solved_at = models.DateTimeField(null=True, blank=True)
+    class Meta: unique_together = ('student', 'exercise')
+
+
+class CodeOrderExercise(models.Model):
+    """Ordonner le code — drag code lines into correct order."""
+    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='code_order_exercises')
+    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='code_order_exercises')
+    title            = models.CharField(max_length=300)
+    instructions     = models.TextField(blank=True)
+    # JSON array of code lines IN CORRECT ORDER
+    correct_order    = models.JSONField(default=list)
+    # JSON array of distractor lines (wrong lines)
+    distractor_lines = models.JSONField(default=list, blank=True)
+    difficulty       = models.CharField(max_length=10, choices=_DIFF, default='easy')
+    points           = models.IntegerField(default=10)
+    hint             = models.TextField(blank=True)
+    explanation      = models.TextField(blank=True)
+    max_attempts     = models.IntegerField(default=0)
+    is_active        = models.BooleanField(default=True)
+    order            = models.IntegerField(default=0)
+    class Meta: ordering = ['order']
+    def __str__(self): return self.title
+
+
+class CodeOrderGrade(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='code_order_grades')
+    exercise = models.ForeignKey(CodeOrderExercise, on_delete=models.CASCADE, related_name='grades')
+    is_solved = models.BooleanField(default=False)
+    points_earned = models.IntegerField(default=0)
+    attempts_count = models.IntegerField(default=0)
+    solved_at = models.DateTimeField(null=True, blank=True)
+    class Meta: unique_together = ('student', 'exercise')
+
+
+class MatchingExercise(models.Model):
+    """Associations — match left items to right items."""
+    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='matching_exercises')
+    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='matching_exercises')
+    title            = models.CharField(max_length=300)
+    instructions     = models.TextField(blank=True)
+    # JSON: [{"left": "Dérivée", "right": "Taux de variation"}, ...]
+    pairs            = models.JSONField(default=list)
+    difficulty       = models.CharField(max_length=10, choices=_DIFF, default='easy')
+    points           = models.IntegerField(default=8)
+    hint             = models.TextField(blank=True)
+    explanation      = models.TextField(blank=True)
+    is_active        = models.BooleanField(default=True)
+    order            = models.IntegerField(default=0)
+    class Meta: ordering = ['order']
+    def __str__(self): return self.title
+
+
+class MatchingGrade(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='matching_grades')
+    exercise = models.ForeignKey(MatchingExercise, on_delete=models.CASCADE, related_name='grades')
+    is_solved = models.BooleanField(default=False)
+    points_earned = models.IntegerField(default=0)
+    attempts_count = models.IntegerField(default=0)
+    solved_at = models.DateTimeField(null=True, blank=True)
+    class Meta: unique_together = ('student', 'exercise')
+
+
+class ShortAnswerExercise(models.Model):
+    """Réponse courte — student types a short text answer."""
+    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='short_answer_exercises')
+    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='short_answer_exercises')
+    title            = models.CharField(max_length=300)
+    question         = models.TextField()
+    # JSON list of accepted answers after normalization
+    accepted_answers = models.JSONField(default=list)
+    case_sensitive   = models.BooleanField(default=False)
+    strip_whitespace = models.BooleanField(default=True)
+    difficulty       = models.CharField(max_length=10, choices=_DIFF, default='easy')
+    points           = models.IntegerField(default=5)
+    hint             = models.TextField(blank=True)
+    explanation      = models.TextField(blank=True)
+    max_attempts     = models.IntegerField(default=3)
+    is_code_answer   = models.BooleanField(default=False)
+    is_active        = models.BooleanField(default=True)
+    order            = models.IntegerField(default=0)
+    class Meta: ordering = ['order']
+    def __str__(self): return self.title
+
+
+class ShortAnswerGrade(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='short_answer_grades')
+    exercise = models.ForeignKey(ShortAnswerExercise, on_delete=models.CASCADE, related_name='grades')
+    is_solved = models.BooleanField(default=False)
+    points_earned = models.IntegerField(default=0)
+    attempts_count = models.IntegerField(default=0)
+    solved_at = models.DateTimeField(null=True, blank=True)
+    class Meta: unique_together = ('student', 'exercise')

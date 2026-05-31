@@ -33,27 +33,25 @@
   {# ── Add block footer ── #}
   <div class="border-t border-slate-200 dark:border-slate-600 pt-4">
     <p class="text-xs text-slate-500 dark:text-slate-400 mb-2 font-semibold">➕ Ajouter un bloc</p>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-      <button type="button" onclick="lbAddBlock('text', null)"
-              class="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors text-xs font-medium text-slate-600 dark:text-slate-300">
-        <span class="text-2xl">📝</span>Texte
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+      {% for icon, btype, label in block_palette %}
+      <button type="button" onclick="lbAddBlock('{{ btype }}', null)"
+              class="flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors text-xs font-medium text-slate-600 dark:text-slate-300">
+        <span class="text-xl">{{ icon }}</span>{{ label }}
       </button>
-      <button type="button" onclick="lbAddBlock('video', null)"
-              class="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors text-xs font-medium text-slate-600 dark:text-slate-300">
-        <span class="text-2xl">🎬</span>Vidéo
-      </button>
-      <button type="button" onclick="lbAddBlock('sandbox', null)"
-              class="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors text-xs font-medium text-slate-600 dark:text-slate-300">
-        <span class="text-2xl">🐍</span>Sandbox
-      </button>
-      <button type="button" onclick="lbAddBlock('exercise', null)"
-              class="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors text-xs font-medium text-slate-600 dark:text-slate-300">
-        <span class="text-2xl">💻</span>Exercice
-      </button>
-      <button type="button" onclick="lbAddBlock('mcq', null)"
-              class="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors text-xs font-medium text-slate-600 dark:text-slate-300">
-        <span class="text-2xl">🔘</span>QCM
-      </button>
+      {% empty %}
+      {# fallback if context missing #}
+      <button type="button" onclick="lbAddBlock('text', null)" class="flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-colors text-xs font-medium text-slate-600"><span class="text-xl">📝</span>Texte</button>
+      <button type="button" onclick="lbAddBlock('video', null)" class="flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-colors text-xs font-medium text-slate-600"><span class="text-xl">🎬</span>Vidéo</button>
+      <button type="button" onclick="lbAddBlock('sandbox', null)" class="flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-colors text-xs font-medium text-slate-600"><span class="text-xl">🐍</span>Sandbox</button>
+      <button type="button" onclick="lbAddBlock('exercise', null)" class="flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-colors text-xs font-medium text-slate-600"><span class="text-xl">💻</span>Exercice</button>
+      <button type="button" onclick="lbAddBlock('mcq', null)" class="flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-colors text-xs font-medium text-slate-600"><span class="text-xl">🔘</span>QCM</button>
+      <button type="button" onclick="lbAddBlock('fill_blank', null)" class="flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-colors text-xs font-medium text-slate-600"><span class="text-xl">✏️</span>Trous</button>
+      <button type="button" onclick="lbAddBlock('true_false', null)" class="flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-colors text-xs font-medium text-slate-600"><span class="text-xl">✅</span>V/F</button>
+      <button type="button" onclick="lbAddBlock('code_order', null)" class="flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-colors text-xs font-medium text-slate-600"><span class="text-xl">🧩</span>Ordre</button>
+      <button type="button" onclick="lbAddBlock('matching', null)" class="flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-colors text-xs font-medium text-slate-600"><span class="text-xl">🔗</span>Asso.</button>
+      <button type="button" onclick="lbAddBlock('short_answer', null)" class="flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border-2 border-dashed border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-colors text-xs font-medium text-slate-600"><span class="text-xl">💬</span>Court</button>
+      {% endfor %}
     </div>
   </div>
 

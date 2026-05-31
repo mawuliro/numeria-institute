@@ -52,6 +52,31 @@
   {% include 'cours/components/mcq_widget.html' with block=block %}
 </div>
 
+{% elif block.type == 'fill_blank' and block.fill_blank_id %}
+<div class="lesson-block lesson-block--fill-blank">
+  {% include 'cours/components/fill_blank_widget.html' with block=block %}
+</div>
+
+{% elif block.type == 'true_false' and block.true_false_id %}
+<div class="lesson-block lesson-block--true-false">
+  {% include 'cours/components/true_false_widget.html' with block=block %}
+</div>
+
+{% elif block.type == 'code_order' and block.code_order_id %}
+<div class="lesson-block lesson-block--code-order">
+  {% include 'cours/components/code_order_widget.html' with block=block %}
+</div>
+
+{% elif block.type == 'matching' and block.matching_id %}
+<div class="lesson-block lesson-block--matching">
+  {% include 'cours/components/matching_widget.html' with block=block %}
+</div>
+
+{% elif block.type == 'short_answer' and block.short_answer_id %}
+<div class="lesson-block lesson-block--short-answer">
+  {% include 'cours/components/short_answer_widget.html' with block=block %}
+</div>
+
 {% endif %}
 
 {% endfor %}

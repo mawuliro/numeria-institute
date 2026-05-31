@@ -1,0 +1,84 @@
+{% load i18n sandbox_tags %}
+{% with ex=block %}
+<div id="sa-{{ ex.short_answer_id }}" class="sa-widget bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
+  <div class="flex items-center gap-3 px-5 py-3.5 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+    <span class="text-base">💬</span>
+    <span class="font-bold text-numeria-bleu dark:text-numeria-teal text-sm">{{ ex.title }}</span>
+    <div class="ml-auto flex items-center gap-2">
+      <span class="text-xs text-gray-400">{{ ex.points }} pts</span>
+      {% if ex.is_solved %}<span class="text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">✅ {% trans "Résolu" %}</span>{% endif %}
+    </div>
+  </div>
+  <div class="px-5 py-4">
+    <div class="prose prose-sm dark:prose-invert max-w-none text-gray-800 dark:text-gray-100 mb-5">
+      {{ ex.question|render_markdown_latex }}
+    </div>
+    {% if ex.hint %}
+    <div id="sa-{{ ex.short_answer_id }}-hint" style="display:none" class="mb-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 px-4 py-3 rounded-xl text-sm text-amber-800 dark:text-amber-300">
+      💡 <strong>{% trans "Indice" %} :</strong> {{ ex.hint }}
+    </div>
+    {% endif %}
+    <div class="flex items-center gap-3 mb-4">
+      <input id="sa-{{ ex.short_answer_id }}-input" type="text"
+             {% if ex.is_solved %}disabled{% endif %}
+             placeholder="{% trans 'Votre réponse…' %}"
+             class="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl text-sm {% if ex.is_code_answer %}font-mono{% endif %} bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-numeria-teal disabled:opacity-60"
+             onkeydown="if(event.key==='Enter') saSubmit_{{ ex.short_answer_id }}()">
+    </div>
+    <div id="sa-{{ ex.short_answer_id }}-result" class="hidden mb-4 rounded-xl px-4 py-3 text-sm"></div>
+    <div class="flex items-center gap-3">
+      <button id="sa-{{ ex.short_answer_id }}-btn" type="button" onclick="saSubmit_{{ ex.short_answer_id }}()"
+              {% if ex.is_solved %}disabled{% endif %}
+              class="bg-numeria-bleu hover:bg-blue-800 text-white text-sm font-bold px-5 py-2.5 rounded-xl disabled:opacity-50 transition-colors">
+        {% if ex.is_solved %}✅ {% trans "Résolu" %}{% else %}{% trans "Valider" %}{% endif %}
+      </button>
+      {% if ex.hint %}
+      <button id="sa-{{ ex.short_answer_id }}-hint-btn" type="button"
+              onclick="document.getElementById('sa-{{ ex.short_answer_id }}-hint').style.display='block';this.style.display='none';"
+              class="text-xs text-amber-600 dark:text-amber-400 border border-amber-300 px-3 py-2 rounded-lg hover:bg-amber-50 font-medium">
+        💡 {% trans "Indice" %}
+      </button>
+      {% endif %}
+      <span id="sa-{{ ex.short_answer_id }}-att" class="text-xs text-gray-400"></span>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+var SID = {{ ex.short_answer_id }};
+var MAX = {{ ex.max_attempts }};
+var PTS = {{ ex.points }};
+var ATT = {{ ex.attempts_used }};
+var CSRF = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+var URL = '/fr/cours/reponse-courte/' + SID + '/soumettre/';
+
+window['saSubmit_' + SID] = async function() {
+  var inp = document.getElementById('sa-' + SID + '-input');
+  if (!inp || !inp.value.trim()) return;
+  ATT++;
+  var r = await fetch(URL, {method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':CSRF}, body:JSON.stringify({answer:inp.value})});
+  var d = await r.json();
+  var res = document.getElementById('sa-' + SID + '-result');
+  res.classList.remove('hidden');
+  if (d.is_correct) {
+    res.className = 'rounded-xl px-4 py-3 text-sm bg-green-50 text-green-800 border border-green-200';
+    res.innerHTML = '✅ {% trans "Bonne réponse !" %} +' + PTS + ' pts' + (d.explanation ? '<br><span class="text-xs mt-1 block">' + d.explanation + '</span>' : '');
+    document.getElementById('sa-' + SID + '-btn').disabled = true;
+    inp.disabled = true;
+  } else {
+    res.className = 'rounded-xl px-4 py-3 text-sm bg-red-50 text-red-800 border border-red-200';
+    var msg = '❌ {% trans "Pas tout à fait. Réessaie !" %}';
+    if (MAX > 0) msg += ' {% trans "Tentative" %} ' + ATT + '/' + MAX;
+    res.innerHTML = msg;
+    if (MAX > 0 && ATT >= MAX) { document.getElementById('sa-' + SID + '-btn').disabled = true; inp.disabled = true; }
+  }
+  var attEl = document.getElementById('sa-' + SID + '-att');
+  if (attEl && MAX > 0) attEl.textContent = '{% trans "Tentative" %} ' + ATT + '/' + MAX;
+};
+if (MAX > 0 && ATT > 0) {
+  var attEl = document.getElementById('sa-' + SID + '-att');
+  if (attEl) attEl.textContent = '{% trans "Tentative" %} ' + ATT + '/' + MAX;
+}
+})();
+</script>
+{% endwith %}

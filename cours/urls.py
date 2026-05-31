@@ -19,4 +19,10 @@ urlpatterns = [
     path('exercice/<int:exercise_id>/solution/', views.get_exercise_solution, name='get_exercise_solution'),
     path('qcm/<int:mcq_id>/soumettre/', views.submit_mcq, name='submit_mcq'),
     path('qcm/<int:mcq_id>/statut/', views.get_mcq_status, name='mcq_status'),
+    # New exercise types — all server-evaluated
+    path('fill-blank/<int:exercise_id>/soumettre/', views.submit_fill_blank, name='submit_fill_blank'),
+    path('vrai-faux/<int:exercise_id>/soumettre/', views.submit_true_false, name='submit_true_false'),
+    path('ordre-code/<int:exercise_id>/soumettre/', views.submit_code_order, name='submit_code_order'),
+    path('associations/<int:exercise_id>/soumettre/', views.submit_matching, name='submit_matching'),
+    path('reponse-courte/<int:exercise_id>/soumettre/', views.submit_short_answer, name='submit_short_answer'),
 ]

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-31 03:04+0000\n"
+"POT-Creation-Date: 2026-05-31 09:22+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -1886,53 +1886,65 @@ msgstr "Your account has been deleted, {prenom}. We hope to see you again! 👋"
 msgid "Mot de passe incorrect. Ton compte n'a pas été supprimé."
 msgstr "Incorrect password. Your account has not been deleted."
 
-#: cours/models.py:772 cours/models.py:965
+#: cours/grades.py:90
+msgid "Exercice réussi ! 🎉"
+msgstr ""
+
+#: cours/grades.py:91
+#, python-brace-format
+msgid "Tu as répondu correctement à '{title}' (+{points} pts)"
+msgstr ""
+
+#: cours/models.py:774 cours/models.py:999
 #: cours/templates/cours/components/code_sandbox.html:37
 #: cours/templates/cours/components/mcq_widget.html:21
 #: templates/admin_panel/exercises_list.html:96
 #: templates/admin_panel/mcq_list.html:61
+#: templates/sandbox/sandbox_widget.html:50
 msgid "Facile"
 msgstr "Easy"
 
-#: cours/models.py:773 cours/models.py:966
+#: cours/models.py:775 cours/models.py:1000
 #: cours/templates/cours/components/code_sandbox.html:39
 #: cours/templates/cours/components/mcq_widget.html:22
 #: templates/admin_panel/exercises_list.html:97
 #: templates/admin_panel/mcq_list.html:62
+#: templates/sandbox/sandbox_widget.html:51
 msgid "Moyen"
 msgstr "Medium"
 
-#: cours/models.py:774 cours/models.py:967
+#: cours/models.py:776 cours/models.py:1001
 #: cours/templates/cours/components/code_sandbox.html:41
 #: cours/templates/cours/components/mcq_widget.html:23
 #: templates/admin_panel/exercises_list.html:98
 #: templates/admin_panel/mcq_list.html:63
+#: templates/sandbox/sandbox_widget.html:52
 msgid "Difficile"
 msgstr "Hard"
 
-#: cours/models.py:777
+#: cours/models.py:779
 msgid "Output exact"
 msgstr "Exact output"
 
-#: cours/models.py:778
+#: cours/models.py:780
 msgid "Output contient"
 msgstr "Output contains"
 
-#: cours/models.py:779
+#: cours/models.py:781
 msgid "Tests unitaires"
 msgstr "Unit tests"
 
-#: cours/models.py:784 formation/templates/formation/voir_lecon.html:14
+#: cours/models.py:786 formation/templates/formation/voir_lecon.html:14
 #: templates/admin_panel/exercise_form.html:117
 #: templates/admin_panel/exercise_results.html:51
 msgid "Leçon"
 msgstr "Lesson"
 
-#: cours/models.py:789 cours/models.py:911 cours/models.py:978
+#: cours/models.py:791 cours/models.py:923 cours/models.py:1012
 msgid "Leçon de formation"
 msgstr "Training lesson"
 
-#: cours/models.py:792 cours/models.py:980 notifications/models.py:34
+#: cours/models.py:794 cours/models.py:1014 notifications/models.py:34
 #: templates/admin_panel/exercise_form.html:26
 #: templates/admin_panel/user_detail.html:141
 #: templates/admin_panel/users_list.html:70
@@ -1940,268 +1952,314 @@ msgstr "Training lesson"
 msgid "Titre"
 msgstr "Title"
 
-#: cours/models.py:794 mentorat/templates/mentorat/video_seance.html:55
+#: cours/models.py:796 mentorat/templates/mentorat/video_seance.html:55
 #: templates/admin_panel/exercise_form.html:72
 #, fuzzy
 #| msgid "Instructeurs"
 msgid "Instructions"
 msgstr "Instructors"
 
-#: cours/models.py:795
+#: cours/models.py:797
 #, fuzzy
 #| msgid "Instructeurs"
 msgid "Instructions en Markdown"
 msgstr "Instructors"
 
-#: cours/models.py:798 templates/admin_panel/exercise_form.html:89
+#: cours/models.py:800 templates/admin_panel/exercise_form.html:89
 msgid "Code de départ"
 msgstr "Starter code"
 
-#: cours/models.py:799
+#: cours/models.py:801
 msgid "Code affiché à l'étudiant"
 msgstr ""
 
-#: cours/models.py:802 templates/admin_panel/exercise_form.html:95
+#: cours/models.py:804 templates/admin_panel/exercise_form.html:95
+#: templates/sandbox/sandbox_widget.html:148
 msgid "Solution"
 msgstr "Solution"
 
-#: cours/models.py:803
+#: cours/models.py:805
 msgid "Jamais montrée à l'étudiant"
 msgstr ""
 
-#: cours/models.py:806 templates/admin_panel/exercise_form.html:102
+#: cours/models.py:808 templates/admin_panel/exercise_form.html:102
 msgid "Output attendu"
 msgstr "Expected output"
 
-#: cours/models.py:807
+#: cours/models.py:809
 msgid "Pour comparaison exacte ou contient"
 msgstr ""
 
-#: cours/models.py:810 templates/admin_panel/exercise_form.html:109
+#: cours/models.py:812 templates/admin_panel/exercise_form.html:109
 msgid "Code de tests"
 msgstr "Test code"
 
-#: cours/models.py:811
+#: cours/models.py:813
 msgid "Assertions cachées (mode tests unitaires)"
 msgstr ""
 
-#: cours/models.py:815 templates/admin_panel/exercise_form.html:31
+#: cours/models.py:817 templates/admin_panel/exercise_form.html:31
 msgid "Mode d'évaluation"
 msgstr "Evaluation mode"
 
-#: cours/models.py:819 templates/admin_panel/exercise_form.html:40
+#: cours/models.py:821 templates/admin_panel/exercise_form.html:40
 #: templates/admin_panel/exercises_list.html:57
 #: templates/admin_panel/mcq_list.html:34
 msgid "Difficulté"
 msgstr "Difficulty"
 
-#: cours/models.py:822 cours/models.py:983
+#: cours/models.py:824 cours/models.py:1017
 #: cours/templates/cours/components/code_sandbox.html:90
 #: cours/templates/cours/components/code_sandbox.html:109
 #: cours/templates/cours/components/mcq_widget.html:43
 #: cours/templates/cours/components/mcq_widget.html:68
+#: cours/templates/cours/components/short_answer_widget.html:18
+#: cours/templates/cours/components/short_answer_widget.html:39
 #: templates/admin_panel/exercise_form.html:78
+#: templates/sandbox/sandbox_widget.html:107
+#: templates/sandbox/sandbox_widget.html:120
 msgid "Indice"
 msgstr "Hint"
 
-#: cours/models.py:823
+#: cours/models.py:825
 msgid "Affiché après 3 tentatives échouées"
 msgstr ""
 
-#: cours/models.py:826 templates/admin_panel/exercise_form.html:53
+#: cours/models.py:828 templates/admin_panel/exercise_form.html:53
 msgid "Tentatives max"
 msgstr "Max attempts"
 
-#: cours/models.py:827
+#: cours/models.py:829
 msgid "0 = illimité"
 msgstr ""
 
-#: cours/models.py:829 cours/models.py:985
+#: cours/models.py:831 cours/models.py:1019
 #: templates/admin_panel/exercise_form.html:48
 #: templates/admin_panel/exercise_results.html:95
 msgid "Points"
 msgstr ""
 
-#: cours/models.py:830 cours/models.py:915
+#: cours/models.py:832 cours/models.py:927
 #: templates/admin_panel/exercise_form.html:58
 msgid "Ordre"
 msgstr "Order"
 
-#: cours/models.py:831 templates/admin_panel/user_detail.html:26
+#: cours/models.py:833 templates/admin_panel/user_detail.html:26
 #: templates/admin_panel/users_list.html:31
 msgid "Actif"
 msgstr "Active"
 
-#: cours/models.py:835 cours/models.py:932
+#: cours/models.py:836
+#, fuzzy
+#| msgid "Traité par"
+msgid "Créé par"
+msgstr "Reviewed by"
+
+#: cours/models.py:838
+msgid "Créé le"
+msgstr ""
+
+#: cours/models.py:842 cours/models.py:944
 msgid "Exercice de code"
 msgstr "Code exercise"
 
-#: cours/models.py:836 cours/templates/cours/detail.html:504
+#: cours/models.py:843 cours/templates/cours/detail.html:504
 #: templates/admin_panel/exercises_list.html:4
 #: templates/admin_panel/exercises_list.html:5
 msgid "Exercices de code"
 msgstr "Code exercises"
 
-#: cours/models.py:845 templates/admin_panel/exercise_results.html:49
+#: cours/models.py:852 templates/admin_panel/exercise_results.html:49
 #: templates/admin_panel/exercise_results.html:93
 msgid "Étudiant"
 msgstr "Student"
 
-#: cours/models.py:849 templates/admin_panel/exercise_results.html:50
+#: cours/models.py:856 templates/admin_panel/exercise_results.html:50
 #: templates/admin_panel/exercises_list.html:53
 #, fuzzy
 #| msgid "Exercice pratique"
 msgid "Exercice"
 msgstr "Practical exercise"
 
-#: cours/models.py:851
+#: cours/models.py:858
 #, fuzzy
 #| msgid "Preuve actuelle"
 msgid "Code soumis"
 msgstr "Current proof"
 
-#: cours/models.py:852
+#: cours/models.py:859
 msgid "Output reçu"
 msgstr ""
 
-#: cours/models.py:853
+#: cours/models.py:860
 msgid "Correct"
 msgstr ""
 
-#: cours/models.py:854
+#: cours/models.py:861
 msgid "Tentative n°"
 msgstr "Attempt #"
 
-#: cours/models.py:855
+#: cours/models.py:862
 msgid "Temps (s)"
 msgstr "Time (s)"
 
-#: cours/models.py:856 templates/admin_panel/candidature_detail.html:99
+#: cours/models.py:863 templates/admin_panel/candidature_detail.html:99
 #: templates/admin_panel/candidatures_list.html:38
 #: templates/admin_panel/mentorat_detail.html:80
 msgid "Soumis le"
 msgstr "Submitted on"
 
-#: cours/models.py:860
+#: cours/models.py:867
 msgid "Soumission de code"
 msgstr "Code submission"
 
-#: cours/models.py:861
+#: cours/models.py:868
 msgid "Soumissions de code"
 msgstr "Code submissions"
 
-#: cours/models.py:895
+#: cours/models.py:902
 msgid "Texte / Markdown / LaTeX"
 msgstr ""
 
-#: cours/models.py:896
+#: cours/models.py:903
 msgid "Vidéo"
 msgstr ""
 
-#: cours/models.py:897
+#: cours/models.py:904
 #, fuzzy
 #| msgid "Sandbox Python"
 msgid "Sandbox Python libre"
 msgstr "Python Sandbox"
 
-#: cours/models.py:898
+#: cours/models.py:905
+#, fuzzy
 #| msgid "Exercice de code"
-msgid "Exercice de code évalué"
-msgstr "Evaluated code exercise"
+msgid "Exercice de code Python"
+msgstr "Python code exercise"
 
-#: cours/models.py:899
-#| msgid "Question initiale"
+#: cours/models.py:906
 msgid "Question à choix multiples"
 msgstr "Multiple choice question"
 
-#: cours/models.py:906 cours/models.py:973
+#: cours/models.py:907
+#, fuzzy
+#| msgid "Accessible à tous"
+msgid "Texte à trous"
+msgstr "Fill in the blank"
+
+#: cours/models.py:908
+msgid "Vrai ou Faux"
+msgstr "True or False"
+
+#: cours/models.py:909
+#, fuzzy
+#| msgid "Continuer le cours"
+msgid "Ordonner le code"
+msgstr "Order the code"
+
+#: cours/models.py:910
+#, fuzzy
+#| msgid "Instructeurs"
+msgid "Associations"
+msgstr "Matching"
+
+#: cours/models.py:911
+#, fuzzy
+#| msgid "Réponse contact"
+msgid "Réponse courte"
+msgstr "Short answer"
+
+#: cours/models.py:918 cours/models.py:1007
 #, fuzzy
 #| msgid "Leçon / Cours"
 msgid "Leçon de cours"
 msgstr "Lesson / Course"
 
-#: cours/models.py:914 notifications/models.py:32
+#: cours/models.py:926 notifications/models.py:32
 #: templates/admin_panel/exercises_list.html:55
 #: templates/admin_panel/mcq_list.html:32 templates/notifications/send.html:42
 msgid "Type"
 msgstr ""
 
-#: cours/models.py:918
+#: cours/models.py:930
 msgid "Contenu Markdown / LaTeX"
 msgstr ""
 
-#: cours/models.py:921
+#: cours/models.py:933
 msgid "URL vidéo"
 msgstr ""
 
-#: cours/models.py:922
+#: cours/models.py:934
 msgid "Légende"
 msgstr ""
 
-#: cours/models.py:939
+#: cours/models.py:951
 msgid "QCM"
 msgstr ""
 
-#: cours/models.py:944
+#: cours/models.py:978
 msgid "Bloc de leçon"
 msgstr ""
 
-#: cours/models.py:945
+#: cours/models.py:979
 msgid "Blocs de leçon"
 msgstr ""
 
-#: cours/models.py:981 templates/admin_panel/mcq_list.html:30
+#: cours/models.py:1015 templates/admin_panel/mcq_list.html:30
 #, fuzzy
 #| msgid "Questions"
 msgid "Question"
 msgstr "Questions"
 
-#: cours/models.py:982 cours/templates/cours/components/mcq_widget.html:57
-#| msgid "Syndication"
+#: cours/models.py:1016 cours/templates/cours/components/mcq_widget.html:57
 msgid "Explication"
 msgstr "Explanation"
 
-#: cours/models.py:986
+#: cours/models.py:1020
 #, fuzzy
 #| msgid "Tentatives max"
 msgid "Tentatives max (0=illimité)"
 msgstr "Max attempts"
 
-#: cours/models.py:989
+#: cours/models.py:1023
 msgid "Plusieurs bonnes réponses possibles"
 msgstr "Multiple correct answers possible"
 
-#: cours/models.py:991
+#: cours/models.py:1025
 msgid "Mélanger les choix"
 msgstr "Shuffle choices"
 
-#: cours/models.py:1003
-#| msgid "Exercice pratique"
+#: cours/models.py:1037
 msgid "Exercice QCM"
 msgstr "MCQ Exercise"
 
-#: cours/models.py:1004 templates/admin_panel/mcq_list.html:4
-#| msgid "Exercice pratique"
+#: cours/models.py:1038 templates/admin_panel/mcq_list.html:4
 msgid "Exercices QCM"
 msgstr "MCQ Exercises"
 
-#: cours/models.py:1019
+#: cours/models.py:1053
 #, fuzzy
 #| msgid "Titre du sujet"
 msgid "Texte du choix"
 msgstr "Topic title"
 
-#: cours/models.py:1020
+#: cours/models.py:1054
 #, fuzzy
 #| msgid "Bonne réponse !"
 msgid "Bonne réponse"
 msgstr "Correct answer!"
 
-#: cours/models.py:1022
+#: cours/models.py:1056
 #, fuzzy
 #| msgid "Besoins spécifiques"
 msgid "Feedback spécifique"
 msgstr "Specific needs"
+
+#: cours/models.py:1107
+#, fuzzy
+#| msgid "Nouvel exercice"
+msgid "Note exercice code"
+msgstr "Code exercise grade"
 
 #: cours/templates/cours/catalogue.html:3
 #: cours/templates/cours/catalogue.html:5
@@ -2237,16 +2295,53 @@ msgstr "Try other filters or check back soon!"
 msgid "Voir tous les cours"
 msgstr "View all courses"
 
+#: cours/templates/cours/components/code_order_widget.html:9
+#: cours/templates/cours/components/code_order_widget.html:32
+#: cours/templates/cours/components/fill_blank_widget.html:10
+#: cours/templates/cours/components/fill_blank_widget.html:23
+#: cours/templates/cours/components/fill_blank_widget.html:57
+#: cours/templates/cours/components/matching_widget.html:9
+#: cours/templates/cours/components/matching_widget.html:43
+#: cours/templates/cours/components/mcq_widget.html:218
+#: cours/templates/cours/components/mcq_widget.html:321
+#: cours/templates/cours/components/short_answer_widget.html:9
+#: cours/templates/cours/components/short_answer_widget.html:33
+#: cours/templates/cours/components/true_false_widget.html:9
+#: cours/templates/cours/components/true_false_widget.html:40
+#: templates/sandbox/sandbox_widget.html:416
+msgid "Résolu"
+msgstr "Solved"
+
+#: cours/templates/cours/components/code_order_widget.html:14
+msgid "Glisse les lignes pour les ordonner."
+msgstr "Drag the lines to order them."
+
+#: cours/templates/cours/components/code_order_widget.html:32
+msgid "Valider l'ordre"
+msgstr "Submit order"
+
+#: cours/templates/cours/components/code_order_widget.html:67
+#: cours/templates/cours/components/code_sandbox.html:345
+#: cours/templates/cours/components/fill_blank_widget.html:55
+#: cours/templates/cours/components/mcq_widget.html:250
+#: cours/templates/cours/components/short_answer_widget.html:65
+#: templates/sandbox/sandbox_widget.html:382
+msgid "Bonne réponse !"
+msgstr "Correct!"
+
+#: cours/templates/cours/components/code_order_widget.html:73
+msgid "L\\'ordre n\\'est pas correct. Réessaie !"
+msgstr ""
+
 #: cours/templates/cours/components/code_sandbox.html:46
 #: cours/templates/cours/components/code_sandbox.html:301
-#: templates/sandbox/sandbox_widget.html:251
 msgid "Réussi"
 msgstr "Passed"
 
 #: cours/templates/cours/components/code_sandbox.html:65
 #: templates/sandbox/full_sandbox.html:25
 #: templates/sandbox/sandbox_page.html:27
-#: templates/sandbox/sandbox_widget.html:34
+#: templates/sandbox/sandbox_widget.html:36
 msgid "Chargement de Python…"
 msgstr "Loading Python..."
 
@@ -2259,9 +2354,9 @@ msgstr "Loading Python..."
 #: templates/sandbox/full_sandbox.html:346
 #: templates/sandbox/sandbox_page.html:98
 #: templates/sandbox/sandbox_page.html:204
-#: templates/sandbox/sandbox_widget.html:46
-#: templates/sandbox/sandbox_widget.html:264
-#: templates/sandbox/sandbox_widget.html:332
+#: templates/sandbox/sandbox_widget.html:88
+#: templates/sandbox/sandbox_widget.html:270
+#: templates/sandbox/sandbox_widget.html:346
 msgid "Exécuter"
 msgstr "Run"
 
@@ -2269,21 +2364,28 @@ msgstr "Run"
 #: mentorat/templates/mentorat/liste_mentors.html:73
 #: templates/admin_panel/exercises_list.html:38
 #: templates/registration/password_reset_confirm.html:10
+#: templates/sandbox/sandbox_widget.html:92
 msgid "Réinitialiser"
 msgstr "Reset"
 
 #: cours/templates/cours/components/code_sandbox.html:85
 #: cours/templates/cours/components/code_sandbox.html:435
-#: templates/sandbox/sandbox_widget.html:60
-#: templates/sandbox/sandbox_widget.html:370
+#: templates/sandbox/sandbox_widget.html:95
 msgid "Copier"
 msgstr "Copy"
 
 #: cours/templates/cours/components/code_sandbox.html:96
 #: cours/templates/cours/components/code_sandbox.html:359
+#: cours/templates/cours/components/fill_blank_widget.html:60
+#: cours/templates/cours/components/fill_blank_widget.html:63
 #: cours/templates/cours/components/mcq_widget.html:181
 #: cours/templates/cours/components/mcq_widget.html:259
+#: cours/templates/cours/components/short_answer_widget.html:71
+#: cours/templates/cours/components/short_answer_widget.html:76
+#: cours/templates/cours/components/short_answer_widget.html:80
 #: templates/admin_panel/exercise_results.html:53
+#: templates/sandbox/sandbox_widget.html:396
+#: templates/sandbox/sandbox_widget.html:442
 msgid "Tentative"
 msgstr "Attempt"
 
@@ -2292,7 +2394,6 @@ msgid "Voir la solution"
 msgstr "Show solution"
 
 #: cours/templates/cours/components/code_sandbox.html:210
-#: templates/sandbox/sandbox_widget.html:179
 msgid "En cours d\\'exécution…"
 msgstr ""
 
@@ -2301,40 +2402,37 @@ msgid "Temps d\\'exécution dépassé (10s)"
 msgstr ""
 
 #: cours/templates/cours/components/code_sandbox.html:263
-#: templates/sandbox/sandbox_widget.html:214
+#: templates/sandbox/sandbox_widget.html:299
 msgid "aucun output"
 msgstr "no output"
 
 #: cours/templates/cours/components/code_sandbox.html:305
 #: cours/templates/cours/components/mcq_widget.html:224
-#: templates/sandbox/sandbox_widget.html:256
+#: templates/sandbox/sandbox_widget.html:408
 msgid "Tentatives épuisées"
 msgstr "Attempts exhausted"
-
-#: cours/templates/cours/components/code_sandbox.html:345
-#: cours/templates/cours/components/mcq_widget.html:250
-#: templates/sandbox/sandbox_widget.html:280
-msgid "Bonne réponse !"
-msgstr "Correct answer!"
 
 #: cours/templates/cours/components/code_sandbox.html:345
 msgid "points"
 msgstr ""
 
 #: cours/templates/cours/components/code_sandbox.html:350
-#: templates/sandbox/sandbox_widget.html:284
+#: templates/sandbox/sandbox_widget.html:387
 msgid "Ce n\\'est pas la bonne réponse. Réessaie !"
 msgstr ""
 
 #: cours/templates/cours/components/code_sandbox.html:353
+#: templates/sandbox/sandbox_widget.html:390
 msgid "Attendu"
 msgstr "Expected"
 
 #: cours/templates/cours/components/code_sandbox.html:354
+#: templates/sandbox/sandbox_widget.html:391
 msgid "Reçu"
 msgstr "Received"
 
 #: cours/templates/cours/components/code_sandbox.html:360
+#: templates/sandbox/sandbox_widget.html:397
 msgid "restante(s)"
 msgstr "remaining"
 
@@ -2343,35 +2441,72 @@ msgid "Exercices réussis ce cours"
 msgstr "Exercises completed in this course"
 
 #: cours/templates/cours/components/code_sandbox.html:424
+#: templates/sandbox/sandbox_widget.html:458
 msgid "Réinitialiser le code ?"
 msgstr "Reset the code?"
 
 #: cours/templates/cours/components/code_sandbox.html:434
-#: templates/sandbox/sandbox_widget.html:369
 msgid "Copié !"
 msgstr "Copied!"
 
+#: cours/templates/cours/components/fill_blank_widget.html:23
+#: cours/templates/cours/components/matching_widget.html:43
+#: cours/templates/cours/components/short_answer_widget.html:33
+#: cours/templates/cours/components/true_false_widget.html:40
+msgid "Valider"
+msgstr "Submit"
+
+#: cours/templates/cours/components/fill_blank_widget.html:60
+msgid "Certains blancs sont incorrects."
+msgstr "Some blanks are incorrect."
+
+#: cours/templates/cours/components/matching_widget.html:17
+msgid "Éléments"
+msgstr "Items"
+
+#: cours/templates/cours/components/matching_widget.html:26
+#, fuzzy
+#| msgid "Corrects"
+msgid "Correspondances"
+msgstr "Matches"
+
+#: cours/templates/cours/components/matching_widget.html:31
+msgid "Choisir"
+msgstr "Choose"
+
+#: cours/templates/cours/components/matching_widget.html:66
+#, fuzzy
+#| msgid "Toutes les notifications ont été marquées comme lues."
+msgid "Toutes les associations sont correctes !"
+msgstr "All matches are correct!"
+
+#: cours/templates/cours/components/matching_widget.html:70
+#, fuzzy
+#| msgid "Inscriptions ouvertes"
+msgid "associations correctes"
+msgstr "correct matches"
+
+#: cours/templates/cours/components/matching_widget.html:70
+#, fuzzy
+#| msgid "Réessayer"
+msgid "Réessaie !"
+msgstr "Try again!"
+
 #: cours/templates/cours/components/mcq_widget.html:26
+#: templates/sandbox/sandbox_widget.html:54
 msgid "Déjà résolu"
 msgstr "Already solved"
 
 #: cours/templates/cours/components/mcq_widget.html:74
 #: cours/templates/cours/components/mcq_widget.html:238
-#| msgid "Publier la réponse"
 msgid "Valider ma réponse"
 msgstr "Submit my answer"
-
-#: cours/templates/cours/components/mcq_widget.html:218
-#: cours/templates/cours/components/mcq_widget.html:321
-msgid "Résolu"
-msgstr "Solved"
 
 #: cours/templates/cours/components/mcq_widget.html:227
 msgid "Réessayer"
 msgstr "Try again"
 
 #: cours/templates/cours/components/mcq_widget.html:254
-#| msgid "Tentatives épuisées"
 msgid "Tentatives épuisées."
 msgstr "Attempts exhausted."
 
@@ -2382,6 +2517,27 @@ msgstr ""
 #: cours/templates/cours/components/mcq_widget.html:318
 msgid "Déjà résolu !"
 msgstr "Already solved!"
+
+#: cours/templates/cours/components/short_answer_widget.html:24
+#: templates/admin_panel/contact_detail.html:65
+msgid "Votre réponse…"
+msgstr "Your reply..."
+
+#: cours/templates/cours/components/short_answer_widget.html:70
+msgid "Pas tout à fait. Réessaie !"
+msgstr "Not quite. Try again!"
+
+#: cours/templates/cours/components/true_false_widget.html:23
+msgid "Vrai"
+msgstr ""
+
+#: cours/templates/cours/components/true_false_widget.html:30
+msgid "Faux"
+msgstr ""
+
+#: cours/templates/cours/components/true_false_widget.html:68
+msgid "Toutes les réponses sont correctes !"
+msgstr "All answers are correct!"
 
 #: cours/templates/cours/detail.html:52 cours/templates/cours/detail.html:226
 #: cours/templates/cours/detail.html:303 cours/templates/cours/detail.html:810
@@ -2457,119 +2613,110 @@ msgstr "Verification code"
 msgid "Découvrir nos cours"
 msgstr "Discover our courses"
 
-#: cours/views.py:293
+#: cours/views.py:389
 #, python-format
 msgid "Tu es déjà inscrit au cours « %(titre)s » ! 📚"
 msgstr "You are already enrolled in the course « %(titre)s »! 📚"
 
-#: cours/views.py:307
+#: cours/views.py:403
 msgid "Inscription confirmée"
 msgstr "Enrollment confirmed"
 
-#: cours/views.py:308
+#: cours/views.py:404
 #, fuzzy, python-format
 #| msgid "Tu t'es désinscrit du cours « %(titre)s » ."
 msgid "Vous êtes inscrit au cours %(titre)s."
 msgstr "You have unenrolled from the course « %(titre)s »."
 
-#: cours/views.py:314
+#: cours/views.py:410
 #, python-format
 msgid "🎉 Bienvenue dans le cours « %(titre)s » !"
 msgstr "🎉 Welcome to the course « %(titre)s »!"
 
-#: cours/views.py:335
+#: cours/views.py:431
 #, python-format
 msgid "Tu t'es désinscrit du cours « %(titre)s » ."
 msgstr "You have unenrolled from the course « %(titre)s »."
 
-#: cours/views.py:337 cours/views.py:356 cours/views.py:456
+#: cours/views.py:433 cours/views.py:452 cours/views.py:552
 #, fuzzy
 #| msgid "Tu n'es inscrit à aucun cours"
 msgid "Tu n'es pas inscrit à ce cours."
 msgstr "You are not enrolled in any course"
 
-#: cours/views.py:378
+#: cours/views.py:474
 #, python-format
 msgid "🎉 Félicitations ! Tu as terminé le cours « %(titre)s » !"
 msgstr "🎉 Congratulations! You have completed the course « %(titre)s »!"
 
-#: cours/views.py:383
+#: cours/views.py:479
 #, python-format
 msgid "✅ Leçon terminée ! Progression : %(pct)s%%"
 msgstr "✅ Lesson completed! Progress: %(pct)s%%"
 
-#: cours/views.py:387
+#: cours/views.py:483
 msgid "Cette leçon était déjà marquée comme terminée."
 msgstr "This lesson was already marked as completed."
 
-#: cours/views.py:431
+#: cours/views.py:527
 #, fuzzy
 #| msgid "Marquer comme terminée"
 msgid "Leçon marquée comme non terminée."
 msgstr "Mark as completed"
 
-#: cours/views.py:463
+#: cours/views.py:559
 #, fuzzy
 #| msgid "Réponse le"
 msgid "Réponse invalide."
 msgstr "Response on"
 
-#: cours/views.py:518
+#: cours/views.py:614
 msgid "Les certificats sont réservés aux cours payants."
 msgstr "Certificates are only available for paid courses."
 
-#: cours/views.py:580
+#: cours/views.py:676
 msgid "Vous devez terminer le cours avant de le noter."
 msgstr "You must complete the course before rating it."
 
-#: cours/views.py:587
+#: cours/views.py:683
 msgid "La note doit être entre 1 et 5."
 msgstr "The rating must be between 1 and 5."
 
-#: cours/views.py:602
+#: cours/views.py:698
 msgid "✅ Merci pour votre évaluation !"
 msgstr "✅ Thank you for your review!"
 
-#: cours/views.py:604
+#: cours/views.py:700
 #, python-format
 msgid "Erreur lors de l'évaluation : %(err)s"
 msgstr "Error during rating: %(err)s"
 
-#: cours/views.py:623
+#: cours/views.py:719
 msgid "Vous devez être inscrit au cours pour poser une question."
 msgstr "You must be enrolled in the course to ask a question."
 
-#: cours/views.py:630
+#: cours/views.py:726
 msgid "La question doit contenir au moins 5 caractères."
 msgstr "The question must contain at least 5 characters."
 
-#: cours/views.py:633
+#: cours/views.py:729
 msgid "La question ne peut pas dépasser 500 caractères."
 msgstr "The question cannot exceed 500 characters."
 
-#: cours/views.py:645
+#: cours/views.py:741
 msgid "✅ Votre question a été soumise et sera modérée par un admin."
 msgstr "✅ Your question has been submitted and will be reviewed by an admin."
 
-#: cours/views.py:647
+#: cours/views.py:743
 #, python-format
 msgid "Erreur lors de la soumission : %(err)s"
 msgstr "Error during submission: %(err)s"
 
-#: cours/views.py:707
-msgid "Exercice réussi ! 🎉"
-msgstr ""
-
-#: cours/views.py:708
-#, python-format
-msgid "Tu as réussi l'exercice '%(title)s' (+%(pts)s pts)"
-msgstr ""
-
-#: cours/views.py:857
+#: cours/views.py:927
 msgid "QCM réussi ! 🎉"
 msgstr ""
 
-#: cours/views.py:858
+#: cours/views.py:928
 #, python-format
 msgid "Tu as répondu correctement à '%(title)s' (+%(pts)s pts)"
 msgstr ""
@@ -6646,10 +6793,6 @@ msgstr "Your reply"
 msgid "À"
 msgstr "To"
 
-#: templates/admin_panel/contact_detail.html:65
-msgid "Votre réponse…"
-msgstr "Your reply..."
-
 #: templates/admin_panel/contact_detail.html:71
 msgid "Envoyer la réponse"
 msgstr "Send reply"
@@ -6946,7 +7089,6 @@ msgid "Choix"
 msgstr ""
 
 #: templates/admin_panel/mcq_list.html:71
-#| msgid "Supprimer mon compte"
 msgid "Supprimer ce QCM ?"
 msgstr "Delete this MCQ?"
 
@@ -7233,7 +7375,7 @@ msgstr "New"
 
 #: templates/base.html:714 templates/sandbox/full_sandbox.html:77
 #: templates/sandbox/sandbox_page.html:101
-#: templates/sandbox/sandbox_widget.html:51
+#: templates/sandbox/sandbox_widget.html:99
 msgid "Sauvegarder"
 msgstr "Save"
 
@@ -7242,12 +7384,14 @@ msgid "Output apparaîtra ici…"
 msgstr ""
 
 #: templates/base.html:1005 templates/sandbox/sandbox_page.html:244
+#: templates/sandbox/sandbox_widget.html:474
 msgid "Nom du script"
 msgstr "Script name"
 
 #: templates/base.html:1005 templates/sandbox/sandbox_page.html:93
 #: templates/sandbox/sandbox_page.html:229
 #: templates/sandbox/sandbox_page.html:243
+#: templates/sandbox/sandbox_widget.html:474
 msgid "Sans titre"
 msgstr "Untitled"
 
@@ -7492,23 +7636,12 @@ msgid "Aucun script sauvegardé."
 msgstr "No scripts saved yet."
 
 #: templates/sandbox/sandbox_page.html:114
-#: templates/sandbox/sandbox_widget.html:56
 msgid "Effacer"
 msgstr "Clear"
 
-#: templates/sandbox/sandbox_widget.html:66
-msgid "Charger bibliothèque"
-msgstr "Load library"
-
-#: templates/sandbox/sandbox_widget.html:364
-msgid "Effacer le code ?"
-msgstr "Clear the code?"
-
-#: templates/sandbox/sandbox_widget.html:374
-#, fuzzy
-#| msgid "Titre du sujet"
-msgid "Titre du script"
-msgstr "Topic title"
+#: templates/sandbox/sandbox_widget.html:267
+msgid "Temps d\\'exécution dépassé (10s)."
+msgstr ""
 
 #: templates/video_room.html:42
 #, fuzzy
@@ -7760,6 +7893,21 @@ msgstr "Log out"
 #| msgid "Continuer le cours"
 msgid "Connexion en cours…"
 msgstr "Continue the course"
+
+#~| msgid "Exercice de code"
+#~ msgid "Exercice de code évalué"
+#~ msgstr "Evaluated code exercise"
+
+#~ msgid "Charger bibliothèque"
+#~ msgstr "Load library"
+
+#~ msgid "Effacer le code ?"
+#~ msgstr "Clear the code?"
+
+#, fuzzy
+#~| msgid "Titre du sujet"
+#~ msgid "Titre du script"
+#~ msgstr "Topic title"
 
 #~| msgid "Chargement de Python…"
 #~ msgid "Chargement…"

@@ -228,6 +228,102 @@ def detail_cours(request, cours_id):
                         'correct_ids':   [c.id for c in choices if c.is_correct] if reveal else [],
                         'explanation':   mcq.explanation if reveal else '',
                     })
+
+                # ── FillBlank block ───────────────────────────────────────
+                elif block.block_type == 'fill_blank' and block.fill_blank_exercise:
+                    from .models import FillBlankExercise, FillBlankGrade
+                    ex = block.fill_blank_exercise
+                    gr = FillBlankGrade.objects.filter(student=request.user, exercise=ex).first()
+                    bd.update({
+                        'fill_blank_id': ex.id, 'title': ex.title,
+                        'instructions': ex.instructions,
+                        'text_rendered': ex.text_with_blanks,
+                        'blank_count': len(ex.answers or {}),
+                        'points': ex.points, 'difficulty': ex.difficulty,
+                        'hint': ex.hint, 'max_attempts': ex.max_attempts,
+                        'is_solved': gr.is_solved if gr else False,
+                        'attempts_used': gr.attempts_count if gr else 0,
+                    })
+
+                # ── TrueFalse block ───────────────────────────────────────
+                elif block.block_type == 'true_false' and block.true_false_exercise:
+                    from .models import TrueFalseExercise, TrueFalseGrade
+                    ex = block.true_false_exercise
+                    gr = TrueFalseGrade.objects.filter(student=request.user, exercise=ex).first()
+                    stmts = [{'statement': s.get('statement',''), 'is_true': s.get('is_true', True)} for s in (ex.statements or [])]
+                    bd.update({
+                        'true_false_id': ex.id, 'title': ex.title,
+                        'statements': stmts,
+                        'points_per_statement': ex.points_per_statement,
+                        'difficulty': ex.difficulty, 'hint': ex.hint,
+                        'is_solved': gr.is_solved if gr else False,
+                        'attempts_used': gr.attempts_count if gr else 0,
+                    })
+
+                # ── CodeOrder block ───────────────────────────────────────
+                elif block.block_type == 'code_order' and block.code_order_exercise:
+                    from .models import CodeOrderExercise, CodeOrderGrade
+                    import random as _random
+                    ex = block.code_order_exercise
+                    gr = CodeOrderGrade.objects.filter(student=request.user, exercise=ex).first()
+                    all_lines = list(ex.correct_order) + list(ex.distractor_lines or [])
+                    indices = list(range(len(all_lines)))
+                    _random.seed(request.user.id + ex.id)
+                    _random.shuffle(indices)
+                    shuffled = [all_lines[i] for i in indices]
+                    import json as _json
+                    bd.update({
+                        'code_order_id': ex.id, 'title': ex.title,
+                        'instructions': ex.instructions,
+                        'shuffled_lines': shuffled,
+                        'shuffled_indices_json': _json.dumps(indices),
+                        'points': ex.points, 'difficulty': ex.difficulty,
+                        'hint': ex.hint, 'max_attempts': ex.max_attempts,
+                        'is_solved': gr.is_solved if gr else False,
+                        'attempts_used': gr.attempts_count if gr else 0,
+                    })
+
+                # ── Matching block ────────────────────────────────────────
+                elif block.block_type == 'matching' and block.matching_exercise:
+                    from .models import MatchingExercise, MatchingGrade
+                    import random as _random
+                    ex = block.matching_exercise
+                    gr = MatchingGrade.objects.filter(student=request.user, exercise=ex).first()
+                    pairs = ex.pairs or []
+                    left = [p.get('left','') for p in pairs]
+                    right = [p.get('right','') for p in pairs]
+                    indices = list(range(len(right)))
+                    _random.seed(request.user.id + ex.id + 1)
+                    _random.shuffle(indices)
+                    shuffled_right = [right[i] for i in indices]
+                    bd.update({
+                        'matching_id': ex.id, 'title': ex.title,
+                        'instructions': ex.instructions,
+                        'left_items': left, 'right_items': shuffled_right,
+                        'right_indices': list(range(len(pairs))),
+                        'pairs': pairs,
+                        'points': ex.points, 'difficulty': ex.difficulty,
+                        'hint': ex.hint,
+                        'is_solved': gr.is_solved if gr else False,
+                        'attempts_used': gr.attempts_count if gr else 0,
+                    })
+
+                # ── ShortAnswer block ─────────────────────────────────────
+                elif block.block_type == 'short_answer' and block.short_answer_exercise:
+                    from .models import ShortAnswerExercise, ShortAnswerGrade
+                    ex = block.short_answer_exercise
+                    gr = ShortAnswerGrade.objects.filter(student=request.user, exercise=ex).first()
+                    bd.update({
+                        'short_answer_id': ex.id, 'title': ex.title,
+                        'question': ex.question,
+                        'points': ex.points, 'difficulty': ex.difficulty,
+                        'hint': ex.hint, 'max_attempts': ex.max_attempts,
+                        'is_code_answer': ex.is_code_answer,
+                        'is_solved': gr.is_solved if gr else False,
+                        'attempts_used': gr.attempts_count if gr else 0,
+                        # accepted_answers intentionally omitted for security
+                    })
+
                 lesson_blocks_data.append(bd)
 
         else:
@@ -656,10 +752,12 @@ def poser_question(request, cours_id):
 @require_POST
 def submit_code_exercise(request, exercise_id):
     """
-    Receive a code submission from the browser (Pyodide ran the code client-side).
-    Saves the result and awards points on first correct submission.
+    Receive a Pyodide code submission (client-side evaluation).
+    Awards points via ExerciseGrade on first correct solve.
     """
-    from .models import CodeExercise, StudentCodeSubmission
+    from .models import CodeExercise, StudentCodeSubmission, ExerciseGrade
+    from .grades import notify_exercise_solved
+    from django.utils import timezone as tz
 
     exercise = get_object_or_404(CodeExercise, id=exercise_id, is_active=True)
 
@@ -684,59 +782,31 @@ def submit_code_exercise(request, exercise_id):
         time_spent_seconds=time_spent,
     )
 
+    grade, _ = ExerciseGrade.objects.get_or_create(
+        student=request.user, exercise=exercise
+    )
+    grade.attempts_count = attempt_num
+    grade.time_spent_seconds = (grade.time_spent_seconds or 0) + time_spent
+
     points_earned = 0
-    if is_correct:
-        first_correct = StudentCodeSubmission.objects.filter(
-            student=request.user, exercise=exercise, is_correct=True
-        ).count() == 1
+    already_solved = grade.is_solved
 
-        if first_correct:
-            points_earned = exercise.points
-            try:
-                from notifications.notifications import notify_user
-                # Build link only when we have a course lesson; formation lessons
-                # don't have a dedicated student page via the same URL pattern.
-                notif_link = None
-                if exercise.lecon_id and exercise.lecon:
-                    notif_link = (
-                        reverse('cours:detail', kwargs={'cours_id': exercise.lecon.cours_id})
-                        + f'?lecon={exercise.lecon_id}'
-                    )
-                notify_user(
-                    request.user,
-                    title=_("Exercice réussi ! 🎉"),
-                    message=_("Tu as réussi l'exercice '%(title)s' (+%(pts)s pts)") % {
-                        'title': exercise.title, 'pts': exercise.points
-                    },
-                    notification_type='success',
-                    link=notif_link,
-                )
-            except Exception:
-                pass
-
-    # Count solved exercises in the same context (course or formation)
-    try:
-        if exercise.lecon_id and exercise.lecon:
-            solved_count = StudentCodeSubmission.objects.filter(
-                student=request.user,
-                exercise__lecon__cours=exercise.lecon.cours,
-                is_correct=True,
-            ).values('exercise').distinct().count()
-        elif exercise.formation_lesson_id and exercise.formation_lesson:
-            solved_count = StudentCodeSubmission.objects.filter(
-                student=request.user,
-                exercise__formation_lesson__formation=exercise.formation_lesson.formation,
-                is_correct=True,
-            ).values('exercise').distinct().count()
-        else:
-            solved_count = 0
-    except Exception:
-        solved_count = 0
+    if is_correct and not already_solved:
+        grade.is_solved     = True
+        grade.points_earned = exercise.points
+        grade.solved_at     = tz.now()
+        points_earned       = exercise.points
+        notify_exercise_solved(request.user, exercise.title, exercise.points)
+    grade.save()
 
     return JsonResponse({
         'success': True,
         'points_earned': points_earned,
-        'total_points': solved_count,
+        'total_points': points_earned,
+        'is_correct': is_correct,
+        'already_solved': already_solved,
+        'attempts_used': attempt_num,
+        'max_attempts': exercise.max_attempts,
     })
 
 
@@ -900,3 +970,185 @@ def get_mcq_status(request, mcq_id):
         'correct_choice_ids': correct_ids,
         'explanation': mcq.explanation if grade.is_solved else '',
     })
+
+
+# ─── 5 NEW EXERCISE TYPE SUBMISSION ENDPOINTS ────────────────────────────────
+# All server-evaluated (no Pyodide). Correct answers NEVER sent to browser.
+
+def _award_and_respond(request, exercise, grade, is_correct, points_max,
+                       attempts_count, extra=None):
+    """Common response builder for all server-evaluated exercise types."""
+    from .grades import notify_exercise_solved
+    from django.utils import timezone as tz
+
+    already_solved = grade.is_solved
+    grade.attempts_count = attempts_count
+
+    points_earned = 0
+    if is_correct and not already_solved:
+        grade.is_solved     = True
+        grade.points_earned = points_max
+        grade.solved_at     = tz.now()
+        points_earned       = points_max
+        notify_exercise_solved(request.user, exercise.title, points_max)
+    grade.save()
+
+    data = {
+        'is_correct':    is_correct,
+        'points_earned': points_earned,
+        'already_solved':already_solved,
+        'attempts_used': attempts_count,
+        'max_attempts':  exercise.max_attempts if hasattr(exercise, 'max_attempts') else 0,
+    }
+    if extra:
+        data.update(extra)
+    return JsonResponse(data)
+
+
+@login_required
+@require_POST
+def submit_fill_blank(request, exercise_id):
+    from .models import FillBlankExercise, FillBlankGrade
+    ex = get_object_or_404(FillBlankExercise, id=exercise_id, is_active=True)
+    try:
+        submitted = json.loads(request.body).get('answers', {})
+    except Exception:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    correct_answers = ex.answers or {}
+    results = {}
+    all_correct = True
+    for key, accepted in correct_answers.items():
+        student_ans = submitted.get(key, '').strip()
+        if not ex.case_sensitive:
+            student_ans = student_ans.lower()
+            accepted = [a.strip().lower() for a in accepted]
+        else:
+            accepted = [a.strip() for a in accepted]
+        ok = student_ans in accepted
+        results[key] = ok
+        if not ok:
+            all_correct = False
+
+    grade, _ = FillBlankGrade.objects.get_or_create(student=request.user, exercise=ex)
+    grade.attempts_count = (grade.attempts_count or 0) + 1
+    return _award_and_respond(
+        request, ex, grade, all_correct, ex.points,
+        grade.attempts_count, extra={'blank_results': results}
+    )
+
+
+@login_required
+@require_POST
+def submit_true_false(request, exercise_id):
+    from .models import TrueFalseExercise, TrueFalseGrade
+    ex = get_object_or_404(TrueFalseExercise, id=exercise_id, is_active=True)
+    try:
+        submitted = json.loads(request.body).get('answers', [])
+    except Exception:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    statements = ex.statements or []
+    correct_count = 0
+    feedback = []
+    for i, stmt in enumerate(statements):
+        student = submitted[i] if i < len(submitted) else None
+        correct = stmt.get('is_true', False)
+        ok = (student == correct)
+        if ok:
+            correct_count += 1
+        feedback.append({'ok': ok, 'explanation': stmt.get('explanation', '')})
+
+    points_max   = ex.points_per_statement * len(statements)
+    points_earned_partial = ex.points_per_statement * correct_count
+    is_correct   = (correct_count == len(statements))
+
+    grade, _ = TrueFalseGrade.objects.get_or_create(student=request.user, exercise=ex)
+    grade.attempts_count = (grade.attempts_count or 0) + 1
+    return _award_and_respond(
+        request, ex, grade, is_correct, points_max,
+        grade.attempts_count,
+        extra={'feedback': feedback, 'points_partial': points_earned_partial}
+    )
+
+
+@login_required
+@require_POST
+def submit_code_order(request, exercise_id):
+    from .models import CodeOrderExercise, CodeOrderGrade
+    ex = get_object_or_404(CodeOrderExercise, id=exercise_id, is_active=True)
+    try:
+        submitted_order = json.loads(request.body).get('submitted_order', [])
+    except Exception:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    correct = list(range(len(ex.correct_order)))   # indices 0..n-1
+    is_correct = (list(submitted_order) == correct)
+
+    grade, _ = CodeOrderGrade.objects.get_or_create(student=request.user, exercise=ex)
+    grade.attempts_count = (grade.attempts_count or 0) + 1
+    extra = {}
+    if is_correct:
+        extra['correct_code'] = '\n'.join(ex.correct_order)
+    return _award_and_respond(request, ex, grade, is_correct, ex.points, grade.attempts_count, extra=extra)
+
+
+@login_required
+@require_POST
+def submit_matching(request, exercise_id):
+    from .models import MatchingExercise, MatchingGrade
+    ex = get_object_or_404(MatchingExercise, id=exercise_id, is_active=True)
+    try:
+        submitted_pairs = json.loads(request.body).get('pairs', [])
+    except Exception:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    pairs = ex.pairs or []
+    # submitted_pairs: [{"left_index": 0, "right_index": 2}, ...]
+    correct_count = 0
+    for sp in submitted_pairs:
+        li = sp.get('left_index')
+        ri = sp.get('right_index')
+        if li is not None and ri is not None and 0 <= li < len(pairs):
+            # Correct pair: li matches li (right[li] belongs to left[li])
+            if li == ri:
+                correct_count += 1
+
+    total        = len(pairs)
+    is_correct   = (correct_count == total)
+    points_max   = ex.points
+    points_partial = round(ex.points * correct_count / total) if total else 0
+
+    grade, _ = MatchingGrade.objects.get_or_create(student=request.user, exercise=ex)
+    grade.attempts_count = (grade.attempts_count or 0) + 1
+    return _award_and_respond(
+        request, ex, grade, is_correct, points_max, grade.attempts_count,
+        extra={'correct_count': correct_count, 'total': total, 'points_partial': points_partial}
+    )
+
+
+@login_required
+@require_POST
+def submit_short_answer(request, exercise_id):
+    from .models import ShortAnswerExercise, ShortAnswerGrade
+    ex = get_object_or_404(ShortAnswerExercise, id=exercise_id, is_active=True)
+    try:
+        answer = json.loads(request.body).get('answer', '')
+    except Exception:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    if ex.strip_whitespace:
+        answer = answer.strip()
+    accepted = [a.strip() for a in (ex.accepted_answers or [])]
+    if not ex.case_sensitive:
+        answer   = answer.lower()
+        accepted = [a.lower() for a in accepted]
+
+    is_correct = answer in accepted
+
+    grade, _ = ShortAnswerGrade.objects.get_or_create(student=request.user, exercise=ex)
+    grade.attempts_count = (grade.attempts_count or 0) + 1
+    extra = {}
+    if is_correct and ex.explanation:
+        extra['explanation'] = ex.explanation
+    return _award_and_respond(request, ex, grade, is_correct, ex.points, grade.attempts_count, extra=extra)

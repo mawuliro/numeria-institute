@@ -1,0 +1,77 @@
+{% load i18n sandbox_tags %}
+{% with ex=block %}
+<div id="tf-{{ ex.true_false_id }}" class="tf-widget bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
+  <div class="flex items-center gap-3 px-5 py-3.5 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+    <span class="text-base">✅</span>
+    <span class="font-bold text-numeria-bleu dark:text-numeria-teal text-sm">{{ ex.title }}</span>
+    <div class="ml-auto flex items-center gap-2">
+      <span class="text-xs text-gray-400">{{ ex.points_per_statement }} pts/affirmation</span>
+      {% if ex.is_solved %}<span class="text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">✅ {% trans "Résolu" %}</span>{% endif %}
+    </div>
+  </div>
+  <div class="px-5 py-4 space-y-3">
+    {% for stmt in ex.statements %}
+    <div class="flex items-center gap-4 p-3 rounded-xl border border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+      <span id="tf-{{ ex.true_false_id }}-icon-{{ forloop.counter0 }}" class="text-lg w-6 flex-shrink-0">○</span>
+      <div class="flex-1 text-sm text-gray-800 dark:text-gray-100 prose prose-sm dark:prose-invert max-w-none">{{ stmt.statement|render_markdown_latex }}</div>
+      <div class="flex gap-3 flex-shrink-0">
+        <label class="flex items-center gap-1 text-xs cursor-pointer">
+          <input type="radio" name="tf-{{ ex.true_false_id }}-{{ forloop.counter0 }}" value="true"
+                 {% if ex.is_solved and stmt.is_true %}checked{% endif %}
+                 {% if ex.is_solved %}disabled{% endif %}
+                 class="accent-green-500">
+          {% trans "Vrai" %}
+        </label>
+        <label class="flex items-center gap-1 text-xs cursor-pointer">
+          <input type="radio" name="tf-{{ ex.true_false_id }}-{{ forloop.counter0 }}" value="false"
+                 {% if ex.is_solved and not stmt.is_true %}checked{% endif %}
+                 {% if ex.is_solved %}disabled{% endif %}
+                 class="accent-red-500">
+          {% trans "Faux" %}
+        </label>
+      </div>
+    </div>
+    {% endfor %}
+    <div id="tf-{{ ex.true_false_id }}-result" class="hidden rounded-xl px-4 py-3 text-sm"></div>
+    <div class="flex items-center gap-3 pt-2">
+      <button id="tf-{{ ex.true_false_id }}-btn" type="button" onclick="tfSubmit_{{ ex.true_false_id }}()"
+              {% if ex.is_solved %}disabled{% endif %}
+              class="bg-numeria-bleu hover:bg-blue-800 text-white text-sm font-bold px-5 py-2.5 rounded-xl disabled:opacity-50 transition-colors">
+        {% if ex.is_solved %}✅ {% trans "Résolu" %}{% else %}{% trans "Valider" %}{% endif %}
+      </button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+var TID = {{ ex.true_false_id }};
+var COUNT = {{ ex.statements|length }};
+var CSRF = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+var URL = '/fr/cours/vrai-faux/' + TID + '/soumettre/';
+
+window['tfSubmit_' + TID] = async function() {
+  var answers = [];
+  for (var i = 0; i < COUNT; i++) {
+    var checked = document.querySelector('input[name="tf-' + TID + '-' + i + '"]:checked');
+    answers.push(checked ? checked.value === 'true' : null);
+  }
+  var r = await fetch(URL, {method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':CSRF}, body:JSON.stringify({answers:answers})});
+  var d = await r.json();
+  (d.feedback||[]).forEach(function(f, i) {
+    var icon = document.getElementById('tf-' + TID + '-icon-' + i);
+    if (icon) icon.textContent = f.ok ? '✅' : '❌';
+  });
+  var res = document.getElementById('tf-' + TID + '-result');
+  res.classList.remove('hidden');
+  if (d.is_correct) {
+    res.className = 'rounded-xl px-4 py-3 text-sm bg-green-50 text-green-800 border border-green-200';
+    res.innerHTML = '✅ {% trans "Toutes les réponses sont correctes !" %}';
+    document.getElementById('tf-' + TID + '-btn').disabled = true;
+  } else {
+    res.className = 'rounded-xl px-4 py-3 text-sm bg-amber-50 text-amber-800 border border-amber-200';
+    res.innerHTML = d.points_partial + ' pts / ' + (COUNT * {{ ex.points_per_statement }}) + ' pts';
+  }
+};
+})();
+</script>
+{% endwith %}
