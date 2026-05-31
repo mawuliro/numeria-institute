@@ -401,14 +401,9 @@ class Course(models.Model):
         ]
 
 
-class Cours(Course):
-    """Alias historique pour les migrations et références legacy."""
-
-    class Meta:
-        proxy = True
-        app_label = 'cours'
-        verbose_name = 'Cours'
-        verbose_name_plural = 'Cours'
+# Simple Python alias — NOT a proxy model (avoids proxy registration issues).
+# Allows legacy imports like `from cours.models import Cours` to still work.
+Cours = Course
 
 
 class CourseModule(models.Model):

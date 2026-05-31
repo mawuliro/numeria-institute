@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from cours.models import Course
+# Use string reference to avoid proxy lazy-reference issues on Railway
+# (cours.Course is the concrete model; cours.Cours is a proxy alias)
 
 
 class Paiement(models.Model):
@@ -54,7 +55,7 @@ class Paiement(models.Model):
     )
     
     cours = models.ForeignKey(
-        Course,
+        'cours.Course',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

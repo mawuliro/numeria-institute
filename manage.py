@@ -32,8 +32,9 @@ def main():
         path = os.path.join(os.path.dirname(__file__), 'cours', 'models.py')
         with open(path, 'r', encoding='utf-8') as f:
             body = f.read()
-        has_proxy = 'class Cours(Course)' in body and "app_label = 'cours'" in body
-        print('MODEL_COURS_SOURCE_PRESENT:', has_proxy, file=sys.stderr)
+        # Proxy replaced with Python alias — check for Course concrete model
+        has_course = 'class Course(models.Model)' in body
+        print('MODEL_COURSE_CONCRETE_PRESENT:', has_course, file=sys.stderr)
     except Exception as exc:
         print('MODEL_COURS_SOURCE_ERROR:', exc, file=sys.stderr)
 
@@ -42,10 +43,10 @@ def main():
         django.setup()
         from django.apps import apps
         try:
-            model = apps.get_model('cours', 'cours')
-            print('MODEL_COURS_REGISTERED:', model, file=sys.stderr)
+            model = apps.get_model('cours', 'Course')
+            print('MODEL_COURSE_REGISTERED:', model, file=sys.stderr)
         except LookupError as exc:
-            print('MODEL_COURS_REGISTER_ERROR:', exc, file=sys.stderr)
+            print('MODEL_COURSE_REGISTER_ERROR:', exc, file=sys.stderr)
     except Exception as exc:
         print('DJANGO_SETUP_ERROR:', exc, file=sys.stderr)
 
