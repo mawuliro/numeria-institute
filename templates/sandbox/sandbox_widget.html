@@ -34,8 +34,8 @@
     <span id="sw-{{ sid }}-status-msg">{% trans "Chargement de Python…" %}</span>
   </div>
 
-  <!-- CodeMirror editor wrapper -->
-  <div id="sw-{{ sid }}-cm-wrapper" class="sw-cm-wrapper">
+  <!-- CodeMirror editor wrapper — tex2jax_ignore prevents MathJax from processing code -->
+  <div id="sw-{{ sid }}-cm-wrapper" class="sw-cm-wrapper tex2jax_ignore">
     <textarea id="sw-{{ sid }}-ta" style="display:none;">{{ initial_code|default:'' }}</textarea>
   </div>
 

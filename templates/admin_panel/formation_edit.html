@@ -392,7 +392,7 @@ function setEditorMode(mode) {
     if(window.EasyMDE&&EasyMDE.prototype.markdown)html=EasyMDE.prototype.markdown(md);
     const pEl=document.getElementById('preview-area'),spEl=document.getElementById('split-preview');
     if(pEl)pEl.innerHTML=html;if(spEl)spEl.innerHTML=html;
-    if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([pEl,spEl].filter(Boolean));
+    if(window.MathJax){var t=[pEl,spEl].filter(Boolean);MathJax.typesetClear(t);MathJax.typesetPromise(t).catch(e=>console.log("MathJax:",e));}
   }
 }
 // Drag & drop
@@ -417,7 +417,7 @@ function initMDE() {
       {name:'sandbox',action:e=>{e.codemirror.replaceSelection('[SANDBOX title="Essaie toi-même" code="# Ton code ici\\n"]');},className:'fa',title:'🐍 Insérer Sandbox'},
       '|','preview','side-by-side','fullscreen'],
     imageUploadFunction:(file,onS,onE)=>{const fd=new FormData();fd.append('file',file);fetch(IMG_URL,{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd}).then(r=>r.json()).then(d=>{if(d.ok)onS(d.url);else onE('Erreur');}).catch(()=>onE('Erreur'));},
-    previewRender:function(md){const h=this.parent.markdown(md);setTimeout(()=>{if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise();},100);return h;},
+    previewRender:function(plainText,preview){const h=this.parent.markdown(plainText);setTimeout(function(){if(preview&&window.MathJax){MathJax.typesetClear([preview]);MathJax.typesetPromise([preview]).catch(e=>console.log('MathJax:',e));}},60);return h;},
   });
   mdeEditor.codemirror.on('change',()=>markDirty());
 }
@@ -436,7 +436,7 @@ function lbInitAll(){
     const bid=ta.dataset.blockId;if(!bid||lbMdes[bid])return;
     const mde=new EasyMDE({element:ta,spellChecker:false,minHeight:'200px',
       toolbar:['bold','italic','heading-2','|','unordered-list','ordered-list','|','link','image','code','quote','|',{name:'latex',action:function(e){e.codemirror.replaceSelection('$$\n\n$$');},className:'fa',title:'∑ LaTeX'},'|','preview','side-by-side'],
-      imageUploadFunction:function(file,onS,onE){var fd=new FormData();fd.append('file',file);fetch(IMG_URL,{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd}).then(r=>r.json()).then(d=>{if(d.ok)onS(d.url);else onE('Erreur');}).catch(()=>onE('Erreur'));}});
+      imageUploadFunction:function(file,onS,onE){var fd=new FormData();fd.append('file',file);fetch(IMG_URL,{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd}).then(r=>r.json()).then(d=>{if(d.ok)onS(d.url);else onE('Erreur');}).catch(()=>onE('Erreur'));},previewRender:function(plainText,preview){const h=this.parent.markdown(plainText);setTimeout(function(){if(preview&&window.MathJax){MathJax.typesetClear([preview]);MathJax.typesetPromise([preview]).catch(e=>console.log('MathJax:',e));}},60);return h;}});
     mde.codemirror.on('change',function(){lbSetSaveStatus(bid,'');});lbMdes[bid]=mde;
   });
   document.querySelectorAll('.lb-cm-target').forEach(function(wrap){

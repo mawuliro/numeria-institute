@@ -1,18 +1,19 @@
-{% load i18n %}
+{% load i18n sandbox_tags %}
 {#
   Renders all LessonBlocks for a lesson in student view.
   Context variable: lesson_blocks — list of sanitised block dicts from detail_cours view.
-  Load Pyodide + CodeMirror CDNs are included at the bottom of detail.html
-  when code_exercises or lesson_blocks are present.
+  CDN scripts (CodeMirror, Pyodide) are loaded at the bottom of detail.html
+  when blocks or exercises are present.
 #}
 
 {% for block in lesson_blocks %}
 
 {% if block.type == 'text' %}
+{# render_markdown_latex: Markdown → HTML with LaTeX preserved for MathJax #}
 <div class="lesson-block lesson-block--text mb-8
             prose prose-sm dark:prose-invert max-w-none
             text-gray-700 dark:text-gray-200 leading-relaxed">
-  {{ block.text_content|safe }}
+  {{ block.text_content|render_markdown_latex }}
 </div>
 
 {% elif block.type == 'video' %}

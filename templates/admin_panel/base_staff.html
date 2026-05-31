@@ -43,6 +43,23 @@
     .badge-read        { background:#f1f5f9; color:#475569; }
     .badge-replied     { background:#dcfce7; color:#166534; }
   </style>
+  <!-- MathJax v3 config — must appear before any mathjax script loads -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath:  [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        packages: {'[+]': ['ams', 'boldsymbol']}
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800" style="font-family: Inter, system-ui, sans-serif;">
 

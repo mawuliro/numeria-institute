@@ -707,9 +707,11 @@ function renderPreview(md) {
   const spEl = document.getElementById('split-preview');
   if (pEl)  pEl.innerHTML  = html;
   if (spEl) spEl.innerHTML = html;
-  // Retrigger MathJax
-  if (window.MathJax && MathJax.typesetPromise) {
-    MathJax.typesetPromise([pEl, spEl].filter(Boolean));
+  // typesetClear then typesetPromise so MathJax re-processes already-seen elements
+  if (window.MathJax) {
+    const targets = [pEl, spEl].filter(Boolean);
+    MathJax.typesetClear(targets);
+    MathJax.typesetPromise(targets).catch(e => console.log('MathJax:', e));
   }
 }
 
@@ -769,13 +771,16 @@ function initMDE() {
       },
       '|','preview','side-by-side','fullscreen',
     ],
-    previewRender: function(md) {
-      let html = this.parent.markdown(md);
+    previewRender: function(plainText, preview) {
+      const html = this.parent.markdown(plainText);
+      // EasyMDE sets preview.innerHTML after this returns;
+      // use a short timeout so MathJax runs after the DOM is updated.
       setTimeout(function() {
-        if (window.MathJax && MathJax.typesetPromise) {
-          MathJax.typesetPromise();
+        if (preview && window.MathJax) {
+          MathJax.typesetClear([preview]);
+          MathJax.typesetPromise([preview]).catch(e => console.log('MathJax:', e));
         }
-      }, 100);
+      }, 60);
       return html;
     },
     imageUploadFunction: function(file, onSuccess, onError) {
@@ -859,6 +864,16 @@ function lbInitAll() {
       toolbar: ['bold','italic','heading-2','|','unordered-list','ordered-list','|','link','image','code','quote','|',
         {name:'latex',action:function(e){e.codemirror.replaceSelection('$$\n\n$$');},className:'fa',title:'∑ LaTeX'},
         '|','preview','side-by-side'],
+      previewRender: function(plainText, preview) {
+        const html = this.parent.markdown(plainText);
+        setTimeout(function() {
+          if (preview && window.MathJax) {
+            MathJax.typesetClear([preview]);
+            MathJax.typesetPromise([preview]).catch(e => console.log('MathJax:', e));
+          }
+        }, 60);
+        return html;
+      },
       imageUploadFunction: function(file, onS, onE) {
         var fd=new FormData(); fd.append('file',file);
         fetch(IMG_URL,{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd}).then(r=>r.json()).then(d=>{if(d.ok)onS(d.url);else onE('Erreur');}).catch(()=>onE('Erreur'));
