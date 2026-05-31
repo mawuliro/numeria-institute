@@ -400,6 +400,15 @@ class Course(models.Model):
         ]
 
 
+class Cours(Course):
+    """Alias historique pour les migrations et références legacy."""
+
+    class Meta:
+        proxy = True
+        verbose_name = 'Cours'
+        verbose_name_plural = 'Cours'
+
+
 class CourseModule(models.Model):
     """Regroupe des leçons dans un cours — couche facultative."""
     course      = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')
