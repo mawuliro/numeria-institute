@@ -14,6 +14,19 @@ from .utils import staff_only
 
 logger = logging.getLogger(__name__)
 
+BLOCK_PALETTE = [
+    ('📝', 'text', 'Texte'),
+    ('🎬', 'video', 'Vidéo'),
+    ('🐍', 'sandbox', 'Sandbox'),
+    ('💻', 'exercise', 'Exercice'),
+    ('🔘', 'mcq', 'QCM'),
+    ('✏️', 'fill_blank', 'Trous'),
+    ('✅', 'true_false', 'V/F'),
+    ('🧩', 'code_order', 'Ordre'),
+    ('🔗', 'matching', 'Asso.'),
+    ('💬', 'short_answer', 'Court'),
+]
+
 
 # ─── HELPERS ──────────────────────────────────────────────────────────────────
 
@@ -25,9 +38,9 @@ def _get_exercises_for_block(block):
         return CodeExercise.objects.filter(
             formation_lesson_id=block.formation_lesson_id, is_active=True
         ).order_by('title')
-    elif block.lesson_id:
+    elif block.course_lesson_id:
         return CodeExercise.objects.filter(
-            lecon_id=block.lesson_id, is_active=True
+            course_lesson_id=block.course_lesson_id, is_active=True
         ).order_by('title')
     return CodeExercise.objects.none()
 
@@ -51,13 +64,14 @@ def _render_block_list(request, blocks, lesson_id, lesson_type):
         ).order_by('title')
     else:
         all_exercises = CodeExercise.objects.filter(
-            lecon_id__isnull=False
-        ).select_related('lecon').order_by('title')
+            course_lesson_id__isnull=False
+        ).select_related('course_lesson').order_by('title')
     return render_to_string('admin_panel/blocks/block_list.html', {
         'blocks':        blocks,
         'lesson_id':     lesson_id,
         'lesson_type':   lesson_type,
         'all_exercises': all_exercises,
+        'block_palette': BLOCK_PALETTE,
     }, request=request)
 
 
@@ -65,9 +79,9 @@ def _render_block_list(request, blocks, lesson_id, lesson_type):
 
 @staff_only
 def get_lesson_blocks(request, lesson_id):
-    from cours.models import Lecon, LessonBlock
-    lecon  = get_object_or_404(Lecon, id=lesson_id)
-    blocks = LessonBlock.objects.filter(lesson=lecon).order_by('order')
+    from cours.models import CourseLesson, LessonBlock
+    lecon  = get_object_or_404(CourseLesson, id=lesson_id)
+    blocks = LessonBlock.objects.filter(course_lesson=lecon).order_by('order')
     html   = _render_block_list(request, blocks, lesson_id, 'cours')
     return JsonResponse({'html': html})
 
@@ -75,8 +89,8 @@ def get_lesson_blocks(request, lesson_id):
 @staff_only
 @require_POST
 def add_lesson_block(request, lesson_id):
-    from cours.models import Lecon, LessonBlock
-    lecon = get_object_or_404(Lecon, id=lesson_id)
+    from cours.models import CourseLesson, LessonBlock
+    lecon = get_object_or_404(CourseLesson, id=lesson_id)
     try:
         data       = json.loads(request.body)
         block_type = data.get('block_type', 'text')
@@ -84,7 +98,7 @@ def add_lesson_block(request, lesson_id):
     except Exception:
         block_type, position = 'text', None
 
-    existing = LessonBlock.objects.filter(lesson=lecon)
+    existing = LessonBlock.objects.filter(course_lesson=lecon)
     if position is not None:
         existing.filter(order__gte=position).update(order=F('order') + 1)
         order = int(position)
@@ -92,7 +106,7 @@ def add_lesson_block(request, lesson_id):
         order = existing.count()
 
     block = LessonBlock.objects.create(
-        lesson=lecon, block_type=block_type, order=order,
+        course_lesson=lecon, block_type=block_type, order=order,
     )
     html = _render_block_card(request, block)
     return JsonResponse({'block_id': block.id, 'html': html, 'order': block.order})
@@ -101,14 +115,14 @@ def add_lesson_block(request, lesson_id):
 @staff_only
 @require_POST
 def reorder_lesson_blocks(request, lesson_id):
-    from cours.models import Lecon, LessonBlock
-    lecon = get_object_or_404(Lecon, id=lesson_id)
+    from cours.models import CourseLesson, LessonBlock
+    lecon = get_object_or_404(CourseLesson, id=lesson_id)
     try:
         order_list = json.loads(request.body).get('order', [])
     except Exception:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     for idx, block_id in enumerate(order_list):
-        LessonBlock.objects.filter(id=block_id, lesson=lecon).update(order=idx)
+        LessonBlock.objects.filter(id=block_id, course_lesson=lecon).update(order=idx)
     return JsonResponse({'success': True})
 
 
@@ -190,7 +204,7 @@ def update_block(request, block_id):
     if 'exercise_id' in data:
         from cours.models import CodeExercise
         ex_id = data['exercise_id']
-        block.exercise = CodeExercise.objects.filter(id=ex_id).first() if ex_id else None
+        block.code_exercise = CodeExercise.objects.filter(id=ex_id).first() if ex_id else None
 
     if 'mcq_id' in data:
         from cours.models import MCQExercise
@@ -213,6 +227,17 @@ def delete_block(request, block_id):
 # ─── FORMATION LESSON: EXERCISES API ─────────────────────────────────────────
 
 @staff_only
+def get_lesson_exercises(request, lesson_id):
+    """GET exercises linked to a CourseLesson (for block card dropdown)."""
+    from cours.models import CourseLesson, CodeExercise
+    lecon = get_object_or_404(CourseLesson, id=lesson_id)
+    exs = list(CodeExercise.objects.filter(
+        course_lesson=lecon, is_active=True
+    ).values('id', 'title', 'difficulty', 'points', 'evaluation_mode'))
+    return JsonResponse({'exercises': exs})
+
+
+@staff_only
 def get_formation_lesson_exercises(request, lesson_id):
     """GET exercises linked to a specific FormationLesson (for block card dropdown)."""
     from formation.models import FormationLesson
@@ -228,17 +253,25 @@ def get_formation_lesson_exercises(request, lesson_id):
 @require_POST
 def create_exercise_from_block(request, lesson_id, block_id):
     """
-    Create a new CodeExercise linked to a FormationLesson and immediately
-    attach it to the given LessonBlock.
-    POST body: { title, instructions, difficulty, points, starter_code,
-                 evaluation_mode, expected_output, test_code,
-                 solution_code, hint, max_attempts }
+    Create a new CodeExercise and attach it to a LessonBlock.
+    Works for course lessons (lessons/<id>/...) and formation lessons.
     """
-    from formation.models import FormationLesson
     from cours.models import CodeExercise, LessonBlock
 
-    fl    = get_object_or_404(FormationLesson, id=lesson_id)
-    block = get_object_or_404(LessonBlock, id=block_id, formation_lesson=fl)
+    block = get_object_or_404(LessonBlock, id=block_id)
+    course_lesson = None
+    formation_lesson = None
+
+    if block.course_lesson_id:
+        if block.course_lesson_id != lesson_id:
+            return JsonResponse({'error': 'Block/lesson mismatch'}, status=400)
+        course_lesson = block.course_lesson
+    elif block.formation_lesson_id:
+        if block.formation_lesson_id != lesson_id:
+            return JsonResponse({'error': 'Block/lesson mismatch'}, status=400)
+        formation_lesson = block.formation_lesson
+    else:
+        return JsonResponse({'error': 'Block has no parent lesson'}, status=400)
 
     try:
         data = json.loads(request.body)
@@ -249,9 +282,10 @@ def create_exercise_from_block(request, lesson_id, block_id):
     if not title:
         return JsonResponse({'error': 'Title required'}, status=400)
 
+    order_filter = {'formation_lesson': formation_lesson} if formation_lesson else {'course_lesson': course_lesson}
     ex = CodeExercise.objects.create(
-        formation_lesson=fl,
-        lecon=None,
+        formation_lesson=formation_lesson,
+        course_lesson=course_lesson,
         title=title,
         instructions=data.get('instructions', ''),
         starter_code=data.get('starter_code', ''),
@@ -263,10 +297,10 @@ def create_exercise_from_block(request, lesson_id, block_id):
         hint=data.get('hint', ''),
         max_attempts=int(data.get('max_attempts', 0) or 0),
         points=int(data.get('points', 10) or 10),
-        order=CodeExercise.objects.filter(formation_lesson=fl).count(),
+        order=CodeExercise.objects.filter(**order_filter).count(),
     )
-    block.exercise = ex
-    block.save(update_fields=['exercise'])
+    block.code_exercise = ex
+    block.save(update_fields=['code_exercise'])
 
     return JsonResponse({
         'success': True,
@@ -286,8 +320,8 @@ def _render_block_card_with_mcqs(request, block):
     exercises = _get_exercises_for_block(block)
     if block.formation_lesson_id:
         mcqs = MCQExercise.objects.filter(formation_lesson_id=block.formation_lesson_id, is_active=True)
-    elif block.lesson_id:
-        mcqs = MCQExercise.objects.filter(lesson_id=block.lesson_id, is_active=True)
+    elif block.course_lesson_id:
+        mcqs = MCQExercise.objects.filter(course_lesson_id=block.course_lesson_id, is_active=True)
     else:
         mcqs = MCQExercise.objects.none()
     return render_to_string('admin_panel/blocks/block_card.html', {
@@ -330,7 +364,7 @@ def create_mcq_from_block(request, block_id):
         return JsonResponse({'error': 'At least 1 correct choice required'}, status=400)
 
     mcq = MCQExercise.objects.create(
-        lesson=block.lesson,
+        course_lesson=block.course_lesson,
         formation_lesson=block.formation_lesson,
         title=title,
         question=question,
@@ -367,9 +401,9 @@ def create_mcq_from_block(request, block_id):
 
 @staff_only
 def get_lesson_mcqs(request, lesson_id):
-    from cours.models import Lecon, MCQExercise
-    get_object_or_404(Lecon, id=lesson_id)
-    mcqs = list(MCQExercise.objects.filter(lesson_id=lesson_id, is_active=True).values(
+    from cours.models import CourseLesson, MCQExercise
+    get_object_or_404(CourseLesson, id=lesson_id)
+    mcqs = list(MCQExercise.objects.filter(course_lesson_id=lesson_id, is_active=True).values(
         'id', 'title', 'difficulty', 'points'
     ))
     return JsonResponse({'mcqs': mcqs})

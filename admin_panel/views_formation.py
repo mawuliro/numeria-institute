@@ -126,18 +126,10 @@ def formation_edit(request, slug):
     from formation.models import Formation
     formation = get_object_or_404(Formation, slug=slug)
     tree      = _get_formation_context(formation)
-    steps = [
-        ('1', '① Informations'),
-        ('2', '② Structure'),
-        ('3', '③ Paramètres'),
-        ('4', '④ SEO & Publication'),
-    ]
     return render(request, 'admin_panel/formation_edit.html', {
         'formation':         formation,
         'modules':           tree['modules'],
         'standalone_lecons': tree['standalone_lecons'],
-        'active_step':       request.GET.get('step', '1'),
-        'steps':             steps,
         'types':             Formation.TYPES_FORMATION,
         'niveaux':           Formation.NIVEAUX,
     })
@@ -189,8 +181,8 @@ def formation_preview(request, slug):
             elif block.block_type == 'sandbox':
                 bd['title']        = block.sandbox_title or 'Essaie toi-même'
                 bd['initial_code'] = block.sandbox_initial_code
-            elif block.block_type == 'exercise' and block.exercise:
-                ex    = block.exercise
+            elif block.block_type == 'exercise' and block.code_exercise:
+                ex    = block.code_exercise
                 tc_b64 = base64.b64encode(ex.test_code.encode()).decode() if ex.test_code else ''
                 bd.update({
                     'exercise_id':    ex.id, 'title': ex.title,

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
-from cours.models import Cours
+from cours.models import Course
 from formation.models import InscriptionFormation
 from .models import Paiement
 from .service import (
@@ -45,7 +45,7 @@ def page_paiement(request, cours_id):
     Page de paiement pour un cours payant.
     Affiche le récapitulatif et les options de paiement.
     """
-    cours = get_object_or_404(Cours, id=cours_id, est_publie=True)
+    cours = get_object_or_404(Course, id=cours_id, est_publie=True)
 
     # Si le cours est gratuit, inscrire directement
     if cours.est_gratuit:
@@ -142,13 +142,13 @@ def initier_paiement(request, cours_id):
     if request.method != 'POST':
         return redirect('paiements:page_paiement', cours_id=cours_id)
 
-    cours = get_object_or_404(Cours, id=cours_id, est_publie=True)
+    cours = get_object_or_404(Course, id=cours_id, est_publie=True)
     provider = request.POST.get('provider', 'sandbox')
 
     # Créer l'enregistrement de paiement
     paiement, nouveau = creer_paiement(
         etudiant=request.user,
-        cours=cours,
+        course=course,
         provider=provider
     )
 
@@ -201,7 +201,7 @@ def historique_paiements(request):
     """
     paiements = Paiement.objects.filter(
         etudiant=request.user
-    ).select_related('cours')
+    ).select_related('course')
 
     contexte = {
         'paiements': paiements,

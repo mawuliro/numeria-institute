@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from cours.models import Cours
+from cours.models import Course
 from django.db.models import Q
 
 
@@ -33,7 +33,7 @@ class AnalytiquesCours(models.Model):
     """Analytics détaillées par cours."""
     
     cours = models.OneToOneField(
-        Cours, on_delete=models.CASCADE,
+        Course, on_delete=models.CASCADE,
         related_name='analytics'
     )
     
@@ -128,7 +128,7 @@ class EveneementUtilisateur(models.Model):
     
     # Contexte de l'événement
     cours = models.ForeignKey(
-        Cours, on_delete=models.SET_NULL,
+        Course, on_delete=models.SET_NULL,
         null=True, blank=True, related_name='evenements'
     )
     

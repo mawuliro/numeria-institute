@@ -43,8 +43,8 @@
         <span class="font-normal text-slate-400 text-xs ml-1">— {{ block.text_content|truncatechars:40 }}</span>
       {% elif block.block_type == 'sandbox' and block.sandbox_title %}
         <span class="font-normal text-slate-400 text-xs ml-1">— {{ block.sandbox_title }}</span>
-      {% elif block.block_type == 'exercise' and block.exercise %}
-        <span class="font-normal text-slate-400 text-xs ml-1">— {{ block.exercise.title }}</span>
+      {% elif block.block_type == 'exercise' and block.code_exercise %}
+        <span class="font-normal text-slate-400 text-xs ml-1">— {{ block.code_exercise.title }}</span>
       {% endif %}
     </span>
     <div class="ml-auto flex items-center gap-2">
@@ -133,41 +133,41 @@
                   data-field="exercise_id">
             <option value="">— Aucun exercice —</option>
             {% for ex in all_exercises %}
-            <option value="{{ ex.id }}" {% if block.exercise_id == ex.id %}selected{% endif %}>
+            <option value="{{ ex.id }}" {% if block.code_exercise_id == ex.id %}selected{% endif %}>
               {{ ex.title }} ({{ ex.get_difficulty_display }}, {{ ex.points }} pts)
             </option>
             {% endfor %}
           </select>
-          {% if lesson_type == 'formation' %}
+          {% if block.course_lesson_id or block.formation_lesson_id %}
           <button type="button"
-                  onclick="lbRefreshFormationExercises({{ block.id }}, {{ block.formation_lesson_id }})"
+                  onclick="lbRefreshLessonExercises({{ block.id }}, {% if block.course_lesson_id %}{{ block.course_lesson_id }}{% else %}{{ block.formation_lesson_id }}{% endif %}, '{{ lesson_type }}')"
                   class="text-xs text-sky-600 hover:text-sky-800 px-2 py-1 border border-slate-200 rounded-lg hover:bg-sky-50 transition-colors"
-                  title="Recharger la liste depuis cette leçon de formation">🔄</button>
+                  title="Recharger la liste">🔄</button>
           {% endif %}
         </div>
       </div>
 
       {# Current exercise preview #}
-      {% if block.exercise %}
+      {% if block.code_exercise %}
       <div id="ex-preview-{{ block.id }}" class="bg-slate-50 dark:bg-slate-700 rounded-lg p-3 text-xs border border-slate-200 dark:border-slate-600">
         <div class="flex items-center gap-2 mb-1">
-          <span class="font-semibold text-slate-700 dark:text-slate-200">{{ block.exercise.title }}</span>
-          {% if block.exercise.difficulty == 'easy' %}<span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">Facile</span>
-          {% elif block.exercise.difficulty == 'medium' %}<span class="bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded-full">Moyen</span>
+          <span class="font-semibold text-slate-700 dark:text-slate-200">{{ block.code_exercise.title }}</span>
+          {% if block.code_exercise.difficulty == 'easy' %}<span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">Facile</span>
+          {% elif block.code_exercise.difficulty == 'medium' %}<span class="bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded-full">Moyen</span>
           {% else %}<span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded-full">Difficile</span>{% endif %}
-          <span class="text-slate-500 ml-auto">{{ block.exercise.points }} pts</span>
+          <span class="text-slate-500 ml-auto">{{ block.code_exercise.points }} pts</span>
         </div>
-        <p class="text-slate-500 dark:text-slate-400">{{ block.exercise.instructions|truncatechars:100 }}</p>
+        <p class="text-slate-500 dark:text-slate-400">{{ block.code_exercise.instructions|truncatechars:100 }}</p>
         <div class="flex gap-3 mt-1 text-slate-400">
-          <span>{{ block.exercise.get_evaluation_mode_display }}</span>
+          <span>{{ block.code_exercise.get_evaluation_mode_display }}</span>
         </div>
       </div>
       {% else %}
       <div id="ex-preview-{{ block.id }}" class="hidden"></div>
       {% endif %}
 
-      {# Create new exercise (Formation lessons only) #}
-      {% if lesson_type == 'formation' %}
+      {# Create new exercise inline #}
+      {% if block.course_lesson_id or block.formation_lesson_id %}
       <details class="text-xs">
         <summary class="cursor-pointer text-sky-600 hover:text-sky-800 font-medium py-1 select-none">
           ➕ Créer un nouvel exercice et le lier
@@ -217,7 +217,7 @@
             </div>
           </div>
           <button type="button"
-                  onclick="lbCreateExerciseForBlock({{ block.id }}, {{ block.formation_lesson_id }})"
+                  onclick="lbCreateExerciseForBlock({{ block.id }}, {% if block.course_lesson_id %}{{ block.course_lesson_id }}{% else %}{{ block.formation_lesson_id }}{% endif %}, '{{ lesson_type }}')"
                   class="w-full text-xs bg-green-600 hover:bg-green-500 text-white font-semibold py-2 rounded-lg transition-colors">
             ✅ Créer et lier cet exercice
           </button>

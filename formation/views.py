@@ -221,29 +221,119 @@ def mes_formations(request):
 
 @login_required
 def voir_lecon(request, lecon_id):
-    """Voir une leçon (accès conditionnel)."""
+    """Student lesson player — CMS FormationLesson with blocks, or legacy LeconFormation."""
+    from cours.lesson_blocks import build_lesson_blocks, build_legacy_code_exercises
+    from .models import FormationLesson, FormationModule, ProgressionFormationLesson
+
+    lecon_cms = FormationLesson.objects.filter(
+        id=lecon_id, est_active=True,
+    ).select_related('formation', 'module').first()
+
+    if lecon_cms:
+        formation = lecon_cms.formation
+        inscription = InscriptionFormation.objects.filter(
+            session__formation=formation,
+            etudiant=request.user,
+            statut__in=['confirmee', 'en_cours', 'terminee'],
+        ).first()
+        if not inscription:
+            return HttpResponseForbidden("Vous n'avez pas accès à cette formation.")
+        if inscription.est_acces_expire():
+            messages.error(request, _("Votre accès à cette formation a expiré."))
+            return redirect('formation:mes_formations')
+
+        progression, _ = ProgressionFormationLesson.objects.get_or_create(
+            inscription=inscription,
+            formation_lesson=lecon_cms,
+        )
+        progression.est_commencee = True
+
+        if request.method == 'POST':
+            if 'mark_complete' in request.POST or 'complete_formation' in request.POST:
+                progression.est_terminee = True
+                if not progression.date_completion:
+                    progression.date_completion = timezone.now()
+                progression.save()
+                inscription.recalculate_progression()
+                if 'complete_formation' in request.POST:
+                    inscription.statut = 'terminee'
+                    inscription.progression = 100
+                    inscription.save()
+                    messages.success(request, _("Formation terminée."))
+                    return redirect('formation:mes_formations')
+                messages.success(request, _("Leçon marquée comme complétée."))
+                return redirect('formation:voir_lecon', lecon_id=lecon_cms.id)
+        progression.save()
+
+        lesson_blocks = build_lesson_blocks(
+            formation_lesson=lecon_cms, user=request.user,
+        )
+        has_blocks = bool(lesson_blocks)
+        code_exercises = [] if has_blocks else build_legacy_code_exercises(
+            formation_lesson=lecon_cms, user=request.user,
+        )
+
+        all_lessons = list(
+            formation.formation_lessons.filter(est_active=True).order_by('ordre')
+        )
+        progressions = {
+            p.formation_lesson_id: p
+            for p in inscription.progressions_cms.all()
+        }
+        for l in all_lessons:
+            l.progression = progressions.get(l.id)
+
+        modules = list(
+            FormationModule.objects.filter(
+                formation=formation, est_actif=True,
+            ).prefetch_related('lessons').order_by('ordre')
+        )
+
+        try:
+            lecon_actuelle = all_lessons.index(lecon_cms) + 1
+        except ValueError:
+            lecon_actuelle = 1
+
+        return render(request, 'formation/voir_lecon.html', {
+            'lecon': lecon_cms,
+            'formation': formation,
+            'inscription': inscription,
+            'progression': progression,
+            'is_cms_lesson': True,
+            'has_blocks': has_blocks,
+            'lesson_blocks': lesson_blocks,
+            'code_exercises': code_exercises,
+            'lecon_suivante': lecon_cms.get_next(),
+            'lecon_precedente': lecon_cms.get_previous(),
+            'lecon_next': lecon_cms.get_next(),
+            'lecon_prev': lecon_cms.get_previous(),
+            'autres_lecons': all_lessons,
+            'modules': modules,
+            'lecon_actuelle': lecon_actuelle,
+            'total_lecons': len(all_lessons),
+            'progression_pct': inscription.progression or 0,
+            'date_expiration': inscription.acces_expire(),
+        })
+
     lecon = get_object_or_404(LeconFormation, id=lecon_id)
     formation = lecon.formation
-    
-    # Vérifier accès: utilisateur doit être inscrit et avoir payé
+
     inscription = InscriptionFormation.objects.filter(
         session__formation=formation,
         etudiant=request.user,
-        statut__in=['confirmee', 'en_cours']
+        statut__in=['confirmee', 'en_cours'],
     ).first()
-    
+
     if not inscription:
         return HttpResponseForbidden("Vous n'avez pas accès à cette formation.")
-    
-    # Vérifier accès pas expiré
+
     if inscription.est_acces_expire():
         messages.error(request, _("Votre accès à cette formation a expiré."))
         return redirect('formation:mes_formations')
-    
-    # Enregistrer progression
+
     progression, _ = ProgressionLecon.objects.get_or_create(
         inscription=inscription,
-        lecon=lecon
+        lecon=lecon,
     )
     progression.est_commencee = True
 
@@ -263,41 +353,36 @@ def voir_lecon(request, lecon_id):
             return redirect('formation:voir_lecon', lecon_id=lecon.id)
 
     progression.save()
-    
-    # Leçons adjacentes
+
     lecon_suivante = lecon.get_next()
     lecon_precedente = lecon.get_previous()
-    
-    # Autres leçons pour sidebar
     autres_lecons = formation.lecons.all().order_by('ordre')
-    
-    # Récupérer les progressions pour toutes les leçons
     progressions = {p.lecon_id: p for p in inscription.progressions_lecons.all()}
-    
-    # Ajouter les progressions aux leçons
     for l in autres_lecons:
         l.progression = progressions.get(l.id)
-    
-    # Calculer la position actuelle
+
     lecon_actuelle = list(autres_lecons).index(lecon) + 1
-    total_lecons = autres_lecons.count()
-    progression_pct = inscription.progression or 0
-    
-    context = {
+
+    return render(request, 'formation/voir_lecon.html', {
         'lecon': lecon,
         'formation': formation,
         'inscription': inscription,
+        'progression': progression,
+        'is_cms_lesson': False,
+        'has_blocks': False,
+        'lesson_blocks': [],
+        'code_exercises': [],
         'lecon_suivante': lecon_suivante,
         'lecon_precedente': lecon_precedente,
         'lecon_next': lecon_suivante,
         'lecon_prev': lecon_precedente,
         'autres_lecons': autres_lecons,
+        'modules': [],
         'lecon_actuelle': lecon_actuelle,
-        'total_lecons': total_lecons,
-        'progression_pct': progression_pct,
+        'total_lecons': autres_lecons.count(),
+        'progression_pct': inscription.progression or 0,
         'date_expiration': inscription.acces_expire(),
-    }
-    return render(request, 'formation/voir_lecon.html', context)
+    })
 
 
 def detail_certificat(request, id):

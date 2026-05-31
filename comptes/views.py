@@ -94,14 +94,14 @@ def deconnexion(request):
 @login_required
 def tableau_de_bord(request):
     """Tableau de bord complet de l'étudiant."""
-    from cours.models import Cours, InscriptionCours
+    from cours.models import Course, InscriptionCours
     from blog.models import Article
 
     profil, cree = Profil.objects.get_or_create(utilisateur=request.user)
 
     inscriptions = InscriptionCours.objects.filter(
         etudiant=request.user
-    ).select_related('cours')
+    ).select_related('course')
 
     total_inscrits  = inscriptions.count()
     total_termines  = inscriptions.filter(est_termine=True).count()
@@ -113,7 +113,7 @@ def tableau_de_bord(request):
         progression_totale = 0
 
     ids_inscrits = inscriptions.values_list('cours_id', flat=True)
-    cours_recommandes = Cours.objects.filter(
+    cours_recommandes = Course.objects.filter(
         est_publie=True
     ).exclude(
         id__in=ids_inscrits

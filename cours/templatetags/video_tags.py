@@ -4,6 +4,14 @@ from cours.models import convertir_url_youtube, extraire_id_youtube
 register = template.Library()
 
 
+@register.filter
+def youtube_embed(url):
+    """Convert a YouTube/Vimeo URL to an embed URL for iframes."""
+    if not url:
+        return ''
+    return convertir_url_youtube(url.strip())
+
+
 @register.inclusion_tag('cours/composants/lecteur_video.html')
 def lecteur_video(url, titre='', hauteur='400px', autoplay=False):
     """

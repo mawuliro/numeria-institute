@@ -122,6 +122,8 @@ urlpatterns = [
     path('lessons/<int:lesson_id>/blocks/', views_blocks.get_lesson_blocks, name='lesson_blocks'),
     path('lessons/<int:lesson_id>/blocks/add/', views_blocks.add_lesson_block, name='lesson_block_add'),
     path('lessons/<int:lesson_id>/blocks/reorder/', views_blocks.reorder_lesson_blocks, name='lesson_blocks_reorder'),
+    path('lessons/<int:lesson_id>/exercises/', views_blocks.get_lesson_exercises, name='lesson_exercises'),
+    path('lessons/<int:lesson_id>/blocks/<int:block_id>/create-exercise/', views_blocks.create_exercise_from_block, name='lesson_block_create_exercise'),
     # Formation lesson blocks
     path('formation-lessons/<int:lesson_id>/blocks/', views_blocks.get_formation_lesson_blocks, name='flesson_blocks'),
     path('formation-lessons/<int:lesson_id>/blocks/add/', views_blocks.add_formation_lesson_block, name='flesson_block_add'),

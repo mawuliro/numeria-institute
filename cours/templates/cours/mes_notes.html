@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block titre %}{% trans "Mes notes" %} — Numeria{% endblock %}
+
+{% block contenu %}
+<div class="max-w-4xl mx-auto px-4 py-10">
+  <h1 class="text-2xl font-bold text-numeria-bleu dark:text-white mb-2">📊 {% trans "Mes notes" %}</h1>
+  <p class="text-sm text-gray-500 dark:text-gray-400 mb-8">
+    {% trans "Total points obtenus" %} : <strong class="text-numeria-or">{{ total_earned }}</strong>
+  </p>
+
+  {% if cours_rows %}
+  <section class="mb-10">
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">📚 {% trans "Cours" %}</h2>
+    <div class="space-y-3">
+      {% for row in cours_rows %}
+      <a href="{% url 'mes_notes_cours' row.slug %}"
+         class="block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 hover:border-numeria-teal transition-colors">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="font-semibold text-gray-900 dark:text-white">{{ row.title }}</div>
+            <div class="text-xs text-gray-500 mt-1">
+              {{ row.earned }} / {{ row.possible }} {% trans "pts" %} · {{ row.progression }}% {% trans "progression" %}
+            </div>
+          </div>
+          <span class="text-numeria-teal text-sm">→</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if formation_rows %}
+  <section>
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">🎓 {% trans "Formations" %}</h2>
+    <div class="space-y-3">
+      {% for row in formation_rows %}
+      <a href="{% url 'mes_notes_formation' row.slug %}"
+         class="block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 hover:border-numeria-teal transition-colors">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="font-semibold text-gray-900 dark:text-white">{{ row.title }}</div>
+            <div class="text-xs text-gray-500 mt-1">
+              {{ row.earned }} / {{ row.possible }} {% trans "pts" %} · {{ row.progression }}% {% trans "progression" %}
+            </div>
+          </div>
+          <span class="text-numeria-teal text-sm">→</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if not cours_rows and not formation_rows %}
+  <p class="text-gray-500 dark:text-gray-400 text-sm">{% trans "Inscrivez-vous à un cours ou une formation pour voir vos notes." %}</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -4,7 +4,7 @@ Grade computation helpers for all exercise types.
 from django.db.models import Sum
 
 
-def _get_exercises_for_block_context(lecon=None, formation_lesson=None):
+def _get_exercises_for_block_context(course_lesson=None, formation_lesson=None):
     """
     Returns a flat dict mapping exercise_type → list of exercise objects
     for a given lesson (course or formation).
@@ -16,7 +16,7 @@ def _get_exercises_for_block_context(lecon=None, formation_lesson=None):
         CodeOrderExercise, MatchingExercise, ShortAnswerExercise,
     )
     result = {}
-    kw = {'lecon': lecon} if lecon else {'formation_lesson': formation_lesson}
+    kw = {'course_lesson': lecon} if lecon else {'formation_lesson': formation_lesson}
     result['code']         = list(CodeExercise.objects.filter(is_active=True, **kw))
     result['mcq']          = list(MCQExercise.objects.filter(is_active=True, **kw))
     result['fill_blank']   = list(FillBlankExercise.objects.filter(is_active=True, **kw))
@@ -27,7 +27,7 @@ def _get_exercises_for_block_context(lecon=None, formation_lesson=None):
     return result
 
 
-def get_lesson_total_points(lecon=None, formation_lesson=None):
+def get_lesson_total_points(course_lesson=None, formation_lesson=None):
     """Return the maximum points achievable for a lesson across all exercise types."""
     exercises = _get_exercises_for_block_context(lecon, formation_lesson)
     total = 0
@@ -40,14 +40,14 @@ def get_lesson_total_points(lecon=None, formation_lesson=None):
     return total
 
 
-def get_student_lesson_points(student, lecon=None, formation_lesson=None):
+def get_student_lesson_points(student, course_lesson=None, formation_lesson=None):
     """Return points earned by student on all exercise types in a lesson."""
     from .models import (
         ExerciseGrade, MCQGrade,
         FillBlankGrade, TrueFalseGrade,
         CodeOrderGrade, MatchingGrade, ShortAnswerGrade,
     )
-    kw_ex  = {'lecon': lecon} if lecon else {'formation_lesson': formation_lesson}
+    kw_ex  = {'course_lesson': lecon} if lecon else {'formation_lesson': formation_lesson}
     kw_fex = {'exercise__lecon': lecon} if lecon else {'exercise__formation_lesson': formation_lesson}
     kw_mcq = {'exercise__lesson': lecon} if lecon else {'exercise__formation_lesson': formation_lesson}
 

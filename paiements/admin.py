@@ -18,7 +18,7 @@ class PaiementAdmin(admin.ModelAdmin):
     search_fields = [
         'reference_numeria',
         'etudiant__username',
-        'cours__titre',
+        'course__titre',
         'reference_provider',
     ]
     readonly_fields = [

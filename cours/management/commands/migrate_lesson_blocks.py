@@ -39,19 +39,19 @@ class Command(BaseCommand):
         skipped        = 0
 
         # ── COURSE LESSONS (Lecon) ─────────────────────────────────────────
-        from cours.models import Lecon, LessonBlock, CodeExercise
+        from cours.models import CourseLesson, LessonBlock, CodeExercise
 
         self.stdout.write('Migrating Course lessons (Lecon)…')
-        for lecon in Lecon.objects.all():
+        for lecon in CourseLesson.objects.all():
             # Skip if already has blocks
-            if LessonBlock.objects.filter(lesson=lecon).exists():
+            if LessonBlock.objects.filter(course_lesson=lecon).exists():
                 skipped += 1
                 continue
 
             has_content = bool(lecon.contenu and lecon.contenu.strip())
             has_video   = bool(lecon.video_youtube)
             exercises   = CodeExercise.objects.filter(
-                lecon=lecon, is_active=True
+                course_lesson=lecon, is_active=True
             ).order_by('order')
 
             if not has_content and not has_video and not exercises.exists():
@@ -64,25 +64,25 @@ class Command(BaseCommand):
             if has_video and not has_content:
                 # Video-only lesson
                 blocks_for_lesson.append(dict(
-                    lesson=lecon, block_type='video',
+                    course_lesson=lecon, block_type='video',
                     order=order, video_url=lecon.video_youtube,
                 ))
                 order += 1
             elif has_content and has_video:
                 # Text first, then video
                 blocks_for_lesson.append(dict(
-                    lesson=lecon, block_type='text',
+                    course_lesson=lecon, block_type='text',
                     order=order, text_content=lecon.contenu,
                 ))
                 order += 1
                 blocks_for_lesson.append(dict(
-                    lesson=lecon, block_type='video',
+                    course_lesson=lecon, block_type='video',
                     order=order, video_url=lecon.video_youtube,
                 ))
                 order += 1
             elif has_content:
                 blocks_for_lesson.append(dict(
-                    lesson=lecon, block_type='text',
+                    course_lesson=lecon, block_type='text',
                     order=order, text_content=lecon.contenu,
                 ))
                 order += 1
@@ -90,7 +90,7 @@ class Command(BaseCommand):
             # Exercises → exercise blocks
             for ex in exercises:
                 blocks_for_lesson.append(dict(
-                    lesson=lecon, block_type='exercise',
+                    course_lesson=lecon, block_type='exercise',
                     order=order, exercise=ex,
                 ))
                 order += 1
@@ -102,7 +102,7 @@ class Command(BaseCommand):
             total_lessons += 1
             total_blocks  += len(blocks_for_lesson)
             self.stdout.write(
-                f'  [{lecon.cours.titre}] {lecon.titre} → '
+                f'  [{lecon.course.titre}] {lecon.titre} → '
                 f'{len(blocks_for_lesson)} bloc(s)'
             )
 

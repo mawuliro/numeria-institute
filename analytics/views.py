@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
 from urllib.parse import urlencode
-from cours.models import InscriptionCours, Cours
+from cours.models import InscriptionCours, Course
 from paiements.models import Paiement
 from admissions.models import Candidature
 from formation.models import InscriptionFormation
@@ -32,7 +32,7 @@ def dashboard(request):
         'total_utilisateurs': User.objects.count(),
         'total_etudiants': User.objects.filter(profil__isnull=False).count(),
         'nouveaux_30j': User.objects.filter(date_joined__date__gte=last_30_days).count(),
-        'total_cours': Cours.objects.filter(est_publie=True).count(),
+        'total_cours': Course.objects.filter(est_publie=True).count(),
         'total_inscriptions': InscriptionCours.objects.count(),
         'taux_completion_moyen': InscriptionCours.objects.aggregate(Avg('progression'))['progression__avg'] or 0,
         'total_articles': Article.objects.filter(est_publie=True).count(),
@@ -86,7 +86,7 @@ def dashboard(request):
     # ============================================================
     
     cours_populaires = (
-        Cours.objects
+        Course.objects
         .filter(est_publie=True)
         .annotate(nombre_inscriptions=Count('inscriptions'))
         .order_by('-nombre_inscriptions')[:5]
@@ -98,7 +98,7 @@ def dashboard(request):
     # ============================================================
     
     completion_par_cours = (
-        Cours.objects
+        Course.objects
         .filter(est_publie=True, inscriptions__isnull=False)
         .annotate(
             progression_moyenne=Avg('inscriptions__progression')

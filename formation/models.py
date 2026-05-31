@@ -427,14 +427,44 @@ class InscriptionFormation(models.Model):
         """Retourne la prochaine leçon à faire (non terminée)."""
         if not self.session_id:
             return None
+        formation = self.session.formation
+
+        cms_lessons = formation.formation_lessons.filter(est_active=True).order_by('ordre')
+        if cms_lessons.exists():
+            done = set(
+                p.formation_lesson_id
+                for p in self.progressions_cms.filter(est_terminee=True)
+            )
+            for lecon in cms_lessons:
+                if lecon.id not in done:
+                    return lecon
+            return None
+
         progressions = self.progressions_lecons.all()
         lecons_terminees = set(p.lecon_id for p in progressions if p.est_terminees)
-
-        for lecon in self.session.formation.lecons.order_by('ordre'):
+        for lecon in formation.lecons.order_by('ordre'):
             if lecon.id not in lecons_terminees:
                 return lecon
+        return None
 
-        return None  # Toutes les leçons sont terminées
+    def uses_cms_lessons(self):
+        if not self.session_id:
+            return False
+        return self.session.formation.formation_lessons.filter(est_active=True).exists()
+
+    def recalculate_progression(self):
+        """Met à jour le pourcentage de progression de l'inscription."""
+        if not self.session_id:
+            return
+        formation = self.session.formation
+        if self.uses_cms_lessons():
+            total = formation.formation_lessons.filter(est_active=True).count()
+            done = self.progressions_cms.filter(est_terminee=True).count()
+        else:
+            total = formation.lecons.count()
+            done = self.progressions_lecons.filter(est_terminees=True).count()
+        self.progression = round(done / total * 100) if total else 0
+        self.save(update_fields=['progression'])
 
 
 class LeconFormation(models.Model):
@@ -653,3 +683,42 @@ class FormationLesson(models.Model):
 
     def __str__(self):
         return f'[{self.formation.titre}] {self.titre}'
+
+    @property
+    def duree_estimee(self):
+        return self.duree_minutes
+
+    def get_siblings_qs(self):
+        return FormationLesson.objects.filter(
+            formation=self.formation, est_active=True,
+        ).order_by('ordre')
+
+    def get_next(self):
+        return self.get_siblings_qs().filter(ordre__gt=self.ordre).first()
+
+    def get_previous(self):
+        return self.get_siblings_qs().filter(ordre__lt=self.ordre).order_by('-ordre').first()
+
+
+class ProgressionFormationLesson(models.Model):
+    """Progression CMS d'un étudiant sur une FormationLesson."""
+    inscription = models.ForeignKey(
+        InscriptionFormation, on_delete=models.CASCADE,
+        related_name='progressions_cms',
+    )
+    formation_lesson = models.ForeignKey(
+        FormationLesson, on_delete=models.CASCADE,
+        related_name='progressions',
+    )
+    est_commencee = models.BooleanField(default=False)
+    est_terminee = models.BooleanField(default=False)
+    date_premiere_visite = models.DateTimeField(auto_now_add=True)
+    date_completion = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Progression leçon CMS'
+        verbose_name_plural = 'Progressions leçons CMS'
+        unique_together = ['inscription', 'formation_lesson']
+
+    def __str__(self):
+        return f'{self.inscription.etudiant.username} → {self.formation_lesson.titre}'

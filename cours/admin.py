@@ -1,6 +1,6 @@
 """
 cours/admin.py — Keeps only the models NOT managed by the custom staff panel.
-Course content (Cours, Lecon, Exercice, CodeExercise, etc.) is managed at
+Course content (Cours, CourseLesson, Exercice, CodeExercise, etc.) is managed at
 /fr/admin-panel/cours/ — no need to register them here.
 
 Kept: InscriptionCours (student enrollment emergency view), Certificat.
@@ -14,10 +14,10 @@ admin.site.site_title  = 'Numeria Admin'
 
 @admin.register(InscriptionCours)
 class InscriptionAdmin(admin.ModelAdmin):
-    list_display    = ['etudiant', 'cours', 'progression', 'est_termine', 'date_inscription']
-    list_filter     = ['est_termine', 'cours']
-    search_fields   = ['etudiant__username', 'cours__titre']
-    raw_id_fields   = ['etudiant', 'cours']
+    list_display    = ['etudiant', 'course', 'progression', 'est_termine', 'date_inscription']
+    list_filter     = ['est_termine', 'course']
+    search_fields   = ['etudiant__username', 'course__titre']
+    raw_id_fields   = ['etudiant', 'course']
 
 
 @admin.register(Certificat)

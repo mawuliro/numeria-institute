@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block titre %}{{ parent_title }} — {% trans "Mes notes" %}{% endblock %}
+
+{% block contenu %}
+<div class="max-w-4xl mx-auto px-4 py-10">
+  <a href="{% url 'mes_notes' %}" class="text-sm text-numeria-teal hover:underline mb-4 inline-block">← {% trans "Mes notes" %}</a>
+  <h1 class="text-2xl font-bold text-numeria-bleu dark:text-white mb-8">{{ parent_title }}</h1>
+
+  <div class="space-y-6">
+    {% for item in lessons %}
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="px-5 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+        <h2 class="font-semibold text-gray-900 dark:text-white">{{ item.lecon.titre }}</h2>
+      </div>
+      {% if item.exercises %}
+      <ul class="divide-y divide-gray-100 dark:divide-gray-700">
+        {% for ex in item.exercises %}
+        <li class="px-5 py-3 flex items-center gap-3 text-sm">
+          <span>{{ ex.icon }}</span>
+          <span class="flex-1 text-gray-800 dark:text-gray-100">{{ ex.title }}</span>
+          <span class="text-xs text-gray-500">{{ ex.earned }}/{{ ex.max_points }} pts</span>
+          <span class="text-xs">
+            {% if ex.status == 'solved' %}<span class="text-green-600">✅</span>
+            {% elif ex.status == 'failed' %}<span class="text-red-500">❌</span>
+            {% else %}<span class="text-gray-400">○</span>{% endif %}
+          </span>
+          {% if ex.attempts %}<span class="text-xs text-gray-400">{{ ex.attempts }} {% trans "tent." %}</span>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="px-5 py-4 text-sm text-gray-400">{% trans "Aucun exercice noté dans cette leçon." %}</p>
+      {% endif %}
+    </div>
+    {% empty %}
+    <p class="text-gray-500">{% trans "Aucune leçon publiée." %}</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 {% extends "admin_panel/base_staff.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block page_title %}{{ formation.titre }} — Éditeur{% endblock %}
 {% block page_heading %}✏️ {{ formation.titre|truncatechars:40 }}{% endblock %}
@@ -19,30 +19,26 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
 
 <style>
-.step-tab { cursor: pointer; transition: all .2s; }
-.step-tab.active { background: #0ea5e9; color: #fff; }
-.step-panel { display: none; }
-.step-panel.active { display: block; }
+.editor-nav { position: sticky; top: 0; z-index: 20; }
+.editor-nav a.active { background: #0ea5e9; color: #fff; }
+.editor-section { scroll-margin-top: 5rem; }
 .tree-item { cursor: pointer; border-radius: 8px; transition: background .15s; }
 .tree-item:hover { background: #f1f5f9; }
 .tree-item.selected { background: #e0f2fe; }
 .drag-over { background: #bae6fd !important; }
 [draggable] { cursor: grab; }
-.EasyMDEContainer .CodeMirror { min-height: 280px; border-radius: 0 0 8px 8px; }
+.EasyMDEContainer .CodeMirror { min-height: 200px; border-radius: 0 0 8px 8px; }
 </style>
-
-<!-- Step tabs -->
-<div class="flex flex-wrap gap-1 bg-white border border-slate-200 rounded-xl p-1 mb-5">
-  {% for step_num, step_label in steps %}
-  <button type="button"
-          class="step-tab flex-1 text-center text-sm font-medium px-3 py-2 rounded-lg transition-colors {% if active_step == step_num %}active{% else %}text-slate-600 hover:bg-slate-100{% endif %}"
-          data-step="{{ step_num }}" onclick="goToStep('{{ step_num }}')">{{ step_label }}</button>
-  {% endfor %}
-</div>
+<nav class="editor-nav flex flex-wrap gap-1 bg-white border border-slate-200 rounded-xl p-1 mb-5 shadow-sm">
+  <a href="#section-general" class="editor-nav-link flex-1 text-center text-sm font-medium px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100">① Infos</a>
+  <a href="#section-structure" class="editor-nav-link flex-1 text-center text-sm font-medium px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100">② Structure</a>
+  <a href="#section-settings" class="editor-nav-link flex-1 text-center text-sm font-medium px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100">③ Paramètres</a>
+  <a href="#section-seo" class="editor-nav-link flex-1 text-center text-sm font-medium px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100">④ Publication</a>
+</nav>
 <div id="autosave-indicator" class="text-xs text-slate-400 mb-3 h-5"><span id="autosave-text">Prêt</span></div>
 
 <!-- ── STEP 1 ────────────────────────────────────────────────────────────── -->
-<div id="step-1" class="step-panel {% if active_step == '1' %}active{% endif %}">
+<div id="section-general" class="editor-section mb-8">
   <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
     <h2 class="font-bold text-slate-700 text-base">① Informations générales</h2>
     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
@@ -71,8 +67,8 @@
     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Compétences visées</label>
       <textarea id="f-competences" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono">{{ formation.competences_visees }}</textarea></div>
     <div class="flex gap-3 pt-2">
-      <button type="button" onclick="saveStep1().then(()=>goToStep('2'))"
-              class="bg-sky-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-sky-700 text-sm">Sauvegarder et continuer →</button>
+      <button type="button" onclick="saveStep1()"
+              class="bg-sky-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-sky-700 text-sm">💾 Sauvegarder les infos</button>
       <button type="button" onclick="saveStep1()"
               class="bg-slate-100 text-slate-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-slate-200 text-sm">Sauvegarder</button>
     </div>
@@ -80,7 +76,7 @@
 </div>
 
 <!-- ── STEP 2 ────────────────────────────────────────────────────────────── -->
-<div id="step-2" class="step-panel {% if active_step == '2' %}active{% endif %}">
+<div id="section-structure" class="editor-section mb-8">
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-4" style="min-height:600px;">
     <!-- Tree -->
     <div class="lg:col-span-1 bg-white rounded-2xl border border-slate-200 flex flex-col">
@@ -198,7 +194,7 @@
 </div>
 
 <!-- ── STEP 3 ────────────────────────────────────────────────────────────── -->
-<div id="step-3" class="step-panel {% if active_step == '3' %}active{% endif %}">
+<div id="section-settings" class="editor-section mb-8">
   <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
     <h2 class="font-bold text-slate-700 text-base">③ Paramètres</h2>
     <div>
@@ -210,12 +206,12 @@
       </select>
     </div>
     <div class="flex gap-3"><button type="button" onclick="saveStep3().then(()=>goToStep('4'))"
-            class="bg-sky-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-sky-700 text-sm">Sauvegarder et continuer →</button></div>
+            class="bg-sky-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-sky-700 text-sm">💾 Sauvegarder les infos</button></div>
   </div>
 </div>
 
 <!-- ── STEP 4 ────────────────────────────────────────────────────────────── -->
-<div id="step-4" class="step-panel {% if active_step == '4' %}active{% endif %}">
+<div id="section-seo" class="editor-section mb-8">
   <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
     <h2 class="font-bold text-slate-700 text-base">④ SEO & Publication</h2>
     <div class="flex flex-wrap gap-3">
@@ -227,6 +223,10 @@
   </div>
 </div>
 
+<script>
+window.NumeriaAdminConfig = { csrf: "{{ csrf_token }}", imgUrl: "{% url 'admin_panel:image_upload' %}" };
+</script>
+<script src="{% static 'js/admin_lesson_editor.js' %}"></script>
 <script>
 'use strict';
 const FORMATION_SLUG = "{{ formation.slug }}";
@@ -244,14 +244,6 @@ function markDirty() { unsavedChanges=true; setSaveStatus('Modifié'); }
 function setSaveStatus(t) { document.getElementById('autosave-text').textContent = t; }
 function now() { return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }
 
-function goToStep(n) {
-  document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.step-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('step-'+n)?.classList.add('active');
-  document.querySelector('[data-step="'+n+'"]')?.classList.add('active');
-  if(n==='2'&&!mdeEditor) initMDE();
-  window.history.replaceState({},'','?step='+n);
-}
 
 async function post(url, body) {
   const r = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify(body)});
@@ -377,26 +369,12 @@ async function deleteLeconUI() {
   document.getElementById('lesson-editor-panel').classList.add('hidden');
   document.getElementById('lesson-editor-empty').classList.remove('hidden');
 }
-function setEditorMode(mode) {
-  ['edit','preview','split'].forEach(m=>{
-    document.getElementById(m+'-area').classList.toggle('hidden',m!==mode);
-    const tab=document.getElementById('tab-'+m);
-    if(tab){tab.classList.toggle('bg-white',m===mode);tab.classList.toggle('shadow-sm',m===mode);}
-  });
-  if(mode==='preview'||mode==='split'){
-    const md=mdeEditor?mdeEditor.value():'';
-    let html=md.replace(/\n/g,'<br>');
-    if(window.EasyMDE&&EasyMDE.prototype.markdown)html=EasyMDE.prototype.markdown(md);
-    const pEl=document.getElementById('preview-area'),spEl=document.getElementById('split-preview');
-    if(pEl)pEl.innerHTML=html;if(spEl)spEl.innerHTML=html;
-    if(window.MathJax){var t=[pEl,spEl].filter(Boolean);MathJax.typesetClear(t);MathJax.typesetPromise(t).catch(e=>console.log("MathJax:",e));}
-  }
-}
 // Drag & drop
 function dragStart(e,el){dragSource=el;e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',el.dataset.id);}
 function dragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');e.dataTransfer.dropEffect='move';}
 function dragLeave(e){e.currentTarget.classList.remove('drag-over');}
 function dropItem(e,target){e.preventDefault();target.classList.remove('drag-over');if(!dragSource||dragSource===target)return;target.parentNode.insertBefore(dragSource,target);saveOrder();}
+
 async function saveOrder() {
   const items=[];
   document.querySelectorAll('[data-type="module"]').forEach((el,i)=>items.push({type:'module',id:+el.dataset.id,order:i}));
@@ -404,166 +382,27 @@ async function saveOrder() {
   const r=await post(REORDER_URL,{items});
   if(r.ok)setSaveStatus('Ordre sauvegardé ✓');
 }
-// EasyMDE
-function initMDE() {
-  const ta = document.getElementById('lecon-contenu-editor'); if (!ta || mdeEditor) return;
-  mdeEditor = window.NumeriaMarkdown.createMarkdownEditor(ta, {
-    imageUploadUrl: IMG_URL,
-    csrfToken: CSRF,
-    toolbar:['bold','italic','heading-2','|','unordered-list','ordered-list','|','link','image','code','quote','|',
-      {name:'latex',action:e=>{e.codemirror.replaceSelection('$$\n\n$$');},className:'fa',title:'∑ LaTeX'},
-      {name:'python',action:e=>{e.codemirror.replaceSelection('```python\n# code\n```');},className:'fa',title:'🐍 Python'},
-      {name:'sandbox',action:e=>{e.codemirror.replaceSelection('[SANDBOX title="Essaie toi-même" code="# Ton code ici\\n"]');},className:'fa',title:'🐍 Insérer Sandbox'},
-      '|','preview','side-by-side','fullscreen']
+
+document.addEventListener('DOMContentLoaded', function() {
+  descMdeEditor = window.NumeriaMarkdown.initEditor('f-desc-longue', {
+    imageUploadUrl: IMG_URL, csrfToken: CSRF, height: '280px',
   });
-  if (mdeEditor && mdeEditor.codemirror) {
-    mdeEditor.codemirror.on('change', ()=>markDirty());
+  if (window.NumeriaMarkdown.initRichEditors) {
+    window.NumeriaMarkdown.initRichEditors(document.getElementById('section-general'));
   }
-}
-/* ── BLOCK BUILDER (shared logic with cours_edit) ── */
-var lbMdes={},lbCms={},lbDragId=null,lbAutoSaveTm=null,lbLessonId=null,lbLessonType=null;
-async function loadLessonBlocks(lessonId,lessonType){
-  lbLessonId=lessonId;lbLessonType=lessonType;
-  const url=lessonType==='formation'?`/fr/admin-panel/formation-lessons/${lessonId}/blocks/`:`/fr/admin-panel/lessons/${lessonId}/blocks/`;
-  const r=await fetch(url,{headers:{'X-CSRFToken':CSRF}});
-  const data=await r.json();
-  const cont=document.getElementById('lb-container');
-  if(cont){cont.innerHTML=data.html||'';lbInitAll();lbStartAutoSave();}
-}
-function lbInitAll(){
-  document.querySelectorAll('.lb-mde-target').forEach(function(ta){
-    const bid=ta.dataset.blockId;if(!bid||lbMdes[bid])return;
-    const mde = window.NumeriaMarkdown.createMarkdownEditor(ta, {
-      imageUploadUrl: IMG_URL,
-      csrfToken: CSRF,
-      toolbar:['bold','italic','heading-2','|','unordered-list','ordered-list','|','link','image','code','quote','|',{name:'latex',action:function(e){e.codemirror.replaceSelection('$$\n\n$$');},className:'fa',title:'∑ LaTeX'},'|','preview','side-by-side']
+  document.querySelectorAll('.editor-nav-link').forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.querySelectorAll('.editor-nav-link').forEach(function(l) { l.classList.remove('active'); });
+      link.classList.add('active');
     });
-    if (mde && mde.codemirror) {
-      mde.codemirror.on('change', function(){lbSetSaveStatus(bid,'');});
-    }
-    lbMdes[bid] = mde;
   });
-  document.querySelectorAll('.lb-cm-target').forEach(function(wrap){
-    const bid=wrap.dataset.blockId;if(!bid||lbCms[bid])return;
-    var ta=document.getElementById('lb-cm-ta-'+bid);if(!ta||!window.CodeMirror)return;
-    var cm=CodeMirror(wrap,{value:ta.value,mode:'python',theme:'dracula',lineNumbers:true,indentUnit:4,tabSize:4,indentWithTabs:false,lineWrapping:true,viewportMargin:Infinity,autoCloseBrackets:true,extraKeys:{Tab:function(c){c.replaceSelection('    ','end');}}});
-    cm.getWrapperElement().style.minHeight='120px';cm.on('change',function(){lbSetSaveStatus(bid,'');});lbCms[bid]=cm;
-  });
-  document.querySelectorAll('.lb-field').forEach(function(input){input.addEventListener('input',function(){var card=input.closest('[data-block-id]');if(card)lbSetSaveStatus(card.dataset.blockId,'');});});
-}
-function lbSetSaveStatus(bid,msg){var el=document.querySelector('.lb-save-status[data-block-id="'+bid+'"]');if(el)el.textContent=msg;}
-async function lbSaveBlock(blockId){
-  var body={};var card=document.querySelector('.lb-card[data-block-id="'+blockId+'"]');if(!card)return;
-  card.querySelectorAll('.lb-field').forEach(function(f){body[f.dataset.field]=f.value;});
-  if(lbMdes[blockId])body.text_content=lbMdes[blockId].value();
-  if(lbCms[blockId])body.sandbox_initial_code=lbCms[blockId].getValue();
-  const r=await fetch(`/fr/admin-panel/blocks/${blockId}/update/`,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify(body)});
-  const d=await r.json();if(d.success){lbSetSaveStatus(blockId,'✓ sauvegardé');}
-}
-async function lbAddBlock(blockType,position){
-  if(!lbLessonId)return;
-  const url=lbLessonType==='formation'?`/fr/admin-panel/formation-lessons/${lbLessonId}/blocks/add/`:`/fr/admin-panel/lessons/${lbLessonId}/blocks/add/`;
-  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify({block_type:blockType,position:position})});
-  const data=await r.json();const list=document.getElementById('lb-list');const empty=document.getElementById('lb-empty');
-  if(empty)empty.remove();if(list){const tmp=document.createElement('div');tmp.innerHTML=data.html;list.appendChild(tmp.firstElementChild);lbInitAll();}
-}
-async function lbDeleteBlock(blockId){
-  if(!confirm('Supprimer ce bloc ?'))return;
-  const r=await fetch(`/fr/admin-panel/blocks/${blockId}/delete/`,{method:'POST',headers:{'X-CSRFToken':CSRF,'Content-Type':'application/json'},body:'{}'});
-  const d=await r.json();if(d.success){document.querySelector('.lb-card[data-block-id="'+blockId+'"]')?.remove();if(lbMdes[blockId])delete lbMdes[blockId];if(lbCms[blockId])delete lbCms[blockId];}
-}
-function lbToggle(header){const body=header.nextElementSibling;const icon=header.querySelector('.lb-collapse-icon');if(body)body.classList.toggle('hidden');if(icon)icon.textContent=body?.classList.contains('hidden')?'▶':'▼';}
-function lbDragStart(e,id){lbDragId=id;e.dataTransfer.effectAllowed='move';}
-function lbDragOver(e){e.preventDefault();e.currentTarget.classList.add('ring-2','ring-sky-400');}
-function lbDragLeave(e){e.currentTarget.classList.remove('ring-2','ring-sky-400');}
-function lbDrop(e,targetId){e.preventDefault();e.currentTarget.classList.remove('ring-2','ring-sky-400');if(!lbDragId||lbDragId===targetId)return;const src=document.querySelector('.lb-card[data-block-id="'+lbDragId+'"]');const tgt=document.querySelector('.lb-card[data-block-id="'+targetId+'"]');if(src&&tgt)tgt.parentNode.insertBefore(src,tgt);lbSaveBlockOrder();}
-async function lbSaveBlockOrder(){if(!lbLessonId)return;const order=[];document.querySelectorAll('.lb-card[data-block-id]').forEach(function(c){order.push(+c.dataset.blockId);});const url=lbLessonType==='formation'?`/fr/admin-panel/formation-lessons/${lbLessonId}/blocks/reorder/`:`/fr/admin-panel/lessons/${lbLessonId}/blocks/reorder/`;await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify({order:order})});if(window.nbToast)nbToast('Ordre sauvegardé ✓','success');}
-function lbUpdatePreview(blockId,url){var wrap=document.getElementById('lb-vid-preview-'+blockId);var frame=wrap?wrap.querySelector('iframe'):null;if(!wrap||!frame)return;if(url){frame.src=url;wrap.classList.remove('hidden');}else{wrap.classList.add('hidden');}}
-function lbStartAutoSave(){if(lbAutoSaveTm)clearInterval(lbAutoSaveTm);lbAutoSaveTm=setInterval(function(){document.querySelectorAll('.lb-card[data-block-id]').forEach(function(card){lbSaveBlock(+card.dataset.blockId);});},60000);}
-/* ── MCQ block management ── */
-var mcqChoiceCount={};
-function addMcqChoice(blockId){var c=document.getElementById('new-mcq-choices-'+blockId);if(!c)return;var idx=mcqChoiceCount[blockId]=(mcqChoiceCount[blockId]||2);var labels=['A','B','C','D','E','F'];var row=document.createElement('div');row.className='flex items-center gap-2 mcq-choice-row';row.innerHTML='<input type="radio" name="new-mcq-correct-'+blockId+'" value="'+idx+'" class="mcq-correct-radio flex-shrink-0"><input type="text" placeholder="Choix '+(labels[idx]||idx)+'" class="mcq-choice-text flex-1 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded text-xs bg-white dark:bg-slate-700"><button type="button" onclick="removeMcqChoice(this)" class="text-red-400 hover:text-red-600 text-xs px-1">✕</button>';c.appendChild(row);mcqChoiceCount[blockId]=idx+1;}
-function removeMcqChoice(btn){var row=btn.closest('.mcq-choice-row');if(row)row.remove();}
-async function lbCreateMcqForBlock(blockId,formationLessonId,courseLessonId){
-  var title=document.getElementById('new-mcq-title-'+blockId)?.value.trim();
-  var question=document.getElementById('new-mcq-q-'+blockId)?.value.trim();
-  var diff=document.getElementById('new-mcq-diff-'+blockId)?.value;
-  var pts=document.getElementById('new-mcq-pts-'+blockId)?.value;
-  var maxAtt=document.getElementById('new-mcq-maxatt-'+blockId)?.value;
-  var expl=document.getElementById('new-mcq-expl-'+blockId)?.value;
-  var hint=document.getElementById('new-mcq-hint-'+blockId)?.value;
-  if(!title||!question){if(window.nbToast)nbToast('Titre et question sont obligatoires.','error');return;}
-  var choices=[];var container=document.getElementById('new-mcq-choices-'+blockId);
-  if(container){container.querySelectorAll('.mcq-choice-row').forEach(function(row,idx){var text=row.querySelector('.mcq-choice-text')?.value.trim();var radio=row.querySelector('.mcq-correct-radio');var isCorrect=radio&&radio.checked;if(text)choices.push({text:text,is_correct:isCorrect,feedback:'',order:idx});});}
-  if(choices.length<2){if(window.nbToast)nbToast('Au moins 2 choix requis.','error');return;}
-  if(!choices.some(function(c){return c.is_correct;})){if(window.nbToast)nbToast('Sélectionnez au moins une bonne réponse.','error');return;}
-  var r=await fetch('/fr/admin-panel/blocks/'+blockId+'/create-mcq/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify({title:title,question:question,choices:choices,difficulty:diff,points:pts,max_attempts:maxAtt,explanation:expl,hint:hint,shuffle_choices:true})});
-  var d=await r.json();
-  if(d.success){if(window.nbToast)nbToast('🔘 QCM «'+d.mcq_title+'» créé et lié.','success');await lbSaveBlock(blockId);}
-  else{if(window.nbToast)nbToast('Erreur: '+(d.error||'inconnue'),'error');}
-}
-window.addMcqChoice=addMcqChoice;window.removeMcqChoice=removeMcqChoice;window.lbCreateMcqForBlock=lbCreateMcqForBlock;
-
-/* ── Formation exercise management in block card ── */
-async function lbRefreshFormationExercises(blockId, lessonId) {
-  var sel = document.getElementById('ex-sel-' + blockId);
-  if (!sel) return;
-  sel.innerHTML = '<option value="">Chargement…</option>';
-  var r = await fetch('/fr/admin-panel/formation-lessons/' + lessonId + '/exercises/');
-  var d = await r.json();
-  sel.innerHTML = '<option value="">— Aucun exercice —</option>';
-  (d.exercises || []).forEach(function(ex) {
-    sel.add(new Option(ex.title + ' (' + ex.difficulty + ', ' + ex.points + ' pts)', ex.id));
-  });
-}
-
-async function lbCreateExerciseForBlock(blockId, lessonId) {
-  var title    = document.getElementById('new-ex-title-' + blockId)?.value.trim();
-  var diff     = document.getElementById('new-ex-diff-' + blockId)?.value;
-  var pts      = document.getElementById('new-ex-pts-' + blockId)?.value;
-  var mode     = document.getElementById('new-ex-mode-' + blockId)?.value;
-  var starter  = document.getElementById('new-ex-starter-' + blockId)?.value;
-  var expected = document.getElementById('new-ex-expected-' + blockId)?.value;
-  var solution = document.getElementById('new-ex-solution-' + blockId)?.value;
-
-  if (!title || !starter || !solution) {
-    if (window.nbToast) nbToast('Titre, code de départ et solution sont obligatoires.', 'error');
-    return;
-  }
-
-  var r = await fetch('/fr/admin-panel/formation-lessons/' + lessonId + '/blocks/' + blockId + '/create-exercise/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
-    body: JSON.stringify({
-      title: title, difficulty: diff, points: pts,
-      evaluation_mode: mode, starter_code: starter,
-      expected_output: expected, solution_code: solution,
-    }),
-  });
-  var d = await r.json();
-  if (d.success) {
-    if (window.nbToast) nbToast('✅ Exercice «' + d.exercise_title + '» créé et lié.', 'success');
-    // Update the exercise select and preview
-    var sel = document.getElementById('ex-sel-' + blockId);
-    if (sel) {
-      var opt = new Option(d.exercise_title + ' (' + d.difficulty + ', ' + d.points + ' pts)', d.exercise_id, true, true);
-      sel.add(opt);
-    }
-    var preview = document.getElementById('ex-preview-' + blockId);
-    if (preview) {
-      preview.className = 'bg-slate-50 rounded-lg p-3 text-xs border border-slate-200';
-      preview.innerHTML = '<div class="flex items-center gap-2 mb-1"><span class="font-semibold text-slate-700">' + d.exercise_title + '</span><span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full text-xs">' + d.difficulty + '</span><span class="text-slate-500 ml-auto">' + d.points + ' pts</span></div><p class="text-slate-500 text-xs">' + d.evaluation_mode + '</p>';
-    }
-    // Save the block to persist the exercise link
-    await lbSaveBlock(blockId);
-  } else {
-    if (window.nbToast) nbToast('Erreur lors de la création.', 'error');
-  }
-}
-
-document.addEventListener('DOMContentLoaded',()=>{
-  descMdeEditor = window.NumeriaMarkdown.initEditor('f-desc-longue', { imageUploadUrl: IMG_URL, csrfToken: CSRF, height: '280px' });
-  setInterval(()=>{const step=document.querySelector('.step-panel.active')?.id?.replace('step-','');if(step==='1')saveStep1(true);else if(step==='3')saveStep3(true);},60000);
+  document.querySelector('.editor-nav-link')?.classList.add('active');
+  setInterval(function() {
+    saveStep1(true);
+    saveStep3(true);
+    if (currentLeconId) saveLecon(true);
+  }, 60000);
+  setSaveStatus('Prêt');
 });
 </script>
 {% endblock %}

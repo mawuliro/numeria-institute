@@ -144,7 +144,7 @@
     <select id="cours-lecon-selector" class="w-full max-w-xl px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white mb-3">
       <option value="">{% trans "— Choisir une leçon de cours —" %}</option>
       {% for c in cours_list %}
-        {% for lecon in c.lecons.all %}
+        {% for lecon in c.lessons.all %}
         <option value="{{ lecon.id }}">{{ c.titre }} › {{ lecon.titre }}</option>
         {% endfor %}
       {% endfor %}

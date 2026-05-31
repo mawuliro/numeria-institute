@@ -7,7 +7,8 @@ from django.contrib.sitemaps.views import sitemap
 from django.contrib.sitemaps import Sitemap
 from django.views.i18n import JavaScriptCatalog
 from pages import views
-from cours.models import Cours
+from cours.models import Course
+from cours import views_grades
 from blog.models import Article
 
 
@@ -27,7 +28,7 @@ class CoursSitemap(Sitemap):
     priority = 0.9
 
     def items(self):
-        return Cours.objects.filter(est_publie=True)
+        return Course.objects.filter(est_publie=True)
 
     def lastmod(self, obj):
         return obj.date_modification
@@ -74,6 +75,9 @@ urlpatterns += i18n_patterns(
     path('contact/', views.contact, name='contact'),
     path('confidentialite/', views.confidentialite, name='confidentialite'),
     path('cgu/', views.cgu, name='cgu'),
+    path('mes-notes/', views_grades.mes_notes, name='mes_notes'),
+    path('mes-notes/cours/<slug:slug>/', views_grades.mes_notes_cours, name='mes_notes_cours'),
+    path('mes-notes/formation/<slug:slug>/', views_grades.mes_notes_formation, name='mes_notes_formation'),
     path('cours/', include('cours.urls')),
     path('formations/', include('formation.urls', namespace='formation')),
     path('blog/', include('blog.urls')),

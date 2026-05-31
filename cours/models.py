@@ -131,7 +131,7 @@ class Tag(models.Model):
         ordering = ['nom']
 
 
-class Cours(models.Model):
+class Course(models.Model):
     """
     Représente un cours sur Numeria Institute.
     Peut être un cours général (adultes/étudiants) ou scolaire (élèves).
@@ -400,9 +400,9 @@ class Cours(models.Model):
         ]
 
 
-class Module(models.Model):
+class CourseModule(models.Model):
     """Regroupe des leçons dans un cours — couche facultative."""
-    cours       = models.ForeignKey(Cours, on_delete=models.CASCADE, related_name='modules')
+    course      = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')
     titre       = models.CharField(max_length=300, verbose_name='Titre')
     description = models.TextField(blank=True, verbose_name='Description')
     ordre       = models.IntegerField(default=0, verbose_name='Ordre')
@@ -414,10 +414,10 @@ class Module(models.Model):
         verbose_name_plural = 'Modules'
 
     def __str__(self):
-        return f'[{self.cours.titre}] {self.titre}'
+        return f'[{self.course.titre}] {self.titre}'
 
 
-class Lecon(models.Model):
+class CourseLesson(models.Model):
     """Une leçon dans un cours."""
 
     CONTENT_TYPE_CHOICES = [
@@ -427,10 +427,10 @@ class Lecon(models.Model):
         ('exercise', 'Exercice pratique'),
     ]
 
-    cours  = models.ForeignKey(Cours,  on_delete=models.CASCADE, related_name='lecons')
+    course  = models.ForeignKey(Course,  on_delete=models.CASCADE, related_name='lessons')
     module = models.ForeignKey(
-        'Module', on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='lecons_module', verbose_name='Module',
+        'CourseModule', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='lessons', verbose_name='Module',
     )
     titre   = models.CharField(max_length=200, verbose_name='Titre')
     slug    = models.SlugField(blank=True, max_length=300, verbose_name='Slug')
@@ -467,12 +467,12 @@ class Lecon(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.cours.titre} — Leçon {self.ordre} : {self.titre}'
+        return f'{self.course.titre} — Leçon {self.ordre} : {self.titre}'
 
     class Meta:
         verbose_name = 'Leçon'
         verbose_name_plural = 'Leçons'
-        ordering = ['cours', 'ordre']
+        ordering = ['course', 'ordre']
 
 
 class ProgressionLecon(models.Model):
@@ -482,18 +482,18 @@ class ProgressionLecon(models.Model):
         'auth.User', on_delete=models.CASCADE,
         related_name='progressions_lecons'
     )
-    lecon = models.ForeignKey(
-        Lecon, on_delete=models.CASCADE, related_name='progressions'
+    course_lesson = models.ForeignKey(
+        'CourseLesson', on_delete=models.CASCADE, related_name='progressions'
     )
     date_completion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.etudiant.username} → {self.lecon.titre}'
+        return f'{self.etudiant.username} → {self.course_lesson.titre}'
 
     class Meta:
         verbose_name = 'Progression leçon'
         verbose_name_plural = 'Progressions leçons'
-        unique_together = ['etudiant', 'lecon']
+        unique_together = ['etudiant', 'course_lesson']
 
 
 class InscriptionCours(models.Model):
@@ -502,8 +502,8 @@ class InscriptionCours(models.Model):
     etudiant = models.ForeignKey(
         'auth.User', on_delete=models.CASCADE, related_name='inscriptions'
     )
-    cours = models.ForeignKey(
-        Cours, on_delete=models.CASCADE, related_name='inscriptions'
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name='inscriptions'
     )
     date_inscription = models.DateTimeField(auto_now_add=True)
     progression      = models.IntegerField(default=0)
@@ -511,13 +511,13 @@ class InscriptionCours(models.Model):
     date_fin         = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.etudiant.username} → {self.cours.titre}'
+        return f'{self.etudiant.username} → {self.course.titre}'
 
     class Meta:
         verbose_name = 'Inscription'
         verbose_name_plural = 'Inscriptions'
         ordering = ['-date_inscription']
-        unique_together = ['etudiant', 'cours']
+        unique_together = ['etudiant', 'course']
 
 class EvaluationCours(models.Model):
     """Évaluations et notes des cours par les étudiants."""
@@ -526,8 +526,8 @@ class EvaluationCours(models.Model):
         'auth.User', on_delete=models.CASCADE,
         related_name='evaluations_cours'
     )
-    cours = models.ForeignKey(
-        Cours, on_delete=models.CASCADE,
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE,
         related_name='evaluations'
     )
     note = models.IntegerField(
@@ -538,12 +538,12 @@ class EvaluationCours(models.Model):
     date_creation = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f'{self.etudiant.username} → {self.cours.titre} ({self.note}/5)'
+        return f'{self.etudiant.username} → {self.course.titre} ({self.note}/5)'
     
     class Meta:
         verbose_name = 'Évaluation'
         verbose_name_plural = 'Évaluations'
-        unique_together = ['etudiant', 'cours']
+        unique_together = ['etudiant', 'course']
         ordering = ['-date_creation']
 
 
@@ -560,8 +560,8 @@ class CertificatCours(models.Model):
         'auth.User', on_delete=models.CASCADE,
         related_name='certificats'
     )
-    cours = models.ForeignKey(
-        Cours, on_delete=models.CASCADE,
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE,
         related_name='certificats'
     )
     date_obtention = models.DateTimeField(auto_now_add=True)
@@ -583,14 +583,14 @@ class CertificatCours(models.Model):
         verbose_name = 'Certificat'
         verbose_name_plural = 'Certificats'
         ordering = ['-date_obtention']
-        unique_together = ['etudiant', 'cours']
+        unique_together = ['etudiant', 'course']
 
 
 class QuestionFAQ(models.Model):
     """Questions fréquemment posées par les étudiants dans un cours."""
     
-    cours = models.ForeignKey(
-        Cours, on_delete=models.CASCADE,
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE,
         related_name='faq'
     )
     auteur = models.ForeignKey(
@@ -604,7 +604,7 @@ class QuestionFAQ(models.Model):
     votes_positifs = models.IntegerField(default=0)
     
     def __str__(self):
-        return f'{self.cours.titre} - {self.question[:50]}...'
+        return f'{self.course.titre} - {self.question[:50]}...'
     
     class Meta:
         verbose_name = 'Question FAQ'
@@ -619,8 +619,8 @@ class Exercice(models.Model):
     """
 
     # La leçon à laquelle appartient cet exercice
-    lecon = models.ForeignKey(
-        Lecon,
+    course_lesson = models.ForeignKey(
+        'CourseLesson',
         on_delete=models.CASCADE,
         related_name='exercices'
     )
@@ -677,12 +677,12 @@ class Exercice(models.Model):
         return mapping.get(self.bonne_reponse, '')
 
     def __str__(self):
-        return f"[{self.lecon.titre}] Exercice {self.ordre} : {self.question[:50]}..."
+        return f"[{self.course_lesson.titre}] Exercice {self.ordre} : {self.question[:50]}..."
 
     class Meta:
         verbose_name = 'Exercice'
         verbose_name_plural = 'Exercices'
-        ordering = ['lecon', 'ordre']
+        ordering = ['course_lesson', 'ordre']
 
 
 class TentativeExercice(models.Model):
@@ -749,14 +749,14 @@ class Certificat(models.Model):
     def __str__(self):
         return (
             f"Certificat — {self.inscription.etudiant.username} "
-            f"— {self.inscription.cours.titre}"
+            f"— {self.inscription.course.titre}"
         )
 
     def get_nom_fichier(self):
         """Nom du fichier PDF téléchargeable."""
         prenom = self.inscription.etudiant.first_name or self.inscription.etudiant.username
         nom    = self.inscription.etudiant.last_name or ''
-        cours  = self.inscription.cours.titre[:30].replace(' ', '_')
+        cours  = self.inscription.course.titre[:30].replace(' ', '_')
         return f"Certificat_Numeria_{prenom}_{nom}_{cours}.pdf"
 
     class Meta:
@@ -781,8 +781,8 @@ class CodeExercise(models.Model):
         ('tests',    _('Tests unitaires')),
     ]
 
-    lecon = models.ForeignKey(
-        'Lecon', on_delete=models.CASCADE,
+    course_lesson = models.ForeignKey(
+        'CourseLesson', on_delete=models.CASCADE,
         related_name='code_exercises', verbose_name=_('Leçon'),
         null=True, blank=True,
     )
@@ -913,8 +913,8 @@ class LessonBlock(models.Model):
     ]
 
     # Belongs to one of these two (exactly one must be set)
-    lesson = models.ForeignKey(
-        'Lecon', on_delete=models.CASCADE,
+    course_lesson = models.ForeignKey(
+        'CourseLesson', on_delete=models.CASCADE,
         related_name='blocks', null=True, blank=True,
         verbose_name=_('Leçon de cours'),
     )
@@ -939,7 +939,7 @@ class LessonBlock(models.Model):
     sandbox_initial_code = models.TextField(blank=True, default='# Écris ton code ici\n')
 
     # ── EXERCISE block ────────────────────────────────────────────────────
-    exercise = models.ForeignKey(
+    code_exercise = models.ForeignKey(
         'CodeExercise', on_delete=models.SET_NULL,
         null=True, blank=True, related_name='lesson_blocks',
         verbose_name=_('Exercice de code'),
@@ -985,12 +985,12 @@ class LessonBlock(models.Model):
         verbose_name_plural = _('Blocs de leçon')
 
     def __str__(self):
-        parent = self.lesson or self.formation_lesson
+        parent = self.course_lesson or self.formation_lesson
         return f'[{self.block_type}] {parent}'
 
     def clean(self):
         from django.core.exceptions import ValidationError
-        if not self.lesson and not self.formation_lesson:
+        if not self.course_lesson and not self.formation_lesson:
             raise ValidationError(
                 'Un bloc doit appartenir à une leçon de cours ou de formation.'
             )
@@ -1007,8 +1007,8 @@ class MCQExercise(models.Model):
         ('hard',   _('Difficile')),
     ]
 
-    lesson = models.ForeignKey(
-        'Lecon', on_delete=models.CASCADE,
+    course_lesson = models.ForeignKey(
+        'CourseLesson', on_delete=models.CASCADE,
         related_name='mcq_exercises', null=True, blank=True,
         verbose_name=_('Leçon de cours'),
     )
@@ -1048,7 +1048,7 @@ class MCQExercise(models.Model):
 
     def clean(self):
         from django.core.exceptions import ValidationError
-        if not self.lesson and not self.formation_lesson:
+        if not self.course_lesson and not self.formation_lesson:
             raise ValidationError(
                 'Un QCM doit être lié à une leçon de cours ou de formation.'
             )
@@ -1123,7 +1123,7 @@ _DIFF = [('easy','Facile'),('medium','Moyen'),('hard','Difficile')]
 
 class FillBlankExercise(models.Model):
     """Texte à trous — blanks marked {{blank_1}}, {{blank_2}} in text."""
-    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='fill_blank_exercises')
+    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='fill_blank_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='fill_blank_exercises')
     title            = models.CharField(max_length=300)
     instructions     = models.TextField(blank=True)
@@ -1154,7 +1154,7 @@ class FillBlankGrade(models.Model):
 
 class TrueFalseExercise(models.Model):
     """Vrai ou Faux — list of statements each marked true/false."""
-    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='true_false_exercises')
+    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='true_false_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='true_false_exercises')
     title            = models.CharField(max_length=300)
     # JSON: [{"statement": "...", "is_true": true, "explanation": "..."}, ...]
@@ -1180,7 +1180,7 @@ class TrueFalseGrade(models.Model):
 
 class CodeOrderExercise(models.Model):
     """Ordonner le code — drag code lines into correct order."""
-    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='code_order_exercises')
+    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='code_order_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='code_order_exercises')
     title            = models.CharField(max_length=300)
     instructions     = models.TextField(blank=True)
@@ -1211,7 +1211,7 @@ class CodeOrderGrade(models.Model):
 
 class MatchingExercise(models.Model):
     """Associations — match left items to right items."""
-    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='matching_exercises')
+    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='matching_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='matching_exercises')
     title            = models.CharField(max_length=300)
     instructions     = models.TextField(blank=True)
@@ -1239,7 +1239,7 @@ class MatchingGrade(models.Model):
 
 class ShortAnswerExercise(models.Model):
     """Réponse courte — student types a short text answer."""
-    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='short_answer_exercises')
+    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='short_answer_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='short_answer_exercises')
     title            = models.CharField(max_length=300)
     question         = models.TextField()
@@ -1267,7 +1267,7 @@ class GroupedExercise(models.Model):
         ('short_answer', _('Réponse courte')),
     ]
 
-    lesson           = models.ForeignKey('Lecon', on_delete=models.CASCADE, null=True, blank=True, related_name='grouped_exercises')
+    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='grouped_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='grouped_exercises')
     title            = models.CharField(max_length=300)
     instructions     = models.TextField(blank=True)
@@ -1296,3 +1296,75 @@ class ShortAnswerGrade(models.Model):
     attempts_count = models.IntegerField(default=0)
     solved_at = models.DateTimeField(null=True, blank=True)
     class Meta: unique_together = ('student', 'exercise')
+
+
+# =============================================================================
+# UNIFIED PROGRESS TRACKING (all exercise types)
+# =============================================================================
+
+class ExerciseAttempt(models.Model):
+    """Records every attempt by a student on any exercise type."""
+    EXERCISE_TYPES = [
+        ('code',         _('Code')),
+        ('mcq',          _('QCM')),
+        ('fill_blank',   _('Texte à trous')),
+        ('true_false',   _('Vrai/Faux')),
+        ('code_order',   _('Ordre code')),
+        ('matching',     _('Associations')),
+        ('short_answer', _('Réponse courte')),
+    ]
+    student = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='exercise_attempts',
+        verbose_name=_('Étudiant'),
+    )
+    exercise_type = models.CharField(max_length=20, choices=EXERCISE_TYPES)
+    exercise_id = models.PositiveIntegerField()
+    attempt_number = models.PositiveIntegerField(default=1)
+    is_correct = models.BooleanField(default=False)
+    points_earned = models.IntegerField(default=0)
+    answer_data = models.JSONField(default=dict, blank=True)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-submitted_at']
+        verbose_name = _('Tentative exercice')
+        verbose_name_plural = _('Tentatives exercices')
+        indexes = [
+            models.Index(fields=['student', 'exercise_type', 'exercise_id']),
+        ]
+
+    def __str__(self):
+        status = '✅' if self.is_correct else '❌'
+        return f'{status} {self.student.username} — {self.exercise_type} #{self.exercise_id}'
+
+
+class StudentProgress(models.Model):
+    """Best result per student per exercise (unified across all types)."""
+    student = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='student_progress',
+        verbose_name=_('Étudiant'),
+    )
+    exercise_type = models.CharField(max_length=20)
+    exercise_id = models.PositiveIntegerField()
+    is_solved = models.BooleanField(default=False)
+    points_earned = models.IntegerField(default=0)
+    attempts = models.PositiveIntegerField(default=0)
+    solved_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('student', 'exercise_type', 'exercise_id')
+        verbose_name = _('Progression étudiant')
+        verbose_name_plural = _('Progressions étudiants')
+        indexes = [
+            models.Index(fields=['student', 'exercise_type']),
+        ]
+
+    def __str__(self):
+        status = '✅' if self.is_solved else '○'
+        return f'{status} {self.student.username} — {self.exercise_type} #{self.exercise_id}'
+
+
+# ── Backward-compatible aliases (deprecated — use English names) ─────────────
+Cours = Course
+Module = CourseModule
+Lecon = CourseLesson

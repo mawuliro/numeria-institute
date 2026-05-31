@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from cours.models import Cours
+from cours.models import Course
 
 
 class Paiement(models.Model):
@@ -54,7 +54,7 @@ class Paiement(models.Model):
     )
     
     cours = models.ForeignKey(
-        Cours,
+        Course,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

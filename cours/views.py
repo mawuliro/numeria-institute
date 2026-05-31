@@ -1,4 +1,3 @@
-import base64
 import json
 import logging
 from django.contrib import messages
@@ -13,7 +12,7 @@ import uuid
 
 logger = logging.getLogger(__name__)
 
-from .models import Cours, InscriptionCours, Lecon, ProgressionLecon
+from .models import Course, InscriptionCours, CourseLesson, ProgressionLecon
 
 
 def catalogue(request):
@@ -21,7 +20,7 @@ def catalogue(request):
     Page catalogue — affiche tous les cours publiés.
     Filtre par type (général ou scolaire), par cycle et par classe.
     """
-    tous_les_cours = Cours.objects.filter(est_publie=True)
+    tous_les_cours = Course.objects.filter(est_publie=True)
 
     # Filtres depuis l'URL
     type_cours = request.GET.get('type', '')
@@ -39,8 +38,8 @@ def catalogue(request):
         tous_les_cours = tous_les_cours.filter(matiere=matiere)
 
     # Compteurs par type
-    cours_generaux  = Cours.objects.filter(est_publie=True, type_cours='general').count()
-    cours_scolaires = Cours.objects.filter(est_publie=True, type_cours='scolaire').count()
+    cours_generaux  = Course.objects.filter(est_publie=True, type_cours='general').count()
+    cours_scolaires = Course.objects.filter(est_publie=True, type_cours='scolaire').count()
 
     contexte = {
         'cours':           tous_les_cours,
@@ -50,9 +49,9 @@ def catalogue(request):
         'cycle_actif':     cycle,
         'classe_active':   classe,
         'matiere_active':  matiere,
-        'cycles':          Cours.CYCLES,
-        'classes':         Cours.CLASSES,
-        'matieres':        Cours.MATIERES,
+        'cycles':          Course.CYCLES,
+        'classes':         Course.CLASSES,
+        'matieres':        Course.MATIERES,
     }
     return render(request, 'cours/catalogue.html', contexte)
 
@@ -60,9 +59,10 @@ def catalogue(request):
 def detail_cours(request, cours_id):
     """Page détail d'un cours avec ses leçons et exercices."""
     from .models import Exercice, TentativeExercice, EvaluationCours, CertificatCours
+    from .lesson_blocks import build_lesson_blocks, build_legacy_code_exercises
 
-    cours  = get_object_or_404(Cours, id=cours_id, est_publie=True)
-    lecons = cours.lecons.filter(est_publiee=True)
+    cours  = get_object_or_404(Course, id=cours_id, est_publie=True)
+    lecons = cours.lessons.filter(est_publiee=True)
 
     est_inscrit          = False
     inscription          = None
@@ -73,7 +73,7 @@ def detail_cours(request, cours_id):
     if request.user.is_authenticated:
         inscription = InscriptionCours.objects.filter(
             etudiant=request.user,
-            cours=cours
+            course=cours
         ).first()
         est_inscrit = inscription is not None
 
@@ -81,21 +81,21 @@ def detail_cours(request, cours_id):
             lecons_terminees_ids = list(
                 ProgressionLecon.objects.filter(
                     etudiant=request.user,
-                    lecon__cours=cours
-                ).values_list('lecon_id', flat=True)
+                    course_lesson__course=cours
+                ).values_list('course_lesson_id', flat=True)
             )
             
             # Get user's evaluation if exists
             evaluation_utilisateur = EvaluationCours.objects.filter(
                 etudiant=request.user,
-                cours=cours
+                course=cours
             ).first()
             
             # Get user's certificate if the course is completed
             if inscription.est_termine:
                 certificat_utilisateur = CertificatCours.objects.filter(
                     etudiant=request.user,
-                    cours=cours,
+                    course=cours,
                     statut__in=['gagne', 'en_cours']
                 ).first()
 
@@ -132,7 +132,7 @@ def detail_cours(request, cours_id):
         exercices_reussis_ids = list(
             TentativeExercice.objects.filter(
                 etudiant=request.user,
-                exercice__lecon=lecon_active,
+                exercice__course_lesson=lecon_active,
                 est_correcte=True
             ).values_list('exercice_id', flat=True)
         )
@@ -150,311 +150,18 @@ def detail_cours(request, cours_id):
     total_lecons           = lecons.count()
     lecons_terminees_count = len(lecons_terminees_ids)
 
-    # ── Code exercises (Pyodide) ───────────────────────────────────────────
+    # ── Code exercises (Pyodide) and LessonBlocks ────────────────────────────
     code_exercises_data = []
-    lesson_blocks_data  = []   # populated when lesson has LessonBlocks
+    lesson_blocks_data  = []
 
     if lecon_active and est_inscrit:
-        from .models import CodeExercise, StudentCodeSubmission, LessonBlock
-
-        # ── LessonBlocks (new system) ─────────────────────────────────────
-        blocks_qs = LessonBlock.objects.filter(lesson=lecon_active).order_by('order')
-        if blocks_qs.exists():
-            solved_ids = set(
-                StudentCodeSubmission.objects.filter(
-                    student=request.user,
-                    exercise__lesson_blocks__lesson=lecon_active,
-                    is_correct=True,
-                ).values_list('exercise_id', flat=True)
+        lesson_blocks_data = build_lesson_blocks(
+            course_lesson=lecon_active, user=request.user,
+        )
+        if not lesson_blocks_data:
+            code_exercises_data = build_legacy_code_exercises(
+                course_lesson=lecon_active, user=request.user,
             )
-            for block in blocks_qs:
-                bd = {
-                    'id':         block.id,
-                    'type':       block.block_type,
-                    'order':      block.order,
-                }
-                if block.block_type == 'text':
-                    bd['text_content'] = block.text_content
-                elif block.block_type == 'video':
-                    bd['video_url']    = block.video_url
-                    bd['video_caption']= block.video_caption
-                    if block.video_url:
-                        from .models import convertir_url_youtube
-                        bd['embed_url'] = convertir_url_youtube(block.video_url)
-                elif block.block_type == 'sandbox':
-                    bd['title']        = block.sandbox_title or 'Essaie toi-même'
-                    bd['initial_code'] = block.sandbox_initial_code
-                elif block.block_type == 'exercise' and block.exercise:
-                    ex    = block.exercise
-                    tc_b64 = base64.b64encode(ex.test_code.encode()).decode() if ex.test_code else ''
-                    bd.update({
-                        'exercise_id':    ex.id,
-                        'title':          ex.title,
-                        'instructions':   ex.instructions,
-                        'starter_code':   ex.starter_code,
-                        'expected_output':ex.expected_output,
-                        'evaluation_mode':ex.evaluation_mode,
-                        'difficulty':     ex.difficulty,
-                        'hint':           ex.hint,
-                        'max_attempts':   ex.max_attempts,
-                        'points':         ex.points,
-                        'test_code_b64':  tc_b64,
-                        'is_solved':      ex.id in solved_ids,
-                        # solution_code intentionally omitted
-                    })
-                elif block.block_type == 'mcq' and block.mcq_exercise:
-                    from .models import MCQExercise, MCQGrade, MCQChoice
-                    mcq   = block.mcq_exercise
-                    grade = MCQGrade.objects.filter(student=request.user, exercise=mcq).first()
-                    choices = list(mcq.choices.order_by('order'))
-                    exhausted = (grade and mcq.max_attempts > 0 and
-                                 grade.attempts_count >= mcq.max_attempts)
-                    reveal = (grade and (grade.is_solved or exhausted))
-                    bd.update({
-                        'mcq_id':        mcq.id,
-                        'mcq_title':     mcq.title,
-                        'question':      mcq.question,
-                        'hint':          mcq.hint,
-                        'allow_multiple':mcq.allow_multiple_correct,
-                        'shuffle':       mcq.shuffle_choices,
-                        'max_attempts':  mcq.max_attempts,
-                        'points':        mcq.points,
-                        'difficulty':    mcq.difficulty,
-                        'choices':       [{'id': c.id, 'text': c.text, 'order': c.order} for c in choices],
-                        'is_solved':     grade.is_solved if grade else False,
-                        'points_earned': grade.points_earned if grade else 0,
-                        'attempts_used': grade.attempts_count if grade else 0,
-                        # Only send correct IDs when solved or exhausted
-                        'correct_ids':   [c.id for c in choices if c.is_correct] if reveal else [],
-                        'explanation':   mcq.explanation if reveal else '',
-                    })
-
-                # ── FillBlank block ───────────────────────────────────────
-                elif block.block_type == 'fill_blank' and block.fill_blank_exercise:
-                    from .models import FillBlankExercise, FillBlankGrade
-                    ex = block.fill_blank_exercise
-                    gr = FillBlankGrade.objects.filter(student=request.user, exercise=ex).first()
-                    bd.update({
-                        'fill_blank_id': ex.id, 'title': ex.title,
-                        'instructions': ex.instructions,
-                        'text_rendered': ex.text_with_blanks,
-                        'blank_count': len(ex.answers or {}),
-                        'points': ex.points, 'difficulty': ex.difficulty,
-                        'hint': ex.hint, 'max_attempts': ex.max_attempts,
-                        'is_solved': gr.is_solved if gr else False,
-                        'attempts_used': gr.attempts_count if gr else 0,
-                    })
-
-                # ── TrueFalse block ───────────────────────────────────────
-                elif block.block_type == 'true_false' and block.true_false_exercise:
-                    from .models import TrueFalseExercise, TrueFalseGrade
-                    ex = block.true_false_exercise
-                    gr = TrueFalseGrade.objects.filter(student=request.user, exercise=ex).first()
-                    stmts = [{'statement': s.get('statement',''), 'is_true': s.get('is_true', True)} for s in (ex.statements or [])]
-                    bd.update({
-                        'true_false_id': ex.id, 'title': ex.title,
-                        'statements': stmts,
-                        'points_per_statement': ex.points_per_statement,
-                        'difficulty': ex.difficulty, 'hint': ex.hint,
-                        'is_solved': gr.is_solved if gr else False,
-                        'attempts_used': gr.attempts_count if gr else 0,
-                    })
-
-                # ── CodeOrder block ───────────────────────────────────────
-                elif block.block_type == 'code_order' and block.code_order_exercise:
-                    from .models import CodeOrderExercise, CodeOrderGrade
-                    import random as _random
-                    ex = block.code_order_exercise
-                    gr = CodeOrderGrade.objects.filter(student=request.user, exercise=ex).first()
-                    all_lines = list(ex.correct_order) + list(ex.distractor_lines or [])
-                    indices = list(range(len(all_lines)))
-                    _random.seed(request.user.id + ex.id)
-                    _random.shuffle(indices)
-                    shuffled = [all_lines[i] for i in indices]
-                    import json as _json
-                    bd.update({
-                        'code_order_id': ex.id, 'title': ex.title,
-                        'instructions': ex.instructions,
-                        'shuffled_lines': shuffled,
-                        'shuffled_indices_json': _json.dumps(indices),
-                        'points': ex.points, 'difficulty': ex.difficulty,
-                        'hint': ex.hint, 'max_attempts': ex.max_attempts,
-                        'is_solved': gr.is_solved if gr else False,
-                        'attempts_used': gr.attempts_count if gr else 0,
-                    })
-
-                # ── Matching block ────────────────────────────────────────
-                elif block.block_type == 'matching' and block.matching_exercise:
-                    from .models import MatchingExercise, MatchingGrade
-                    import random as _random
-                    ex = block.matching_exercise
-                    gr = MatchingGrade.objects.filter(student=request.user, exercise=ex).first()
-                    pairs = ex.pairs or []
-                    left = [p.get('left','') for p in pairs]
-                    right = [p.get('right','') for p in pairs]
-                    indices = list(range(len(right)))
-                    _random.seed(request.user.id + ex.id + 1)
-                    _random.shuffle(indices)
-                    shuffled_right = [right[i] for i in indices]
-                    bd.update({
-                        'matching_id': ex.id, 'title': ex.title,
-                        'instructions': ex.instructions,
-                        'left_items': left, 'right_items': shuffled_right,
-                        'right_indices': list(range(len(pairs))),
-                        'pairs': pairs,
-                        'points': ex.points, 'difficulty': ex.difficulty,
-                        'hint': ex.hint,
-                        'is_solved': gr.is_solved if gr else False,
-                        'attempts_used': gr.attempts_count if gr else 0,
-                    })
-
-                # ── ShortAnswer block ─────────────────────────────────────
-                elif block.block_type == 'short_answer' and block.short_answer_exercise:
-                    from .models import ShortAnswerExercise, ShortAnswerGrade
-                    ex = block.short_answer_exercise
-                    gr = ShortAnswerGrade.objects.filter(student=request.user, exercise=ex).first()
-                    bd.update({
-                        'short_answer_id': ex.id, 'title': ex.title,
-                        'question': ex.question,
-                        'points': ex.points, 'difficulty': ex.difficulty,
-                        'hint': ex.hint, 'max_attempts': ex.max_attempts,
-                        'is_code_answer': ex.is_code_answer,
-                        'is_solved': gr.is_solved if gr else False,
-                        'attempts_used': gr.attempts_count if gr else 0,
-                        # accepted_answers intentionally omitted for security
-                    })
-
-                elif block.block_type == 'grouped_exercise' and block.grouped_exercise:
-                    group = block.grouped_exercise
-                    questions = []
-                    for idx, q in enumerate(group.questions or []):
-                        qt = q.get('question_type')
-                        qid = q.get('exercise_id')
-                        label = q.get('label', f'Q{idx + 1}')
-                        if qt == 'qcm':
-                            from .models import MCQExercise, MCQGrade
-                            ex = MCQExercise.objects.filter(id=qid).first()
-                            if not ex:
-                                continue
-                            gr = MCQGrade.objects.filter(student=request.user, exercise=ex).first()
-                            choices = list(ex.choices.order_by('order'))
-                            questions.append({
-                                'type': 'mcq',
-                                'label': label,
-                                'mcq_id': ex.id,
-                                'mcq_title': ex.title,
-                                'question': ex.question,
-                                'hint': ex.hint,
-                                'allow_multiple': ex.allow_multiple_correct,
-                                'shuffle': ex.shuffle_choices,
-                                'max_attempts': ex.max_attempts,
-                                'points': ex.points,
-                                'difficulty': ex.difficulty,
-                                'choices': [{'id': c.id, 'text': c.text, 'order': c.order} for c in choices],
-                                'is_solved': gr.is_solved if gr else False,
-                                'points_earned': gr.points_earned if gr else 0,
-                                'attempts_used': gr.attempts_count if gr else 0,
-                                'correct_ids': [c.id for c in choices if c.is_correct] if (gr and (gr.is_solved or (ex.max_attempts > 0 and gr.attempts_count >= ex.max_attempts))) else [],
-                                'explanation': ex.explanation if (gr and (gr.is_solved or (ex.max_attempts > 0 and gr.attempts_count >= ex.max_attempts))) else '',
-                            })
-                        elif qt == 'fill_blank':
-                            from .models import FillBlankExercise, FillBlankGrade
-                            ex = FillBlankExercise.objects.filter(id=qid).first()
-                            if not ex:
-                                continue
-                            gr = FillBlankGrade.objects.filter(student=request.user, exercise=ex).first()
-                            questions.append({
-                                'type': 'fill_blank',
-                                'label': label,
-                                'fill_blank_id': ex.id,
-                                'title': ex.title,
-                                'instructions': ex.instructions,
-                                'text_with_blanks': ex.text_with_blanks,
-                                'blank_count': len(ex.answers or {}),
-                                'points': ex.points,
-                                'difficulty': ex.difficulty,
-                                'hint': ex.hint,
-                                'max_attempts': ex.max_attempts,
-                                'is_solved': gr.is_solved if gr else False,
-                                'attempts_used': gr.attempts_count if gr else 0,
-                            })
-                        elif qt == 'true_false':
-                            from .models import TrueFalseExercise, TrueFalseGrade
-                            ex = TrueFalseExercise.objects.filter(id=qid).first()
-                            if not ex:
-                                continue
-                            gr = TrueFalseGrade.objects.filter(student=request.user, exercise=ex).first()
-                            questions.append({
-                                'type': 'true_false',
-                                'label': label,
-                                'true_false_id': ex.id,
-                                'title': ex.title,
-                                'statements': ex.statements or [],
-                                'points_per_statement': ex.points_per_statement,
-                                'difficulty': ex.difficulty,
-                                'hint': ex.hint,
-                                'is_solved': gr.is_solved if gr else False,
-                                'attempts_used': gr.attempts_count if gr else 0,
-                            })
-                        elif qt == 'short_answer':
-                            from .models import ShortAnswerExercise, ShortAnswerGrade
-                            ex = ShortAnswerExercise.objects.filter(id=qid).first()
-                            if not ex:
-                                continue
-                            gr = ShortAnswerGrade.objects.filter(student=request.user, exercise=ex).first()
-                            questions.append({
-                                'type': 'short_answer',
-                                'label': label,
-                                'short_answer_id': ex.id,
-                                'title': ex.title,
-                                'question': ex.question,
-                                'points': ex.points,
-                                'difficulty': ex.difficulty,
-                                'hint': ex.hint,
-                                'max_attempts': ex.max_attempts,
-                                'is_code_answer': ex.is_code_answer,
-                                'is_solved': gr.is_solved if gr else False,
-                                'attempts_used': gr.attempts_count if gr else 0,
-                            })
-                    bd.update({
-                        'grouped_exercise_id': group.id,
-                        'group_title': group.title,
-                        'group_instructions': group.instructions,
-                        'question_type': group.question_type,
-                        'questions': questions,
-                    })
-
-                lesson_blocks_data.append(bd)
-
-        else:
-            # ── Legacy: CodeExercise only (no blocks yet) ─────────────────
-            raw_exs = CodeExercise.objects.filter(
-                lecon=lecon_active, is_active=True
-            ).order_by('order')
-            solved_ids = set(
-                StudentCodeSubmission.objects.filter(
-                    student=request.user,
-                    exercise__lecon=lecon_active,
-                    is_correct=True,
-                ).values_list('exercise_id', flat=True)
-            )
-            for ex in raw_exs:
-                tc_b64 = base64.b64encode(ex.test_code.encode()).decode() if ex.test_code else ''
-                code_exercises_data.append({
-                    'id':               ex.id,
-                    'title':            ex.title,
-                    'instructions':     ex.instructions,
-                    'starter_code':     ex.starter_code,
-                    'expected_output':  ex.expected_output,
-                    'evaluation_mode':  ex.evaluation_mode,
-                    'difficulty':       ex.difficulty,
-                    'hint':             ex.hint,
-                    'max_attempts':     ex.max_attempts,
-                    'points':           ex.points,
-                    'order':            ex.order,
-                    'test_code_b64':    tc_b64,
-                    'is_solved':        ex.id in solved_ids,
-                })
 
     contexte = {
         'cours':                  cours,
@@ -483,16 +190,16 @@ def detail_cours(request, cours_id):
 @login_required
 def inscrire_cours(request, cours_id):
     """S'inscrire à un cours — gratuit ou payant."""
-    cours = get_object_or_404(Cours, id=cours_id, est_publie=True)
+    cours = get_object_or_404(Course, id=cours_id, est_publie=True)
 
-    if InscriptionCours.objects.filter(etudiant=request.user, cours=cours).exists():
+    if InscriptionCours.objects.filter(etudiant=request.user, course=cours).exists():
         messages.info(request, _("Tu es déjà inscrit au cours « %(titre)s » ! 📚") % {'titre': cours.titre})
         return redirect('cours:detail', cours_id=cours_id)
 
     if cours.est_gratuit:
         InscriptionCours.objects.create(
             etudiant=request.user,
-            cours=cours,
+            course=cours,
             progression=0,
             est_termine=False
         )
@@ -517,15 +224,15 @@ def inscrire_cours(request, cours_id):
 @login_required
 def se_desinscrire(request, cours_id):
     """Se désinscrire d'un cours."""
-    cours = get_object_or_404(Cours, id=cours_id)
+    cours = get_object_or_404(Course, id=cours_id)
 
     inscription = InscriptionCours.objects.filter(
-        etudiant=request.user, cours=cours
+        etudiant=request.user, course=cours
     ).first()
 
     if inscription:
         ProgressionLecon.objects.filter(
-            etudiant=request.user, lecon__cours=cours
+            etudiant=request.user, course_lesson__course=cours
         ).delete()
         inscription.delete()
         messages.success(request, _("Tu t'es désinscrit du cours « %(titre)s » .") % {'titre': cours.titre})
@@ -541,11 +248,11 @@ def terminer_lecon(request, lecon_id):
     if request.method != 'POST':
         return redirect('cours:catalogue')
 
-    lecon = get_object_or_404(Lecon, id=lecon_id)
-    cours = lecon.cours
+    lecon = get_object_or_404(CourseLesson, id=lecon_id)
+    cours = lecon.course
 
     inscription = InscriptionCours.objects.filter(
-        etudiant=request.user, cours=cours
+        etudiant=request.user, course=cours
     ).first()
 
     if not inscription:
@@ -553,13 +260,13 @@ def terminer_lecon(request, lecon_id):
         return redirect('cours:detail', cours_id=cours.id)
 
     progression_lecon, cree = ProgressionLecon.objects.get_or_create(
-        etudiant=request.user, lecon=lecon
+        etudiant=request.user, course_lesson=lecon
     )
 
     if cree:
-        total_lecons     = cours.lecons.filter(est_publiee=True).count()
+        total_lecons     = cours.lessons.filter(est_publiee=True).count()
         lecons_terminees = ProgressionLecon.objects.filter(
-            etudiant=request.user, lecon__cours=cours
+            etudiant=request.user, course_lesson__course=cours
         ).count()
 
         if total_lecons > 0:
@@ -583,7 +290,7 @@ def terminer_lecon(request, lecon_id):
         messages.info(request, _("Cette leçon était déjà marquée comme terminée."))
 
     # Rediriger vers la leçon suivante si elle existe
-    lecon_suivante = cours.lecons.filter(
+    lecon_suivante = cours.lessons.filter(
         est_publiee=True, ordre__gt=lecon.ordre
     ).first()
 
@@ -599,23 +306,23 @@ def annuler_lecon(request, lecon_id):
     if request.method != 'POST':
         return redirect('cours:catalogue')
 
-    lecon = get_object_or_404(Lecon, id=lecon_id)
-    cours = lecon.cours
+    lecon = get_object_or_404(CourseLesson, id=lecon_id)
+    cours = lecon.course
 
     inscription = InscriptionCours.objects.filter(
-        etudiant=request.user, cours=cours
+        etudiant=request.user, course=cours
     ).first()
 
     if not inscription:
         return redirect('cours:catalogue')
 
     ProgressionLecon.objects.filter(
-        etudiant=request.user, lecon=lecon
+        etudiant=request.user, course_lesson=lecon
     ).delete()
 
-    total_lecons     = cours.lecons.filter(est_publiee=True).count()
+    total_lecons     = cours.lessons.filter(est_publiee=True).count()
     lecons_terminees = ProgressionLecon.objects.filter(
-        etudiant=request.user, lecon__cours=cours
+        etudiant=request.user, course_lesson__course=cours
     ).count()
 
     if total_lecons > 0:
@@ -641,13 +348,13 @@ def soumettre_exercice(request, exercice_id):
         return redirect('cours:catalogue')
 
     exercice = get_object_or_404(Exercice, id=exercice_id, est_actif=True)
-    lecon    = exercice.lecon
-    cours    = lecon.cours
+    lecon    = exercice.course_lesson
+    cours    = lecon.course
 
     # Vérifier que l'étudiant est inscrit
     if not InscriptionCours.objects.filter(
         etudiant=request.user,
-        cours=cours
+        course=cours
     ).exists():
         messages.error(request, _("Tu n'es pas inscrit à ce cours."))
         return redirect('cours:detail', cours_id=cours.id)
@@ -708,7 +415,7 @@ def telecharger_certificat(request, inscription_id):
     )
 
     # Vérifier que le cours est payant
-    if inscription.cours.est_gratuit:
+    if inscription.course.est_gratuit:
         messages.error(
             request,
             _("Les certificats sont réservés aux cours payants.")
@@ -754,7 +461,7 @@ def verifier_certificat(request, code):
         'certificat':  certificat,
         'inscription': inscription,
         'etudiant':    inscription.etudiant,
-        'cours':       inscription.cours,
+        'cours':       inscription.course,
         'date_emission': certificat.date_emission,
     }
     return render(request, 'cours/verifier_certificat.html', contexte)
@@ -765,10 +472,10 @@ def evaluer_cours(request, cours_id):
     """Poster une évaluation pour un cours complété."""
     from .models import EvaluationCours
     
-    cours = get_object_or_404(Cours, id=cours_id, est_publie=True)
+    cours = get_object_or_404(Course, id=cours_id, est_publie=True)
     inscription = InscriptionCours.objects.filter(
         etudiant=request.user,
-        cours=cours,
+        course=cours,
         est_termine=True
     ).first()
     
@@ -788,7 +495,7 @@ def evaluer_cours(request, cours_id):
             # Créer ou mettre à jour l'évaluation
             evaluation, created = EvaluationCours.objects.update_or_create(
                 etudiant=request.user,
-                cours=cours,
+                course=cours,
                 defaults={
                     'note': note,
                     'commentaire': commentaire,
@@ -809,10 +516,10 @@ def poser_question(request, cours_id):
     """Poser une question sur un cours."""
     from .models import QuestionFAQ
     
-    cours = get_object_or_404(Cours, id=cours_id, est_publie=True)
+    cours = get_object_or_404(Course, id=cours_id, est_publie=True)
     inscription = InscriptionCours.objects.filter(
         etudiant=request.user,
-        cours=cours
+        course=cours
     ).first()
     
     if not inscription:
@@ -831,7 +538,7 @@ def poser_question(request, cours_id):
             
             # Créer la question (en attente de modération)
             QuestionFAQ.objects.create(
-                cours=cours,
+                course=cours,
                 auteur=request.user,
                 question=question,
                 reponse="",  # Will be filled by admin
@@ -1076,9 +783,10 @@ def get_mcq_status(request, mcq_id):
 # All server-evaluated (no Pyodide). Correct answers NEVER sent to browser.
 
 def _award_and_respond(request, exercise, grade, is_correct, points_max,
-                       attempts_count, extra=None):
+                       attempts_count, extra=None, answer_data=None):
     """Common response builder for all server-evaluated exercise types."""
     from .grades import notify_exercise_solved
+    from .progress import record_submission
     from django.utils import timezone as tz
 
     already_solved = grade.is_solved
@@ -1093,12 +801,26 @@ def _award_and_respond(request, exercise, grade, is_correct, points_max,
         notify_exercise_solved(request.user, exercise.title, points_max)
     grade.save()
 
+    record_submission(
+        request.user, exercise, is_correct,
+        points_earned=points_earned, answer_data=answer_data,
+    )
+
+    exhausted = (
+        hasattr(exercise, 'max_attempts') and exercise.max_attempts > 0
+        and attempts_count >= exercise.max_attempts
+    )
+    show_explanation = is_correct or exhausted or already_solved
+
     data = {
-        'is_correct':    is_correct,
+        'is_correct': is_correct,
         'points_earned': points_earned,
-        'already_solved':already_solved,
+        'already_solved': already_solved,
         'attempts_used': attempts_count,
-        'max_attempts':  exercise.max_attempts if hasattr(exercise, 'max_attempts') else 0,
+        'max_attempts': exercise.max_attempts if hasattr(exercise, 'max_attempts') else 0,
+        'explanation': (
+            getattr(exercise, 'explanation', '') or ''
+        ) if show_explanation else '',
     }
     if extra:
         data.update(extra)

@@ -11,30 +11,27 @@ from django import template
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
-from cours.templatetags.content_filters import render_markdown_content
+from cours.templatetags.content_filters import render_content as _render_content_core
 
 register = template.Library()
 
 
 @register.filter
 def split(value, separator=','):
-    """Split a string into a list: {{ "a,b,c"|split:"," }}"""
     return str(value).split(separator)
 
 
 @register.filter(name='render_markdown_latex', is_safe=True)
 def render_markdown_latex(content):
-    """Alias for render_markdown_content (backward compatibility)."""
-    return render_markdown_content(content)
+    return _render_content_core(content)
 
 
 @register.filter(name='render_content', is_safe=True)
 def render_content(content):
-    """Render content with Markdown, HTML, LaTeX and sandbox markers."""
     if not content:
         return mark_safe('')
     content = process_sandbox_markers(content)
-    return render_markdown_content(content)
+    return _render_content_core(content)
 
 
 _SANDBOX_RE = re.compile(
@@ -45,7 +42,6 @@ _SANDBOX_RE = re.compile(
 
 @register.filter(name='process_sandbox_markers', is_safe=True)
 def process_sandbox_markers(content, counter_start=0):
-    """Replace [SANDBOX ...] markers with rendered sandbox widget HTML."""
     if not content:
         return content
 
@@ -62,9 +58,8 @@ def process_sandbox_markers(content, counter_start=0):
             .replace('\\t', '\t')
             .replace('\\\\', '\\')
         )
-
         try:
-            rendered = render_to_string('sandbox/sandbox_widget.html', {
+            return render_to_string('sandbox/sandbox_widget.html', {
                 'sandbox_id': sid,
                 'title': title,
                 'initial_code': decoded_code,
@@ -73,7 +68,6 @@ def process_sandbox_markers(content, counter_start=0):
                 'show_packages': False,
                 'readonly': False,
             })
-            return rendered
         except Exception:
             return (
                 f'<div class="bg-amber-50 border border-amber-200 rounded-lg p-3 '

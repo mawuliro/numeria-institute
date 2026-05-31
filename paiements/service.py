@@ -60,7 +60,7 @@ def creer_paiement(etudiant, cours=None, formation_inscription=None, paiement_se
     # Vérifier qu'il n'y a pas déjà un paiement réussi pour un cours ou une formation
     paiement_existant = Paiement.objects.filter(
         etudiant=etudiant,
-        cours=cours,
+        course=course,
         formation_inscription=formation_inscription,
         statut='reussi'
     ).first()
@@ -83,7 +83,7 @@ def creer_paiement(etudiant, cours=None, formation_inscription=None, paiement_se
 
     paiement = Paiement.objects.create(
         etudiant=etudiant,
-        cours=cours,
+        course=course,
         formation_inscription=formation_inscription,
         montant_initial=montant,
         montant_final=montant,
@@ -157,7 +157,7 @@ def verifier_acces_cours(etudiant, cours):
 
     return Paiement.objects.filter(
         etudiant=etudiant,
-        cours=cours,
+        course=course,
         statut='reussi'
     ).exists()
 

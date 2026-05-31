@@ -24,12 +24,12 @@ logger = logging.getLogger(__name__)
 
 def _get_cours_context(cours):
     """Return a dict with module/lesson tree for the course editor."""
-    from cours.models import Module, Lecon
+    from cours.models import CourseModule, CourseLesson
     modules = list(
-        Module.objects.filter(cours=cours).prefetch_related('lecons_module').order_by('ordre')
+        CourseModule.objects.filter(course=cours).prefetch_related('lessons').order_by('ordre')
     )
     standalone_lecons = list(
-        Lecon.objects.filter(cours=cours, module__isnull=True).order_by('ordre')
+        CourseLesson.objects.filter(course=cours, module__isnull=True).order_by('ordre')
     )
     return {'modules': modules, 'standalone_lecons': standalone_lecons}
 
@@ -38,12 +38,12 @@ def _get_cours_context(cours):
 
 @staff_only
 def cours_list(request):
-    from cours.models import Cours, InscriptionCours
+    from cours.models import Course, InscriptionCours
 
-    qs = Cours.objects.select_related('created_by').annotate(
+    qs = Course.objects.select_related('created_by').annotate(
         nb_inscrits=Count('inscriptions', distinct=True),
         nb_modules=Count('modules', distinct=True),
-        nb_lecons=Count('lecons', distinct=True),
+        nb_lecons=Count('lessons', distinct=True),
     )
 
     # Filters
@@ -79,7 +79,7 @@ def cours_list(request):
     paginator = Paginator(qs, 12)
     page_obj  = paginator.get_page(request.GET.get('page'))
 
-    draft_count = Cours.objects.filter(status='brouillon').count()
+    draft_count = Course.objects.filter(status='brouillon').count()
 
     return render(request, 'admin_panel/cours_list.html', {
         'page_obj':    page_obj,
@@ -91,9 +91,9 @@ def cours_list(request):
         'q':           q,
         'sort':        sort,
         'draft_count': draft_count,
-        'status_choices': Cours.STATUS_COURS,
-        'matieres':    Cours.MATIERES,
-        'niveaux':     Cours.NIVEAUX,
+        'status_choices': Course.STATUS_COURS,
+        'matieres':    Course.MATIERES,
+        'niveaux':     Course.NIVEAUX,
     })
 
 
@@ -101,7 +101,7 @@ def cours_list(request):
 
 @staff_only
 def cours_create(request):
-    from cours.models import Cours
+    from cours.models import Course
     if request.method == 'POST':
         titre = request.POST.get('titre', '').strip()
         if not titre:
@@ -110,10 +110,10 @@ def cours_create(request):
         slug = slugify(titre)
         counter = 1
         base_slug = slug
-        while Cours.objects.filter(slug=slug).exists():
+        while Course.objects.filter(slug=slug).exists():
             slug = f'{base_slug}-{counter}'
             counter += 1
-        cours = Cours.objects.create(
+        cours = Course.objects.create(
             titre=titre,
             slug=slug,
             resume=request.POST.get('resume', ''),
@@ -128,7 +128,7 @@ def cours_create(request):
                          f"Cours créé : «{cours.titre}»")
         return redirect('admin_panel:cours_edit', slug=cours.slug)
 
-    from cours.models import Cours as C
+    from cours.models import Course as C
     return render(request, 'admin_panel/cours_create.html', {
         'matieres': C.MATIERES,
         'niveaux':  C.NIVEAUX,
@@ -137,34 +137,25 @@ def cours_create(request):
 
 @staff_only
 def cours_edit(request, slug):
-    from cours.models import Cours
-    cours = get_object_or_404(Cours, slug=slug)
+    from cours.models import Course
+    cours = get_object_or_404(Course, slug=slug)
     tree  = _get_cours_context(cours)
-    active_step = request.GET.get('step', '1')
 
-    steps = [
-        ('1', '① Informations'),
-        ('2', '② Structure'),
-        ('3', '③ Paramètres'),
-        ('4', '④ SEO & Publication'),
-    ]
     return render(request, 'admin_panel/cours_edit.html', {
         'cours':             cours,
         'modules':           tree['modules'],
         'standalone_lecons': tree['standalone_lecons'],
-        'active_step':       active_step,
-        'steps':             steps,
-        'matieres':          Cours.MATIERES,
-        'niveaux':           Cours.NIVEAUX,
-        'status_choices':    Cours.STATUS_COURS,
+        'matieres':          Course.MATIERES,
+        'niveaux':           Course.NIVEAUX,
+        'status_choices':    Course.STATUS_COURS,
     })
 
 
 @staff_only
 @require_POST
 def cours_delete(request, slug):
-    from cours.models import Cours
-    cours = get_object_or_404(Cours, slug=slug)
+    from cours.models import Course
+    cours = get_object_or_404(Course, slug=slug)
     titre = cours.titre
     cours.delete()
     log_staff_action(request.user, 'notification_sent', f"Cours supprimé : «{titre}»")
@@ -177,18 +168,18 @@ def cours_delete(request, slug):
 @staff_only
 def cours_preview(request, slug):
     import base64
-    from cours.models import Cours, Lecon, LessonBlock
-    cours = get_object_or_404(Cours, slug=slug)
+    from cours.models import Course, CourseLesson, LessonBlock
+    cours = get_object_or_404(Course, slug=slug)
     lecon_id = request.GET.get('lecon')
     lecon_active = None
     if lecon_id:
-        lecon_active = Lecon.objects.filter(id=lecon_id, cours=cours).first()
+        lecon_active = CourseLesson.objects.filter(id=lecon_id, course=cours).first()
     if not lecon_active:
-        lecon_active = cours.lecons.filter(est_publiee=True).first()
+        lecon_active = cours.lessons.filter(est_publiee=True).first()
 
     lesson_blocks_data = []
     if lecon_active:
-        blocks_qs = LessonBlock.objects.filter(lesson=lecon_active).order_by('order')
+        blocks_qs = LessonBlock.objects.filter(course_lesson=lecon_active).order_by('order')
         for block in blocks_qs:
             bd = {'id': block.id, 'type': block.block_type, 'order': block.order}
             if block.block_type == 'text':
@@ -202,8 +193,8 @@ def cours_preview(request, slug):
             elif block.block_type == 'sandbox':
                 bd['title'] = block.sandbox_title or 'Essaie toi-même'
                 bd['initial_code'] = block.sandbox_initial_code
-            elif block.block_type == 'exercise' and block.exercise:
-                ex = block.exercise
+            elif block.block_type == 'exercise' and block.code_exercise:
+                ex = block.code_exercise
                 tc_b64 = base64.b64encode(ex.test_code.encode()).decode() if ex.test_code else ''
                 bd.update({
                     'exercise_id': ex.id,
@@ -344,24 +335,24 @@ def cours_preview(request, slug):
 
 @staff_only
 def cours_analytics(request, slug):
-    from cours.models import Cours, InscriptionCours, ProgressionLecon, Lecon
+    from cours.models import Course, InscriptionCours, ProgressionLecon, CourseLesson
     from paiements.models import Paiement
     from django.db.models.functions import TruncWeek
 
-    cours = get_object_or_404(Cours, slug=slug)
-    total_inscrits = InscriptionCours.objects.filter(cours=cours).count()
-    total_termines = InscriptionCours.objects.filter(cours=cours, est_termine=True).count()
+    cours = get_object_or_404(Course, slug=slug)
+    total_inscrits = InscriptionCours.objects.filter(course=cours).count()
+    total_termines = InscriptionCours.objects.filter(course=cours, est_termine=True).count()
     completion_rate = round(total_termines / total_inscrits * 100, 1) if total_inscrits else 0
 
-    revenus = Paiement.objects.filter(cours=cours, statut='reussi').aggregate(
+    revenus = Paiement.objects.filter(course=cours, statut='reussi').aggregate(
         t=Sum('montant_final')
     )['t'] or 0
 
     # Most dropped lesson
-    total_lecons = cours.lecons.count()
+    total_lecons = cours.lessons.count()
     lecons_stats = []
-    for l in cours.lecons.all():
-        done = ProgressionLecon.objects.filter(lecon=l).count()
+    for l in cours.lessons.all():
+        done = ProgressionLecon.objects.filter(course_lesson=l).count()
         lecons_stats.append({'lecon': l, 'done': done})
     lecons_stats.sort(key=lambda x: x['done'])
     most_dropped = lecons_stats[0] if lecons_stats else None
@@ -374,7 +365,7 @@ def cours_analytics(request, slug):
         week_start = now - timedelta(weeks=i+1)
         week_end   = now - timedelta(weeks=i)
         count = InscriptionCours.objects.filter(
-            cours=cours, date_inscription__gte=week_start, date_inscription__lt=week_end
+            course=course, date_inscription__gte=week_start, date_inscription__lt=week_end
         ).count()
         weeks_data.append({'label': week_start.strftime('%d/%m'), 'count': count})
 
@@ -394,8 +385,8 @@ def cours_analytics(request, slug):
 @staff_only
 @require_POST
 def ajax_cours_save(request, slug):
-    from cours.models import Cours
-    cours = get_object_or_404(Cours, slug=slug)
+    from cours.models import Course
+    cours = get_object_or_404(Course, slug=slug)
     try:
         data = json.loads(request.body)
     except (json.JSONDecodeError, ValueError):
@@ -405,7 +396,14 @@ def ajax_cours_save(request, slug):
         'titre', 'resume', 'description', 'matiere', 'niveau', 'langue',
         'duree_estimee_heures', 'competences_visees', 'prerequisites',
         'meta_description', 'meta_keywords', 'status', 'est_gratuit', 'prix',
+        'video_youtube',
     ]
+    if 'slug_new' in data:
+        from django.utils.text import slugify
+        new_slug = slugify(data['slug_new'].strip())[:300]
+        if new_slug and new_slug != cours.slug:
+            cours.slug = new_slug
+
     for field in updatable:
         if field in data:
             val = data[field]
@@ -445,8 +443,8 @@ def ajax_cours_save(request, slug):
 @staff_only
 @require_POST
 def ajax_module_create(request, slug):
-    from cours.models import Cours, Module
-    cours = get_object_or_404(Cours, slug=slug)
+    from cours.models import Course, CourseModule
+    cours = get_object_or_404(Course, slug=slug)
     try:
         data  = json.loads(request.body)
         titre = data.get('titre', '').strip()
@@ -454,16 +452,16 @@ def ajax_module_create(request, slug):
         titre = request.POST.get('titre', '').strip()
     if not titre:
         return JsonResponse({'error': 'Titre requis'}, status=400)
-    next_ordre = Module.objects.filter(cours=cours).count()
-    module = Module.objects.create(cours=cours, titre=titre, ordre=next_ordre)
+    next_ordre = CourseModule.objects.filter(course=cours).count()
+    module = CourseModule.objects.create(course=cours, titre=titre, ordre=next_ordre)
     return JsonResponse({'id': module.id, 'titre': module.titre, 'ordre': module.ordre})
 
 
 @staff_only
 @require_POST
 def ajax_module_update(request, module_id):
-    from cours.models import Module
-    module = get_object_or_404(Module, id=module_id)
+    from cours.models import CourseModule
+    module = get_object_or_404(CourseModule, id=module_id)
     try:
         data  = json.loads(request.body)
         titre = data.get('titre', module.titre).strip()
@@ -478,10 +476,10 @@ def ajax_module_update(request, module_id):
 @staff_only
 @require_POST
 def ajax_module_delete(request, module_id):
-    from cours.models import Module
-    module = get_object_or_404(Module, id=module_id)
+    from cours.models import CourseModule
+    module = get_object_or_404(CourseModule, id=module_id)
     # Move orphaned lessons to standalone
-    module.lecons_module.update(module=None)
+    module.lessons.update(module=None)
     module.delete()
     return JsonResponse({'ok': True})
 
@@ -491,8 +489,8 @@ def ajax_module_delete(request, module_id):
 @staff_only
 @require_POST
 def ajax_lecon_create(request, slug):
-    from cours.models import Cours, Lecon, Module
-    cours = get_object_or_404(Cours, slug=slug)
+    from cours.models import Course, CourseLesson, CourseModule
+    cours = get_object_or_404(Course, slug=slug)
     try:
         data = json.loads(request.body)
     except Exception:
@@ -502,16 +500,16 @@ def ajax_lecon_create(request, slug):
     module_id = data.get('module_id')
     module    = None
     if module_id:
-        module = Module.objects.filter(id=module_id, cours=cours).first()
+        module = CourseModule.objects.filter(id=module_id, course=cours).first()
 
     # Determine order
     if module:
-        next_ordre = module.lecons_module.count()
+        next_ordre = module.lessons.count()
     else:
-        next_ordre = Lecon.objects.filter(cours=cours, module__isnull=True).count()
+        next_ordre = CourseLesson.objects.filter(course=cours, module__isnull=True).count()
 
-    lecon = Lecon.objects.create(
-        cours=cours, module=module, titre=titre,
+    lecon = CourseLesson.objects.create(
+        course=cours, module=module, titre=titre,
         ordre=next_ordre, content_type=data.get('content_type', 'text'),
     )
     return JsonResponse({
@@ -523,8 +521,8 @@ def ajax_lecon_create(request, slug):
 
 @staff_only
 def ajax_lecon_get(request, lecon_id):
-    from cours.models import Lecon
-    lecon = get_object_or_404(Lecon, id=lecon_id)
+    from cours.models import CourseLesson
+    lecon = get_object_or_404(CourseLesson, id=lecon_id)
     return JsonResponse({
         'id':              lecon.id,
         'titre':           lecon.titre,
@@ -541,8 +539,8 @@ def ajax_lecon_get(request, lecon_id):
 @staff_only
 @require_POST
 def ajax_lecon_save(request, lecon_id):
-    from cours.models import Lecon
-    lecon = get_object_or_404(Lecon, id=lecon_id)
+    from cours.models import CourseLesson
+    lecon = get_object_or_404(CourseLesson, id=lecon_id)
     try:
         data = json.loads(request.body)
     except Exception:
@@ -562,8 +560,8 @@ def ajax_lecon_save(request, lecon_id):
 @staff_only
 @require_POST
 def ajax_lecon_delete(request, lecon_id):
-    from cours.models import Lecon
-    lecon = get_object_or_404(Lecon, id=lecon_id)
+    from cours.models import CourseLesson
+    lecon = get_object_or_404(CourseLesson, id=lecon_id)
     lecon.delete()
     return JsonResponse({'ok': True})
 
@@ -573,8 +571,8 @@ def ajax_lecon_delete(request, lecon_id):
 @staff_only
 @require_POST
 def ajax_reorder(request, slug):
-    from cours.models import Cours, Module, Lecon
-    cours = get_object_or_404(Cours, slug=slug)
+    from cours.models import Course, CourseModule, CourseLesson
+    cours = get_object_or_404(Course, slug=slug)
     try:
         data  = json.loads(request.body)
         items = data.get('items', [])
@@ -587,9 +585,9 @@ def ajax_reorder(request, slug):
         o  = item.get('order', 0)
         mid = item.get('module_id')
         if t == 'module':
-            Module.objects.filter(id=pk, cours=cours).update(ordre=o)
+            CourseModule.objects.filter(id=pk, course=course).update(ordre=o)
         elif t == 'lecon':
-            qs = Lecon.objects.filter(id=pk, cours=cours)
+            qs = CourseLesson.objects.filter(id=pk, course=course)
             if mid:
                 qs.update(ordre=o, module_id=mid)
             else:
@@ -627,9 +625,9 @@ def image_upload(request):
 @staff_only
 def api_courses(request):
     """GET /api/courses/ — list all courses for the insert-in-lesson modal."""
-    from cours.models import Cours
+    from cours.models import Course
     courses = list(
-        Cours.objects.order_by('titre').values('id', 'titre', 'slug', 'status')
+        Course.objects.order_by('titre').values('id', 'titre', 'slug', 'status')
     )
     for c in courses:
         c['title'] = c.pop('titre')
@@ -639,10 +637,10 @@ def api_courses(request):
 @staff_only
 def api_course_modules(request, slug):
     """GET /api/courses/<slug>/modules/ — list modules for a course."""
-    from cours.models import Cours, Module
-    cours = get_object_or_404(Cours, slug=slug)
+    from cours.models import Course, CourseModule
+    cours = get_object_or_404(Course, slug=slug)
     modules = list(
-        Module.objects.filter(cours=cours).order_by('ordre').values('id', 'titre', 'ordre')
+        CourseModule.objects.filter(course=cours).order_by('ordre').values('id', 'titre', 'ordre')
     )
     return JsonResponse({'modules': modules})
 
@@ -650,10 +648,10 @@ def api_course_modules(request, slug):
 @staff_only
 def api_module_lessons(request, module_id):
     """GET /api/modules/<id>/lessons/ — list lessons for a module."""
-    from cours.models import Module, Lecon
-    module = get_object_or_404(Module, id=module_id)
+    from cours.models import CourseModule, CourseLesson
+    module = get_object_or_404(CourseModule, id=module_id)
     lessons = list(
-        Lecon.objects.filter(module=module).order_by('ordre').values('id', 'titre', 'ordre')
+        CourseLesson.objects.filter(module=module).order_by('ordre').values('id', 'titre', 'ordre')
     )
     return JsonResponse({'lessons': lessons})
 
@@ -662,8 +660,8 @@ def api_module_lessons(request, module_id):
 @require_POST
 def api_lesson_insert_sandbox(request, lesson_id):
     """POST /api/lessons/<id>/insert-sandbox/ — append [SANDBOX] marker to lesson content."""
-    from cours.models import Lecon
-    lesson = get_object_or_404(Lecon, id=lesson_id)
+    from cours.models import CourseLesson
+    lesson = get_object_or_404(CourseLesson, id=lesson_id)
     try:
         body   = json.loads(request.body)
         marker = body.get('marker', '').strip()
@@ -694,7 +692,7 @@ def api_formation_modules(request, slug):
     from formation.models import Formation, FormationModule
     formation = get_object_or_404(Formation, slug=slug)
     modules = list(
-        FormationModule.objects.filter(formation=formation).order_by('ordre').values('id', 'titre', 'ordre')
+        FormationCourseModule.objects.filter(formation=formation).order_by('ordre').values('id', 'titre', 'ordre')
     )
     return JsonResponse({'modules': modules})
 
