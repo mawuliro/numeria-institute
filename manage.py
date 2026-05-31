@@ -38,6 +38,18 @@ def main():
         print('MODEL_COURS_SOURCE_ERROR:', exc, file=sys.stderr)
 
     try:
+        import django
+        django.setup()
+        from django.apps import apps
+        try:
+            model = apps.get_model('cours', 'cours')
+            print('MODEL_COURS_REGISTERED:', model, file=sys.stderr)
+        except LookupError as exc:
+            print('MODEL_COURS_REGISTER_ERROR:', exc, file=sys.stderr)
+    except Exception as exc:
+        print('DJANGO_SETUP_ERROR:', exc, file=sys.stderr)
+
+    try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
         raise ImportError(
