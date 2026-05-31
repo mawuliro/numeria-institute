@@ -1,0 +1,145 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}Créer un QCM{% endblock %}
+{% block page_heading %}🔘 Créer un QCM{% endblock %}
+{% block breadcrumb %}
+<p class="text-xs text-slate-400 mt-0.5">
+  <a href="{% url 'admin_panel:exercises_list' %}" class="hover:underline">Exercices</a> › QCM › Créer
+</p>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl">
+  <div class="bg-slate-50 rounded-xl border border-slate-200 p-3 mb-5 text-sm text-slate-600">
+    Leçon : <span class="font-medium">{{ lecon.titre }}</span>
+  </div>
+
+  <form method="post" class="space-y-5">
+    {% csrf_token %}
+    <input type="hidden" name="back_url" value="{{ back_url }}">
+
+    <div class="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+      <h3 class="font-semibold text-slate-700">Informations</h3>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
+        <input type="text" name="title" required maxlength="300"
+               class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Question * <span class="font-normal text-slate-400">(Markdown + LaTeX supportés)</span></label>
+        <textarea name="question" required rows="4"
+                  class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono"
+                  placeholder="Ex: Quelle est la valeur de $\int_0^1 x\,dx$ ?"></textarea>
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Difficulté</label>
+          <select name="difficulty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+            {% for val, label in difficulties %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Points</label>
+          <input type="number" name="points" value="5" min="0"
+                 class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Max tentatives <span class="font-normal text-slate-400">(0=∞)</span></label>
+          <input type="number" name="max_attempts" value="0" min="0"
+                 class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="checkbox" name="allow_multiple_correct" id="allow-multi" class="rounded">
+        <label for="allow-multi" class="text-sm text-slate-700">Plusieurs bonnes réponses possibles (cases à cocher)</label>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-semibold text-slate-700">Choix de réponses</h3>
+        <button type="button" onclick="addChoice()"
+                class="text-xs text-sky-600 hover:text-sky-800 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg font-medium">
+          + Ajouter un choix
+        </button>
+      </div>
+      <p class="text-xs text-slate-500">Cochez le(s) radio/case à gauche pour marquer un choix comme <strong>correct</strong>. Minimum 2 choix requis.</p>
+      <div id="choices-container" class="space-y-2">
+        {% for i in "0123" %}
+        <div class="flex items-center gap-3 choice-row">
+          <input type="{% if i == '0' or i == '1' %}radio{% else %}radio{% endif %}"
+                 name="choice_correct" value="{{ i }}"
+                 id="correct-{{ i }}" class="flex-shrink-0 accent-green-600">
+          <input type="text" name="choice_text" placeholder="Choix {{ forloop.counter }}"
+                 class="flex-1 px-2 py-1.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+          <button type="button" onclick="removeChoice(this)"
+                  class="text-red-400 hover:text-red-600 text-xs px-1 flex-shrink-0">✕</button>
+        </div>
+        {% if i == '1' %}{% comment %}only render 2 choices initially{% endcomment %}{% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+      <h3 class="font-semibold text-slate-700">Optionnel</h3>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Explication (affichée après réponse)</label>
+        <textarea name="explanation" rows="3"
+                  class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Indice (après 3 mauvaises réponses)</label>
+        <input type="text" name="hint"
+               class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+      </div>
+    </div>
+
+    <div class="flex gap-3">
+      <button type="submit"
+              class="bg-sky-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-sky-700 text-sm">
+        🔘 Créer le QCM
+      </button>
+      <a href="{% url 'admin_panel:exercises_list' %}"
+         class="bg-slate-100 text-slate-700 font-semibold px-6 py-2.5 rounded-xl hover:bg-slate-200 text-sm">
+        Annuler
+      </a>
+    </div>
+  </form>
+</div>
+
+{% block extra_js %}
+<script>
+var choiceCount = 4;
+function addChoice() {
+  var c = document.getElementById('choices-container');
+  var row = document.createElement('div');
+  row.className = 'flex items-center gap-3 choice-row';
+  row.innerHTML = '<input type="radio" name="choice_correct" value="' + choiceCount + '" class="flex-shrink-0 accent-green-600">' +
+    '<input type="text" name="choice_text" placeholder="Nouveau choix" class="flex-1 px-2 py-1.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">' +
+    '<button type="button" onclick="removeChoice(this)" class="text-red-400 hover:text-red-600 text-xs px-1 flex-shrink-0">✕</button>';
+  c.appendChild(row);
+  // Re-number values
+  renumberChoices();
+  choiceCount++;
+}
+function removeChoice(btn) {
+  var rows = document.querySelectorAll('.choice-row');
+  if (rows.length <= 2) { alert('Minimum 2 choix requis.'); return; }
+  btn.closest('.choice-row').remove();
+  renumberChoices();
+}
+function renumberChoices() {
+  document.querySelectorAll('.choice-row').forEach(function(row, i) {
+    var radio = row.querySelector('input[type="radio"]');
+    if (radio) radio.value = i;
+  });
+}
+// Remove extra empty choices on page load (keep 2)
+document.addEventListener('DOMContentLoaded', function() {
+  var rows = document.querySelectorAll('.choice-row');
+  rows.forEach(function(row, i) { if (i >= 2) row.remove(); });
+});
+</script>
+{% endblock %}
+{% endblock %}

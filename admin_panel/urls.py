@@ -34,8 +34,15 @@ urlpatterns = [
     path('exercices/', views.exercises_list, name='exercises_list'),
     path('exercices/resultats/', views.exercise_results, name='exercise_results'),
     path('exercices/resultats/csv/', views.exercise_results_csv, name='exercise_results_csv'),
-    path('exercices/lecon/<int:lecon_id>/ajouter/', views.exercise_create, name='exercise_create'),
-    path('exercices/formation-lecon/<int:lecon_id>/ajouter/', views.exercise_create_formation, name='exercise_create_formation'),
+    # Exercise type selectors (redirects to per-type form)
+    path('exercices/lecon/<int:lecon_id>/ajouter/', views.exercise_type_selector, name='exercise_type_selector'),
+    path('exercices/formation-lecon/<int:lecon_id>/ajouter/', views.exercise_type_selector_formation, name='exercise_type_selector_formation'),
+    # Per-type creation — course lessons
+    path('exercices/lecon/<int:lecon_id>/ajouter/code/', views.exercise_create, name='exercise_create'),
+    path('exercices/lecon/<int:lecon_id>/ajouter/<str:ex_type>/', views.exercise_create_by_type, name='exercise_create_by_type'),
+    # Per-type creation — formation lessons
+    path('exercices/formation-lecon/<int:lecon_id>/ajouter/code/', views.exercise_create_formation, name='exercise_create_formation'),
+    path('exercices/formation-lecon/<int:lecon_id>/ajouter/<str:ex_type>/', views.exercise_create_formation_by_type, name='exercise_create_formation_by_type'),
     path('exercices/<int:exercise_id>/modifier/', views.exercise_edit, name='exercise_edit'),
     path('exercices/<int:exercise_id>/supprimer/', views.exercise_delete, name='exercise_delete'),
     path('exercices/<int:exercise_id>/reorder/', views.exercise_reorder, name='exercise_reorder'),

@@ -966,3 +966,229 @@ def mcq_delete(request, mcq_id):
     mcq.delete()
     messages.success(request, f'QCM «{title}» supprimé.')
     return redirect('admin_panel:mcq_list')
+
+
+# ─── EXERCISE TYPE SELECTOR + PER-TYPE CREATION ───────────────────────────────
+
+EXERCISE_TYPES = {
+    'code':         ('💻', 'Code Python'),
+    'qcm':          ('🔘', 'QCM'),
+    'fill_blank':   ('✏️', 'Texte à trous'),
+    'true_false':   ('✅', 'Vrai ou Faux'),
+    'code_order':   ('🧩', 'Ordre de code'),
+    'matching':     ('🔗', 'Associations'),
+    'short_answer': ('💬', 'Réponse courte'),
+}
+
+
+@staff_only
+def exercise_type_selector(request, lecon_id):
+    """Type selector for course lesson exercise creation."""
+    from cours.models import Lecon
+    lecon = get_object_or_404(Lecon, id=lecon_id)
+    return render(request, 'admin_panel/exercise_type_selector.html', {
+        'lecon': lecon,
+        'lesson_type': 'cours',
+        'exercise_types': EXERCISE_TYPES,
+    })
+
+
+@staff_only
+def exercise_type_selector_formation(request, lecon_id):
+    """Type selector for formation lesson exercise creation."""
+    from formation.models import FormationLesson
+    fl = get_object_or_404(FormationLesson, id=lecon_id)
+    return render(request, 'admin_panel/exercise_type_selector.html', {
+        'lecon': fl,
+        'lesson_type': 'formation',
+        'exercise_types': EXERCISE_TYPES,
+    })
+
+
+def _handle_exercise_creation(request, lecon, fl, ex_type):
+    """
+    Shared dispatcher for creating any exercise type for a lesson.
+    lecon = Lecon instance or None, fl = FormationLesson instance or None.
+    """
+    from cours.models import (
+        CodeExercise, MCQExercise, MCQChoice,
+        FillBlankExercise, TrueFalseExercise,
+        CodeOrderExercise, MatchingExercise, ShortAnswerExercise,
+    )
+    import json as _json
+
+    lesson_type = 'formation' if fl else 'cours'
+    lesson_obj  = fl or lecon
+    back_url    = request.POST.get('back_url') or request.GET.get('back_url') or ''
+
+    template_map = {
+        'code':         'admin_panel/exercise_form.html',
+        'qcm':          'admin_panel/exercise_form_qcm.html',
+        'fill_blank':   'admin_panel/exercise_form_fill_blank.html',
+        'true_false':   'admin_panel/exercise_form_true_false.html',
+        'code_order':   'admin_panel/exercise_form_code_order.html',
+        'matching':     'admin_panel/exercise_form_matching.html',
+        'short_answer': 'admin_panel/exercise_form_short_answer.html',
+    }
+    template = template_map.get(ex_type, 'admin_panel/exercise_form.html')
+
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        if not title:
+            messages.error(request, 'Le titre est obligatoire.')
+        else:
+            try:
+                if ex_type == 'code':
+                    f = _parse_exercise_fields(request)
+                    if not f['starter_code'] or not f['solution_code']:
+                        messages.error(request, 'Code de départ et solution sont obligatoires.')
+                        return render(request, template, {'lecon': lesson_obj, 'lesson_type': lesson_type, 'action': 'create'})
+                    CodeExercise.objects.create(
+                        lecon=lecon, formation_lesson=fl, created_by=request.user, **f
+                    )
+
+                elif ex_type == 'qcm':
+                    allow_multi = 'allow_multiple_correct' in request.POST
+                    mcq = MCQExercise.objects.create(
+                        lecon=lecon, formation_lesson=fl,
+                        title=title,
+                        question=request.POST.get('question', '').strip(),
+                        explanation=request.POST.get('explanation', '').strip(),
+                        hint=request.POST.get('hint', '').strip(),
+                        difficulty=request.POST.get('difficulty', 'easy'),
+                        points=int(request.POST.get('points', 5) or 5),
+                        max_attempts=int(request.POST.get('max_attempts', 0) or 0),
+                        allow_multiple_correct=allow_multi,
+                        shuffle_choices=True,
+                        created_by=request.user,
+                    )
+                    texts    = request.POST.getlist('choice_text')
+                    corrects = request.POST.getlist('choice_correct')
+                    for idx, text in enumerate(texts):
+                        if text.strip():
+                            MCQChoice.objects.create(
+                                exercise=mcq, text=text.strip(),
+                                is_correct=str(idx) in corrects,
+                                order=idx,
+                            )
+
+                elif ex_type == 'fill_blank':
+                    answers = {}
+                    text = request.POST.get('text_with_blanks', '')
+                    import re
+                    blanks = re.findall(r'\{\{(blank_\w+)\}\}', text)
+                    for blank in blanks:
+                        raw = request.POST.get(f'answer_{blank}', '')
+                        answers[blank] = [a.strip() for a in raw.split(',') if a.strip()]
+                    FillBlankExercise.objects.create(
+                        lecon=lecon, formation_lesson=fl, title=title,
+                        instructions=request.POST.get('instructions', '').strip(),
+                        text_with_blanks=text,
+                        answers=answers,
+                        case_sensitive='case_sensitive' in request.POST,
+                        difficulty=request.POST.get('difficulty', 'easy'),
+                        points=int(request.POST.get('points', 5) or 5),
+                        hint=request.POST.get('hint', '').strip(),
+                        explanation=request.POST.get('explanation', '').strip(),
+                        max_attempts=int(request.POST.get('max_attempts', 0) or 0),
+                    )
+
+                elif ex_type == 'true_false':
+                    stmts = []
+                    for i, stmt in enumerate(request.POST.getlist('statement')):
+                        if stmt.strip():
+                            stmts.append({
+                                'statement': stmt.strip(),
+                                'is_true': f'is_true_{i}' in request.POST,
+                                'explanation': request.POST.getlist('stmt_explanation')[i] if i < len(request.POST.getlist('stmt_explanation')) else '',
+                            })
+                    TrueFalseExercise.objects.create(
+                        lecon=lecon, formation_lesson=fl, title=title,
+                        statements=stmts,
+                        points_per_statement=int(request.POST.get('points_per_statement', 2) or 2),
+                        difficulty=request.POST.get('difficulty', 'easy'),
+                        hint=request.POST.get('hint', '').strip(),
+                    )
+
+                elif ex_type == 'code_order':
+                    lines_raw = request.POST.get('correct_solution', '')
+                    correct_order = [l for l in lines_raw.split('\n') if l.strip() or l == '']
+                    # Remove trailing empty lines
+                    while correct_order and not correct_order[-1].strip():
+                        correct_order.pop()
+                    distractors_raw = request.POST.get('distractor_lines', '')
+                    distractors = [l.strip() for l in distractors_raw.split('\n') if l.strip()]
+                    CodeOrderExercise.objects.create(
+                        lecon=lecon, formation_lesson=fl, title=title,
+                        instructions=request.POST.get('instructions', '').strip(),
+                        correct_order=correct_order,
+                        distractor_lines=distractors,
+                        difficulty=request.POST.get('difficulty', 'easy'),
+                        points=int(request.POST.get('points', 10) or 10),
+                        hint=request.POST.get('hint', '').strip(),
+                        explanation=request.POST.get('explanation', '').strip(),
+                        max_attempts=int(request.POST.get('max_attempts', 0) or 0),
+                    )
+
+                elif ex_type == 'matching':
+                    lefts  = request.POST.getlist('left_item')
+                    rights = request.POST.getlist('right_item')
+                    pairs  = [{'left': l.strip(), 'right': r.strip()}
+                              for l, r in zip(lefts, rights) if l.strip() and r.strip()]
+                    MatchingExercise.objects.create(
+                        lecon=lecon, formation_lesson=fl, title=title,
+                        instructions=request.POST.get('instructions', '').strip(),
+                        pairs=pairs,
+                        difficulty=request.POST.get('difficulty', 'easy'),
+                        points=int(request.POST.get('points', 8) or 8),
+                        hint=request.POST.get('hint', '').strip(),
+                        explanation=request.POST.get('explanation', '').strip(),
+                    )
+
+                elif ex_type == 'short_answer':
+                    raw = request.POST.get('accepted_answers', '')
+                    accepted = [a.strip() for a in raw.split(',') if a.strip()]
+                    ShortAnswerExercise.objects.create(
+                        lecon=lecon, formation_lesson=fl, title=title,
+                        question=request.POST.get('question', '').strip(),
+                        accepted_answers=accepted,
+                        case_sensitive='case_sensitive' in request.POST,
+                        difficulty=request.POST.get('difficulty', 'easy'),
+                        points=int(request.POST.get('points', 5) or 5),
+                        hint=request.POST.get('hint', '').strip(),
+                        explanation=request.POST.get('explanation', '').strip(),
+                        max_attempts=int(request.POST.get('max_attempts', 3) or 3),
+                        is_code_answer='is_code_answer' in request.POST,
+                    )
+
+                messages.success(request, f"Exercice '{title}' créé avec succès.")
+                return redirect('admin_panel:exercises_list')
+
+            except Exception as e:
+                messages.error(request, f"Erreur lors de la création : {e}")
+
+    from cours.models import CodeExercise as CE
+    ctx = {
+        'lecon': lesson_obj,
+        'lesson_type': lesson_type,
+        'action': 'create',
+        'ex_type': ex_type,
+        'back_url': back_url,
+        'eval_modes': CE.EVAL_MODES,
+        'difficulties': CE.DIFFICULTY_CHOICES,
+    }
+    return render(request, template, ctx)
+
+
+@staff_only
+def exercise_create_by_type(request, lecon_id, ex_type):
+    from cours.models import Lecon
+    lecon = get_object_or_404(Lecon, id=lecon_id)
+    return _handle_exercise_creation(request, lecon, None, ex_type)
+
+
+@staff_only
+def exercise_create_formation_by_type(request, lecon_id, ex_type):
+    from formation.models import FormationLesson
+    fl = get_object_or_404(FormationLesson, id=lecon_id)
+    return _handle_exercise_creation(request, None, fl, ex_type)

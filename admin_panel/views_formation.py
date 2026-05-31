@@ -158,19 +158,69 @@ def formation_delete(request, slug):
 
 @staff_only
 def formation_preview(request, slug):
+    import base64
     from formation.models import Formation, FormationLesson
-    formation = get_object_or_404(Formation, slug=slug)
-    lesson_id = request.GET.get('lecon')
+    from cours.models import LessonBlock, MCQExercise, MCQGrade, MCQChoice
+    from django.utils import timezone as _tz
+
+    formation    = get_object_or_404(Formation, slug=slug)
+    lesson_id    = request.GET.get('lecon')
     lecon_active = None
     if lesson_id:
         lecon_active = FormationLesson.objects.filter(id=lesson_id, formation=formation).first()
     if not lecon_active:
         lecon_active = formation.formation_lessons.filter(est_active=True).first()
+
+    # Build LessonBlock data for the active lesson (staff preview — no grade gating)
+    lesson_blocks_data = []
+    if lecon_active:
+        blocks_qs = LessonBlock.objects.filter(formation_lesson=lecon_active).order_by('order')
+        for block in blocks_qs:
+            bd = {'id': block.id, 'type': block.block_type, 'order': block.order}
+            if block.block_type == 'text':
+                bd['text_content'] = block.text_content
+            elif block.block_type == 'video':
+                bd['video_url']    = block.video_url
+                bd['video_caption']= block.video_caption
+                if block.video_url:
+                    from formation.models import Formation as F
+                    from cours.models import convertir_url_youtube
+                    bd['embed_url'] = convertir_url_youtube(block.video_url)
+            elif block.block_type == 'sandbox':
+                bd['title']        = block.sandbox_title or 'Essaie toi-même'
+                bd['initial_code'] = block.sandbox_initial_code
+            elif block.block_type == 'exercise' and block.exercise:
+                ex    = block.exercise
+                tc_b64 = base64.b64encode(ex.test_code.encode()).decode() if ex.test_code else ''
+                bd.update({
+                    'exercise_id':    ex.id, 'title': ex.title,
+                    'instructions':   ex.instructions, 'starter_code': ex.starter_code,
+                    'expected_output':ex.expected_output, 'evaluation_mode': ex.evaluation_mode,
+                    'difficulty':     ex.difficulty, 'hint': ex.hint,
+                    'max_attempts':   ex.max_attempts, 'points': ex.points,
+                    'test_code_b64':  tc_b64, 'is_solved': False, 'attempts_used': 0,
+                })
+            elif block.block_type == 'mcq' and block.mcq_exercise:
+                mcq = block.mcq_exercise
+                choices = list(mcq.choices.order_by('order'))
+                bd.update({
+                    'mcq_id': mcq.id, 'mcq_title': mcq.title, 'question': mcq.question,
+                    'hint': mcq.hint, 'allow_multiple': mcq.allow_multiple_correct,
+                    'shuffle': mcq.shuffle_choices, 'max_attempts': mcq.max_attempts,
+                    'points': mcq.points, 'difficulty': mcq.difficulty,
+                    'choices': [{'id': c.id, 'text': c.text, 'order': c.order} for c in choices],
+                    'is_solved': False, 'points_earned': 0, 'attempts_used': 0,
+                    'correct_ids': [], 'explanation': '',
+                })
+            lesson_blocks_data.append(bd)
+
     return render(request, 'admin_panel/formation_preview.html', {
-        'formation':    formation,
-        'lecon_active': lecon_active,
-        'modules':      _get_formation_context(formation)['modules'],
-        'is_preview':   True,
+        'formation':         formation,
+        'lecon_active':      lecon_active,
+        'lesson_blocks':     lesson_blocks_data,
+        'modules':           _get_formation_context(formation)['modules'],
+        'is_preview':        True,
+        'has_blocks':        bool(lesson_blocks_data),
     })
 
 

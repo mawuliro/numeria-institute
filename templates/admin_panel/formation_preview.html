@@ -1,5 +1,5 @@
 {% extends "admin_panel/base_staff.html" %}
-{% load i18n %}
+{% load i18n sandbox_tags %}
 
 {% block page_title %}Prévisualisation — {{ formation.titre }}{% endblock %}
 {% block page_heading %}👁️ {{ formation.titre }}{% endblock %}
@@ -8,6 +8,13 @@
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+{% if has_blocks %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+{% endif %}
 
 <div class="bg-amber-50 border border-amber-300 rounded-xl px-4 py-3 mb-5 flex items-center justify-between">
   <span class="text-amber-800 text-sm font-medium">⚠️ MODE PRÉVISUALISATION — Formation non publiée</span>
@@ -49,18 +56,38 @@
     <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6">
       {% if lecon_active %}
       <h2 class="text-xl font-bold text-slate-800 mb-4">{{ lecon_active.titre }}</h2>
-      {% if lecon_active.video_url %}
-      <div class="mb-4 rounded-xl overflow-hidden aspect-video bg-black">
-        <iframe src="{{ lecon_active.video_url }}" class="w-full h-full" allowfullscreen></iframe>
-      </div>
+
+      {% if has_blocks and lesson_blocks %}
+        {# ── New block-based rendering ── #}
+        {% include 'cours/components/lesson_blocks_render.html' with lesson_blocks=lesson_blocks %}
+      {% else %}
+        {# ── Legacy: raw contenu + video_url ── #}
+        {% if lecon_active.video_url %}
+        <div class="mb-4 rounded-xl overflow-hidden aspect-video bg-black">
+          <iframe src="{{ lecon_active.video_url }}" class="w-full h-full" allowfullscreen></iframe>
+        </div>
+        {% endif %}
+        {% if lecon_active.contenu %}
+        <div class="prose prose-sm max-w-none text-slate-700 leading-relaxed">{{ lecon_active.contenu|safe }}</div>
+        {% else %}
+        <div class="text-slate-400 text-sm py-8 text-center">
+          <div class="text-3xl mb-2">📭</div>
+          <p>Cette leçon n'a pas encore de contenu.</p>
+          <p class="text-xs mt-1">Ajoutez des blocs depuis l'éditeur de leçon.</p>
+        </div>
+        {% endif %}
       {% endif %}
-      {% if lecon_active.contenu %}
-      <div class="prose prose-sm max-w-none text-slate-700 leading-relaxed">{{ lecon_active.contenu|safe }}</div>
-      {% endif %}
-      {% else %}<p class="text-slate-400 text-sm">Sélectionne une leçon.</p>{% endif %}
+
+      {% else %}<p class="text-slate-400 text-sm">Sélectionne une leçon dans le plan à gauche.</p>{% endif %}
     </div>
   </div>
 </div>
+
+{% if has_blocks and lesson_blocks %}
+<script>
+window._swPyodideReady = window._swPyodideReady || (typeof loadPyodide === 'function' ? loadPyodide({indexURL:'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/'}) : Promise.resolve(null));
+</script>
+{% endif %}
 <script>
 var isMobile=false;
 function toggleMobile(){isMobile=!isMobile;var w=document.getElementById('preview-wrapper');if(isMobile){w.style.maxWidth='375px';w.style.margin='0 auto';w.style.border='2px solid #0ea5e9';w.style.borderRadius='20px';}else{w.style.maxWidth='';w.style.margin='';w.style.border='';w.style.borderRadius='';}}

@@ -1,0 +1,56 @@
+{% extends "admin_panel/base_staff.html" %}
+{% block page_title %}Créer une Réponse courte{% endblock %}
+{% block page_heading %}💬 Créer un exercice Réponse courte{% endblock %}
+{% block breadcrumb %}<p class="text-xs text-slate-400 mt-0.5"><a href="{% url 'admin_panel:exercises_list' %}" class="hover:underline">Exercices</a> › Réponse courte › Créer</p>{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl">
+  <div class="bg-slate-50 rounded-xl border border-slate-200 p-3 mb-5 text-sm text-slate-600">Leçon : <span class="font-medium">{{ lecon.titre }}</span></div>
+  <form method="post" class="space-y-5">
+    {% csrf_token %}
+    <div class="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+      <h3 class="font-semibold text-slate-700">Exercice</h3>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
+        <input type="text" name="title" required maxlength="300" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Question * <span class="font-normal text-slate-400">(Markdown + LaTeX)</span></label>
+        <textarea name="question" required rows="4" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono" placeholder="Ex: Quel mot-clé Python définit une fonction ?"></textarea>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Réponses acceptées * <span class="font-normal text-slate-400">(séparées par des virgules)</span></label>
+        <input type="text" name="accepted_answers" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" placeholder="def, DEF, def ">
+        <p class="text-xs text-slate-400 mt-1">Chaque valeur séparée par une virgule est une réponse acceptée. Les espaces en début/fin sont ignorés par défaut.</p>
+      </div>
+      <div class="flex items-center gap-6">
+        <label class="flex items-center gap-2 text-sm cursor-pointer">
+          <input type="checkbox" name="case_sensitive" id="case-sens" class="rounded">
+          Respecter la casse
+        </label>
+        <label class="flex items-center gap-2 text-sm cursor-pointer">
+          <input type="checkbox" name="is_code_answer" id="is-code" class="rounded">
+          Afficher en police code
+        </label>
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Difficulté</label>
+          <select name="difficulty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+            {% for val, label in difficulties %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+          </select></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Points</label>
+          <input type="number" name="points" value="5" min="0" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Max tentatives</label>
+          <input type="number" name="max_attempts" value="3" min="0" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+      </div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Indice</label>
+        <input type="text" name="hint" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Explication (affichée après réponse)</label>
+        <textarea name="explanation" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></textarea></div>
+    </div>
+    <div class="flex gap-3">
+      <button type="submit" class="bg-sky-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-sky-700 text-sm">💬 Créer l'exercice</button>
+      <a href="{% url 'admin_panel:exercises_list' %}" class="bg-slate-100 text-slate-700 font-semibold px-6 py-2.5 rounded-xl hover:bg-slate-200 text-sm">Annuler</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+</content>

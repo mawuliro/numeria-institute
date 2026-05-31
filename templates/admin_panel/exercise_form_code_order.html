@@ -1,0 +1,71 @@
+{% extends "admin_panel/base_staff.html" %}
+{% block page_title %}Créer un Ordre de code{% endblock %}
+{% block page_heading %}🧩 Créer un exercice Ordre de code{% endblock %}
+{% block breadcrumb %}<p class="text-xs text-slate-400 mt-0.5"><a href="{% url 'admin_panel:exercises_list' %}" class="hover:underline">Exercices</a> › Ordre de code › Créer</p>{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+
+<div class="max-w-3xl">
+  <div class="bg-slate-50 rounded-xl border border-slate-200 p-3 mb-5 text-sm text-slate-600">Leçon : <span class="font-medium">{{ lecon.titre }}</span></div>
+  <form method="post" id="co-form" class="space-y-5">
+    {% csrf_token %}
+    <div class="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+      <h3 class="font-semibold text-slate-700">Exercice</h3>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
+        <input type="text" name="title" required maxlength="300" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Instructions</label>
+        <input type="text" name="instructions" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+      <div>
+        <div class="flex items-center justify-between mb-1">
+          <label class="block text-xs font-semibold text-slate-600">Solution correcte * <span class="font-normal text-slate-400">(chaque ligne sera un bloc)</span></label>
+        </div>
+        <div class="border border-slate-300 rounded-lg overflow-hidden tex2jax_ignore">
+          <textarea id="solution-cm" name="correct_solution" style="display:none;" rows="8">for i in range(10):
+    if i % 2 == 0:
+        print(i)</textarea>
+          <div id="solution-cm-wrap"></div>
+        </div>
+      </div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Lignes distractrices <span class="font-normal text-slate-400">(optionnel — une par ligne)</span></label>
+        <textarea name="distractor_lines" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono" placeholder="print(i * 2)&#10;if i > 10:"></textarea></div>
+      <div class="grid grid-cols-3 gap-3">
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Difficulté</label>
+          <select name="difficulty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+            {% for val, label in difficulties %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+          </select></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Points</label>
+          <input type="number" name="points" value="10" min="0" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Max tentatives</label>
+          <input type="number" name="max_attempts" value="0" min="0" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+      </div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Indice</label>
+        <input type="text" name="hint" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+    </div>
+    <div class="flex gap-3">
+      <button type="submit" class="bg-sky-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-sky-700 text-sm">🧩 Créer l'exercice</button>
+      <a href="{% url 'admin_panel:exercises_list' %}" class="bg-slate-100 text-slate-700 font-semibold px-6 py-2.5 rounded-xl hover:bg-slate-200 text-sm">Annuler</a>
+    </div>
+  </form>
+</div>
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var ta = document.getElementById('solution-cm');
+  var cm = CodeMirror(document.getElementById('solution-cm-wrap'), {
+    value: ta.value,
+    mode:'python', theme:'material-darker', lineNumbers:true,
+    indentUnit:4, tabSize:4, lineWrapping:true, viewportMargin:Infinity,
+    extraKeys:{Tab:function(c){c.replaceSelection('    ','end');}},
+  });
+  cm.getWrapperElement().style.minHeight='180px';
+  document.getElementById('co-form').addEventListener('submit', function() {
+    ta.value = cm.getValue();
+  });
+});
+</script>
+{% endblock %}
+{% endblock %}

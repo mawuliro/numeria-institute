@@ -1,0 +1,73 @@
+{% extends "admin_panel/base_staff.html" %}
+{% block page_title %}Créer des Associations{% endblock %}
+{% block page_heading %}🔗 Créer un exercice Associations{% endblock %}
+{% block breadcrumb %}<p class="text-xs text-slate-400 mt-0.5"><a href="{% url 'admin_panel:exercises_list' %}" class="hover:underline">Exercices</a> › Associations › Créer</p>{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl">
+  <div class="bg-slate-50 rounded-xl border border-slate-200 p-3 mb-5 text-sm text-slate-600">Leçon : <span class="font-medium">{{ lecon.titre }}</span></div>
+  <form method="post" class="space-y-5">
+    {% csrf_token %}
+    <div class="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+      <h3 class="font-semibold text-slate-700">Exercice</h3>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
+        <input type="text" name="title" required maxlength="300" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Instructions</label>
+        <input type="text" name="instructions" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-xs font-semibold text-slate-600">Paires * <span class="font-normal text-slate-400">(Gauche ↔ Droite)</span></label>
+          <button type="button" onclick="addPair()" class="text-xs text-sky-600 bg-sky-50 hover:bg-sky-100 px-3 py-1 rounded-lg font-medium">+ Ajouter une paire</button>
+        </div>
+        <div id="pairs-container" class="space-y-2">
+          <div class="pair-row grid grid-cols-2 gap-2 items-center">
+            <input type="text" name="left_item" placeholder="Gauche (ex: Dérivée)" required class="px-2 py-1.5 border border-slate-300 rounded-lg text-sm">
+            <div class="flex gap-2">
+              <input type="text" name="right_item" placeholder="Droite (ex: Taux de variation)" required class="flex-1 px-2 py-1.5 border border-slate-300 rounded-lg text-sm">
+              <button type="button" onclick="removePair(this)" class="text-red-400 hover:text-red-600 text-xs">✕</button>
+            </div>
+          </div>
+          <div class="pair-row grid grid-cols-2 gap-2 items-center">
+            <input type="text" name="left_item" placeholder="Gauche" class="px-2 py-1.5 border border-slate-300 rounded-lg text-sm">
+            <div class="flex gap-2">
+              <input type="text" name="right_item" placeholder="Droite" class="flex-1 px-2 py-1.5 border border-slate-300 rounded-lg text-sm">
+              <button type="button" onclick="removePair(this)" class="text-red-400 hover:text-red-600 text-xs">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Difficulté</label>
+          <select name="difficulty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+            {% for val, label in difficulties %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+          </select></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Points</label>
+          <input type="number" name="points" value="8" min="0" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+      </div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Indice</label>
+        <input type="text" name="hint" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"></div>
+    </div>
+    <div class="flex gap-3">
+      <button type="submit" class="bg-sky-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-sky-700 text-sm">🔗 Créer l'exercice</button>
+      <a href="{% url 'admin_panel:exercises_list' %}" class="bg-slate-100 text-slate-700 font-semibold px-6 py-2.5 rounded-xl hover:bg-slate-200 text-sm">Annuler</a>
+    </div>
+  </form>
+</div>
+{% block extra_js %}
+<script>
+function addPair() {
+  var c = document.getElementById('pairs-container');
+  var d = document.createElement('div');
+  d.className = 'pair-row grid grid-cols-2 gap-2 items-center';
+  d.innerHTML = '<input type="text" name="left_item" placeholder="Gauche" class="px-2 py-1.5 border border-slate-300 rounded-lg text-sm">' +
+    '<div class="flex gap-2"><input type="text" name="right_item" placeholder="Droite" class="flex-1 px-2 py-1.5 border border-slate-300 rounded-lg text-sm"><button type="button" onclick="removePair(this)" class="text-red-400 hover:text-red-600 text-xs">✕</button></div>';
+  c.appendChild(d);
+}
+function removePair(btn) {
+  if (document.querySelectorAll('.pair-row').length <= 2) { alert('Minimum 2 paires.'); return; }
+  btn.closest('.pair-row').remove();
+}
+</script>
+{% endblock %}
+{% endblock %}
