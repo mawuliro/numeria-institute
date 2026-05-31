@@ -164,7 +164,12 @@
 
     <a href="{% url 'admin_panel:exercises_list' %}"
        class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'exercise' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
-      <span>💻</span> Exercices &amp; Résultats
+      <span>💻</span> Exercices code
+    </a>
+
+    <a href="{% url 'admin_panel:mcq_list' %}"
+       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'mcq' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+      <span>🔘</span> Exercices QCM
     </a>
 
     <!-- ── SYSTÈME ── -->

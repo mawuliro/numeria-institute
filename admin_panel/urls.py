@@ -125,4 +125,12 @@ urlpatterns = [
     # Formation lesson exercise API
     path('formation-lessons/<int:lesson_id>/exercises/', views_blocks.get_formation_lesson_exercises, name='flesson_exercises'),
     path('formation-lessons/<int:lesson_id>/blocks/<int:block_id>/create-exercise/', views_blocks.create_exercise_from_block, name='flesson_block_create_exercise'),
+    # MCQ block management
+    path('blocks/<int:block_id>/create-mcq/', views_blocks.create_mcq_from_block, name='block_create_mcq'),
+    path('api/lessons/<int:lesson_id>/mcqs/', views_blocks.get_lesson_mcqs, name='api_lesson_mcqs'),
+    path('api/formation-lessons/<int:lesson_id>/mcqs/', views_blocks.get_formation_lesson_mcqs, name='api_flesson_mcqs'),
+    # MCQ admin list
+    path('qcm/', views.mcq_list, name='mcq_list'),
+    path('qcm/<int:mcq_id>/modifier/', views.mcq_edit, name='mcq_edit'),
+    path('qcm/<int:mcq_id>/supprimer/', views.mcq_delete, name='mcq_delete'),
 ]

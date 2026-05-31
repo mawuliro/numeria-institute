@@ -1,0 +1,332 @@
+{% load i18n sandbox_tags %}
+{#
+  MCQ Widget — renders a single MCQExercise for students.
+  Props (from lesson_blocks_render context):
+    block.mcq_id, block.mcq_title, block.question, block.hint,
+    block.allow_multiple, block.shuffle, block.max_attempts, block.points,
+    block.difficulty, block.choices  [{id, text, order}]
+    block.is_solved, block.points_earned, block.attempts_used,
+    block.correct_ids  ([] unless already solved or exhausted),
+    block.explanation  ('' unless already solved or exhausted)
+#}
+{% with mcq=block %}
+<div id="mcq-{{ mcq.mcq_id }}"
+     class="mcq-widget bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm mb-8">
+
+  {# Header #}
+  <div class="flex items-center gap-3 px-5 py-3.5 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+    <span class="text-lg">🔘</span>
+    <span class="font-bold text-numeria-bleu dark:text-numeria-teal text-sm">{{ mcq.mcq_title }}</span>
+    <div class="ml-auto flex items-center gap-2">
+      {% if mcq.difficulty == 'easy' %}<span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{% trans "Facile" %}</span>
+      {% elif mcq.difficulty == 'medium' %}<span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">{% trans "Moyen" %}</span>
+      {% else %}<span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">{% trans "Difficile" %}</span>{% endif %}
+      <span class="text-xs text-gray-400">{{ mcq.points }} pts</span>
+      {% if mcq.is_solved %}
+      <span class="text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">✅ {% trans "Déjà résolu" %}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Question #}
+  <div class="px-5 py-4">
+    <div class="mcq-question prose prose-sm dark:prose-invert max-w-none text-gray-800 dark:text-gray-100 mb-5 leading-relaxed">
+      {{ mcq.question|render_markdown_latex }}
+    </div>
+
+    {# Choices container (JS fills this) #}
+    <div id="mcq-choices-{{ mcq.mcq_id }}" class="space-y-2.5 mb-5"></div>
+
+    {# Hint — hidden until 2 failed attempts #}
+    {% if mcq.hint %}
+    <div id="mcq-hint-{{ mcq.mcq_id }}" class="hidden mb-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
+      💡 <strong>{% trans "Indice" %} :</strong> {{ mcq.hint }}
+    </div>
+    {% endif %}
+
+    {# Feedback banner (shown after submission) #}
+    <div id="mcq-feedback-{{ mcq.mcq_id }}" class="hidden mb-4 relative overflow-hidden rounded-xl px-5 py-4">
+      <div id="mcq-confetti-{{ mcq.mcq_id }}" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+      <div id="mcq-feedback-body-{{ mcq.mcq_id }}"></div>
+    </div>
+
+    {# Explanation (shown when solved or exhausted) #}
+    {% if mcq.explanation %}
+    <div id="mcq-explanation-{{ mcq.mcq_id }}"
+         class="{% if not mcq.is_solved %}hidden{% endif %} mb-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl px-4 py-3 text-sm text-blue-800 dark:text-blue-300 prose prose-sm dark:prose-invert max-w-none">
+      <strong>💡 {% trans "Explication" %} :</strong>
+      {{ mcq.explanation|render_markdown_latex }}
+    </div>
+    {% endif %}
+
+    {# Controls #}
+    <div class="flex items-center gap-3 flex-wrap">
+      {% if mcq.hint %}
+      <button id="mcq-hint-btn-{{ mcq.mcq_id }}" type="button"
+              onclick="mcqShowHint({{ mcq.mcq_id }})"
+              class="hidden text-xs text-amber-600 dark:text-amber-400 border border-amber-300 px-3 py-2 rounded-lg hover:bg-amber-50 transition-colors font-medium">
+        💡 {% trans "Indice" %}
+      </button>
+      {% endif %}
+      <button id="mcq-submit-{{ mcq.mcq_id }}" type="button" disabled
+              onclick="mcqSubmit({{ mcq.mcq_id }})"
+              class="flex items-center gap-1.5 bg-numeria-bleu hover:bg-blue-800 text-white text-sm font-bold px-5 py-2.5 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        ✅ {% trans "Valider ma réponse" %}
+      </button>
+      <span id="mcq-attempts-{{ mcq.mcq_id }}" class="text-xs text-gray-400 dark:text-gray-500"></span>
+    </div>
+  </div>
+</div>
+
+{# ── PER-MCQ JAVASCRIPT (IIFE) ── #}
+<script>
+(function(){
+'use strict';
+var MID         = {{ mcq.mcq_id }};
+var ALLOW_MULTI = {% if mcq.allow_multiple %}true{% else %}false{% endif %};
+var SHUFFLE     = {% if mcq.shuffle %}true{% else %}false{% endif %};
+var MAX_ATT     = {{ mcq.max_attempts }};
+var HINT_TEXT   = "{{ mcq.hint|escapejs }}";
+var POINTS      = {{ mcq.points }};
+var IS_SOLVED   = {% if mcq.is_solved %}true{% else %}false{% endif %};
+var ATT_USED    = {{ mcq.attempts_used }};
+var CORRECT_IDS = [{% for cid in mcq.correct_ids %}{{ cid }}{% if not forloop.last %},{% endif %}{% endfor %}];
+var CSRF        = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+var SUBMIT_URL  = '{% url "cours:submit_mcq" 0 %}'.replace('/0/', '/' + MID + '/');
+var CHOICES_RAW = [
+  {% for ch in mcq.choices %}
+  { id: {{ ch.id }}, text: {{ ch.text|json_script:"" }}{% comment %}we'll handle text below{% endcomment %}, order: {{ ch.order }} }{% if not forloop.last %},{% endif %}
+  {% endfor %}
+];
+
+/* We pass choice text as data attributes to avoid JS injection issues */
+var CHOICE_TEXTS = {};
+{% for ch in mcq.choices %}
+CHOICE_TEXTS[{{ ch.id }}] = "{{ ch.text|escapejs }}";
+{% endfor %}
+
+var attCount = ATT_USED;
+var solved   = IS_SOLVED;
+var locked   = IS_SOLVED || (MAX_ATT > 0 && ATT_USED >= MAX_ATT);
+
+function g(id) { return document.getElementById('mcq-' + id + '-' + MID); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── Fisher-Yates shuffle ── */
+function shuffleArray(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+/* ── Render choices ── */
+function renderChoices() {
+  var container = document.getElementById('mcq-choices-' + MID);
+  if (!container) return;
+
+  var choices = CHOICES_RAW.slice();
+  if (SHUFFLE && !locked) choices = shuffleArray(choices);
+
+  container.innerHTML = '';
+  choices.forEach(function(ch) {
+    var isCorrect = CORRECT_IDS.indexOf(ch.id) !== -1;
+    var inputType = ALLOW_MULTI ? 'checkbox' : 'radio';
+    var inputName = 'mcq-' + MID + '-choice';
+    var checkedAttr = (IS_SOLVED && isCorrect) ? 'checked' : '';
+    var disabledAttr = locked ? 'disabled' : '';
+
+    var bgClass = '';
+    if (locked && isCorrect) bgClass = 'bg-green-50 dark:bg-green-900/20 border-green-400';
+    else bgClass = 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/10';
+
+    var el = document.createElement('label');
+    el.className = 'flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-colors ' + bgClass;
+    if (locked) el.classList.add('cursor-default');
+    el.dataset.choiceId = ch.id;
+    el.innerHTML = '<input type="' + inputType + '" ' +
+      'name="' + inputName + '" value="' + ch.id + '" ' +
+      checkedAttr + ' ' + disabledAttr +
+      ' class="mt-0.5 accent-numeria-bleu flex-shrink-0" ' +
+      'onchange="mcqOnChange(' + MID + ')">' +
+      '<span class="text-sm text-gray-800 dark:text-gray-100 leading-relaxed">' + esc(CHOICE_TEXTS[ch.id]) + '</span>' +
+      (locked && isCorrect ? ' <span class="ml-auto text-green-600 flex-shrink-0">✅</span>' : '');
+    container.appendChild(el);
+  });
+
+  updateAttemptsLabel();
+
+  // MathJax retypeset choices
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetClear([container]);
+    MathJax.typesetPromise([container]).catch(function(){});
+  }
+}
+
+function mcqOnChange(mid) {
+  var any = document.querySelectorAll(
+    'input[name="mcq-' + mid + '-choice"]:checked'
+  ).length > 0;
+  var btn = document.getElementById('mcq-submit-' + mid);
+  if (btn) btn.disabled = !any;
+}
+
+function updateAttemptsLabel() {
+  var el = document.getElementById('mcq-attempts-' + MID);
+  if (!el) return;
+  if (MAX_ATT > 0) {
+    el.textContent = '{% trans "Tentative" %} ' + attCount + ' / ' + MAX_ATT;
+  }
+  if (attCount >= 2 && HINT_TEXT) {
+    var hintBtn = document.getElementById('mcq-hint-btn-' + MID);
+    if (hintBtn) hintBtn.classList.remove('hidden');
+  }
+}
+
+/* ── Submit ── */
+window['mcqSubmit'] = function(mid) {
+  if (mid !== MID) return;
+  var selected = Array.from(
+    document.querySelectorAll('input[name="mcq-' + MID + '-choice"]:checked')
+  ).map(function(el){ return parseInt(el.value, 10); });
+
+  if (!selected.length) return;
+
+  var btn = document.getElementById('mcq-submit-' + MID);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ …'; }
+
+  fetch(SUBMIT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+    body: JSON.stringify({ selected_choice_ids: selected }),
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    attCount++;
+    updateAttemptsLabel();
+    showFeedback(d, selected);
+
+    if (d.is_correct) {
+      solved = true; locked = true;
+      if (d.correct_choice_ids) CORRECT_IDS = d.correct_choice_ids;
+      renderChoices();
+      triggerConfetti();
+      if (d.explanation) showExplanation(d.explanation);
+      if (btn) { btn.disabled = true; btn.innerHTML = '✅ {% trans "Résolu" %}'; }
+    } else if (d.exhausted) {
+      locked = true;
+      if (d.correct_choice_ids) CORRECT_IDS = d.correct_choice_ids;
+      renderChoices();
+      if (d.explanation) showExplanation(d.explanation);
+      if (btn) { btn.textContent = '{% trans "Tentatives épuisées" %}'; }
+    } else {
+      // Wrong, retry allowed
+      if (btn) { btn.disabled = false; btn.innerHTML = '↩️ {% trans "Réessayer" %}'; }
+      // Re-enable choices
+      document.querySelectorAll('input[name="mcq-' + MID + '-choice"]').forEach(function(inp){
+        inp.disabled = false;
+        inp.checked = false;
+      });
+      document.querySelectorAll('label[data-choice-id]').forEach(function(lbl){
+        lbl.className = lbl.className.replace(/bg-\w+-\d+[^\s]*/g, '') + ' bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-sky-400 hover:bg-sky-50';
+      });
+    }
+  })
+  .catch(function(e){ console.log('MCQ submit error:', e); if (btn){ btn.disabled=false; btn.innerHTML='✅ {% trans "Valider ma réponse" %}'; } });
+};
+
+function showFeedback(d, selected) {
+  var fb   = document.getElementById('mcq-feedback-' + MID);
+  var body = document.getElementById('mcq-feedback-body-' + MID);
+  if (!fb || !body) return;
+  fb.classList.remove('hidden');
+
+  if (d.is_correct) {
+    fb.style.backgroundColor = '#f0fdf4';
+    fb.style.border = '1px solid #bbf7d0';
+    body.innerHTML = '<p class="font-bold text-green-700 text-sm">✅ {% trans "Bonne réponse !" %} +' + POINTS + ' pts</p>';
+  } else if (d.exhausted) {
+    fb.style.backgroundColor = '#fef2f2';
+    fb.style.border = '1px solid #fecaca';
+    body.innerHTML = '<p class="font-bold text-red-700 text-sm">❌ {% trans "Tentatives épuisées." %}</p>';
+  } else {
+    fb.style.backgroundColor = '#fef2f2';
+    fb.style.border = '1px solid #fecaca';
+    var msg = '<p class="font-bold text-red-700 text-sm">❌ {% trans "Ce n\'est pas la bonne réponse." %}';
+    if (MAX_ATT > 0) msg += ' {% trans "Tentative" %} ' + attCount + ' / ' + MAX_ATT + '.';
+    msg += '</p>';
+    // Per-choice feedback
+    if (d.per_choice_feedback) {
+      selected.forEach(function(cid){
+        var fb_text = d.per_choice_feedback[String(cid)];
+        if (fb_text) msg += '<p class="text-xs text-red-600 mt-1">' + esc(fb_text) + '</p>';
+      });
+    }
+    body.innerHTML = msg;
+  }
+}
+
+function showExplanation(text) {
+  var el = document.getElementById('mcq-explanation-' + MID);
+  if (el) {
+    el.classList.remove('hidden');
+    if (text) {
+      var strong = el.querySelector('strong');
+      el.innerHTML = (strong ? strong.outerHTML + ' ' : '') + esc(text);
+    }
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetClear([el]);
+      MathJax.typesetPromise([el]).catch(function(){});
+    }
+  }
+}
+
+function triggerConfetti() {
+  var c = document.getElementById('mcq-confetti-' + MID);
+  if (!c) return;
+  c.innerHTML = '';
+  var colors = ['#ffd700','#2dd4bf','#1a3c6e','#ef4444','#22c55e'];
+  for (var i = 0; i < 28; i++) {
+    var p = document.createElement('div');
+    p.style.cssText = 'position:absolute;width:8px;height:8px;background:'+colors[i%colors.length]+';left:'+Math.random()*100+'%;top:-10px;border-radius:2px;animation:confetti-fall '+(0.7+Math.random()*1.3)+'s ease-in '+(Math.random()*0.4)+'s forwards;transform:rotate('+Math.random()*360+'deg)';
+    c.appendChild(p);
+  }
+  setTimeout(function(){ c.innerHTML=''; }, 3500);
+}
+
+window['mcqShowHint'] = function(mid) {
+  if (mid !== MID) return;
+  var el = document.getElementById('mcq-hint-' + MID);
+  if (el) el.classList.remove('hidden');
+};
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', function() {
+  renderChoices();
+
+  // Restore already-solved state
+  if (IS_SOLVED && CORRECT_IDS.length) {
+    var fb   = document.getElementById('mcq-feedback-' + MID);
+    var body = document.getElementById('mcq-feedback-body-' + MID);
+    if (fb && body) {
+      fb.classList.remove('hidden');
+      fb.style.backgroundColor = '#f0fdf4';
+      fb.style.border = '1px solid #bbf7d0';
+      body.innerHTML = '<p class="font-bold text-green-700 text-sm">✅ {% trans "Déjà résolu !" %} +' + POINTS + ' pts</p>';
+    }
+    var submitBtn = document.getElementById('mcq-submit-' + MID);
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '✅ {% trans "Résolu" %}'; }
+  }
+
+  // MathJax on question text
+  var qEl = document.querySelector('#mcq-' + MID + ' .mcq-question');
+  if (qEl && window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([qEl]).catch(function(){});
+  }
+});
+
+})();
+</script>
+{% endwith %}

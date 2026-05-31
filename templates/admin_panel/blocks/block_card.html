@@ -20,13 +20,15 @@
       {% if block.block_type == 'text' %}📝
       {% elif block.block_type == 'video' %}🎬
       {% elif block.block_type == 'sandbox' %}🐍
-      {% elif block.block_type == 'exercise' %}💻{% endif %}
+      {% elif block.block_type == 'exercise' %}💻
+      {% elif block.block_type == 'mcq' %}🔘{% endif %}
     </span>
     <span class="font-semibold text-sm text-slate-700 dark:text-slate-200">
       {% if block.block_type == 'text' %}Texte
       {% elif block.block_type == 'video' %}Vidéo
       {% elif block.block_type == 'sandbox' %}Sandbox Python
-      {% elif block.block_type == 'exercise' %}Exercice évalué{% endif %}
+      {% elif block.block_type == 'exercise' %}Exercice évalué
+      {% elif block.block_type == 'mcq' %}QCM{% endif %}
       {% if block.block_type == 'text' and block.text_content %}
         <span class="font-normal text-slate-400 text-xs ml-1">— {{ block.text_content|truncatechars:40 }}</span>
       {% elif block.block_type == 'sandbox' and block.sandbox_title %}
@@ -215,6 +217,115 @@
 
     </div>
 
+    {% endif %}
+
+    {# ── MCQ block ── #}
+    {% if block.block_type == 'mcq' %}
+    <div class="space-y-4">
+
+      {# Existing MCQ selector #}
+      {% if all_exercises or block.mcq_exercise %}
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+          Utiliser un QCM existant
+        </label>
+        <select id="mcq-sel-{{ block.id }}"
+                class="lb-mcq-field w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200"
+                data-field="mcq_id">
+          <option value="">— Aucun QCM —</option>
+          {% for mcq in all_mcqs %}
+          <option value="{{ mcq.id }}" {% if block.mcq_exercise_id == mcq.id %}selected{% endif %}>
+            {{ mcq.title }} ({{ mcq.get_difficulty_display }}, {{ mcq.points }} pts)
+          </option>
+          {% endfor %}
+        </select>
+        {% if block.mcq_exercise %}
+        <div class="mt-2 bg-slate-50 dark:bg-slate-700 rounded-lg p-3 text-xs border border-slate-200 dark:border-slate-600">
+          <p class="font-semibold text-slate-700 dark:text-slate-200">🔘 {{ block.mcq_exercise.title }}</p>
+          <p class="text-slate-500 mt-0.5 truncate">{{ block.mcq_exercise.question|truncatechars:80 }}</p>
+          <div class="flex gap-2 mt-1 text-slate-400">
+            <span>{{ block.mcq_exercise.get_difficulty_display }}</span>
+            <span>{{ block.mcq_exercise.points }} pts</span>
+            <span>{{ block.mcq_exercise.choices.count }} choix</span>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {# Create new MCQ (Formation or Course) #}
+      <details class="text-xs">
+        <summary class="cursor-pointer text-sky-600 hover:text-sky-800 font-medium py-1 select-none">
+          ➕ Créer un nouveau QCM et le lier
+        </summary>
+        <div class="mt-3 space-y-3 border border-slate-200 dark:border-slate-600 rounded-xl p-4 bg-slate-50 dark:bg-slate-800">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
+            <input type="text" id="new-mcq-title-{{ block.id }}" maxlength="300"
+                   class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Question * <span class="font-normal text-slate-400">(Markdown + LaTeX $...$ supportés)</span></label>
+            <textarea id="new-mcq-q-{{ block.id }}" rows="3"
+                      class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs font-mono bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200"
+                      placeholder="Ex: Quelle est la valeur de $\int_0^1 x\,dx$ ?"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Choix de réponses *</label>
+            <div id="new-mcq-choices-{{ block.id }}" class="space-y-2">
+              <div class="flex items-center gap-2 mcq-choice-row">
+                <input type="radio" name="new-mcq-correct-{{ block.id }}" value="0" class="mcq-correct-radio flex-shrink-0">
+                <input type="text" placeholder="Choix A" class="mcq-choice-text flex-1 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded text-xs bg-white dark:bg-slate-700">
+                <button type="button" onclick="removeMcqChoice(this)" class="text-red-400 hover:text-red-600 text-xs px-1">✕</button>
+              </div>
+              <div class="flex items-center gap-2 mcq-choice-row">
+                <input type="radio" name="new-mcq-correct-{{ block.id }}" value="1" class="mcq-correct-radio flex-shrink-0">
+                <input type="text" placeholder="Choix B" class="mcq-choice-text flex-1 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded text-xs bg-white dark:bg-slate-700">
+                <button type="button" onclick="removeMcqChoice(this)" class="text-red-400 hover:text-red-600 text-xs px-1">✕</button>
+              </div>
+            </div>
+            <button type="button" onclick="addMcqChoice('{{ block.id }}')"
+                    class="mt-2 text-xs text-sky-600 hover:text-sky-800 font-medium">+ Ajouter un choix</button>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Difficulté</label>
+              <select id="new-mcq-diff-{{ block.id }}" class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs bg-white dark:bg-slate-700">
+                <option value="easy">Facile</option>
+                <option value="medium">Moyen</option>
+                <option value="hard">Difficile</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Points</label>
+              <input type="number" id="new-mcq-pts-{{ block.id }}" value="5" min="0"
+                     class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Max tentatives</label>
+              <input type="number" id="new-mcq-maxatt-{{ block.id }}" value="0" min="0"
+                     class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Explication (optionnelle)</label>
+            <textarea id="new-mcq-expl-{{ block.id }}" rows="2"
+                      class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Indice (optionnel)</label>
+            <input type="text" id="new-mcq-hint-{{ block.id }}"
+                   class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+          </div>
+          <button type="button"
+                  onclick="lbCreateMcqForBlock({{ block.id }}, {{ block.formation_lesson_id|default:'null' }}, {{ block.lesson_id|default:'null' }})"
+                  class="w-full text-xs bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2 rounded-lg transition-colors">
+            🔘 Créer et lier ce QCM
+          </button>
+        </div>
+      </details>
+
+    </div>
     {% endif %}
 
     {# ── Save indicator + auto-save ── #}

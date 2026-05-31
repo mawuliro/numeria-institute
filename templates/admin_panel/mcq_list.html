@@ -1,0 +1,88 @@
+{% extends "admin_panel/base_staff.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Exercices QCM" %}{% endblock %}
+{% block page_heading %}🔘 {% trans "Questions à Choix Multiples" %}{% endblock %}
+
+{% block content %}
+<div class="flex flex-wrap gap-3 mb-5 items-center justify-between">
+  <form method="get" class="flex flex-wrap gap-2">
+    <select name="type" onchange="this.form.submit()"
+            class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+      <option value=""          {% if not type_filter %}selected{% endif %}>{% trans "Tous les types" %}</option>
+      <option value="cours"     {% if type_filter == 'cours' %}selected{% endif %}>📚 {% trans "Cours" %}</option>
+      <option value="formation" {% if type_filter == 'formation' %}selected{% endif %}>🎓 {% trans "Formation" %}</option>
+    </select>
+    <input type="text" name="q" value="{{ q }}" placeholder="{% trans 'Rechercher…' %}"
+           class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+    <button type="submit" class="px-3 py-2 bg-sky-600 text-white rounded-lg text-sm">🔍</button>
+    {% if type_filter or q %}
+    <a href="{% url 'admin_panel:mcq_list' %}" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm">✕</a>
+    {% endif %}
+  </form>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+  {% if mcqs %}
+  <table class="w-full text-sm">
+    <thead class="bg-slate-50 text-xs text-slate-500 uppercase tracking-wide">
+      <tr>
+        <th class="px-4 py-3 text-left">{% trans "Question" %}</th>
+        <th class="px-4 py-3 text-left hidden md:table-cell">{% trans "Leçon / Parent" %}</th>
+        <th class="px-4 py-3 text-center hidden sm:table-cell">{% trans "Type" %}</th>
+        <th class="px-4 py-3 text-center hidden lg:table-cell">{% trans "Choix" %}</th>
+        <th class="px-4 py-3 text-center hidden lg:table-cell">{% trans "Difficulté" %}</th>
+        <th class="px-4 py-3 text-center">{% trans "Pts" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Actions" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for mcq in mcqs %}
+      <tr class="hover:bg-slate-50 transition-colors {% if not mcq.is_active %}opacity-50{% endif %}">
+        <td class="px-4 py-3">
+          <div class="font-medium text-slate-800 line-clamp-2">{{ mcq.title }}</div>
+          <div class="text-xs text-slate-400 mt-0.5 line-clamp-1">{{ mcq.question|truncatechars:60 }}</div>
+        </td>
+        <td class="px-4 py-3 text-slate-600 hidden md:table-cell">
+          {% if mcq.lesson %}
+          <div class="text-xs text-slate-400">{{ mcq.lesson.cours.titre }}</div>
+          <div class="text-xs">{{ mcq.lesson.titre }}</div>
+          {% elif mcq.formation_lesson %}
+          <div class="text-xs text-slate-400">{{ mcq.formation_lesson.formation.titre }}</div>
+          <div class="text-xs">{{ mcq.formation_lesson.titre }}</div>
+          {% else %}<span class="text-slate-400">—</span>{% endif %}
+        </td>
+        <td class="px-4 py-3 text-center hidden sm:table-cell">
+          {% if mcq.formation_lesson %}<span class="text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">🟩 Formation</span>
+          {% else %}<span class="text-xs font-semibold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">🟦 Cours</span>{% endif %}
+        </td>
+        <td class="px-4 py-3 text-center hidden lg:table-cell text-slate-600">{{ mcq.choices.count }}</td>
+        <td class="px-4 py-3 text-center hidden lg:table-cell">
+          {% if mcq.difficulty == 'easy' %}<span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{% trans "Facile" %}</span>
+          {% elif mcq.difficulty == 'medium' %}<span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">{% trans "Moyen" %}</span>
+          {% else %}<span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">{% trans "Difficile" %}</span>{% endif %}
+        </td>
+        <td class="px-4 py-3 text-center font-semibold text-slate-700">{{ mcq.points }}</td>
+        <td class="px-4 py-3 text-right">
+          <div class="flex justify-end gap-1">
+            <a href="{% url 'admin_panel:mcq_edit' mcq.id %}"
+               class="text-sky-600 text-xs px-2 py-1 bg-sky-50 hover:bg-sky-100 rounded-md font-medium">{% trans "Modifier" %}</a>
+            <form method="post" action="{% url 'admin_panel:mcq_delete' mcq.id %}" class="inline"
+                  onsubmit="return confirm('{% trans "Supprimer ce QCM ?" %}')">
+              {% csrf_token %}
+              <button type="submit" class="text-red-600 text-xs px-2 py-1 bg-red-50 hover:bg-red-100 rounded-md font-medium">{% trans "Suppr." %}</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="px-5 py-12 text-center text-slate-400">
+    <div class="text-4xl mb-3">🔘</div>
+    <p>{% trans "Aucun QCM trouvé. Créez-en depuis l'éditeur de leçon." %}</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

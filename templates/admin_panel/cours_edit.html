@@ -1025,6 +1025,81 @@ function lbStartAutoSave() {
   }, 60000);
 }
 
+/* ── MCQ block management ── */
+var mcqChoiceCount = {};  // blockId → next choice index
+
+function addMcqChoice(blockId) {
+  var container = document.getElementById('new-mcq-choices-' + blockId);
+  if (!container) return;
+  var idx = mcqChoiceCount[blockId] = (mcqChoiceCount[blockId] || 2);
+  var labels = ['A','B','C','D','E','F'];
+  var row = document.createElement('div');
+  row.className = 'flex items-center gap-2 mcq-choice-row';
+  row.innerHTML = '<input type="radio" name="new-mcq-correct-' + blockId + '" value="' + idx + '" class="mcq-correct-radio flex-shrink-0">' +
+    '<input type="text" placeholder="Choix ' + (labels[idx]||idx) + '" class="mcq-choice-text flex-1 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded text-xs bg-white dark:bg-slate-700">' +
+    '<button type="button" onclick="removeMcqChoice(this)" class="text-red-400 hover:text-red-600 text-xs px-1">✕</button>';
+  container.appendChild(row);
+  mcqChoiceCount[blockId] = idx + 1;
+}
+
+function removeMcqChoice(btn) {
+  var row = btn.closest('.mcq-choice-row');
+  if (row) row.remove();
+}
+
+async function lbCreateMcqForBlock(blockId, formationLessonId, courseLessonId) {
+  var title    = document.getElementById('new-mcq-title-' + blockId)?.value.trim();
+  var question = document.getElementById('new-mcq-q-' + blockId)?.value.trim();
+  var diff     = document.getElementById('new-mcq-diff-' + blockId)?.value;
+  var pts      = document.getElementById('new-mcq-pts-' + blockId)?.value;
+  var maxAtt   = document.getElementById('new-mcq-maxatt-' + blockId)?.value;
+  var expl     = document.getElementById('new-mcq-expl-' + blockId)?.value;
+  var hint     = document.getElementById('new-mcq-hint-' + blockId)?.value;
+
+  if (!title || !question) {
+    if (window.nbToast) nbToast('Titre et question sont obligatoires.', 'error'); return;
+  }
+
+  // Collect choices
+  var choices = [];
+  var container = document.getElementById('new-mcq-choices-' + blockId);
+  if (container) {
+    container.querySelectorAll('.mcq-choice-row').forEach(function(row, idx) {
+      var text = row.querySelector('.mcq-choice-text')?.value.trim();
+      var radio = row.querySelector('.mcq-correct-radio');
+      var isCorrect = radio && radio.checked;
+      if (text) choices.push({ text: text, is_correct: isCorrect, feedback: '', order: idx });
+    });
+  }
+  if (choices.length < 2) {
+    if (window.nbToast) nbToast('Au moins 2 choix requis.', 'error'); return;
+  }
+  if (!choices.some(function(c){ return c.is_correct; })) {
+    if (window.nbToast) nbToast('Sélectionnez au moins une bonne réponse.', 'error'); return;
+  }
+
+  var r = await fetch('/fr/admin-panel/blocks/' + blockId + '/create-mcq/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+    body: JSON.stringify({
+      title: title, question: question, choices: choices,
+      difficulty: diff, points: pts, max_attempts: maxAtt,
+      explanation: expl, hint: hint, shuffle_choices: true,
+    }),
+  });
+  var d = await r.json();
+  if (d.success) {
+    if (window.nbToast) nbToast('🔘 QCM «' + d.mcq_title + '» créé et lié.', 'success');
+    await lbSaveBlock(blockId);
+  } else {
+    if (window.nbToast) nbToast('Erreur: ' + (d.error || 'inconnue'), 'error');
+  }
+}
+
+window.addMcqChoice = addMcqChoice;
+window.removeMcqChoice = removeMcqChoice;
+window.lbCreateMcqForBlock = lbCreateMcqForBlock;
+
 /* ── Formation exercise management in block card ── */
 async function lbRefreshFormationExercises(blockId, lessonId) {
   var sel = document.getElementById('ex-sel-' + blockId);

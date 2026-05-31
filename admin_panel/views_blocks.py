@@ -192,6 +192,11 @@ def update_block(request, block_id):
         ex_id = data['exercise_id']
         block.exercise = CodeExercise.objects.filter(id=ex_id).first() if ex_id else None
 
+    if 'mcq_id' in data:
+        from cours.models import MCQExercise
+        mcq_id = data['mcq_id']
+        block.mcq_exercise = MCQExercise.objects.filter(id=mcq_id).first() if mcq_id else None
+
     block.save()
     return JsonResponse({'success': True})
 
@@ -271,3 +276,111 @@ def create_exercise_from_block(request, lesson_id, block_id):
         'points': ex.points,
         'evaluation_mode': ex.get_evaluation_mode_display(),
     })
+
+
+# ─── MCQ BLOCK MANAGEMENT ─────────────────────────────────────────────────────
+
+def _render_block_card_with_mcqs(request, block):
+    """Render block card passing scoped MCQs alongside exercises."""
+    from cours.models import CodeExercise, MCQExercise
+    exercises = _get_exercises_for_block(block)
+    if block.formation_lesson_id:
+        mcqs = MCQExercise.objects.filter(formation_lesson_id=block.formation_lesson_id, is_active=True)
+    elif block.lesson_id:
+        mcqs = MCQExercise.objects.filter(lesson_id=block.lesson_id, is_active=True)
+    else:
+        mcqs = MCQExercise.objects.none()
+    return render_to_string('admin_panel/blocks/block_card.html', {
+        'block':         block,
+        'all_exercises': exercises,
+        'all_mcqs':      mcqs,
+        'lesson_type':   'formation' if block.formation_lesson_id else 'cours',
+    }, request=request)
+
+
+# Override the existing helpers to pass MCQs
+def _render_block_card(request, block):
+    return _render_block_card_with_mcqs(request, block)
+
+
+@staff_only
+@require_POST
+def create_mcq_from_block(request, block_id):
+    """
+    Create a new MCQExercise + choices and link it to a LessonBlock.
+    Works for both Course (lesson_id) and Formation (formation_lesson_id).
+    """
+    from cours.models import LessonBlock, MCQExercise, MCQChoice
+
+    block = get_object_or_404(LessonBlock, id=block_id)
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    title   = data.get('title', '').strip()
+    question = data.get('question', '').strip()
+    choices  = data.get('choices', [])
+
+    if not title or not question:
+        return JsonResponse({'error': 'title and question required'}, status=400)
+    if len(choices) < 2:
+        return JsonResponse({'error': 'At least 2 choices required'}, status=400)
+    if not any(c.get('is_correct') for c in choices):
+        return JsonResponse({'error': 'At least 1 correct choice required'}, status=400)
+
+    mcq = MCQExercise.objects.create(
+        lesson=block.lesson,
+        formation_lesson=block.formation_lesson,
+        title=title,
+        question=question,
+        explanation=data.get('explanation', ''),
+        hint=data.get('hint', ''),
+        difficulty=data.get('difficulty', 'easy'),
+        points=int(data.get('points', 5) or 5),
+        max_attempts=int(data.get('max_attempts', 0) or 0),
+        allow_multiple_correct=bool(data.get('allow_multiple', False)),
+        shuffle_choices=bool(data.get('shuffle_choices', True)),
+        created_by=request.user,
+    )
+    for idx, ch in enumerate(choices):
+        MCQChoice.objects.create(
+            exercise=mcq,
+            text=ch.get('text', '').strip(),
+            is_correct=bool(ch.get('is_correct', False)),
+            feedback=ch.get('feedback', '').strip(),
+            order=idx,
+        )
+
+    block.mcq_exercise = mcq
+    block.save(update_fields=['mcq_exercise'])
+
+    return JsonResponse({
+        'success': True,
+        'mcq_id': mcq.id,
+        'mcq_title': mcq.title,
+        'difficulty': mcq.get_difficulty_display(),
+        'points': mcq.points,
+        'choices_count': mcq.choices.count(),
+    })
+
+
+@staff_only
+def get_lesson_mcqs(request, lesson_id):
+    from cours.models import Lecon, MCQExercise
+    get_object_or_404(Lecon, id=lesson_id)
+    mcqs = list(MCQExercise.objects.filter(lesson_id=lesson_id, is_active=True).values(
+        'id', 'title', 'difficulty', 'points'
+    ))
+    return JsonResponse({'mcqs': mcqs})
+
+
+@staff_only
+def get_formation_lesson_mcqs(request, lesson_id):
+    from formation.models import FormationLesson
+    from cours.models import MCQExercise
+    get_object_or_404(FormationLesson, id=lesson_id)
+    mcqs = list(MCQExercise.objects.filter(formation_lesson_id=lesson_id, is_active=True).values(
+        'id', 'title', 'difficulty', 'points'
+    ))
+    return JsonResponse({'mcqs': mcqs})

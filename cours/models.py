@@ -895,7 +895,8 @@ class LessonBlock(models.Model):
         ('text',     _('Texte / Markdown / LaTeX')),
         ('video',    _('Vidéo')),
         ('sandbox',  _('Sandbox Python libre')),
-        ('exercise', _('Exercice évalué')),
+        ('exercise', _('Exercice de code évalué')),
+        ('mcq',      _('Question à choix multiples')),
     ]
 
     # Belongs to one of these two (exactly one must be set)
@@ -928,7 +929,14 @@ class LessonBlock(models.Model):
     exercise = models.ForeignKey(
         'CodeExercise', on_delete=models.SET_NULL,
         null=True, blank=True, related_name='lesson_blocks',
-        verbose_name=_('Exercice'),
+        verbose_name=_('Exercice de code'),
+    )
+
+    # ── MCQ block ─────────────────────────────────────────────────────────
+    mcq_exercise = models.ForeignKey(
+        'MCQExercise', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='lesson_blocks',
+        verbose_name=_('QCM'),
     )
 
     class Meta:
@@ -946,3 +954,101 @@ class LessonBlock(models.Model):
             raise ValidationError(
                 'Un bloc doit appartenir à une leçon de cours ou de formation.'
             )
+
+
+# =============================================================================
+# MCQ EXERCISES — Questions à Choix Multiples
+# =============================================================================
+
+class MCQExercise(models.Model):
+    DIFFICULTY_CHOICES = [
+        ('easy',   _('Facile')),
+        ('medium', _('Moyen')),
+        ('hard',   _('Difficile')),
+    ]
+
+    lesson = models.ForeignKey(
+        'Lecon', on_delete=models.CASCADE,
+        related_name='mcq_exercises', null=True, blank=True,
+        verbose_name=_('Leçon de cours'),
+    )
+    formation_lesson = models.ForeignKey(
+        'formation.FormationLesson', on_delete=models.CASCADE,
+        related_name='mcq_exercises', null=True, blank=True,
+        verbose_name=_('Leçon de formation'),
+    )
+    title      = models.CharField(max_length=300, verbose_name=_('Titre'))
+    question   = models.TextField(verbose_name=_('Question'))
+    explanation = models.TextField(blank=True, verbose_name=_('Explication'))
+    hint       = models.TextField(blank=True, verbose_name=_('Indice'))
+    difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES, default='easy')
+    points     = models.IntegerField(default=5, verbose_name=_('Points'))
+    max_attempts = models.IntegerField(default=0, verbose_name=_('Tentatives max (0=illimité)'))
+    allow_multiple_correct = models.BooleanField(
+        default=False,
+        verbose_name=_('Plusieurs bonnes réponses possibles'),
+    )
+    shuffle_choices = models.BooleanField(default=True, verbose_name=_('Mélanger les choix'))
+    show_explanation_on_wrong = models.BooleanField(default=True)
+    order      = models.IntegerField(default=0)
+    is_active  = models.BooleanField(default=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='created_mcq_exercises',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = _('Exercice QCM')
+        verbose_name_plural = _('Exercices QCM')
+
+    def __str__(self):
+        return self.title
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if not self.lesson and not self.formation_lesson:
+            raise ValidationError(
+                'Un QCM doit être lié à une leçon de cours ou de formation.'
+            )
+
+
+class MCQChoice(models.Model):
+    exercise   = models.ForeignKey(MCQExercise, on_delete=models.CASCADE, related_name='choices')
+    text       = models.TextField(verbose_name=_('Texte du choix'))
+    is_correct = models.BooleanField(default=False, verbose_name=_('Bonne réponse'))
+    order      = models.IntegerField(default=0)
+    feedback   = models.TextField(blank=True, verbose_name=_('Feedback spécifique'))
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"{'✓' if self.is_correct else '○'} {self.text[:60]}"
+
+
+class MCQSubmission(models.Model):
+    student    = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mcq_submissions')
+    exercise   = models.ForeignKey(MCQExercise, on_delete=models.CASCADE, related_name='submissions')
+    selected_choices = models.ManyToManyField(MCQChoice, related_name='submissions', blank=True)
+    is_correct = models.BooleanField(default=False)
+    attempt_number = models.IntegerField(default=1)
+    points_earned  = models.IntegerField(default=0)
+    submitted_at   = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-submitted_at']
+
+
+class MCQGrade(models.Model):
+    """Tracks a student's best result on a specific MCQExercise."""
+    student       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mcq_grades')
+    exercise      = models.ForeignKey(MCQExercise, on_delete=models.CASCADE, related_name='grades')
+    is_solved     = models.BooleanField(default=False)
+    points_earned = models.IntegerField(default=0)
+    attempts_count = models.IntegerField(default=0)
+    solved_at     = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('student', 'exercise')

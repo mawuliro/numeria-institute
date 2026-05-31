@@ -202,6 +202,32 @@ def detail_cours(request, cours_id):
                         'is_solved':      ex.id in solved_ids,
                         # solution_code intentionally omitted
                     })
+                elif block.block_type == 'mcq' and block.mcq_exercise:
+                    from .models import MCQExercise, MCQGrade, MCQChoice
+                    mcq   = block.mcq_exercise
+                    grade = MCQGrade.objects.filter(student=request.user, exercise=mcq).first()
+                    choices = list(mcq.choices.order_by('order'))
+                    exhausted = (grade and mcq.max_attempts > 0 and
+                                 grade.attempts_count >= mcq.max_attempts)
+                    reveal = (grade and (grade.is_solved or exhausted))
+                    bd.update({
+                        'mcq_id':        mcq.id,
+                        'mcq_title':     mcq.title,
+                        'question':      mcq.question,
+                        'hint':          mcq.hint,
+                        'allow_multiple':mcq.allow_multiple_correct,
+                        'shuffle':       mcq.shuffle_choices,
+                        'max_attempts':  mcq.max_attempts,
+                        'points':        mcq.points,
+                        'difficulty':    mcq.difficulty,
+                        'choices':       [{'id': c.id, 'text': c.text, 'order': c.order} for c in choices],
+                        'is_solved':     grade.is_solved if grade else False,
+                        'points_earned': grade.points_earned if grade else 0,
+                        'attempts_used': grade.attempts_count if grade else 0,
+                        # Only send correct IDs when solved or exhausted
+                        'correct_ids':   [c.id for c in choices if c.is_correct] if reveal else [],
+                        'explanation':   mcq.explanation if reveal else '',
+                    })
                 lesson_blocks_data.append(bd)
 
         else:
@@ -729,3 +755,148 @@ def get_exercise_solution(request, exercise_id):
             return JsonResponse({'error': 'Attempts not exhausted'}, status=403)
 
     return JsonResponse({'solution': exercise.solution_code})
+
+
+# ─── MCQ EXERCISES ────────────────────────────────────────────────────────────
+
+@login_required
+@require_POST
+def submit_mcq(request, mcq_id):
+    """
+    Receive a student's MCQ answer.
+    Never sends correct_choice_ids or explanation before solved/max attempts.
+    """
+    from .models import MCQExercise, MCQChoice, MCQSubmission, MCQGrade
+    from django.utils import timezone as tz
+
+    mcq = get_object_or_404(MCQExercise, id=mcq_id, is_active=True)
+
+    try:
+        body = json.loads(request.body)
+        selected_ids = [int(x) for x in body.get('selected_choice_ids', [])]
+    except (json.JSONDecodeError, ValueError, TypeError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    # Security: verify all selected choices belong to this exercise
+    selected_choices = list(MCQChoice.objects.filter(id__in=selected_ids, exercise=mcq))
+    if len(selected_choices) != len(selected_ids):
+        return JsonResponse({'error': 'Invalid choice IDs'}, status=400)
+
+    # Get or create grade record
+    grade, _ = MCQGrade.objects.get_or_create(
+        student=request.user, exercise=mcq
+    )
+
+    if grade.is_solved:
+        return JsonResponse({
+            'is_correct': True,
+            'already_solved': True,
+            'points_earned': grade.points_earned,
+            'attempts_used': grade.attempts_count,
+            'max_attempts': mcq.max_attempts,
+        })
+
+    # Check max attempts
+    if mcq.max_attempts > 0 and grade.attempts_count >= mcq.max_attempts:
+        correct_ids = list(MCQChoice.objects.filter(exercise=mcq, is_correct=True).values_list('id', flat=True))
+        return JsonResponse({
+            'is_correct': False,
+            'already_solved': False,
+            'exhausted': True,
+            'attempts_used': grade.attempts_count,
+            'max_attempts': mcq.max_attempts,
+            'correct_choice_ids': correct_ids,
+            'explanation': mcq.explanation,
+        })
+
+    grade.attempts_count += 1
+    grade.save(update_fields=['attempts_count'])
+
+    # Evaluate correctness
+    all_correct = set(MCQChoice.objects.filter(exercise=mcq, is_correct=True).values_list('id', flat=True))
+    selected_set = {c.id for c in selected_choices}
+
+    if mcq.allow_multiple_correct:
+        is_correct = (selected_set == all_correct)
+    else:
+        is_correct = (len(selected_set) == 1 and selected_set == all_correct)
+
+    # Save submission
+    sub = MCQSubmission.objects.create(
+        student=request.user, exercise=mcq,
+        is_correct=is_correct,
+        attempt_number=grade.attempts_count,
+        points_earned=mcq.points if is_correct else 0,
+    )
+    sub.selected_choices.set(selected_choices)
+
+    response_data = {
+        'is_correct': is_correct,
+        'already_solved': False,
+        'exhausted': False,
+        'attempts_used': grade.attempts_count,
+        'max_attempts': mcq.max_attempts,
+        'points_earned': 0,
+        'per_choice_feedback': {
+            str(c.id): c.feedback for c in selected_choices if c.feedback
+        },
+    }
+
+    if is_correct:
+        grade.is_solved = True
+        grade.points_earned = mcq.points
+        grade.solved_at = tz.now()
+        grade.save()
+        response_data['points_earned'] = mcq.points
+        response_data['explanation'] = mcq.explanation
+        # Notify
+        try:
+            from notifications.notifications import notify_user
+            notify_user(
+                request.user,
+                title=_("QCM réussi ! 🎉"),
+                message=_("Tu as répondu correctement à '%(title)s' (+%(pts)s pts)") % {
+                    'title': mcq.title, 'pts': mcq.points
+                },
+                notification_type='success',
+            )
+        except Exception:
+            pass
+    elif mcq.max_attempts > 0 and grade.attempts_count >= mcq.max_attempts:
+        # Max attempts just reached — send answers
+        response_data['exhausted'] = True
+        response_data['correct_choice_ids'] = list(all_correct)
+        response_data['explanation'] = mcq.explanation
+    else:
+        # Wrong but attempts remain — optionally send explanation
+        if mcq.show_explanation_on_wrong and mcq.explanation:
+            response_data['explanation'] = mcq.explanation
+
+    return JsonResponse(response_data)
+
+
+@login_required
+def get_mcq_status(request, mcq_id):
+    """Return current grade status for the authenticated student."""
+    from .models import MCQExercise, MCQChoice, MCQGrade
+
+    mcq   = get_object_or_404(MCQExercise, id=mcq_id, is_active=True)
+    grade = MCQGrade.objects.filter(student=request.user, exercise=mcq).first()
+
+    if not grade:
+        return JsonResponse({
+            'is_solved': False, 'points_earned': 0,
+            'attempts_used': 0, 'correct_choice_ids': [],
+        })
+
+    correct_ids = []
+    if grade.is_solved or (mcq.max_attempts > 0 and grade.attempts_count >= mcq.max_attempts):
+        correct_ids = list(MCQChoice.objects.filter(exercise=mcq, is_correct=True).values_list('id', flat=True))
+
+    return JsonResponse({
+        'is_solved':      grade.is_solved,
+        'points_earned':  grade.points_earned,
+        'attempts_used':  grade.attempts_count,
+        'correct_choice_ids': correct_ids,
+        'explanation': mcq.explanation if grade.is_solved else '',
+    })

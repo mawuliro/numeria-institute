@@ -901,3 +901,68 @@ def exercise_results_csv(request):
             sub.submitted_at.strftime('%Y-%m-%d %H:%M'),
         ])
     return response
+
+
+# ─── MCQ ADMIN MANAGEMENT ────────────────────────────────────────────────────
+
+@staff_only
+def mcq_list(request):
+    from cours.models import MCQExercise
+    from formation.models import Formation
+    from cours.models import Cours
+
+    type_filter = request.GET.get('type', '')
+    qs = MCQExercise.objects.select_related(
+        'lesson__cours', 'formation_lesson__formation'
+    ).prefetch_related('choices')
+
+    if type_filter == 'cours':
+        qs = qs.filter(lesson__isnull=False)
+    elif type_filter == 'formation':
+        qs = qs.filter(formation_lesson__isnull=False)
+
+    q = request.GET.get('q', '').strip()
+    if q:
+        from django.db.models import Q as DQ
+        qs = qs.filter(DQ(title__icontains=q) | DQ(question__icontains=q))
+
+    qs = qs.order_by('title')
+
+    return render(request, 'admin_panel/mcq_list.html', {
+        'mcqs':        qs,
+        'type_filter': type_filter,
+        'q':           q,
+    })
+
+
+@staff_only
+def mcq_edit(request, mcq_id):
+    from cours.models import MCQExercise, MCQChoice
+    mcq = get_object_or_404(MCQExercise, id=mcq_id)
+    if request.method == 'POST':
+        mcq.title       = request.POST.get('title', mcq.title).strip()
+        mcq.question    = request.POST.get('question', mcq.question)
+        mcq.explanation = request.POST.get('explanation', mcq.explanation)
+        mcq.hint        = request.POST.get('hint', mcq.hint)
+        mcq.difficulty  = request.POST.get('difficulty', mcq.difficulty)
+        mcq.points      = int(request.POST.get('points', mcq.points) or mcq.points)
+        mcq.max_attempts = int(request.POST.get('max_attempts', mcq.max_attempts) or 0)
+        mcq.is_active   = 'is_active' in request.POST
+        mcq.save()
+        messages.success(request, 'QCM mis à jour.')
+        return redirect('admin_panel:mcq_list')
+    return render(request, 'admin_panel/mcq_edit.html', {
+        'mcq':    mcq,
+        'choices': mcq.choices.all(),
+    })
+
+
+@staff_only
+@require_POST
+def mcq_delete(request, mcq_id):
+    from cours.models import MCQExercise
+    mcq = get_object_or_404(MCQExercise, id=mcq_id)
+    title = mcq.title
+    mcq.delete()
+    messages.success(request, f'QCM «{title}» supprimé.')
+    return redirect('admin_panel:mcq_list')

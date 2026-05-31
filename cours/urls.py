@@ -17,4 +17,6 @@ urlpatterns = [
     path('verifier/<str:code>/', views.verifier_certificat, name='verifier_certificat'),
     path('exercice/<int:exercise_id>/submit/', views.submit_code_exercise, name='submit_code_exercise'),
     path('exercice/<int:exercise_id>/solution/', views.get_exercise_solution, name='get_exercise_solution'),
+    path('qcm/<int:mcq_id>/soumettre/', views.submit_mcq, name='submit_mcq'),
+    path('qcm/<int:mcq_id>/statut/', views.get_mcq_status, name='mcq_status'),
 ]

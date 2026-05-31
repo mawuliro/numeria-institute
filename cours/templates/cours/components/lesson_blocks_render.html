@@ -47,6 +47,11 @@
   {% include 'cours/components/code_sandbox.html' with exercise=block %}
 </div>
 
+{% elif block.type == 'mcq' and block.mcq_id %}
+<div class="lesson-block lesson-block--mcq mb-8">
+  {% include 'cours/components/mcq_widget.html' with block=block %}
+</div>
+
 {% endif %}
 
 {% endfor %}
