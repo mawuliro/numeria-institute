@@ -405,6 +405,7 @@ class Cours(Course):
 
     class Meta:
         proxy = True
+        app_label = 'cours'
         verbose_name = 'Cours'
         verbose_name_plural = 'Cours'
 
