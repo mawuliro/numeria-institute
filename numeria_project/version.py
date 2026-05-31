@@ -1,0 +1,1 @@
+DEPLOY_COMMIT = 'ffa596a'
