@@ -46,11 +46,9 @@ Parameters (via include ... with):
     <span class="text-white/70 text-xs font-semibold tracking-wide select-none">🐍 Python Sandbox</span>
     <div id="fsbx-{{ sid }}-status"
          class="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full"
-         style="background:rgba(0,212,170,.12);color:#00d4aa;border:1px solid rgba(0,212,170,.25)">
-      <span class="fsbx-spinner"></span>
-      <span id="fsbx-{{ sid }}-status-msg">
-        {% if auto_load_pkgs %}Chargement numpy, matplotlib…{% else %}{% trans "Initialisation Python…" %}{% endif %}
-      </span>
+         style="background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.3)">
+      <span class="fsbx-spinner" id="fsbx-{{ sid }}-spinner"></span>
+      <span id="fsbx-{{ sid }}-status-msg">{% trans "Chargement Python…" %}</span>
     </div>
     <div class="ml-auto flex items-center gap-2">
       <a href="{% url 'sandbox_page' %}" target="_blank" rel="noopener"
@@ -301,22 +299,70 @@ function _setTabActive(tabId){
   });
 }
 
+/* ── Load CodeMirror if not already available (fallback for contexts
+      where the parent template did not pre-load it) ── */
+function _ensureCodeMirror(cb){
+  if(window.CodeMirror && CodeMirror.modes && CodeMirror.modes.python){ cb(); return; }
+  var BASE = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/';
+  function loadScript(src, next){
+    var s=document.createElement('script'); s.src=src;
+    s.onload=next; s.onerror=next; document.head.appendChild(s);
+  }
+  function loadLink(href){
+    if(document.querySelector('link[href="'+href+'"]')) return;
+    var l=document.createElement('link'); l.rel='stylesheet'; l.href=href;
+    document.head.appendChild(l);
+  }
+  loadLink(BASE+'codemirror.min.css');
+  loadLink(BASE+'theme/dracula.min.css');
+  if(!window.CodeMirror){
+    loadScript(BASE+'codemirror.min.js', function(){
+      loadScript(BASE+'mode/python/python.min.js', function(){
+        loadScript(BASE+'addon/edit/closebrackets.min.js', cb);
+      });
+    });
+  } else {
+    loadScript(BASE+'mode/python/python.min.js', function(){
+      loadScript(BASE+'addon/edit/closebrackets.min.js', cb);
+    });
+  }
+}
+
 /* ── Pyodide init ── */
+function _setStatus(text, ready){
+  var st  = g('status');
+  var msg = g('status-msg');
+  var sp  = g('spinner');
+  if(ready){
+    if(st){ st.style.background='rgba(0,212,170,.12)'; st.style.borderColor='rgba(0,212,170,.3)'; st.style.color='#00d4aa'; }
+    if(sp) sp.style.display='none';
+  } else {
+    if(st){ st.style.background='rgba(251,191,36,.12)'; st.style.borderColor='rgba(251,191,36,.3)'; st.style.color='#fbbf24'; }
+    if(sp) sp.style.display='';
+  }
+  if(msg) msg.textContent=text;
+}
+
 function initPyodide(){
   if(window._numeriaPyodideReady) return;
-  var loadFn = (typeof loadPyodide === 'function')
-    ? function(){ return loadPyodide(); }
-    : function(){
-        return new Promise(function(res){
-          var s=document.createElement('script');
-          s.src='https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js';
-          s.onload=function(){ res(loadPyodide()); };
-          document.head.appendChild(s);
-        });
-      };
 
-  window._numeriaPyodideReady = loadFn().then(function(py){
+  function doLoad(){
+    if(typeof loadPyodide === 'function') return Promise.resolve();
+    return new Promise(function(res){
+      var s=document.createElement('script');
+      s.src='https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js';
+      s.onload=res; s.onerror=res;
+      document.head.appendChild(s);
+    });
+  }
+
+  _setStatus('Chargement Python (Pyodide)…', false);
+
+  window._numeriaPyodideReady = doLoad().then(function(){
+    return loadPyodide();
+  }).then(function(py){
     if(AUTO_PKGS){
+      _setStatus('Chargement numpy, matplotlib, pandas…', false);
       return py.loadPackage(['numpy','matplotlib','pandas','scipy','sympy']).then(function(){ return py; });
     }
     return py;
@@ -324,16 +370,12 @@ function initPyodide(){
 
   window._numeriaPyodideReady.then(function(py){
     pyReady = true;
-    var st  = g('status');
-    var msg = g('status-msg');
+    _setStatus('Python prêt ✓', true);
     var btn = g('run-btn');
-    if(st)  { st.style.background='rgba(0,212,170,.12)'; st.style.borderColor='rgba(0,212,170,.25)'; st.style.color='#00d4aa'; }
-    if(msg) { msg.textContent='Python prêt ✓'; }
     if(btn) { btn.disabled=false; }
     if(AUTO_PKGS){
       ['numpy','matplotlib','pandas','scipy','sympy'].forEach(function(p){
-        var pill = g('pkg-pill-'+p);
-        var st2  = g('pkg-st-'+p);
+        var pill=g('pkg-pill-'+p); var st2=g('pkg-st-'+p);
         if(pill) pill.classList.add('loaded');
         if(st2)  st2.textContent=' ✓';
       });
@@ -341,14 +383,19 @@ function initPyodide(){
     if(!AUTO_PKGS) restorePkgs();
     loadScripts();
   }).catch(function(e){
-    var msg = g('status-msg');
-    if(msg) msg.textContent = 'Erreur Python: '+e;
+    _setStatus('Erreur Python ❌', false);
+    console.error('Pyodide load error:', e);
   });
 }
 
 /* ── CodeMirror init ── */
 function initCM(){
-  if(!window.CodeMirror){ setTimeout(initCM,100); return; }
+  _ensureCodeMirror(function(){
+    _initCMInner();
+  });
+}
+function _initCMInner(){
+  if(!window.CodeMirror){ setTimeout(initCM,200); return; }
   var wrap = g('cm-wrap');
   if(!wrap||cm) return;
   var savedCode = localStorage.getItem(LS_CODE_KEY);

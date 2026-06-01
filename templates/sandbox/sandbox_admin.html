@@ -5,5 +5,13 @@
 {% block page_heading %}🐍 Sandbox Python (Admin){% endblock %}
 
 {% block content %}
-{% include 'sandbox/full_sandbox.html' with sandbox_id="admin_sandbox" height=400 auto_load_pkgs=True show_insert_lesson=True initial_code="# Admin sandbox — packages numpy, matplotlib, pandas, scipy, sympy pré-chargés\nimport numpy as np\nprint('numpy version:', np.__version__)\n" %}
+{% comment %}CodeMirror (not bundled in EasyMDE with Python mode/dracula theme){% endcomment %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+{% comment %}Pyodide — loaded eagerly so the sandbox is ready faster{% endcomment %}
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+{% include 'sandbox/full_sandbox.html' with sandbox_id="admin_sandbox" height=400 auto_load_pkgs=True show_insert_lesson=True initial_code="# Admin sandbox — numpy, matplotlib, pandas, scipy, sympy pré-chargés\nimport numpy as np\nprint('numpy', np.__version__)\n" %}
 {% endblock %}
