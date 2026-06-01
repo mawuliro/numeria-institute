@@ -328,7 +328,7 @@
                    class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-xs bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200">
           </div>
           <button type="button"
-                  onclick="lbCreateMcqForBlock({{ block.id }}, {{ block.formation_lesson_id|default:'null' }}, {{ block.lesson_id|default:'null' }})"
+                  onclick="lbCreateMcqForBlock({{ block.id }}, {{ block.formation_lesson_id|default:'null' }}, {{ block.course_lesson_id|default:'null' }})"
                   class="w-full text-xs bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2 rounded-lg transition-colors">
             🔘 Créer et lier ce QCM
           </button>
@@ -340,41 +340,41 @@
 
     {# ── FILL BLANK block ── #}
     {% if block.block_type == 'fill_blank' %}
-    <div class="text-xs text-slate-500 py-2">
-      {% if block.fill_blank_exercise %}<p class="font-medium text-slate-700 dark:text-slate-200">{{ block.fill_blank_exercise.title }}</p>
-      {% else %}<p>Aucun exercice lié. <a href="{% url 'admin_panel:exercises_list' %}" class="text-sky-600 hover:underline">Créer depuis la liste →</a></p>{% endif %}
+    <div class="text-xs text-slate-500 py-2" data-block-id="{{ block.id }}">
+      {% if block.fill_blank %}<p class="font-medium text-slate-700 dark:text-slate-200">✏️ {{ block.fill_blank.title }}</p>
+      {% else %}{% include 'admin_panel/blocks/_typed_ex_create.html' with block=block lesson_type=lesson_type ex_kind='fill_blank' %}{% endif %}
     </div>
     {% endif %}
 
     {# ── TRUE FALSE block ── #}
     {% if block.block_type == 'true_false' %}
-    <div class="text-xs text-slate-500 py-2">
-      {% if block.true_false_exercise %}<p class="font-medium text-slate-700 dark:text-slate-200">{{ block.true_false_exercise.title }} — {{ block.true_false_exercise.statements|length }} affirmation(s)</p>
-      {% else %}<p>Aucun exercice lié. <a href="{% url 'admin_panel:exercises_list' %}" class="text-sky-600 hover:underline">Créer depuis la liste →</a></p>{% endif %}
+    <div class="text-xs text-slate-500 py-2" data-block-id="{{ block.id }}">
+      {% if block.true_false %}<p class="font-medium text-slate-700 dark:text-slate-200">✅ {{ block.true_false.title }} — {{ block.true_false.statements|length }} affirmation(s)</p>
+      {% else %}{% include 'admin_panel/blocks/_typed_ex_create.html' with block=block lesson_type=lesson_type ex_kind='true_false' %}{% endif %}
     </div>
     {% endif %}
 
     {# ── CODE ORDER block ── #}
     {% if block.block_type == 'code_order' %}
-    <div class="text-xs text-slate-500 py-2">
-      {% if block.code_order_exercise %}<p class="font-medium text-slate-700 dark:text-slate-200">{{ block.code_order_exercise.title }} — {{ block.code_order_exercise.correct_order|length }} ligne(s)</p>
-      {% else %}<p>Aucun exercice lié. <a href="{% url 'admin_panel:exercises_list' %}" class="text-sky-600 hover:underline">Créer depuis la liste →</a></p>{% endif %}
+    <div class="text-xs text-slate-500 py-2" data-block-id="{{ block.id }}">
+      {% if block.code_order %}<p class="font-medium text-slate-700 dark:text-slate-200">🧩 {{ block.code_order.title }} — {{ block.code_order.correct_order|length }} ligne(s)</p>
+      {% else %}{% include 'admin_panel/blocks/_typed_ex_create.html' with block=block lesson_type=lesson_type ex_kind='code_order' %}{% endif %}
     </div>
     {% endif %}
 
     {# ── MATCHING block ── #}
     {% if block.block_type == 'matching' %}
-    <div class="text-xs text-slate-500 py-2">
-      {% if block.matching_exercise %}<p class="font-medium text-slate-700 dark:text-slate-200">{{ block.matching_exercise.title }} — {{ block.matching_exercise.pairs|length }} paire(s)</p>
-      {% else %}<p>Aucun exercice lié. <a href="{% url 'admin_panel:exercises_list' %}" class="text-sky-600 hover:underline">Créer depuis la liste →</a></p>{% endif %}
+    <div class="text-xs text-slate-500 py-2" data-block-id="{{ block.id }}">
+      {% if block.matching %}<p class="font-medium text-slate-700 dark:text-slate-200">🔗 {{ block.matching.title }} — {{ block.matching.pairs|length }} paire(s)</p>
+      {% else %}{% include 'admin_panel/blocks/_typed_ex_create.html' with block=block lesson_type=lesson_type ex_kind='matching' %}{% endif %}
     </div>
     {% endif %}
 
     {# ── SHORT ANSWER block ── #}
     {% if block.block_type == 'short_answer' %}
-    <div class="text-xs text-slate-500 py-2">
-      {% if block.short_answer_exercise %}<p class="font-medium text-slate-700 dark:text-slate-200">{{ block.short_answer_exercise.title }}</p>
-      {% else %}<p>Aucun exercice lié. <a href="{% url 'admin_panel:exercises_list' %}" class="text-sky-600 hover:underline">Créer depuis la liste →</a></p>{% endif %}
+    <div class="text-xs text-slate-500 py-2" data-block-id="{{ block.id }}">
+      {% if block.short_answer %}<p class="font-medium text-slate-700 dark:text-slate-200">💬 {{ block.short_answer.title }}</p>
+      {% else %}{% include 'admin_panel/blocks/_typed_ex_create.html' with block=block lesson_type=lesson_type ex_kind='short_answer' %}{% endif %}
     </div>
     {% endif %}
 

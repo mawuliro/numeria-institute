@@ -26,10 +26,10 @@ def _get_cours_context(cours):
     """Return a dict with module/lesson tree for the course editor."""
     from cours.models import CourseModule, CourseLesson
     modules = list(
-        CourseModule.objects.filter(course=cours).prefetch_related('lessons').order_by('ordre')
+        CourseModule.objects.filter(course=cours).prefetch_related('lessons').order_by('order')
     )
     standalone_lecons = list(
-        CourseLesson.objects.filter(course=cours, module__isnull=True).order_by('ordre')
+        CourseLesson.objects.filter(course=cours, module__isnull=True).order_by('order')
     )
     return {'modules': modules, 'standalone_lecons': standalone_lecons}
 
@@ -41,7 +41,7 @@ def cours_list(request):
     from cours.models import Course, InscriptionCours
 
     qs = Course.objects.select_related('created_by').annotate(
-        nb_inscrits=Count('inscriptions', distinct=True),
+        nb_inscrits=Count('inscriptions__etudiant', distinct=True),
         nb_modules=Count('modules', distinct=True),
         nb_lecons=Count('lessons', distinct=True),
     )
@@ -91,9 +91,9 @@ def cours_list(request):
         'q':           q,
         'sort':        sort,
         'draft_count': draft_count,
-        'status_choices': Course.STATUS_COURS,
-        'matieres':    Course.MATIERES,
-        'niveaux':     Course.NIVEAUX,
+        'status_choices': Course.STATUS,
+        'matieres':    Course.CATEGORIES,
+        'niveaux':     Course.LEVELS,
     })
 
 
@@ -130,8 +130,8 @@ def cours_create(request):
 
     from cours.models import Course as C
     return render(request, 'admin_panel/cours_create.html', {
-        'matieres': C.MATIERES,
-        'niveaux':  C.NIVEAUX,
+        'matieres': C.CATEGORIES,
+        'niveaux':  C.LEVELS,
     })
 
 
@@ -145,9 +145,9 @@ def cours_edit(request, slug):
         'cours':             cours,
         'modules':           tree['modules'],
         'standalone_lecons': tree['standalone_lecons'],
-        'matieres':          Course.MATIERES,
-        'niveaux':           Course.NIVEAUX,
-        'status_choices':    Course.STATUS_COURS,
+        'matieres':          Course.CATEGORIES,
+        'niveaux':           Course.LEVELS,
+        'status_choices':    Course.STATUS,
     })
 
 
@@ -167,8 +167,8 @@ def cours_delete(request, slug):
 
 @staff_only
 def cours_preview(request, slug):
-    import base64
-    from cours.models import Course, CourseLesson, LessonBlock
+    from cours.models import Course, CourseLesson
+    from .block_preview import build_block_previews
     cours = get_object_or_404(Course, slug=slug)
     lecon_id = request.GET.get('lecon')
     lecon_active = None
@@ -179,9 +179,7 @@ def cours_preview(request, slug):
 
     lesson_blocks_data = []
     if lecon_active:
-        blocks_qs = LessonBlock.objects.filter(course_lesson=lecon_active).order_by('order')
-        for block in blocks_qs:
-            lesson_blocks_data.append(block.get_payload())
+        lesson_blocks_data = build_block_previews(course_lesson=lecon_active)
 
     return render(request, 'admin_panel/cours_preview.html', {
         'cours':        cours,
@@ -263,13 +261,11 @@ def ajax_cours_save(request, slug):
         'langue': 'language',
         'duree_estimee_heures': 'estimated_hours',
         'competences_visees': 'objectives',
+        'prerequis': 'prerequisites',
         'prerequisites': 'prerequisites',
-        'meta_description': 'meta_description',
-        'meta_keywords': 'meta_keywords',
         'status': 'status',
         'est_gratuit': 'is_free',
         'prix': 'price',
-        'video_youtube': 'video_youtube',
         # direct new names
         'title': 'title',
         'short_description': 'short_description',
@@ -281,6 +277,10 @@ def ajax_cours_save(request, slug):
         'is_free': 'is_free',
         'price': 'price',
     }
+    # Normalise legacy status values to the rebuilt model's choices.
+    status_alias = {'publie': 'published', 'brouillon': 'draft', 'archive': 'archived'}
+    if 'status' in data and data['status'] in status_alias:
+        data['status'] = status_alias[data['status']]
     if 'slug_new' in data:
         from django.utils.text import slugify
         new_slug = slugify(data['slug_new'].strip())[:300]
@@ -293,9 +293,6 @@ def ajax_cours_save(request, slug):
             if new_key == 'is_free':
                 val = val in (True, 'true', '1', 'on')
             setattr(cours, new_key, val)
-
-    if 'status' in data and data['status'] == 'publie' and not cours.published_at:
-        cours.published_at = timezone.now()
 
     # Handle thumbnail upload
     if 'thumbnail' in request.FILES:
@@ -553,8 +550,14 @@ def api_lesson_insert_sandbox(request, lesson_id):
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     if not marker:
         return JsonResponse({'error': 'Empty marker'}, status=400)
-    lesson.contenu = (lesson.contenu or '') + '\n\n' + marker
-    lesson.save(update_fields=['contenu'])
+    # Lessons no longer store free-text `contenu`; sandboxes live in LessonBlocks.
+    from cours.models import LessonBlock
+    LessonBlock.objects.create(
+        course_lesson=lesson,
+        block_type='sandbox',
+        order=LessonBlock.objects.filter(course_lesson=lesson).count(),
+        sandbox_initial_code=marker,
+    )
     return JsonResponse({'success': True, 'lesson_title': lesson.title})
 
 
@@ -604,6 +607,11 @@ def api_formation_lesson_insert_sandbox(request, lesson_id):
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     if not marker:
         return JsonResponse({'error': 'Empty marker'}, status=400)
-    lesson.contenu = (lesson.contenu or '') + '\n\n' + marker
-    lesson.save(update_fields=['contenu'])
+    from cours.models import LessonBlock
+    LessonBlock.objects.create(
+        formation_lesson=lesson,
+        block_type='sandbox',
+        order=LessonBlock.objects.filter(formation_lesson=lesson).count(),
+        sandbox_initial_code=marker,
+    )
     return JsonResponse({'success': True, 'lesson_title': lesson.title})

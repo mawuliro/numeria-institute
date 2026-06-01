@@ -1,205 +1,127 @@
 {% extends "admin_panel/base_staff.html" %}
-{% load i18n humanize %}
+{% load i18n static %}
 
 {% block page_title %}Cours{% endblock %}
-{% block page_heading %}📚 Cours
-  {% if draft_count %}<span class="ml-2 text-sm bg-amber-100 text-amber-700 font-medium px-2 py-0.5 rounded-full">{{ draft_count }} brouillon{{ draft_count|pluralize }}</span>{% endif %}
-{% endblock %}
+{% block page_heading %}📚 Cours{% endblock %}
+{% block breadcrumb %}<p class="text-xs text-slate-400 mt-0.5">{% trans "Gestion des cours" %}</p>{% endblock %}
 
 {% block content %}
-<div class="grid gap-4 mb-6 sm:grid-cols-2 xl:grid-cols-4">
-  <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-    <div class="text-xs uppercase tracking-[0.18em] text-slate-400">Total</div>
-    <div class="mt-3 text-3xl font-semibold text-slate-900">{{ page_obj.paginator.count }}</div>
-    <div class="mt-1 text-sm text-slate-500">Cours trouvés</div>
-  </div>
-  <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-    <div class="text-xs uppercase tracking-[0.18em] text-slate-400">Brouillons</div>
-    <div class="mt-3 text-3xl font-semibold text-slate-900">{{ draft_count }}</div>
-    <div class="mt-1 text-sm text-slate-500">Cours à terminer</div>
-  </div>
-  <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-    <div class="text-xs uppercase tracking-[0.18em] text-slate-400">Résultats</div>
-    <div class="mt-3 text-3xl font-semibold text-slate-900">{{ page_obj.paginator.count|default:0 }}</div>
-    <div class="mt-1 text-sm text-slate-500">Éléments affichés</div>
-  </div>
-  <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-    <div class="text-xs uppercase tracking-[0.18em] text-slate-400">Action rapide</div>
-    <a href="{% url 'admin_panel:cours_create' %}" class="mt-3 inline-flex items-center justify-center rounded-2xl bg-sky-600 px-3 py-2 text-sm font-semibold text-white hover:bg-sky-700">+ Nouveau cours</a>
-  </div>
-</div>
-
 <!-- Top bar -->
 <div class="flex flex-wrap items-center gap-3 mb-6">
   <a href="{% url 'admin_panel:cours_create' %}"
-     class="flex items-center gap-2 bg-sky-600 text-white font-bold px-4 py-2.5 rounded-xl hover:bg-sky-700 transition-colors text-sm">
-    + Créer un cours
+     class="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-colors shadow-sm">
+    ＋ Créer un cours
   </a>
 
-  <!-- Search -->
-  <form method="get" class="flex gap-2 flex-1 min-w-64" id="filter-form">
-    {% if status_f %}<input type="hidden" name="status" value="{{ status_f }}">{% endif %}
-    {% if categorie_f %}<input type="hidden" name="categorie" value="{{ categorie_f }}">{% endif %}
-    {% if niveau_f %}<input type="hidden" name="niveau" value="{{ niveau_f }}">{% endif %}
-    {% if mine_only %}<input type="hidden" name="mine" value="1">{% endif %}
-    <input type="text" name="q" value="{{ q }}" id="search-input"
-           placeholder="Rechercher un cours…"
-           class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
-    <button type="submit" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm">🔍</button>
-  </form>
-</div>
+  <div class="relative flex-1 min-w-[180px] max-w-xs">
+    <input id="search-input" type="text" placeholder="🔍 Rechercher…" value="{{ q }}"
+           class="w-full pl-3 pr-8 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+           oninput="filterCards()">
+  </div>
 
-<!-- Filters bar -->
-<div class="flex flex-wrap gap-2 mb-6">
-  <!-- Mine / All toggle -->
-  <div class="flex gap-1 bg-white border border-slate-200 rounded-lg p-1">
-    <a href="?{% if q %}q={{ q }}&{% endif %}{% if status_f %}status={{ status_f }}&{% endif %}"
-       class="px-3 py-1.5 rounded-md text-sm font-medium {% if not mine_only %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
-      Tous les cours
+  <div class="flex gap-1 flex-wrap">
+    <a href="?{% if sort %}sort={{ sort }}&{% endif %}"
+       class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {% if not status_f %}bg-sky-600 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">
+       Tous
     </a>
-    <a href="?mine=1{% if q %}&q={{ q }}{% endif %}{% if status_f %}&status={{ status_f }}{% endif %}"
-       class="px-3 py-1.5 rounded-md text-sm font-medium {% if mine_only %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
-      Mes cours
+    <a href="?status=draft{% if sort %}&sort={{ sort }}{% endif %}"
+       class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {% if status_f == 'draft' %}bg-slate-600 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">
+       Brouillon {% if draft_count %}<span class="ml-1 bg-white/30 rounded-full px-1.5">{{ draft_count }}</span>{% endif %}
+    </a>
+    <a href="?status=published{% if sort %}&sort={{ sort }}{% endif %}"
+       class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {% if status_f == 'published' %}bg-green-600 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">
+       Publié
+    </a>
+    <a href="?status=archived{% if sort %}&sort={{ sort }}{% endif %}"
+       class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {% if status_f == 'archived' %}bg-red-600 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">
+       Archivé
     </a>
   </div>
 
-  <!-- Status filter -->
-  <select onchange="applyFilter('status', this.value)"
-          class="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white">
-    <option value="">Tous les statuts</option>
-    {% for val, label in status_choices %}
-    <option value="{{ val }}" {% if status_f == val %}selected{% endif %}>{{ label }}</option>
-    {% endfor %}
-  </select>
-
-  <!-- Category filter -->
-  <select onchange="applyFilter('categorie', this.value)"
-          class="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white">
-    <option value="">Toutes les matières</option>
-    {% for val, label in matieres %}
-    <option value="{{ val }}" {% if categorie_f == val %}selected{% endif %}>{{ label }}</option>
-    {% endfor %}
-  </select>
-
-  <!-- Level filter -->
-  <select onchange="applyFilter('niveau', this.value)"
-          class="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white">
-    <option value="">Tous les niveaux</option>
-    {% for val, label in niveaux %}
-    <option value="{{ val }}" {% if niveau_f == val %}selected{% endif %}>{{ label }}</option>
-    {% endfor %}
-  </select>
-
-  <!-- Sort -->
-  <select onchange="applyFilter('sort', this.value)"
-          class="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white ml-auto">
-    <option value="-date_creation" {% if sort == '-date_creation' %}selected{% endif %}>Plus récents</option>
-    <option value="-nb_inscrits"   {% if sort == '-nb_inscrits'   %}selected{% endif %}>Plus inscrits</option>
-    <option value="titre"          {% if sort == 'titre'          %}selected{% endif %}>Alphabétique</option>
+  <select onchange="window.location='?sort='+this.value+'{% if status_f %}&status={{ status_f }}{% endif %}{% if q %}&q={{ q }}{% endif %}'"
+          class="px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none ml-auto">
+    <option value="-created_at" {% if sort == '-created_at' or not sort %}selected{% endif %}>Plus récent</option>
+    <option value="title" {% if sort == 'title' %}selected{% endif %}>Alphabétique</option>
+    <option value="-nb_inscrits" {% if sort == '-nb_inscrits' %}selected{% endif %}>Plus d'inscrits</option>
   </select>
 </div>
 
-<!-- Course grid -->
-{% if page_obj.object_list %}
-<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+<div id="cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
   {% for cours in page_obj %}
-  <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
+  <div class="course-card bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col"
+       data-title="{{ cours.title|lower }}">
 
-    <!-- Thumbnail -->
-    <div class="h-36 bg-gradient-to-br
-      {% if cours.category == 'mathematiques' %}from-blue-100 to-blue-200
-      {% elif cours.category == 'physique' %}from-purple-100 to-purple-200
-      {% elif cours.category == 'informatique' or cours.category == 'python' %}from-green-100 to-green-200
-      {% elif cours.category == 'ia' or cours.category == 'data' %}from-orange-100 to-orange-200
-      {% else %}from-slate-100 to-slate-200{% endif %}
-      flex items-center justify-center text-5xl relative">
+    <div class="relative h-36 bg-gradient-to-br from-sky-100 to-blue-200 flex items-center justify-center overflow-hidden">
       {% if cours.thumbnail %}
-        <img src="{{ cours.thumbnail.url }}" alt="{{ cours.title }}" class="w-full h-full object-cover absolute inset-0">
+      <img src="{{ cours.thumbnail.url }}" class="w-full h-full object-cover" alt="">
       {% else %}
-        {% if cours.category == 'mathematiques' %}🔢
-        {% elif cours.category == 'physique' %}⚛️
-        {% elif cours.category == 'python' %}🐍
-        {% elif cours.category == 'informatique' %}💻
-        {% elif cours.category == 'ia' %}🤖
-        {% elif cours.category == 'data' %}📊
-        {% else %}📚{% endif %}
+      <span class="text-5xl select-none">🎓</span>
       {% endif %}
-      <!-- Status badge -->
       <span class="absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full
-        {% if cours.status == 'publie' %}bg-green-500 text-white
-        {% elif cours.status == 'revision' %}bg-yellow-400 text-slate-900
-        {% elif cours.status == 'archive' %}bg-red-100 text-red-700
-        {% else %}bg-slate-200 text-slate-600{% endif %}">
-        {{ cours.get_status_display }}
+        {% if cours.status == 'published' %}bg-green-100 text-green-700
+        {% elif cours.status == 'archived' %}bg-red-100 text-red-700
+        {% else %}bg-slate-100 text-slate-600{% endif %}">
+        {% if cours.status == 'published' %}✓ Publié
+        {% elif cours.status == 'archived' %}🗄 Archivé
+        {% else %}✏️ Brouillon{% endif %}
       </span>
     </div>
 
-    <!-- Info -->
     <div class="p-4 flex flex-col flex-1">
-      <div class="flex flex-wrap gap-1 mb-2">
-        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ cours.get_category_display }}</span>
+      <h3 class="font-bold text-slate-800 text-sm leading-snug mb-2 line-clamp-2">{{ cours.title }}</h3>
+      <div class="flex flex-wrap gap-1.5 mb-3">
+        <span class="text-xs bg-sky-50 text-sky-700 px-2 py-0.5 rounded-full font-medium">{{ cours.get_category_display }}</span>
         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ cours.get_level_display }}</span>
-        {% if cours.language == 'en' %}<span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">EN</span>{% endif %}
+        {% if not cours.is_free %}<span class="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full">{{ cours.price|floatformat:0 }} FCFA</span>{% endif %}
       </div>
-      <h3 class="font-bold text-slate-800 text-sm leading-snug mb-1 line-clamp-2">{{ cours.title }}</h3>
-      <p class="text-xs text-slate-500 line-clamp-2 mb-3 flex-1">{{ cours.short_description }}</p>
-
-      <!-- Stats -->
-      <div class="flex items-center gap-3 text-xs text-slate-400 mb-3">
-        <span>📦 {{ cours.nb_modules }}</span>
-        <span>📄 {{ cours.nb_lecons }}</span>
-        <span>👥 {{ cours.nb_inscrits }}</span>
-        <span class="ml-auto">{{ cours.updated_at|date:"d/m/y" }}</span>
-      </div>
-
-      <!-- Actions -->
-      <div class="flex gap-2 flex-wrap">
+      <p class="text-xs text-slate-400 mb-4">
+        {{ cours.nb_modules }} module{{ cours.nb_modules|pluralize }} ·
+        {{ cours.nb_lecons }} leçon{{ cours.nb_lecons|pluralize }} ·
+        {{ cours.nb_inscrits }} inscrit{{ cours.nb_inscrits|pluralize }}
+      </p>
+      <div class="mt-auto flex gap-2">
         <a href="{% url 'admin_panel:cours_edit' cours.slug %}"
-           class="flex-1 text-center text-sky-700 text-xs px-2 py-1.5 bg-sky-50 hover:bg-sky-100 rounded-lg font-medium transition-colors">
+           class="flex-1 flex items-center justify-center gap-1 bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold py-2 rounded-lg transition-colors">
           ✏️ Modifier
         </a>
         <a href="{% url 'admin_panel:cours_preview' cours.slug %}" target="_blank"
-           class="text-slate-600 text-xs px-2 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg font-medium transition-colors">
-          👁️
-        </a>
-        <a href="{% url 'admin_panel:cours_analytics' cours.slug %}"
-           class="text-slate-600 text-xs px-2 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg font-medium transition-colors">
-          📊
-        </a>
-        <form method="post" action="{% url 'admin_panel:cours_delete' cours.slug %}" class="inline"
-              onsubmit="return confirm('Supprimer «{{ cours.title }}» ?')">
+           class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs rounded-lg transition-colors" title="Prévisualiser">👁️</a>
+        <form method="post" action="{% url 'admin_panel:cours_delete' cours.slug %}" style="display:inline"
+              onsubmit="return confirm('Supprimer « {{ cours.title }} » ?')">
           {% csrf_token %}
-          <button type="submit"
-                  class="text-red-600 text-xs px-2 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition-colors">
-            🗑️
-          </button>
+          <button type="submit" class="px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-xs rounded-lg transition-colors" title="Supprimer">🗑️</button>
         </form>
       </div>
     </div>
   </div>
+  {% empty %}
+  <div class="col-span-full text-center py-20 text-slate-400">
+    <div class="text-5xl mb-4">📚</div>
+    <p class="font-medium text-slate-600 mb-2">Aucun cours trouvé</p>
+    <a href="{% url 'admin_panel:cours_create' %}" class="inline-flex items-center gap-2 bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-sm mt-4">＋ Créer un cours</a>
+  </div>
   {% endfor %}
 </div>
-{% else %}
-<div class="bg-white rounded-2xl border border-slate-200 px-6 py-16 text-center">
-  <div class="text-5xl mb-4">📚</div>
-  <p class="text-slate-500 text-lg mb-2">Aucun cours trouvé.</p>
-  <a href="{% url 'admin_panel:cours_create' %}" class="text-sky-600 hover:underline text-sm">
-    Créer le premier cours →
-  </a>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<div class="flex justify-center gap-2 mt-8">
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}{% if status_f %}&status={{ status_f }}{% endif %}{% if q %}&q={{ q }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="px-3 py-1.5 border border-slate-300 rounded-lg text-sm hover:bg-slate-50">← Précédent</a>
+  {% endif %}
+  <span class="px-3 py-1.5 text-sm text-slate-500">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}{% if status_f %}&status={{ status_f }}{% endif %}{% if q %}&q={{ q }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="px-3 py-1.5 border border-slate-300 rounded-lg text-sm hover:bg-slate-50">Suivant →</a>
+  {% endif %}
 </div>
 {% endif %}
 
-{% include "admin_panel/includes/pagination.html" %}
-{% endblock %}
-
-{% block extra_js %}
 <script>
-function applyFilter(key, value) {
-  var url = new URL(window.location.href);
-  if (value) url.searchParams.set(key, value);
-  else url.searchParams.delete(key);
-  url.searchParams.delete('page');
-  window.location.href = url.toString();
+const searchInput = document.getElementById('search-input');
+function filterCards() {
+  const q = searchInput.value.toLowerCase().trim();
+  document.querySelectorAll('.course-card').forEach(c => {
+    c.style.display = (!q || c.dataset.title.includes(q)) ? '' : 'none';
+  });
 }
 </script>
 {% endblock %}

@@ -1,0 +1,43 @@
+{% load i18n %}
+{# Renders staff preview blocks built by admin_panel.block_preview.build_block_previews.
+   Each `block` is a plain dict. Solutions/test code are never included. #}
+<div class="space-y-5">
+  {% for block in lesson_blocks %}
+    {% if block.type == 'text' %}
+    <div class="prose prose-sm max-w-none text-slate-700 leading-relaxed">{{ block.text_content|safe }}</div>
+
+    {% elif block.type == 'video' %}
+    <figure>
+      {% if block.video_url %}
+      <div class="rounded-xl overflow-hidden aspect-video bg-black">
+        <iframe src="{{ block.video_url }}" class="w-full h-full" allowfullscreen></iframe>
+      </div>
+      {% endif %}
+      {% if block.video_caption %}<figcaption class="text-xs text-slate-500 mt-1">{{ block.video_caption }}</figcaption>{% endif %}
+    </figure>
+
+    {% elif block.type == 'sandbox' %}
+    <div class="border border-slate-200 rounded-xl overflow-hidden">
+      <div class="bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-600">🐍 {{ block.sandbox_title }}</div>
+      <pre class="m-0 p-3 text-xs bg-slate-900 text-slate-100 overflow-x-auto"><code class="language-python">{{ block.sandbox_initial_code }}</code></pre>
+    </div>
+
+    {% else %}
+    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50">
+      {% if block.exercise %}
+      <div class="flex items-center gap-2 mb-1">
+        <span class="font-semibold text-slate-800 text-sm">{{ block.exercise.title }}</span>
+        <span class="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">{{ block.exercise.difficulty }}</span>
+        <span class="text-xs text-slate-500 ml-auto">{{ block.exercise.points }} pts</span>
+      </div>
+      {% if block.exercise.instructions %}
+      <div class="prose prose-sm max-w-none text-slate-600">{{ block.exercise.instructions|safe }}</div>
+      {% endif %}
+      <p class="text-xs text-sky-600 mt-2">🧩 {% trans "Exercice interactif" %}</p>
+      {% else %}
+      <p class="text-xs text-slate-400">{% trans "Bloc exercice non configuré." %}</p>
+      {% endif %}
+    </div>
+    {% endif %}
+  {% endfor %}
+</div>

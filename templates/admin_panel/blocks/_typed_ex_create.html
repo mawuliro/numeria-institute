@@ -1,0 +1,40 @@
+{% load i18n %}
+{# Inline "create + link" form for typed exercises (fill_blank, true_false,
+   code_order, matching, short_answer). Posts to lesson_exercise_create.
+   Context: block, lesson_type, ex_kind #}
+{% if block.course_lesson_id or block.formation_lesson_id %}
+<div class="space-y-2">
+  <p class="text-slate-400">{% trans "Aucun exercice lié." %}</p>
+  <details>
+    <summary class="cursor-pointer text-sky-600 hover:text-sky-800 font-medium py-1 select-none">
+      ➕ {% trans "Créer un exercice et le lier" %}
+    </summary>
+    <div class="mt-2 space-y-2 border border-slate-200 dark:border-slate-600 rounded-lg p-3 bg-slate-50 dark:bg-slate-800">
+      <input type="text" id="typed-ex-title-{{ block.id }}" maxlength="300"
+             placeholder="{% trans 'Titre *' %}"
+             class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded text-xs bg-white dark:bg-slate-700">
+      <textarea id="typed-ex-instr-{{ block.id }}" rows="2"
+                placeholder="{% trans 'Instructions (Markdown)' %}"
+                class="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded text-xs bg-white dark:bg-slate-700"></textarea>
+      <div class="flex items-center gap-2">
+        <select id="typed-ex-diff-{{ block.id }}" class="px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded text-xs bg-white dark:bg-slate-700">
+          <option value="easy">{% trans "Facile" %}</option>
+          <option value="medium">{% trans "Moyen" %}</option>
+          <option value="hard">{% trans "Difficile" %}</option>
+        </select>
+        <input type="number" id="typed-ex-pts-{{ block.id }}" value="5" min="0"
+               class="w-16 px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded text-xs bg-white dark:bg-slate-700">
+      </div>
+      <button type="button"
+              onclick="lbCreateTypedExercise({{ block.id }}, '{{ ex_kind }}', {% if block.course_lesson_id %}{{ block.course_lesson_id }}{% else %}{{ block.formation_lesson_id }}{% endif %}, '{{ lesson_type }}')"
+              class="w-full text-xs bg-green-600 hover:bg-green-500 text-white font-semibold py-1.5 rounded-lg transition-colors">
+        ✅ {% trans "Créer et lier" %}
+      </button>
+      <p class="text-[11px] text-slate-400">{% trans "Configurez les détails ensuite via" %}
+        <a href="{% url 'admin_panel:exercises_list' %}" class="text-sky-600 hover:underline">{% trans "la liste des exercices" %}</a>.</p>
+    </div>
+  </details>
+</div>
+{% else %}
+<p class="text-slate-400">{% trans "Aucun exercice lié." %}</p>
+{% endif %}

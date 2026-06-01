@@ -418,3 +418,186 @@ def get_formation_lesson_mcqs(request, lesson_id):
         'id', 'title', 'difficulty', 'points'
     ))
     return JsonResponse({'mcqs': mcqs})
+
+
+# ─── INLINE EXERCISE CREATION (drawer "Créer un exercice" tab) ────────────────
+
+# Maps an exercise type string to (Model, LessonBlock FK field, block_type).
+_EX_TYPE_MAP = {
+    'code':         ('CodeExercise',        'code_exercise', 'exercise'),
+    'mcq':          ('MCQExercise',         'mcq_exercise',  'mcq'),
+    'qcm':          ('MCQExercise',         'mcq_exercise',  'mcq'),
+    'fill_blank':   ('FillBlankExercise',   'fill_blank',    'fill_blank'),
+    'true_false':   ('TrueFalseExercise',   'true_false',    'true_false'),
+    'code_order':   ('CodeOrderExercise',   'code_order',    'code_order'),
+    'matching':     ('MatchingExercise',    'matching',      'matching'),
+    'short_answer': ('ShortAnswerExercise', 'short_answer',  'short_answer'),
+}
+
+
+def _build_inline_exercise(model_name, data, *, course_lesson, formation_lesson, user):
+    """Instantiate and save the right exercise model from posted JSON data."""
+    from cours.models import (
+        CodeExercise, MCQExercise, MCQChoice, FillBlankExercise,
+        TrueFalseExercise, CodeOrderExercise, MatchingExercise, ShortAnswerExercise,
+    )
+
+    common = dict(
+        course_lesson=course_lesson,
+        formation_lesson=formation_lesson,
+        title=data.get('title', '').strip(),
+        instructions=data.get('instructions', ''),
+        difficulty=data.get('difficulty', 'easy'),
+        points=int(data.get('points', 5) or 5),
+        max_attempts=int(data.get('max_attempts', 0) or 0),
+        hint=data.get('hint', ''),
+        explanation=data.get('explanation', ''),
+        created_by=user,
+    )
+    lesson = formation_lesson or course_lesson
+    order_filter = (
+        {'formation_lesson': formation_lesson} if formation_lesson
+        else {'course_lesson': course_lesson}
+    )
+
+    if model_name == 'CodeExercise':
+        common['order'] = CodeExercise.objects.filter(**order_filter).count()
+        return CodeExercise.objects.create(
+            starter_code=data.get('starter_code', '# Écris ton code ici\n'),
+            solution_code=data.get('solution_code', ''),
+            expected_output=data.get('expected_output', ''),
+            test_code=data.get('test_code', ''),
+            evaluation_mode=data.get('evaluation_mode', 'exact'),
+            **common,
+        )
+
+    if model_name == 'MCQExercise':
+        common['order'] = MCQExercise.objects.filter(**order_filter).count()
+        mcq = MCQExercise.objects.create(
+            question=data.get('question', ''),
+            allow_multiple_correct=bool(data.get('allow_multiple_correct', False)),
+            shuffle_choices=bool(data.get('shuffle_choices', True)),
+            **common,
+        )
+        for idx, ch in enumerate(data.get('choices', [])):
+            text = (ch.get('text') or '').strip()
+            if text:
+                MCQChoice.objects.create(
+                    exercise=mcq, text=text,
+                    is_correct=bool(ch.get('is_correct', False)),
+                    feedback=ch.get('feedback', ''), order=idx,
+                )
+        return mcq
+
+    if model_name == 'FillBlankExercise':
+        common['order'] = FillBlankExercise.objects.filter(**order_filter).count()
+        return FillBlankExercise.objects.create(
+            text_with_blanks=data.get('text_with_blanks', ''),
+            answers=data.get('answers', {}),
+            case_sensitive=bool(data.get('case_sensitive', False)),
+            **common,
+        )
+
+    if model_name == 'TrueFalseExercise':
+        common['order'] = TrueFalseExercise.objects.filter(**order_filter).count()
+        return TrueFalseExercise.objects.create(
+            statements=data.get('statements', []),
+            points_per_statement=int(data.get('points_per_statement', 2) or 2),
+            **common,
+        )
+
+    if model_name == 'CodeOrderExercise':
+        common['order'] = CodeOrderExercise.objects.filter(**order_filter).count()
+        return CodeOrderExercise.objects.create(
+            correct_order=data.get('correct_order', []),
+            distractor_lines=data.get('distractor_lines', []),
+            **common,
+        )
+
+    if model_name == 'MatchingExercise':
+        common['order'] = MatchingExercise.objects.filter(**order_filter).count()
+        return MatchingExercise.objects.create(
+            pairs=data.get('pairs', []),
+            **common,
+        )
+
+    if model_name == 'ShortAnswerExercise':
+        common['order'] = ShortAnswerExercise.objects.filter(**order_filter).count()
+        return ShortAnswerExercise.objects.create(
+            question=data.get('question', ''),
+            accepted_answers=data.get('accepted_answers', []),
+            case_sensitive=bool(data.get('case_sensitive', False)),
+            is_code_answer=bool(data.get('is_code_answer', False)),
+            **common,
+        )
+
+    return None
+
+
+def _create_exercise_inline(request, lesson_id, ex_type, *, is_formation):
+    """Shared implementation for course/formation inline exercise creation."""
+    from cours.models import LessonBlock
+
+    mapping = _EX_TYPE_MAP.get(ex_type)
+    if not mapping:
+        return JsonResponse({'error': f'Unknown exercise type: {ex_type}'}, status=400)
+    model_name, fk_field, block_type = mapping
+
+    course_lesson = formation_lesson = None
+    if is_formation:
+        from formation.models import FormationLesson
+        formation_lesson = get_object_or_404(FormationLesson, id=lesson_id)
+    else:
+        from cours.models import CourseLesson
+        course_lesson = get_object_or_404(CourseLesson, id=lesson_id)
+
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        data = request.POST.dict()
+
+    if not (data.get('title') or '').strip():
+        return JsonResponse({'error': 'Le titre est obligatoire.'}, status=400)
+
+    ex = _build_inline_exercise(
+        model_name, data,
+        course_lesson=course_lesson, formation_lesson=formation_lesson,
+        user=request.user,
+    )
+    if ex is None:
+        return JsonResponse({'error': 'Création impossible.'}, status=400)
+
+    order_filter = (
+        {'formation_lesson': formation_lesson} if formation_lesson
+        else {'course_lesson': course_lesson}
+    )
+    block = LessonBlock.objects.create(
+        course_lesson=course_lesson,
+        formation_lesson=formation_lesson,
+        block_type=block_type,
+        order=LessonBlock.objects.filter(**order_filter).count(),
+    )
+    setattr(block, fk_field, ex)
+    block.save(update_fields=[fk_field])
+
+    return JsonResponse({
+        'success': True,
+        'block_id': block.id,
+        'exercise_id': ex.id,
+        'exercise_title': ex.title,
+        'block_type': block_type,
+    })
+
+
+@staff_only
+@require_POST
+def create_exercise_inline(request, lesson_id, ex_type):
+    """Create an exercise + LessonBlock for a COURSE lesson, from the drawer."""
+    return _create_exercise_inline(request, lesson_id, ex_type, is_formation=False)
+
+
+@staff_only
+@require_POST
+def create_exercise_inline_formation(request, lesson_id, ex_type):
+    """Create an exercise + LessonBlock for a FORMATION lesson, from the drawer."""
+    return _create_exercise_inline(request, lesson_id, ex_type, is_formation=True)
