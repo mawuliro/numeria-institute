@@ -73,7 +73,7 @@ def mes_notes(request):
         cours_rows.append({
             'obj': c,
             'kind': 'cours',
-            'title': c.titre,
+            'title': c.title,
             'slug': c.slug,
             'earned': earned,
             'possible': possible,
@@ -81,9 +81,9 @@ def mes_notes(request):
         })
 
     formation_rows = []
-    for ins in InscriptionFormation.objects.filter(etudiant=user).select_related('session__formation'):
-        f = ins.session.formation
-        lesson_ids = list(f.formation_lessons.values_list('id', flat=True))
+    for ins in InscriptionFormation.objects.filter(etudiant=user).select_related('formation'):
+        f = ins.formation
+        lesson_ids = list(f.lessons.values_list('id', flat=True))
         progress = StudentProgress.objects.filter(student=user)
         earned = possible = 0
         for ex_type, model in EXERCISE_MODELS.items():
@@ -97,7 +97,7 @@ def mes_notes(request):
         formation_rows.append({
             'obj': f,
             'kind': 'formation',
-            'title': f.titre,
+            'title': f.title,
             'slug': f.slug,
             'earned': earned,
             'possible': possible,
@@ -118,7 +118,7 @@ def mes_notes_cours(request, slug):
     """Lesson-by-lesson breakdown for one course."""
     cours = get_object_or_404(Course, slug=slug)
     user = request.user
-    lessons = cours.lessons.filter(est_publiee=True).order_by('ordre')
+    lessons = cours.lessons.filter(is_active=True).order_by('order')
     lesson_data = []
 
     for lecon in lessons:
@@ -149,7 +149,7 @@ def mes_notes_cours(request, slug):
     return render(request, 'cours/mes_notes_detail.html', {
         'parent': cours,
         'parent_kind': 'cours',
-        'parent_title': cours.titre,
+        'parent_title': cours.title,
         'lessons': lesson_data,
     })
 
@@ -159,7 +159,7 @@ def mes_notes_formation(request, slug):
     """Lesson-by-lesson breakdown for one formation."""
     formation = get_object_or_404(Formation, slug=slug)
     user = request.user
-    lessons = formation.formation_lessons.filter(est_active=True).order_by('ordre')
+    lessons = formation.lessons.filter(is_active=True).order_by('order')
     lesson_data = []
 
     for lecon in lessons:
@@ -187,6 +187,6 @@ def mes_notes_formation(request, slug):
     return render(request, 'cours/mes_notes_detail.html', {
         'parent': formation,
         'parent_kind': 'formation',
-        'parent_title': formation.titre,
+        'parent_title': formation.title,
         'lessons': lesson_data,
     })

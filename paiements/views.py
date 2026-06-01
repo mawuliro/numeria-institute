@@ -19,13 +19,10 @@ def _post_payment_actions(user, paiement):
     """Send an in-app notification after a successful payment."""
     try:
         from notifications.notifications import notify_user
-        if paiement.course:
-            item = paiement.course.titre
-        elif paiement.formation_inscription:
-            item = (
-                f"{paiement.formation_inscription.session.formation.titre}"
-                f" — {paiement.formation_inscription.session.nom}"
-            )
+        if paiement.cours_id:
+            item = paiement.cours.title
+        elif paiement.formation_id:
+            item = paiement.formation.title
         else:
             item = 'Paiement'
         notify_user(
@@ -45,10 +42,10 @@ def page_paiement(request, cours_id):
     Page de paiement pour un cours payant.
     Affiche le récapitulatif et les options de paiement.
     """
-    cours = get_object_or_404(Course, id=cours_id, est_publie=True)
+    cours = get_object_or_404(Course, id=cours_id, status='published')
 
     # Si le cours est gratuit, inscrire directement
-    if cours.est_gratuit:
+    if cours.is_free:
         messages.info(request, "Ce cours est gratuit !")
         return redirect('cours:inscrire', cours_id=cours_id)
 
@@ -74,9 +71,9 @@ def page_paiement_formation(request, inscription_id):
     """
     inscription = get_object_or_404(InscriptionFormation, id=inscription_id, etudiant=request.user)
 
-    if inscription.statut == 'confirmee' or verifier_acces_formation(request.user, inscription.session):
+    if inscription.statut == 'confirmee' or verifier_acces_formation(request.user, inscription.formation):
         messages.info(request, "Cette inscription a déjà été payée.")
-        return redirect('formation:session_detail', session_id=inscription.session.id)
+        return redirect('formation:detail', slug=inscription.formation.slug)
 
     contexte = {
         'objet': inscription,
@@ -100,7 +97,7 @@ def initier_paiement_formation(request, inscription_id):
 
     if inscription.statut == 'confirmee':
         messages.info(request, "Cette inscription a déjà été payée.")
-        return redirect('formation:session_detail', session_id=inscription.session.id)
+        return redirect('formation:detail', slug=inscription.formation.slug)
 
     provider = request.POST.get('provider', 'sandbox')
     paiement, nouveau = creer_paiement(
@@ -111,14 +108,14 @@ def initier_paiement_formation(request, inscription_id):
 
     if not nouveau and paiement.statut == 'reussi':
         messages.info(request, "Tu as déjà payé cette formation.")
-        return redirect('formation:session_detail', session_id=inscription.session.id)
+        return redirect('formation:detail', slug=inscription.formation.slug)
 
     try:
         traiter_paiement(paiement, provider)
         _post_payment_actions(request.user, paiement)
         messages.success(
             request,
-            f"✅ Paiement réussi ! Tu es maintenant inscrit à la session '{inscription.session.nom}'."
+            f"✅ Paiement réussi ! Tu es maintenant inscrit à la formation '{inscription.formation.title}'."
         )
         return redirect('paiements:confirmation', paiement_id=paiement.id)
 
@@ -142,7 +139,7 @@ def initier_paiement(request, cours_id):
     if request.method != 'POST':
         return redirect('paiements:page_paiement', cours_id=cours_id)
 
-    cours = get_object_or_404(Course, id=cours_id, est_publie=True)
+    cours = get_object_or_404(Course, id=cours_id, status='published')
     provider = request.POST.get('provider', 'sandbox')
 
     # Créer l'enregistrement de paiement
@@ -163,7 +160,7 @@ def initier_paiement(request, cours_id):
 
         messages.success(
             request,
-            f"✅ Paiement réussi ! Tu es maintenant inscrit au cours '{cours.titre}'."
+            f"✅ Paiement réussi ! Tu es maintenant inscrit au cours '{cours.title}'."
         )
         return redirect('paiements:confirmation', paiement_id=paiement.id)
 

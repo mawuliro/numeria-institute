@@ -20,8 +20,8 @@ def staff_counts(request):
             'sidebar_pending_candidacies':         Candidature.objects.filter(statut='soumise').count(),
             'sidebar_pending_mentorships':         DemandeMentorat.objects.filter(statut='en_attente').count(),
             'sidebar_pending_mentor_applications': MentorApplication.objects.filter(status='pending').count(),
-            'sidebar_draft_courses':               Course.objects.filter(status='brouillon').count(),
-            'sidebar_draft_formations':            Formation.objects.filter(est_publiee=False, est_archivee=False).count(),
+            'sidebar_draft_courses':               Course.objects.filter(status='draft').count(),
+            'sidebar_draft_formations':            Formation.objects.filter(status='draft').count(),
         }
     except Exception:
         return {}

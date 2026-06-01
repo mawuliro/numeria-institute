@@ -6,7 +6,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import get_user_model
 
 from .models import SeanceMentorat
-from formation.models import SessionFormation, InscriptionFormation
 
 User = get_user_model()
 ACTIVE_VIDEO_ROOMS = defaultdict(dict)
@@ -222,10 +221,7 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
                 return None
 
         if room_type == 'formation_session':
-            try:
-                return SessionFormation.objects.select_related('formation').get(pk=room_pk)
-            except SessionFormation.DoesNotExist:
-                return None
+            return None  # SessionFormation removed in model rebuild
 
         return None
 
@@ -243,16 +239,6 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
             )
 
         if room_type == 'formation_session':
-            if room.statut == 'annulee':
-                return False
-
-            if room.get_instructeurs().filter(pk=user.pk).exists():
-                return True
-
-            return InscriptionFormation.objects.filter(
-                session=room,
-                etudiant=user,
-                statut__in=['confirmee', 'en_cours', 'terminee']
-            ).exists()
+            return False  # not implemented after model rebuild
 
         return False
