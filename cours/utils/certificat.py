@@ -376,10 +376,10 @@ def generer_certificat_pdf(inscription, url_verification=None):
     # NOM DU COURS
     # ══════════════════════════════════════════════════════════════
     cours_y = inst_y - 0.95 * cm
-    taille_cours = 20 if len(cours.titre) < 40 else 15
+    taille_cours = 20 if len(cours.title) < 40 else 15
     c.setFillColor(BLEU_MARINE)
     c.setFont('Times-Bold', taille_cours)
-    c.drawCentredString(CX, cours_y, cours.titre)
+    c.drawCentredString(CX, cours_y, cours.title)
 
     # ══════════════════════════════════════════════════════════════
     # DATE — style "le X mois YYYY"

@@ -20,7 +20,7 @@
     <select name="cours" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
       <option value="">{% trans "Tous les cours" %}</option>
       {% for c in cours_list %}
-      <option value="{{ c.id }}" {% if cours_filter == c.id|stringformat:"s" %}selected{% endif %}>{{ c.titre }}</option>
+      <option value="{{ c.id }}" {% if cours_filter == c.id|stringformat:"s" %}selected{% endif %}>{{ c.title }}</option>
       {% endfor %}
     </select>
     {% endif %}
@@ -29,7 +29,7 @@
     <select name="formation" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
       <option value="">{% trans "Toutes les formations" %}</option>
       {% for f in formation_list %}
-      <option value="{{ f.id }}" {% if formation_filter == f.id|stringformat:"s" %}selected{% endif %}>{{ f.titre }}</option>
+      <option value="{{ f.id }}" {% if formation_filter == f.id|stringformat:"s" %}selected{% endif %}>{{ f.title }}</option>
       {% endfor %}
     </select>
     {% endif %}
@@ -66,18 +66,18 @@
         <td class="px-4 py-3">
           <div class="font-medium text-slate-800">{{ ex.title }}</div>
           <div class="text-xs text-slate-400 md:hidden">
-            {% if ex.course_lesson %}{{ ex.course_lesson.course.titre }} › {{ ex.course_lesson.titre }}
-            {% elif ex.formation_lesson %}{{ ex.formation_lesson.formation.titre }} › {{ ex.formation_lesson.titre }}
+            {% if ex.course_lesson %}{{ ex.course_lesson.course.title }} › {{ ex.course_lesson.title }}
+            {% elif ex.formation_lesson %}{{ ex.formation_lesson.formation.title }} › {{ ex.formation_lesson.title }}
             {% else %}—{% endif %}
           </div>
         </td>
         <td class="px-4 py-3 text-slate-600 hidden md:table-cell">
           {% if ex.course_lesson %}
-          <div class="text-xs text-slate-400">{{ ex.course_lesson.course.titre }}</div>
-          <div>{{ ex.course_lesson.titre }}</div>
+          <div class="text-xs text-slate-400">{{ ex.course_lesson.course.title }}</div>
+          <div>{{ ex.course_lesson.title }}</div>
           {% elif ex.formation_lesson %}
-          <div class="text-xs text-slate-400">{{ ex.formation_lesson.formation.titre }}</div>
-          <div>{{ ex.formation_lesson.titre }}</div>
+          <div class="text-xs text-slate-400">{{ ex.formation_lesson.formation.title }}</div>
+          <div>{{ ex.formation_lesson.title }}</div>
           {% else %}
           <span class="text-slate-400">—</span>
           {% endif %}
@@ -145,7 +145,7 @@
       <option value="">{% trans "— Choisir une leçon de cours —" %}</option>
       {% for c in cours_list %}
         {% for lecon in c.lessons.all %}
-        <option value="{{ lecon.id }}">{{ c.titre }} › {{ lecon.titre }}</option>
+        <option value="{{ lecon.id }}">{{ c.title }} › {{ lecon.title }}</option>
         {% endfor %}
       {% endfor %}
     </select>
@@ -162,7 +162,7 @@
               class="flex-1 min-w-48 px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
         <option value="">{% trans "— Choisir une formation —" %}</option>
         {% for f in formation_list %}
-        <option value="{{ f.slug }}">{{ f.titre }}</option>
+        <option value="{{ f.slug }}">{{ f.title }}</option>
         {% endfor %}
       </select>
       <select id="formation-module-selector" onchange="loadFormationLessons(this.value)" disabled
@@ -214,7 +214,7 @@ async function loadFormationModules(slug) {
   var r = await fetch('/fr/admin-panel/api/formations/' + slug + '/modules/');
   var d = await r.json();
   modSel.innerHTML = '<option value="">— Module —</option>';
-  (d.modules||[]).forEach(m => modSel.add(new Option(m.titre, m.id)));
+  (d.modules||[]).forEach(m => modSel.add(new Option(m.title||m.titre, m.id)));
   modSel.disabled = false;
 }
 
@@ -226,7 +226,7 @@ async function loadFormationLessons(moduleId) {
   var r = await fetch('/fr/admin-panel/api/formation-modules/' + moduleId + '/lessons/');
   var d = await r.json();
   lesSel.innerHTML = '<option value="">— Leçon —</option>';
-  (d.lessons||[]).forEach(l => lesSel.add(new Option(l.titre, l.id)));
+  (d.lessons||[]).forEach(l => lesSel.add(new Option(l.title||l.titre, l.id)));
   lesSel.disabled = false;
 }
 

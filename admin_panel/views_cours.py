@@ -53,33 +53,33 @@ def cours_list(request):
     langue_f   = request.GET.get('langue', '')
     mine_only  = request.GET.get('mine', '')
     q          = request.GET.get('q', '').strip()
-    sort       = request.GET.get('sort', '-date_creation')
+    sort       = request.GET.get('sort', '-created_at')
 
     if status_f:
         qs = qs.filter(status=status_f)
     if categorie_f:
-        qs = qs.filter(matiere=categorie_f)
+        qs = qs.filter(category=categorie_f)
     if niveau_f:
-        qs = qs.filter(niveau=niveau_f)
+        qs = qs.filter(level=niveau_f)
     if langue_f:
-        qs = qs.filter(langue=langue_f)
+        qs = qs.filter(language=langue_f)
     if mine_only:
         qs = qs.filter(created_by=request.user)
     if q:
-        qs = qs.filter(Q(titre__icontains=q) | Q(resume__icontains=q))
+        qs = qs.filter(Q(title__icontains=q) | Q(short_description__icontains=q))
 
     sort_map = {
-        '-date_creation': '-date_creation',
-        'date_creation':  'date_creation',
-        'titre':          'titre',
-        '-nb_inscrits':   '-nb_inscrits',
+        '-created_at': '-created_at',
+        'created_at':  'created_at',
+        'title':       'title',
+        '-nb_inscrits': '-nb_inscrits',
     }
-    qs = qs.order_by(sort_map.get(sort, '-date_creation'))
+    qs = qs.order_by(sort_map.get(sort, '-created_at'))
 
     paginator = Paginator(qs, 12)
     page_obj  = paginator.get_page(request.GET.get('page'))
 
-    draft_count = Course.objects.filter(status='brouillon').count()
+    draft_count = Course.objects.filter(status='draft').count()
 
     return render(request, 'admin_panel/cours_list.html', {
         'page_obj':    page_obj,
@@ -114,18 +114,18 @@ def cours_create(request):
             slug = f'{base_slug}-{counter}'
             counter += 1
         cours = Course.objects.create(
-            titre=titre,
+            title=titre,
             slug=slug,
-            resume=request.POST.get('resume', ''),
+            short_description=request.POST.get('resume', ''),
             description=request.POST.get('description', ''),
-            matiere=request.POST.get('matiere', 'autre'),
-            niveau=request.POST.get('niveau', 'debutant'),
-            langue=request.POST.get('langue', 'fr'),
-            status='brouillon',
+            category=request.POST.get('matiere', 'autre'),
+            level=request.POST.get('niveau', 'debutant'),
+            language=request.POST.get('langue', 'fr'),
+            status='draft',
             created_by=request.user,
         )
         log_staff_action(request.user, 'notification_sent',
-                         f"Cours créé : «{cours.titre}»")
+                         f"Cours créé : «{cours.title}»")
         return redirect('admin_panel:cours_edit', slug=cours.slug)
 
     from cours.models import Course as C
@@ -156,7 +156,7 @@ def cours_edit(request, slug):
 def cours_delete(request, slug):
     from cours.models import Course
     cours = get_object_or_404(Course, slug=slug)
-    titre = cours.titre
+    titre = cours.title
     cours.delete()
     log_staff_action(request.user, 'notification_sent', f"Cours supprimé : «{titre}»")
     messages.success(request, f'Cours «{titre}» supprimé.')
@@ -175,7 +175,7 @@ def cours_preview(request, slug):
     if lecon_id:
         lecon_active = CourseLesson.objects.filter(id=lecon_id, course=cours).first()
     if not lecon_active:
-        lecon_active = cours.lessons.filter(est_publiee=True).first()
+        lecon_active = cours.lessons.filter(is_active=True).first()
 
     lesson_blocks_data = []
     if lecon_active:
@@ -227,7 +227,7 @@ def cours_analytics(request, slug):
         week_start = now - timedelta(weeks=i+1)
         week_end   = now - timedelta(weeks=i)
         count = InscriptionCours.objects.filter(
-            course=course, date_inscription__gte=week_start, date_inscription__lt=week_end
+            course=cours, date_inscription__gte=week_start, date_inscription__lt=week_end
         ).count()
         weeks_data.append({'label': week_start.strftime('%d/%m'), 'count': count})
 
@@ -254,24 +254,45 @@ def ajax_cours_save(request, slug):
     except (json.JSONDecodeError, ValueError):
         data = request.POST.dict()
 
-    updatable = [
-        'titre', 'resume', 'description', 'matiere', 'niveau', 'langue',
-        'duree_estimee_heures', 'competences_visees', 'prerequisites',
-        'meta_description', 'meta_keywords', 'status', 'est_gratuit', 'prix',
-        'video_youtube',
-    ]
+    field_map = {
+        'titre': 'title',
+        'resume': 'short_description',
+        'description': 'description',
+        'matiere': 'category',
+        'niveau': 'level',
+        'langue': 'language',
+        'duree_estimee_heures': 'estimated_hours',
+        'competences_visees': 'objectives',
+        'prerequisites': 'prerequisites',
+        'meta_description': 'meta_description',
+        'meta_keywords': 'meta_keywords',
+        'status': 'status',
+        'est_gratuit': 'is_free',
+        'prix': 'price',
+        'video_youtube': 'video_youtube',
+        # direct new names
+        'title': 'title',
+        'short_description': 'short_description',
+        'category': 'category',
+        'level': 'level',
+        'language': 'language',
+        'estimated_hours': 'estimated_hours',
+        'objectives': 'objectives',
+        'is_free': 'is_free',
+        'price': 'price',
+    }
     if 'slug_new' in data:
         from django.utils.text import slugify
         new_slug = slugify(data['slug_new'].strip())[:300]
         if new_slug and new_slug != cours.slug:
             cours.slug = new_slug
 
-    for field in updatable:
-        if field in data:
-            val = data[field]
-            if field == 'est_gratuit':
+    for old_key, new_key in field_map.items():
+        if old_key in data:
+            val = data[old_key]
+            if new_key == 'is_free':
                 val = val in (True, 'true', '1', 'on')
-            setattr(cours, field, val)
+            setattr(cours, new_key, val)
 
     if 'status' in data and data['status'] == 'publie' and not cours.published_at:
         cours.published_at = timezone.now()
@@ -288,7 +309,7 @@ def ajax_cours_save(request, slug):
         ContentVersion.objects.create(
             content_type='cours',
             object_id=cours.id,
-            version_data={'titre': cours.titre, 'resume': cours.resume, 'status': cours.status},
+            version_data={'title': cours.title, 'short_description': cours.short_description, 'status': cours.status},
             created_by=request.user,
         )
         ContentVersion.objects.filter(
@@ -297,7 +318,7 @@ def ajax_cours_save(request, slug):
     except Exception:
         pass
 
-    return JsonResponse({'ok': True, 'slug': cours.slug, 'titre': cours.titre})
+    return JsonResponse({'ok': True, 'slug': cours.slug, 'title': cours.title})
 
 
 # ─── AJAX — MODULE ────────────────────────────────────────────────────────────
@@ -315,8 +336,8 @@ def ajax_module_create(request, slug):
     if not titre:
         return JsonResponse({'error': 'Titre requis'}, status=400)
     next_ordre = CourseModule.objects.filter(course=cours).count()
-    module = CourseModule.objects.create(course=cours, titre=titre, ordre=next_ordre)
-    return JsonResponse({'id': module.id, 'titre': module.titre, 'ordre': module.ordre})
+    module = CourseModule.objects.create(course=cours, title=titre, order=next_ordre)
+    return JsonResponse({'id': module.id, 'title': module.title, 'order': module.order})
 
 
 @staff_only
@@ -326,13 +347,13 @@ def ajax_module_update(request, module_id):
     module = get_object_or_404(CourseModule, id=module_id)
     try:
         data  = json.loads(request.body)
-        titre = data.get('titre', module.titre).strip()
+        titre = data.get('titre', module.title).strip()
     except Exception:
-        titre = request.POST.get('titre', module.titre).strip()
+        titre = request.POST.get('titre', module.title).strip()
     if titre:
-        module.titre = titre
-        module.save(update_fields=['titre'])
-    return JsonResponse({'ok': True, 'titre': module.titre})
+        module.title = titre
+        module.save(update_fields=['title'])
+    return JsonResponse({'ok': True, 'title': module.title})
 
 
 @staff_only
@@ -371,13 +392,13 @@ def ajax_lecon_create(request, slug):
         next_ordre = CourseLesson.objects.filter(course=cours, module__isnull=True).count()
 
     lecon = CourseLesson.objects.create(
-        course=cours, module=module, titre=titre,
-        ordre=next_ordre, content_type=data.get('content_type', 'text'),
+        course=cours, module=module, title=titre,
+        order=next_ordre,
     )
     return JsonResponse({
-        'id': lecon.id, 'titre': lecon.titre,
+        'id': lecon.id, 'title': lecon.title,
         'module_id': module.id if module else None,
-        'ordre': lecon.ordre,
+        'order': lecon.order,
     })
 
 
@@ -386,15 +407,15 @@ def ajax_lecon_get(request, lecon_id):
     from cours.models import CourseLesson
     lecon = get_object_or_404(CourseLesson, id=lecon_id)
     return JsonResponse({
-        'id':              lecon.id,
-        'titre':           lecon.titre,
-        'contenu':         lecon.contenu,
-        'video_youtube':   lecon.video_youtube or '',
-        'content_type':    lecon.content_type,
-        'duree_minutes':   lecon.duree_minutes,
-        'is_free_preview': lecon.is_free_preview,
-        'est_publiee':     lecon.est_publiee,
-        'ordre':           lecon.ordre,
+        'id':               lecon.id,
+        'title':            lecon.title,
+        'contenu':          getattr(lecon, 'contenu', ''),
+        'video_youtube':    getattr(lecon, 'video_youtube', '') or '',
+        'content_type':     getattr(lecon, 'content_type', 'text'),
+        'estimated_minutes': lecon.estimated_minutes,
+        'is_free_preview':  lecon.is_free_preview,
+        'is_active':        lecon.is_active,
+        'order':            lecon.order,
     })
 
 
@@ -408,15 +429,18 @@ def ajax_lecon_save(request, lecon_id):
     except Exception:
         data = request.POST.dict()
 
-    lecon.titre          = data.get('titre', lecon.titre).strip() or lecon.titre
-    lecon.contenu        = data.get('contenu', lecon.contenu)
-    lecon.video_youtube  = data.get('video_youtube', lecon.video_youtube) or None
-    lecon.content_type   = data.get('content_type', lecon.content_type)
-    lecon.duree_minutes  = int(data.get('duree_minutes', lecon.duree_minutes) or 10)
+    lecon.title           = (data.get('titre') or data.get('title') or lecon.title).strip() or lecon.title
+    if hasattr(lecon, 'contenu'):
+        lecon.contenu     = data.get('contenu', lecon.contenu)
+    if hasattr(lecon, 'video_youtube'):
+        lecon.video_youtube = data.get('video_youtube', getattr(lecon, 'video_youtube', None)) or None
+    if hasattr(lecon, 'content_type'):
+        lecon.content_type = data.get('content_type', lecon.content_type)
+    lecon.estimated_minutes = int(data.get('duree_minutes') or data.get('estimated_minutes') or lecon.estimated_minutes or 10)
     lecon.is_free_preview = data.get('is_free_preview') in (True, 'true', '1', 'on')
-    lecon.est_publiee    = data.get('est_publiee', True) not in (False, 'false', '0')
+    lecon.is_active       = data.get('est_publiee', data.get('is_active', True)) not in (False, 'false', '0')
     lecon.save()
-    return JsonResponse({'ok': True, 'id': lecon.id, 'titre': lecon.titre})
+    return JsonResponse({'ok': True, 'id': lecon.id, 'title': lecon.title})
 
 
 @staff_only
@@ -447,13 +471,13 @@ def ajax_reorder(request, slug):
         o  = item.get('order', 0)
         mid = item.get('module_id')
         if t == 'module':
-            CourseModule.objects.filter(id=pk, course=course).update(ordre=o)
+            CourseModule.objects.filter(id=pk, course=cours).update(order=o)
         elif t == 'lecon':
-            qs = CourseLesson.objects.filter(id=pk, course=course)
+            qs = CourseLesson.objects.filter(id=pk, course=cours)
             if mid:
-                qs.update(ordre=o, module_id=mid)
+                qs.update(order=o, module_id=mid)
             else:
-                qs.update(ordre=o, module=None)
+                qs.update(order=o, module=None)
     return JsonResponse({'ok': True})
 
 
@@ -489,10 +513,8 @@ def api_courses(request):
     """GET /api/courses/ — list all courses for the insert-in-lesson modal."""
     from cours.models import Course
     courses = list(
-        Course.objects.order_by('titre').values('id', 'titre', 'slug', 'status')
+        Course.objects.order_by('title').values('id', 'title', 'slug', 'status')
     )
-    for c in courses:
-        c['title'] = c.pop('titre')
     return JsonResponse({'courses': courses})
 
 
@@ -502,7 +524,7 @@ def api_course_modules(request, slug):
     from cours.models import Course, CourseModule
     cours = get_object_or_404(Course, slug=slug)
     modules = list(
-        CourseModule.objects.filter(course=cours).order_by('ordre').values('id', 'titre', 'ordre')
+        CourseModule.objects.filter(course=cours).order_by('order').values('id', 'title', 'order')
     )
     return JsonResponse({'modules': modules})
 
@@ -513,7 +535,7 @@ def api_module_lessons(request, module_id):
     from cours.models import CourseModule, CourseLesson
     module = get_object_or_404(CourseModule, id=module_id)
     lessons = list(
-        CourseLesson.objects.filter(module=module).order_by('ordre').values('id', 'titre', 'ordre')
+        CourseLesson.objects.filter(module=module).order_by('order').values('id', 'title', 'order')
     )
     return JsonResponse({'lessons': lessons})
 
@@ -533,7 +555,7 @@ def api_lesson_insert_sandbox(request, lesson_id):
         return JsonResponse({'error': 'Empty marker'}, status=400)
     lesson.contenu = (lesson.contenu or '') + '\n\n' + marker
     lesson.save(update_fields=['contenu'])
-    return JsonResponse({'success': True, 'lesson_title': lesson.titre})
+    return JsonResponse({'success': True, 'lesson_title': lesson.title})
 
 
 @staff_only
@@ -541,10 +563,8 @@ def api_formations(request):
     """GET /api/formations/ — list all formations."""
     from formation.models import Formation
     formations = list(
-        Formation.objects.order_by('titre').values('id', 'titre', 'slug')
+        Formation.objects.order_by('title').values('id', 'title', 'slug')
     )
-    for f in formations:
-        f['title'] = f.pop('titre')
     return JsonResponse({'formations': formations})
 
 
@@ -553,8 +573,9 @@ def api_formation_modules(request, slug):
     """GET /api/formations/<slug>/modules/ — list modules for a formation."""
     from formation.models import Formation, FormationModule
     formation = get_object_or_404(Formation, slug=slug)
+    from formation.models import FormationModule
     modules = list(
-        FormationCourseModule.objects.filter(formation=formation).order_by('ordre').values('id', 'titre', 'ordre')
+        FormationModule.objects.filter(formation=formation).order_by('order').values('id', 'title', 'order')
     )
     return JsonResponse({'modules': modules})
 
@@ -565,7 +586,7 @@ def api_formation_module_lessons(request, module_id):
     from formation.models import FormationModule, FormationLesson
     module = get_object_or_404(FormationModule, id=module_id)
     lessons = list(
-        FormationLesson.objects.filter(module=module).order_by('ordre').values('id', 'titre', 'ordre')
+        FormationLesson.objects.filter(module=module).order_by('order').values('id', 'title', 'order')
     )
     return JsonResponse({'lessons': lessons})
 
@@ -585,4 +606,4 @@ def api_formation_lesson_insert_sandbox(request, lesson_id):
         return JsonResponse({'error': 'Empty marker'}, status=400)
     lesson.contenu = (lesson.contenu or '') + '\n\n' + marker
     lesson.save(update_fields=['contenu'])
-    return JsonResponse({'success': True, 'lesson_title': lesson.titre})
+    return JsonResponse({'success': True, 'lesson_title': lesson.title})

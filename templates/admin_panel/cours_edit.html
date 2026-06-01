@@ -1,8 +1,8 @@
 {% extends "admin_panel/base_staff.html" %}
 {% load i18n static %}
 
-{% block page_title %}{{ cours.titre }} — Éditeur{% endblock %}
-{% block page_heading %}✏️ {{ cours.titre|truncatechars:40 }}{% endblock %}
+{% block page_title %}{{ cours.title }} — Éditeur{% endblock %}
+{% block page_heading %}✏️ {{ cours.title|truncatechars:40 }}{% endblock %}
 {% block breadcrumb %}
 <p class="text-xs text-slate-400 mt-0.5">
   <a href="{% url 'admin_panel:cours_list' %}" class="hover:underline">Cours</a> ›
@@ -62,17 +62,17 @@
 
     <div>
       <label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
-      <input type="text" id="f-titre" value="{{ cours.titre }}" maxlength="200"
+      <input type="text" id="f-titre" value="{{ cours.title }}" maxlength="200"
              class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
     </div>
 
     <div>
       <label class="block text-xs font-semibold text-slate-600 mb-1">Résumé court <span class="text-slate-400 font-normal">(max 300 caractères)</span></label>
       <div class="relative">
-        <input type="text" id="f-resume" value="{{ cours.resume }}" maxlength="300"
+        <input type="text" id="f-resume" value="{{ cours.short_description }}" maxlength="300"
                oninput="updateCounter(this,'resume-count')"
                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 pr-16">
-        <span id="resume-count" class="absolute right-3 top-2 text-xs text-slate-400">{{ cours.resume|length }}/300</span>
+        <span id="resume-count" class="absolute right-3 top-2 text-xs text-slate-400">{{ cours.short_description|length }}/300</span>
       </div>
     </div>
 
@@ -86,7 +86,7 @@
         <label class="block text-xs font-semibold text-slate-600 mb-1">Matière</label>
         <select id="f-matiere" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
           {% for val, label in matieres %}
-          <option value="{{ val }}" {% if cours.matiere == val %}selected{% endif %}>{{ label }}</option>
+          <option value="{{ val }}" {% if cours.category == val %}selected{% endif %}>{{ label }}</option>
           {% endfor %}
         </select>
       </div>
@@ -94,15 +94,15 @@
         <label class="block text-xs font-semibold text-slate-600 mb-1">Niveau</label>
         <select id="f-niveau" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
           {% for val, label in niveaux %}
-          <option value="{{ val }}" {% if cours.niveau == val %}selected{% endif %}>{{ label }}</option>
+          <option value="{{ val }}" {% if cours.level == val %}selected{% endif %}>{{ label }}</option>
           {% endfor %}
         </select>
       </div>
       <div>
         <label class="block text-xs font-semibold text-slate-600 mb-1">Langue</label>
         <select id="f-langue" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
-          <option value="fr" {% if cours.langue == 'fr' %}selected{% endif %}>🇫🇷 Français</option>
-          <option value="en" {% if cours.langue == 'en' %}selected{% endif %}>🇬🇧 English</option>
+          <option value="fr" {% if cours.language == 'fr' %}selected{% endif %}>🇫🇷 Français</option>
+          <option value="en" {% if cours.language == 'en' %}selected{% endif %}>🇬🇧 English</option>
         </select>
       </div>
     </div>
@@ -110,7 +110,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
         <label class="block text-xs font-semibold text-slate-600 mb-1">Durée estimée (heures)</label>
-        <input type="number" id="f-duree" min="0" step="0.5" value="{{ cours.duree_estimee_heures }}"
+        <input type="number" id="f-duree" min="0" step="0.5" value="{{ cours.estimated_hours }}"
                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
       </div>
       <div>
@@ -139,7 +139,7 @@
 
     <div>
       <label class="block text-xs font-semibold text-slate-600 mb-1">Objectifs d'apprentissage <span class="font-normal text-slate-400">(un par ligne)</span></label>
-      <textarea id="f-objectifs" rows="3" data-rich-editor data-editor-height="160px">{{ cours.competences_visees }}</textarea>
+      <textarea id="f-objectifs" rows="3" data-rich-editor data-editor-height="160px">{{ cours.objectives }}</textarea>
     </div>
 
     <div class="flex gap-3 pt-2">
@@ -172,14 +172,14 @@
         <!-- Module header -->
         <div class="tree-item tree-module-header"
              draggable="true"
-             data-type="module" data-id="{{ module.id }}" data-order="{{ module.ordre }}"
+             data-type="module" data-id="{{ module.id }}" data-order="{{ module.order }}"
              ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)"
              ondragleave="dragLeave(event)">
           <div class="flex items-center gap-2 px-3 py-2">
             <span class="text-slate-400 cursor-grab text-xs">⠿</span>
             <span class="text-base">📁</span>
             <span class="flex-1 text-sm text-slate-700" id="module-title-{{ module.id }}"
-                  ondblclick="renameModule({{ module.id }})">{{ module.titre }}</span>
+                  ondblclick="renameModule({{ module.id }})">{{ module.title }}</span>
             <button type="button" onclick="addLecon({{ module.id }})"
                     class="text-xs text-sky-600 hover:text-sky-800 px-1">+</button>
             <button type="button" onclick="deleteModule({{ module.id }})"
@@ -192,14 +192,14 @@
           {% for lecon in module.lessons.all %}
           <div class="tree-item"
                draggable="true"
-               data-type="lecon" data-id="{{ lecon.id }}" data-order="{{ lecon.ordre }}" data-module="{{ module.id }}"
+               data-type="lecon" data-id="{{ lecon.id }}" data-order="{{ lecon.order }}" data-module="{{ module.id }}"
                ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)"
                ondragleave="dragLeave(event)"
                onclick="selectLecon({{ lecon.id }}, this)">
             <div class="flex items-center gap-2 px-3 py-1.5">
               <span class="text-slate-400 cursor-grab text-xs">⠿</span>
               <span class="text-sm">{% if lecon.content_type == 'video' %}🎥{% elif lecon.content_type == 'exercise' %}💻{% else %}📄{% endif %}</span>
-              <span class="flex-1 text-xs text-slate-700 truncate">{{ lecon.titre }}</span>
+              <span class="flex-1 text-xs text-slate-700 truncate">{{ lecon.title }}</span>
               {% if lecon.is_free_preview %}<span class="text-xs text-green-600" title="Aperçu gratuit">🔓</span>{% endif %}
             </div>
           </div>
@@ -213,14 +213,14 @@
         {% for lecon in standalone_lecons %}
         <div class="tree-item"
              draggable="true"
-             data-type="lecon" data-id="{{ lecon.id }}" data-order="{{ lecon.ordre }}"
+             data-type="lecon" data-id="{{ lecon.id }}" data-order="{{ lecon.order }}"
              ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)"
              ondragleave="dragLeave(event)"
              onclick="selectLecon({{ lecon.id }}, this)">
           <div class="flex items-center gap-2 px-3 py-1.5">
             <span class="text-slate-400 cursor-grab text-xs">⠿</span>
             <span class="text-sm">📄</span>
-            <span class="flex-1 text-xs text-slate-700 truncate">{{ lecon.titre }}</span>
+            <span class="flex-1 text-xs text-slate-700 truncate">{{ lecon.title }}</span>
           </div>
         </div>
         {% endfor %}
@@ -329,16 +329,16 @@
 
     <div class="flex items-center gap-3">
       <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" id="f-est-gratuit" {% if cours.est_gratuit %}checked{% endif %}
+        <input type="checkbox" id="f-est-gratuit" {% if cours.is_free %}checked{% endif %}
                class="sr-only peer" onchange="togglePrix()">
         <div class="w-11 h-6 bg-slate-200 peer-focus:ring-2 peer-focus:ring-sky-400 rounded-full peer peer-checked:bg-sky-500 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
       </label>
       <span class="text-sm text-slate-700 font-medium">Cours gratuit</span>
     </div>
 
-    <div id="prix-field" class="{% if cours.est_gratuit %}hidden{% endif %}">
+    <div id="prix-field" class="{% if cours.is_free %}hidden{% endif %}">
       <label class="block text-xs font-semibold text-slate-600 mb-1">Prix (FCFA)</label>
-      <input type="number" id="f-prix" min="0" step="100" value="{{ cours.prix }}"
+      <input type="number" id="f-prix" min="0" step="100" value="{{ cours.price }}"
              class="w-full max-w-xs px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
     </div>
 
@@ -511,14 +511,14 @@ async function addModule() {
     const tree = document.getElementById('structure-tree');
     const html = `
       <div class="tree-item tree-module-header" draggable="true"
-           data-type="module" data-id="${data.id}" data-order="${data.ordre}"
+           data-type="module" data-id="${data.id}" data-order="${data.order}"
            ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)"
            ondragleave="dragLeave(event)">
         <div class="flex items-center gap-2 px-3 py-2">
           <span class="text-slate-400 text-xs">⠿</span>
           <span class="text-base">📁</span>
           <span class="flex-1 text-sm text-slate-700" id="module-title-${data.id}"
-                ondblclick="renameModule(${data.id})">${data.titre}</span>
+                ondblclick="renameModule(${data.id})">${data.title}</span>
           <button type="button" onclick="addLecon(${data.id})" class="text-xs text-sky-600 hover:text-sky-800 px-1">+</button>
           <button type="button" onclick="deleteModule(${data.id})" class="text-xs text-red-400 hover:text-red-600 px-1">✕</button>
         </div>
@@ -555,7 +555,7 @@ async function addLecon(moduleId) {
   const icon = '📄';
   const html = `
     <div class="tree-item" draggable="true"
-         data-type="lecon" data-id="${data.id}" data-order="${data.ordre}"
+         data-type="lecon" data-id="${data.id}" data-order="${data.order}"
          ${moduleId ? 'data-module="'+moduleId+'"' : ''}
          ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)"
          ondragleave="dragLeave(event)"
@@ -563,7 +563,7 @@ async function addLecon(moduleId) {
       <div class="flex items-center gap-2 px-3 py-1.5">
         <span class="text-slate-400 text-xs">⠿</span>
         <span class="text-sm">${icon}</span>
-        <span class="flex-1 text-xs text-slate-700 truncate">${data.titre}</span>
+        <span class="flex-1 text-xs text-slate-700 truncate">${data.title}</span>
       </div>
     </div>`;
   if (moduleId) {
@@ -587,12 +587,12 @@ async function selectLecon(id, el) {
 
   currentLeconId = id;
   document.getElementById('current-lecon-id').value     = id;
-  document.getElementById('lecon-titre').value           = data.titre;
-  document.getElementById('lecon-duree').value           = data.duree_minutes;
-  document.getElementById('lecon-content-type').value   = data.content_type;
+  document.getElementById('lecon-titre').value           = data.title;
+  document.getElementById('lecon-duree').value           = data.estimated_minutes;
+  document.getElementById('lecon-content-type').value   = data.content_type || 'text';
   document.getElementById('lecon-free-preview').checked = data.is_free_preview;
-  document.getElementById('lecon-publiee').checked      = data.est_publiee;
-  document.getElementById('editor-lecon-title-display').textContent = data.titre;
+  document.getElementById('lecon-publiee').checked      = data.is_active;
+  document.getElementById('editor-lecon-title-display').textContent = data.title;
 
   // Load block builder
   loadLessonBlocks(id, 'cours');
@@ -606,11 +606,11 @@ function updateLeconTypeUI() { /* no-op: blocks replace type-based UI */ }
 async function saveLecon(silent) {
   if (!currentLeconId) return;
   const body = {
-    titre:           document.getElementById('lecon-titre').value,
-    content_type:    document.getElementById('lecon-content-type').value,
-    duree_minutes:   document.getElementById('lecon-duree').value,
-    is_free_preview: document.getElementById('lecon-free-preview').checked,
-    est_publiee:     document.getElementById('lecon-publiee').checked,
+    titre:             document.getElementById('lecon-titre').value,
+    content_type:      document.getElementById('lecon-content-type').value,
+    estimated_minutes: document.getElementById('lecon-duree').value,
+    is_free_preview:   document.getElementById('lecon-free-preview').checked,
+    is_active:         document.getElementById('lecon-publiee').checked,
   };
   const r = await post(`/fr/admin-panel/cours/ajax/lecon/${currentLeconId}/save/`, body);
   if (r.ok && !silent) setAutosaveText('Leçon sauvegardée ✓ — ' + now());

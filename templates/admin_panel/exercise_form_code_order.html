@@ -10,7 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
 
 <div class="max-w-3xl">
-  <div class="bg-slate-50 rounded-xl border border-slate-200 p-3 mb-5 text-sm text-slate-600">Leçon : <span class="font-medium">{{ lecon.titre }}</span></div>
+  <div class="bg-slate-50 rounded-xl border border-slate-200 p-3 mb-5 text-sm text-slate-600">Leçon : <span class="font-medium">{{ lecon.title }}</span></div>
   <form method="post" id="co-form" class="space-y-5">
     {% csrf_token %}
     <div class="bg-white rounded-xl border border-slate-200 p-6 space-y-4">

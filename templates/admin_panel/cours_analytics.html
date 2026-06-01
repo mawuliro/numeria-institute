@@ -1,9 +1,9 @@
 {% extends "admin_panel/base_staff.html" %}
 {% load i18n humanize %}
 
-{% block page_title %}Statistiques — {{ cours.titre }}{% endblock %}
-{% block page_heading %}📊 {{ cours.titre }} — Statistiques{% endblock %}
-{% block breadcrumb %}<p class="text-xs text-slate-400 mt-0.5"><a href="{% url 'admin_panel:cours_list' %}" class="hover:underline">Cours</a> › <a href="{% url 'admin_panel:cours_edit' cours.slug %}" class="hover:underline">{{ cours.titre|truncatechars:30 }}</a> › Statistiques</p>{% endblock %}
+{% block page_title %}Statistiques — {{ cours.title }}{% endblock %}
+{% block page_heading %}📊 {{ cours.title }} — Statistiques{% endblock %}
+{% block breadcrumb %}<p class="text-xs text-slate-400 mt-0.5"><a href="{% url 'admin_panel:cours_list' %}" class="hover:underline">Cours</a> › <a href="{% url 'admin_panel:cours_edit' cours.slug %}" class="hover:underline">{{ cours.title|truncatechars:30 }}</a> › Statistiques</p>{% endblock %}
 
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -40,7 +40,7 @@
     <h3 class="font-semibold text-slate-700 mb-4 text-sm">⚠️ Leçon avec le moins de complétion</h3>
     {% if most_dropped %}
     <div class="bg-amber-50 rounded-lg p-3 text-sm">
-      <p class="font-medium text-amber-800">{{ most_dropped.lecon.titre }}</p>
+      <p class="font-medium text-amber-800">{{ most_dropped.lecon.title }}</p>
       <p class="text-amber-600 text-xs mt-1">{{ most_dropped.done }} complétion{{ most_dropped.done|pluralize }}</p>
     </div>
     {% else %}

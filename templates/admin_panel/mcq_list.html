@@ -45,11 +45,11 @@
         </td>
         <td class="px-4 py-3 text-slate-600 hidden md:table-cell">
           {% if mcq.course_lesson %}
-          <div class="text-xs text-slate-400">{{ mcq.course_lesson.course.titre }}</div>
-          <div class="text-xs">{{ mcq.course_lesson.titre }}</div>
+          <div class="text-xs text-slate-400">{{ mcq.course_lesson.course.title }}</div>
+          <div class="text-xs">{{ mcq.course_lesson.title }}</div>
           {% elif mcq.formation_lesson %}
-          <div class="text-xs text-slate-400">{{ mcq.formation_lesson.formation.titre }}</div>
-          <div class="text-xs">{{ mcq.formation_lesson.titre }}</div>
+          <div class="text-xs text-slate-400">{{ mcq.formation_lesson.formation.title }}</div>
+          <div class="text-xs">{{ mcq.formation_lesson.title }}</div>
           {% else %}<span class="text-slate-400">—</span>{% endif %}
         </td>
         <td class="px-4 py-3 text-center hidden sm:table-cell">

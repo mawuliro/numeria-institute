@@ -28,10 +28,10 @@ class CoursSitemap(Sitemap):
     priority = 0.9
 
     def items(self):
-        return Course.objects.filter(est_publie=True)
+        return Course.objects.filter(status='published')
 
     def lastmod(self, obj):
-        return obj.date_modification
+        return obj.updated_at
 
     def location(self, obj):
         return reverse('cours:detail', args=[obj.id])
@@ -45,7 +45,7 @@ class ArticleSitemap(Sitemap):
         return Article.objects.filter(est_publie=True)
 
     def lastmod(self, obj):
-        return obj.date_modification
+        return obj.date_modification  # Article model has date_modification
 
     def location(self, obj):
         return reverse('blog:detail', args=[obj.slug])
