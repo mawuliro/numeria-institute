@@ -114,7 +114,7 @@ def tableau_de_bord(request):
 
     ids_inscrits = inscriptions.values_list('cours_id', flat=True)
     cours_recommandes = Course.objects.filter(
-        est_publie=True
+        status='published'
     ).exclude(
         id__in=ids_inscrits
     )[:3]

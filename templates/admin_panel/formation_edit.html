@@ -1,13 +1,13 @@
 {% extends "admin_panel/base_staff.html" %}
 {% load i18n static %}
 
-{% block page_title %}{{ formation.titre }} — Éditeur{% endblock %}
-{% block page_heading %}✏️ {{ formation.titre|truncatechars:40 }}{% endblock %}
+{% block page_title %}{{ formation.title }} — Éditeur{% endblock %}
+{% block page_heading %}✏️ {{ formation.title|truncatechars:40 }}{% endblock %}
 {% block breadcrumb %}
 <p class="text-xs text-slate-400 mt-0.5">
   <a href="{% url 'admin_panel:formation_list' %}" class="hover:underline">Formations</a> ›
-  <span class="{% if formation.est_publiee %}text-green-600{% else %}text-slate-500{% endif %} font-medium">
-    {% if formation.est_publiee %}Publiée{% elif formation.est_archivee %}Archivée{% else %}Brouillon{% endif %}
+  <span class="{% if formation.status == 'published' %}text-green-600{% else %}text-slate-500{% endif %} font-medium">
+    {% if formation.status == 'published' %}Publiée{% elif formation.status == 'archived' %}Archivée{% else %}Brouillon{% endif %}
   </span>
 </p>
 {% endblock %}
@@ -42,30 +42,30 @@
   <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
     <h2 class="font-bold text-slate-700 text-base">① Informations générales</h2>
     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
-      <input type="text" id="f-titre" value="{{ formation.titre }}" maxlength="200"
+      <input type="text" id="f-titre" value="{{ formation.title }}" maxlength="200"
              class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"></div>
     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Description courte</label>
-      <input type="text" id="f-desc-courte" value="{{ formation.description_courte }}" maxlength="300"
+      <input type="text" id="f-desc-courte" value="{{ formation.short_description }}" maxlength="300"
              class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"></div>
     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Description complète</label>
-      <textarea id="f-desc-longue" rows="4" data-rich-editor data-editor-height="280px">{{ formation.description_longue }}</textarea></div>
+      <textarea id="f-desc-longue" rows="4" data-rich-editor data-editor-height="280px">{{ formation.description }}</textarea></div>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div><label class="block text-xs font-semibold text-slate-600 mb-1">Type</label>
         <select id="f-type" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
-          {% for val, label in types %}<option value="{{ val }}" {% if formation.type_formation == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+          {% for val, label in types %}<option value="{{ val }}" {% if formation.category == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
         </select></div>
       <div><label class="block text-xs font-semibold text-slate-600 mb-1">Niveau</label>
         <select id="f-niveau" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
-          {% for val, label in niveaux %}<option value="{{ val }}" {% if formation.niveau == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+          {% for val, label in niveaux %}<option value="{{ val }}" {% if formation.level == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
         </select></div>
       <div><label class="block text-xs font-semibold text-slate-600 mb-1">Durée (heures)</label>
-        <input type="number" id="f-duree" min="0" value="{{ formation.duree_heures }}"
+        <input type="number" id="f-duree" min="0" value="{{ formation.estimated_hours }}"
                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"></div>
     </div>
     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Prérequis</label>
-      <textarea id="f-prerequis" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono">{{ formation.prerequis }}</textarea></div>
+      <textarea id="f-prerequis" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono">{{ formation.prerequisites }}</textarea></div>
     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Compétences visées</label>
-      <textarea id="f-competences" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono">{{ formation.competences_visees }}</textarea></div>
+      <textarea id="f-competences" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono">{{ formation.objectives }}</textarea></div>
     <div class="flex gap-3 pt-2">
       <button type="button" onclick="saveStep1()"
               class="bg-sky-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-sky-700 text-sm">💾 Sauvegarder les infos</button>
@@ -86,24 +86,24 @@
       </div>
       <div id="structure-tree" class="flex-1 overflow-y-auto p-3 space-y-1">
         {% for module in modules %}
-        <div class="tree-item font-semibold" draggable="true" data-type="module" data-id="{{ module.id }}" data-order="{{ module.ordre }}"
+        <div class="tree-item font-semibold" draggable="true" data-type="module" data-id="{{ module.id }}" data-order="{{ module.order }}"
              ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)" ondragleave="dragLeave(event)">
           <div class="flex items-center gap-2 px-3 py-2">
             <span class="text-slate-400 text-xs">⠿</span><span class="text-base">📁</span>
-            <span class="flex-1 text-sm text-slate-700" id="module-title-{{ module.id }}" ondblclick="renameModule({{ module.id }})">{{ module.titre }}</span>
+            <span class="flex-1 text-sm text-slate-700" id="module-title-{{ module.id }}" ondblclick="renameModule({{ module.id }})">{{ module.title }}</span>
             <button type="button" onclick="addLecon({{ module.id }})" class="text-xs text-sky-600 px-1">+</button>
             <button type="button" onclick="deleteModule({{ module.id }})" class="text-xs text-red-400 px-1">✕</button>
           </div>
         </div>
         <div id="module-lessons-{{ module.id }}" class="pl-5 space-y-0.5">
           {% for lesson in module.lessons.all %}
-          <div class="tree-item" draggable="true" data-type="lecon" data-id="{{ lesson.id }}" data-order="{{ lesson.ordre }}" data-module="{{ module.id }}"
+          <div class="tree-item" draggable="true" data-type="lecon" data-id="{{ lesson.id }}" data-order="{{ lesson.order }}" data-module="{{ module.id }}"
                ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)" ondragleave="dragLeave(event)"
                onclick="selectLecon({{ lesson.id }}, this)">
             <div class="flex items-center gap-2 px-3 py-1.5">
               <span class="text-slate-400 text-xs">⠿</span>
               <span class="text-sm">{% if lesson.content_type == 'video' %}🎥{% elif lesson.content_type == 'exercise' %}💻{% else %}📄{% endif %}</span>
-              <span class="flex-1 text-xs text-slate-700 truncate">{{ lesson.titre }}</span>
+              <span class="flex-1 text-xs text-slate-700 truncate">{{ lesson.title }}</span>
               {% if lesson.is_free_preview %}<span class="text-green-600 text-xs">🔓</span>{% endif %}
             </div>
           </div>
@@ -113,12 +113,12 @@
         {% if standalone_lecons %}
         <div class="text-xs text-slate-400 px-3 py-1 mt-2">Leçons sans module :</div>
         {% for lesson in standalone_lecons %}
-        <div class="tree-item" draggable="true" data-type="lecon" data-id="{{ lesson.id }}" data-order="{{ lesson.ordre }}"
+        <div class="tree-item" draggable="true" data-type="lecon" data-id="{{ lesson.id }}" data-order="{{ lesson.order }}"
              ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)" ondragleave="dragLeave(event)"
              onclick="selectLecon({{ lesson.id }}, this)">
           <div class="flex items-center gap-2 px-3 py-1.5">
             <span class="text-slate-400 text-xs">⠿</span><span class="text-sm">📄</span>
-            <span class="flex-1 text-xs text-slate-700 truncate">{{ lesson.titre }}</span>
+            <span class="flex-1 text-xs text-slate-700 truncate">{{ lesson.title }}</span>
           </div>
         </div>
         {% endfor %}
@@ -200,9 +200,9 @@
     <div>
       <label class="block text-xs font-semibold text-slate-600 mb-1">Statut</label>
       <select id="f-statut" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
-        <option value="brouillon" {% if not formation.est_publiee and not formation.est_archivee %}selected{% endif %}>Brouillon</option>
-        <option value="publie" {% if formation.est_publiee %}selected{% endif %}>Publiée</option>
-        <option value="archive" {% if formation.est_archivee %}selected{% endif %}>Archivée</option>
+        <option value="brouillon" {% if formation.status == 'draft' %}selected{% endif %}>Brouillon</option>
+        <option value="publie" {% if formation.status == 'published' %}selected{% endif %}>Publiée</option>
+        <option value="archive" {% if formation.status == 'archived' %}selected{% endif %}>Archivée</option>
       </select>
     </div>
     <div class="flex gap-3"><button type="button" onclick="saveStep3().then(()=>goToStep('4'))"
@@ -252,9 +252,7 @@ async function post(url, body) {
 
 async function saveStep1(silent) {
   const fd = new FormData();
-  ['titre','description_courte','description_longue','prerequis','competences_visees'].forEach(id=>{
-    fd.append(id, document.getElementById('f-'+id.replace('_','-').replace('_','-'))?.value || document.getElementById('f-'+id)?.value || '');
-  });
+  // Appending fields via their correct IDs below
   fd.append('type_formation', document.getElementById('f-type').value);
   fd.append('niveau', document.getElementById('f-niveau').value);
   fd.append('duree_heures', document.getElementById('f-duree').value);
@@ -290,11 +288,11 @@ async function addModule() {
   if(!data.id) return;
   const tree = document.getElementById('structure-tree');
   tree.insertAdjacentHTML('beforeend',`
-    <div class="tree-item font-semibold" draggable="true" data-type="module" data-id="${data.id}" data-order="${data.ordre}"
+    <div class="tree-item font-semibold" draggable="true" data-type="module" data-id="${data.id}" data-order="${data.order}"
          ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)" ondragleave="dragLeave(event)">
       <div class="flex items-center gap-2 px-3 py-2">
         <span class="text-slate-400 text-xs">⠿</span><span class="text-base">📁</span>
-        <span class="flex-1 text-sm text-slate-700" id="module-title-${data.id}" ondblclick="renameModule(${data.id})">${data.titre}</span>
+        <span class="flex-1 text-sm text-slate-700" id="module-title-${data.id}" ondblclick="renameModule(${data.id})">${data.title}</span>
         <button type="button" onclick="addLecon(${data.id})" class="text-xs text-sky-600 px-1">+</button>
         <button type="button" onclick="deleteModule(${data.id})" class="text-xs text-red-400 px-1">✕</button>
       </div>
@@ -316,11 +314,11 @@ async function addLecon(moduleId) {
   const titre = prompt('Titre de la leçon :'); if(!titre) return;
   const data = await post(LECON_URL,{titre,module_id:moduleId});
   if(!data.id) return;
-  const html = `<div class="tree-item" draggable="true" data-type="lecon" data-id="${data.id}" data-order="${data.ordre}" ${moduleId?'data-module="'+moduleId+'"':''}
+  const html = `<div class="tree-item" draggable="true" data-type="lecon" data-id="${data.id}" data-order="${data.order}" ${moduleId?'data-module="'+moduleId+'"':''}
     ondragstart="dragStart(event,this)" ondragover="dragOver(event)" ondrop="dropItem(event,this)" ondragleave="dragLeave(event)"
     onclick="selectLecon(${data.id}, this)">
     <div class="flex items-center gap-2 px-3 py-1.5"><span class="text-slate-400 text-xs">⠿</span><span class="text-sm">📄</span>
-    <span class="flex-1 text-xs text-slate-700 truncate">${data.titre}</span></div></div>`;
+    <span class="flex-1 text-xs text-slate-700 truncate">${data.title}</span></div></div>`;
   if(moduleId){document.getElementById('module-lessons-'+moduleId)?.insertAdjacentHTML('beforeend',html);}
   else{document.getElementById('structure-tree').insertAdjacentHTML('beforeend',html);}
   selectLecon(data.id, document.querySelector(`[data-type="lecon"][data-id="${data.id}"]`));
@@ -333,13 +331,13 @@ async function selectLecon(id, el) {
   const data = await r.json();
   currentLeconId = id;
   document.getElementById('current-lecon-id').value = id;
-  document.getElementById('lecon-titre').value = data.titre;
-  document.getElementById('lecon-duree').value = data.duree_minutes;
-  document.getElementById('lecon-content-type').value = data.content_type;
+  document.getElementById('lecon-titre').value = data.title;
+  document.getElementById('lecon-duree').value = data.estimated_minutes;
+  document.getElementById('lecon-content-type').value = data.content_type || 'text';
   document.getElementById('lecon-free-preview').checked = data.is_free_preview;
-  document.getElementById('lecon-active').checked = data.est_active;
-  document.getElementById('lecon-video').value = data.video_url;
-  document.getElementById('editor-lecon-title-display').textContent = data.titre;
+  document.getElementById('lecon-active').checked = data.is_active;
+  if(document.getElementById('lecon-video')) document.getElementById('lecon-video').value = data.video_url || '';
+  document.getElementById('editor-lecon-title-display').textContent = data.title;
   if(mdeEditor) mdeEditor.value(data.contenu||'');
   // Load block builder
   loadLessonBlocks(id, 'formation');
@@ -351,9 +349,9 @@ async function saveLecon(silent) {
   if(!currentLeconId) return;
   const body={titre:document.getElementById('lecon-titre').value,
     content_type:document.getElementById('lecon-content-type').value,
-    duree_minutes:document.getElementById('lecon-duree').value,
+    estimated_minutes:document.getElementById('lecon-duree').value,
     is_free_preview:document.getElementById('lecon-free-preview').checked,
-    est_active:document.getElementById('lecon-active').checked};
+    is_active:document.getElementById('lecon-active').checked};
   const r = await post(`/fr/admin-panel/formations/ajax/lecon/${currentLeconId}/save/`,body);
   if(r.ok&&!silent)setSaveStatus('Leçon sauvegardée ✓ — '+now());
   const tEl=document.querySelector(`[data-type="lecon"][data-id="${currentLeconId}"] span.truncate`);

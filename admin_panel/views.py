@@ -42,7 +42,7 @@ def dashboard(request):
         'pending_mentorships': DemandeMentorat.objects.filter(statut='en_attente').count(),
         'pending_mentor_applications': MentorApplication.objects.filter(status='pending').count(),
         'total_users': User.objects.filter(is_active=True).count(),
-        'total_courses': Course.objects.filter(est_publie=True).count(),
+        'total_courses': Course.objects.filter(status='published').count(),
         'payments_this_month': payments_qs.count(),
         'payments_amount': payments_qs.aggregate(t=Sum('montant_final'))['t'] or 0,
     }
@@ -676,8 +676,8 @@ def exercises_list(request):
     return render(request, 'admin_panel/exercises_list.html', {
         'exercises':        exercises,
         'submission_counts': submission_counts,
-        'cours_list':       Course.objects.order_by('titre'),
-        'formation_list':   Formation.objects.order_by('titre'),
+        'cours_list':       Course.objects.order_by('title'),
+        'formation_list':   Formation.objects.order_by('title'),
         'type_filter':      type_filter,
         'cours_filter':     cours_filter,
         'formation_filter': formation_filter,
@@ -716,7 +716,7 @@ def exercise_create(request, lecon_id):
         else:
             CodeExercise.objects.create(course_lesson=lecon, **f)
             log_staff_action(request.user, 'notification_sent',
-                             f"Exercice créé: '{f['title']}' pour {lecon.titre}")
+                             f"Exercice créé: '{f['title']}' pour {lecon.title}")
             messages.success(request, _("Exercice créé avec succès."))
             return redirect('admin_panel:exercises_list')
 
@@ -746,7 +746,7 @@ def exercise_create_formation(request, lecon_id):
         else:
             CodeExercise.objects.create(formation_lesson=fl, course_lesson=None, **f)
             log_staff_action(request.user, 'notification_sent',
-                             f"Exercice créé: '{f['title']}' pour {fl.titre}")
+                             f"Exercice créé: '{f['title']}' pour {fl.title}")
             messages.success(request, _("Exercice créé avec succès."))
             return redirect('admin_panel:exercises_list')
 
@@ -890,15 +890,15 @@ def exercise_results_csv(request):
         'student', 'exercise__course_lesson__course', 'exercise__formation_lesson'
     ).order_by('-submitted_at')[:5000]:
         lesson = sub.exercise.course_lesson or sub.exercise.formation_lesson
-        parent = (sub.exercise.course_lesson.course.titre
+        parent = (sub.exercise.course_lesson.course.title
                   if sub.exercise.course_lesson_id else
-                  (sub.exercise.formation_lesson.formation.titre
+                  (sub.exercise.formation_lesson.formation.title
                    if sub.exercise.formation_lesson_id else ''))
         writer.writerow([
             sub.student.get_full_name() or sub.student.username,
             sub.student.email,
             sub.exercise.title,
-            lesson.titre if lesson else '',
+            lesson.title if lesson else '',
             parent,
             sub.is_correct,
             sub.attempt_number,

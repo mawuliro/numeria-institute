@@ -47,7 +47,7 @@
       <ul class="space-y-2 text-sm">
         {% for i in inscriptions %}
         <li class="flex items-center justify-between">
-          <span class="truncate text-slate-700">{{ i.cours.titre }}</span>
+          <span class="truncate text-slate-700">{{ i.course.title }}</span>
           <span class="text-xs {% if i.est_termine %}text-green-600{% else %}text-slate-500{% endif %} ml-2 shrink-0">{{ i.progression }}%</span>
         </li>
         {% endfor %}

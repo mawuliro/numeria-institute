@@ -62,15 +62,15 @@
   {% for f in page_obj %}
   <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
     <div class="h-36 bg-gradient-to-br from-indigo-100 to-purple-200 flex items-center justify-center text-5xl relative">
-      {% if f.image_couverture %}
-      <img src="{{ f.image_couverture.url }}" alt="{{ f.titre }}" class="w-full h-full object-cover absolute inset-0">
+      {% if f.thumbnail %}
+      <img src="{{ f.thumbnail.url }}" alt="{{ f.title }}" class="w-full h-full object-cover absolute inset-0">
       {% else %}🎓{% endif %}
       <span class="absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full
-        {% if f.est_publiee and not f.est_archivee %}bg-green-500 text-white
-        {% elif f.est_archivee %}bg-red-100 text-red-700
+        {% if f.status == 'published' %}bg-green-500 text-white
+        {% elif f.status == 'archived' %}bg-red-100 text-red-700
         {% else %}bg-slate-200 text-slate-600{% endif %}">
-        {% if f.est_publiee and not f.est_archivee %}Publiée
-        {% elif f.est_archivee %}Archivée
+        {% if f.status == 'published' %}Publiée
+        {% elif f.status == 'archived' %}Archivée
         {% else %}Brouillon{% endif %}
       </span>
     </div>
@@ -79,8 +79,8 @@
         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ f.get_type_formation_display }}</span>
         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ f.get_niveau_display }}</span>
       </div>
-      <h3 class="font-bold text-slate-800 text-sm leading-snug mb-1 line-clamp-2">{{ f.titre }}</h3>
-      <p class="text-xs text-slate-500 line-clamp-2 flex-1 mb-3">{{ f.description_courte }}</p>
+      <h3 class="font-bold text-slate-800 text-sm leading-snug mb-1 line-clamp-2">{{ f.title }}</h3>
+      <p class="text-xs text-slate-500 line-clamp-2 flex-1 mb-3">{{ f.short_description }}</p>
       <div class="flex items-center gap-3 text-xs text-slate-400 mb-3">
         <span>📦 {{ f.nb_modules }}</span>
         <span>📄 {{ f.nb_lessons }}</span>
@@ -95,7 +95,7 @@
         <a href="{% url 'admin_panel:formation_analytics' f.slug %}"
            class="text-slate-600 text-xs px-2 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg font-medium">📊</a>
         <form method="post" action="{% url 'admin_panel:formation_delete' f.slug %}" class="inline"
-              onsubmit="return confirm('Supprimer «{{ f.titre }}» ?')">
+              onsubmit="return confirm('Supprimer «{{ f.title }}» ?')">
           {% csrf_token %}
           <button type="submit" class="text-red-600 text-xs px-2 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg font-medium">🗑️</button>
         </form>

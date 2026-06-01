@@ -32,10 +32,10 @@ def dashboard(request):
         'total_utilisateurs': User.objects.count(),
         'total_etudiants': User.objects.filter(profil__isnull=False).count(),
         'nouveaux_30j': User.objects.filter(date_joined__date__gte=last_30_days).count(),
-        'total_cours': Course.objects.filter(est_publie=True).count(),
+        'total_cours': Course.objects.filter(status='published').count(),
         'total_inscriptions': InscriptionCours.objects.count(),
         'taux_completion_moyen': InscriptionCours.objects.aggregate(Avg('progression'))['progression__avg'] or 0,
-        'total_articles': Article.objects.filter(est_publie=True).count(),
+        'total_articles': Article.objects.filter(est_publie=True).count(),  # Article keeps est_publie
     }
     
     # ============================================================
@@ -87,10 +87,10 @@ def dashboard(request):
     
     cours_populaires = (
         Course.objects
-        .filter(est_publie=True)
+        .filter(status='published')
         .annotate(nombre_inscriptions=Count('inscriptions'))
         .order_by('-nombre_inscriptions')[:5]
-        .values('titre', 'nombre_inscriptions', 'prix', 'est_gratuit')
+        .values('title', 'nombre_inscriptions', 'price', 'is_free')
     )
     
     # ============================================================
@@ -99,16 +99,16 @@ def dashboard(request):
     
     completion_par_cours = (
         Course.objects
-        .filter(est_publie=True, inscriptions__isnull=False)
+        .filter(status='published', inscriptions__isnull=False)
         .annotate(
             progression_moyenne=Avg('inscriptions__progression')
         )
-        .values('titre', 'progression_moyenne')
+        .values('title', 'progression_moyenne')
         .order_by('-progression_moyenne')[:5]
     )
-    
+
     completion_data = {
-        'labels': [item['titre'][:30] for item in completion_par_cours],
+        'labels': [item['title'][:30] for item in completion_par_cours],
         'values': [round(item['progression_moyenne'] or 0, 1) for item in completion_par_cours]
     }
     

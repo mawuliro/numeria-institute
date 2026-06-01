@@ -1,8 +1,8 @@
 {% extends "admin_panel/base_staff.html" %}
 {% load i18n sandbox_tags %}
 
-{% block page_title %}Prévisualisation — {{ formation.titre }}{% endblock %}
-{% block page_heading %}👁️ {{ formation.titre }}{% endblock %}
+{% block page_title %}Prévisualisation — {{ formation.title }}{% endblock %}
+{% block page_heading %}👁️ {{ formation.title }}{% endblock %}
 
 {% block content %}
 {% if has_blocks %}
@@ -23,13 +23,13 @@
 
 <div id="preview-wrapper" class="transition-all duration-300">
   <div class="bg-white rounded-2xl border border-slate-200 p-6 mb-5">
-    {% if formation.image_couverture %}<img src="{{ formation.image_couverture.url }}" class="w-full max-h-48 object-cover rounded-xl mb-4">{% endif %}
+    {% if formation.thumbnail %}<img src="{{ formation.thumbnail.url }}" class="w-full max-h-48 object-cover rounded-xl mb-4">{% endif %}
     <div class="flex gap-2 mb-3">
       <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ formation.get_type_formation_display }}</span>
       <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ formation.get_niveau_display }}</span>
     </div>
-    <h1 class="text-2xl font-bold text-slate-800 mb-2">{{ formation.titre }}</h1>
-    <p class="text-slate-600">{{ formation.description_courte }}</p>
+    <h1 class="text-2xl font-bold text-slate-800 mb-2">{{ formation.title }}</h1>
+    <p class="text-slate-600">{{ formation.short_description }}</p>
     {% if formation.description_longue %}
     <div class="mt-4 text-sm text-slate-700 prose prose-sm max-w-none">{{ formation.description_longue|render_content }}</div>
     {% endif %}
@@ -40,10 +40,10 @@
       <h3 class="font-semibold text-slate-700 mb-3 text-sm">Plan de la formation</h3>
       {% for module in modules %}
       <div class="mb-3">
-        <div class="font-semibold text-slate-700 text-sm mb-1">📁 {{ module.titre }}</div>
+        <div class="font-semibold text-slate-700 text-sm mb-1">📁 {{ module.title }}</div>
         {% for lesson in module.lessons.all %}
         <a href="?lecon={{ lesson.id }}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs {% if lecon_active.id == lesson.id %}bg-sky-50 text-sky-700 font-medium{% else %}text-slate-600 hover:bg-slate-50{% endif %}">
-          <span>{% if lesson.content_type == 'video' %}🎥{% else %}📄{% endif %}</span>{{ lesson.titre }}
+          <span>{% if lesson.content_type == 'video' %}🎥{% else %}📄{% endif %}</span>{{ lesson.title }}
           {% if lesson.is_free_preview %}<span class="text-green-500 ml-auto">🔓</span>{% endif %}
         </a>
         {% endfor %}
@@ -52,7 +52,7 @@
     </div>
     <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6">
       {% if lecon_active %}
-      <h2 class="text-xl font-bold text-slate-800 mb-4">{{ lecon_active.titre }}</h2>
+      <h2 class="text-xl font-bold text-slate-800 mb-4">{{ lecon_active.title }}</h2>
 
       {% if has_blocks and lesson_blocks %}
         {# ── New block-based rendering ── #}

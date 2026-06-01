@@ -30,7 +30,7 @@
       <select name="exercise" class="flex-1 min-w-48 px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
         <option value="">{% trans "Tous les exercices" %}</option>
         {% for ex in all_exercises %}
-        <option value="{{ ex.id }}" {% if ex_filter == ex.id|stringformat:"s" %}selected{% endif %}>{{ ex.lecon.cours.titre }} › {{ ex.title }}</option>
+        <option value="{{ ex.id }}" {% if ex_filter == ex.id|stringformat:"s" %}selected{% endif %}>{{ ex.course_lesson.course.title }} › {{ ex.title }}</option>
         {% endfor %}
       </select>
       <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm">{% trans "Filtrer" %}</button>
@@ -63,7 +63,7 @@
             <div class="text-xs text-slate-400">{{ sub.student.email }}</div>
           </td>
           <td class="px-4 py-3 text-slate-700 hidden md:table-cell">{{ sub.exercise.title }}</td>
-          <td class="px-4 py-3 text-slate-500 hidden lg:table-cell">{{ sub.exercise.lecon.titre }}</td>
+          <td class="px-4 py-3 text-slate-500 hidden lg:table-cell">{{ sub.exercise.course_lesson.title }}</td>
           <td class="px-4 py-3 text-center">
             {% if sub.is_correct %}<span class="text-green-600 font-bold">✅</span>{% else %}<span class="text-red-500">❌</span>{% endif %}
           </td>

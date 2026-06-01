@@ -20,7 +20,7 @@ def catalogue(request):
     Page catalogue — affiche tous les cours publiés.
     Filtre par type (général ou scolaire), par cycle et par classe.
     """
-    tous_les_cours = Course.objects.filter(est_publie=True)
+    tous_les_cours = Course.objects.filter(status='published')
 
     # Filtres depuis l'URL
     type_cours = request.GET.get('type', '')
@@ -35,11 +35,11 @@ def catalogue(request):
     if classe:
         tous_les_cours = tous_les_cours.filter(classe=classe)
     if matiere:
-        tous_les_cours = tous_les_cours.filter(matiere=matiere)
+        tous_les_cours = tous_les_cours.filter(category=matiere)
 
     # Compteurs par type
-    cours_generaux  = Course.objects.filter(est_publie=True, type_cours='general').count()
-    cours_scolaires = Course.objects.filter(est_publie=True, type_cours='scolaire').count()
+    cours_generaux  = Course.objects.filter(status='published', type_cours='general').count()
+    cours_scolaires = Course.objects.filter(status='published', type_cours='scolaire').count()
 
     contexte = {
         'cours':           tous_les_cours,
@@ -61,8 +61,8 @@ def detail_cours(request, cours_id):
     from .models import Exercice, TentativeExercice, EvaluationCours, CertificatCours
     from .lesson_blocks import build_lesson_blocks, build_legacy_code_exercises
 
-    cours  = get_object_or_404(Course, id=cours_id, est_publie=True)
-    lecons = cours.lessons.filter(est_publiee=True)
+    cours  = get_object_or_404(Course, id=cours_id, status='published')
+    lecons = cours.lessons.filter(is_active=True)
 
     est_inscrit          = False
     inscription          = None
@@ -127,7 +127,7 @@ def detail_cours(request, cours_id):
     reponse_choisie        = None
 
     if lecon_active and est_inscrit:
-        exercices = lecon_active.exercices.filter(est_actif=True)
+        exercices = lecon_active.exercices.filter(is_active=True)
 
         exercices_reussis_ids = list(
             StudentProgress.objects.filter(
@@ -191,13 +191,13 @@ def detail_cours(request, cours_id):
 @login_required
 def inscrire_cours(request, cours_id):
     """S'inscrire à un cours — gratuit ou payant."""
-    cours = get_object_or_404(Course, id=cours_id, est_publie=True)
+    cours = get_object_or_404(Course, id=cours_id, status='published')
 
     if InscriptionCours.objects.filter(etudiant=request.user, course=cours).exists():
-        messages.info(request, _("Tu es déjà inscrit au cours « %(titre)s » ! 📚") % {'titre': cours.titre})
+        messages.info(request, _("Tu es déjà inscrit au cours « %(titre)s » ! 📚") % {'titre': cours.title})
         return redirect('cours:detail', cours_id=cours_id)
 
-    if cours.est_gratuit:
+    if cours.is_free:
         InscriptionCours.objects.create(
             etudiant=request.user,
             course=cours,
@@ -209,13 +209,13 @@ def inscrire_cours(request, cours_id):
             notify_user(
                 request.user,
                 title=_("Inscription confirmée"),
-                message=_("Vous êtes inscrit au cours %(titre)s.") % {'titre': cours.titre},
+                message=_("Vous êtes inscrit au cours %(titre)s.") % {'titre': cours.title},
                 notification_type='course',
                 link=reverse('cours:detail', kwargs={'cours_id': cours.id}),
             )
         except Exception as e:
             logger.error('Course enrollment notification failed: %s', e)
-        messages.success(request, _("🎉 Bienvenue dans le cours « %(titre)s » !") % {'titre': cours.titre})
+        messages.success(request, _("🎉 Bienvenue dans le cours « %(titre)s » !") % {'titre': cours.title})
         return redirect('cours:detail', cours_id=cours_id)
     else:
         # Cours payant — redirection vers la page de paiement
@@ -236,7 +236,7 @@ def se_desinscrire(request, cours_id):
             etudiant=request.user, course_lesson__course=cours
         ).delete()
         inscription.delete()
-        messages.success(request, _("Tu t'es désinscrit du cours « %(titre)s » .") % {'titre': cours.titre})
+        messages.success(request, _("Tu t'es désinscrit du cours « %(titre)s » .") % {'titre': cours.title})
     else:
         messages.error(request, _("Tu n'es pas inscrit à ce cours."))
 
@@ -265,7 +265,7 @@ def terminer_lecon(request, lecon_id):
     )
 
     if cree:
-        total_lecons     = cours.lessons.filter(est_publiee=True).count()
+        total_lecons     = cours.lessons.filter(is_active=True).count()
         lecons_terminees = ProgressionLecon.objects.filter(
             etudiant=request.user, course_lesson__course=cours
         ).count()
@@ -279,7 +279,7 @@ def terminer_lecon(request, lecon_id):
                 inscription.date_fin    = timezone.now()
                 messages.success(
                     request,
-                    _("🎉 Félicitations ! Tu as terminé le cours « %(titre)s » !") % {'titre': cours.titre}
+                    _("🎉 Félicitations ! Tu as terminé le cours « %(titre)s » !") % {'titre': cours.title}
                 )
             else:
                 messages.success(
@@ -292,7 +292,7 @@ def terminer_lecon(request, lecon_id):
 
     # Rediriger vers la leçon suivante si elle existe
     lecon_suivante = cours.lessons.filter(
-        est_publiee=True, ordre__gt=lecon.ordre
+        is_active=True, order__gt=lecon.order
     ).first()
 
     url_detail = reverse('cours:detail', kwargs={'cours_id': cours.id})
@@ -321,7 +321,7 @@ def annuler_lecon(request, lecon_id):
         etudiant=request.user, course_lesson=lecon
     ).delete()
 
-    total_lecons     = cours.lessons.filter(est_publiee=True).count()
+    total_lecons     = cours.lessons.filter(is_active=True).count()
     lecons_terminees = ProgressionLecon.objects.filter(
         etudiant=request.user, course_lesson__course=cours
     ).count()
@@ -349,7 +349,7 @@ def soumettre_exercice(request, exercice_id):
     if request.method != 'POST':
         return redirect('cours:catalogue')
 
-    exercice = get_object_or_404(Exercice, id=exercice_id, est_actif=True)
+    exercice = get_object_or_404(Exercice, id=exercice_id, is_active=True)
     lecon    = exercice.course_lesson
     cours    = lecon.course
 
@@ -425,7 +425,7 @@ def telecharger_certificat(request, inscription_id):
     )
 
     # Vérifier que le cours est payant
-    if inscription.course.est_gratuit:
+    if inscription.course.is_free:
         messages.error(
             request,
             _("Les certificats sont réservés aux cours payants.")
@@ -482,7 +482,7 @@ def evaluer_cours(request, cours_id):
     """Poster une évaluation pour un cours complété."""
     from .models import EvaluationCours
     
-    cours = get_object_or_404(Course, id=cours_id, est_publie=True)
+    cours = get_object_or_404(Course, id=cours_id, status='published')
     inscription = InscriptionCours.objects.filter(
         etudiant=request.user,
         course=cours,
@@ -526,12 +526,12 @@ def poser_question(request, cours_id):
     """Poser une question sur un cours."""
     from .models import QuestionFAQ
     
-    cours = get_object_or_404(Course, id=cours_id, est_publie=True)
+    cours = get_object_or_404(Course, id=cours_id, status='published')
     inscription = InscriptionCours.objects.filter(
         etudiant=request.user,
         course=cours
     ).first()
-    
+
     if not inscription:
         messages.error(request, _("Vous devez être inscrit au cours pour poser une question."))
         return redirect('cours:detail', cours_id=cours_id)

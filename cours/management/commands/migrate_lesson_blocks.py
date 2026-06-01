@@ -102,7 +102,7 @@ class Command(BaseCommand):
             total_lessons += 1
             total_blocks  += len(blocks_for_lesson)
             self.stdout.write(
-                f'  [{lecon.course.titre}] {lecon.titre} → '
+                f'  [{lecon.course.title}] {lecon.title} → '
                 f'{len(blocks_for_lesson)} bloc(s)'
             )
 
@@ -167,7 +167,7 @@ class Command(BaseCommand):
                 total_lessons += 1
                 total_blocks  += len(blocks_for_lesson)
                 self.stdout.write(
-                    f'  [{fl.formation.titre}] {fl.titre} → '
+                    f'  [{fl.formation.title}] {fl.title} → '
                     f'{len(blocks_for_lesson)} bloc(s)'
                 )
 
