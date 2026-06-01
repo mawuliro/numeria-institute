@@ -133,12 +133,12 @@
                                             {% if inscription.est_termine %}
                                                 <span class="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 text-xs font-bold px-2 py-0.5 rounded-full">✓ {% trans "Terminé" %}</span>
                                             {% endif %}
-                                            {% if not inscription.cours.est_gratuit %}
+                                            {% if not inscription.cours.is_free %}
                                                 <span class="bg-numeria-or/20 text-numeria-or text-xs font-bold px-2 py-0.5 rounded-full">{% trans "Payant" %}</span>
                                             {% endif %}
                                         </div>
                                         <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm truncate group-hover:text-numeria-bleu dark:group-hover:text-numeria-teal transition-colors">
-                                            {{ inscription.cours.titre }}
+                                            {{ inscription.cours.title }}
                                         </h3>
                                         <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">
                                             {{ inscription.cours.nombre_lecons }} leçons · Inscrit le {{ inscription.date_inscription|date:"d/m/Y" }}
@@ -159,7 +159,7 @@
                                            class="text-center bg-numeria-bleu text-white text-xs font-bold py-1.5 rounded-lg hover:bg-numeria-bleu-fonce transition-colors">
                                             {% if inscription.est_termine %}{% trans "Revoir" %}{% else %}{% trans "Continuer" %} →{% endif %}
                                         </a>
-                                        {% if inscription.est_termine and not inscription.cours.est_gratuit %}
+                                        {% if inscription.est_termine and not inscription.cours.is_free %}
                                         <a href="{% url 'cours:telecharger_certificat' inscription.id %}"
                                            class="flex items-center justify-center gap-1.5 bg-numeria-or/10 border border-numeria-or text-numeria-or font-bold py-1.5 rounded-lg hover:bg-numeria-or hover:text-numeria-bleu transition-all text-xs">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -270,13 +270,13 @@
                                 {{ cours.get_matiere_display|first|upper }}
                             </div>
                             <div class="flex-1 min-w-0">
-                                <h3 class="text-xs font-bold text-gray-800 dark:text-gray-100 group-hover:text-numeria-teal transition-colors leading-tight truncate">{{ cours.titre }}</h3>
+                                <h3 class="text-xs font-bold text-gray-800 dark:text-gray-100 group-hover:text-numeria-teal transition-colors leading-tight truncate">{{ cours.title }}</h3>
                                 <div class="flex items-center gap-1.5 mt-0.5">
                                     <span class="text-xs text-gray-400">{{ cours.nombre_lecons }} leçons</span>
-                                    {% if cours.est_gratuit %}
+                                    {% if cours.is_free %}
                                         <span class="text-xs font-bold text-green-500">· Gratuit</span>
                                     {% else %}
-                                        <span class="text-xs font-bold text-numeria-or">· {{ cours.prix }} FCFA</span>
+                                        <span class="text-xs font-bold text-numeria-or">· {{ cours.price }} FCFA</span>
                                     {% endif %}
                                 </div>
                             </div>
