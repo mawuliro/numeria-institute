@@ -173,7 +173,7 @@ class ExerciseCommon(models.Model):
     is_active = models.BooleanField(default=True, verbose_name=_('Actif'))
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='created_exercises', verbose_name=_('Créé par'),
+        related_name='%(app_label)s_%(class)s_created_by', verbose_name=_('Créé par'),
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Créé le'))
 
