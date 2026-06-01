@@ -26,28 +26,28 @@ def generer_reference():
     return f"NIM-{annee}-{code}"
 
 
-def creer_paiement(etudiant, course=None, formation=None, formation_inscription=None, paiement_seance=None, provider=’sandbox’, method=None):
+def creer_paiement(etudiant, course=None, formation=None, formation_inscription=None, paiement_seance=None, provider='sandbox', method=None):
     """
     Crée un enregistrement de paiement en attente.
-    Appelé quand l’étudiant clique sur "Payer".
+    Appelé quand l'étudiant clique sur "Payer".
     `formation_inscription` is accepted for backwards compatibility; its .formation is used.
     """
     # Normalize: accept InscriptionFormation via formation_inscription kwarg
     if formation_inscription is not None and formation is None:
         formation = formation_inscription.formation
 
-    cours = course  # Paiement model uses ‘cours’ FK
+    cours = course  # Paiement model uses 'cours' FK
 
     if not cours and not formation and not paiement_seance:
-        raise ValueError(‘Un paiement doit être associé à un cours, une formation ou une séance de mentorat.’)
+        raise ValueError('Un paiement doit être associé à un cours, une formation ou une séance de mentorat.')
 
     if sum(bool(x) for x in [cours, formation, paiement_seance]) != 1:
-        raise ValueError(‘Un paiement ne peut pas être lié à plusieurs objets en même temps.’)
+        raise ValueError('Un paiement ne peut pas être lié à plusieurs objets en même temps.')
 
     if paiement_seance and paiement_seance.seance.relation.mentee.profil.utilisateur != etudiant:
-        raise ValueError(‘La séance de mentorat doit appartenir au mentoré en cours.’)
+        raise ValueError('La séance de mentorat doit appartenir au mentoré en cours.')
 
-    # Vérifier s’il existe déjà un paiement actif pour cette séance
+    # Vérifier s'il existe déjà un paiement actif pour cette séance
     if paiement_seance is not None:
         paiement_existant = None
         try:
@@ -55,18 +55,18 @@ def creer_paiement(etudiant, course=None, formation=None, formation_inscription=
         except ObjectDoesNotExist:
             paiement_existant = None
 
-        if paiement_existant and paiement_existant.statut != ‘echoue’:
-            if paiement_existant.statut != ‘reussi’:
+        if paiement_existant and paiement_existant.statut != 'echoue':
+            if paiement_existant.statut != 'reussi':
                 paiement_existant.provider = provider
-                paiement_existant.save(update_fields=[‘provider’])
+                paiement_existant.save(update_fields=['provider'])
             return paiement_existant, False
 
-    # Vérifier qu’il n’y a pas déjà un paiement réussi pour un cours ou une formation
+    # Vérifier qu'il n'y a pas déjà un paiement réussi pour un cours ou une formation
     paiement_existant = Paiement.objects.filter(
         etudiant=etudiant,
         cours=cours,
         formation=formation,
-        statut=’reussi’
+        statut='reussi'
     ).first()
 
     if paiement_existant:
@@ -80,9 +80,9 @@ def creer_paiement(etudiant, course=None, formation=None, formation_inscription=
         montant = formation.price
 
     if method is None:
-        if provider == ‘stripe’:
-            method = ‘card’
-        elif provider in (‘mixx’, ‘moov’):
+        if provider == 'stripe':
+            method = 'card'
+        elif provider in ('mixx', 'moov'):
             method = provider
 
     paiement = Paiement.objects.create(
@@ -91,8 +91,8 @@ def creer_paiement(etudiant, course=None, formation=None, formation_inscription=
         formation=formation,
         montant_initial=montant,
         montant_final=montant,
-        devise=’XOF’,
-        statut=’en_attente’,
+        devise='XOF',
+        statut='en_attente',
         provider=provider,
         method=method,
         reference_numeria=generer_reference(),
