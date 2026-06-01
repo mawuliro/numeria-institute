@@ -58,7 +58,7 @@ def catalogue(request):
 
 def detail_cours(request, cours_id):
     """Page détail d'un cours avec ses leçons et exercices."""
-    from .models import Exercice, TentativeExercice, EvaluationCours, CertificatCours
+    # TODO: Exercice, TentativeExercice, EvaluationCours, CertificatCours removed in rebuild
     from .lesson_blocks import build_lesson_blocks, build_legacy_code_exercises
 
     cours  = get_object_or_404(Course, id=cours_id, status='published')
@@ -85,19 +85,11 @@ def detail_cours(request, cours_id):
                 ).values_list('course_lesson_id', flat=True)
             )
             
-            # Get user's evaluation if exists
-            evaluation_utilisateur = EvaluationCours.objects.filter(
-                etudiant=request.user,
-                course=cours
-            ).first()
-            
-            # Get user's certificate if the course is completed
-            if inscription.est_termine:
-                certificat_utilisateur = CertificatCours.objects.filter(
-                    etudiant=request.user,
-                    course=cours,
-                    statut__in=['gagne', 'en_cours']
-                ).first()
+            # TODO: EvaluationCours removed in rebuild — evaluation_utilisateur disabled
+            evaluation_utilisateur = None
+
+            # TODO: CertificatCours removed in rebuild — use Certificat model
+            certificat_utilisateur = None
 
     # Leçon active
     lecon_active_id = request.GET.get('lecon')
@@ -343,70 +335,13 @@ def soumettre_exercice(request, exercice_id):
     Vérifie si la réponse est correcte côté serveur.
     Le corrigé n'est JAMAIS envoyé si la réponse est fausse.
     """
-    from .models import Exercice, TentativeExercice
-    from .progress import record_submission
-
+    # TODO: Exercice / TentativeExercice removed in rebuild.
+    # This legacy QCM submission endpoint is no longer active.
+    # New submissions go through submit_mcq (MCQExercise).
     if request.method != 'POST':
         return redirect('cours:catalogue')
-
-    exercice = get_object_or_404(Exercice, id=exercice_id, is_active=True)
-    lecon    = exercice.course_lesson
-    cours    = lecon.course
-
-    # Vérifier que l'étudiant est inscrit
-    if not InscriptionCours.objects.filter(
-        etudiant=request.user,
-        course=cours
-    ).exists():
-        messages.error(request, _("Tu n'es pas inscrit à ce cours."))
-        return redirect('cours:detail', cours_id=cours.id)
-
-    # Récupérer la réponse choisie
-    reponse_choisie = request.POST.get('reponse', '').upper()
-
-    if reponse_choisie not in ['A', 'B', 'C', 'D']:
-        messages.error(request, _("Réponse invalide."))
-        # CORRIGÉ : reverse() au lieu de syntaxe template dans du Python
-        url_detail = reverse('cours:detail', kwargs={'cours_id': cours.id})
-        return redirect(f'{url_detail}?lecon={lecon.id}')
-
-    # Compter les tentatives précédentes
-    nb_tentatives = TentativeExercice.objects.filter(
-        etudiant=request.user,
-        exercice=exercice
-    ).count()
-
-    # Vérifier si la réponse est correcte
-    est_correcte = (reponse_choisie == exercice.bonne_reponse)
-
-    # Enregistrer la tentative
-    TentativeExercice.objects.create(
-        etudiant=request.user,
-        exercice=exercice,
-        reponse_choisie=reponse_choisie,
-        est_correcte=est_correcte,
-        numero_tentative=nb_tentatives + 1
-    )
-
-    record_submission(
-        request.user,
-        exercice,
-        est_correcte,
-        points_earned=exercice.points if est_correcte else 0,
-        answer_data={'selected': reponse_choisie},
-    )
-
-    # Rediriger vers la leçon avec le résultat dans l'URL
-    url_detail = reverse('cours:detail', kwargs={'cours_id': cours.id})
-    if est_correcte:
-        return redirect(
-            f'{url_detail}?lecon={lecon.id}&exercice={exercice_id}&resultat=correct'
-        )
-    else:
-        return redirect(
-            f'{url_detail}?lecon={lecon.id}&exercice={exercice_id}'
-            f'&resultat=incorrect&choisie={reponse_choisie}'
-        )
+    messages.error(request, _("Ce type d'exercice n'est plus disponible."))
+    return redirect('cours:catalogue')
     
 @login_required
 def telecharger_certificat(request, inscription_id):
@@ -480,87 +415,16 @@ def verifier_certificat(request, code):
 @login_required
 def evaluer_cours(request, cours_id):
     """Poster une évaluation pour un cours complété."""
-    from .models import EvaluationCours
-    
-    cours = get_object_or_404(Course, id=cours_id, status='published')
-    inscription = InscriptionCours.objects.filter(
-        etudiant=request.user,
-        course=cours,
-        est_termine=True
-    ).first()
-    
-    if not inscription:
-        messages.error(request, _("Vous devez terminer le cours avant de le noter."))
-        return redirect('cours:detail', cours_id=cours_id)
-    
-    if request.method == 'POST':
-        try:
-            note = int(request.POST.get('note', 0) or 0)
-            if note < 1 or note > 5:
-                messages.error(request, _("La note doit être entre 1 et 5."))
-                return redirect('cours:detail', cours_id=cours_id)
-            
-            commentaire = request.POST.get('commentaire', '').strip()
-            
-            # Créer ou mettre à jour l'évaluation
-            evaluation, created = EvaluationCours.objects.update_or_create(
-                etudiant=request.user,
-                course=cours,
-                defaults={
-                    'note': note,
-                    'commentaire': commentaire,
-                }
-            )
-            
-            messages.success(request, _("✅ Merci pour votre évaluation !"))
-        except Exception as e:
-            messages.error(request, _("Erreur lors de l'évaluation : %(err)s") % {'err': str(e)})
-        
-        return redirect('cours:detail', cours_id=cours_id)
-    
+    # TODO: EvaluationCours removed in rebuild — course evaluation disabled.
+    messages.info(request, _("L'évaluation des cours sera disponible prochainement."))
     return redirect('cours:detail', cours_id=cours_id)
 
 
 @login_required
 def poser_question(request, cours_id):
     """Poser une question sur un cours."""
-    from .models import QuestionFAQ
-    
-    cours = get_object_or_404(Course, id=cours_id, status='published')
-    inscription = InscriptionCours.objects.filter(
-        etudiant=request.user,
-        course=cours
-    ).first()
-
-    if not inscription:
-        messages.error(request, _("Vous devez être inscrit au cours pour poser une question."))
-        return redirect('cours:detail', cours_id=cours_id)
-    
-    if request.method == 'POST':
-        try:
-            question = request.POST.get('question', '').strip()
-            if not question or len(question) < 5:
-                messages.error(request, _("La question doit contenir au moins 5 caractères."))
-                return redirect('cours:detail', cours_id=cours_id)
-            if len(question) > 500:
-                messages.error(request, _("La question ne peut pas dépasser 500 caractères."))
-                return redirect('cours:detail', cours_id=cours_id)
-            
-            # Créer la question (en attente de modération)
-            QuestionFAQ.objects.create(
-                course=cours,
-                auteur=request.user,
-                question=question,
-                reponse="",  # Will be filled by admin
-                approuvee_par_admin=False
-            )
-            
-            messages.success(request, _("✅ Votre question a été soumise et sera modérée par un admin."))
-        except Exception as e:
-            messages.error(request, _("Erreur lors de la soumission : %(err)s") % {'err': str(e)})
-        
-        return redirect('cours:detail', cours_id=cours_id)
-    
+    # TODO: QuestionFAQ removed in rebuild — course Q&A disabled.
+    messages.info(request, _("La FAQ des cours sera disponible prochainement."))
     return redirect('cours:detail', cours_id=cours_id)
 
 # ─── CODE EXERCISE (Pyodide) ──────────────────────────────────────────────────
@@ -572,8 +436,9 @@ def submit_code_exercise(request, exercise_id):
     Receive a Pyodide code submission (client-side evaluation).
     Awards points via ExerciseGrade on first correct solve.
     """
-    from .models import CodeExercise, StudentCodeSubmission, ExerciseGrade
+    from .models import CodeExercise, StudentProgress, ExerciseAttempt
     from .grades import notify_exercise_solved
+    from .progress import record_submission
     from django.utils import timezone as tz
 
     exercise = get_object_or_404(CodeExercise, id=exercise_id, is_active=True)
@@ -589,49 +454,38 @@ def submit_code_exercise(request, exercise_id):
     attempt_num = int(body.get('attempt_number', 1))
     time_spent  = int(body.get('time_spent', 0))
 
-    StudentCodeSubmission.objects.create(
+    # Use StudentProgress (replaces ExerciseGrade) + ExerciseAttempt (replaces StudentCodeSubmission)
+    progress, _ = StudentProgress.objects.get_or_create(
         student=request.user,
-        exercise=exercise,
-        code_submitted=code,
-        output_received=output,
-        is_correct=is_correct,
-        attempt_number=attempt_num,
-        time_spent_seconds=time_spent,
+        exercise_type='code',
+        exercise_id=exercise.pk,
+        defaults={'attempts': 0},
     )
-
-    grade, _ = ExerciseGrade.objects.get_or_create(
-        student=request.user, exercise=exercise
-    )
-    grade.attempts_count = attempt_num
-    grade.time_spent_seconds = (grade.time_spent_seconds or 0) + time_spent
+    already_solved = progress.is_solved
+    progress.attempts = attempt_num
 
     points_earned = 0
-    already_solved = grade.is_solved
-
     if is_correct and not already_solved:
-        grade.is_solved     = True
-        grade.points_earned = exercise.points
-        grade.solved_at     = tz.now()
-        points_earned       = exercise.points
+        progress.is_solved     = True
+        progress.points_earned = exercise.points
+        progress.solved_at     = tz.now()
+        points_earned          = exercise.points
         notify_exercise_solved(request.user, exercise.title, exercise.points)
-    grade.save()
+    progress.save()
 
-    try:
-        from .progress import record_submission
-        record_submission(
-            request.user,
-            exercise,
-            is_correct,
-            points_earned=points_earned,
-            answer_data={
-                'code': code,
-                'output': output,
-                'attempt_number': attempt_num,
-                'time_spent_seconds': time_spent,
-            },
-        )
-    except Exception:
-        pass
+    ExerciseAttempt.objects.create(
+        student=request.user,
+        exercise_type='code',
+        exercise_id=exercise.pk,
+        attempt_number=attempt_num,
+        is_correct=is_correct,
+        points_earned=points_earned,
+        answer_data={
+            'code': code,
+            'output': output,
+            'time_spent_seconds': time_spent,
+        },
+    )
 
     return JsonResponse({
         'success': True,
@@ -647,14 +501,15 @@ def submit_code_exercise(request, exercise_id):
 @login_required
 def get_exercise_solution(request, exercise_id):
     """Return solution code only when the student has exhausted attempts."""
-    from .models import CodeExercise, StudentCodeSubmission
+    from .models import CodeExercise, StudentProgress
 
     exercise = get_object_or_404(CodeExercise, id=exercise_id, is_active=True)
 
     if exercise.max_attempts > 0:
-        attempts = StudentCodeSubmission.objects.filter(
-            student=request.user, exercise=exercise
-        ).count()
+        progress = StudentProgress.objects.filter(
+            student=request.user, exercise_type='code', exercise_id=exercise.pk,
+        ).first()
+        attempts = progress.attempts if progress else 0
         if attempts < exercise.max_attempts:
             return JsonResponse({'error': 'Attempts not exhausted'}, status=403)
 
@@ -670,7 +525,8 @@ def submit_mcq(request, mcq_id):
     Receive a student's MCQ answer.
     Never sends correct_choice_ids or explanation before solved/max attempts.
     """
-    from .models import MCQExercise, MCQChoice, MCQSubmission, MCQGrade
+    from .models import MCQExercise, MCQChoice, StudentProgress, ExerciseAttempt
+    from .progress import record_submission
     from django.utils import timezone as tz
 
     mcq = get_object_or_404(MCQExercise, id=mcq_id, is_active=True)
@@ -686,35 +542,38 @@ def submit_mcq(request, mcq_id):
     if len(selected_choices) != len(selected_ids):
         return JsonResponse({'error': 'Invalid choice IDs'}, status=400)
 
-    # Get or create grade record
-    grade, _ = MCQGrade.objects.get_or_create(
-        student=request.user, exercise=mcq
+    # Use StudentProgress instead of removed MCQGrade
+    progress, _ = StudentProgress.objects.get_or_create(
+        student=request.user,
+        exercise_type='mcq',
+        exercise_id=mcq.pk,
+        defaults={'attempts': 0},
     )
 
-    if grade.is_solved:
+    if progress.is_solved:
         return JsonResponse({
             'is_correct': True,
             'already_solved': True,
-            'points_earned': grade.points_earned,
-            'attempts_used': grade.attempts_count,
+            'points_earned': progress.points_earned,
+            'attempts_used': progress.attempts,
             'max_attempts': mcq.max_attempts,
         })
 
     # Check max attempts
-    if mcq.max_attempts > 0 and grade.attempts_count >= mcq.max_attempts:
+    if mcq.max_attempts > 0 and progress.attempts >= mcq.max_attempts:
         correct_ids = list(MCQChoice.objects.filter(exercise=mcq, is_correct=True).values_list('id', flat=True))
         return JsonResponse({
             'is_correct': False,
             'already_solved': False,
             'exhausted': True,
-            'attempts_used': grade.attempts_count,
+            'attempts_used': progress.attempts,
             'max_attempts': mcq.max_attempts,
             'correct_choice_ids': correct_ids,
             'explanation': mcq.explanation,
         })
 
-    grade.attempts_count += 1
-    grade.save(update_fields=['attempts_count'])
+    progress.attempts += 1
+    progress.save(update_fields=['attempts'])
 
     # Evaluate correctness
     all_correct = set(MCQChoice.objects.filter(exercise=mcq, is_correct=True).values_list('id', flat=True))
@@ -725,35 +584,23 @@ def submit_mcq(request, mcq_id):
     else:
         is_correct = (len(selected_set) == 1 and selected_set == all_correct)
 
-    # Save submission
-    sub = MCQSubmission.objects.create(
-        student=request.user, exercise=mcq,
-        is_correct=is_correct,
-        attempt_number=grade.attempts_count,
+    # Record attempt via progress helper
+    record_submission(
+        request.user,
+        mcq,
+        is_correct,
         points_earned=mcq.points if is_correct else 0,
+        answer_data={
+            'selected_choice_ids': selected_ids,
+            'attempt_number': progress.attempts,
+        },
     )
-    sub.selected_choices.set(selected_choices)
-
-    try:
-        from .progress import record_submission
-        record_submission(
-            request.user,
-            mcq,
-            is_correct,
-            points_earned=mcq.points if is_correct else 0,
-            answer_data={
-                'selected_choice_ids': selected_ids,
-                'attempt_number': grade.attempts_count,
-            },
-        )
-    except Exception:
-        pass
 
     response_data = {
         'is_correct': is_correct,
         'already_solved': False,
         'exhausted': False,
-        'attempts_used': grade.attempts_count,
+        'attempts_used': progress.attempts,
         'max_attempts': mcq.max_attempts,
         'points_earned': 0,
         'per_choice_feedback': {
@@ -762,10 +609,10 @@ def submit_mcq(request, mcq_id):
     }
 
     if is_correct:
-        grade.is_solved = True
-        grade.points_earned = mcq.points
-        grade.solved_at = tz.now()
-        grade.save()
+        progress.is_solved = True
+        progress.points_earned = mcq.points
+        progress.solved_at = tz.now()
+        progress.save()
         response_data['points_earned'] = mcq.points
         response_data['explanation'] = mcq.explanation
         # Notify
@@ -781,14 +628,14 @@ def submit_mcq(request, mcq_id):
             )
         except Exception:
             pass
-    elif mcq.max_attempts > 0 and grade.attempts_count >= mcq.max_attempts:
+    elif mcq.max_attempts > 0 and progress.attempts >= mcq.max_attempts:
         # Max attempts just reached — send answers
         response_data['exhausted'] = True
         response_data['correct_choice_ids'] = list(all_correct)
         response_data['explanation'] = mcq.explanation
     else:
         # Wrong but attempts remain — optionally send explanation
-        if mcq.show_explanation_on_wrong and mcq.explanation:
+        if getattr(mcq, 'show_explanation_on_wrong', False) and mcq.explanation:
             response_data['explanation'] = mcq.explanation
 
     return JsonResponse(response_data)
@@ -797,51 +644,69 @@ def submit_mcq(request, mcq_id):
 @login_required
 def get_mcq_status(request, mcq_id):
     """Return current grade status for the authenticated student."""
-    from .models import MCQExercise, MCQChoice, MCQGrade
+    from .models import MCQExercise, MCQChoice, StudentProgress
 
-    mcq   = get_object_or_404(MCQExercise, id=mcq_id, is_active=True)
-    grade = MCQGrade.objects.filter(student=request.user, exercise=mcq).first()
+    mcq      = get_object_or_404(MCQExercise, id=mcq_id, is_active=True)
+    progress = StudentProgress.objects.filter(
+        student=request.user, exercise_type='mcq', exercise_id=mcq.pk
+    ).first()
 
-    if not grade:
+    if not progress:
         return JsonResponse({
             'is_solved': False, 'points_earned': 0,
             'attempts_used': 0, 'correct_choice_ids': [],
         })
 
     correct_ids = []
-    if grade.is_solved or (mcq.max_attempts > 0 and grade.attempts_count >= mcq.max_attempts):
+    if progress.is_solved or (mcq.max_attempts > 0 and progress.attempts >= mcq.max_attempts):
         correct_ids = list(MCQChoice.objects.filter(exercise=mcq, is_correct=True).values_list('id', flat=True))
 
     return JsonResponse({
-        'is_solved':      grade.is_solved,
-        'points_earned':  grade.points_earned,
-        'attempts_used':  grade.attempts_count,
+        'is_solved':      progress.is_solved,
+        'points_earned':  progress.points_earned,
+        'attempts_used':  progress.attempts,
         'correct_choice_ids': correct_ids,
-        'explanation': mcq.explanation if grade.is_solved else '',
+        'explanation': mcq.explanation if progress.is_solved else '',
     })
 
 
 # ─── 5 NEW EXERCISE TYPE SUBMISSION ENDPOINTS ────────────────────────────────
 # All server-evaluated (no Pyodide). Correct answers NEVER sent to browser.
 
-def _award_and_respond(request, exercise, grade, is_correct, points_max,
+def _get_exercise_type(exercise):
+    """Map exercise class to exercise_type string."""
+    from .models import (
+        CodeExercise, MCQExercise, FillBlankExercise, TrueFalseExercise,
+        CodeOrderExercise, MatchingExercise, ShortAnswerExercise,
+    )
+    TYPE_MAP = {
+        CodeExercise: 'code', MCQExercise: 'mcq', FillBlankExercise: 'fill_blank',
+        TrueFalseExercise: 'true_false', CodeOrderExercise: 'code_order',
+        MatchingExercise: 'matching', ShortAnswerExercise: 'short_answer',
+    }
+    return TYPE_MAP.get(type(exercise), 'code')
+
+
+def _award_and_respond(request, exercise, progress, is_correct, points_max,
                        attempts_count, extra=None, answer_data=None):
-    """Common response builder for all server-evaluated exercise types."""
+    """Common response builder for all server-evaluated exercise types.
+    progress is a StudentProgress instance (replaces removed XxxGrade models).
+    """
     from .grades import notify_exercise_solved
     from .progress import record_submission
     from django.utils import timezone as tz
 
-    already_solved = grade.is_solved
-    grade.attempts_count = attempts_count
+    already_solved = progress.is_solved
+    progress.attempts = attempts_count
 
     points_earned = 0
     if is_correct and not already_solved:
-        grade.is_solved     = True
-        grade.points_earned = points_max
-        grade.solved_at     = tz.now()
-        points_earned       = points_max
+        progress.is_solved     = True
+        progress.points_earned = points_max
+        progress.solved_at     = tz.now()
+        points_earned          = points_max
         notify_exercise_solved(request.user, exercise.title, points_max)
-    grade.save()
+    progress.save()
 
     record_submission(
         request.user, exercise, is_correct,
@@ -855,11 +720,11 @@ def _award_and_respond(request, exercise, grade, is_correct, points_max,
     show_explanation = is_correct or exhausted or already_solved
 
     data = {
-        'is_correct': is_correct,
+        'is_correct':    is_correct,
         'points_earned': points_earned,
         'already_solved': already_solved,
         'attempts_used': attempts_count,
-        'max_attempts': exercise.max_attempts if hasattr(exercise, 'max_attempts') else 0,
+        'max_attempts':  exercise.max_attempts if hasattr(exercise, 'max_attempts') else 0,
         'explanation': (
             getattr(exercise, 'explanation', '') or ''
         ) if show_explanation else '',
@@ -869,10 +734,23 @@ def _award_and_respond(request, exercise, grade, is_correct, points_max,
     return JsonResponse(data)
 
 
+def _get_progress(user, exercise):
+    """Get or create a StudentProgress record for the given exercise."""
+    from .models import StudentProgress
+    ex_type = _get_exercise_type(exercise)
+    progress, _ = StudentProgress.objects.get_or_create(
+        student=user,
+        exercise_type=ex_type,
+        exercise_id=exercise.pk,
+        defaults={'attempts': 0},
+    )
+    return progress
+
+
 @login_required
 @require_POST
 def submit_fill_blank(request, exercise_id):
-    from .models import FillBlankExercise, FillBlankGrade
+    from .models import FillBlankExercise
     ex = get_object_or_404(FillBlankExercise, id=exercise_id, is_active=True)
     try:
         submitted = json.loads(request.body).get('answers', {})
@@ -894,18 +772,18 @@ def submit_fill_blank(request, exercise_id):
         if not ok:
             all_correct = False
 
-    grade, _ = FillBlankGrade.objects.get_or_create(student=request.user, exercise=ex)
-    grade.attempts_count = (grade.attempts_count or 0) + 1
+    progress = _get_progress(request.user, ex)
+    progress.attempts = (progress.attempts or 0) + 1
     return _award_and_respond(
-        request, ex, grade, all_correct, ex.points,
-        grade.attempts_count, extra={'blank_results': results}
+        request, ex, progress, all_correct, ex.points,
+        progress.attempts, extra={'blank_results': results}
     )
 
 
 @login_required
 @require_POST
 def submit_true_false(request, exercise_id):
-    from .models import TrueFalseExercise, TrueFalseGrade
+    from .models import TrueFalseExercise
     ex = get_object_or_404(TrueFalseExercise, id=exercise_id, is_active=True)
     try:
         submitted = json.loads(request.body).get('answers', [])
@@ -927,11 +805,11 @@ def submit_true_false(request, exercise_id):
     points_earned_partial = ex.points_per_statement * correct_count
     is_correct   = (correct_count == len(statements))
 
-    grade, _ = TrueFalseGrade.objects.get_or_create(student=request.user, exercise=ex)
-    grade.attempts_count = (grade.attempts_count or 0) + 1
+    progress = _get_progress(request.user, ex)
+    progress.attempts = (progress.attempts or 0) + 1
     return _award_and_respond(
-        request, ex, grade, is_correct, points_max,
-        grade.attempts_count,
+        request, ex, progress, is_correct, points_max,
+        progress.attempts,
         extra={'feedback': feedback, 'points_partial': points_earned_partial}
     )
 
@@ -939,7 +817,7 @@ def submit_true_false(request, exercise_id):
 @login_required
 @require_POST
 def submit_code_order(request, exercise_id):
-    from .models import CodeOrderExercise, CodeOrderGrade
+    from .models import CodeOrderExercise
     ex = get_object_or_404(CodeOrderExercise, id=exercise_id, is_active=True)
     try:
         submitted_order = json.loads(request.body).get('submitted_order', [])
@@ -949,18 +827,18 @@ def submit_code_order(request, exercise_id):
     correct = list(range(len(ex.correct_order)))   # indices 0..n-1
     is_correct = (list(submitted_order) == correct)
 
-    grade, _ = CodeOrderGrade.objects.get_or_create(student=request.user, exercise=ex)
-    grade.attempts_count = (grade.attempts_count or 0) + 1
+    progress = _get_progress(request.user, ex)
+    progress.attempts = (progress.attempts or 0) + 1
     extra = {}
     if is_correct:
         extra['correct_code'] = '\n'.join(ex.correct_order)
-    return _award_and_respond(request, ex, grade, is_correct, ex.points, grade.attempts_count, extra=extra)
+    return _award_and_respond(request, ex, progress, is_correct, ex.points, progress.attempts, extra=extra)
 
 
 @login_required
 @require_POST
 def submit_matching(request, exercise_id):
-    from .models import MatchingExercise, MatchingGrade
+    from .models import MatchingExercise
     ex = get_object_or_404(MatchingExercise, id=exercise_id, is_active=True)
     try:
         submitted_pairs = json.loads(request.body).get('pairs', [])
@@ -978,15 +856,15 @@ def submit_matching(request, exercise_id):
             if li == ri:
                 correct_count += 1
 
-    total        = len(pairs)
-    is_correct   = (correct_count == total)
-    points_max   = ex.points
+    total          = len(pairs)
+    is_correct     = (correct_count == total)
+    points_max     = ex.points
     points_partial = round(ex.points * correct_count / total) if total else 0
 
-    grade, _ = MatchingGrade.objects.get_or_create(student=request.user, exercise=ex)
-    grade.attempts_count = (grade.attempts_count or 0) + 1
+    progress = _get_progress(request.user, ex)
+    progress.attempts = (progress.attempts or 0) + 1
     return _award_and_respond(
-        request, ex, grade, is_correct, points_max, grade.attempts_count,
+        request, ex, progress, is_correct, points_max, progress.attempts,
         extra={'correct_count': correct_count, 'total': total, 'points_partial': points_partial}
     )
 
@@ -994,14 +872,14 @@ def submit_matching(request, exercise_id):
 @login_required
 @require_POST
 def submit_short_answer(request, exercise_id):
-    from .models import ShortAnswerExercise, ShortAnswerGrade
+    from .models import ShortAnswerExercise
     ex = get_object_or_404(ShortAnswerExercise, id=exercise_id, is_active=True)
     try:
         answer = json.loads(request.body).get('answer', '')
     except Exception:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
-    if ex.strip_whitespace:
+    if getattr(ex, 'strip_whitespace', True):
         answer = answer.strip()
     accepted = [a.strip() for a in (ex.accepted_answers or [])]
     if not ex.case_sensitive:
@@ -1010,9 +888,9 @@ def submit_short_answer(request, exercise_id):
 
     is_correct = answer in accepted
 
-    grade, _ = ShortAnswerGrade.objects.get_or_create(student=request.user, exercise=ex)
-    grade.attempts_count = (grade.attempts_count or 0) + 1
+    progress = _get_progress(request.user, ex)
+    progress.attempts = (progress.attempts or 0) + 1
     extra = {}
     if is_correct and ex.explanation:
         extra['explanation'] = ex.explanation
-    return _award_and_respond(request, ex, grade, is_correct, ex.points, grade.attempts_count, extra=extra)
+    return _award_and_respond(request, ex, progress, is_correct, ex.points, progress.attempts, extra=extra)

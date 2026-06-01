@@ -4,13 +4,13 @@ import json
 import random
 
 from .models import (
-    LessonBlock, CodeExercise, StudentCodeSubmission,
-    MCQExercise, MCQGrade, MCQChoice,
-    FillBlankExercise, FillBlankGrade,
-    TrueFalseExercise, TrueFalseGrade,
-    CodeOrderExercise, CodeOrderGrade,
-    MatchingExercise, MatchingGrade,
-    ShortAnswerExercise, ShortAnswerGrade,
+    LessonBlock, CodeExercise, StudentProgress, ExerciseAttempt,
+    MCQExercise, MCQChoice,
+    FillBlankExercise,
+    TrueFalseExercise,
+    CodeOrderExercise,
+    MatchingExercise,
+    ShortAnswerExercise,
     convertir_url_youtube,
 )
 
@@ -54,8 +54,9 @@ def build_legacy_code_exercises(*, course_lesson=None, formation_lesson=None, us
     solved_ids = set()
     if user:
         solved_ids = set(
-            StudentCodeSubmission.objects.filter(
-                student=user, is_correct=True, exercise__in=raw_exs,
+            StudentProgress.objects.filter(
+                student=user, exercise_type='code', is_solved=True,
+                exercise_id__in=raw_exs.values_list('id', flat=True),
             ).values_list('exercise_id', flat=True)
         )
 
