@@ -380,7 +380,47 @@
     }
   }
 
+  /**
+   * Create a typed exercise (fill_blank, true_false, code_order, matching,
+   * short_answer) and link it to the existing block. Reloads the block list.
+   */
+  async function lbCreateTypedExercise(blockId, exKind, lessonId, lessonType) {
+    var title = (document.getElementById('typed-ex-title-' + blockId) || {}).value || '';
+    title = title.trim();
+    if (!title) { if (window.nbToast) nbToast('Le titre est obligatoire.', 'error'); return; }
+    var base = lessonType === 'formation'
+      ? '/fr/admin-panel/formation-lessons/'
+      : '/fr/admin-panel/lessons/';
+    var url = base + lessonId + '/exercise/create/' + exKind + '/';
+    var body = {
+      title: title,
+      instructions: (document.getElementById('typed-ex-instr-' + blockId) || {}).value || '',
+      difficulty: (document.getElementById('typed-ex-diff-' + blockId) || {}).value || 'easy',
+      points: (document.getElementById('typed-ex-pts-' + blockId) || {}).value || 5,
+    };
+    var r = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+      body: JSON.stringify(body),
+    });
+    var d = await r.json();
+    if (d.success) {
+      if (window.nbToast) nbToast('✅ Exercice «' + d.exercise_title + '» créé et lié.', 'success');
+      // The new endpoint creates its own block; remove the original empty block
+      // so we don't leave a duplicate, then reload the list.
+      try {
+        await fetch('/fr/admin-panel/blocks/' + blockId + '/delete/', {
+          method: 'POST', headers: { 'X-CSRFToken': CSRF },
+        });
+      } catch (e) { /* ignore */ }
+      await loadLessonBlocks(lessonId, lessonType);
+    } else if (window.nbToast) {
+      nbToast(d.error || 'Erreur lors de la création.', 'error');
+    }
+  }
+
   /* ── Export globals ────────────────────────────────────────────────────── */
+  window.lbCreateTypedExercise = lbCreateTypedExercise;
   window.loadLessonBlocks = loadLessonBlocks;
   window.lbInitAll = lbInitAll;
   window.lbSaveBlock = lbSaveBlock;

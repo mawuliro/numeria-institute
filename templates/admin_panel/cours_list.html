@@ -93,9 +93,9 @@
   <!-- Sort -->
   <select onchange="applyFilter('sort', this.value)"
           class="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white ml-auto">
-    <option value="-date_creation" {% if sort == '-date_creation' %}selected{% endif %}>Plus récents</option>
-    <option value="-nb_inscrits"   {% if sort == '-nb_inscrits'   %}selected{% endif %}>Plus inscrits</option>
-    <option value="titre"          {% if sort == 'titre'          %}selected{% endif %}>Alphabétique</option>
+    <option value="-created_at" {% if sort == '-created_at' %}selected{% endif %}>Plus récents</option>
+    <option value="-nb_inscrits" {% if sort == '-nb_inscrits' %}selected{% endif %}>Plus inscrits</option>
+    <option value="title" {% if sort == 'title' %}selected{% endif %}>Alphabétique</option>
   </select>
 </div>
 
@@ -126,9 +126,8 @@
       {% endif %}
       <!-- Status badge -->
       <span class="absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full
-        {% if cours.status == 'publie' %}bg-green-500 text-white
-        {% elif cours.status == 'revision' %}bg-yellow-400 text-slate-900
-        {% elif cours.status == 'archive' %}bg-red-100 text-red-700
+        {% if cours.status == 'published' %}bg-green-500 text-white
+        {% elif cours.status == 'archived' %}bg-red-100 text-red-700
         {% else %}bg-slate-200 text-slate-600{% endif %}">
         {{ cours.get_status_display }}
       </span>

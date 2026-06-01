@@ -151,10 +151,8 @@ def formation_delete(request, slug):
 
 @staff_only
 def formation_preview(request, slug):
-    import base64
     from formation.models import Formation, FormationLesson
-    from cours.models import LessonBlock, MCQExercise
-    from django.utils import timezone as _tz
+    from .block_preview import build_block_previews
 
     formation    = get_object_or_404(Formation, slug=slug)
     lesson_id    = request.GET.get('lecon')
@@ -167,9 +165,7 @@ def formation_preview(request, slug):
     # Build LessonBlock data for the active lesson (staff preview — no grade gating)
     lesson_blocks_data = []
     if lecon_active:
-        blocks_qs = LessonBlock.objects.filter(formation_lesson=lecon_active).order_by('order')
-        for block in blocks_qs:
-            lesson_blocks_data.append(block.get_payload())
+        lesson_blocks_data = build_block_previews(formation_lesson=lecon_active)
 
     return render(request, 'admin_panel/formation_preview.html', {
         'formation':         formation,

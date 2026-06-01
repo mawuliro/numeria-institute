@@ -51,9 +51,9 @@
   </div>
   <select onchange="window.location.href='?sort='+this.value+'{% if q %}&q={{ q }}{% endif %}{% if status_f %}&status={{ status_f }}{% endif %}'"
           class="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white ml-auto">
-    <option value="-date_creation" {% if sort == '-date_creation' %}selected{% endif %}>Plus récentes</option>
-    <option value="-nb_inscrits"   {% if sort == '-nb_inscrits'   %}selected{% endif %}>Plus inscrites</option>
-    <option value="titre"          {% if sort == 'titre'          %}selected{% endif %}>Alphabétique</option>
+    <option value="-created_at" {% if sort == '-created_at' %}selected{% endif %}>Plus récentes</option>
+    <option value="-nb_inscrits" {% if sort == '-nb_inscrits' %}selected{% endif %}>Plus inscrites</option>
+    <option value="title" {% if sort == 'title' %}selected{% endif %}>Alphabétique</option>
   </select>
 </div>
 
@@ -76,8 +76,8 @@
     </div>
     <div class="p-4 flex flex-col flex-1">
       <div class="flex flex-wrap gap-1 mb-2">
-        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ f.get_type_formation_display }}</span>
-        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ f.get_niveau_display }}</span>
+        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ f.get_category_display }}</span>
+        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ f.get_level_display }}</span>
       </div>
       <h3 class="font-bold text-slate-800 text-sm leading-snug mb-1 line-clamp-2">{{ f.title }}</h3>
       <p class="text-xs text-slate-500 line-clamp-2 flex-1 mb-3">{{ f.short_description }}</p>
@@ -85,7 +85,7 @@
         <span>📦 {{ f.nb_modules }}</span>
         <span>📄 {{ f.nb_lessons }}</span>
         <span>👥 {{ f.nb_inscrits }}</span>
-        <span class="ml-auto">{{ f.date_modification|date:"d/m/y" }}</span>
+        <span class="ml-auto">{{ f.updated_at|date:"d/m/y" }}</span>
       </div>
       <div class="flex gap-2 flex-wrap">
         <a href="{% url 'admin_panel:formation_edit' f.slug %}"

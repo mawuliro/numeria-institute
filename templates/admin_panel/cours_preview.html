@@ -61,7 +61,7 @@
         {% for lecon in module.lessons.all %}
         <a href="?lecon={{ lecon.id }}"
            class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs {% if lecon_active.id == lecon.id %}bg-sky-50 text-sky-700 font-medium{% else %}text-slate-600 hover:bg-slate-50{% endif %}">
-          <span>{% if lecon.content_type == 'video' %}🎥{% else %}📄{% endif %}</span>
+          <span>📄</span>
           {{ lecon.title }}
           {% if lecon.is_free_preview %}<span class="text-green-500 ml-auto">🔓</span>{% endif %}
         </a>
@@ -74,19 +74,10 @@
     <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6">
       {% if lecon_active %}
       <h2 class="text-xl font-bold text-slate-800 mb-4">{{ lecon_active.title }}</h2>
-      {% if has_blocks and lesson_blocks %}
-        {% include 'cours/components/lesson_blocks_render.html' with lesson_blocks=lesson_blocks %}
+      {% if lesson_blocks %}
+        {% include 'admin_panel/blocks/block_preview.html' with lesson_blocks=lesson_blocks %}
       {% else %}
-        {% if lecon_active.video_youtube %}
-        <div class="mb-4 rounded-xl overflow-hidden aspect-video bg-black">
-          <iframe src="{{ lecon_active.get_video_embed_url }}" class="w-full h-full" allowfullscreen></iframe>
-        </div>
-        {% endif %}
-        {% if lecon_active.contenu %}
-        <div class="prose prose-sm max-w-none text-slate-700 leading-relaxed">
-          {{ lecon_active.contenu|render_content }}
-        </div>
-        {% endif %}
+        <p class="text-slate-400 text-sm">Cette leçon n'a pas encore de contenu.</p>
       {% endif %}
       {% else %}
       <p class="text-slate-400 text-sm">Sélectionne une leçon dans le plan.</p>

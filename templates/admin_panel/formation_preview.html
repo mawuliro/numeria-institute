@@ -25,13 +25,13 @@
   <div class="bg-white rounded-2xl border border-slate-200 p-6 mb-5">
     {% if formation.thumbnail %}<img src="{{ formation.thumbnail.url }}" class="w-full max-h-48 object-cover rounded-xl mb-4">{% endif %}
     <div class="flex gap-2 mb-3">
-      <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ formation.get_type_formation_display }}</span>
-      <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ formation.get_niveau_display }}</span>
+      <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ formation.get_category_display }}</span>
+      <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ formation.get_level_display }}</span>
     </div>
     <h1 class="text-2xl font-bold text-slate-800 mb-2">{{ formation.title }}</h1>
     <p class="text-slate-600">{{ formation.short_description }}</p>
-    {% if formation.description_longue %}
-    <div class="mt-4 text-sm text-slate-700 prose prose-sm max-w-none">{{ formation.description_longue|render_content }}</div>
+    {% if formation.description %}
+    <div class="mt-4 text-sm text-slate-700 prose prose-sm max-w-none">{{ formation.description|linebreaks }}</div>
     {% endif %}
   </div>
 
@@ -43,7 +43,7 @@
         <div class="font-semibold text-slate-700 text-sm mb-1">📁 {{ module.title }}</div>
         {% for lesson in module.lessons.all %}
         <a href="?lecon={{ lesson.id }}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs {% if lecon_active.id == lesson.id %}bg-sky-50 text-sky-700 font-medium{% else %}text-slate-600 hover:bg-slate-50{% endif %}">
-          <span>{% if lesson.content_type == 'video' %}🎥{% else %}📄{% endif %}</span>{{ lesson.title }}
+          <span>📄</span>{{ lesson.title }}
           {% if lesson.is_free_preview %}<span class="text-green-500 ml-auto">🔓</span>{% endif %}
         </a>
         {% endfor %}
@@ -54,25 +54,14 @@
       {% if lecon_active %}
       <h2 class="text-xl font-bold text-slate-800 mb-4">{{ lecon_active.title }}</h2>
 
-      {% if has_blocks and lesson_blocks %}
-        {# ── New block-based rendering ── #}
-        {% include 'cours/components/lesson_blocks_render.html' with lesson_blocks=lesson_blocks %}
+      {% if lesson_blocks %}
+        {% include 'admin_panel/blocks/block_preview.html' with lesson_blocks=lesson_blocks %}
       {% else %}
-        {# ── Legacy: raw contenu + video_url ── #}
-        {% if lecon_active.video_url %}
-        <div class="mb-4 rounded-xl overflow-hidden aspect-video bg-black">
-          <iframe src="{{ lecon_active.video_url }}" class="w-full h-full" allowfullscreen></iframe>
-        </div>
-        {% endif %}
-        {% if lecon_active.contenu %}
-        <div class="prose prose-sm max-w-none text-slate-700 leading-relaxed">{{ lecon_active.contenu|render_content }}</div>
-        {% else %}
         <div class="text-slate-400 text-sm py-8 text-center">
           <div class="text-3xl mb-2">📭</div>
           <p>Cette leçon n'a pas encore de contenu.</p>
           <p class="text-xs mt-1">Ajoutez des blocs depuis l'éditeur de leçon.</p>
         </div>
-        {% endif %}
       {% endif %}
 
       {% else %}<p class="text-slate-400 text-sm">Sélectionne une leçon dans le plan à gauche.</p>{% endif %}

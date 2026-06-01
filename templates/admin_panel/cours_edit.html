@@ -7,9 +7,8 @@
 <p class="text-xs text-slate-400 mt-0.5">
   <a href="{% url 'admin_panel:cours_list' %}" class="hover:underline">Cours</a> ›
   <span class="
-    {% if cours.status == 'publie' %}text-green-600
-    {% elif cours.status == 'revision' %}text-yellow-600
-    {% elif cours.status == 'archive' %}text-red-600
+    {% if cours.status == 'published' %}text-green-600
+    {% elif cours.status == 'archived' %}text-red-600
     {% else %}text-slate-500{% endif %}
     font-medium">{{ cours.get_status_display }}</span>
 </p>
@@ -496,7 +495,7 @@ async function saveStep4(silent) {
 }
 
 async function publishCours() {
-  document.getElementById('f-status').value = 'publie';
+  document.getElementById('f-status').value = 'published';
   await saveStep4();
   await saveStep3();
   setAutosaveText('🚀 Publié ✓');

@@ -124,6 +124,7 @@ urlpatterns = [
     path('lessons/<int:lesson_id>/blocks/reorder/', views_blocks.reorder_lesson_blocks, name='lesson_blocks_reorder'),
     path('lessons/<int:lesson_id>/exercises/', views_blocks.get_lesson_exercises, name='lesson_exercises'),
     path('lessons/<int:lesson_id>/blocks/<int:block_id>/create-exercise/', views_blocks.create_exercise_from_block, name='lesson_block_create_exercise'),
+    path('lessons/<int:lesson_id>/exercise/create/<str:ex_type>/', views_blocks.create_exercise_inline, name='lesson_exercise_create'),
     # Formation lesson blocks
     path('formation-lessons/<int:lesson_id>/blocks/', views_blocks.get_formation_lesson_blocks, name='flesson_blocks'),
     path('formation-lessons/<int:lesson_id>/blocks/add/', views_blocks.add_formation_lesson_block, name='flesson_block_add'),
@@ -134,6 +135,7 @@ urlpatterns = [
     # Formation lesson exercise API
     path('formation-lessons/<int:lesson_id>/exercises/', views_blocks.get_formation_lesson_exercises, name='flesson_exercises'),
     path('formation-lessons/<int:lesson_id>/blocks/<int:block_id>/create-exercise/', views_blocks.create_exercise_from_block, name='flesson_block_create_exercise'),
+    path('formation-lessons/<int:lesson_id>/exercise/create/<str:ex_type>/', views_blocks.create_exercise_inline_formation, name='flesson_exercise_create'),
     # MCQ block management
     path('blocks/<int:block_id>/create-mcq/', views_blocks.create_mcq_from_block, name='block_create_mcq'),
     path('api/lessons/<int:lesson_id>/mcqs/', views_blocks.get_lesson_mcqs, name='api_lesson_mcqs'),
