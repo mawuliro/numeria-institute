@@ -16,7 +16,7 @@ def _get_exercises_for_block_context(course_lesson=None, formation_lesson=None):
         CodeOrderExercise, MatchingExercise, ShortAnswerExercise,
     )
     result = {}
-    kw = {'course_lesson': lecon} if lecon else {'formation_lesson': formation_lesson}
+    kw = {'course_lesson': course_lesson} if course_lesson else {'formation_lesson': formation_lesson}
     result['code']         = list(CodeExercise.objects.filter(is_active=True, **kw))
     result['mcq']          = list(MCQExercise.objects.filter(is_active=True, **kw))
     result['fill_blank']   = list(FillBlankExercise.objects.filter(is_active=True, **kw))
@@ -29,7 +29,7 @@ def _get_exercises_for_block_context(course_lesson=None, formation_lesson=None):
 
 def get_lesson_total_points(course_lesson=None, formation_lesson=None):
     """Return the maximum points achievable for a lesson across all exercise types."""
-    exercises = _get_exercises_for_block_context(lecon, formation_lesson)
+    exercises = _get_exercises_for_block_context(course_lesson, formation_lesson)
     total = 0
     for exs in exercises.values():
         for ex in exs:
@@ -43,29 +43,36 @@ def get_lesson_total_points(course_lesson=None, formation_lesson=None):
 def get_student_lesson_points(student, course_lesson=None, formation_lesson=None):
     """Return points earned by student on all exercise types in a lesson."""
     from .models import (
-        ExerciseGrade, MCQGrade,
-        FillBlankGrade, TrueFalseGrade,
-        CodeOrderGrade, MatchingGrade, ShortAnswerGrade,
+        CodeExercise, MCQExercise,
+        FillBlankExercise, TrueFalseExercise,
+        CodeOrderExercise, MatchingExercise, ShortAnswerExercise,
+        StudentProgress,
     )
-    kw_ex  = {'course_lesson': lecon} if lecon else {'formation_lesson': formation_lesson}
-    kw_fex = {'exercise__lecon': lecon} if lecon else {'exercise__formation_lesson': formation_lesson}
-    kw_mcq = {'exercise__lesson': lecon} if lecon else {'exercise__formation_lesson': formation_lesson}
+
+    filter_kw = {'course_lesson': course_lesson} if course_lesson else {'formation_lesson': formation_lesson}
+    exercise_models = {
+        'code':         CodeExercise,
+        'mcq':          MCQExercise,
+        'fill_blank':   FillBlankExercise,
+        'true_false':   TrueFalseExercise,
+        'code_order':   CodeOrderExercise,
+        'matching':     MatchingExercise,
+        'short_answer': ShortAnswerExercise,
+    }
 
     total = 0
-    for GradeModel, fk_kw in [
-        (ExerciseGrade,    {'exercise__lecon': lecon} if lecon else {'exercise__formation_lesson': formation_lesson}),
-        (MCQGrade,         kw_mcq),
-        (FillBlankGrade,   kw_fex),
-        (TrueFalseGrade,   kw_fex),
-        (CodeOrderGrade,   kw_fex),
-        (MatchingGrade,    kw_fex),
-        (ShortAnswerGrade, kw_fex),
-    ]:
-        try:
-            agg = GradeModel.objects.filter(student=student, is_solved=True, **fk_kw).aggregate(t=Sum('points_earned'))
-            total += agg['t'] or 0
-        except Exception:
-            pass
+    for ex_type, model in exercise_models.items():
+        exercise_ids = list(model.objects.filter(is_active=True, **filter_kw).values_list('id', flat=True))
+        if not exercise_ids:
+            continue
+        agg = StudentProgress.objects.filter(
+            student=student,
+            exercise_type=ex_type,
+            exercise_id__in=exercise_ids,
+            is_solved=True,
+        ).aggregate(t=Sum('points_earned'))
+        total += agg['t'] or 0
+
     return total
 
 

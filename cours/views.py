@@ -12,7 +12,7 @@ import uuid
 
 logger = logging.getLogger(__name__)
 
-from .models import Course, InscriptionCours, CourseLesson, ProgressionLecon
+from .models import Course, InscriptionCours, CourseLesson, ProgressionLecon, StudentProgress
 
 
 def catalogue(request):
@@ -130,11 +130,12 @@ def detail_cours(request, cours_id):
         exercices = lecon_active.exercices.filter(est_actif=True)
 
         exercices_reussis_ids = list(
-            TentativeExercice.objects.filter(
-                etudiant=request.user,
-                exercice__course_lesson=lecon_active,
-                est_correcte=True
-            ).values_list('exercice_id', flat=True)
+            StudentProgress.objects.filter(
+                student=request.user,
+                exercise_type='mcq',
+                exercise_id__in=lecon_active.exercices.values_list('id', flat=True),
+                is_solved=True
+            ).values_list('exercise_id', flat=True)
         )
 
         resultat_exercice = request.GET.get('resultat')
@@ -343,6 +344,7 @@ def soumettre_exercice(request, exercice_id):
     Le corrigé n'est JAMAIS envoyé si la réponse est fausse.
     """
     from .models import Exercice, TentativeExercice
+    from .progress import record_submission
 
     if request.method != 'POST':
         return redirect('cours:catalogue')
@@ -384,6 +386,14 @@ def soumettre_exercice(request, exercice_id):
         reponse_choisie=reponse_choisie,
         est_correcte=est_correcte,
         numero_tentative=nb_tentatives + 1
+    )
+
+    record_submission(
+        request.user,
+        exercice,
+        est_correcte,
+        points_earned=exercice.points if est_correcte else 0,
+        answer_data={'selected': reponse_choisie},
     )
 
     # Rediriger vers la leçon avec le résultat dans l'URL
@@ -606,6 +616,23 @@ def submit_code_exercise(request, exercise_id):
         notify_exercise_solved(request.user, exercise.title, exercise.points)
     grade.save()
 
+    try:
+        from .progress import record_submission
+        record_submission(
+            request.user,
+            exercise,
+            is_correct,
+            points_earned=points_earned,
+            answer_data={
+                'code': code,
+                'output': output,
+                'attempt_number': attempt_num,
+                'time_spent_seconds': time_spent,
+            },
+        )
+    except Exception:
+        pass
+
     return JsonResponse({
         'success': True,
         'points_earned': points_earned,
@@ -706,6 +733,21 @@ def submit_mcq(request, mcq_id):
         points_earned=mcq.points if is_correct else 0,
     )
     sub.selected_choices.set(selected_choices)
+
+    try:
+        from .progress import record_submission
+        record_submission(
+            request.user,
+            mcq,
+            is_correct,
+            points_earned=mcq.points if is_correct else 0,
+            answer_data={
+                'selected_choice_ids': selected_ids,
+                'attempt_number': grade.attempts_count,
+            },
+        )
+    except Exception:
+        pass
 
     response_data = {
         'is_correct': is_correct,

@@ -4,6 +4,7 @@ from django.utils import timezone
 EXERCISE_TYPE_MAP = {
     'CodeExercise': 'code',
     'MCQExercise': 'mcq',
+    'Exercice': 'mcq',
     'FillBlankExercise': 'fill_blank',
     'TrueFalseExercise': 'true_false',
     'CodeOrderExercise': 'code_order',

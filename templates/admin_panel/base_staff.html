@@ -29,6 +29,11 @@
     #staff-sidebar { transition: transform 0.25s ease; }
     .stat-card { transition: box-shadow 0.2s; }
     .stat-card:hover { box-shadow: 0 4px 20px rgba(14,165,233,0.18); }
+    .sidebar-link { transition: background 0.2s, color 0.2s, border-color 0.2s; }
+    .sidebar-link:hover { background: rgba(255,255,255,0.12); }
+    .sidebar-link.active { background: rgba(14,165,233,0.16); color: white; border-left: 3px solid #0ea5e9; }
+    .sidebar-heading { padding: 0.8rem 1.25rem 0.5rem; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(148,163,184,1); }
+    .sidebar-separator { height: 1px; background: rgba(255,255,255,0.12); margin: 0.75rem 0; }
     /* Modal overlay */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
@@ -144,73 +149,82 @@
     {% load i18n %}
     <!-- Dashboard -->
     <a href="{% url 'admin_panel:dashboard' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if request.resolver_match.url_name == 'dashboard' %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if request.resolver_match.url_name == 'dashboard' %}active{% else %}text-slate-300{% endif %}">
       <span>🏠</span> Dashboard
     </a>
 
-    <!-- ── CONTENU ── -->
-    <div class="px-5 py-1.5 text-slate-500 text-[10px] uppercase tracking-wider mt-2">Contenu</div>
+    <div class="sidebar-heading">Création</div>
+    <a href="{% url 'admin_panel:cours_create' %}"
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if request.resolver_match.url_name == 'cours_create' %}active{% else %}text-slate-300{% endif %}">
+      <span>➕</span> Nouveau cours
+    </a>
+    <a href="{% url 'admin_panel:formation_create' %}"
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if request.resolver_match.url_name == 'formation_create' %}active{% else %}text-slate-300{% endif %}">
+      <span>➕</span> Nouvelle formation
+    </a>
+
+    <div class="sidebar-separator"></div>
+    <div class="sidebar-heading">Contenu</div>
 
     <a href="{% url 'admin_panel:cours_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'cours' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'cours' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
       <span>📚</span> Cours
       {% if sidebar_draft_courses %}<span class="ml-auto bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_draft_courses }}</span>{% endif %}
     </a>
 
     <a href="{% url 'admin_panel:formation_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'formation' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'formation' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
       <span>🎓</span> Formations
       {% if sidebar_draft_formations %}<span class="ml-auto bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_draft_formations }}</span>{% endif %}
     </a>
 
     <a href="{% url 'admin_panel:blog_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'blog' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'blog' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
       <span>📝</span> Blog / Articles
     </a>
 
     <a href="{% url 'admin_panel:media_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'media' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'media' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
       <span>🖼️</span> Médiathèque
     </a>
 
-    <!-- ── ÉTUDIANTS ── -->
-    <div class="px-5 py-1.5 text-slate-500 text-[10px] uppercase tracking-wider mt-2">Étudiants</div>
+    <div class="sidebar-heading">Apprenants</div>
 
     <a href="{% url 'admin_panel:contacts_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'contact' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'contact' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
       <span>📩</span> Contacts
       {% if sidebar_unread_contacts %}<span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_unread_contacts }}</span>{% endif %}
     </a>
 
     <a href="{% url 'admin_panel:candidatures_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'candidature' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'candidature' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
       <span>📋</span> Candidatures
       {% if sidebar_pending_candidacies %}<span class="ml-auto bg-yellow-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_pending_candidacies }}</span>{% endif %}
     </a>
 
     <a href="{% url 'mentorat:applications_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 text-slate-300">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'applications_list' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
       <span>🎓</span> Candidatures Mentor
     </a>
 
     <a href="{% url 'admin_panel:mentorat_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'mentorat' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'mentorat' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
       <span>🤝</span> Mentorat
       {% if sidebar_pending_mentorships %}<span class="ml-auto bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_pending_mentorships }}</span>{% endif %}
     </a>
 
     <a href="{% url 'admin_panel:users_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'user' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'user' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
       <span>👥</span> Utilisateurs
     </a>
 
     <a href="{% url 'admin_panel:exercises_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'exercise' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'exercise' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
       <span>💻</span> Exercices code
     </a>
 
     <a href="{% url 'admin_panel:mcq_list' %}"
-       class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if 'mcq' in request.resolver_match.url_name %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
+       class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'mcq' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
       <span>🔘</span> Exercices QCM
     </a>
 

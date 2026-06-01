@@ -144,7 +144,12 @@ class Formation(models.Model):
     
     def get_absolute_url(self):
         return reverse('formation:detail', kwargs={'slug': self.slug})
-    
+
+    @property
+    def lecons(self):
+        """Backward-compatible alias for formation lessons."""
+        return self.formation_lessons.all()
+
     def sessions_actives(self):
         """Sessions ouvertes aux inscriptions."""
         return self.sessions.filter(

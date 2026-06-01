@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
@@ -155,25 +156,43 @@ class LessonMixin:
         return f"{getattr(self, 'duree_minutes', 0)} min"
 
 
-class ExerciseCommon(models.Model):
+class BaseExercise(models.Model):
     """Common fields and helpers for all exercise types."""
 
-    DIFFICULTY_CHOICES = [
+    DIFFICULTY = [
         ('easy', _('Facile')),
         ('medium', _('Moyen')),
         ('hard', _('Difficile')),
     ]
 
+    course_lesson = models.ForeignKey(
+        'CourseLesson', on_delete=models.CASCADE,
+        null=True, blank=True, related_name='%(class)s_set',
+    )
+    formation_lesson = models.ForeignKey(
+        'formation.FormationLesson', on_delete=models.CASCADE,
+        null=True, blank=True, related_name='%(class)s_set',
+    )
     title = models.CharField(max_length=300, verbose_name=_('Titre'))
-    hint = models.TextField(blank=True, verbose_name=_('Indice'))
-    difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES, default='easy', verbose_name=_('Difficulté'))
+    instructions = models.TextField(
+        blank=True,
+        verbose_name=_('Instructions'),
+        help_text=_('Markdown + LaTeX + HTML'),
+    )
+    difficulty = models.CharField(max_length=10, choices=DIFFICULTY, default='easy', verbose_name=_('Difficulté'))
     points = models.IntegerField(default=5, verbose_name=_('Points'))
     max_attempts = models.IntegerField(default=0, verbose_name=_('Tentatives max (0=illimité)'))
+    hint = models.TextField(blank=True, verbose_name=_('Indice'))
+    explanation = models.TextField(blank=True, verbose_name=_('Explication'))
     order = models.IntegerField(default=0, verbose_name=_('Ordre'))
     is_active = models.BooleanField(default=True, verbose_name=_('Actif'))
     created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='%(app_label)s_%(class)s_created_by', verbose_name=_('Créé par'),
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='%(class)s_created',
+        verbose_name=_('Créé par'),
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Créé le'))
 
@@ -181,19 +200,15 @@ class ExerciseCommon(models.Model):
         abstract = True
         ordering = ['order']
 
-    def get_metadata(self):
-        return {
-            'title': self.title,
-            'hint': self.hint,
-            'difficulty': self.difficulty,
-            'points': self.points,
-            'max_attempts': self.max_attempts,
-            'order': self.order,
-            'is_active': self.is_active,
-        }
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if self.course_lesson and self.formation_lesson:
+            raise ValidationError('Set course_lesson OR formation_lesson, not both.')
+        if not self.course_lesson and not self.formation_lesson:
+            raise ValidationError('Must set course_lesson or formation_lesson.')
 
-    def get_payload(self):
-        return self.get_metadata()
+    def __str__(self):
+        return self.title
 
 
 class Tag(models.Model):
@@ -857,23 +872,12 @@ class Certificat(models.Model):
 # EXERCICES DE CODE (Pyodide — exécution dans le navigateur)
 # =============================================================================
 
-class CodeExercise(ExerciseCommon):
+class CodeExercise(BaseExercise):
     EVAL_MODES = [
         ('exact',    _('Output exact')),
         ('contains', _('Output contient')),
         ('tests',    _('Tests unitaires')),
     ]
-
-    course_lesson = models.ForeignKey(
-        'CourseLesson', on_delete=models.CASCADE,
-        related_name='code_exercises', verbose_name=_('Leçon'),
-        null=True, blank=True,
-    )
-    formation_lesson = models.ForeignKey(
-        'formation.FormationLesson', on_delete=models.CASCADE,
-        related_name='code_exercises', verbose_name=_('Leçon de formation'),
-        null=True, blank=True,
-    )
     instructions = models.TextField(
         verbose_name=_('Instructions'),
         help_text=_('Instructions en Markdown'),
@@ -899,7 +903,7 @@ class CodeExercise(ExerciseCommon):
         verbose_name=_('Mode d\'évaluation'),
     )
 
-    class Meta(ExerciseCommon.Meta):
+    class Meta(BaseExercise.Meta):
         verbose_name = _('Exercice de code')
         verbose_name_plural = _('Exercices de code')
 
@@ -963,7 +967,6 @@ class StudentCodeSubmission(models.Model):
     def __str__(self):
         status = '✅' if self.is_correct else '❌'
         return f"{status} {self.student.username} — {self.exercise.title} (#{self.attempt_number})"
-
 
 # =============================================================================
 # SANDBOX — Scripts sauvegardés par les utilisateurs
@@ -1164,17 +1167,7 @@ class LessonBlock(models.Model):
 # MCQ EXERCISES — Questions à Choix Multiples
 # =============================================================================
 
-class MCQExercise(ExerciseCommon):
-    course_lesson = models.ForeignKey(
-        'CourseLesson', on_delete=models.CASCADE,
-        related_name='mcq_exercises', null=True, blank=True,
-        verbose_name=_('Leçon de cours'),
-    )
-    formation_lesson = models.ForeignKey(
-        'formation.FormationLesson', on_delete=models.CASCADE,
-        related_name='mcq_exercises', null=True, blank=True,
-        verbose_name=_('Leçon de formation'),
-    )
+class MCQExercise(BaseExercise):
     question   = models.TextField(verbose_name=_('Question'))
     explanation = models.TextField(blank=True, verbose_name=_('Explication'))
     allow_multiple_correct = models.BooleanField(
@@ -1184,7 +1177,7 @@ class MCQExercise(ExerciseCommon):
     shuffle_choices = models.BooleanField(default=True, verbose_name=_('Mélanger les choix'))
     show_explanation_on_wrong = models.BooleanField(default=True)
 
-    class Meta(ExerciseCommon.Meta):
+    class Meta(BaseExercise.Meta):
         verbose_name = _('Exercice QCM')
         verbose_name_plural = _('Exercices QCM')
 
@@ -1289,16 +1282,14 @@ class ExerciseGrade(models.Model):
 _DIFF = [('easy','Facile'),('medium','Moyen'),('hard','Difficile')]
 
 
-class FillBlankExercise(ExerciseCommon):
+class FillBlankExercise(BaseExercise):
     """Texte à trous — blanks marked {{blank_1}}, {{blank_2}} in text."""
-    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='fill_blank_exercises')
-    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='fill_blank_exercises')
     instructions     = models.TextField(blank=True)
     text_with_blanks = models.TextField(help_text='Use {{blank_1}}, {{blank_2}}, … markers')
     answers          = models.JSONField(default=dict)
     case_sensitive   = models.BooleanField(default=False)
 
-    class Meta(ExerciseCommon.Meta):
+    class Meta(BaseExercise.Meta):
         verbose_name = _('Exercice texte à trous')
         verbose_name_plural = _('Exercices texte à trous')
 
@@ -1334,14 +1325,12 @@ class FillBlankGrade(models.Model):
     class Meta: unique_together = ('student', 'exercise')
 
 
-class TrueFalseExercise(ExerciseCommon):
+class TrueFalseExercise(BaseExercise):
     """Vrai ou Faux — list of statements each marked true/false."""
-    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='true_false_exercises')
-    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='true_false_exercises')
     statements       = models.JSONField(default=list)
     points_per_statement = models.IntegerField(default=2)
 
-    class Meta(ExerciseCommon.Meta):
+    class Meta(BaseExercise.Meta):
         verbose_name = _('Exercice vrai/faux')
         verbose_name_plural = _('Exercices vrai/faux')
 
@@ -1375,15 +1364,13 @@ class TrueFalseGrade(models.Model):
     class Meta: unique_together = ('student', 'exercise')
 
 
-class CodeOrderExercise(ExerciseCommon):
+class CodeOrderExercise(BaseExercise):
     """Ordonner le code — drag code lines into correct order."""
-    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='code_order_exercises')
-    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='code_order_exercises')
     instructions     = models.TextField(blank=True)
     correct_order    = models.JSONField(default=list)
     distractor_lines = models.JSONField(default=list, blank=True)
 
-    class Meta(ExerciseCommon.Meta):
+    class Meta(BaseExercise.Meta):
         verbose_name = _('Exercice ordre de code')
         verbose_name_plural = _('Exercices ordre de code')
 
@@ -1427,14 +1414,12 @@ class CodeOrderGrade(models.Model):
     class Meta: unique_together = ('student', 'exercise')
 
 
-class MatchingExercise(ExerciseCommon):
+class MatchingExercise(BaseExercise):
     """Associations — match left items to right items."""
-    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='matching_exercises')
-    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='matching_exercises')
     instructions     = models.TextField(blank=True)
     pairs            = models.JSONField(default=list)
 
-    class Meta(ExerciseCommon.Meta):
+    class Meta(BaseExercise.Meta):
         verbose_name = _('Exercice association')
         verbose_name_plural = _('Exercices associations')
 
@@ -1482,17 +1467,15 @@ class MatchingGrade(models.Model):
     class Meta: unique_together = ('student', 'exercise')
 
 
-class ShortAnswerExercise(ExerciseCommon):
+class ShortAnswerExercise(BaseExercise):
     """Réponse courte — student types a short text answer."""
-    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='short_answer_exercises')
-    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='short_answer_exercises')
     question         = models.TextField()
     accepted_answers = models.JSONField(default=list)
     case_sensitive   = models.BooleanField(default=False)
     strip_whitespace = models.BooleanField(default=True)
     is_code_answer   = models.BooleanField(default=False)
 
-    class Meta(ExerciseCommon.Meta):
+    class Meta(BaseExercise.Meta):
         verbose_name = _('Exercice réponse courte')
         verbose_name_plural = _('Exercices réponses courtes')
 
@@ -1517,21 +1500,18 @@ class ShortAnswerExercise(ExerciseCommon):
         return payload
 
 
-class GroupedExercise(ExerciseCommon):
+class GroupedExercise(BaseExercise):
     QUESTION_TYPES = [
         ('qcm', _('QCM')),
         ('fill_blank', _('Texte à trous')),
         ('true_false', _('Vrai ou Faux')),
         ('short_answer', _('Réponse courte')),
     ]
-
-    course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='grouped_exercises')
-    formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='grouped_exercises')
     instructions     = models.TextField(blank=True)
     question_type    = models.CharField(max_length=20, choices=QUESTION_TYPES, default='qcm')
     questions        = models.JSONField(default=list)
 
-    class Meta(ExerciseCommon.Meta):
+    class Meta(BaseExercise.Meta):
         verbose_name = _('Exercice groupé')
         verbose_name_plural = _('Exercices groupés')
 
