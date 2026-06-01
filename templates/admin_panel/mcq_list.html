@@ -44,9 +44,9 @@
           <div class="text-xs text-slate-400 mt-0.5 line-clamp-1">{{ mcq.question|truncatechars:60 }}</div>
         </td>
         <td class="px-4 py-3 text-slate-600 hidden md:table-cell">
-          {% if mcq.lesson %}
-          <div class="text-xs text-slate-400">{{ mcq.lesson.cours.titre }}</div>
-          <div class="text-xs">{{ mcq.lesson.titre }}</div>
+          {% if mcq.course_lesson %}
+          <div class="text-xs text-slate-400">{{ mcq.course_lesson.course.titre }}</div>
+          <div class="text-xs">{{ mcq.course_lesson.titre }}</div>
           {% elif mcq.formation_lesson %}
           <div class="text-xs text-slate-400">{{ mcq.formation_lesson.formation.titre }}</div>
           <div class="text-xs">{{ mcq.formation_lesson.titre }}</div>

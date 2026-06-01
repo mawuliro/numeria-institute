@@ -66,15 +66,15 @@
         <td class="px-4 py-3">
           <div class="font-medium text-slate-800">{{ ex.title }}</div>
           <div class="text-xs text-slate-400 md:hidden">
-            {% if ex.lecon %}{{ ex.lecon.cours.titre }} › {{ ex.lecon.titre }}
+            {% if ex.course_lesson %}{{ ex.course_lesson.course.titre }} › {{ ex.course_lesson.titre }}
             {% elif ex.formation_lesson %}{{ ex.formation_lesson.formation.titre }} › {{ ex.formation_lesson.titre }}
             {% else %}—{% endif %}
           </div>
         </td>
         <td class="px-4 py-3 text-slate-600 hidden md:table-cell">
-          {% if ex.lecon %}
-          <div class="text-xs text-slate-400">{{ ex.lecon.cours.titre }}</div>
-          <div>{{ ex.lecon.titre }}</div>
+          {% if ex.course_lesson %}
+          <div class="text-xs text-slate-400">{{ ex.course_lesson.course.titre }}</div>
+          <div>{{ ex.course_lesson.titre }}</div>
           {% elif ex.formation_lesson %}
           <div class="text-xs text-slate-400">{{ ex.formation_lesson.formation.titre }}</div>
           <div>{{ ex.formation_lesson.titre }}</div>

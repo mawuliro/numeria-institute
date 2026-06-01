@@ -651,16 +651,16 @@ def exercises_list(request):
     formation_filter = request.GET.get('formation', '')
 
     qs = CodeExercise.objects.select_related(
-        'lecon__cours', 'formation_lesson__formation'
+        'course_lesson__course', 'formation_lesson__formation'
     )
 
     if type_filter == 'cours':
-        qs = qs.filter(lecon__isnull=False)
+        qs = qs.filter(course_lesson__isnull=False)
     elif type_filter == 'formation':
         qs = qs.filter(formation_lesson__isnull=False)
 
     if cours_filter:
-        qs = qs.filter(lecon__cours_id=cours_filter)
+        qs = qs.filter(course_lesson__course_id=cours_filter)
     if formation_filter:
         qs = qs.filter(formation_lesson__formation_id=formation_filter)
 
@@ -834,7 +834,7 @@ def exercise_results(request):
     from django.db.models import Count, Sum
 
     qs = StudentCodeSubmission.objects.select_related(
-        'student', 'exercise__lecon__cours'
+        'student', 'exercise__course_lesson__course', 'exercise__formation_lesson'
     ).order_by('-submitted_at')
 
     correct_filter = request.GET.get('correct', '')
@@ -887,14 +887,19 @@ def exercise_results_csv(request):
                      'Correct', 'Attempts', 'Time(s)', 'Date'])
 
     for sub in StudentCodeSubmission.objects.select_related(
-        'student', 'exercise__lecon__cours'
+        'student', 'exercise__course_lesson__course', 'exercise__formation_lesson'
     ).order_by('-submitted_at')[:5000]:
+        lesson = sub.exercise.course_lesson or sub.exercise.formation_lesson
+        parent = (sub.exercise.course_lesson.course.titre
+                  if sub.exercise.course_lesson_id else
+                  (sub.exercise.formation_lesson.formation.titre
+                   if sub.exercise.formation_lesson_id else ''))
         writer.writerow([
             sub.student.get_full_name() or sub.student.username,
             sub.student.email,
             sub.exercise.title,
-            sub.exercise.course_lesson.titre,
-            sub.exercise.course_lesson.course.titre,
+            lesson.titre if lesson else '',
+            parent,
             sub.is_correct,
             sub.attempt_number,
             sub.time_spent_seconds,
@@ -913,11 +918,11 @@ def mcq_list(request):
 
     type_filter = request.GET.get('type', '')
     qs = MCQExercise.objects.select_related(
-        'lesson__cours', 'formation_lesson__formation'
+        'course_lesson__course', 'formation_lesson__formation'
     ).prefetch_related('choices')
 
     if type_filter == 'cours':
-        qs = qs.filter(lesson__isnull=False)
+        qs = qs.filter(course_lesson__isnull=False)
     elif type_filter == 'formation':
         qs = qs.filter(formation_lesson__isnull=False)
 
