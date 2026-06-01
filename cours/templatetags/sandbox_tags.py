@@ -3,6 +3,11 @@ Template filters for lesson content:
 - split: split a string by separator
 - render_content: Markdown + LaTeX + HTML + sandbox markers
 - process_sandbox_markers: replace [SANDBOX ...] markers with rendered widgets
+
+IMPORTANT: content_filters (bleach + markdown) is imported LAZILY inside each
+function so that this module always loads successfully even if those packages
+have version-specific issues. The split filter (used in full_sandbox.html) must
+never fail to register.
 """
 import html as html_module
 import re
@@ -11,9 +16,12 @@ from django import template
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
-from cours.templatetags.content_filters import render_content as _render_content_core
-
 register = template.Library()
+
+
+def _get_render_content_core():
+    from cours.templatetags.content_filters import render_content as core
+    return core
 
 
 @register.filter
@@ -23,7 +31,7 @@ def split(value, separator=','):
 
 @register.filter(name='render_markdown_latex', is_safe=True)
 def render_markdown_latex(content):
-    return _render_content_core(content)
+    return _get_render_content_core()(content)
 
 
 @register.filter(name='render_content', is_safe=True)
@@ -31,7 +39,7 @@ def render_content(content):
     if not content:
         return mark_safe('')
     content = process_sandbox_markers(content)
-    return _render_content_core(content)
+    return _get_render_content_core()(content)
 
 
 _SANDBOX_RE = re.compile(
