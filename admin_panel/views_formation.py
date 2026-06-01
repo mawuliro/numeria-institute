@@ -39,7 +39,7 @@ def formation_list(request):
     from formation.models import Formation
     qs = Formation.objects.annotate(
         nb_modules=Count('modules', distinct=True),
-        nb_lessons=Count('lessons', distinct=True),
+        nb_lecons=Count('lessons', distinct=True),
         nb_inscrits=Count('inscriptions__etudiant', distinct=True),
     )
 
@@ -47,12 +47,8 @@ def formation_list(request):
     q        = request.GET.get('q', '').strip()
     mine     = request.GET.get('mine', '')
 
-    if status_f == 'publie':
-        qs = qs.filter(status='published')
-    elif status_f == 'brouillon':
-        qs = qs.filter(status='draft')
-    elif status_f == 'archive':
-        qs = qs.filter(status='archived')
+    if status_f:
+        qs = qs.filter(status=status_f)
     if mine:
         qs = qs.filter(created_by=request.user)
     if q:
@@ -68,20 +64,15 @@ def formation_list(request):
     page_obj  = paginator.get_page(request.GET.get('page'))
 
     return render(request, 'admin_panel/formation_list.html', {
-        'page_obj':    page_obj,
-        'status_f':    status_f,
-        'q':           q,
-        'mine':        mine,
-        'sort':        sort,
-        'draft_count': draft_count,
-        'types':       Formation.CATEGORIES,
-        'niveaux':     Formation.LEVELS,
-        'statut_choices': [
-            ('', 'Toutes'),
-            ('publie', 'Publiées'),
-            ('brouillon', 'Brouillons'),
-            ('archive', 'Archivées'),
-        ],
+        'page_obj':       page_obj,
+        'status_f':       status_f,
+        'q':              q,
+        'mine':           mine,
+        'sort':           sort,
+        'draft_count':    draft_count,
+        'matieres':       Formation.CATEGORIES,
+        'niveaux':        Formation.LEVELS,
+        'status_choices': Formation.STATUS,
     })
 
 
@@ -131,8 +122,9 @@ def formation_edit(request, slug):
         'formation':         formation,
         'modules':           tree['modules'],
         'standalone_lecons': tree['standalone_lecons'],
-        'types':             Formation.CATEGORIES,
+        'matieres':          Formation.CATEGORIES,
         'niveaux':           Formation.LEVELS,
+        'status_choices':    Formation.STATUS,
     })
 
 

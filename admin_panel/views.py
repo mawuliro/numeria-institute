@@ -642,46 +642,45 @@ def activity_log(request):
 
 @staff_only
 def exercises_list(request):
-    """List all code exercises (Course AND Formation) with filters."""
-    from cours.models import CodeExercise, ExerciseAttempt, Course
-    from formation.models import Formation
-
-    type_filter = request.GET.get('type', '')        # 'cours' | 'formation' | ''
-    cours_filter = request.GET.get('cours', '')
-    formation_filter = request.GET.get('formation', '')
-
-    qs = CodeExercise.objects.select_related(
-        'course_lesson__course', 'formation_lesson__formation'
+    """List exercises of all types with tab filter."""
+    from cours.models import (
+        CodeExercise, MCQExercise, FillBlankExercise, TrueFalseExercise,
+        CodeOrderExercise, MatchingExercise, ShortAnswerExercise,
     )
 
-    if type_filter == 'cours':
-        qs = qs.filter(course_lesson__isnull=False)
-    elif type_filter == 'formation':
-        qs = qs.filter(formation_lesson__isnull=False)
+    active_type = request.GET.get('type', 'all')
+    q = request.GET.get('q', '').strip()
 
-    if cours_filter:
-        qs = qs.filter(course_lesson__course_id=cours_filter)
-    if formation_filter:
-        qs = qs.filter(formation_lesson__formation_id=formation_filter)
-
-    qs = qs.order_by('title')
-    exercises = list(qs)
-    # Use ExerciseAttempt (replaces removed StudentCodeSubmission)
-    submission_counts = {
-        ex.id: ExerciseAttempt.objects.filter(
-            exercise_type='code', exercise_id=ex.id, is_correct=True
-        ).values('student').distinct().count()
-        for ex in exercises
+    MODEL_MAP = {
+        'code':         CodeExercise,
+        'mcq':          MCQExercise,
+        'fill_blank':   FillBlankExercise,
+        'true_false':   TrueFalseExercise,
+        'code_order':   CodeOrderExercise,
+        'matching':     MatchingExercise,
+        'short_answer': ShortAnswerExercise,
     }
 
+    if active_type in MODEL_MAP:
+        models_to_query = {active_type: MODEL_MAP[active_type]}
+    else:
+        models_to_query = MODEL_MAP
+
+    exercises = []
+    for ex_type, model in models_to_query.items():
+        qs = model.objects.select_related('course_lesson', 'formation_lesson').order_by('title')
+        if q:
+            qs = qs.filter(title__icontains=q)
+        for ex in qs:
+            ex._ex_type = ex_type
+            exercises.append(ex)
+
+    exercises.sort(key=lambda e: e.title.lower())
+
     return render(request, 'admin_panel/exercises_list.html', {
-        'exercises':        exercises,
-        'submission_counts': submission_counts,
-        'cours_list':       Course.objects.order_by('title'),
-        'formation_list':   Formation.objects.order_by('title'),
-        'type_filter':      type_filter,
-        'cours_filter':     cours_filter,
-        'formation_filter': formation_filter,
+        'exercises':   exercises,
+        'active_type': active_type,
+        'q':           q,
     })
 
 

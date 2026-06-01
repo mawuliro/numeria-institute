@@ -26,10 +26,10 @@ def _get_cours_context(cours):
     """Return a dict with module/lesson tree for the course editor."""
     from cours.models import CourseModule, CourseLesson
     modules = list(
-        CourseModule.objects.filter(course=cours).prefetch_related('lessons').order_by('ordre')
+        CourseModule.objects.filter(course=cours).prefetch_related('lessons').order_by('order')
     )
     standalone_lecons = list(
-        CourseLesson.objects.filter(course=cours, module__isnull=True).order_by('ordre')
+        CourseLesson.objects.filter(course=cours, module__isnull=True).order_by('order')
     )
     return {'modules': modules, 'standalone_lecons': standalone_lecons}
 

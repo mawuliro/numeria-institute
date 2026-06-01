@@ -1,82 +1,104 @@
 {% extends "admin_panel/base_staff.html" %}
-{% load i18n sandbox_tags %}
+{% load i18n static %}
 
 {% block page_title %}Prévisualisation — {{ formation.title }}{% endblock %}
 {% block page_heading %}👁️ {{ formation.title }}{% endblock %}
+{% block breadcrumb %}
+<p class="text-xs text-slate-400 mt-0.5">
+  <a href="{% url 'admin_panel:formation_list' %}" class="hover:underline">Formations</a> ›
+  <a href="{% url 'admin_panel:formation_edit' formation.slug %}" class="hover:underline">{{ formation.title|truncatechars:30 }}</a> ›
+  Prévisualisation
+</p>
+{% endblock %}
 
 {% block content %}
-{% if has_blocks %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
-<script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
-{% endif %}
-
-<div class="bg-amber-50 border border-amber-300 rounded-xl px-4 py-3 mb-5 flex items-center justify-between">
-  <span class="text-amber-800 text-sm font-medium">⚠️ MODE PRÉVISUALISATION — Formation non publiée</span>
-  <div class="flex gap-2">
-    <button type="button" onclick="toggleMobile()" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-lg font-medium">📱 Vue mobile</button>
-    <a href="{% url 'admin_panel:formation_edit' formation.slug %}" class="text-xs bg-sky-600 text-white px-3 py-1.5 rounded-lg hover:bg-sky-700 font-medium">✏️ Retour</a>
-  </div>
+<div class="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-6">
+  <span class="text-amber-500 text-lg">⚠️</span>
+  <span class="text-amber-800 text-sm font-medium">MODE PRÉVISUALISATION — Ce contenu n'est pas publié au public</span>
+  <a href="{% url 'admin_panel:formation_edit' formation.slug %}" class="ml-auto text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-lg font-medium">← Retour à l'éditeur</a>
 </div>
 
-<div id="preview-wrapper" class="transition-all duration-300">
-  <div class="bg-white rounded-2xl border border-slate-200 p-6 mb-5">
-    {% if formation.thumbnail %}<img src="{{ formation.thumbnail.url }}" class="w-full max-h-48 object-cover rounded-xl mb-4">{% endif %}
-    <div class="flex gap-2 mb-3">
-      <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ formation.get_category_display }}</span>
-      <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{{ formation.get_level_display }}</span>
-    </div>
-    <h1 class="text-2xl font-bold text-slate-800 mb-2">{{ formation.title }}</h1>
-    <p class="text-slate-600">{{ formation.short_description }}</p>
-    {% if formation.description %}
-    <div class="mt-4 text-sm text-slate-700 prose prose-sm max-w-none">{{ formation.description|linebreaks }}</div>
-    {% endif %}
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-    <div class="lg:col-span-1 bg-white rounded-2xl border border-slate-200 p-4">
-      <h3 class="font-semibold text-slate-700 mb-3 text-sm">Plan de la formation</h3>
-      {% for module in modules %}
-      <div class="mb-3">
-        <div class="font-semibold text-slate-700 text-sm mb-1">📁 {{ module.title }}</div>
-        {% for lesson in module.lessons.all %}
-        <a href="?lecon={{ lesson.id }}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs {% if lecon_active.id == lesson.id %}bg-sky-50 text-sky-700 font-medium{% else %}text-slate-600 hover:bg-slate-50{% endif %}">
-          <span>📄</span>{{ lesson.title }}
-          {% if lesson.is_free_preview %}<span class="text-green-500 ml-auto">🔓</span>{% endif %}
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+  <div class="lg:col-span-1">
+    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden sticky top-4">
+      <div class="px-4 py-3 border-b border-slate-100 font-bold text-sm text-slate-700">📋 Contenu</div>
+      <div class="p-3 space-y-1 max-h-[70vh] overflow-y-auto">
+        {% for module in modules %}
+        <div class="text-xs font-bold text-slate-500 uppercase px-2 py-1 mt-2">{{ module.title }}</div>
+        {% for lecon in module.lessons.all %}
+        <a href="?lecon={{ lecon.id }}"
+           class="block px-3 py-1.5 rounded-lg text-xs text-slate-700 hover:bg-slate-100 truncate
+             {% if lecon_active and lecon_active.id == lecon.id %}bg-violet-50 text-violet-700 font-semibold{% endif %}">
+          📄 {{ lecon.title }}
         </a>
         {% endfor %}
+        {% empty %}
+        <p class="text-xs text-slate-400 px-2 py-2">Aucune leçon</p>
+        {% endfor %}
       </div>
-      {% endfor %}
-    </div>
-    <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6">
-      {% if lecon_active %}
-      <h2 class="text-xl font-bold text-slate-800 mb-4">{{ lecon_active.title }}</h2>
-
-      {% if lesson_blocks %}
-        {% include 'admin_panel/blocks/block_preview.html' with lesson_blocks=lesson_blocks %}
-      {% else %}
-        <div class="text-slate-400 text-sm py-8 text-center">
-          <div class="text-3xl mb-2">📭</div>
-          <p>Cette leçon n'a pas encore de contenu.</p>
-          <p class="text-xs mt-1">Ajoutez des blocs depuis l'éditeur de leçon.</p>
-        </div>
-      {% endif %}
-
-      {% else %}<p class="text-slate-400 text-sm">Sélectionne une leçon dans le plan à gauche.</p>{% endif %}
     </div>
   </div>
-</div>
 
-{% if has_blocks and lesson_blocks %}
-<script>
-window._swPyodideReady = window._swPyodideReady || (typeof loadPyodide === 'function' ? loadPyodide({indexURL:'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/'}) : Promise.resolve(null));
-</script>
-{% endif %}
-<script>
-var isMobile=false;
-function toggleMobile(){isMobile=!isMobile;var w=document.getElementById('preview-wrapper');if(isMobile){w.style.maxWidth='375px';w.style.margin='0 auto';w.style.border='2px solid #0ea5e9';w.style.borderRadius='20px';}else{w.style.maxWidth='';w.style.margin='';w.style.border='';w.style.borderRadius='';}}
-document.addEventListener('DOMContentLoaded',function(){if(window.Prism)Prism.highlightAll();if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise();});
-</script>
+  <div class="lg:col-span-3">
+    {% if lecon_active %}
+    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100">
+        <h2 class="font-bold text-slate-800 text-lg">{{ lecon_active.title }}</h2>
+        {% if lecon_active.is_free_preview %}<span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full mt-1 inline-block">🔓 Aperçu gratuit</span>{% endif %}
+      </div>
+      <div class="p-6 space-y-6">
+        {% if lesson_blocks %}
+          {% for block in lesson_blocks %}
+          <div class="block-preview">
+            {% if block.type == 'text' %}
+            <div class="prose prose-slate max-w-none text-sm">{{ block.content|safe }}</div>
+            {% elif block.type == 'video' %}
+            {% if block.embed_url %}
+            <div class="aspect-video rounded-xl overflow-hidden bg-slate-100">
+              <iframe src="{{ block.embed_url }}" class="w-full h-full" allowfullscreen></iframe>
+            </div>
+            {% if block.caption %}<p class="text-xs text-slate-500 text-center mt-2 italic">{{ block.caption }}</p>{% endif %}
+            {% else %}
+            <div class="bg-slate-100 rounded-xl p-4 text-xs text-slate-500">🎬 Vidéo : {{ block.video_url }}</div>
+            {% endif %}
+            {% elif block.type == 'sandbox' %}
+            <div class="bg-slate-900 rounded-xl overflow-hidden">
+              <div class="px-4 py-2 bg-slate-800 flex items-center justify-between">
+                <span class="text-xs text-slate-300 font-medium">🐍 {{ block.sandbox_title|default:"Sandbox Python" }}</span>
+              </div>
+              <pre class="text-green-400 text-xs p-4 overflow-x-auto font-mono">{{ block.initial_code }}</pre>
+            </div>
+            {% else %}
+            <div class="border border-slate-200 rounded-xl p-4 bg-slate-50">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-sm">
+                  {% if block.type == 'code_exercise' %}💻{% elif block.type == 'mcq' %}🔘{% elif block.type == 'fill_blank' %}✏️{% elif block.type == 'true_false' %}✅{% elif block.type == 'code_order' %}🧩{% elif block.type == 'matching' %}🔗{% else %}💬{% endif %}
+                </span>
+                <span class="text-xs font-bold text-slate-600">{{ block.exercise_title|default:"Exercice" }}</span>
+                {% if block.points %}<span class="text-xs text-violet-600 font-bold">{{ block.points }} pts</span>{% endif %}
+              </div>
+              {% if block.instructions %}<p class="text-xs text-slate-500 italic">{{ block.instructions|truncatechars:150 }}</p>{% endif %}
+              <p class="text-xs text-amber-600 mt-2 bg-amber-50 px-2 py-1 rounded">Exercice interactif</p>
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        {% else %}
+        <div class="text-center py-12 text-slate-400">
+          <div class="text-4xl mb-3">📄</div>
+          <p class="text-sm">Cette leçon n'a pas encore de contenu.</p>
+          <a href="{% url 'admin_panel:formation_edit' formation.slug %}"
+             class="inline-block mt-4 text-xs bg-violet-600 text-white px-3 py-2 rounded-lg">← Ajouter des blocs</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% else %}
+    <div class="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-400">
+      <div class="text-4xl mb-3">👈</div>
+      <p class="text-sm">Sélectionnez une leçon dans le menu de gauche.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}
