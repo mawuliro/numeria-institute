@@ -643,7 +643,7 @@ def activity_log(request):
 @staff_only
 def exercises_list(request):
     """List all code exercises (Course AND Formation) with filters."""
-    from cours.models import CodeExercise, StudentCodeSubmission, Course
+    from cours.models import CodeExercise, ExerciseAttempt, Course
     from formation.models import Formation
 
     type_filter = request.GET.get('type', '')        # 'cours' | 'formation' | ''
@@ -666,9 +666,10 @@ def exercises_list(request):
 
     qs = qs.order_by('title')
     exercises = list(qs)
+    # Use ExerciseAttempt (replaces removed StudentCodeSubmission)
     submission_counts = {
-        ex.id: StudentCodeSubmission.objects.filter(
-            exercise=ex, is_correct=True
+        ex.id: ExerciseAttempt.objects.filter(
+            exercise_type='code', exercise_id=ex.id, is_correct=True
         ).values('student').distinct().count()
         for ex in exercises
     }
@@ -727,7 +728,7 @@ def exercise_create(request, lecon_id):
         'action': 'create',
         'lesson_type': 'cours',
         'eval_modes': CodeExercise.EVAL_MODES,
-        'difficulties': CodeExercise.DIFFICULTY_CHOICES,
+        'difficulties': CodeExercise.DIFFICULTY,
     })
 
 
@@ -757,7 +758,7 @@ def exercise_create_formation(request, lecon_id):
         'action':      'create',
         'lesson_type': 'formation',
         'eval_modes':  CodeExercise.EVAL_MODES,
-        'difficulties': CodeExercise.DIFFICULTY_CHOICES,
+        'difficulties': CodeExercise.DIFFICULTY,
     })
 
 
@@ -794,7 +795,7 @@ def exercise_edit(request, exercise_id):
         'lesson_type': lesson_type,
         'action':      'edit',
         'eval_modes':  CE.EVAL_MODES,
-        'difficulties': CE.DIFFICULTY_CHOICES,
+        'difficulties': CE.DIFFICULTY,
     })
 
 
@@ -830,12 +831,11 @@ def exercise_reorder(request, exercise_id):
 @staff_only
 def exercise_results(request):
     """Student submission results table with filters and leaderboard."""
-    from cours.models import StudentCodeSubmission, CodeExercise
+    from cours.models import ExerciseAttempt, CodeExercise
     from django.db.models import Count, Sum
 
-    qs = StudentCodeSubmission.objects.select_related(
-        'student', 'exercise__course_lesson__course', 'exercise__formation_lesson'
-    ).order_by('-submitted_at')
+    # ExerciseAttempt replaces removed StudentCodeSubmission
+    qs = ExerciseAttempt.objects.filter(exercise_type='code').select_related('student').order_by('-submitted_at')
 
     correct_filter = request.GET.get('correct', '')
     if correct_filter == '1':
@@ -850,18 +850,16 @@ def exercise_results(request):
     paginator = Paginator(qs, 30)
     page_obj  = paginator.get_page(request.GET.get('page'))
 
-    # Leaderboard: top students by distinct correct exercises * points
+    # Leaderboard: top students by distinct correct exercises
     leaderboard = (
-        StudentCodeSubmission.objects
-        .filter(is_correct=True)
-        .values('student__id', 'student__first_name', 'student__last_name',
-                'student__username')
-        .annotate(solved=Count('exercise', distinct=True),
-                  total_pts=Sum('exercise__points'))
+        ExerciseAttempt.objects
+        .filter(exercise_type='code', is_correct=True)
+        .values('student__id', 'student__first_name', 'student__last_name', 'student__username')
+        .annotate(solved=Count('exercise_id', distinct=True), total_pts=Sum('points_earned'))
         .order_by('-total_pts')[:20]
     )
 
-    all_exercises = CodeExercise.objects.select_related('course_lesson').order_by('course_lesson__course__titre', 'order')
+    all_exercises = CodeExercise.objects.select_related('course_lesson').order_by('course_lesson__course__title', 'order')
 
     return render(request, 'admin_panel/exercise_results.html', {
         'page_obj': page_obj,
@@ -875,7 +873,7 @@ def exercise_results(request):
 @staff_only
 def exercise_results_csv(request):
     """Export submissions as CSV."""
-    from cours.models import StudentCodeSubmission
+    from cours.models import ExerciseAttempt, CodeExercise
     import csv
     from django.http import HttpResponse as _HttpResponse
 
@@ -883,27 +881,25 @@ def exercise_results_csv(request):
     response['Content-Disposition'] = 'attachment; filename="submissions.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Student', 'Email', 'Exercise', 'Lesson', 'Course',
-                     'Correct', 'Attempts', 'Time(s)', 'Date'])
+    writer.writerow(['Student', 'Email', 'Exercise ID', 'Exercise Type',
+                     'Correct', 'Attempts', 'Points Earned', 'Date'])
 
-    for sub in StudentCodeSubmission.objects.select_related(
-        'student', 'exercise__course_lesson__course', 'exercise__formation_lesson'
+    # ExerciseAttempt replaces removed StudentCodeSubmission
+    for attempt in ExerciseAttempt.objects.filter(exercise_type='code').select_related(
+        'student'
     ).order_by('-submitted_at')[:5000]:
-        lesson = sub.exercise.course_lesson or sub.exercise.formation_lesson
-        parent = (sub.exercise.course_lesson.course.title
-                  if sub.exercise.course_lesson_id else
-                  (sub.exercise.formation_lesson.formation.title
-                   if sub.exercise.formation_lesson_id else ''))
+        # Lookup exercise title
+        ex = CodeExercise.objects.filter(pk=attempt.exercise_id).first()
+        ex_title = ex.title if ex else f'#{attempt.exercise_id}'
         writer.writerow([
-            sub.student.get_full_name() or sub.student.username,
-            sub.student.email,
-            sub.exercise.title,
-            lesson.title if lesson else '',
-            parent,
-            sub.is_correct,
-            sub.attempt_number,
-            sub.time_spent_seconds,
-            sub.submitted_at.strftime('%Y-%m-%d %H:%M'),
+            attempt.student.get_full_name() or attempt.student.username,
+            attempt.student.email,
+            ex_title,
+            attempt.exercise_type,
+            attempt.is_correct,
+            attempt.attempt_number,
+            attempt.points_earned,
+            attempt.submitted_at.strftime('%Y-%m-%d %H:%M'),
         ])
     return response
 
@@ -1020,7 +1016,7 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
         CodeExercise, LessonBlock, MCQExercise, MCQChoice,
         FillBlankExercise, TrueFalseExercise,
         CodeOrderExercise, MatchingExercise, ShortAnswerExercise,
-        GroupedExercise,
+        # TODO: GroupedExercise removed in rebuild — grouped exercise creation disabled
     )
     import json as _json
 
@@ -1278,21 +1274,9 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
                         messages.error(request, 'Aucune question valide n’a été trouvée.')
                         return render(request, template, {'lecon': lesson_obj, 'lesson_type': lesson_type, 'action': 'create'})
 
-                    group = GroupedExercise.objects.create(
-                        course_lesson=lecon, formation_lesson=fl,
-                        title=title,
-                        instructions=request.POST.get('instructions', '').strip(),
-                        question_type=qtype,
-                        questions=created_exercises,
-                        created_by=request.user,
-                    )
-                    existing_blocks = LessonBlock.objects.filter(course_lesson=lecon) if lecon else LessonBlock.objects.filter(formation_lesson=fl)
-                    LessonBlock.objects.create(
-                        course_lesson=lecon, formation_lesson=fl,
-                        block_type='grouped_exercise',
-                        grouped_exercise=group,
-                        order=existing_blocks.count(),
-                    )
+                    # TODO: GroupedExercise removed in rebuild — cannot create grouped blocks
+                    messages.error(request, "Les exercices groupés ne sont pas encore disponibles dans la nouvelle version.")
+                    return render(request, template, {'lecon': lesson_obj, 'lesson_type': lesson_type, 'action': 'create'})
 
                 messages.success(request, f"Exercice '{title}' créé avec succès.")
                 return redirect('admin_panel:exercises_list')
@@ -1308,7 +1292,7 @@ def _handle_exercise_creation(request, lecon, fl, ex_type):
         'ex_type': ex_type,
         'back_url': back_url,
         'eval_modes': CE.EVAL_MODES,
-        'difficulties': CE.DIFFICULTY_CHOICES,
+        'difficulties': CE.DIFFICULTY,
     }
     return render(request, template, ctx)
 

@@ -56,7 +56,7 @@ class AnalytiquesCours(models.Model):
     derniere_mise_a_jour = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f'Analytics {self.cours.titre}'
+        return f'Analytics {self.cours.title}'
     
     class Meta:
         verbose_name = 'Analytique cours'
