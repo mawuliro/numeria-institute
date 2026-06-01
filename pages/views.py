@@ -66,12 +66,12 @@ def accueil(request):
         homepage.meta_title = "Home - Numeria Institute"
         homepage.meta_description = _("Accessible scientific education in Africa. Mathematics, science and AI courses for African and French-speaking learners.")
     
-    cours_recents = Course.objects.filter(est_publie=True)[:3]
+    cours_recents = Course.objects.filter(status='published')[:3]
     articles_recents = Article.objects.filter(est_publie=True)[:3]
 
     # Statistiques dynamiques depuis la base de données
     nb_etudiants = User.objects.filter(is_active=True).count()
-    nb_cours = Course.objects.filter(est_publie=True).count()
+    nb_cours = Course.objects.filter(status='published').count()
 
     contexte = {
         'homepage': homepage,
@@ -147,7 +147,7 @@ def a_propos(request):
         aboutpage.meta_description = _("Discover Numeria Institute, our mission and team for scientific education in Africa.")
     
     # Statistiques dynamiques
-    total_cours = Course.objects.filter(est_publie=True).count()
+    total_cours = Course.objects.filter(status='published').count()
     total_etudiants = User.objects.filter(is_active=True).count()
     contexte = {
         'aboutpage': aboutpage,
