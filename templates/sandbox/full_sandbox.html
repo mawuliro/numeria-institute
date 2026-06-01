@@ -2,7 +2,7 @@
 {#
   Full Python IDE — shared component used by both admin sandbox and dashboard.
 
-  Parameters (via {% include 'sandbox/full_sandbox.html' with ... %}):
+  Parameters:
     sandbox_id          : unique string ID, no spaces (required)
     height              : CodeMirror min-height px (default 350)
     auto_load_pkgs      : True = pre-load all packages at init (admin mode)
@@ -284,7 +284,7 @@ function initCM(){
   var wrap = g('cm-wrap');
   if(!wrap||cm) return;
   var savedCode = localStorage.getItem(LS_CODE_KEY);
-  var initCode  = savedCode || '{{ initial_code|default:"# Sandbox Python\\nprint(\\"Hello Numeria ! 🎓\\")"| escapejs }}';
+  var initCode  = savedCode || '{{ initial_code|default:'# Sandbox Python\nprint("Hello Numeria ! 🎓")'|escapejs }}';
   cm = CodeMirror(wrap, {
     value: initCode,
     mode:'python', theme:'dracula', lineNumbers:true,

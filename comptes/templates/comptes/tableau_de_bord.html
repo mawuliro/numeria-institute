@@ -341,13 +341,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
     {% load sandbox_tags %}
-    {% include 'sandbox/full_sandbox.html' with
-        sandbox_id="dashboard_sandbox"
-        height=350
-        auto_load_pkgs=False
-        show_insert_lesson=False
-        initial_code="# Sandbox Python — Dashboard\nprint('Bonjour Numeria ! 🎓')\n"
-    %}
+    {% include 'sandbox/full_sandbox.html' with sandbox_id="dashboard_sandbox" height=350 auto_load_pkgs=False show_insert_lesson=False initial_code="# Sandbox Python — Dashboard\nprint('Bonjour Numeria ! 🎓')\n" %}
 
 </section>
 {% endif %}

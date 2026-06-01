@@ -5,11 +5,5 @@
 {% block page_heading %}🐍 Sandbox Python (Admin){% endblock %}
 
 {% block content %}
-{% include 'sandbox/full_sandbox.html' with
-    sandbox_id="admin_sandbox"
-    height=400
-    auto_load_pkgs=True
-    show_insert_lesson=True
-    initial_code="# Admin sandbox — packages numpy, matplotlib, pandas, scipy, sympy pré-chargés\nimport numpy as np\nprint('numpy version:', np.__version__)\n"
-%}
+{% include 'sandbox/full_sandbox.html' with sandbox_id="admin_sandbox" height=400 auto_load_pkgs=True show_insert_lesson=True initial_code="# Admin sandbox — packages numpy, matplotlib, pandas, scipy, sympy pré-chargés\nimport numpy as np\nprint('numpy version:', np.__version__)\n" %}
 {% endblock %}
