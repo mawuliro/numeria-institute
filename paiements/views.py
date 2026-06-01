@@ -19,8 +19,8 @@ def _post_payment_actions(user, paiement):
     """Send an in-app notification after a successful payment."""
     try:
         from notifications.notifications import notify_user
-        if paiement.cours:
-            item = paiement.cours.titre
+        if paiement.course:
+            item = paiement.course.titre
         elif paiement.formation_inscription:
             item = (
                 f"{paiement.formation_inscription.session.formation.titre}"
@@ -148,7 +148,7 @@ def initier_paiement(request, cours_id):
     # Créer l'enregistrement de paiement
     paiement, nouveau = creer_paiement(
         etudiant=request.user,
-        course=course,
+        course=cours,
         provider=provider
     )
 

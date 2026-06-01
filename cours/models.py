@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify
+import base64
+import json
+import random
 import uuid
 
 # =============================================================================
@@ -114,6 +118,83 @@ def convertir_url_youtube(url):
 # =============================================================================
 # MODÈLES
 # =============================================================================
+
+
+class LessonMixin:
+    """Shared helpers for course and formation lessons."""
+
+    def save(self, *args, **kwargs):
+        if not getattr(self, 'slug', None):
+            self.slug = slugify(getattr(self, 'titre', '') or '')[:300]
+        super().save(*args, **kwargs)
+
+    def get_video_embed_url(self):
+        source = getattr(self, 'video_youtube', None) or getattr(self, 'video_url', None)
+        return convertir_url_youtube(source) if source else None
+
+    @property
+    def parent(self):
+        if hasattr(self, 'course') and self.course_id:
+            return self.course
+        if hasattr(self, 'formation') and self.formation_id:
+            return self.formation
+        return None
+
+    @property
+    def parent_type(self):
+        if hasattr(self, 'course') and self.course_id:
+            return 'course'
+        if hasattr(self, 'formation') and self.formation_id:
+            return 'formation'
+        return None
+
+    def get_blocks(self):
+        return getattr(self, 'blocks', []).order_by('order') if hasattr(self, 'blocks') else []
+
+    def get_duration_label(self):
+        return f"{getattr(self, 'duree_minutes', 0)} min"
+
+
+class ExerciseCommon(models.Model):
+    """Common fields and helpers for all exercise types."""
+
+    DIFFICULTY_CHOICES = [
+        ('easy', _('Facile')),
+        ('medium', _('Moyen')),
+        ('hard', _('Difficile')),
+    ]
+
+    title = models.CharField(max_length=300, verbose_name=_('Titre'))
+    hint = models.TextField(blank=True, verbose_name=_('Indice'))
+    difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES, default='easy', verbose_name=_('Difficulté'))
+    points = models.IntegerField(default=5, verbose_name=_('Points'))
+    max_attempts = models.IntegerField(default=0, verbose_name=_('Tentatives max (0=illimité)'))
+    order = models.IntegerField(default=0, verbose_name=_('Ordre'))
+    is_active = models.BooleanField(default=True, verbose_name=_('Actif'))
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='created_exercises', verbose_name=_('Créé par'),
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Créé le'))
+
+    class Meta:
+        abstract = True
+        ordering = ['order']
+
+    def get_metadata(self):
+        return {
+            'title': self.title,
+            'hint': self.hint,
+            'difficulty': self.difficulty,
+            'points': self.points,
+            'max_attempts': self.max_attempts,
+            'order': self.order,
+            'is_active': self.is_active,
+        }
+
+    def get_payload(self):
+        return self.get_metadata()
+
 
 class Tag(models.Model):
     """Tags pour catégoriser les cours."""
@@ -433,6 +514,7 @@ class CourseLesson(models.Model):
     ]
 
     course  = models.ForeignKey(Course,  on_delete=models.CASCADE, related_name='lessons')
+    cours = property(lambda self: self.course)
     module = models.ForeignKey(
         'CourseModule', on_delete=models.SET_NULL, null=True, blank=True,
         related_name='lessons', verbose_name='Module',
@@ -510,6 +592,7 @@ class InscriptionCours(models.Model):
     course = models.ForeignKey(
         Course, on_delete=models.CASCADE, related_name='inscriptions'
     )
+    cours = property(lambda self: self.course)
     date_inscription = models.DateTimeField(auto_now_add=True)
     progression      = models.IntegerField(default=0)
     est_termine      = models.BooleanField(default=False)
@@ -774,12 +857,7 @@ class Certificat(models.Model):
 # EXERCICES DE CODE (Pyodide — exécution dans le navigateur)
 # =============================================================================
 
-class CodeExercise(models.Model):
-    DIFFICULTY_CHOICES = [
-        ('easy',   _('Facile')),
-        ('medium', _('Moyen')),
-        ('hard',   _('Difficile')),
-    ]
+class CodeExercise(ExerciseCommon):
     EVAL_MODES = [
         ('exact',    _('Output exact')),
         ('contains', _('Output contient')),
@@ -796,7 +874,6 @@ class CodeExercise(models.Model):
         related_name='code_exercises', verbose_name=_('Leçon de formation'),
         null=True, blank=True,
     )
-    title = models.CharField(max_length=300, verbose_name=_('Titre'))
     instructions = models.TextField(
         verbose_name=_('Instructions'),
         help_text=_('Instructions en Markdown'),
@@ -821,34 +898,45 @@ class CodeExercise(models.Model):
         max_length=20, choices=EVAL_MODES, default='exact',
         verbose_name=_('Mode d\'évaluation'),
     )
-    difficulty = models.CharField(
-        max_length=10, choices=DIFFICULTY_CHOICES, default='easy',
-        verbose_name=_('Difficulté'),
-    )
-    hint = models.TextField(
-        blank=True, verbose_name=_('Indice'),
-        help_text=_('Affiché après 3 tentatives échouées'),
-    )
-    max_attempts = models.IntegerField(
-        default=0, verbose_name=_('Tentatives max'),
-        help_text=_('0 = illimité'),
-    )
-    points = models.IntegerField(default=10, verbose_name=_('Points'))
-    order = models.IntegerField(default=0, verbose_name=_('Ordre'))
-    is_active = models.BooleanField(default=True, verbose_name=_('Actif'))
-    created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='created_code_exercises', verbose_name=_('Créé par'),
-    )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Créé le'), null=True)
 
-    class Meta:
-        ordering = ['order']
+    class Meta(ExerciseCommon.Meta):
         verbose_name = _('Exercice de code')
         verbose_name_plural = _('Exercices de code')
 
     def __str__(self):
         return self.title
+
+    def get_payload(self, user=None, preview=False):
+        payload = self.get_metadata()
+        payload.update({
+            'id': self.id,
+            'exercise_id': self.id,
+            'instructions': self.instructions,
+            'starter_code': self.starter_code,
+            'expected_output': self.expected_output,
+            'evaluation_mode': self.evaluation_mode,
+            'difficulty': self.difficulty,
+            'hint': self.hint,
+            'max_attempts': self.max_attempts,
+            'points': self.points,
+            'test_code_b64': base64.b64encode(self.test_code.encode()).decode() if self.test_code else '',
+        })
+
+        if user and not preview:
+            submissions = self.submissions.filter(student=user)
+            attempts_used = submissions.count()
+            is_solved = submissions.filter(is_correct=True).exists()
+            payload.update({
+                'is_solved': is_solved,
+                'attempts_used': attempts_used,
+            })
+        else:
+            payload.update({
+                'is_solved': False,
+                'attempts_used': 0,
+            })
+
+        return payload
 
 
 class StudentCodeSubmission(models.Model):
@@ -916,6 +1004,77 @@ class LessonBlock(models.Model):
         ('short_answer', _('Réponse courte')),
         ('grouped_exercise', _('Exercice groupé')),
     ]
+
+    @property
+    def parent_lesson(self):
+        return self.course_lesson or self.formation_lesson
+
+    @property
+    def lesson_type(self):
+        return 'course' if self.course_lesson_id else 'formation'
+
+    @property
+    def is_code_block(self):
+        return self.block_type == 'exercise'
+
+    @property
+    def is_assessment_block(self):
+        return self.block_type in {'exercise', 'mcq', 'fill_blank', 'true_false', 'code_order', 'matching', 'short_answer', 'grouped_exercise'}
+
+    def get_payload(self, user=None, preview=False):
+        data = {'id': self.id, 'type': self.block_type, 'order': self.order}
+
+        if self.block_type == 'text':
+            data['text_content'] = self.text_content
+            return data
+
+        if self.block_type == 'video':
+            data['video_url'] = self.video_url
+            data['video_caption'] = self.video_caption
+            if self.video_url:
+                data['embed_url'] = convertir_url_youtube(self.video_url)
+            return data
+
+        if self.block_type == 'sandbox':
+            data['title'] = self.sandbox_title or 'Essaie toi-même'
+            data['initial_code'] = self.sandbox_initial_code
+            return data
+
+        if self.block_type == 'exercise' and self.code_exercise:
+            data.update(self.code_exercise.get_payload())
+            data['is_solved'] = False
+            data['attempts_used'] = 0
+            return data
+
+        if self.block_type == 'mcq' and self.mcq_exercise:
+            data.update(self.mcq_exercise.get_payload(user=user, preview=preview))
+            return data
+
+        if self.block_type == 'fill_blank' and self.fill_blank_exercise:
+            data.update(self.fill_blank_exercise.get_payload(user=user, preview=preview))
+            return data
+
+        if self.block_type == 'true_false' and self.true_false_exercise:
+            data.update(self.true_false_exercise.get_payload(user=user, preview=preview))
+            return data
+
+        if self.block_type == 'code_order' and self.code_order_exercise:
+            data.update(self.code_order_exercise.get_payload(user=user, preview=preview))
+            return data
+
+        if self.block_type == 'matching' and self.matching_exercise:
+            data.update(self.matching_exercise.get_payload(user=user, preview=preview))
+            return data
+
+        if self.block_type == 'short_answer' and self.short_answer_exercise:
+            data.update(self.short_answer_exercise.get_payload(user=user, preview=preview))
+            return data
+
+        if self.block_type == 'grouped_exercise' and self.grouped_exercise:
+            data.update(self.grouped_exercise.get_payload(user=user, preview=preview))
+            return data
+
+        return data
 
     # Belongs to one of these two (exactly one must be set)
     course_lesson = models.ForeignKey(
@@ -1005,13 +1164,7 @@ class LessonBlock(models.Model):
 # MCQ EXERCISES — Questions à Choix Multiples
 # =============================================================================
 
-class MCQExercise(models.Model):
-    DIFFICULTY_CHOICES = [
-        ('easy',   _('Facile')),
-        ('medium', _('Moyen')),
-        ('hard',   _('Difficile')),
-    ]
-
+class MCQExercise(ExerciseCommon):
     course_lesson = models.ForeignKey(
         'CourseLesson', on_delete=models.CASCADE,
         related_name='mcq_exercises', null=True, blank=True,
@@ -1022,34 +1175,44 @@ class MCQExercise(models.Model):
         related_name='mcq_exercises', null=True, blank=True,
         verbose_name=_('Leçon de formation'),
     )
-    title      = models.CharField(max_length=300, verbose_name=_('Titre'))
     question   = models.TextField(verbose_name=_('Question'))
     explanation = models.TextField(blank=True, verbose_name=_('Explication'))
-    hint       = models.TextField(blank=True, verbose_name=_('Indice'))
-    difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES, default='easy')
-    points     = models.IntegerField(default=5, verbose_name=_('Points'))
-    max_attempts = models.IntegerField(default=0, verbose_name=_('Tentatives max (0=illimité)'))
     allow_multiple_correct = models.BooleanField(
         default=False,
         verbose_name=_('Plusieurs bonnes réponses possibles'),
     )
     shuffle_choices = models.BooleanField(default=True, verbose_name=_('Mélanger les choix'))
     show_explanation_on_wrong = models.BooleanField(default=True)
-    order      = models.IntegerField(default=0)
-    is_active  = models.BooleanField(default=True)
-    created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='created_mcq_exercises',
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ['order']
+    class Meta(ExerciseCommon.Meta):
         verbose_name = _('Exercice QCM')
         verbose_name_plural = _('Exercices QCM')
 
     def __str__(self):
         return self.title
+
+    def get_payload(self, user=None, preview=False):
+        payload = self.get_metadata()
+        choices = list(self.choices.order_by('order'))
+        grade = MCQGrade.objects.filter(student=user, exercise=self).first() if user and not preview else None
+        exhausted = grade and self.max_attempts > 0 and grade.attempts_count >= self.max_attempts
+        reveal = preview or (grade and (grade.is_solved or exhausted))
+        payload.update({
+            'mcq_id': self.id,
+            'mcq_title': self.title,
+            'question': self.question,
+            'hint': self.hint,
+            'allow_multiple': self.allow_multiple_correct,
+            'shuffle': self.shuffle_choices,
+            'max_attempts': self.max_attempts,
+            'choices': [{'id': c.id, 'text': c.text, 'order': c.order} for c in choices],
+            'is_solved': grade.is_solved if grade else False,
+            'points_earned': grade.points_earned if grade else 0,
+            'attempts_used': grade.attempts_count if grade else 0,
+            'correct_ids': [c.id for c in choices if c.is_correct] if reveal else [],
+            'explanation': self.explanation if reveal else '',
+        })
+        return payload
 
     def clean(self):
         from django.core.exceptions import ValidationError
@@ -1126,25 +1289,39 @@ class ExerciseGrade(models.Model):
 _DIFF = [('easy','Facile'),('medium','Moyen'),('hard','Difficile')]
 
 
-class FillBlankExercise(models.Model):
+class FillBlankExercise(ExerciseCommon):
     """Texte à trous — blanks marked {{blank_1}}, {{blank_2}} in text."""
     course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='fill_blank_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='fill_blank_exercises')
-    title            = models.CharField(max_length=300)
     instructions     = models.TextField(blank=True)
     text_with_blanks = models.TextField(help_text='Use {{blank_1}}, {{blank_2}}, … markers')
-    # JSON: {"blank_1": ["nx", "n*x"], "blank_2": ["n-1"]}
     answers          = models.JSONField(default=dict)
     case_sensitive   = models.BooleanField(default=False)
-    difficulty       = models.CharField(max_length=10, choices=_DIFF, default='easy')
-    points           = models.IntegerField(default=5)
-    hint             = models.TextField(blank=True)
-    explanation      = models.TextField(blank=True)
-    max_attempts     = models.IntegerField(default=0)
-    is_active        = models.BooleanField(default=True)
-    order            = models.IntegerField(default=0)
-    class Meta: ordering = ['order']
-    def __str__(self): return self.title
+
+    class Meta(ExerciseCommon.Meta):
+        verbose_name = _('Exercice texte à trous')
+        verbose_name_plural = _('Exercices texte à trous')
+
+    def __str__(self):
+        return self.title
+
+    def get_payload(self, user=None, preview=False):
+        grade = FillBlankGrade.objects.filter(student=user, exercise=self).first() if user and not preview else None
+        exhausted = grade and self.max_attempts > 0 and grade.attempts_count >= self.max_attempts
+        reveal = preview or (grade and (grade.is_solved or exhausted))
+        payload = self.get_metadata()
+        payload.update({
+            'text_with_blanks': self.text_with_blanks,
+            'answers': self.answers if reveal else {},
+            'hint': self.hint,
+            'question': self.instructions,
+            'max_attempts': self.max_attempts,
+            'is_solved': grade.is_solved if grade else False,
+            'attempts_used': grade.attempts_count if grade else 0,
+            'points_earned': grade.points_earned if grade else 0,
+            'explanation': self.explanation if reveal else '',
+        })
+        return payload
 
 
 class FillBlankGrade(models.Model):
@@ -1157,20 +1334,35 @@ class FillBlankGrade(models.Model):
     class Meta: unique_together = ('student', 'exercise')
 
 
-class TrueFalseExercise(models.Model):
+class TrueFalseExercise(ExerciseCommon):
     """Vrai ou Faux — list of statements each marked true/false."""
     course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='true_false_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='true_false_exercises')
-    title            = models.CharField(max_length=300)
-    # JSON: [{"statement": "...", "is_true": true, "explanation": "..."}, ...]
     statements       = models.JSONField(default=list)
     points_per_statement = models.IntegerField(default=2)
-    difficulty       = models.CharField(max_length=10, choices=_DIFF, default='easy')
-    hint             = models.TextField(blank=True)
-    is_active        = models.BooleanField(default=True)
-    order            = models.IntegerField(default=0)
-    class Meta: ordering = ['order']
-    def __str__(self): return self.title
+
+    class Meta(ExerciseCommon.Meta):
+        verbose_name = _('Exercice vrai/faux')
+        verbose_name_plural = _('Exercices vrai/faux')
+
+    def __str__(self):
+        return self.title
+
+    def get_payload(self, user=None, preview=False):
+        grade = TrueFalseGrade.objects.filter(student=user, exercise=self).first() if user and not preview else None
+        exhausted = grade and self.max_attempts > 0 and grade.attempts_count >= self.max_attempts
+        reveal = preview or (grade and (grade.is_solved or exhausted))
+        payload = self.get_metadata()
+        payload.update({
+            'statements': self.statements,
+            'points_per_statement': self.points_per_statement,
+            'hint': self.hint,
+            'max_attempts': self.max_attempts,
+            'is_solved': grade.is_solved if grade else False,
+            'attempts_used': grade.attempts_count if grade else 0,
+            'points_earned': grade.points_earned if grade else 0,
+        })
+        return payload
 
 
 class TrueFalseGrade(models.Model):
@@ -1183,25 +1375,46 @@ class TrueFalseGrade(models.Model):
     class Meta: unique_together = ('student', 'exercise')
 
 
-class CodeOrderExercise(models.Model):
+class CodeOrderExercise(ExerciseCommon):
     """Ordonner le code — drag code lines into correct order."""
     course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='code_order_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='code_order_exercises')
-    title            = models.CharField(max_length=300)
     instructions     = models.TextField(blank=True)
-    # JSON array of code lines IN CORRECT ORDER
     correct_order    = models.JSONField(default=list)
-    # JSON array of distractor lines (wrong lines)
     distractor_lines = models.JSONField(default=list, blank=True)
-    difficulty       = models.CharField(max_length=10, choices=_DIFF, default='easy')
-    points           = models.IntegerField(default=10)
-    hint             = models.TextField(blank=True)
-    explanation      = models.TextField(blank=True)
-    max_attempts     = models.IntegerField(default=0)
-    is_active        = models.BooleanField(default=True)
-    order            = models.IntegerField(default=0)
-    class Meta: ordering = ['order']
-    def __str__(self): return self.title
+
+    class Meta(ExerciseCommon.Meta):
+        verbose_name = _('Exercice ordre de code')
+        verbose_name_plural = _('Exercices ordre de code')
+
+    def __str__(self):
+        return self.title
+
+    def get_payload(self, user=None, preview=False):
+        grade = CodeOrderGrade.objects.filter(student=user, exercise=self).first() if user and not preview else None
+        exhausted = grade and self.max_attempts > 0 and grade.attempts_count >= self.max_attempts
+        reveal = preview or (grade and (grade.is_solved or exhausted))
+        all_lines = list(self.correct_order or []) + list(self.distractor_lines or [])
+        user_seed = (user.id if user else 0) + self.id
+        rng = random.Random(user_seed)
+        indices = list(range(len(all_lines)))
+        rng.shuffle(indices)
+        shuffled_lines = [all_lines[i] for i in indices]
+        payload = self.get_metadata()
+        payload.update({
+            'code_order_id': self.id,
+            'correct_order': self.correct_order,
+            'choices': all_lines,
+            'shuffled_lines': shuffled_lines,
+            'shuffled_indices_json': json.dumps(indices),
+            'hint': self.hint,
+            'max_attempts': self.max_attempts,
+            'is_solved': grade.is_solved if grade else False,
+            'attempts_used': grade.attempts_count if grade else 0,
+            'points_earned': grade.points_earned if grade else 0,
+            'explanation': self.explanation if reveal else '',
+        })
+        return payload
 
 
 class CodeOrderGrade(models.Model):
@@ -1214,22 +1427,49 @@ class CodeOrderGrade(models.Model):
     class Meta: unique_together = ('student', 'exercise')
 
 
-class MatchingExercise(models.Model):
+class MatchingExercise(ExerciseCommon):
     """Associations — match left items to right items."""
     course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='matching_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='matching_exercises')
-    title            = models.CharField(max_length=300)
     instructions     = models.TextField(blank=True)
-    # JSON: [{"left": "Dérivée", "right": "Taux de variation"}, ...]
     pairs            = models.JSONField(default=list)
-    difficulty       = models.CharField(max_length=10, choices=_DIFF, default='easy')
-    points           = models.IntegerField(default=8)
-    hint             = models.TextField(blank=True)
-    explanation      = models.TextField(blank=True)
-    is_active        = models.BooleanField(default=True)
-    order            = models.IntegerField(default=0)
-    class Meta: ordering = ['order']
-    def __str__(self): return self.title
+
+    class Meta(ExerciseCommon.Meta):
+        verbose_name = _('Exercice association')
+        verbose_name_plural = _('Exercices associations')
+
+    def __str__(self):
+        return self.title
+
+    def get_payload(self, user=None, preview=False):
+        grade = MatchingGrade.objects.filter(student=user, exercise=self).first() if user and not preview else None
+        exhausted = grade and self.max_attempts > 0 and grade.attempts_count >= self.max_attempts
+        reveal = preview or (grade and (grade.is_solved or exhausted))
+        pairs = self.pairs or []
+        left_items = [p.get('left', '') for p in pairs]
+        right_items = [p.get('right', '') for p in pairs]
+        user_seed = (user.id if user else 0) + self.id + 1
+        rng = random.Random(user_seed)
+        indices = list(range(len(right_items)))
+        rng.shuffle(indices)
+        shuffled_right = [right_items[i] for i in indices]
+        payload = self.get_metadata()
+        payload.update({
+            'matching_id': self.id,
+            'instructions': self.instructions,
+            'left_items': left_items,
+            'right_items': shuffled_right,
+            'right_indices': list(range(len(pairs))),
+            'pairs': pairs,
+            'points': self.points,
+            'difficulty': self.difficulty,
+            'hint': self.hint,
+            'is_solved': grade.is_solved if grade else False,
+            'attempts_used': grade.attempts_count if grade else 0,
+            'points_earned': grade.points_earned if grade else 0,
+            'explanation': self.explanation if reveal else '',
+        })
+        return payload
 
 
 class MatchingGrade(models.Model):
@@ -1242,29 +1482,42 @@ class MatchingGrade(models.Model):
     class Meta: unique_together = ('student', 'exercise')
 
 
-class ShortAnswerExercise(models.Model):
+class ShortAnswerExercise(ExerciseCommon):
     """Réponse courte — student types a short text answer."""
     course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='short_answer_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='short_answer_exercises')
-    title            = models.CharField(max_length=300)
     question         = models.TextField()
-    # JSON list of accepted answers after normalization
     accepted_answers = models.JSONField(default=list)
     case_sensitive   = models.BooleanField(default=False)
     strip_whitespace = models.BooleanField(default=True)
-    difficulty       = models.CharField(max_length=10, choices=_DIFF, default='easy')
-    points           = models.IntegerField(default=5)
-    hint             = models.TextField(blank=True)
-    explanation      = models.TextField(blank=True)
-    max_attempts     = models.IntegerField(default=3)
     is_code_answer   = models.BooleanField(default=False)
-    is_active        = models.BooleanField(default=True)
-    order            = models.IntegerField(default=0)
-    class Meta: ordering = ['order']
-    def __str__(self): return self.title
+
+    class Meta(ExerciseCommon.Meta):
+        verbose_name = _('Exercice réponse courte')
+        verbose_name_plural = _('Exercices réponses courtes')
+
+    def __str__(self):
+        return self.title
+
+    def get_payload(self, user=None, preview=False):
+        grade = ShortAnswerGrade.objects.filter(student=user, exercise=self).first() if user and not preview else None
+        exhausted = grade and self.max_attempts > 0 and grade.attempts_count >= self.max_attempts
+        reveal = preview or (grade and (grade.is_solved or exhausted))
+        payload = self.get_metadata()
+        payload.update({
+            'question': self.question,
+            'hint': self.hint,
+            'max_attempts': self.max_attempts,
+            'is_solved': grade.is_solved if grade else False,
+            'attempts_used': grade.attempts_count if grade else 0,
+            'points_earned': grade.points_earned if grade else 0,
+            'accepted_answers': self.accepted_answers if reveal else [],
+            'explanation': self.explanation if reveal else '',
+        })
+        return payload
 
 
-class GroupedExercise(models.Model):
+class GroupedExercise(ExerciseCommon):
     QUESTION_TYPES = [
         ('qcm', _('QCM')),
         ('fill_blank', _('Texte à trous')),
@@ -1274,23 +1527,69 @@ class GroupedExercise(models.Model):
 
     course_lesson    = models.ForeignKey('CourseLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='grouped_exercises')
     formation_lesson = models.ForeignKey('formation.FormationLesson', on_delete=models.CASCADE, null=True, blank=True, related_name='grouped_exercises')
-    title            = models.CharField(max_length=300)
     instructions     = models.TextField(blank=True)
     question_type    = models.CharField(max_length=20, choices=QUESTION_TYPES, default='qcm')
     questions        = models.JSONField(default=list)
-    created_by       = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='created_grouped_exercises', verbose_name=_('Créé par'),
-    )
-    created_at       = models.DateTimeField(auto_now_add=True, verbose_name=_('Créé le'))
-    is_active        = models.BooleanField(default=True)
 
-    class Meta:
+    class Meta(ExerciseCommon.Meta):
         verbose_name = _('Exercice groupé')
         verbose_name_plural = _('Exercices groupés')
 
     def __str__(self):
         return self.title
+
+    def get_payload(self, user=None, preview=False):
+        payload = self.get_metadata()
+        questions = []
+
+        for idx, q in enumerate(self.questions or []):
+            qt = q.get('question_type')
+            qid = q.get('exercise_id')
+            label = q.get('label', f'Q{idx + 1}')
+
+            if qt == 'qcm':
+                ex = MCQExercise.objects.filter(id=qid).first()
+                if not ex:
+                    continue
+                question_payload = ex.get_payload(user=user, preview=preview)
+                question_payload.update({'type': 'qcm', 'label': label})
+                questions.append(question_payload)
+                continue
+
+            if qt == 'fill_blank':
+                ex = FillBlankExercise.objects.filter(id=qid).first()
+                if not ex:
+                    continue
+                question_payload = ex.get_payload(user=user, preview=preview)
+                question_payload.update({'type': 'fill_blank', 'label': label})
+                questions.append(question_payload)
+                continue
+
+            if qt == 'true_false':
+                ex = TrueFalseExercise.objects.filter(id=qid).first()
+                if not ex:
+                    continue
+                question_payload = ex.get_payload(user=user, preview=preview)
+                question_payload.update({'type': 'true_false', 'label': label})
+                questions.append(question_payload)
+                continue
+
+            if qt == 'short_answer':
+                ex = ShortAnswerExercise.objects.filter(id=qid).first()
+                if not ex:
+                    continue
+                question_payload = ex.get_payload(user=user, preview=preview)
+                question_payload.update({'type': 'short_answer', 'label': label})
+                questions.append(question_payload)
+                continue
+
+        payload.update({
+            'question_type': self.question_type,
+            'instructions': self.instructions,
+            'questions': questions,
+            'explanation': self.explanation if preview else '',
+        })
+        return payload
 
 
 class ShortAnswerGrade(models.Model):

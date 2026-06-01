@@ -89,8 +89,8 @@ def send_payment_confirmation_email(user, payment):
         return
     try:
         subject = 'Confirmation de paiement — Numeria Institute'
-        if payment.cours:
-            item_name = payment.cours.titre
+        if payment.course:
+            item_name = payment.course.titre
         elif payment.formation_inscription:
             item_name = (
                 f"{payment.formation_inscription.session.formation.titre}"

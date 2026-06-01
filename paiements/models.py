@@ -54,13 +54,15 @@ class Paiement(models.Model):
         related_name='paiements'
     )
     
-    cours = models.ForeignKey(
+    course = models.ForeignKey(
         'cours.Course',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='paiements'
+        related_name='paiements',
+        db_column='cours_id'
     )
+    cours = property(lambda self: self.course)
     formation_inscription = models.ForeignKey(
         'formation.InscriptionFormation',
         on_delete=models.SET_NULL,
@@ -153,8 +155,8 @@ class Paiement(models.Model):
     user_agent = models.TextField(blank=True)
 
     def __str__(self):
-        if self.cours:
-            item_titre = self.cours.titre
+        if self.course:
+            item_titre = self.course.titre
         elif self.formation_inscription:
             item_titre = f"{self.formation_inscription.session.formation.titre} — {self.formation_inscription.session.nom}"
         else:
@@ -190,17 +192,13 @@ class Paiement(models.Model):
         return self.etudiant
 
     @property
-    def course(self):
-        return self.cours
-
-    @property
     def montant(self):
         return self.montant_final
 
     @property
     def objet(self):
-        if self.cours:
-            return self.cours
+        if self.course:
+            return self.course
         if self.formation_inscription:
             return self.formation_inscription
         try:
@@ -210,7 +208,7 @@ class Paiement(models.Model):
 
     @property
     def objet_type(self):
-        if self.cours:
+        if self.course:
             return 'cours'
         if self.formation_inscription:
             return 'formation'

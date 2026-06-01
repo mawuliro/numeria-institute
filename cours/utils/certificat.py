@@ -266,7 +266,7 @@ def generer_certificat_pdf(inscription, url_verification=None):
     c = canvas.Canvas(buffer, pagesize=landscape(A4))
 
     etudiant  = inscription.etudiant
-    cours     = inscription.cours
+    cours     = inscription.course
     date_fin  = inscription.date_fin or datetime.now()
 
     prenom      = etudiant.first_name or etudiant.username

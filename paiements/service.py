@@ -26,15 +26,15 @@ def generer_reference():
     return f"NIM-{annee}-{code}"
 
 
-def creer_paiement(etudiant, cours=None, formation_inscription=None, paiement_seance=None, provider='sandbox', method=None):
+def creer_paiement(etudiant, course=None, formation_inscription=None, paiement_seance=None, provider='sandbox', method=None):
     """
     Crée un enregistrement de paiement en attente.
     Appelé quand l'étudiant clique sur "Payer".
     """
-    if not cours and not formation_inscription and not paiement_seance:
+    if not course and not formation_inscription and not paiement_seance:
         raise ValueError('Un paiement doit être associé à un cours, une inscription de formation ou une séance de mentorat.')
 
-    if sum(bool(x) for x in [cours, formation_inscription, paiement_seance]) != 1:
+    if sum(bool(x) for x in [course, formation_inscription, paiement_seance]) != 1:
         raise ValueError('Un paiement ne peut pas être lié à plusieurs objets en même temps.')
 
     if formation_inscription and formation_inscription.etudiant != etudiant:
@@ -70,8 +70,8 @@ def creer_paiement(etudiant, cours=None, formation_inscription=None, paiement_se
 
     if paiement_seance:
         montant = paiement_seance.montant_total
-    elif cours:
-        montant = cours.prix
+    elif course:
+        montant = course.prix
     else:
         montant = formation_inscription.prix_paye_fcfa
 
@@ -120,7 +120,7 @@ def confirmer_paiement(paiement, reference_provider=None):
     # Inscrire automatiquement l'étudiant au cours
     inscription, cree = InscriptionCours.objects.get_or_create(
         etudiant=paiement.etudiant,
-        cours=paiement.cours,
+        course=paiement.course,
         defaults={
             'progression': 0,
             'est_termine': False,
@@ -130,7 +130,7 @@ def confirmer_paiement(paiement, reference_provider=None):
     if cree:
         try:
             from numeria_project.emails import send_course_enrollment_email
-            send_course_enrollment_email(paiement.etudiant, paiement.cours)
+            send_course_enrollment_email(paiement.etudiant, paiement.course)
         except Exception:
             pass
 
@@ -145,14 +145,14 @@ def echouer_paiement(paiement, raison=''):
     return paiement
 
 
-def verifier_acces_cours(etudiant, cours):
+def verifier_acces_cours(etudiant, course):
     """
     Vérifie si un étudiant a accès à un cours payant.
     Retourne True si :
     - Le cours est gratuit
     - L'étudiant a un paiement réussi pour ce cours
     """
-    if cours.est_gratuit:
+    if course.est_gratuit:
         return True
 
     return Paiement.objects.filter(
