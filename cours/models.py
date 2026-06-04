@@ -255,6 +255,12 @@ class Certificat(models.Model):
             self.code_verification = slugify(f'{self.inscription_id}-{self.date_emission}')[:64] or 'cert'
         super().save(*args, **kwargs)
 
+    def get_nom_fichier(self):
+        """Return a safe filename for the PDF certificate download."""
+        nom = slugify(self.inscription.etudiant.get_full_name() or self.inscription.etudiant.username)
+        cours = slugify(self.inscription.course.title)
+        return f'certificat-{nom}-{cours}.pdf'
+
     class Meta:
         ordering = ['-date_emission']
 

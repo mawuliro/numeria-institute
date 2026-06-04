@@ -64,8 +64,8 @@ def _render_block_list(request, blocks, lesson_id, lesson_type):
         ).order_by('title')
     else:
         all_exercises = CodeExercise.objects.filter(
-            course_lesson_id__isnull=False
-        ).select_related('course_lesson').order_by('title')
+            course_lesson_id=lesson_id, is_active=True
+        ).order_by('title')
     return render_to_string('admin_panel/blocks/block_list.html', {
         'blocks':        blocks,
         'lesson_id':     lesson_id,

@@ -18,40 +18,25 @@ from .models import Course, InscriptionCours, CourseLesson, ProgressionLecon, St
 def catalogue(request):
     """
     Page catalogue — affiche tous les cours publiés.
-    Filtre par type (général ou scolaire), par cycle et par classe.
+    Filtre par catégorie (matière) et par niveau.
     """
     tous_les_cours = Course.objects.filter(status='published')
 
     # Filtres depuis l'URL
-    type_cours = request.GET.get('type', '')
-    cycle      = request.GET.get('cycle', '')
-    classe     = request.GET.get('classe', '')
-    matiere    = request.GET.get('matiere', '')
+    matiere = request.GET.get('matiere', '')
+    niveau  = request.GET.get('niveau', '')
 
-    if type_cours:
-        tous_les_cours = tous_les_cours.filter(type_cours=type_cours)
-    if cycle:
-        tous_les_cours = tous_les_cours.filter(cycle=cycle)
-    if classe:
-        tous_les_cours = tous_les_cours.filter(classe=classe)
     if matiere:
         tous_les_cours = tous_les_cours.filter(category=matiere)
-
-    # Compteurs par type
-    cours_generaux  = Course.objects.filter(status='published', type_cours='general').count()
-    cours_scolaires = Course.objects.filter(status='published', type_cours='scolaire').count()
+    if niveau:
+        tous_les_cours = tous_les_cours.filter(level=niveau)
 
     contexte = {
-        'cours':           tous_les_cours,
-        'cours_generaux':  cours_generaux,
-        'cours_scolaires': cours_scolaires,
-        'type_actif':      type_cours,
-        'cycle_actif':     cycle,
-        'classe_active':   classe,
-        'matiere_active':  matiere,
-        'cycles':          Course.CYCLES,
-        'classes':         Course.CLASSES,
-        'matieres':        Course.MATIERES,
+        'cours':          tous_les_cours,
+        'matiere_active': matiere,
+        'niveau_actif':   niveau,
+        'matieres':       Course.CATEGORIES,
+        'niveaux':        Course.LEVELS,
     }
     return render(request, 'cours/catalogue.html', contexte)
 
@@ -119,13 +104,14 @@ def detail_cours(request, cours_id):
     reponse_choisie        = None
 
     if lecon_active and est_inscrit:
-        exercices = lecon_active.exercices.filter(is_active=True)
+        from .models import MCQExercise
+        exercices = MCQExercise.objects.filter(course_lesson=lecon_active, is_active=True)
 
         exercices_reussis_ids = list(
             StudentProgress.objects.filter(
                 student=request.user,
                 exercise_type='mcq',
-                exercise_id__in=lecon_active.exercices.values_list('id', flat=True),
+                exercise_id__in=exercices.values_list('id', flat=True),
                 is_solved=True
             ).values_list('exercise_id', flat=True)
         )

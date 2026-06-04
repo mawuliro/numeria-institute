@@ -204,7 +204,7 @@ def cours_analytics(request, slug):
     total_termines = InscriptionCours.objects.filter(course=cours, est_termine=True).count()
     completion_rate = round(total_termines / total_inscrits * 100, 1) if total_inscrits else 0
 
-    revenus = Paiement.objects.filter(course=cours, statut='reussi').aggregate(
+    revenus = Paiement.objects.filter(cours=cours, statut='reussi').aggregate(
         t=Sum('montant_final')
     )['t'] or 0
 

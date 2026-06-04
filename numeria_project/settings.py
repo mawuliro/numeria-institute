@@ -118,7 +118,6 @@ if DATABASE_URL and not DATABASE_URL.startswith('sqlite'):
             default=DATABASE_URL,
             conn_max_age=600,
             conn_health_checks=True,
-            ssl_require=True,
         )
     }
 else:
