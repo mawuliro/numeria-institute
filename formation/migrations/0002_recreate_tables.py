@@ -17,23 +17,36 @@ class Migration(migrations.Migration):
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
+def drop_old_formation_tables(apps, schema_editor):
+    connection = schema_editor.connection
+    cursor = connection.cursor()
+    cascade = ' CASCADE' if connection.vendor == 'postgresql' else ''
+
+    for table_name in [
+        'formation_progressionformationlesson',
+        'formation_progressionlecon',
+        'formation_certificatformation',
+        'formation_inscriptionformation',
+        'formation_formationlesson',
+        'formation_formationmodule',
+        'formation_leconformation',
+        'formation_sessionformation',
+        'formation_formation_instructeurs',
+        'formation_formation',
+    ]:
+        cursor.execute(f"DROP TABLE IF EXISTS {table_name}{cascade};")
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('formation', '0001_initial'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+    ]
+
     operations = [
         # Step 1: Drop everything from the old schema (order matters for FKs)
-        migrations.RunSQL(
-            sql="""
-                DROP TABLE IF EXISTS formation_progressionformationlesson;
-                DROP TABLE IF EXISTS formation_progressionlecon;
-                DROP TABLE IF EXISTS formation_certificatformation;
-                DROP TABLE IF EXISTS formation_inscriptionformation;
-                DROP TABLE IF EXISTS formation_formationlesson;
-                DROP TABLE IF EXISTS formation_formationmodule;
-                DROP TABLE IF EXISTS formation_leconformation;
-                DROP TABLE IF EXISTS formation_sessionformation;
-                DROP TABLE IF EXISTS formation_formation_instructeurs;
-                DROP TABLE IF EXISTS formation_formation;
-            """,
-            reverse_sql=migrations.RunSQL.noop,
-        ),
+        migrations.RunPython(drop_old_formation_tables, reverse_code=migrations.RunPython.noop),
 
         # Step 2: Recreate with the new schema (mirrors 0001_initial operations,
         # but runs DB SQL only — state is already set by 0001_initial).
