@@ -22,87 +22,57 @@ _EXERCISE_TABLES = [
     'cours_shortanswerexercise',
 ]
 
-# Build the ADD COLUMN IF NOT EXISTS statements for BaseExercise inherited fields
-_ADD_BASE_FIELDS = '\n'.join(
-    f"""
-    ALTER TABLE {t} ADD COLUMN IF NOT EXISTS instructions      TEXT    NOT NULL DEFAULT '';
-    ALTER TABLE {t} ADD COLUMN IF NOT EXISTS max_attempts      INTEGER NOT NULL DEFAULT 0;
-    ALTER TABLE {t} ADD COLUMN IF NOT EXISTS hint              TEXT    NOT NULL DEFAULT '';
-    ALTER TABLE {t} ADD COLUMN IF NOT EXISTS explanation       TEXT    NOT NULL DEFAULT '';
-    ALTER TABLE {t} ADD COLUMN IF NOT EXISTS formation_lesson_id BIGINT
-        REFERENCES formation_formationlesson(id) ON DELETE CASCADE;
-    """
-    for t in _EXERCISE_TABLES
-)
 
-# Rename LessonBlock FKs using a PL/pgSQL DO block (safe even if already renamed)
-_RENAME_LESSON_BLOCK_FKS = """
-DO $$
-BEGIN
-    IF EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_name = 'cours_lessonblock'
-          AND column_name = 'fill_blank_exercise_id'
-    ) THEN
-        ALTER TABLE cours_lessonblock
-            RENAME COLUMN fill_blank_exercise_id TO fill_blank_id;
-    END IF;
+def apply_exercise_schema_fixes(apps, schema_editor):
+    connection = schema_editor.connection
 
-    IF EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_name = 'cours_lessonblock'
-          AND column_name = 'true_false_exercise_id'
-    ) THEN
-        ALTER TABLE cours_lessonblock
-            RENAME COLUMN true_false_exercise_id TO true_false_id;
-    END IF;
+    def has_column(table_name, column_name):
+        cursor = connection.cursor()
+        if connection.vendor == 'sqlite':
+            cursor.execute(f"PRAGMA table_info({table_name})")
+            return any(row[1] == column_name for row in cursor.fetchall())
 
-    IF EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_name = 'cours_lessonblock'
-          AND column_name = 'code_order_exercise_id'
-    ) THEN
-        ALTER TABLE cours_lessonblock
-            RENAME COLUMN code_order_exercise_id TO code_order_id;
-    END IF;
+        cursor.execute(
+            "SELECT 1 FROM information_schema.columns WHERE table_name=%s AND column_name=%s",
+            [table_name, column_name],
+        )
+        return cursor.fetchone() is not None
 
-    IF EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_name = 'cours_lessonblock'
-          AND column_name = 'matching_exercise_id'
-    ) THEN
-        ALTER TABLE cours_lessonblock
-            RENAME COLUMN matching_exercise_id TO matching_id;
-    END IF;
+    def execute(sql, params=None):
+        cursor = connection.cursor()
+        cursor.execute(sql, params or [])
 
-    IF EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_name = 'cours_lessonblock'
-          AND column_name = 'short_answer_exercise_id'
-    ) THEN
-        ALTER TABLE cours_lessonblock
-            RENAME COLUMN short_answer_exercise_id TO short_answer_id;
-    END IF;
-END $$;
-"""
+    def add_column(table_name, column_name, column_sql):
+        if not has_column(table_name, column_name):
+            execute(f"ALTER TABLE {table_name} ADD COLUMN {column_sql}")
 
-# MCQChoice extra columns
-_MCQCHOICE_FIELDS = """
-    ALTER TABLE cours_mcqchoice ADD COLUMN IF NOT EXISTS feedback TEXT    NOT NULL DEFAULT '';
-    ALTER TABLE cours_mcqchoice ADD COLUMN IF NOT EXISTS "order"  INTEGER NOT NULL DEFAULT 0;
-"""
+    def rename_column(table_name, old_name, new_name):
+        if has_column(table_name, old_name) and not has_column(table_name, new_name):
+            execute(f"ALTER TABLE {table_name} RENAME COLUMN {old_name} TO {new_name}")
 
-# Extra fields that might be missing from specific exercise tables
-_SPECIFIC_FIELDS = """
-    ALTER TABLE cours_fillblankexercise
-        ADD COLUMN IF NOT EXISTS case_sensitive BOOLEAN NOT NULL DEFAULT FALSE;
+    for table in _EXERCISE_TABLES:
+        add_column(table, 'instructions', "instructions TEXT NOT NULL DEFAULT ''")
+        add_column(table, 'max_attempts', 'max_attempts INTEGER NOT NULL DEFAULT 0')
+        add_column(table, 'hint', "hint TEXT NOT NULL DEFAULT ''")
+        add_column(table, 'explanation', "explanation TEXT NOT NULL DEFAULT ''")
+        add_column(
+            table,
+            'formation_lesson_id',
+            'formation_lesson_id BIGINT REFERENCES formation_formationlesson(id) ON DELETE CASCADE',
+        )
 
-    ALTER TABLE cours_shortanswerexercise
-        ADD COLUMN IF NOT EXISTS is_code_answer BOOLEAN NOT NULL DEFAULT FALSE;
+    rename_column('cours_lessonblock', 'fill_blank_exercise_id', 'fill_blank_id')
+    rename_column('cours_lessonblock', 'true_false_exercise_id', 'true_false_id')
+    rename_column('cours_lessonblock', 'code_order_exercise_id', 'code_order_id')
+    rename_column('cours_lessonblock', 'matching_exercise_id', 'matching_id')
+    rename_column('cours_lessonblock', 'short_answer_exercise_id', 'short_answer_id')
 
-    ALTER TABLE cours_mcqexercise
-        ADD COLUMN IF NOT EXISTS shuffle_choices BOOLEAN NOT NULL DEFAULT TRUE;
-"""
+    add_column('cours_mcqchoice', 'feedback', "feedback TEXT NOT NULL DEFAULT ''")
+    add_column('cours_mcqchoice', 'order', '"order" INTEGER NOT NULL DEFAULT 0')
+
+    add_column('cours_fillblankexercise', 'case_sensitive', 'case_sensitive BOOLEAN NOT NULL DEFAULT FALSE')
+    add_column('cours_shortanswerexercise', 'is_code_answer', 'is_code_answer BOOLEAN NOT NULL DEFAULT FALSE')
+    add_column('cours_mcqexercise', 'shuffle_choices', 'shuffle_choices BOOLEAN NOT NULL DEFAULT TRUE')
 
 
 class Migration(migrations.Migration):
@@ -116,10 +86,7 @@ class Migration(migrations.Migration):
         migrations.SeparateDatabaseAndState(
             state_operations=[],
             database_operations=[
-                migrations.RunSQL(
-                    sql=_ADD_BASE_FIELDS + _RENAME_LESSON_BLOCK_FKS + _MCQCHOICE_FIELDS + _SPECIFIC_FIELDS,
-                    reverse_sql=migrations.RunSQL.noop,
-                ),
+                migrations.RunPython(apply_exercise_schema_fixes, reverse_code=migrations.RunPython.noop),
             ],
         ),
     ]

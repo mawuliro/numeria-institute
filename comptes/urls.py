@@ -6,6 +6,9 @@ app_name = 'comptes'
 
 urlpatterns = [
     path('inscription/', views.inscription, name='inscription'),
+    path('verification-envoyee/', views.verification_sent, name='verification_sent'),
+    path('verification/<str:token>/', views.verify_email, name='verify_email'),
+    path('verification/renvoyer/', views.resend_verification_email, name='resend_verification_email'),
     path('connexion/', views.connexion, name='connexion'),
     path('password-reset/', views.RatelimitedPasswordResetView.as_view(), name='password_reset'),
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(

@@ -21,16 +21,16 @@ class Migration(migrations.Migration):
         # Step 1: Drop everything from the old schema (order matters for FKs)
         migrations.RunSQL(
             sql="""
-                DROP TABLE IF EXISTS formation_progressionformationlesson CASCADE;
-                DROP TABLE IF EXISTS formation_progressionlecon CASCADE;
-                DROP TABLE IF EXISTS formation_certificatformation CASCADE;
-                DROP TABLE IF EXISTS formation_inscriptionformation CASCADE;
-                DROP TABLE IF EXISTS formation_formationlesson CASCADE;
-                DROP TABLE IF EXISTS formation_formationmodule CASCADE;
-                DROP TABLE IF EXISTS formation_leconformation CASCADE;
-                DROP TABLE IF EXISTS formation_sessionformation CASCADE;
-                DROP TABLE IF EXISTS formation_formation_instructeurs CASCADE;
-                DROP TABLE IF EXISTS formation_formation CASCADE;
+                DROP TABLE IF EXISTS formation_progressionformationlesson;
+                DROP TABLE IF EXISTS formation_progressionlecon;
+                DROP TABLE IF EXISTS formation_certificatformation;
+                DROP TABLE IF EXISTS formation_inscriptionformation;
+                DROP TABLE IF EXISTS formation_formationlesson;
+                DROP TABLE IF EXISTS formation_formationmodule;
+                DROP TABLE IF EXISTS formation_leconformation;
+                DROP TABLE IF EXISTS formation_sessionformation;
+                DROP TABLE IF EXISTS formation_formation_instructeurs;
+                DROP TABLE IF EXISTS formation_formation;
             """,
             reverse_sql=migrations.RunSQL.noop,
         ),

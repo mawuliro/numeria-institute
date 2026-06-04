@@ -5,6 +5,7 @@ from django.contrib.auth import login, logout, authenticate, update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.signing import BadSignature, SignatureExpired
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -12,6 +13,7 @@ from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 from django.contrib.auth.views import PasswordResetView
 from django.urls import reverse_lazy
+from numeria_project.emails import send_verification_email, verify_email_token
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +29,7 @@ class RatelimitedPasswordResetView(PasswordResetView):
     @ratelimit(key='ip', rate='5/h', method='POST', block=True)
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
-from .forms import FormulaireInscription, FormulaireConnexion, FormulaireProfil
+from .forms import FormulaireInscription, FormulaireConnexion, FormulaireProfil, VerificationResendForm
 from .models import Profil
 
 
@@ -41,9 +43,9 @@ def inscription(request):
         formulaire = FormulaireInscription(request.POST)
         if formulaire.is_valid():
             user = formulaire.save()
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            messages.success(request, _("🎉 Bienvenue sur Numeria, {prenom} !").format(prenom=user.first_name))
-            return redirect('comptes:tableau_de_bord')
+            send_verification_email(user, request)
+            messages.success(request, _("Un email de vérification a été envoyé à ton adresse.") )
+            return redirect('comptes:verification_sent')
         else:
             messages.error(request, _("Veuillez corriger les erreurs ci-dessous."))
     else:
@@ -52,7 +54,43 @@ def inscription(request):
     return render(request, 'comptes/inscription.html', {'formulaire': formulaire})
 
 
-@ratelimit(key='ip', rate='20/h', method='POST', block=True)
+def verification_sent(request):
+    return render(request, 'comptes/verification_sent.html')
+
+
+def verify_email(request, token):
+    try:
+        user = verify_email_token(token)
+    except SignatureExpired:
+        return render(request, 'comptes/verification_expired.html')
+    except (BadSignature, User.DoesNotExist, ValueError):
+        return render(request, 'comptes/verification_invalid.html')
+
+    user.is_active = True
+    user.save()
+    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+    return redirect('comptes:tableau_de_bord')
+
+
+def resend_verification_email(request):
+    if request.method == 'POST':
+        formulaire = VerificationResendForm(request.POST)
+        if formulaire.is_valid():
+            email = formulaire.cleaned_data['email']
+            try:
+                user = User.objects.get(email=email, is_active=False)
+                send_verification_email(user, request)
+                messages.success(request, _("Un nouvel email de vérification a été envoyé."))
+                return redirect('comptes:verification_sent')
+            except User.DoesNotExist:
+                messages.info(request, _("Aucun compte inactif n'est associé à cette adresse email."))
+    else:
+        formulaire = VerificationResendForm()
+
+    return render(request, 'comptes/verification_resend.html', {'formulaire': formulaire})
+
+
+@ratelimit(key='ip', rate='10/h', method='POST', block=True)
 def connexion(request):
     """Connexion d'un utilisateur existant."""
     if request.user.is_authenticated:
@@ -112,7 +150,7 @@ def tableau_de_bord(request):
     else:
         progression_totale = 0
 
-    ids_inscrits = inscriptions.values_list('cours_id', flat=True)
+    ids_inscrits = inscriptions.values_list('course_id', flat=True)
     cours_recommandes = Course.objects.filter(
         status='published'
     ).exclude(

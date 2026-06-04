@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 import resend
 from django.core import signing
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.html import strip_tags
@@ -75,6 +76,43 @@ def verify_email_token(token):
     if not user_id:
         raise ValueError('Jeton de vérification invalide.')
     return User.objects.get(pk=user_id)
+
+
+def send_verification_email(user, request, language=None):
+    if not user.email:
+        return False
+
+    language = _get_language(language)
+    token = make_email_verification_token(user)
+    verification_url = request.build_absolute_uri(
+        reverse('comptes:verify_email', args=[token])
+    )
+    template_name = f'emails/verify_email_{language}.html'
+    html_content = _render_template(
+        template_name,
+        {
+            'user': user,
+            'verification_url': verification_url,
+            'site_name': 'Numeria Institute',
+        },
+        language=language,
+    )
+    text_content = strip_tags(html_content)
+    subject = (
+        'Confirm your Numeria account'
+        if language == 'en'
+        else 'Confirme ton compte Numeria'
+    )
+
+    email = EmailMultiAlternatives(
+        subject,
+        text_content,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+    )
+    email.attach_alternative(html_content, 'text/html')
+    email.send()
+    return True
 
 
 # ─── TRANSACTIONAL EMAILS (Gmail SMTP) ────────────────────────────────────────
