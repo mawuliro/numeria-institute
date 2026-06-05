@@ -331,11 +331,7 @@
   <!-- Drawer add block bar -->
   <div class="shrink-0 border-t border-slate-100 p-4">
     <div id="block-palette" class="hidden grid grid-cols-5 gap-2 mb-3">
-      {% with palette="📝text,🎬video,🐍sandbox,💻code_exercise,🔘mcq,✏️fill_blank,✅true_false,🧩code_order,🔗matching,💬short_answer" %}
-      {% for item in palette|split:"," %}
-      <!-- rendered by JS block palette button below -->
-      {% endfor %}
-      {% endwith %}
+      <!-- populated by renderPalette() in JavaScript -->
     </div>
     <button onclick="togglePalette()" type="button"
             class="w-full py-2 border-2 border-dashed border-slate-300 hover:border-sky-400 text-slate-500 hover:text-sky-600 rounded-xl text-sm font-medium transition-colors">

@@ -8,17 +8,12 @@
 {% block content %}
 <!-- Type tabs -->
 <div class="flex flex-wrap gap-1 mb-5 border-b border-slate-200 pb-1">
-  {% with tabs="all:📊 Tous,code:💻 Code,mcq:🔘 QCM,fill_blank:✏️ Trous,true_false:✅ V/F,code_order:🧩 Ordre,matching:🔗 Asso.,short_answer:💬 Court" %}
-  {% for tab in tabs|split:"," %}
-  {% with parts=tab|split:":" %}
-  <a href="?type={{ parts.0 }}{% if q %}&q={{ q }}{% endif %}"
-     class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors
-       {% if active_type == parts.0 or not active_type and parts.0 == 'all' %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
-    {{ parts.1 }}
+  {% for type_val,type_label in tab_choices %}
+  <a href="?type={{ type_val }}{% if q %}&q={{ q }}{% endif %}"
+     class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {% if active_type == type_val %}bg-sky-600 text-white{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+    {{ type_label }}
   </a>
-  {% endwith %}
   {% endfor %}
-  {% endwith %}
 </div>
 
 <!-- Search + create -->

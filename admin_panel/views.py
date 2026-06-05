@@ -677,10 +677,21 @@ def exercises_list(request):
 
     exercises.sort(key=lambda e: e.title.lower())
 
+    TAB_CHOICES = [
+        ('all',          '📊 Tous'),
+        ('code',         '💻 Code'),
+        ('mcq',          '🔘 QCM'),
+        ('fill_blank',   '✏️ Trous'),
+        ('true_false',   '✅ V/F'),
+        ('code_order',   '🧩 Ordre'),
+        ('matching',     '🔗 Asso.'),
+        ('short_answer', '💬 Court'),
+    ]
     return render(request, 'admin_panel/exercises_list.html', {
         'exercises':   exercises,
         'active_type': active_type,
         'q':           q,
+        'tab_choices': TAB_CHOICES,
     })
 
 
