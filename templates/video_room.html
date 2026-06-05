@@ -121,22 +121,9 @@
         <p class="text-xs uppercase tracking-wider mb-3" style="color:rgba(255,255,255,.3);">
           {{ participants_count }} {% trans "participants" %}
         </p>
-        {% for p in room_participants %}
-        <div class="flex items-center gap-3 rounded-xl px-3 py-2 transition" style="cursor:default;"
-             onmouseenter="this.style.background='rgba(255,255,255,.05)'" onmouseleave="this.style.background=''">
-          <div class="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-sm font-bold text-white select-none"
-               style="background:#5f6368;">{{ p.name|first|upper }}</div>
-          <div class="min-w-0 flex-1">
-            <p class="text-white text-sm font-medium truncate">{{ p.name }}</p>
-            <p class="text-xs truncate" style="color:rgba(255,255,255,.4);">{{ p.role }}</p>
-          </div>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,.3)">
-            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16c-2.47 0-4.52-1.8-4.93-4.15-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/>
-          </svg>
+        <div id="peopleList" class="space-y-2">
+          <p id="peopleEmpty" class="text-center text-sm py-8" style="color:rgba(255,255,255,.25);">{% trans "Aucun participant pour l'instant." %}</p>
         </div>
-        {% empty %}
-        <p class="text-center text-sm py-8" style="color:rgba(255,255,255,.25);">{% trans "Aucun participant pour l'instant." %}</p>
-        {% endfor %}
       </div>
 
       <!-- Chat panel -->
@@ -498,6 +485,7 @@
   let presenterMode = false;
   let presenterTileId = null;
   const clientId    = (crypto.randomUUID?.() ?? `c_${Math.random().toString(36).slice(2)}_${Date.now()}`);
+  const participants = {};   // clientId → {name, status}
 
   /* ── DOM refs ───────────────────────────────────────────── */
   const $  = id => document.getElementById(id);
@@ -511,12 +499,71 @@
   const localVideo   = $('localVideo');
   const localAvatar  = $('localAvatar');
   const videoGrid    = $('videoGrid');
+  const peopleList   = $('peopleList');
   const sidebar      = $('sidebar');
   const statusDot    = $('statusDot');
   const statusText   = $('statusText');
   const chatMessages = $('chatMessages');
   const btnScreen    = $('btnScreen');
   const screenTip    = $('screenTip');
+  const currentUserName = '{{ current_user_name|escapejs }}';
+
+  function setParticipantCount() {
+    const count = Object.keys(participants).length;
+    const countEl = $('participantCount');
+    if(countEl) countEl.textContent = count;
+  }
+
+  function renderParticipantItem(client, name, status='online') {
+    const existing = document.querySelector(`[data-client-id="${client}"]`);
+    if (existing) {
+      existing.querySelector('.participant-name').textContent = escapeHtml(name || '{% trans "Participant" %}');
+      existing.querySelector('.participant-status').textContent = status === 'online' ? '{% trans "En ligne" %}' : '{% trans "Déconnecté" %}';
+      existing.classList.toggle('opacity-50', status !== 'online');
+      return;
+    }
+    const item = document.createElement('div');
+    item.className = 'flex items-center gap-3 rounded-xl px-3 py-2 transition bg-white/5';
+    item.dataset.clientId = client;
+    item.innerHTML = `
+      <div class="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-sm font-bold text-white select-none"
+           style="background:${computeNameColor(name)};">${escapeHtml((name||'?').charAt(0).toUpperCase())}</div>
+      <div class="min-w-0 flex-1">
+        <p class="participant-name text-white text-sm font-medium truncate">${escapeHtml(name)}</p>
+        <p class="participant-status text-xs truncate" style="color:rgba(255,255,255,.6);">${status === 'online' ? '{% trans "En ligne" %}' : '{% trans "Déconnecté" %}'}</p>
+      </div>
+    `;
+    peopleList.appendChild(item);
+  }
+
+  function addParticipant(client, name) {
+    if (!client || participants[client]) return;
+    participants[client] = { name: name || '{% trans "Participant" %}', status: 'online' };
+    const empty = $('peopleEmpty');
+    if (empty) empty.remove();
+    renderParticipantItem(client, participants[client].name, 'online');
+    setParticipantCount();
+  }
+
+  function removeParticipant(client) {
+    if (!participants[client]) return;
+    delete participants[client];
+    const item = document.querySelector(`[data-client-id="${client}"]`);
+    if (item) item.remove();
+    if (!Object.keys(participants).length) {
+      const empty = document.createElement('p');
+      empty.id = 'peopleEmpty';
+      empty.className = 'text-center text-sm py-8';
+      empty.style.color = 'rgba(255,255,255,.25)';
+      empty.textContent = '{% trans "Aucun participant pour l'instant." %}';
+      peopleList.appendChild(empty);
+    }
+    setParticipantCount();
+  }
+
+  function addLocalParticipant() {
+    addParticipant(clientId, currentUserName);
+  }
 
   /* ── Clock ──────────────────────────────────────────────── */
   function tick() {
@@ -571,13 +618,13 @@
     if(currentScreenSharer && currentScreenSharer !== clientId){
       btnScreen.disabled = true;
       btnScreen.style.opacity = '0.5';
-      btnScreen.title = `{% trans "Partage en cours par" %} ${currentScreenSharerName || ''}`;
+      btnScreen.title = `{% trans "Partage en cours par" %}`;
       screenTip.textContent = `{% trans "Partage en cours" %}`;
     } else {
       btnScreen.disabled = false;
       btnScreen.style.opacity = '1';
-      btnScreen.title = screenShareOn ? '{% trans "Arrêter le partage" %}' : '{% trans "Partager l\'écran" %}';
-      screenTip.textContent = screenShareOn ? '{% trans "Arrêter le partage" %}' : '{% trans "Partager l\'écran" %}';
+      btnScreen.title = screenShareOn ? "{% trans 'Arrêter le partage'|escapejs %}" : "{% trans 'Partager l\'écran'|escapejs %}";
+      screenTip.textContent = screenShareOn ? "{% trans 'Arrêter le partage'|escapejs %}" : "{% trans 'Partager l\'écran'|escapejs %}";
     }
   }
 
@@ -640,7 +687,8 @@
     if(!tile) return;
     let badge = tile.querySelector('.screen-badge');
     if(!badge) return;
-    badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> {% trans "Partage d\'écran" %}: ${escapeHtml(name)}`;
+    const label = "{% trans 'Partage d\'écran'|escapejs %}";
+    badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> ${label}: ${escapeHtml(name)}`;
   }
 
   const audioContext = window.AudioContext ? new AudioContext() : null;
@@ -691,7 +739,7 @@
     videoGrid.classList.add(`vg-${n}`);
     videoGrid.style.gridTemplateColumns = '';
     videoGrid.style.gridTemplateRows    = '';
-    $('participantCount').textContent = tiles.length;
+    setParticipantCount();
   }
 
   /* ── Mic toggle ─────────────────────────────────────────── */
@@ -753,7 +801,7 @@
     try{
       if(!localStream){ await initMedia(); }
       if(!localStream){
-        meetToast("{% trans 'Impossible d\'initialiser la caméra/micro avant le partage.' %}");
+        meetToast("{% trans 'Impossible d\'initialiser la caméra/micro avant le partage.'|escapejs %}");
         return;
       }
       screenStream = await navigator.mediaDevices.getDisplayMedia({video:{cursor:'always'},audio:false});
@@ -773,16 +821,16 @@
 
       screenShareOn = true;
       $('btnScreen').style.background = '#1a73e8';
-      $('screenTip').textContent = '{% trans "Arrêter le partage" %}';
+      $('screenTip').textContent = "{% trans 'Arrêter le partage'|escapejs %}";
       setScreenBadge('localTile', true);
       send('screen_share',{action:'start'});
-      meetToast("{% trans 'Partage d\'écran activé' %}");
+      meetToast("{% trans 'Partage d\'écran activé'|escapejs %}");
 
       // Handle browser-level "Stop sharing" button
       track.addEventListener('ended', stopScreenShare);
       setScreenShareState(clientId, 'start');
     }catch(err){
-      if(err.name!=='NotAllowedError') meetToast("{% trans 'Impossible de partager l\'écran' %}");
+      if(err.name!=='NotAllowedError') meetToast("{% trans 'Impossible de partager l\'écran'|escapejs %}");
     }
   };
 
@@ -807,11 +855,11 @@
     localAvatar.classList.toggle('hidden', camOn);
 
     $('btnScreen').style.background = '#3c4043';
-    $('screenTip').textContent = "{% trans 'Partager l\'écran' %}";
+    $('screenTip').textContent = "{% trans 'Partager l\'écran'|escapejs %}";
     setScreenBadge('localTile', false);
     setScreenShareState(clientId, 'stop');
     send('screen_share',{action:'stop'});
-    meetToast("{% trans 'Partage d\'écran arrêté' %}");
+    meetToast("{% trans 'Partage d\'écran arrêté'|escapejs %}");
   }
 
   function setScreenBadge(tileId, show, name){
@@ -820,10 +868,12 @@
     if(show && !badge){
       badge = document.createElement('div');
       badge.className = 'screen-badge';
-      badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> {% trans "Partage d'écran" %}${name ? ` — ${escapeHtml(name)}` : ''}`;
+      const shareText = "{% trans 'Partage d\'écran'|escapejs %}";
+      badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> ${shareText}${name ? ` — ${escapeHtml(name)}` : ''}`;
       tile.appendChild(badge);
     } else if(show && badge && name){
-      badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> {% trans "Partage d'écran" %} — ${escapeHtml(name)}`;
+      const shareText = "{% trans 'Partage d\'écran'|escapejs %}";
+      badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> ${shareText} — ${escapeHtml(name)}`;
     } else if(!show && badge){
       badge.remove();
     }
@@ -950,6 +1000,12 @@
       }
     };
 
+    pc.onicecandidate = e => {
+      if(e.candidate && socket && socket.readyState === WebSocket.OPEN){
+        send('ice-candidate', {candidate: e.candidate, target_client_id: remoteId});
+      }
+    };
+
     pc.onconnectionstatechange = ()=>{
       if(pc.connectionState==='connected')     setStatus('{% trans "Connecté" %}','green');
       else if(['disconnected','failed'].includes(pc.connectionState)) setStatus('{% trans "Reconnexion…" %}','yellow');
@@ -1033,7 +1089,7 @@
   async function createAnswer(rid){
     const stream = await initMedia();
     if(!stream){
-      setStatus("{% trans 'Impossible de répondre à l\'offre vidéo.' %}",'red');
+      setStatus("{% trans 'Impossible de répondre à l\'offre vidéo.'|escapejs %}",'red');
       return;
     }
     const pc = await getPeer(rid);
@@ -1079,9 +1135,11 @@
     const from = msg.sender_client_id;
 
     if(msg.signal_type==='peer_list'){
+      addLocalParticipant();
       for(const p of (msg.peers||[])){
         if(p.display_name) peerNames[p.client_id] = p.display_name;
         if(p.client_id !== clientId) {
+          addParticipant(p.client_id, p.display_name || '{% trans "Participant" %}');
           getOrCreateRemoteTile(p.client_id, p.display_name||null);
           meetToast(`✅ ${p.display_name || '{% trans "Participant" %}'} {% trans "a rejoint la réunion" %}`);
         }
@@ -1092,6 +1150,7 @@
     if(msg.signal_type==='peer_announce'){
       if(msg.client_id !== clientId){
         if(msg.display_name) peerNames[msg.client_id] = msg.display_name;
+        addParticipant(msg.client_id, msg.display_name || '{% trans "Participant" %}');
         getOrCreateRemoteTile(msg.client_id, msg.display_name||null);
         if(clientId < msg.client_id) await createOffer(msg.client_id);
       }
@@ -1101,6 +1160,7 @@
       if(msg.client_id!==clientId){
         const leaver = peerNames[msg.client_id] || '{% trans "Participant" %}';
         meetToast(`⚠️ ${leaver} {% trans "a quitté la réunion" %}`);
+        removeParticipant(msg.client_id);
         await closePeer(msg.client_id);
       }
       return;
@@ -1167,6 +1227,7 @@
   });
 
   /* ── Boot ───────────────────────────────────────────────── */
+  addLocalParticipant();
   initMedia().catch(()=>{});
   refreshGrid();
 
