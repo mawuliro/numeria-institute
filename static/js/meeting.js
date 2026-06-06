@@ -429,7 +429,8 @@ class NumeriaConference {
         if (!payload.sender || payload.target !== this.peerId) {
             return;
         }
-        const pc = this.createPeerConnection(payload.sender, payload.sender_display_name);
+        const displayName = payload.sender_display_name || payload.sender;
+        const pc = this.createPeerConnection(payload.sender, displayName);
         const desc = new RTCSessionDescription(payload.sdp);
         await pc.setRemoteDescription(desc);
         const answer = await pc.createAnswer();

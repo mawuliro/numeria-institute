@@ -115,6 +115,14 @@ class MeetingConsumer(AsyncJsonWebsocketConsumer):
             return
 
         await self.approve_participant(room, participant, notify=False)
+        await self.group_send({
+            'type': 'broadcast_event',
+            'event': {
+                'type': 'participant_join',
+                'peer_id': participant.peer_id,
+                'display_name': participant.display_name,
+            }
+        })
 
     async def leave_room(self, content):
         peer_id = content.get('peer_id') or self.peer_id
@@ -145,6 +153,7 @@ class MeetingConsumer(AsyncJsonWebsocketConsumer):
                 'type': signal_type,
                 'target': target,
                 'sender': self.peer_id,
+                'sender_display_name': self.user.get_full_name() or self.user.username,
                 'sdp': content.get('sdp'),
                 'candidate': content.get('candidate'),
             }
