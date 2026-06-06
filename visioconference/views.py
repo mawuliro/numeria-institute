@@ -52,7 +52,8 @@ def join_room(request):
             messages.error(request, 'La salle est complète. Essayez une autre réunion ou demandez l’admission.')
             return redirect('visioconference:join_room')
 
-        return redirect('visioconference:meeting_room', room_code=room.room_code)
+        meeting_url = reverse('visioconference:meeting_room', kwargs={'room_code': room.room_code})
+        return redirect(f'{meeting_url}?joined=1')
 
     return render(request, 'visioconference/create_join.html', {'join_mode': True})
 
