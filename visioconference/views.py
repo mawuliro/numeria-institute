@@ -10,9 +10,11 @@ from channels.layers import get_channel_layer
 from .models import ChatMessage, MeetingParticipant, MeetingRoom
 
 
-@login_required
 def create_room(request):
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect(f"{reverse('comptes:connexion')}?next={request.path}")
+
         title = request.POST.get('title', '').strip() or 'Réunion Numeria'
         max_participants = request.POST.get('max_participants', '6').strip()
         password = request.POST.get('password', '').strip()
@@ -32,7 +34,6 @@ def create_room(request):
     return render(request, 'visioconference/create_join.html', {'create_mode': True})
 
 
-@login_required
 def join_room(request):
     if request.method == 'POST':
         room_code = request.POST.get('room_code', '').strip().upper()
