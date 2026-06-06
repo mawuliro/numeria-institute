@@ -1,6 +1,6 @@
 from django.urls import path
-from . import consumers
+from .consumers import MeetingConsumer
 
 websocket_urlpatterns = [
-    path('ws/visio/<str:room_code>/', consumers.MeetingConsumer.as_asgi()),
+    path('ws/visio/<str:room_code>/', MeetingConsumer.as_asgi()),
 ]

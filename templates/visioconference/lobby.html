@@ -1,65 +1,119 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Salle d'attente - {{ room.title }}{% endblock %}
+{% block title %}Lobby de réunion{% endblock %}
 
 {% block contenu %}
-<main id="lobby-container" data-room-code="{{ room.room_code }}" data-display-name="{{ display_name|escapejs }}" class="min-h-screen bg-[#1C1C1E] text-white px-4 py-8 sm:px-6 lg:px-10">
-    <div class="mx-auto flex max-w-7xl flex-col gap-10">
-        <section class="rounded-3xl border border-white/10 bg-[#222228] p-6 shadow-2xl shadow-black/20">
-            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                <div>
-                    <p class="text-xs uppercase tracking-[0.35em] text-slate-500">Salle d'attente</p>
-                    <h1 class="mt-2 text-3xl font-semibold">Préparez votre entrée dans la réunion</h1>
-                    <p class="mt-3 max-w-2xl text-sm text-slate-300">Vérifiez votre caméra et votre micro avant d’entrer. Une fois prêt·e, rejoignez la réunion avec votre nom affiché pour les autres participant·e·s.</p>
-                </div>
-                <div class="rounded-3xl bg-[#29292F] px-4 py-3 text-sm text-slate-300">Code de réunion : <span class="font-semibold text-white">{{ room.room_code }}</span></div>
-            </div>
-        </section>
-
-        <section class="grid gap-8 lg:grid-cols-[1.3fr_0.7fr]">
-            <div class="rounded-3xl border border-white/10 bg-[#1E1E22] p-6 shadow-xl shadow-black/20">
-                <div class="grid gap-4">
-                    <div class="rounded-3xl bg-[#16161A] p-4">
-                        <video id="previewVideo" autoplay muted playsinline class="h-80 w-full rounded-3xl bg-black object-cover"></video>
-                        <div id="previewHint" class="mt-3 text-sm text-slate-400">Aperçu vidéo en direct. Autorisez la caméra et le micro pour continuer.</div>
-                    </div>
-                    <div class="grid gap-4 sm:grid-cols-2">
-                        <label class="block text-sm text-slate-300">
-                            <span>Caméra</span>
-                            <select id="cameraSelect" class="mt-3 w-full rounded-3xl border border-white/10 bg-[#16161A] px-4 py-3 text-white outline-none"></select>
-                        </label>
-                        <label class="block text-sm text-slate-300">
-                            <span>Microphone</span>
-                            <select id="microphoneSelect" class="mt-3 w-full rounded-3xl border border-white/10 bg-[#16161A] px-4 py-3 text-white outline-none"></select>
-                        </label>
-                    </div>
-                    <label class="block text-sm text-slate-300">
-                        <span>Nom affiché</span>
-                        <input id="displayName" type="text" value="{{ display_name }}" class="mt-3 w-full rounded-3xl border border-white/10 bg-[#16161A] px-4 py-3 text-white outline-none" />
-                    </label>
-                    <label class="inline-flex items-center gap-3 text-sm text-slate-300">
-                        <input id="blurBackground" type="checkbox" class="h-5 w-5 rounded border-white/10 bg-[#16161A] text-[#2D8CFF]" />
-                        <span>Flouter l’arrière-plan (effet visuel)</span>
-                    </label>
-                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <p class="text-sm text-slate-400">Vous pouvez changer les paramètres dans la réunion.</p>
-                        <button id="joinButton" type="button" class="inline-flex h-14 items-center justify-center rounded-full bg-[#3D3D3D] px-7 text-sm font-semibold text-white transition hover:bg-[#4D4D4D]">Rejoindre maintenant</button>
-                    </div>
-                    <div id="lobbyError" class="hidden rounded-3xl border border-red-500 bg-red-950/50 px-4 py-3 text-sm text-red-200"></div>
-                </div>
-            </div>
-            <aside class="rounded-3xl border border-white/10 bg-[#25252C] p-6 shadow-xl shadow-black/20">
-                <h2 class="text-xl font-semibold text-white">Règles de la salle</h2>
-                <ul class="mt-5 space-y-4 text-sm text-slate-300">
-                    <li>🔒 L’hôte peut admettre ou refuser chaque participant.</li>
-                    <li>🎧 Le micro et la caméra peuvent être coupés à tout moment.</li>
-                    <li>📱 Les salles sont optimisées pour moins de 6 participant·e·s.</li>
-                    <li>🧑‍💻 Si le navigateur ne prend pas WebRTC en charge, utilisez Chrome ou Edge.</li>
-                </ul>
-            </aside>
-        </section>
+<main class="min-h-screen bg-[#020617] text-white py-12">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div class="mb-8 rounded-[2rem] border border-slate-800 bg-[#08111F] p-8 shadow-2xl shadow-black/40">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p class="text-sm uppercase tracking-[0.35em] text-slate-500">Préparation</p>
+          <h1 class="mt-3 text-3xl font-semibold text-white">Vous êtes presque prêt·e</h1>
+          <p class="mt-2 max-w-2xl text-slate-300">Vérifiez votre caméra et votre micro avant de rejoindre le meeting.</p>
+        </div>
+        <div class="rounded-3xl bg-[#0B1323] px-5 py-4 text-sm text-slate-300">
+          <p><span class="font-semibold text-white">Salle :</span> {{ room.title }}</p>
+          <p class="mt-1"><span class="font-semibold text-white">Code :</span> {{ room.room_code }}</p>
+        </div>
+      </div>
     </div>
+
+    <div class="grid gap-8 xl:grid-cols-[1.4fr_0.8fr]">
+      <section class="rounded-[2rem] border border-slate-800 bg-[#08111F] p-6 shadow-2xl shadow-black/40">
+        <div class="mb-5 flex items-center justify-between">
+          <div>
+            <p class="text-sm uppercase tracking-[0.35em] text-slate-400">Aperçu caméra</p>
+            <h2 class="text-xl font-semibold text-white">Vérifiez votre image</h2>
+          </div>
+          <span class="rounded-full bg-teal-500/15 px-3 py-1 text-xs uppercase tracking-[0.35em] text-teal-300">Numeria Live</span>
+        </div>
+        <div class="relative overflow-hidden rounded-[2rem] bg-black pb-[56.25%]">
+          <video id="preview-video" autoplay muted playsinline class="absolute inset-0 h-full w-full object-cover"></video>
+          <div id="preview-overlay" class="absolute inset-0 flex items-center justify-center bg-black/70 text-center text-white opacity-0 transition-opacity">Autorisez la caméra pour voir l’aperçu.</div>
+        </div>
+        <div id="previewError" class="mt-4 hidden rounded-3xl border border-red-500 bg-red-950/50 px-4 py-3 text-sm text-red-200"></div>
+      </section>
+
+      <aside class="rounded-[2rem] border border-slate-800 bg-[#08111F] p-6 shadow-2xl shadow-black/40">
+        <div class="mb-6">
+          <p class="text-sm uppercase tracking-[0.35em] text-slate-400">Informations</p>
+          <h2 class="mt-3 text-xl font-semibold text-white">Prêt à rejoindre</h2>
+        </div>
+        <div class="space-y-4 text-sm text-slate-300">
+          <div class="rounded-3xl border border-slate-700 bg-[#0B1323] p-4">
+            <p class="text-slate-400">Utilisateur</p>
+            <p class="mt-2 font-semibold text-white">{{ display_name }}</p>
+          </div>
+          <div class="rounded-3xl border border-slate-700 bg-[#0B1323] p-4">
+            <p class="text-slate-400">Réunion</p>
+            <p class="mt-2 font-semibold text-white">{{ room.title }}</p>
+          </div>
+          <div class="rounded-3xl border border-slate-700 bg-[#0B1323] p-4">
+            <p class="text-slate-400">Participants maximum</p>
+            <p class="mt-2 font-semibold text-white">{{ room.max_participants }}</p>
+          </div>
+        </div>
+        <div class="mt-8 space-y-4">
+          <button id="togglePreviewCamera" type="button" class="w-full rounded-3xl bg-slate-700 px-5 py-4 text-sm font-semibold text-white transition hover:bg-slate-600">Couper / activer la caméra</button>
+          <button id="togglePreviewMic" type="button" class="w-full rounded-3xl bg-slate-700 px-5 py-4 text-sm font-semibold text-white transition hover:bg-slate-600">Couper / activer le micro</button>
+          <a href="{% url 'visioconference:meeting_room' room_code=room.room_code %}" class="block rounded-3xl bg-teal-500 px-5 py-4 text-center text-sm font-semibold text-slate-950 transition hover:bg-teal-400">Rejoindre maintenant</a>
+          <a href="{% url 'visioconference:create_room' %}" class="block rounded-3xl border border-slate-700 bg-transparent px-5 py-4 text-center text-sm font-semibold text-slate-300 transition hover:border-teal-400 hover:text-white">Annuler</a>
+        </div>
+      </aside>
+    </div>
+  </div>
 </main>
-<script src="{% static 'js/meeting.js' %}"></script>
+
+<script>
+  const previewVideo = document.querySelector('#preview-video');
+  const previewOverlay = document.querySelector('#preview-overlay');
+  const previewError = document.querySelector('#previewError');
+  let previewStream = null;
+  let previewAudioEnabled = true;
+  let previewCameraEnabled = true;
+
+  async function startPreview() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      previewError.textContent = 'Votre navigateur ne supporte pas la capture vidéo en direct.';
+      previewError.classList.remove('hidden');
+      return;
+    }
+
+    try {
+      previewStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      previewVideo.srcObject = previewStream;
+      previewOverlay.classList.add('opacity-0');
+      previewVideo.play().catch(() => {});
+    } catch (error) {
+      previewError.textContent = 'Impossible d’accéder à la caméra ou au micro. Vérifiez les permissions du navigateur.';
+      previewError.classList.remove('hidden');
+      previewOverlay.classList.remove('opacity-0');
+    }
+  }
+
+  function togglePreviewTrack(kind) {
+    if (!previewStream) {
+      return;
+    }
+    const tracks = previewStream.getTracks().filter(track => track.kind === kind);
+    tracks.forEach(track => {
+      track.enabled = !track.enabled;
+      if (kind === 'video') {
+        previewCameraEnabled = track.enabled;
+        previewOverlay.classList.toggle('opacity-0', track.enabled);
+      }
+      if (kind === 'audio') {
+        previewAudioEnabled = track.enabled;
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    startPreview();
+    document.querySelector('#togglePreviewCamera').addEventListener('click', () => togglePreviewTrack('video'));
+    document.querySelector('#togglePreviewMic').addEventListener('click', () => togglePreviewTrack('audio'));
+  });
+</script>
 {% endblock %}

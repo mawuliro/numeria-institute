@@ -1,236 +1,178 @@
 import json
-from asgiref.sync import async_to_sync
 from channels.db import database_sync_to_async
-from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from .models import MeetingRoom, MeetingParticipant, ChatMessage
+
+from .models import ChatMessage, MeetingParticipant, MeetingRoom
 
 User = get_user_model()
 
 
-class MeetingConsumer(AsyncJsonWebsocketConsumer):
+class MeetingConsumer(AsyncWebsocketConsumer):
+    room_participants = {}
+
     async def connect(self):
         self.room_code = self.scope['url_route']['kwargs']['room_code']
         self.room_group_name = f'visio_{self.room_code}'
         self.user = self.scope['user']
         self.peer_id = None
+        self.username = self.user.get_full_name() if self.user.is_authenticated else 'Invité'
+        self.user_id = self.user.id if self.user.is_authenticated else None
 
-        if not self.user.is_authenticated:
+        room = await self.get_room(self.room_code)
+        if not self.user.is_authenticated or not room or not room.is_active:
             await self.close(code=4001)
             return
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        MeetingConsumer.room_participants.setdefault(self.room_code, {})[self.channel_name] = {
+            'peer_id': None,
+            'username': self.username,
+            'user_id': self.user_id,
+        }
         await self.accept()
 
     async def disconnect(self, code):
-        if self.peer_id:
-            await self.leave_room({'peer_id': self.peer_id})
+        participant_record = MeetingConsumer.room_participants.get(self.room_code, {}).pop(self.channel_name, None)
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
-    async def receive_json(self, content, **kwargs):
-        event_type = content.get('type')
+        if participant_record and participant_record.get('peer_id'):
+            await self.broadcast({
+                'type': 'user_left',
+                'peer_id': participant_record['peer_id'],
+                'username': participant_record['username'],
+            })
+            await self.mark_participant_left(self.room_code, participant_record['peer_id'])
 
-        if event_type == 'join_room':
-            await self.join_room(content)
-        elif event_type == 'leave_room':
-            await self.leave_room(content)
-        elif event_type == 'offer':
-            await self.forward_signal('offer', content)
-        elif event_type == 'answer':
-            await self.forward_signal('answer', content)
-        elif event_type == 'ice_candidate':
-            await self.forward_signal('ice_candidate', content)
-        elif event_type == 'chat_message':
-            await self.chat_message(content)
-        elif event_type == 'raise_hand':
-            await self.participant_state_change(content, 'raise_hand')
-        elif event_type == 'mute_status':
-            await self.participant_state_change(content, 'mute_status')
-        elif event_type == 'camera_status':
-            await self.participant_state_change(content, 'camera_status')
-        elif event_type == 'admit_participant':
-            await self.admit_participant(content)
+    async def receive(self, text_data=None, bytes_data=None):
+        try:
+            data = json.loads(text_data or '{}')
+        except json.JSONDecodeError:
+            return
+
+        action = data.get('type')
+        if action == 'join':
+            await self.handle_join(data)
+        elif action == 'leave':
+            await self.handle_leave(data)
+        elif action in {'offer', 'answer', 'ice_candidate'}:
+            await self.forward_signal(data)
+        elif action == 'chat':
+            await self.handle_chat(data)
+        elif action in {'raise_hand', 'mute_status', 'camera_status'}:
+            await self.handle_state_change(data)
+        elif action == 'end_meeting':
+            await self.handle_end_meeting()
+
+    async def broadcast(self, event):
+        await self.channel_layer.group_send(self.room_group_name, {'type': 'broadcast_event', 'event': event})
 
     async def broadcast_event(self, event):
-        await self.send_json(event['event'])
+        await self.send(text_data=json.dumps(event['event']))
 
-    async def join_room(self, content):
+    async def handle_join(self, data):
+        peer_id = data.get('peer_id')
+        username = data.get('username') or self.username
+        user_id = data.get('user_id') or self.user_id
+
+        if not peer_id:
+            await self.send(text_data=json.dumps({'type': 'error', 'message': 'Identifiant de session manquant.'}))
+            return
+
         room = await self.get_room(self.room_code)
         if not room or not room.is_active:
-            await self.send_json({'type': 'error', 'message': 'Cette réunion n’est plus active.'})
+            await self.send(text_data=json.dumps({'type': 'error', 'message': 'La réunion n’est pas disponible.'}))
             return
 
-        self.peer_id = content.get('peer_id')
-        display_name = content.get('display_name') or self.user.get_full_name() or self.user.username
-        if not self.peer_id:
-            await self.send_json({'type': 'error', 'message': 'Identifiant de session manquant.'})
-            return
+        self.peer_id = peer_id
+        self.username = username
+        self.user_id = user_id
+        MeetingConsumer.room_participants.setdefault(self.room_code, {})[self.channel_name] = {
+            'peer_id': peer_id,
+            'username': username,
+            'user_id': user_id,
+        }
 
-        if room.host_id != self.user.id and not await self.room_has_capacity(room):
-            await self.send_json({'type': 'error', 'message': 'La salle a atteint sa capacité maximale.'})
-            return
+        await self.save_participant(room, self.user, peer_id, username)
+        existing = await self.get_participants(room)
+        recent_messages = await self.get_recent_messages(room)
 
-        is_host = room.host_id == self.user.id
-        participant = await self.create_participant(room, self.user, display_name, self.peer_id, is_host=is_host)
+        await self.send(text_data=json.dumps({
+            'type': 'participants_list',
+            'participants': existing,
+            'chat_history': recent_messages,
+        }))
 
-        participants = await self.fetch_active_participants(room)
-        pending = await self.fetch_pending_participants(room)
-
-        await self.send_json({
-            'type': 'room_state',
-            'room': {
-                'room_code': room.room_code,
-                'title': room.title,
-                'host': room.host.get_full_name() or room.host.username,
-                'max_participants': room.max_participants,
-            },
-            'participants': participants,
-            'pending': pending,
-            'is_host': is_host,
+        await self.broadcast({
+            'type': 'user_joined',
+            'peer_id': peer_id,
+            'username': username,
+            'user_id': user_id,
         })
 
-        if is_host:
-            await self.group_send({
-                'type': 'broadcast_event',
-                'event': {
-                    'type': 'host_arrived',
-                    'peer_id': self.peer_id,
-                    'display_name': display_name,
-                }
-            })
-            return
-
-        if room.waiting_room:
-            await self.send_json({'type': 'waiting_for_admission'})
-            await self.group_send({
-                'type': 'broadcast_event',
-                'event': {
-                    'type': 'waiting_room_request',
-                    'peer_id': self.peer_id,
-                    'display_name': display_name,
-                    'requested_by': display_name,
-                }
-            })
-            return
-
-        await self.approve_participant(room, participant, notify=False)
-        await self.group_send({
-            'type': 'broadcast_event',
-            'event': {
-                'type': 'participant_join',
-                'peer_id': participant.peer_id,
-                'display_name': participant.display_name,
-            }
-        })
-        await self.group_send({
-            'type': 'broadcast_event',
-            'event': {
-                'type': 'user_joined',
-                'peer_id': participant.peer_id,
-                'display_name': participant.display_name,
-            }
-        })
-
-    async def leave_room(self, content):
-        peer_id = content.get('peer_id') or self.peer_id
+    async def handle_leave(self, data):
+        peer_id = data.get('peer_id') or self.peer_id
         room = await self.get_room(self.room_code)
-        if not room:
+        if not room or not peer_id:
             return
 
-        participant = await self.deactivate_participant(room, peer_id)
-        if not participant:
-            return
-
-        await self.group_send({
-            'type': 'broadcast_event',
-            'event': {
-                'type': 'participant_leave',
-                'peer_id': peer_id,
-                'display_name': participant.display_name,
-            }
+        await self.mark_participant_left(self.room_code, peer_id)
+        await self.broadcast({
+            'type': 'user_left',
+            'peer_id': peer_id,
+            'username': self.username,
         })
 
-    async def forward_signal(self, signal_type, content):
-        target = content.get('target')
+    async def forward_signal(self, data):
+        target = data.get('target')
         if not target:
             return
-        await self.group_send({
-            'type': 'broadcast_event',
-            'event': {
-                'type': signal_type,
-                'target': target,
-                'sender': self.peer_id,
-                'sender_display_name': self.user.get_full_name() or self.user.username,
-                'sdp': content.get('sdp'),
-                'candidate': content.get('candidate'),
-            }
-        })
+        event = {
+            'type': data['type'],
+            'target': target,
+            'from': self.peer_id,
+            'username': self.username,
+        }
+        if data['type'] in {'offer', 'answer'}:
+            event['sdp'] = data.get('sdp')
+        else:
+            event['candidate'] = data.get('candidate')
+        await self.broadcast(event)
 
-    async def chat_message(self, content):
+    async def handle_chat(self, data):
         room = await self.get_room(self.room_code)
         if not room:
             return
-        message_text = content.get('message', '').strip()
+        message_text = (data.get('message') or '').strip()
         if not message_text:
             return
-
         message = await self.save_chat_message(room, self.user, message_text)
-        await self.group_send({
-            'type': 'broadcast_event',
-            'event': {
-                'type': 'chat_message',
-                'sender': self.user.get_full_name() or self.user.username,
-                'content': message.content,
-                'timestamp': message.timestamp.isoformat(),
-            }
+        await self.broadcast({
+            'type': 'chat',
+            'sender': self.username,
+            'message': message.content,
+            'timestamp': message.timestamp.isoformat(),
         })
 
-    async def participant_state_change(self, content, state_type):
-        room = await self.get_room(self.room_code)
-        if not room:
+    async def handle_state_change(self, data):
+        event_type = data.get('type')
+        peer_id = data.get('peer_id') or self.peer_id
+        value = data.get('value')
+        if not peer_id:
             return
-        await self.update_participant_state(room, self.peer_id, state_type, content.get('value'))
-        await self.group_send({
-            'type': 'broadcast_event',
-            'event': {
-                'type': state_type,
-                'peer_id': self.peer_id,
-                'value': content.get('value'),
-            }
+        await self.broadcast({
+            'type': event_type,
+            'peer_id': peer_id,
+            'value': value,
         })
 
-    async def admit_participant(self, content):
+    async def handle_end_meeting(self):
         room = await self.get_room(self.room_code)
         if not room or room.host_id != self.user.id:
-            await self.send_json({'type': 'error', 'message': 'Seul l’hôte peut admettre les participants.'})
             return
-
-        peer_id = content.get('peer_id')
-        participant = await self.get_pending_participant(room, peer_id)
-        if not participant:
-            await self.send_json({'type': 'error', 'message': 'Participant introuvable ou déjà admis.'})
-            return
-
-        participant = await self.approve_participant(room, participant)
-        await self.group_send({
-            'type': 'broadcast_event',
-            'event': {
-                'type': 'participant_join',
-                'peer_id': participant.peer_id,
-                'display_name': participant.display_name,
-            }
-        })
-        await self.group_send({
-            'type': 'broadcast_event',
-            'event': {
-                'type': 'participant_approved',
-                'peer_id': peer_id,
-            }
-        })
-
-    async def group_send(self, message):
-        await self.channel_layer.group_send(self.room_group_name, message)
+        await self.deactivate_room(room)
+        await self.broadcast({'type': 'meeting_ended'})
 
     @database_sync_to_async
     def get_room(self, room_code):
@@ -240,84 +182,63 @@ class MeetingConsumer(AsyncJsonWebsocketConsumer):
             return None
 
     @database_sync_to_async
-    def room_has_capacity(self, room):
-        return room.has_capacity()
+    def get_participants(self, room):
+        items = []
+        for participant in room.participants.filter(left_at__isnull=True).order_by('joined_at'):
+            items.append({
+                'peer_id': participant.peer_id,
+                'username': participant.display_name or participant.user.get_full_name() or participant.user.username,
+                'is_host': participant.is_host,
+            })
+        return items
 
     @database_sync_to_async
-    def create_participant(self, room, user, display_name, peer_id, is_host=False):
-        participant, _ = MeetingParticipant.objects.get_or_create(
+    def get_recent_messages(self, room):
+        messages = list(room.chat_messages.order_by('-timestamp')[:30])
+        messages.reverse()
+        return [
+            {
+                'sender': message.sender.get_full_name() or message.sender.username,
+                'message': message.content,
+                'timestamp': message.timestamp.isoformat(),
+            }
+            for message in messages
+        ]
+
+    @database_sync_to_async
+    def save_participant(self, room, user, peer_id, display_name):
+        participant, created = MeetingParticipant.objects.get_or_create(
             room=room,
             user=user,
-            peer_id=peer_id,
             defaults={
+                'peer_id': peer_id,
                 'display_name': display_name,
-                'is_host': is_host,
-                'is_approved': is_host,
-                'joined_at': timezone.now(),
+                'is_host': room.host_id == user.id,
             }
         )
-        if not participant.is_approved and is_host:
-            participant.is_approved = True
+        if not created:
+            participant.peer_id = peer_id
+            participant.display_name = display_name
+            participant.left_at = None
             participant.save()
         return participant
 
     @database_sync_to_async
-    def fetch_active_participants(self, room):
-        return [
-            {
-                'peer_id': participant.peer_id,
-                'display_name': participant.display_name,
-                'is_host': participant.is_host,
-                'is_muted': participant.is_muted,
-                'camera_on': participant.camera_on,
-                'hand_raised': participant.hand_raised,
-            }
-            for participant in room.active_participants()
-        ]
-
-    @database_sync_to_async
-    def fetch_pending_participants(self, room):
-        return [
-            {
-                'peer_id': participant.peer_id,
-                'display_name': participant.display_name,
-            }
-            for participant in room.pending_participants()
-        ]
-
-    @database_sync_to_async
-    def deactivate_participant(self, room, peer_id):
+    def mark_participant_left(self, room_code, peer_id):
         try:
-            participant = MeetingParticipant.objects.filter(room=room, peer_id=peer_id, left_at__isnull=True).last()
-            if not participant:
-                return None
-            participant.left_at = timezone.now()
-            participant.save()
-            return participant
-        except MeetingParticipant.DoesNotExist:
-            return None
+            room = MeetingRoom.objects.get(room_code=room_code)
+            participant = room.participants.filter(peer_id=peer_id, left_at__isnull=True).first()
+            if participant:
+                participant.left_at = timezone.now()
+                participant.save()
+        except MeetingRoom.DoesNotExist:
+            pass
 
     @database_sync_to_async
     def save_chat_message(self, room, user, message_text):
         return ChatMessage.objects.create(room=room, sender=user, content=message_text)
 
     @database_sync_to_async
-    def update_participant_state(self, room, peer_id, state_type, value):
-        kwargs = {}
-        if state_type == 'raise_hand':
-            kwargs['hand_raised'] = bool(value)
-        elif state_type == 'mute_status':
-            kwargs['is_muted'] = bool(value)
-        elif state_type == 'camera_status':
-            kwargs['camera_on'] = bool(value)
-        MeetingParticipant.objects.filter(room=room, peer_id=peer_id, left_at__isnull=True).update(**kwargs)
-
-    @database_sync_to_async
-    def get_pending_participant(self, room, peer_id):
-        return MeetingParticipant.objects.filter(room=room, peer_id=peer_id, left_at__isnull=True, is_approved=False).first()
-
-    @database_sync_to_async
-    def approve_participant(self, room, participant, notify=True):
-        participant.is_approved = True
-        participant.save()
-        return participant
+    def deactivate_room(self, room):
+        room.is_active = False
+        room.save()

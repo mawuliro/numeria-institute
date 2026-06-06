@@ -4,8 +4,6 @@ from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 
 from .models import ChatMessage, MeetingParticipant, MeetingRoom
 
@@ -16,46 +14,58 @@ def create_room(request):
             return redirect(f"{reverse('comptes:connexion')}?next={request.path}")
 
         title = request.POST.get('title', '').strip() or 'Réunion Numeria'
-        max_participants = request.POST.get('max_participants', '6').strip()
-        password = request.POST.get('password', '').strip()
+        max_participants = request.POST.get('max_participants', '10').strip()
+        password = request.POST.get('password', '').strip() or None
 
         try:
-            max_participants = min(20, max(2, int(max_participants)))
+            max_participants = int(max_participants)
         except ValueError:
-            max_participants = 6
+            max_participants = 10
 
-        room = MeetingRoom(host=request.user, title=title, max_participants=max_participants)
-        if password:
-            room.set_password(password)
+        max_participants = max(2, min(max_participants, 20))
+
+        room = MeetingRoom(host=request.user, title=title, max_participants=max_participants, password=password)
         room.save()
-        messages.success(request, 'Salle créée avec succès. Vous pouvez inviter des participants en partageant le lien.')
-        return redirect('visioconference:meeting_room', room_code=room.room_code)
+        messages.success(request, 'Salle créée. Rejoignez le lobby pour préparer votre réunion.')
+        return redirect('visioconference:lobby', room_code=room.room_code)
 
-    return render(request, 'visioconference/create_join.html', {'create_mode': True})
+    return render(request, 'visioconference/create_join.html', {
+        'page_title': 'Créer une réunion',
+        'create_mode': True,
+    })
 
 
 def join_room(request):
+    error = None
     if request.method == 'POST':
-        room_code = request.POST.get('room_code', '').strip().upper()
+        room_code = (request.POST.get('room_code') or '').strip().upper()
         password = request.POST.get('password', '').strip()
         room = MeetingRoom.objects.filter(room_code=room_code, is_active=True).first()
 
         if not room:
-            messages.error(request, 'Aucune salle active ne correspond à ce code.')
-            return redirect('visioconference:create_room')
+            error = 'Aucune réunion active n’a été trouvée pour ce code.'
+        elif room.password and room.password != password:
+            error = 'Mot de passe invalide pour cette réunion.'
+        elif not room.has_capacity():
+            error = 'La réunion a atteint sa capacité maximale.'
+        else:
+            return redirect('visioconference:lobby', room_code=room.room_code)
 
-        if room.password and not room.check_password(password):
-            messages.error(request, 'Mot de passe incorrect pour cette salle.')
-            return redirect('visioconference:join_room')
+        messages.error(request, error)
 
-        if not room.has_capacity():
-            messages.error(request, 'La salle est complète. Essayez une autre réunion ou demandez l’admission.')
-            return redirect('visioconference:join_room')
+    return render(request, 'visioconference/create_join.html', {
+        'page_title': 'Rejoindre une réunion',
+        'join_mode': True,
+    })
 
-        meeting_url = reverse('visioconference:meeting_room', kwargs={'room_code': room.room_code})
-        return redirect(f'{meeting_url}?joined=1')
 
-    return render(request, 'visioconference/create_join.html', {'join_mode': True})
+def lobby(request, room_code):
+    room = get_object_or_404(MeetingRoom, room_code=room_code, is_active=True)
+    return render(request, 'visioconference/lobby.html', {
+        'room': room,
+        'room_title': room.title,
+        'display_name': request.user.get_full_name() or request.user.username if request.user.is_authenticated else 'Invité',
+    })
 
 
 @login_required
@@ -65,30 +75,26 @@ def meeting_room(request, room_code):
         messages.error(request, 'Cette réunion a été terminée.')
         return redirect('visioconference:create_room')
 
-    if room.password and request.GET.get('joined') != '1' and request.method == 'GET' and request.GET.get('password') is None:
-        if room.host != request.user:
-            messages.warning(request, 'Ce salon nécessite un mot de passe. Veuillez rejoindre la réunion depuis la page de connexion.')
-            return redirect('visioconference:join_room')
+    participant, created = MeetingParticipant.objects.get_or_create(
+        room=room,
+        user=request.user,
+        defaults={
+            'is_host': room.host_id == request.user.id,
+            'display_name': request.user.get_full_name() or request.user.username,
+        }
+    )
+    if not created and participant.left_at is not None:
+        participant.left_at = None
+        participant.save()
 
-    display_name = request.GET.get('display_name') or request.user.get_full_name() or request.user.username
-    joined = request.GET.get('joined') == '1'
-    participants = room.active_participants().select_related('user')
-    pending_participants = room.pending_participants().select_related('user')
-    chat_history = ChatMessage.objects.filter(room=room).order_by('timestamp')[:50]
+    scheme = 'wss' if request.is_secure() else 'ws'
+    ws_url = f"{scheme}://{request.get_host()}/ws/visio/{room.room_code}/"
 
-    context = {
+    return render(request, 'visioconference/meeting_room.html', {
         'room': room,
-        'display_name': display_name,
-        'joined': joined,
         'is_host': room.host == request.user,
-        'participants': participants,
-        'pending_participants': pending_participants,
-        'chat_history': chat_history,
-    }
-
-    if joined:
-        return render(request, 'visioconference/meeting_room.html', context)
-    return render(request, 'visioconference/lobby.html', context)
+        'ws_url': ws_url,
+    })
 
 
 @login_required
@@ -100,31 +106,7 @@ def end_meeting(request, room_code):
     if request.method == 'POST':
         room.is_active = False
         room.save()
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            f'visio_{room_code}',
-            {
-                'type': 'broadcast_event',
-                'event': {'type': 'meeting_ended'},
-            }
-        )
-        participants = room.participants.order_by('joined_at')
-        chat_history = ChatMessage.objects.filter(room=room).order_by('timestamp')
-        duration_seconds = 0
-        if participants.exists():
-            first_join = participants.first().joined_at
-            duration_seconds = int((timezone.now() - first_join).total_seconds())
-
-        hours = duration_seconds // 3600
-        minutes = (duration_seconds % 3600) // 60
-        seconds = duration_seconds % 60
-        duration_text = f"{hours:02d}h {minutes:02d}m {seconds:02d}s"
-
-        return render(request, 'visioconference/post_meeting.html', {
-            'room': room,
-            'participants': participants,
-            'chat_history': chat_history,
-            'duration_text': duration_text,
-        })
+        messages.success(request, 'La réunion a été terminée pour tous les participants.')
+        return redirect('accueil')
 
     raise Http404()

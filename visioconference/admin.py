@@ -11,8 +11,8 @@ class MeetingRoomAdmin(admin.ModelAdmin):
 
 @admin.register(MeetingParticipant)
 class MeetingParticipantAdmin(admin.ModelAdmin):
-    list_display = ('display_name', 'room', 'user', 'is_host', 'is_approved', 'joined_at', 'left_at')
-    list_filter = ('is_host', 'is_approved', 'camera_on', 'is_muted')
+    list_display = ('display_name', 'room', 'user', 'is_host', 'joined_at', 'left_at')
+    list_filter = ('is_host', 'room')
     search_fields = ('display_name', 'user__username', 'room__room_code')
 
 

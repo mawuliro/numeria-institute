@@ -4,114 +4,111 @@
 {% block title %}Réunion {{ room.title }}{% endblock %}
 
 {% block contenu %}
-<div id="meeting-app" data-room-code="{{ room.room_code }}" data-display-name="{{ display_name|escapejs }}" data-is-host="{{ is_host|yesno:'true,false' }}" data-room-title="{{ room.title|escapejs }}" data-max-participants="{{ room.max_participants }}">
-    <main class="min-h-screen bg-[#1C1C1E] text-white">
-        <div class="relative flex min-h-screen flex-col">
-            <header class="flex flex-col gap-3 border-b border-white/10 bg-[#25252C] px-4 py-4 shadow-sm shadow-black/20 sm:px-6 lg:px-8">
-                <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                    <div>
-                        <p class="text-xs uppercase tracking-[0.35em] text-slate-400">Réunion</p>
-                        <h1 class="mt-2 text-2xl font-semibold text-white">{{ room.title }}</h1>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-3 text-sm text-slate-300">
-                        <span id="meetingTimer" class="rounded-full border border-white/10 bg-[#1C1C1E] px-4 py-2">00:00:00</span>
-                        <button id="copyRoomCode" type="button" class="rounded-full border border-white/10 bg-[#1C1C1E] px-4 py-2 text-white transition hover:bg-[#2D2D2D]">Copier le code {{ room.room_code }}</button>
-                    </div>
-                </div>
-            </header>
-
-            <section class="relative flex flex-1 flex-col lg:flex-row">
-                <div class="flex-1 overflow-hidden bg-[#1C1C1E] px-4 py-4 sm:px-6 lg:px-8">
-                    <div class="mb-4 flex items-center justify-between gap-4 rounded-3xl border border-white/10 bg-[#222228] p-4 text-sm text-slate-300">
-                        <div>
-                            <div id="connectionStatus" class="font-semibold text-white">Connexion en cours...</div>
-                            <div id="participantCount" class="mt-1 text-slate-400">Participants : 0</div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="h-3 w-3 rounded-full bg-yellow-500 animate-pulse"></span>
-                            <span>Signal WebSocket</span>
-                        </div>
-                    </div>
-                    <div id="video-grid" class="grid h-full gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        <div id="localVideoCard" class="relative overflow-hidden rounded-3xl bg-[#111117] shadow-inner shadow-black/40">
-                            <div class="absolute inset-0 bg-[#000000] opacity-30"></div>
-                            <video id="local-video" autoplay muted playsinline class="h-full w-full object-cover"></video>
-                            <div class="absolute left-4 bottom-4 rounded-full bg-[#2D8CFF] px-3 py-1 text-sm text-white">Votre vidéo</div>
-                        </div>
-                    </div>
-                    <div id="meetingError" class="mt-4 hidden rounded-3xl border border-red-500 bg-red-950/50 px-4 py-3 text-sm text-red-200"></div>
-                </div>
-
-                <aside id="sidebar" class="hidden w-full max-w-sm shrink-0 border-l border-white/10 bg-[#18181F] p-4 lg:block">
-                    <div class="mb-4 flex items-center justify-between">
-                        <h2 class="text-lg font-semibold text-white">Panel</h2>
-                        <button id="closeSidebar" type="button" class="text-slate-400 hover:text-white">Fermer</button>
-                    </div>
-                    <div id="sidebarTabs" class="space-y-3">
-                        <button type="button" data-panel="chat" class="w-full rounded-3xl border border-white/10 bg-[#22222A] px-4 py-3 text-left text-white">Chat</button>
-                        <button type="button" data-panel="participants" class="w-full rounded-3xl border border-white/10 bg-[#22222A] px-4 py-3 text-left text-white">Participants</button>
-                    </div>
-                    <div id="panelChat" class="mt-5 hidden">
-                        <div class="mb-4 flex items-center justify-between text-sm text-slate-400">
-                            <span>Discussions</span>
-                            <span id="unreadBadge" class="hidden rounded-full bg-[#2D8CFF] px-2 py-1 text-xs font-semibold text-white">Nouveau</span>
-                        </div>
-                        <div id="chatMessages" class="max-h-[45vh] space-y-3 overflow-y-auto rounded-3xl border border-white/10 bg-[#111117] p-4 text-sm text-slate-300">
-                            {% for message in chat_history %}
-                                <div>
-                                    <span class="font-semibold text-white">{{ message.sender.get_full_name|default:message.sender.username }} :</span>
-                                    <span>{{ message.content }}</span>
-                                </div>
-                            {% empty %}
-                                <p class="text-slate-500">Aucun message pour le moment.</p>
-                            {% endfor %}
-                        </div>
-                        <div class="mt-4 flex items-center gap-3">
-                            <input id="chatInput" type="text" placeholder="Écrire un message..." class="flex-1 rounded-3xl border border-white/10 bg-[#16161A] px-4 py-3 text-white outline-none focus:border-[#2D8CFF]" />
-                            <button id="chatSend" type="button" class="inline-flex h-12 items-center justify-center rounded-full bg-[#2D8CFF] px-5 text-sm font-semibold text-white hover:bg-[#4DA4FF] transition">Envoyer</button>
-                        </div>
-                    </div>
-                    <div id="panelParticipants" class="mt-5 hidden">
-                        <div class="mb-4 text-sm text-slate-400">Participant·e·s présent·e·s</div>
-                        <div id="participantsList" class="space-y-3 text-sm text-slate-300"></div>
-                    </div>
-                </aside>
-            </section>
-
-            <footer class="sticky bottom-0 z-30 mt-auto border-t border-white/10 bg-[#2D2D2D] px-4 py-4 shadow-[0_-8px_24px_-12px_rgba(0,0,0,0.55)] sm:px-6 lg:px-8">
-                <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-3 text-white">
-                    <button id="toggleMute" type="button" class="rounded-full bg-[#3D3D3D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#4D4D4D]">Couper le micro</button>
-                    <button id="toggleCamera" type="button" class="rounded-full bg-[#3D3D3D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#4D4D4D]">Couper la caméra</button>
-                    <button id="screenShare" type="button" class="rounded-full bg-[#3D3D3D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#4D4D4D]">Partager l’écran</button>
-                    <button id="raiseHand" type="button" class="rounded-full bg-[#3D3D3D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#4D4D4D]">Lever la main</button>
-                    <button id="toggleChat" type="button" class="rounded-full bg-[#3D3D3D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#4D4D4D]">Chat</button>
-                    <button id="toggleParticipants" type="button" class="rounded-full bg-[#3D3D3D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#4D4D4D]">Participants</button>
-                    <button id="recordButton" type="button" class="rounded-full bg-[#3D3D3D] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#4D4D4D]">Enregistrer</button>
-                    <form method="post" action="{% url 'visioconference:end_meeting' room.room_code %}" class="inline">
-                        {% csrf_token %}
-                        {% if is_host %}
-                            <button type="submit" class="rounded-full bg-[#E02020] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#FF4C4C]">Terminer</button>
-                        {% endif %}
-                    </form>
-                    <button id="leaveButton" type="button" class="rounded-full bg-[#E02020] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#FF4C4C]">Quitter</button>
-                </div>
-            </footer>
+<div class="min-h-screen bg-[#050816] text-white">
+  <header class="sticky top-0 z-40 border-b border-white/10 bg-[#020617]/95 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3">
+        <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-teal-500/15">
+          <svg aria-hidden="true" class="h-6 w-6 text-teal-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.5h19M5 20h14a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z"/><path d="M8 14h8M8 10h4"/></svg>
         </div>
-    </main>
-
-    <div id="waitingOverlay" class="fixed inset-0 hidden items-center justify-center bg-black/80 p-6 text-center text-white">
-        <div class="max-w-lg rounded-3xl border border-white/10 bg-[#18181F] p-8 shadow-2xl">
-            <h2 class="text-2xl font-semibold">En attente d’admission</h2>
-            <p class="mt-3 text-slate-300">Un·e hôte examine votre demande. Vous serez admis·e dès que possible.</p>
+        <div>
+          <p class="text-xs uppercase tracking-[0.35em] text-slate-400">Réunion Numeria</p>
+          <p class="text-lg font-semibold text-white">{{ room.title }}</p>
         </div>
+      </div>
+
+      <div class="hidden items-center gap-4 md:flex">
+        <div class="rounded-3xl border border-slate-700 bg-[#08101F] px-4 py-3 text-sm text-slate-300">
+          <span class="font-semibold text-white" id="meeting-timer">00:00:00</span>
+        </div>
+        <div class="rounded-3xl border border-slate-700 bg-[#08101F] px-4 py-3 text-sm text-slate-300">Participants <span id="video-count">1</span></div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="copyRoomCode" type="button" class="inline-flex items-center gap-2 rounded-3xl border border-slate-700 bg-[#08101F] px-4 py-3 text-sm text-slate-300 transition hover:bg-slate-800">
+          <span class="font-semibold text-white">{{ room.room_code }}</span>
+          <span>Sécurisé</span>
+        </button>
+      </div>
     </div>
+  </header>
 
-    <div id="notificationToast" class="fixed bottom-8 right-8 hidden rounded-3xl bg-[#111117] px-5 py-4 text-sm text-white shadow-2xl shadow-black/60"></div>
+  <main class="mx-auto flex max-w-7xl flex-col gap-6 px-4 pb-32 pt-6 sm:px-6 lg:px-8">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-start">
+      <section class="flex-1 space-y-4">
+        <div class="rounded-[2rem] border border-white/10 bg-[#08101F] p-4 shadow-2xl shadow-black/30">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="text-sm text-slate-400">Statut de la réunion</p>
+              <p id="connection-status" class="text-base font-semibold text-teal-300">Connexion...</p>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-400">
+              <span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
+              <span>WebSocket actif</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="video-grid" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
+
+        <div id="local-video-container" class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#08101F] shadow-inner shadow-black/40">
+          <video id="local-video" autoplay muted playsinline class="h-full w-full min-h-[260px] object-cover"></video>
+          <div id="local-video-label" class="absolute left-4 bottom-4 rounded-full bg-teal-500/20 px-3 py-1 text-sm text-teal-100">Vous ({{ request.user.first_name }})</div>
+          <div id="local-camera-off" class="absolute inset-0 hidden items-center justify-center bg-black/75 text-center text-white text-sm font-semibold">Caméra désactivée</div>
+        </div>
+      </section>
+
+      <aside class="hidden w-full max-w-sm shrink-0 space-y-4 xl:block">
+        <div id="chat-sidebar" class="rounded-[2rem] border border-white/10 bg-[#08101F] p-5 shadow-2xl shadow-black/30 hidden">
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-white">Discussion</h2>
+            <span id="chatBadge" class="hidden rounded-full bg-teal-500 px-3 py-1 text-xs font-semibold text-slate-950">0</span>
+          </div>
+          <div id="chatFeed" class="mb-4 max-h-[48vh] space-y-3 overflow-y-auto rounded-3xl bg-[#020617] p-4 text-sm text-slate-300"></div>
+          <div class="flex gap-3">
+            <input id="chat-input" type="text" placeholder="Écrire un message..." class="flex-1 rounded-3xl border border-slate-700 bg-[#020617] px-4 py-3 text-white outline-none focus:border-teal-400" />
+            <button id="chat-send" type="button" class="rounded-3xl bg-teal-500 px-4 py-3 text-sm font-semibold text-slate-950">Envoyer</button>
+          </div>
+        </div>
+
+        <div id="participants-sidebar" class="rounded-[2rem] border border-white/10 bg-[#08101F] p-5 shadow-2xl shadow-black/30 hidden">
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-white">Participants</h2>
+            <span id="participants-count" class="text-sm text-slate-400">1</span>
+          </div>
+          <div id="participants-list" class="space-y-3 text-sm text-slate-300"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[#020617]/95 px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-3">
+        <button id="btn-mute" type="button" class="rounded-3xl bg-[#0B1323] px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">🎤 Activer/Couper son</button>
+        <button id="btn-camera" type="button" class="rounded-3xl bg-[#0B1323] px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">📷 Activer/Couper vidéo</button>
+        <button id="btn-screen" type="button" class="rounded-3xl bg-[#0B1323] px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">🖥️ Partager l’écran</button>
+        <button id="btn-chat" type="button" class="rounded-3xl bg-[#0B1323] px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">💬 Discussion</button>
+        <button id="btn-participants" type="button" class="rounded-3xl bg-[#0B1323] px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">👥 Participants</button>
+        <button id="btn-hand" type="button" class="rounded-3xl bg-[#0B1323] px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">✋ Lever la main</button>
+        <button id="btn-record" type="button" class="rounded-3xl bg-[#0B1323] px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">⏺️ Enregistrer</button>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        {% if is_host %}
+          <button id="btn-end" type="button" class="rounded-3xl bg-[#EF4444] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#F87171]">⛔ Terminer</button>
+        {% endif %}
+        <button id="btn-leave" type="button" class="rounded-3xl bg-[#DC2626] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#EF4444]">🔴 Quitter</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-    const ROOM_CODE = "{{ room.room_code }}";
-    const CURRENT_USER = "{{ request.user.username|escapejs }}";
+  const ROOM_CODE = "{{ room.room_code }}";
+  const CURRENT_USER = "{{ request.user.username|escapejs }}";
+  const CURRENT_USER_ID = {{ request.user.id }};
+  const IS_HOST = {{ is_host|yesno:"true,false" }};
+  const WS_URL = "{{ ws_url }}";
 </script>
 <script src="{% static 'js/meeting.js' %}"></script>
 {% endblock %}
