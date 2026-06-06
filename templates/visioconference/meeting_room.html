@@ -22,7 +22,24 @@
 
             <section class="relative flex flex-1 flex-col lg:flex-row">
                 <div class="flex-1 overflow-hidden bg-[#1C1C1E] px-4 py-4 sm:px-6 lg:px-8">
-                    <div id="video-grid" class="grid h-full gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+                    <div class="mb-4 flex items-center justify-between gap-4 rounded-3xl border border-white/10 bg-[#222228] p-4 text-sm text-slate-300">
+                        <div>
+                            <div id="connectionStatus" class="font-semibold text-white">Connexion en cours...</div>
+                            <div id="participantCount" class="mt-1 text-slate-400">Participants : 0</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="h-3 w-3 rounded-full bg-yellow-500 animate-pulse"></span>
+                            <span>Signal WebSocket</span>
+                        </div>
+                    </div>
+                    <div id="video-grid" class="grid h-full gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        <div id="localVideoCard" class="relative overflow-hidden rounded-3xl bg-[#111117] shadow-inner shadow-black/40">
+                            <div class="absolute inset-0 bg-[#000000] opacity-30"></div>
+                            <video id="local-video" autoplay muted playsinline class="h-full w-full object-cover"></video>
+                            <div class="absolute left-4 bottom-4 rounded-full bg-[#2D8CFF] px-3 py-1 text-sm text-white">Votre vidéo</div>
+                        </div>
+                    </div>
+                    <div id="meetingError" class="mt-4 hidden rounded-3xl border border-red-500 bg-red-950/50 px-4 py-3 text-sm text-red-200"></div>
                 </div>
 
                 <aside id="sidebar" class="hidden w-full max-w-sm shrink-0 border-l border-white/10 bg-[#18181F] p-4 lg:block">
@@ -92,5 +109,9 @@
     <div id="notificationToast" class="fixed bottom-8 right-8 hidden rounded-3xl bg-[#111117] px-5 py-4 text-sm text-white shadow-2xl shadow-black/60"></div>
 </div>
 
+<script>
+    const ROOM_CODE = "{{ room.room_code }}";
+    const CURRENT_USER = "{{ request.user.username|escapejs }}";
+</script>
 <script src="{% static 'js/meeting.js' %}"></script>
 {% endblock %}

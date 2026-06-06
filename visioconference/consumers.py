@@ -123,6 +123,14 @@ class MeetingConsumer(AsyncJsonWebsocketConsumer):
                 'display_name': participant.display_name,
             }
         })
+        await self.group_send({
+            'type': 'broadcast_event',
+            'event': {
+                'type': 'user_joined',
+                'peer_id': participant.peer_id,
+                'display_name': participant.display_name,
+            }
+        })
 
     async def leave_room(self, content):
         peer_id = content.get('peer_id') or self.peer_id

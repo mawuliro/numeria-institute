@@ -1,1 +1,1 @@
-web: gunicorn numeria_project.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --workers 4 --log-file - --timeout 120
+web: uvicorn numeria_project.asgi:application --host 0.0.0.0 --port $PORT --workers 1
