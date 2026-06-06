@@ -9,8 +9,9 @@
 <!-- ║  GOOGLE MEET–STYLE VIDEO ROOM — fullscreen overlay          ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════╝ -->
 <div id="meetApp"
-     class="fixed inset-0 z-[9999] flex flex-col overflow-hidden"
-     style="background:radial-gradient(circle at 15% 20%, rgba(56,189,248,.18), transparent 25%),
+     class="flex flex-col overflow-hidden"
+     style="position:fixed; top:0; right:0; bottom:0; left:0; z-index:9999;
+            background:radial-gradient(circle at 15% 20%, rgba(56,189,248,.18), transparent 25%),
                     radial-gradient(circle at 80% 15%, rgba(52,211,153,.15), transparent 22%),
                     linear-gradient(180deg, #111827 0%, #161b22 100%);
             font-family:'Google Sans',Roboto,Arial,sans-serif;">
@@ -274,6 +275,9 @@
 
 <!-- ──────────────────────────────────────────────────────────────── -->
 <style>
+/* Hide base layout elements when video room is active */
+#header-principal, body > footer, body > main > *:not(#meetApp) { display: none !important; }
+
 /* Fade-in entrance */
 @keyframes meetFadeIn { from{opacity:0;transform:scale(.98)} to{opacity:1;transform:scale(1)} }
 #meetApp { animation: meetFadeIn .25s ease-out; }
