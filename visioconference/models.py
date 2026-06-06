@@ -1,11 +1,9 @@
 import string
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
-
-User = get_user_model()
 
 
 def generate_room_code():
@@ -13,7 +11,7 @@ def generate_room_code():
 
 
 class MeetingRoom(models.Model):
-    host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='meeting_rooms')
+    host = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='meeting_rooms')
     title = models.CharField(max_length=120)
     room_code = models.CharField(max_length=9, unique=True, default=generate_room_code)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -40,7 +38,7 @@ class MeetingRoom(models.Model):
 
 class MeetingParticipant(models.Model):
     room = models.ForeignKey(MeetingRoom, on_delete=models.CASCADE, related_name='participants')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='meeting_participations')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='meeting_participations')
     joined_at = models.DateTimeField(auto_now_add=True)
     left_at = models.DateTimeField(blank=True, null=True)
     is_host = models.BooleanField(default=False)
@@ -61,7 +59,7 @@ class MeetingParticipant(models.Model):
 
 class ChatMessage(models.Model):
     room = models.ForeignKey(MeetingRoom, on_delete=models.CASCADE, related_name='chat_messages')
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='meeting_chat_messages')
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='meeting_chat_messages')
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
