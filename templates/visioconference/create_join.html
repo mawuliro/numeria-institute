@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Créer ou rejoindre une réunion{% endblock %}
+
+{% block contenu %}
+<main class="min-h-screen bg-[#1C1C1E] text-white px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-6xl space-y-10">
+        <section class="rounded-3xl border border-white/10 bg-[#202025] p-8 shadow-xl shadow-black/20">
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <p class="text-sm uppercase tracking-[0.35em] text-[#7d7d88]">Visioconférence</p>
+                    <h1 class="mt-3 text-3xl font-semibold text-white">Créer ou rejoindre une salle de réunion</h1>
+                    <p class="mt-2 max-w-2xl text-sm leading-7 text-slate-300">Utilisez un code unique pour rejoindre une session sécurisée avec audio, vidéo, chat et admission des participant·e·s.</p>
+                </div>
+                <div class="rounded-3xl bg-[#29292F] p-4 text-xs uppercase tracking-[0.25em] text-slate-400">Maximum 6 participants recommandés</div>
+            </div>
+        </section>
+
+        {% if messages %}
+        <div class="space-y-2">
+            {% for message in messages %}
+                <div class="rounded-2xl border px-4 py-3 text-sm {% if message.tags == 'error' %}border-red-500 bg-red-950/60 text-red-300{% else %}border-emerald-500 bg-emerald-950/50 text-emerald-200{% endif %}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="grid gap-8 xl:grid-cols-2">
+            <article class="rounded-3xl border border-white/10 bg-[#25252C] p-8 shadow-xl shadow-black/20">
+                <h2 class="text-xl font-semibold text-white">Créer une réunion</h2>
+                <p class="mt-3 text-sm text-slate-400">Créez une salle avec un code privé et partagez le lien pour inviter vos participant·e·s.</p>
+                <form method="post" action="{% url 'visioconference:create_room' %}" class="mt-6 space-y-5">
+                    {% csrf_token %}
+                    <label class="block text-sm text-slate-300">
+                        <span>Titre de la réunion</span>
+                        <input type="text" name="title" placeholder="Réunion Mathématiques" class="mt-3 w-full rounded-3xl border border-white/10 bg-[#16161A] px-4 py-3 text-white outline-none focus:border-[#2D8CFF]" />
+                    </label>
+                    <label class="block text-sm text-slate-300">
+                        <span>Code d'accès</span>
+                        <input type="text" name="room_code" value="GÉNÉRÉ AUTOMATIQUEMENT" disabled class="mt-3 w-full rounded-3xl border border-white/10 bg-[#101014] px-4 py-3 text-slate-400" />
+                    </label>
+                    <label class="block text-sm text-slate-300">
+                        <span>Mot de passe (optionnel)</span>
+                        <input type="password" name="password" placeholder="••••••••" class="mt-3 w-full rounded-3xl border border-white/10 bg-[#16161A] px-4 py-3 text-white outline-none focus:border-[#2D8CFF]" />
+                    </label>
+                    <label class="block text-sm text-slate-300">
+                        <span>Nombre maximal de participant·e·s</span>
+                        <select name="max_participants" class="mt-3 w-full rounded-3xl border border-white/10 bg-[#16161A] px-4 py-3 text-white outline-none focus:border-[#2D8CFF]">
+                            <option value="2">2 participants</option>
+                            <option value="3">3 participants</option>
+                            <option value="4">4 participants</option>
+                            <option value="5">5 participants</option>
+                            <option value="6" selected>6 participants</option>
+                            <option value="7">7 participants</option>
+                            <option value="8">8 participants</option>
+                            <option value="9">9 participants</option>
+                            <option value="10">10 participants</option>
+                            <option value="12">12 participants</option>
+                            <option value="14">14 participants</option>
+                            <option value="16">16 participants</option>
+                            <option value="18">18 participants</option>
+                            <option value="20">20 participants</option>
+                        </select>
+                    </label>
+                    <button type="submit" class="inline-flex h-14 items-center justify-center rounded-full bg-[#3D3D3D] px-7 text-sm font-semibold text-white transition hover:bg-[#4D4D4D]">Créer la réunion</button>
+                </form>
+            </article>
+
+            <article class="rounded-3xl border border-white/10 bg-[#25252C] p-8 shadow-xl shadow-black/20">
+                <h2 class="text-xl font-semibold text-white">Rejoindre une réunion</h2>
+                <p class="mt-3 text-sm text-slate-400">Entrez le code de la salle et le mot de passe si nécessaire.</p>
+                <form method="post" action="{% url 'visioconference:join_room' %}" class="mt-6 space-y-5">
+                    {% csrf_token %}
+                    <label class="block text-sm text-slate-300">
+                        <span>Code de la salle</span>
+                        <input type="text" name="room_code" placeholder="ABC123XYZ" required class="mt-3 w-full rounded-3xl border border-white/10 bg-[#16161A] px-4 py-3 text-white outline-none focus:border-[#2D8CFF]" />
+                    </label>
+                    <label class="block text-sm text-slate-300">
+                        <span>Mot de passe</span>
+                        <input type="password" name="password" placeholder="Mot de passe si nécessaire" class="mt-3 w-full rounded-3xl border border-white/10 bg-[#16161A] px-4 py-3 text-white outline-none focus:border-[#2D8CFF]" />
+                    </label>
+                    <button type="submit" class="inline-flex h-14 items-center justify-center rounded-full bg-[#3D3D3D] px-7 text-sm font-semibold text-white transition hover:bg-[#4D4D4D]">Rejoindre la réunion</button>
+                </form>
+            </article>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'cloudinary',           # ← NOUVEAU : Doit être avant cloudinary_storage
     'cloudinary_storage',   # ← NOUVEAU : Doit être avant staticfiles
     'channels',
+    'visioconference',
     'pages',
     'cours',
     'blog',

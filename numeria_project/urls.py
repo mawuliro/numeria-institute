@@ -86,6 +86,7 @@ urlpatterns += i18n_patterns(
     path('communaute/', include('communaute.urls')),
     path('mentorat/', include('mentorat.urls')),
     path('notifications/', include('notifications.urls')),
+    path('visio/', include('visioconference.urls')),
     path('admin-panel/', include('admin_panel.urls')),
     path('sandbox/', include('admin_panel.urls_sandbox')),
 )

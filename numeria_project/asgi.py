@@ -9,12 +9,13 @@ django_asgi_app = get_asgi_application()
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 import mentorat.routing
+import visioconference.routing
 
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
     'websocket': AuthMiddlewareStack(
         URLRouter(
-            mentorat.routing.websocket_urlpatterns
+            mentorat.routing.websocket_urlpatterns + visioconference.routing.websocket_urlpatterns
         )
     ),
 })
