@@ -221,7 +221,7 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
                 return None
 
         if room_type == 'formation_session':
-            return None  # SessionFormation removed in model rebuild
+            return {'pk': room_pk}
 
         return None
 
@@ -239,6 +239,6 @@ class VideoChatConsumer(AsyncWebsocketConsumer):
             )
 
         if room_type == 'formation_session':
-            return False  # not implemented after model rebuild
+            return user.is_authenticated
 
         return False

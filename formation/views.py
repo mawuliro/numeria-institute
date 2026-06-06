@@ -41,3 +41,35 @@ def voir_lecon(request, formation_slug, lesson_slug):
         'blocks': blocks,
     })
 
+
+@login_required
+def video_session(request, session_pk):
+    back_url = request.META.get('HTTP_REFERER', '/')
+    current_user_name = request.user.get_full_name() or request.user.username
+    context = {
+        'room_type': 'formation_session',
+        'room_pk': session_pk,
+        'room_title': f'Visioconférence de formation #{session_pk}',
+        'room_description': 'Session de formation en visioconférence',
+        'room_modalite': 'Visio',
+        'room_date': '',
+        'room_time': '',
+        'room_duration': '',
+        'room_participants': [
+            {
+                'id': request.user.id,
+                'name': current_user_name,
+                'role': 'Participant',
+            },
+        ],
+        'participants_count': 1,
+        'participant_label': 'Participants',
+        'current_user_id': request.user.id,
+        'current_user_name': current_user_name,
+        'role_label': 'Participant',
+        'back_url': back_url,
+        'back_label': 'Retour',
+        'room_notes': 'Activez votre micro et votre caméra, puis rejoignez la session.',
+    }
+    return render(request, 'video_room.html', context)
+

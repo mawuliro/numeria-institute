@@ -7,5 +7,6 @@ urlpatterns = [
     path('', views.liste_formations, name='liste'),
     path('<slug:slug>/', views.detail_formation, name='detail'),
     path('<slug:formation_slug>/lecon/<slug:lesson_slug>/', views.voir_lecon, name='voir_lecon'),
+    path('session/<int:session_pk>/video/', views.video_session, name='video_session'),
 ]
 

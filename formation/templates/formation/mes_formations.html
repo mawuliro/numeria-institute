@@ -100,10 +100,11 @@
                     <!-- CTA -->
                     {% if inscription.a_acces %}
                       {% if inscription.session_formation.modalite in ['visio', 'hybride'] %}
-                        <button class="w-full bg-numeria-teal/70 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 inline-flex items-center justify-center cursor-not-allowed" disabled>
+                        <a href="{% url 'formation:video_session' inscription.session_formation.id %}"
+                           class="w-full bg-numeria-teal hover:bg-numeria-teal/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 inline-flex items-center justify-center">
                           <i class="fas fa-video mr-2"></i>
-                          {% trans "Visioconférence en attente" %}
-                        </button>
+                          {% trans "Rejoindre la visioconférence" %}
+                        </a>
                       {% elif inscription.prochaine_lecon %}
                         <a href="{% url 'formation:voir_lecon' inscription.prochaine_lecon.id %}"
                            class="w-full bg-numeria-teal hover:bg-numeria-teal/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 inline-flex items-center justify-center">
