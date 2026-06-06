@@ -555,7 +555,7 @@
       empty.id = 'peopleEmpty';
       empty.className = 'text-center text-sm py-8';
       empty.style.color = 'rgba(255,255,255,.25)';
-      empty.textContent = '{% trans "Aucun participant pour l'instant." %}';
+      empty.textContent = "Aucun participant pour l'instant.";
       peopleList.appendChild(empty);
     }
     setParticipantCount();
@@ -608,11 +608,15 @@
     const canShare = !!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia);
     if(!canShare){
       btnScreen.disabled = true;
-      btnScreen.parentElement?.style.display = 'none';
+      if(btnScreen?.parentElement){
+        btnScreen.parentElement.style.display = 'none';
+      }
       const hint = document.createElement('div');
       hint.className = 'screen-disabled-tip';
       hint.textContent = '{% trans "Non supporté par ce navigateur" %}';
-      btnScreen.parentElement?.parentElement?.appendChild(hint);
+      if(btnScreen?.parentElement?.parentElement){
+        btnScreen.parentElement.parentElement.appendChild(hint);
+      }
       return;
     }
     if(currentScreenSharer && currentScreenSharer !== clientId){
