@@ -8,13 +8,15 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'numeria_project.settings')
 
 django_asgi_app = get_asgi_application()
 
+import mentorat.routing
 import visioconference.routing
 
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
     'websocket': AuthMiddlewareStack(
         URLRouter(
-            visioconference.routing.websocket_urlpatterns
+            mentorat.routing.websocket_urlpatterns
+            + visioconference.routing.websocket_urlpatterns
         )
     ),
 })

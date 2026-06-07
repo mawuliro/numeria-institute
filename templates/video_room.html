@@ -898,7 +898,19 @@ window.VRoom = (function(){
   }
 
   /* ── Boot ───────────────────────────────────────────────── */
+  function escapeContainingBlock(){
+    /* <main> runs a transform-based entry animation, which makes it a
+       containing block for position:fixed descendants — the overlay would
+       then be sized to <main> instead of the viewport. Re-parent it to
+       <body> so "inset:0" truly means fullscreen. */
+    const root = $('vroom');
+    if(root && root.parentElement !== document.body){
+      document.body.appendChild(root);
+    }
+  }
+
   function boot(){
+    escapeContainingBlock();
     addParticipant(clientId, MY_NAME);
     if(!navigator.mediaDevices?.getDisplayMedia){
       $('vroomBtnScreen').style.display = 'none';
