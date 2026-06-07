@@ -1154,23 +1154,32 @@
     d.pendingCandidates = [];
   }
 
-  async function initMedia() {
-    if (localStream) return localStream;
-    try {
-      localStream = await navigator.mediaDevices.getUserMedia({video:true, audio:true});
-      localVideo.srcObject = localStream;
-      localVideo.style.display = 'block';
-      localAvatar.style.display = 'none';
-      localVideo.play().catch(() => {});
-      createVoiceAnalyser(localStream, 'localTile');
-      setStatus('{% trans "En attente des participants…" %}', 'green');
-      return localStream;
-    } catch(err) {
-      setStatus('{% trans "Accès caméra/micro refusé" %}', 'red');
-      localAvatar.style.display = 'flex';
-      localVideo.style.display = 'none';
-      meetToast('{% trans "Accès caméra/micro refusé. Vérifiez les permissions." %}');
-    }
+  let mediaPromise = null;
+  function initMedia() {
+    if (localStream) return Promise.resolve(localStream);
+    if (mediaPromise) return mediaPromise;   // share the in-flight request — never call getUserMedia twice concurrently
+    mediaPromise = (async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({video:true, audio:true});
+        localStream = stream;
+        localVideo.srcObject = localStream;
+        localVideo.style.display = 'block';
+        localAvatar.style.display = 'none';
+        localVideo.play().catch(() => {});
+        createVoiceAnalyser(localStream, 'localTile');
+        setStatus('{% trans "En attente des participants…" %}', 'green');
+        return localStream;
+      } catch(err) {
+        setStatus('{% trans "Accès caméra/micro refusé" %}', 'red');
+        localAvatar.style.display = 'flex';
+        localVideo.style.display = 'none';
+        meetToast('{% trans "Accès caméra/micro refusé. Vérifiez les permissions." %}');
+        return null;
+      } finally {
+        mediaPromise = null;
+      }
+    })();
+    return mediaPromise;
   }
 
   function send(type, payload={}) {
