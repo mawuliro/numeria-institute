@@ -171,12 +171,20 @@
    regardless of how the flex container resolves its own height. */
 .vroom-tile {
   position:relative;
-  flex:1 1 380px; max-width:560px;
+  flex:1 1 460px; max-width:900px;
   aspect-ratio:16/9;
   border-radius:16px; overflow:hidden;
   background:linear-gradient(135deg,#1b1b2f 0%,#15192c 100%);
   border:1px solid rgba(255,255,255,.07);
   box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+/* With a single participant, let the tile fill almost the entire grid
+   instead of staying capped at a small fixed width. */
+.vroom-grid[data-count="1"] .vroom-tile {
+  flex:1 1 100%; max-width:min(1400px, 100%);
+}
+.vroom-grid[data-count="2"] .vroom-tile {
+  flex:1 1 46%; max-width:760px;
 }
 .vroom-tile video {
   position:absolute; inset:0;
@@ -429,6 +437,10 @@ window.VRoom = (function(){
   }
 
   /* ── Tiles ──────────────────────────────────────────────── */
+  function syncGridLayout(){
+    grid.dataset.count = String(grid.children.length);
+  }
+
   function ensureRemoteTile(cid, name){
     let tile = $(`tile-${cid}`);
     if(tile) return tile;
@@ -442,6 +454,7 @@ window.VRoom = (function(){
       <div class="vroom-tile-bar"><span class="vroom-tile-name">${escapeHtml(display)}</span></div>
     `;
     grid.appendChild(tile);
+    syncGridLayout();
     return tile;
   }
 
@@ -469,7 +482,10 @@ window.VRoom = (function(){
 
   function removeRemoteTile(cid){
     const tile = $(`tile-${cid}`);
-    if(tile) tile.remove();
+    if(tile){
+      tile.remove();
+      syncGridLayout();
+    }
   }
 
   /* ── Local media ────────────────────────────────────────── */
@@ -911,6 +927,9 @@ window.VRoom = (function(){
 
   function boot(){
     escapeContainingBlock();
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    syncGridLayout();
     addParticipant(clientId, MY_NAME);
     if(!navigator.mediaDevices?.getDisplayMedia){
       $('vroomBtnScreen').style.display = 'none';
