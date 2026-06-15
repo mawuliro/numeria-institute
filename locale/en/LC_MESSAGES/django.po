@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-31 09:22+0000\n"
+"POT-Creation-Date: 2026-06-15 16:18+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: English <contact@numeriainstitute.com>\n"
@@ -57,7 +57,7 @@ msgstr "Notification sent"
 
 #: admin_panel/models.py:22
 msgid "Effectué par"
-msgstr ""
+msgstr "Performed by"
 
 #: admin_panel/models.py:25
 #, fuzzy
@@ -122,7 +122,7 @@ msgstr "Topic"
 #: templates/admin_panel/contact_detail.html:63
 #: templates/admin_panel/mentorat_list.html:30
 #: templates/admin_panel/user_detail.html:142
-#: templates/admin_panel/users_list.html:71
+#: templates/admin_panel/users_list.html:72
 #: templates/notifications/send.html:35
 msgid "Message"
 msgstr "Message"
@@ -145,7 +145,7 @@ msgstr "Image"
 
 #: admin_panel/models.py:70
 msgid "PDF"
-msgstr ""
+msgstr "PDF"
 
 #: admin_panel/models.py:71 comptes/models.py:41 mentorat/models.py:30
 #: mentorat/models.py:259 pages/forms.py:15
@@ -154,7 +154,7 @@ msgstr "Other"
 
 #: admin_panel/models.py:73
 msgid "Fichier"
-msgstr ""
+msgstr "File"
 
 #: admin_panel/models.py:74 comptes/templates/comptes/inscription.html:91
 #: pages/models.py:106 templates/admin_panel/candidature_detail.html:84
@@ -173,19 +173,19 @@ msgstr "Approved"
 
 #: admin_panel/models.py:80
 msgid "Uploadé le"
-msgstr ""
+msgstr "Uploaded on"
 
 #: admin_panel/models.py:81
 msgid "Taille (octets)"
-msgstr ""
+msgstr "Size (bytes)"
 
 #: admin_panel/models.py:85
 msgid "Média uploadé"
-msgstr ""
+msgstr "Uploaded media"
 
 #: admin_panel/models.py:86
 msgid "Médias uploadés"
-msgstr ""
+msgstr "Uploaded media"
 
 #: admin_panel/views.py:80
 msgid "Messages marqués comme lus."
@@ -215,7 +215,7 @@ msgstr "Reply message cannot be empty."
 
 #: admin_panel/views.py:125
 msgid "L'adresse email de destination n'est pas valide."
-msgstr ""
+msgstr "The destination email address is not valid."
 
 #: admin_panel/views.py:154
 msgid "Réponse envoyée"
@@ -270,7 +270,7 @@ msgstr "Application accepted!"
 #: admin_panel/views.py:262
 #, python-format
 msgid "Votre candidature pour %(prog)s a été acceptée ! 🎉"
-msgstr ""
+msgstr "Your application for %(prog)s has been accepted! 🎉"
 
 #: admin_panel/views.py:272
 #, fuzzy, python-format
@@ -291,7 +291,7 @@ msgstr "Submit my application"
 #: admin_panel/views.py:298
 #, python-format
 msgid "Nous avons examiné votre candidature pour %(prog)s."
-msgstr ""
+msgstr "We have reviewed your application for %(prog)s."
 
 #: admin_panel/views.py:307
 #, fuzzy, python-format
@@ -326,6 +326,7 @@ msgstr "Completed"
 #: admin_panel/views.py:420
 msgid "Cette demande a déjà été traitée et ne peut plus être modifiée."
 msgstr ""
+"This request has already been processed and can no longer be modified."
 
 #: admin_panel/views.py:438
 msgid "Demande de mentorat acceptée"
@@ -334,16 +335,16 @@ msgstr "Mentorship request accepted"
 #: admin_panel/views.py:439
 #, python-format
 msgid "%(mentor)s va vous accompagner comme mentor. 🤝"
-msgstr ""
+msgstr "%(mentor)s will be your mentor. 🤝"
 
 #: admin_panel/views.py:448
 msgid "Nouveau mentee assigné"
-msgstr ""
+msgstr "New mentee assigned"
 
 #: admin_panel/views.py:449
 #, python-format
 msgid "%(mentee)s vous a été assigné comme mentee."
-msgstr ""
+msgstr "%(mentee)s has been assigned to you as a mentee."
 
 #: admin_panel/views.py:459
 msgid "✅ Demande de mentorat acceptée."
@@ -425,22 +426,22 @@ msgstr "Password reset email sent to %(email)s"
 msgid "Impossible d'envoyer l'email (adresse invalide ?)"
 msgstr "Couldn't send the email (invalid address?)"
 
-#: admin_panel/views.py:715 admin_panel/views.py:745
+#: admin_panel/views.py:726 admin_panel/views.py:756
 msgid "Titre, code de départ et solution sont obligatoires."
 msgstr "Title, starter code and solution are required."
 
-#: admin_panel/views.py:720 admin_panel/views.py:750
+#: admin_panel/views.py:731 admin_panel/views.py:761
 msgid "Exercice créé avec succès."
 msgstr "Exercise created successfully."
 
-#: admin_panel/views.py:786
+#: admin_panel/views.py:797
 msgid "Exercice mis à jour."
 msgstr "Exercise updated."
 
-#: admin_panel/views.py:808
+#: admin_panel/views.py:819
 #, python-format
 msgid "Exercice « %(title)s » supprimé."
-msgstr ""
+msgstr "Exercise « %(title)s » deleted."
 
 #: admissions/templates/admissions/candidature.html:3
 #: notifications/models.py:15 templates/admin_panel/candidature_detail.html:4
@@ -478,6 +479,7 @@ msgid "Documents"
 msgstr "Documents"
 
 #: admissions/templates/admissions/candidature.html:204
+#: cours/templates/cours/components/grouped_exercise_widget.html:12
 msgid "Questions"
 msgstr "Questions"
 
@@ -514,9 +516,6 @@ msgstr "Summary"
 #: admissions/templates/admissions/paiement_candidature.html:43
 #: formation/templates/formation/detail_session.html:80
 #: formation/templates/formation/paiement.html:36
-#: templates/admin_panel/exercises_list.html:16
-#: templates/admin_panel/exercises_list.html:87
-#: templates/admin_panel/exercises_list.html:138
 #: templates/admin_panel/mcq_list.html:14
 msgid "Formation"
 msgstr "Programme"
@@ -574,7 +573,8 @@ msgstr ""
 "becomes available."
 
 #: admissions/templates/admissions/detail_candidature.html:55
-msgid "Nous sommes désolés, votre candidature n'a pas été retenue cette année."
+msgid ""
+"Nous sommes désolés, votre candidature n'a pas été retenue cette année."
 msgstr "We are sorry, your application was not selected this year."
 
 #: admissions/templates/admissions/detail_candidature.html:65
@@ -629,6 +629,8 @@ msgid ""
 "Découvrez les campagnes de candidature en Calcul Scientifique et "
 "Intelligence Artificielle à Numeria Institute à Lomé."
 msgstr ""
+"Discover the application campaigns in Scientific Computing and Artificial "
+"Intelligence at Numeria Institute in Lomé."
 
 #: admissions/templates/admissions/liste_campagnes.html:5
 #, fuzzy
@@ -641,6 +643,8 @@ msgid ""
 "Consultez les dates limites, places et frais d'inscription des campagnes de "
 "candidature Numeria Institute."
 msgstr ""
+"Check the deadlines, available seats and registration fees for Numeria "
+"Institute application campaigns."
 
 #: admissions/templates/admissions/liste_campagnes.html:22
 #, fuzzy
@@ -659,6 +663,8 @@ msgid ""
 "Des programmes d'excellence en Calcul Scientifique et en Intelligence "
 "Artificielle, basés à Lomé."
 msgstr ""
+"Programs of excellence in Scientific Computing and Artificial Intelligence, "
+"based in Lomé."
 
 #: admissions/templates/admissions/liste_campagnes.html:65
 msgid "Date limite :"
@@ -789,8 +795,8 @@ msgid ""
 "✅ Paiement de {montant} FCFA réussi ! Vous pouvez maintenant remplir votre "
 "formulaire de candidature."
 msgstr ""
-"✅ Payment of {montant} FCFA successful! You can now fill in your "
-"application form."
+"✅ Payment of {montant} FCFA successful! You can now fill in your application"
+" form."
 
 #: admissions/views.py:131
 msgid ""
@@ -881,6 +887,8 @@ msgid ""
 "Parcourez le blog de Numeria Institute pour des actualités scientifiques, "
 "des histoires d'IA et des ressources d'apprentissage."
 msgstr ""
+"Browse the Numeria Institute blog for scientific news, AI stories and "
+"learning resources."
 
 #: blog/templates/blog/liste.html:5
 #, fuzzy
@@ -893,6 +901,8 @@ msgid ""
 "Lisez les derniers articles sur la science et l'IA de Numeria Institute, "
 "conçus pour les apprenants et passionnés de technologie."
 msgstr ""
+"Read the latest articles on science and AI from Numeria Institute, designed "
+"for learners and tech enthusiasts."
 
 #: blog/templates/blog/liste.html:22
 msgid "Blog scientifique"
@@ -913,7 +923,13 @@ msgid_plural ""
 "                    %(article_count)s articles\n"
 "                "
 msgstr[0] ""
+"\n"
+"                    %(article_count)s article\n"
+"                "
 msgstr[1] ""
+"\n"
+"                    %(article_count)s articles\n"
+"                "
 
 #: blog/templates/blog/liste.html:33
 #, python-format
@@ -926,7 +942,13 @@ msgid_plural ""
 "                    %(category_count)s domaines\n"
 "                "
 msgstr[0] ""
+"\n"
+"                    %(category_count)s domain\n"
+"                "
 msgstr[1] ""
+"\n"
+"                    %(category_count)s domains\n"
+"                "
 
 #: blog/templates/blog/liste.html:78
 #, python-format
@@ -939,7 +961,13 @@ msgid_plural ""
 "                                                %(views)s views\n"
 "                                            "
 msgstr[0] ""
+"\n"
+"                                                %(views)s view\n"
+"                                            "
 msgstr[1] ""
+"\n"
+"                                                %(views)s views\n"
+"                                            "
 
 #: blog/templates/blog/liste.html:104
 msgid "Lecture rapide"
@@ -991,7 +1019,7 @@ msgstr "Create a category"
 #: communaute/templates/communaute/modifier_message.html:3
 #: communaute/templates/communaute/modifier_profil.html:3
 #: comptes/templates/comptes/inscription.html:248
-#: pages/templates/pages/contact.html:337 templates/base.html:594
+#: pages/templates/pages/contact.html:337 templates/base.html:598
 #: templates/includes/nav_items.html:9 templates/includes/nav_items.html:22
 msgid "Communauté"
 msgstr "Community"
@@ -1061,7 +1089,7 @@ msgstr "Save category"
 #: templates/admin_panel/user_detail.html:129
 #: templates/admin_panel/user_detail.html:144
 #: templates/admin_panel/user_detail.html:158
-#: templates/admin_panel/users_list.html:73
+#: templates/admin_panel/users_list.html:74
 msgid "Annuler"
 msgstr "Cancel"
 
@@ -1139,7 +1167,8 @@ msgid ""
 "Sujets de discussion dans la catégorie %(nom)s de la communauté Numeria "
 "Institute."
 msgstr ""
-"Discussion topics in the %(nom)s category of the Numeria Institute community."
+"Discussion topics in the %(nom)s category of the Numeria Institute "
+"community."
 
 #: communaute/templates/communaute/detail_categorie.html:32
 msgid "Nouveau sujet"
@@ -1174,7 +1203,7 @@ msgstr "repl."
 
 #: communaute/templates/communaute/detail_categorie.html:168
 #: communaute/templates/communaute/detail_sujet.html:256
-#: formation/templates/formation/voir_lecon.html:158
+#: formation/templates/formation/voir_lecon.html:139
 #: mentorat/templates/mentorat/liste_mentors.html:180
 #: templates/admin_panel/includes/pagination.html:6
 #: templates/notifications/list.html:95
@@ -1183,7 +1212,7 @@ msgstr "Previous"
 
 #: communaute/templates/communaute/detail_categorie.html:182
 #: communaute/templates/communaute/detail_sujet.html:270
-#: formation/templates/formation/voir_lecon.html:166
+#: formation/templates/formation/voir_lecon.html:147
 #: mentorat/templates/mentorat/liste_mentors.html:189
 #: templates/admin_panel/includes/pagination.html:11
 #: templates/notifications/list.html:104
@@ -1239,7 +1268,6 @@ msgstr "edited"
 #: communaute/templates/communaute/detail_sujet.html:208
 #: communaute/templates/communaute/modifier_sujet.html:3
 #: templates/admin_panel/exercise_form.html:5
-#: templates/admin_panel/exercises_list.html:105
 #: templates/admin_panel/mcq_list.html:69
 msgid "Modifier"
 msgstr "Edit"
@@ -1280,7 +1308,7 @@ msgstr "Log in to participate in the discussion."
 #: communaute/templates/communaute/liste_categories.html:203
 #: comptes/templates/comptes/connexion.html:129
 #: comptes/templates/comptes/inscription.html:230 templates/403.html:21
-#: templates/base.html:542
+#: templates/base.html:546
 #: templates/registration/password_reset_complete.html:8
 msgid "Se connecter"
 msgstr "Log in"
@@ -1331,7 +1359,8 @@ msgid "Choisissez un forum"
 msgstr "Choose a forum"
 
 #: communaute/templates/communaute/liste_categories.html:101
-msgid "Parcourez les catégories et rejoignez la discussion qui vous intéresse."
+msgid ""
+"Parcourez les catégories et rejoignez la discussion qui vous intéresse."
 msgstr "Browse the categories and join the discussion that interests you."
 
 #: communaute/templates/communaute/liste_categories.html:125
@@ -1376,8 +1405,8 @@ msgstr "Join the conversation"
 
 #: communaute/templates/communaute/liste_categories.html:192
 msgid ""
-"Créez un compte gratuit pour poser vos questions, partager vos connaissances "
-"et progresser avec la communauté."
+"Créez un compte gratuit pour poser vos questions, partager vos connaissances"
+" et progresser avec la communauté."
 msgstr ""
 "Create a free account to ask questions, share knowledge and grow with the "
 "community."
@@ -1429,8 +1458,8 @@ msgstr "Back to my profile"
 msgid "Personnalisez votre présence dans la communauté"
 msgstr "Customise your presence in the community"
 
-#: communaute/templates/communaute/modifier_profil.html:35 comptes/forms.py:211
-#: mentorat/forms.py:75
+#: communaute/templates/communaute/modifier_profil.html:35
+#: comptes/forms.py:211 mentorat/forms.py:75
 msgid "Photo de profil"
 msgstr "Profile photo"
 
@@ -1438,7 +1467,8 @@ msgstr "Profile photo"
 msgid "Formats : JPG, PNG, GIF. Taille max : 5 Mo."
 msgstr "Formats: JPG, PNG, GIF. Max size: 5 MB."
 
-#: communaute/templates/communaute/modifier_profil.html:47 comptes/forms.py:212
+#: communaute/templates/communaute/modifier_profil.html:47
+#: comptes/forms.py:212
 msgid "Biographie"
 msgstr "Biography"
 
@@ -1675,7 +1705,7 @@ msgstr "Back to profile"
 msgid "Changer le mot de passe"
 msgstr "Change password"
 
-#: comptes/templates/comptes/connexion.html:3 templates/base.html:494
+#: comptes/templates/comptes/connexion.html:3 templates/base.html:498
 msgid "Connexion"
 msgstr "Login"
 
@@ -1700,8 +1730,8 @@ msgid "Pas encore de compte ?"
 msgstr "Don't have an account?"
 
 #: comptes/templates/comptes/connexion.html:140
-#: cours/templates/cours/detail.html:52 pages/templates/pages/a_propos.html:409
-#: templates/base.html:543
+#: cours/templates/cours/detail.html:52
+#: pages/templates/pages/a_propos.html:409 templates/base.html:547
 msgid "S'inscrire gratuitement"
 msgstr "Sign up for free"
 
@@ -1739,17 +1769,19 @@ msgstr "PDF certificates"
 
 #: comptes/templates/comptes/locked.html:3
 msgid "Compte temporairement verrouillé"
-msgstr ""
+msgstr "Account temporarily locked"
 
 #: comptes/templates/comptes/locked.html:9
 msgid "Trop de tentatives de connexion"
-msgstr ""
+msgstr "Too many login attempts"
 
 #: comptes/templates/comptes/locked.html:12
 msgid ""
 "Votre accès a été temporairement bloqué suite à plusieurs tentatives de "
 "connexion échouées. Réessayez dans 1 heure."
 msgstr ""
+"Your access has been temporarily blocked after several failed login "
+"attempts. Try again in 1 hour."
 
 #: comptes/templates/comptes/profil.html:110
 #: comptes/templates/comptes/supprimer_compte.html:19
@@ -1769,7 +1801,7 @@ msgstr "Hello, %(name)s"
 msgid "Nouveau cours"
 msgstr "New course"
 
-#: comptes/templates/comptes/tableau_de_bord.html:38 templates/base.html:539
+#: comptes/templates/comptes/tableau_de_bord.html:38 templates/base.html:543
 msgid "Mon profil"
 msgstr "My profile"
 
@@ -1827,439 +1859,87 @@ msgstr "Discover our catalogue and start learning today!"
 msgid "Pour toi"
 msgstr "For you"
 
-#: comptes/views.py:45
-#, fuzzy, python-brace-format
-#| msgid "Bienvenue sur Numeria, {first_name} ! 🎓"
-msgid "🎉 Bienvenue sur Numeria, {prenom} !"
-msgstr "Welcome to Numeria, {first_name}! 🎓"
+#: comptes/views.py:47
+#, fuzzy
+#| msgid "Un email et une notification seront envoyés à"
+msgid "Un email de vérification a été envoyé à ton adresse."
+msgstr "An email and notification will be sent to"
 
-#: comptes/views.py:48 comptes/views.py:236
+#: comptes/views.py:50 comptes/views.py:274
 msgid "Veuillez corriger les erreurs ci-dessous."
 msgstr "Please correct the errors below."
 
-#: comptes/views.py:71
+#: comptes/views.py:83
+#, fuzzy
+#| msgid "Code de vérification"
+msgid "Un nouvel email de vérification a été envoyé."
+msgstr "Verification code"
+
+#: comptes/views.py:86
+#, fuzzy
+#| msgid "Aucun compte actif n'a été trouvé pour cette adresse email."
+msgid "Aucun compte inactif n'est associé à cette adresse email."
+msgstr "No active account was found for this email address."
+
+#: comptes/views.py:109
 #, python-brace-format
 msgid "Bon retour, {first_name} ! 👋"
 msgstr "Welcome back, {first_name}! 👋"
 
-#: comptes/views.py:78
+#: comptes/views.py:116
 msgid "Nom d'utilisateur ou mot de passe incorrect."
 msgstr "Incorrect username or password."
 
-#: comptes/views.py:90
+#: comptes/views.py:128
 #, python-brace-format
 msgid "À bientôt, {prenom} ! 👋"
 msgstr "See you soon, {prenom}! 👋"
 
-#: comptes/views.py:156
+#: comptes/views.py:194
 msgid "Ton profil a été mis à jour ! ✅"
 msgstr "Your profile has been updated! ✅"
 
-#: comptes/views.py:172
+#: comptes/views.py:210
 msgid ""
-"Profil mis à jour, mais la photo n'a pas pu être enregistrée (Cloudinary non "
-"configuré)."
+"Profil mis à jour, mais la photo n'a pas pu être enregistrée (Cloudinary non"
+" configuré)."
 msgstr ""
+"Profile updated, but the photo could not be saved (Cloudinary not "
+"configured)."
 
-#: comptes/views.py:178
+#: comptes/views.py:216
 msgid "Veuillez corriger les erreurs."
 msgstr "Please correct the errors."
 
-#: comptes/views.py:211
+#: comptes/views.py:249
 msgid "Ta photo de profil a été supprimée. ✅"
 msgstr "Your profile picture has been deleted. ✅"
 
-#: comptes/views.py:213
+#: comptes/views.py:251
 msgid "Tu n'as pas de photo de profil à supprimer."
 msgstr "You don't have a profile picture to delete."
 
-#: comptes/views.py:233
+#: comptes/views.py:271
 msgid "Ton mot de passe a été changé avec succès ! 🔐"
 msgstr "Your password has been changed successfully! 🔐"
 
-#: comptes/views.py:253
+#: comptes/views.py:291
 #, python-brace-format
 msgid "Ton compte a été supprimé, {prenom}. Nous espérons te revoir ! 👋"
 msgstr "Your account has been deleted, {prenom}. We hope to see you again! 👋"
 
-#: comptes/views.py:256
+#: comptes/views.py:294
 msgid "Mot de passe incorrect. Ton compte n'a pas été supprimé."
 msgstr "Incorrect password. Your account has not been deleted."
 
-#: cours/grades.py:90
+#: cours/grades.py:97
 msgid "Exercice réussi ! 🎉"
-msgstr ""
+msgstr "Exercise completed! 🎉"
 
-#: cours/grades.py:91
+#: cours/grades.py:98
 #, python-brace-format
 msgid "Tu as répondu correctement à '{title}' (+{points} pts)"
-msgstr ""
-
-#: cours/models.py:774 cours/models.py:999
-#: cours/templates/cours/components/code_sandbox.html:37
-#: cours/templates/cours/components/mcq_widget.html:21
-#: templates/admin_panel/exercises_list.html:96
-#: templates/admin_panel/mcq_list.html:61
-#: templates/sandbox/sandbox_widget.html:50
-msgid "Facile"
-msgstr "Easy"
-
-#: cours/models.py:775 cours/models.py:1000
-#: cours/templates/cours/components/code_sandbox.html:39
-#: cours/templates/cours/components/mcq_widget.html:22
-#: templates/admin_panel/exercises_list.html:97
-#: templates/admin_panel/mcq_list.html:62
-#: templates/sandbox/sandbox_widget.html:51
-msgid "Moyen"
-msgstr "Medium"
-
-#: cours/models.py:776 cours/models.py:1001
-#: cours/templates/cours/components/code_sandbox.html:41
-#: cours/templates/cours/components/mcq_widget.html:23
-#: templates/admin_panel/exercises_list.html:98
-#: templates/admin_panel/mcq_list.html:63
-#: templates/sandbox/sandbox_widget.html:52
-msgid "Difficile"
-msgstr "Hard"
-
-#: cours/models.py:779
-msgid "Output exact"
-msgstr "Exact output"
-
-#: cours/models.py:780
-msgid "Output contient"
-msgstr "Output contains"
-
-#: cours/models.py:781
-msgid "Tests unitaires"
-msgstr "Unit tests"
-
-#: cours/models.py:786 formation/templates/formation/voir_lecon.html:14
-#: templates/admin_panel/exercise_form.html:117
-#: templates/admin_panel/exercise_results.html:51
-msgid "Leçon"
-msgstr "Lesson"
-
-#: cours/models.py:791 cours/models.py:923 cours/models.py:1012
-msgid "Leçon de formation"
-msgstr "Training lesson"
-
-#: cours/models.py:794 cours/models.py:1014 notifications/models.py:34
-#: templates/admin_panel/exercise_form.html:26
-#: templates/admin_panel/user_detail.html:141
-#: templates/admin_panel/users_list.html:70
-#: templates/notifications/send.html:28
-msgid "Titre"
-msgstr "Title"
-
-#: cours/models.py:796 mentorat/templates/mentorat/video_seance.html:55
-#: templates/admin_panel/exercise_form.html:72
-#, fuzzy
-#| msgid "Instructeurs"
-msgid "Instructions"
-msgstr "Instructors"
-
-#: cours/models.py:797
-#, fuzzy
-#| msgid "Instructeurs"
-msgid "Instructions en Markdown"
-msgstr "Instructors"
-
-#: cours/models.py:800 templates/admin_panel/exercise_form.html:89
-msgid "Code de départ"
-msgstr "Starter code"
-
-#: cours/models.py:801
-msgid "Code affiché à l'étudiant"
-msgstr ""
-
-#: cours/models.py:804 templates/admin_panel/exercise_form.html:95
-#: templates/sandbox/sandbox_widget.html:148
-msgid "Solution"
-msgstr "Solution"
-
-#: cours/models.py:805
-msgid "Jamais montrée à l'étudiant"
-msgstr ""
-
-#: cours/models.py:808 templates/admin_panel/exercise_form.html:102
-msgid "Output attendu"
-msgstr "Expected output"
-
-#: cours/models.py:809
-msgid "Pour comparaison exacte ou contient"
-msgstr ""
-
-#: cours/models.py:812 templates/admin_panel/exercise_form.html:109
-msgid "Code de tests"
-msgstr "Test code"
-
-#: cours/models.py:813
-msgid "Assertions cachées (mode tests unitaires)"
-msgstr ""
-
-#: cours/models.py:817 templates/admin_panel/exercise_form.html:31
-msgid "Mode d'évaluation"
-msgstr "Evaluation mode"
-
-#: cours/models.py:821 templates/admin_panel/exercise_form.html:40
-#: templates/admin_panel/exercises_list.html:57
-#: templates/admin_panel/mcq_list.html:34
-msgid "Difficulté"
-msgstr "Difficulty"
-
-#: cours/models.py:824 cours/models.py:1017
-#: cours/templates/cours/components/code_sandbox.html:90
-#: cours/templates/cours/components/code_sandbox.html:109
-#: cours/templates/cours/components/mcq_widget.html:43
-#: cours/templates/cours/components/mcq_widget.html:68
-#: cours/templates/cours/components/short_answer_widget.html:18
-#: cours/templates/cours/components/short_answer_widget.html:39
-#: templates/admin_panel/exercise_form.html:78
-#: templates/sandbox/sandbox_widget.html:107
-#: templates/sandbox/sandbox_widget.html:120
-msgid "Indice"
-msgstr "Hint"
-
-#: cours/models.py:825
-msgid "Affiché après 3 tentatives échouées"
-msgstr ""
-
-#: cours/models.py:828 templates/admin_panel/exercise_form.html:53
-msgid "Tentatives max"
-msgstr "Max attempts"
-
-#: cours/models.py:829
-msgid "0 = illimité"
-msgstr ""
-
-#: cours/models.py:831 cours/models.py:1019
-#: templates/admin_panel/exercise_form.html:48
-#: templates/admin_panel/exercise_results.html:95
-msgid "Points"
-msgstr ""
-
-#: cours/models.py:832 cours/models.py:927
-#: templates/admin_panel/exercise_form.html:58
-msgid "Ordre"
-msgstr "Order"
-
-#: cours/models.py:833 templates/admin_panel/user_detail.html:26
-#: templates/admin_panel/users_list.html:31
-msgid "Actif"
-msgstr "Active"
-
-#: cours/models.py:836
-#, fuzzy
-#| msgid "Traité par"
-msgid "Créé par"
-msgstr "Reviewed by"
-
-#: cours/models.py:838
-msgid "Créé le"
-msgstr ""
-
-#: cours/models.py:842 cours/models.py:944
-msgid "Exercice de code"
-msgstr "Code exercise"
-
-#: cours/models.py:843 cours/templates/cours/detail.html:504
-#: templates/admin_panel/exercises_list.html:4
-#: templates/admin_panel/exercises_list.html:5
-msgid "Exercices de code"
-msgstr "Code exercises"
-
-#: cours/models.py:852 templates/admin_panel/exercise_results.html:49
-#: templates/admin_panel/exercise_results.html:93
-msgid "Étudiant"
-msgstr "Student"
-
-#: cours/models.py:856 templates/admin_panel/exercise_results.html:50
-#: templates/admin_panel/exercises_list.html:53
-#, fuzzy
-#| msgid "Exercice pratique"
-msgid "Exercice"
-msgstr "Practical exercise"
-
-#: cours/models.py:858
-#, fuzzy
-#| msgid "Preuve actuelle"
-msgid "Code soumis"
-msgstr "Current proof"
-
-#: cours/models.py:859
-msgid "Output reçu"
-msgstr ""
-
-#: cours/models.py:860
-msgid "Correct"
-msgstr ""
-
-#: cours/models.py:861
-msgid "Tentative n°"
-msgstr "Attempt #"
-
-#: cours/models.py:862
-msgid "Temps (s)"
-msgstr "Time (s)"
-
-#: cours/models.py:863 templates/admin_panel/candidature_detail.html:99
-#: templates/admin_panel/candidatures_list.html:38
-#: templates/admin_panel/mentorat_detail.html:80
-msgid "Soumis le"
-msgstr "Submitted on"
-
-#: cours/models.py:867
-msgid "Soumission de code"
-msgstr "Code submission"
-
-#: cours/models.py:868
-msgid "Soumissions de code"
-msgstr "Code submissions"
-
-#: cours/models.py:902
-msgid "Texte / Markdown / LaTeX"
-msgstr ""
-
-#: cours/models.py:903
-msgid "Vidéo"
-msgstr ""
-
-#: cours/models.py:904
-#, fuzzy
-#| msgid "Sandbox Python"
-msgid "Sandbox Python libre"
-msgstr "Python Sandbox"
-
-#: cours/models.py:905
-#, fuzzy
-#| msgid "Exercice de code"
-msgid "Exercice de code Python"
-msgstr "Python code exercise"
-
-#: cours/models.py:906
-msgid "Question à choix multiples"
-msgstr "Multiple choice question"
-
-#: cours/models.py:907
-#, fuzzy
-#| msgid "Accessible à tous"
-msgid "Texte à trous"
-msgstr "Fill in the blank"
-
-#: cours/models.py:908
-msgid "Vrai ou Faux"
-msgstr "True or False"
-
-#: cours/models.py:909
-#, fuzzy
-#| msgid "Continuer le cours"
-msgid "Ordonner le code"
-msgstr "Order the code"
-
-#: cours/models.py:910
-#, fuzzy
-#| msgid "Instructeurs"
-msgid "Associations"
-msgstr "Matching"
-
-#: cours/models.py:911
-#, fuzzy
-#| msgid "Réponse contact"
-msgid "Réponse courte"
-msgstr "Short answer"
-
-#: cours/models.py:918 cours/models.py:1007
-#, fuzzy
-#| msgid "Leçon / Cours"
-msgid "Leçon de cours"
-msgstr "Lesson / Course"
-
-#: cours/models.py:926 notifications/models.py:32
-#: templates/admin_panel/exercises_list.html:55
-#: templates/admin_panel/mcq_list.html:32 templates/notifications/send.html:42
-msgid "Type"
-msgstr ""
-
-#: cours/models.py:930
-msgid "Contenu Markdown / LaTeX"
-msgstr ""
-
-#: cours/models.py:933
-msgid "URL vidéo"
-msgstr ""
-
-#: cours/models.py:934
-msgid "Légende"
-msgstr ""
-
-#: cours/models.py:951
-msgid "QCM"
-msgstr ""
-
-#: cours/models.py:978
-msgid "Bloc de leçon"
-msgstr ""
-
-#: cours/models.py:979
-msgid "Blocs de leçon"
-msgstr ""
-
-#: cours/models.py:1015 templates/admin_panel/mcq_list.html:30
-#, fuzzy
-#| msgid "Questions"
-msgid "Question"
-msgstr "Questions"
-
-#: cours/models.py:1016 cours/templates/cours/components/mcq_widget.html:57
-msgid "Explication"
-msgstr "Explanation"
-
-#: cours/models.py:1020
-#, fuzzy
-#| msgid "Tentatives max"
-msgid "Tentatives max (0=illimité)"
-msgstr "Max attempts"
-
-#: cours/models.py:1023
-msgid "Plusieurs bonnes réponses possibles"
-msgstr "Multiple correct answers possible"
-
-#: cours/models.py:1025
-msgid "Mélanger les choix"
-msgstr "Shuffle choices"
-
-#: cours/models.py:1037
-msgid "Exercice QCM"
-msgstr "MCQ Exercise"
-
-#: cours/models.py:1038 templates/admin_panel/mcq_list.html:4
-msgid "Exercices QCM"
-msgstr "MCQ Exercises"
-
-#: cours/models.py:1053
-#, fuzzy
-#| msgid "Titre du sujet"
-msgid "Texte du choix"
-msgstr "Topic title"
-
-#: cours/models.py:1054
-#, fuzzy
-#| msgid "Bonne réponse !"
-msgid "Bonne réponse"
-msgstr "Correct answer!"
-
-#: cours/models.py:1056
-#, fuzzy
-#| msgid "Besoins spécifiques"
-msgid "Feedback spécifique"
-msgstr "Specific needs"
-
-#: cours/models.py:1107
-#, fuzzy
-#| msgid "Nouvel exercice"
-msgid "Note exercice code"
-msgstr "Code exercise grade"
+msgstr "You answered '{title}' correctly (+{points} pts)"
 
 #: cours/templates/cours/catalogue.html:3
 #: cours/templates/cours/catalogue.html:5
@@ -2302,8 +1982,8 @@ msgstr "View all courses"
 #: cours/templates/cours/components/fill_blank_widget.html:57
 #: cours/templates/cours/components/matching_widget.html:9
 #: cours/templates/cours/components/matching_widget.html:43
-#: cours/templates/cours/components/mcq_widget.html:218
-#: cours/templates/cours/components/mcq_widget.html:321
+#: cours/templates/cours/components/mcq_widget.html:217
+#: cours/templates/cours/components/mcq_widget.html:320
 #: cours/templates/cours/components/short_answer_widget.html:9
 #: cours/templates/cours/components/short_answer_widget.html:33
 #: cours/templates/cours/components/true_false_widget.html:9
@@ -2323,15 +2003,39 @@ msgstr "Submit order"
 #: cours/templates/cours/components/code_order_widget.html:67
 #: cours/templates/cours/components/code_sandbox.html:345
 #: cours/templates/cours/components/fill_blank_widget.html:55
-#: cours/templates/cours/components/mcq_widget.html:250
+#: cours/templates/cours/components/mcq_widget.html:249
 #: cours/templates/cours/components/short_answer_widget.html:65
 #: templates/sandbox/sandbox_widget.html:382
 msgid "Bonne réponse !"
 msgstr "Correct!"
 
 #: cours/templates/cours/components/code_order_widget.html:73
-msgid "L\\'ordre n\\'est pas correct. Réessaie !"
-msgstr ""
+msgid "L'ordre n'est pas correct. Réessaie !"
+msgstr "The order is not correct. Try again!"
+
+#: cours/templates/cours/components/code_sandbox.html:37
+#: cours/templates/cours/components/mcq_widget.html:21
+#: templates/admin_panel/blocks/_typed_ex_create.html:21
+#: templates/admin_panel/mcq_list.html:61
+#: templates/sandbox/sandbox_widget.html:50
+msgid "Facile"
+msgstr "Easy"
+
+#: cours/templates/cours/components/code_sandbox.html:39
+#: cours/templates/cours/components/mcq_widget.html:22
+#: templates/admin_panel/blocks/_typed_ex_create.html:22
+#: templates/admin_panel/mcq_list.html:62
+#: templates/sandbox/sandbox_widget.html:51
+msgid "Moyen"
+msgstr "Medium"
+
+#: cours/templates/cours/components/code_sandbox.html:41
+#: cours/templates/cours/components/mcq_widget.html:23
+#: templates/admin_panel/blocks/_typed_ex_create.html:23
+#: templates/admin_panel/mcq_list.html:63
+#: templates/sandbox/sandbox_widget.html:52
+msgid "Difficile"
+msgstr "Hard"
 
 #: cours/templates/cours/components/code_sandbox.html:46
 #: cours/templates/cours/components/code_sandbox.html:301
@@ -2339,7 +2043,6 @@ msgid "Réussi"
 msgstr "Passed"
 
 #: cours/templates/cours/components/code_sandbox.html:65
-#: templates/sandbox/full_sandbox.html:25
 #: templates/sandbox/sandbox_page.html:27
 #: templates/sandbox/sandbox_widget.html:36
 msgid "Chargement de Python…"
@@ -2349,9 +2052,9 @@ msgstr "Loading Python..."
 #: cours/templates/cours/components/code_sandbox.html:310
 #: cours/templates/cours/components/code_sandbox.html:319
 #: cours/templates/cours/components/code_sandbox.html:325
-#: templates/base.html:711 templates/base.html:981
-#: templates/sandbox/full_sandbox.html:73
-#: templates/sandbox/full_sandbox.html:346
+#: templates/base.html:715 templates/base.html:991
+#: templates/sandbox/full_sandbox.html:124
+#: templates/sandbox/full_sandbox.html:406
 #: templates/sandbox/sandbox_page.html:98
 #: templates/sandbox/sandbox_page.html:204
 #: templates/sandbox/sandbox_widget.html:88
@@ -2362,7 +2065,6 @@ msgstr "Run"
 
 #: cours/templates/cours/components/code_sandbox.html:81
 #: mentorat/templates/mentorat/liste_mentors.html:73
-#: templates/admin_panel/exercises_list.html:38
 #: templates/registration/password_reset_confirm.html:10
 #: templates/sandbox/sandbox_widget.html:92
 msgid "Réinitialiser"
@@ -2374,12 +2076,24 @@ msgstr "Reset"
 msgid "Copier"
 msgstr "Copy"
 
+#: cours/templates/cours/components/code_sandbox.html:90
+#: cours/templates/cours/components/code_sandbox.html:109
+#: cours/templates/cours/components/mcq_widget.html:43
+#: cours/templates/cours/components/mcq_widget.html:68
+#: cours/templates/cours/components/short_answer_widget.html:18
+#: cours/templates/cours/components/short_answer_widget.html:39
+#: templates/admin_panel/exercise_form.html:78
+#: templates/sandbox/sandbox_widget.html:107
+#: templates/sandbox/sandbox_widget.html:120
+msgid "Indice"
+msgstr "Hint"
+
 #: cours/templates/cours/components/code_sandbox.html:96
 #: cours/templates/cours/components/code_sandbox.html:359
 #: cours/templates/cours/components/fill_blank_widget.html:60
 #: cours/templates/cours/components/fill_blank_widget.html:63
-#: cours/templates/cours/components/mcq_widget.html:181
-#: cours/templates/cours/components/mcq_widget.html:259
+#: cours/templates/cours/components/mcq_widget.html:180
+#: cours/templates/cours/components/mcq_widget.html:258
 #: cours/templates/cours/components/short_answer_widget.html:71
 #: cours/templates/cours/components/short_answer_widget.html:76
 #: cours/templates/cours/components/short_answer_widget.html:80
@@ -2394,12 +2108,12 @@ msgid "Voir la solution"
 msgstr "Show solution"
 
 #: cours/templates/cours/components/code_sandbox.html:210
-msgid "En cours d\\'exécution…"
-msgstr ""
+msgid "En cours d'exécution…"
+msgstr "Running…"
 
 #: cours/templates/cours/components/code_sandbox.html:258
-msgid "Temps d\\'exécution dépassé (10s)"
-msgstr ""
+msgid "Temps d'exécution dépassé (10s)"
+msgstr "Execution time exceeded (10s)"
 
 #: cours/templates/cours/components/code_sandbox.html:263
 #: templates/sandbox/sandbox_widget.html:299
@@ -2407,19 +2121,19 @@ msgid "aucun output"
 msgstr "no output"
 
 #: cours/templates/cours/components/code_sandbox.html:305
-#: cours/templates/cours/components/mcq_widget.html:224
+#: cours/templates/cours/components/mcq_widget.html:223
 #: templates/sandbox/sandbox_widget.html:408
 msgid "Tentatives épuisées"
 msgstr "Attempts exhausted"
 
 #: cours/templates/cours/components/code_sandbox.html:345
 msgid "points"
-msgstr ""
+msgstr "points"
 
 #: cours/templates/cours/components/code_sandbox.html:350
 #: templates/sandbox/sandbox_widget.html:387
-msgid "Ce n\\'est pas la bonne réponse. Réessaie !"
-msgstr ""
+msgid "Ce n'est pas la bonne réponse. Réessaie !"
+msgstr "That's not the right answer. Try again!"
 
 #: cours/templates/cours/components/code_sandbox.html:353
 #: templates/sandbox/sandbox_widget.html:390
@@ -2460,6 +2174,10 @@ msgstr "Submit"
 msgid "Certains blancs sont incorrects."
 msgstr "Some blanks are incorrect."
 
+#: cours/templates/cours/components/grouped_exercise_widget.html:39
+msgid "Type de question non pris en charge."
+msgstr "Question type not supported."
+
 #: cours/templates/cours/components/matching_widget.html:17
 msgid "Éléments"
 msgstr "Items"
@@ -2497,24 +2215,28 @@ msgstr "Try again!"
 msgid "Déjà résolu"
 msgstr "Already solved"
 
+#: cours/templates/cours/components/mcq_widget.html:57
+msgid "Explication"
+msgstr "Explanation"
+
 #: cours/templates/cours/components/mcq_widget.html:74
-#: cours/templates/cours/components/mcq_widget.html:238
+#: cours/templates/cours/components/mcq_widget.html:237
 msgid "Valider ma réponse"
 msgstr "Submit my answer"
 
-#: cours/templates/cours/components/mcq_widget.html:227
+#: cours/templates/cours/components/mcq_widget.html:226
 msgid "Réessayer"
 msgstr "Try again"
 
-#: cours/templates/cours/components/mcq_widget.html:254
+#: cours/templates/cours/components/mcq_widget.html:253
 msgid "Tentatives épuisées."
 msgstr "Attempts exhausted."
 
-#: cours/templates/cours/components/mcq_widget.html:258
-msgid "Ce n\\'est pas la bonne réponse."
-msgstr ""
+#: cours/templates/cours/components/mcq_widget.html:257
+msgid "Ce n'est pas la bonne réponse."
+msgstr "That's not the right answer."
 
-#: cours/templates/cours/components/mcq_widget.html:318
+#: cours/templates/cours/components/mcq_widget.html:317
 msgid "Déjà résolu !"
 msgstr "Already solved!"
 
@@ -2529,11 +2251,11 @@ msgstr "Not quite. Try again!"
 
 #: cours/templates/cours/components/true_false_widget.html:23
 msgid "Vrai"
-msgstr ""
+msgstr "True"
 
 #: cours/templates/cours/components/true_false_widget.html:30
 msgid "Faux"
-msgstr ""
+msgstr "False"
 
 #: cours/templates/cours/components/true_false_widget.html:68
 msgid "Toutes les réponses sont correctes !"
@@ -2542,7 +2264,8 @@ msgstr "All answers are correct!"
 #: cours/templates/cours/detail.html:52 cours/templates/cours/detail.html:226
 #: cours/templates/cours/detail.html:303 cours/templates/cours/detail.html:810
 #: formation/templates/formation/detail_formation.html:194
-#: formation/templates/formation/detail_session.html:46 templates/base.html:498
+#: formation/templates/formation/detail_session.html:46
+#: templates/base.html:502
 msgid "S'inscrire"
 msgstr "Sign up"
 
@@ -2563,11 +2286,75 @@ msgstr "Content reserved for enrolled students"
 msgid "Inscris-toi gratuitement pour accéder à tout le contenu."
 msgstr "Sign up for free to access everything."
 
+#: cours/templates/cours/detail.html:504
+#: formation/templates/formation/voir_lecon.html:55
+msgid "Exercices de code"
+msgstr "Code exercises"
+
 #: cours/templates/cours/detail.html:510
 msgid ""
 "Le code s'exécute directement dans ton navigateur — aucune installation "
 "requise."
-msgstr ""
+msgstr "The code runs directly in your browser — no installation required."
+
+#: cours/templates/cours/mes_notes.html:4
+#: cours/templates/cours/mes_notes.html:8
+#: cours/templates/cours/mes_notes_detail.html:4
+#: cours/templates/cours/mes_notes_detail.html:8
+#, fuzzy
+#| msgid "Mes mentors"
+msgid "Mes notes"
+msgstr "My mentors"
+
+#: cours/templates/cours/mes_notes.html:10
+msgid "Total points obtenus"
+msgstr "Total points earned"
+
+#: cours/templates/cours/mes_notes.html:15 notifications/models.py:12
+#: paiements/templates/paiements/confirmation.html:42
+#: templates/admin_panel/mcq_list.html:13 templates/includes/nav_items.html:5
+#: templates/includes/nav_items.html:18 templates/notifications/list.html:28
+msgid "Cours"
+msgstr "Courses"
+
+#: cours/templates/cours/mes_notes.html:24
+#: cours/templates/cours/mes_notes.html:46
+msgid "pts"
+msgstr "pts"
+
+#: cours/templates/cours/mes_notes.html:24
+#: cours/templates/cours/mes_notes.html:46
+#, fuzzy
+#| msgid "Progression"
+msgid "progression"
+msgstr "Progress"
+
+#: cours/templates/cours/mes_notes.html:37 templates/includes/nav_items.html:6
+#: templates/includes/nav_items.html:19
+msgid "Formations"
+msgstr "Training Programmes"
+
+#: cours/templates/cours/mes_notes.html:58
+#, fuzzy
+#| msgid "Inscris-toi à un cours payant pour voir ton historique ici."
+msgid "Inscrivez-vous à un cours ou une formation pour voir vos notes."
+msgstr "Sign up for a paid course to see your history here."
+
+#: cours/templates/cours/mes_notes_detail.html:29
+msgid "tent."
+msgstr "att."
+
+#: cours/templates/cours/mes_notes_detail.html:34
+#, fuzzy
+#| msgid "Ajouter un exercice à une leçon"
+msgid "Aucun exercice noté dans cette leçon."
+msgstr "Add an exercise to a lesson"
+
+#: cours/templates/cours/mes_notes_detail.html:38
+#, fuzzy
+#| msgid "Aucune séance planifiée"
+msgid "Aucune leçon publiée."
+msgstr "No session scheduled"
 
 #: cours/templates/cours/verifier_certificat.html:3
 msgid "Vérification du certificat"
@@ -2580,7 +2367,8 @@ msgstr "Authentic certificate"
 
 #: cours/templates/cours/verifier_certificat.html:25
 msgid "Ce certificat a été émis par Numeria Institute et est authentifié."
-msgstr "This certificate was issued by Numeria Institute and is authenticated."
+msgstr ""
+"This certificate was issued by Numeria Institute and is authenticated."
 
 #: cours/templates/cours/verifier_certificat.html:59
 msgid "CERTIFICAT DE RÉUSSITE"
@@ -2613,113 +2401,85 @@ msgstr "Verification code"
 msgid "Découvrir nos cours"
 msgstr "Discover our courses"
 
-#: cours/views.py:389
+#: cours/views.py:175
 #, python-format
 msgid "Tu es déjà inscrit au cours « %(titre)s » ! 📚"
 msgstr "You are already enrolled in the course « %(titre)s »! 📚"
 
-#: cours/views.py:403
+#: cours/views.py:189
 msgid "Inscription confirmée"
 msgstr "Enrollment confirmed"
 
-#: cours/views.py:404
+#: cours/views.py:190
 #, fuzzy, python-format
 #| msgid "Tu t'es désinscrit du cours « %(titre)s » ."
 msgid "Vous êtes inscrit au cours %(titre)s."
 msgstr "You have unenrolled from the course « %(titre)s »."
 
-#: cours/views.py:410
+#: cours/views.py:196
 #, python-format
 msgid "🎉 Bienvenue dans le cours « %(titre)s » !"
 msgstr "🎉 Welcome to the course « %(titre)s »!"
 
-#: cours/views.py:431
+#: cours/views.py:217
 #, python-format
 msgid "Tu t'es désinscrit du cours « %(titre)s » ."
 msgstr "You have unenrolled from the course « %(titre)s »."
 
-#: cours/views.py:433 cours/views.py:452 cours/views.py:552
+#: cours/views.py:219 cours/views.py:238
 #, fuzzy
 #| msgid "Tu n'es inscrit à aucun cours"
 msgid "Tu n'es pas inscrit à ce cours."
 msgstr "You are not enrolled in any course"
 
-#: cours/views.py:474
+#: cours/views.py:260
 #, python-format
 msgid "🎉 Félicitations ! Tu as terminé le cours « %(titre)s » !"
 msgstr "🎉 Congratulations! You have completed the course « %(titre)s »!"
 
-#: cours/views.py:479
+#: cours/views.py:265
 #, python-format
 msgid "✅ Leçon terminée ! Progression : %(pct)s%%"
 msgstr "✅ Lesson completed! Progress: %(pct)s%%"
 
-#: cours/views.py:483
+#: cours/views.py:269
 msgid "Cette leçon était déjà marquée comme terminée."
 msgstr "This lesson was already marked as completed."
 
-#: cours/views.py:527
+#: cours/views.py:313
 #, fuzzy
 #| msgid "Marquer comme terminée"
 msgid "Leçon marquée comme non terminée."
 msgstr "Mark as completed"
 
-#: cours/views.py:559
-#, fuzzy
-#| msgid "Réponse le"
-msgid "Réponse invalide."
-msgstr "Response on"
+#: cours/views.py:329
+msgid "Ce type d'exercice n'est plus disponible."
+msgstr "This exercise type is no longer available."
 
-#: cours/views.py:614
+#: cours/views.py:352
 msgid "Les certificats sont réservés aux cours payants."
 msgstr "Certificates are only available for paid courses."
 
-#: cours/views.py:676
-msgid "Vous devez terminer le cours avant de le noter."
-msgstr "You must complete the course before rating it."
+#: cours/views.py:405
+#, fuzzy
+#| msgid "L'accès sera disponible prochainement"
+msgid "L'évaluation des cours sera disponible prochainement."
+msgstr "Access will be available soon"
 
-#: cours/views.py:683
-msgid "La note doit être entre 1 et 5."
-msgstr "The rating must be between 1 and 5."
+#: cours/views.py:413
+#, fuzzy
+#| msgid "L'accès sera disponible prochainement"
+msgid "La FAQ des cours sera disponible prochainement."
+msgstr "Access will be available soon"
 
-#: cours/views.py:698
-msgid "✅ Merci pour votre évaluation !"
-msgstr "✅ Thank you for your review!"
-
-#: cours/views.py:700
-#, python-format
-msgid "Erreur lors de l'évaluation : %(err)s"
-msgstr "Error during rating: %(err)s"
-
-#: cours/views.py:719
-msgid "Vous devez être inscrit au cours pour poser une question."
-msgstr "You must be enrolled in the course to ask a question."
-
-#: cours/views.py:726
-msgid "La question doit contenir au moins 5 caractères."
-msgstr "The question must contain at least 5 characters."
-
-#: cours/views.py:729
-msgid "La question ne peut pas dépasser 500 caractères."
-msgstr "The question cannot exceed 500 characters."
-
-#: cours/views.py:741
-msgid "✅ Votre question a été soumise et sera modérée par un admin."
-msgstr "✅ Your question has been submitted and will be reviewed by an admin."
-
-#: cours/views.py:743
-#, python-format
-msgid "Erreur lors de la soumission : %(err)s"
-msgstr "Error during submission: %(err)s"
-
-#: cours/views.py:927
+#: cours/views.py:609
 msgid "QCM réussi ! 🎉"
-msgstr ""
+msgstr "Quiz completed! 🎉"
 
-#: cours/views.py:928
+#: cours/views.py:610
 #, python-format
 msgid "Tu as répondu correctement à '%(title)s' (+%(pts)s pts)"
-msgstr ""
+msgstr "You answered '%(title)s' correctly (+%(pts)s pts)"
 
 #: formation/templates/formation/detail_formation.html:39
 msgid "Étudiants"
@@ -2868,7 +2628,6 @@ msgid "Type de formation"
 msgstr "Type of training"
 
 #: formation/templates/formation/liste.html:51
-#: templates/admin_panel/exercises_list.html:14
 #: templates/admin_panel/mcq_list.html:12
 msgid "Tous les types"
 msgstr "All types"
@@ -2927,8 +2686,8 @@ msgstr "Ready to start your learning?"
 
 #: formation/templates/formation/liste.html:216
 msgid ""
-"Rejoignez des milliers d'apprenants africains qui transforment leur carrière "
-"grâce à nos formations."
+"Rejoignez des milliers d'apprenants africains qui transforment leur carrière"
+" grâce à nos formations."
 msgstr ""
 "Join thousands of African learners transforming their careers through our "
 "training programmes."
@@ -2967,8 +2726,8 @@ msgid "Formations en cours"
 msgstr "Ongoing training programmes"
 
 #: formation/templates/formation/mes_formations.html:75
-#: formation/templates/formation/voir_lecon.html:23
-#: formation/templates/formation/voir_lecon.html:191
+#: formation/templates/formation/voir_lecon.html:22
+#: formation/templates/formation/voir_lecon.html:168
 msgid "Progression"
 msgstr "Progress"
 
@@ -3046,11 +2805,8 @@ msgstr "Enrolment details"
 msgid "Session"
 msgstr "Session"
 
-#: formation/templates/formation/paiement.html:59 templates/video_room.html:626
-#: templates/video_room.html:675 templates/video_room.html:899
-#: templates/video_room.html:904 templates/video_room.html:1086
-#: templates/video_room.html:1102 templates/video_room.html:1110
-#: templates/video_room.html:1123
+#: formation/templates/formation/paiement.html:59
+#: templates/video_room.html:339
 msgid "Participant"
 msgstr "Participant"
 
@@ -3095,7 +2851,7 @@ msgstr ""
 "this enrolment."
 
 #: formation/templates/formation/paiement.html:150
-#: templates/admin_panel/contact_detail.html:75 templates/video_room.html:26
+#: templates/admin_panel/contact_detail.html:75 templates/video_room.html:14
 msgid "Retour"
 msgstr "Back"
 
@@ -3202,77 +2958,37 @@ msgstr "Permanent"
 msgid "Valable à vie"
 msgstr "Valid for life"
 
-#: formation/templates/formation/voir_lecon.html:49
-msgid "Vidéo pédagogique"
-msgstr "Educational video"
+#: formation/templates/formation/voir_lecon.html:13
+#: templates/admin_panel/exercise_form.html:117
+#: templates/admin_panel/exercise_results.html:51
+msgid "Leçon"
+msgstr "Lesson"
 
-#: formation/templates/formation/voir_lecon.html:88
+#: formation/templates/formation/voir_lecon.html:83
 msgid "Ressources"
 msgstr "Resources"
 
-#: formation/templates/formation/voir_lecon.html:113
-msgid "Exercice pratique"
-msgstr "Practical exercise"
-
+#: formation/templates/formation/voir_lecon.html:105
 #: formation/templates/formation/voir_lecon.html:121
-msgid "Démarrer l'exercice"
-msgstr "Start the exercise"
-
-#: formation/templates/formation/voir_lecon.html:136
 msgid "Marquer cette leçon comme complétée"
 msgstr "Mark this lesson as completed"
 
-#: formation/templates/formation/voir_lecon.html:144
+#: formation/templates/formation/voir_lecon.html:111
+#: formation/templates/formation/voir_lecon.html:127
 msgid "Leçon complétée le"
 msgstr "Lesson completed on"
 
-#: formation/templates/formation/voir_lecon.html:176
+#: formation/templates/formation/voir_lecon.html:154
 msgid "Terminer la formation"
 msgstr "Complete the training programme"
 
-#: formation/templates/formation/voir_lecon.html:200
+#: formation/templates/formation/voir_lecon.html:174
 msgid "Complétion"
 msgstr "Completion"
 
-#: formation/templates/formation/voir_lecon.html:213
+#: formation/templates/formation/voir_lecon.html:182
 msgid "leçons"
 msgstr "lessons"
-
-#: formation/views.py:176
-msgid "Cette session n'est plus ouverte aux inscriptions."
-msgstr "This session is no longer open for enrollment."
-
-#: formation/views.py:183
-msgid "Vous êtes déjà inscrit à cette session."
-msgstr "You are already enrolled in this session."
-
-#: formation/views.py:194
-#, fuzzy
-#| msgid "Aucun paiement trouvé. Veuillez effectuer le paiement."
-msgid "Inscription créée. Veuillez effectuer le paiement."
-msgstr "No payment found. Please make the payment."
-
-#: formation/views.py:240
-msgid "Votre accès à cette formation a expiré."
-msgstr "Your access to this training program has expired."
-
-#: formation/views.py:260
-#, fuzzy
-#| msgid "Formation terminée !"
-msgid "Formation terminée."
-msgstr "Training programme completed!"
-
-#: formation/views.py:262
-#, fuzzy
-#| msgid "Marquer comme terminée"
-msgid "Leçon marquée comme complétée."
-msgstr "Mark as completed"
-
-#: formation/views.py:332
-#, fuzzy
-#| msgid "Certificat authentique"
-msgid "Ce certificat a expiré."
-msgstr "Authentic certificate"
 
 #: mentorat/admin.py:41
 #, fuzzy, python-format
@@ -3321,10 +3037,10 @@ msgstr "PDF, DOC, DOCX. Max size 5MB."
 #: mentorat/forms.py:45
 #, fuzzy
 #| msgid ""
-#| "Décrivez votre parcours, vos objectifs et pourquoi ce mentor vous "
-#| "intéresse."
+#| "Décrivez votre parcours, vos objectifs et pourquoi ce mentor vous intéresse."
 msgid ""
-"Décrivez votre parcours, vos compétences et pourquoi vous souhaitez mentorer."
+"Décrivez votre parcours, vos compétences et pourquoi vous souhaitez "
+"mentorer."
 msgstr "Describe your background, goals and why this mentor interests you."
 
 #: mentorat/forms.py:49
@@ -3366,6 +3082,8 @@ msgid ""
 "Parlez de votre expertise, de vos succès et de la façon dont vous "
 "accompagnez vos mentorés."
 msgstr ""
+"Talk about your expertise, your achievements and how you support your "
+"mentees."
 
 #: mentorat/forms.py:95
 msgid "Ex: leadership, product management, entretien technique"
@@ -3386,8 +3104,7 @@ msgstr "Keywords or mentorship categories separated by commas."
 #: mentorat/forms.py:145
 #, fuzzy
 #| msgid ""
-#| "Décrivez votre parcours, vos objectifs et pourquoi ce mentor vous "
-#| "intéresse."
+#| "Décrivez votre parcours, vos objectifs et pourquoi ce mentor vous intéresse."
 msgid ""
 "Décrivez votre parcours, vos expériences, et vos motivations à devenir "
 "mentor..."
@@ -3395,7 +3112,7 @@ msgstr "Describe your background, goals and why this mentor interests you."
 
 #: mentorat/forms.py:149
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: mentorat/forms.py:153
 #, python-format
@@ -3403,6 +3120,8 @@ msgid ""
 "Laissez 0 si votre mentorat est gratuit. Numeria prélève 20% de commission "
 "sur chaque séance payante."
 msgstr ""
+"Leave 0 if your mentorship is free. Numeria takes a 20%% commission on each "
+"paid session."
 
 #: mentorat/forms.py:166
 msgid "Ex: TM2504120001..."
@@ -3413,17 +3132,20 @@ msgid ""
 "Décrivez vos objectifs, vos difficultés actuelles, et ce que vous attendez "
 "de votre mentor..."
 msgstr ""
+"Describe your goals, your current challenges, and what you expect from your "
+"mentor..."
 
 #: mentorat/forms.py:200
 #, fuzzy
-#| msgid "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor."
+#| msgid ""
+#| "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor."
 msgid ""
 "Présentez-vous brièvement et expliquez pourquoi vous souhaitez ce mentor..."
 msgstr "Introduce yourself and explain why you want this mentor."
 
 #: mentorat/forms.py:220
 msgid "datetime-local"
-msgstr ""
+msgstr "datetime-local"
 
 #: mentorat/forms.py:224
 #, fuzzy
@@ -3548,8 +3270,7 @@ msgstr "Mentoring Programme"
 #: mentorat/models.py:67
 #, fuzzy
 #| msgid ""
-#| "Décrivez votre parcours, vos objectifs et pourquoi ce mentor vous "
-#| "intéresse."
+#| "Décrivez votre parcours, vos objectifs et pourquoi ce mentor vous intéresse."
 msgid "Décrivez votre parcours, vos motivations à devenir mentor..."
 msgstr "Describe your background, goals and why this mentor interests you."
 
@@ -3682,7 +3403,7 @@ msgstr "Social networks"
 
 #: mentorat/models.py:175
 msgid "Liens vers d’autres profils sociaux, séparés par des virgules."
-msgstr ""
+msgstr "Links to other social profiles, separated by commas."
 
 #: mentorat/models.py:181
 #, fuzzy
@@ -3773,7 +3494,8 @@ msgstr "My mentors"
 
 #: mentorat/models.py:337
 #, fuzzy
-#| msgid "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor."
+#| msgid ""
+#| "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor."
 msgid "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor..."
 msgstr "Introduce yourself and explain why you want this mentor."
 
@@ -3840,7 +3562,8 @@ msgstr "Video Conference"
 
 #: mentorat/models.py:477 pages/models.py:107
 #: pages/templates/pages/a_propos.html:350
-#: pages/templates/pages/contact.html:85 pages/templates/pages/contact.html:210
+#: pages/templates/pages/contact.html:85
+#: pages/templates/pages/contact.html:210
 #: templates/admin_panel/candidature_detail.html:85
 #: templates/admin_panel/contacts_list.html:46
 #: templates/admin_panel/mentorat_detail.html:60
@@ -4259,22 +3982,22 @@ msgid ""
 "Partagez votre expertise et guidez la nouvelle génération sur Numeria "
 "Institute."
 msgstr ""
-"Share your expertise and guide the next generation on Numeria Institute."
-"Share your expertise and help the next generation succeed. Make a difference "
-"in a learner's life."
+"Share your expertise and guide the next generation on Numeria "
+"Institute.Share your expertise and help the next generation succeed. Make a "
+"difference in a learner's life."
 
 #: mentorat/templates/mentorat/devenir_mentor.html:21
 msgid "Partagez votre expertise et aidez la nouvelle génération à réussir."
 msgstr ""
 "Share your expertise and help the next generation succeed.Share your "
-"expertise and help the next generation succeed.Share your expertise and help "
-"the next generation succeed.Share your expertise and help the next "
+"expertise and help the next generation succeed.Share your expertise and help"
+" the next generation succeed.Share your expertise and help the next "
 "generation succeed. Make a difference in a learner's life."
 
 #: mentorat/templates/mentorat/index.html:5
 msgid ""
-"Programme de mentorat de Numeria Institute : connectez-vous avec des experts "
-"en sciences et IA pour accélérer votre développement."
+"Programme de mentorat de Numeria Institute : connectez-vous avec des experts"
+" en sciences et IA pour accélérer votre développement."
 msgstr ""
 "Numeria Institute mentoring programme: connect with science and AI experts "
 "to accelerate your development."
@@ -4339,8 +4062,8 @@ msgstr "My Mentor Space"
 
 #: mentorat/templates/mentorat/index.html:84
 msgid ""
-"Gérez vos mentorés, planifiez des séances et suivez vos revenus depuis votre "
-"tableau de bord."
+"Gérez vos mentorés, planifiez des séances et suivez vos revenus depuis votre"
+" tableau de bord."
 msgstr ""
 "Manage your mentees, schedule sessions and track your earnings from your "
 "dashboard."
@@ -4355,8 +4078,8 @@ msgid ""
 "Partagez votre expertise et aidez la nouvelle génération à réussir. Faites "
 "la différence dans la vie d'un apprenant."
 msgstr ""
-"Share your expertise and help the next generation succeed. Make a difference "
-"in a learner's life."
+"Share your expertise and help the next generation succeed. Make a difference"
+" in a learner's life."
 
 #: mentorat/templates/mentorat/index.html:101
 #, fuzzy
@@ -4391,16 +4114,16 @@ msgid ""
 "Retrouvez vos séances planifiées, vos mentors et l'avancement de votre "
 "parcours d'apprentissage."
 msgstr ""
-"Find your scheduled sessions, your mentors and the progress of your learning "
-"journey."
+"Find your scheduled sessions, your mentors and the progress of your learning"
+" journey."
 
 #: mentorat/templates/mentorat/index.html:146
 msgid ""
-"Bénéficiez de conseils personnalisés d'experts dans votre domaine. Accélérez "
-"votre apprentissage et votre carrière."
+"Bénéficiez de conseils personnalisés d'experts dans votre domaine. Accélérez"
+" votre apprentissage et votre carrière."
 msgstr ""
-"Get personalised advice from experts in your field. Accelerate your learning "
-"and career."
+"Get personalised advice from experts in your field. Accelerate your learning"
+" and career."
 
 #: mentorat/templates/mentorat/index.html:152
 msgid "S'inscrire comme mentoré"
@@ -4434,7 +4157,8 @@ msgstr "Connect"
 
 #: mentorat/templates/mentorat/index.html:197
 msgid ""
-"Les mentors et mentorés sont mis en relation selon leurs profils et domaines."
+"Les mentors et mentorés sont mis en relation selon leurs profils et "
+"domaines."
 msgstr ""
 "Mentors and mentees are matched according to their profiles and fields."
 
@@ -4493,7 +4217,6 @@ msgstr "All levels"
 
 #: mentorat/templates/mentorat/liste_mentors.html:69
 #: templates/admin_panel/exercise_results.html:36
-#: templates/admin_panel/exercises_list.html:36
 msgid "Filtrer"
 msgstr "Filter"
 
@@ -4567,6 +4290,8 @@ msgid ""
 "Choisissez un provider pour payer votre séance et confirmez automatiquement "
 "votre réservation."
 msgstr ""
+"Choose a provider to pay for your session and automatically confirm your "
+"booking."
 
 #: mentorat/templates/mentorat/paiement_seance.html:100
 #: paiements/templates/paiements/page_paiement.html:77
@@ -4870,6 +4595,8 @@ msgid ""
 "Rejoignez votre séance de mentorat en visioconférence. Activez votre caméra "
 "et votre micro, puis attendez que votre interlocuteur rejoigne."
 msgstr ""
+"Join your mentoring session via video call. Turn on your camera and "
+"microphone, then wait for the other participant to join."
 
 #: mentorat/templates/mentorat/video_seance.html:38
 #, fuzzy
@@ -4884,7 +4611,7 @@ msgid "Initialisation..."
 msgstr "Specialisation"
 
 #: mentorat/templates/mentorat/video_seance.html:41
-#: templates/video_room.html:80 templates/video_room.html:875
+#: templates/video_room.html:49 templates/video_room.html:742
 msgid "Vous"
 msgstr "You"
 
@@ -4892,6 +4619,13 @@ msgstr "You"
 #, fuzzy
 #| msgid "Instructeurs"
 msgid "Interlocuteur"
+msgstr "Instructors"
+
+#: mentorat/templates/mentorat/video_seance.html:55
+#: templates/admin_panel/exercise_form.html:72
+#, fuzzy
+#| msgid "Instructeurs"
+msgid "Instructions"
 msgstr "Instructors"
 
 #: mentorat/templates/mentorat/video_seance.html:57
@@ -4923,14 +4657,16 @@ msgstr "Duration (minutes)"
 
 #: mentorat/templates/mentorat/video_seance.html:75
 msgid ""
-"Pour une meilleure qualité, utilisez un casque et une connexion Wi-Fi stable."
-msgstr ""
+"Pour une meilleure qualité, utilisez un casque et une connexion Wi-Fi "
+"stable."
+msgstr "For better quality, use a headset and a stable Wi-Fi connection."
 
 #: mentorat/templates/mentorat/video_seance.html:77
 msgid ""
 "Si votre interlocuteur ne rejoint pas, attendez quelques instants puis "
 "actualisez la page."
 msgstr ""
+"If the other participant doesn't join, wait a moment then refresh the page."
 
 #: mentorat/templates/mentorat/video_seance.html:135
 msgid "État"
@@ -4938,15 +4674,15 @@ msgstr "Status"
 
 #: mentorat/templates/mentorat/video_seance.html:150
 msgid "Caméra et micro actifs. En attente d’autre participant..."
-msgstr ""
+msgstr "Camera and mic active. Waiting for the other participant..."
 
 #: mentorat/templates/mentorat/video_seance.html:153
 msgid "Erreur : impossible d’accéder à la caméra ou au micro."
-msgstr ""
+msgstr "Error: unable to access the camera or microphone."
 
 #: mentorat/templates/mentorat/video_seance.html:168
 msgid "Offre envoyée. En attente de la réponse de l’autre participant..."
-msgstr ""
+msgstr "Offer sent. Waiting for the other participant's response..."
 
 #: mentorat/templates/mentorat/video_seance.html:172
 msgid "Connexion au serveur de signalisation établie."
@@ -4954,7 +4690,7 @@ msgstr "Signaling server connection established."
 
 #: mentorat/templates/mentorat/video_seance.html:188
 msgid "L’autre participant a quitté la séance."
-msgstr ""
+msgstr "The other participant has left the session."
 
 #: mentorat/templates/mentorat/video_seance.html:206
 msgid "Offre reçue. Réponse envoyée."
@@ -4979,6 +4715,8 @@ msgid ""
 "Votre candidature a bien été envoyée. Un administrateur la validera "
 "prochainement."
 msgstr ""
+"Your application has been successfully submitted. An administrator will "
+"review it shortly."
 
 #: mentorat/views.py:143
 #, fuzzy
@@ -5095,6 +4833,7 @@ msgstr "Payment confirmed"
 msgid ""
 "Preuve de paiement envoyée. Votre séance sera confirmée après vérification."
 msgstr ""
+"Proof of payment sent. Your session will be confirmed after verification."
 
 #: notifications/models.py:8
 #, fuzzy
@@ -5104,7 +4843,7 @@ msgstr "Information"
 
 #: notifications/models.py:9
 msgid "Succès"
-msgstr ""
+msgstr "Success"
 
 #: notifications/models.py:10
 #, fuzzy
@@ -5114,17 +4853,7 @@ msgstr "Last institution attended"
 
 #: notifications/models.py:11
 msgid "Alerte"
-msgstr ""
-
-#: notifications/models.py:12
-#: paiements/templates/paiements/confirmation.html:42
-#: templates/admin_panel/exercises_list.html:15
-#: templates/admin_panel/exercises_list.html:89
-#: templates/admin_panel/exercises_list.html:134
-#: templates/admin_panel/mcq_list.html:13 templates/includes/nav_items.html:5
-#: templates/includes/nav_items.html:18 templates/notifications/list.html:28
-msgid "Cours"
-msgstr "Courses"
+msgstr "Alert"
 
 #: notifications/models.py:13
 #: paiements/templates/paiements/page_paiement.html:3
@@ -5144,9 +4873,21 @@ msgstr "Overall average"
 msgid "Destinataire"
 msgstr "Become a Mentor"
 
+#: notifications/models.py:32 templates/admin_panel/mcq_list.html:32
+#: templates/notifications/send.html:42
+msgid "Type"
+msgstr "Type"
+
+#: notifications/models.py:34 templates/admin_panel/exercise_form.html:26
+#: templates/admin_panel/user_detail.html:141
+#: templates/admin_panel/users_list.html:70
+#: templates/notifications/send.html:28
+msgid "Titre"
+msgstr "Title"
+
 #: notifications/models.py:36
 msgid "Lien (CTA)"
-msgstr ""
+msgstr "Link (CTA)"
 
 #: notifications/models.py:37 pages/models.py:102 pages/models.py:111
 #: templates/admin_panel/contact_detail.html:20
@@ -5212,11 +4953,11 @@ msgstr "All applicants (submitted/accepted)"
 msgid "Utilisateur spécifique (par username ou email)"
 msgstr "Specific user (by username or email)"
 
-#: numeria_project/settings.py:157
+#: numeria_project/settings.py:158
 msgid "Français"
 msgstr "French"
 
-#: numeria_project/settings.py:158
+#: numeria_project/settings.py:159
 msgid "English"
 msgstr "English"
 
@@ -5291,7 +5032,7 @@ msgstr "Replied"
 msgid "Messages de contact"
 msgstr "Contact messages"
 
-#: pages/templates/pages/a_propos.html:42 templates/base.html:582
+#: pages/templates/pages/a_propos.html:42 templates/base.html:586
 msgid "Rayonnement CEDEAO"
 msgstr "ECOWAS Reach"
 
@@ -5327,6 +5068,10 @@ msgid ""
 "ambitieuse, mais une absence criante de formation pratique en sciences "
 "computationnelles et intelligence artificielle."
 msgstr ""
+"Numeria Institute was born from a simple observation: Sub-Saharan Africa is "
+"experiencing an accelerated digital transformation, with a large and "
+"ambitious youth population, but a glaring lack of practical training in "
+"computational sciences and artificial intelligence."
 
 #: pages/templates/pages/a_propos.html:88
 msgid "Basé à "
@@ -5338,6 +5083,9 @@ msgid ""
 "vision claire : devenir le hub de référence pour la formation technologique "
 "appliquée pour l'ensemble de la région CEDEAO."
 msgstr ""
+", in the heart of West Africa, Numeria Institute was founded with a clear "
+"vision: to become the reference hub for applied technology training for the "
+"entire ECOWAS region."
 
 #: pages/templates/pages/a_propos.html:91
 msgid ""
@@ -5346,6 +5094,9 @@ msgid ""
 "inclusive — pour former des experts capables de créer des solutions à fort "
 "impact local."
 msgstr ""
+"Our approach is unique: we combine academic rigor with projects rooted in "
+"African realities — agriculture, health, energy, inclusive finance — to "
+"train experts capable of creating high-impact local solutions."
 
 #: pages/templates/pages/a_propos.html:105
 msgid "Vision & Mission"
@@ -5364,6 +5115,10 @@ msgid ""
 "l'Ouest francophone, produisant des experts capables de modéliser, analyser "
 "et résoudre les problèmes complexes du continent."
 msgstr ""
+"To become, by 2030, the leading training institute in computational sciences"
+" and applied artificial intelligence in French-speaking West Africa, "
+"producing experts capable of modeling, analyzing and solving the continent's"
+" complex problems."
 
 #: pages/templates/pages/a_propos.html:122
 #, fuzzy
@@ -5378,6 +5133,10 @@ msgid ""
 "mener des recherches appliquées et de créer des produits technologiques à "
 "fort impact social et économique."
 msgstr ""
+"Train a new generation of African digital scientists and engineers, equipped"
+" with modern tools (Python, Fortran, ML/AI), capable of conducting applied "
+"research and creating technology products with high social and economic "
+"impact."
 
 #: pages/templates/pages/a_propos.html:139
 msgid "Nos valeurs fondatrices"
@@ -5394,6 +5153,8 @@ msgid ""
 "Rigueur scientifique et qualité pédagogique dans chaque cours et chaque "
 "interaction."
 msgstr ""
+"Scientific rigor and educational quality in every course and every "
+"interaction."
 
 #: pages/templates/pages/a_propos.html:154
 #, fuzzy
@@ -5406,6 +5167,8 @@ msgid ""
 "Chaque projet doit répondre à un vrai défi africain. La technologie au "
 "service du continent."
 msgstr ""
+"Every project must address a real African challenge. Technology serving the "
+"continent."
 
 #: pages/templates/pages/a_propos.html:162
 #, fuzzy
@@ -5418,6 +5181,8 @@ msgid ""
 "Esprit entrepreneurial, créativité et curiosité au cœur de notre approche "
 "pédagogique."
 msgstr ""
+"Entrepreneurial spirit, creativity and curiosity at the heart of our "
+"educational approach."
 
 #: pages/templates/pages/a_propos.html:170
 #, fuzzy
@@ -5430,6 +5195,8 @@ msgid ""
 "Inclusion et accessibilité pour tous les niveaux, bourses, tarification "
 "adaptée, cours en ligne gratuits."
 msgstr ""
+"Inclusion and accessibility for all levels, scholarships, adapted pricing, "
+"free online courses."
 
 #: pages/templates/pages/a_propos.html:178
 #, fuzzy
@@ -5442,6 +5209,8 @@ msgid ""
 "Coopération Sud-Sud et partenariats internationaux pour connecter l'Afrique "
 "au monde."
 msgstr ""
+"South-South cooperation and international partnerships to connect Africa to "
+"the world."
 
 #: pages/templates/pages/a_propos.html:186
 msgid "Impact mesurable"
@@ -5449,9 +5218,11 @@ msgstr "Measurable impact"
 
 #: pages/templates/pages/a_propos.html:188
 msgid ""
-"Chaque étudiant formé devient un vecteur de changement dans sa communauté et "
-"son pays."
+"Chaque étudiant formé devient un vecteur de changement dans sa communauté et"
+" son pays."
 msgstr ""
+"Every trained student becomes a vector of change in their community and "
+"country."
 
 #: pages/templates/pages/a_propos.html:203
 msgid "Les fondateurs"
@@ -5472,6 +5243,8 @@ msgid ""
 "Expert en sciences computationnelles et passionné par l'éducation "
 "scientifique. Visionnaire derrière Numeria Institute."
 msgstr ""
+"Expert in computational sciences and passionate about scientific education. "
+"The visionary behind Numeria Institute."
 
 #: pages/templates/pages/a_propos.html:223
 #, fuzzy
@@ -5488,6 +5261,8 @@ msgid ""
 "Expert technique et stratège. Responsable du développement technologique et "
 "des partenariats de Numeria Institute."
 msgstr ""
+"Technical expert and strategist. Responsible for technology development and "
+"partnerships at Numeria Institute."
 
 #: pages/templates/pages/a_propos.html:243
 #, fuzzy
@@ -5541,6 +5316,8 @@ msgid ""
 "Public : étudiants en 3e année de licence, master, diplômés en "
 "mathématiques, physique et ingénierie"
 msgstr ""
+"Audience: 3rd-year bachelor's students, master's students, graduates in "
+"mathematics, physics and engineering"
 
 #: pages/templates/pages/a_propos.html:292
 msgid "Filière B"
@@ -5571,7 +5348,8 @@ msgid "IA appliquée & déploiement"
 msgstr "Applied AI & deployment"
 
 #: pages/templates/pages/a_propos.html:306
-msgid "Public : toutes disciplines scientifiques, développeurs, professionnels"
+msgid ""
+"Public : toutes disciplines scientifiques, développeurs, professionnels"
 msgstr "Audience: all scientific disciplines, developers, professionals"
 
 #: pages/templates/pages/a_propos.html:323
@@ -5595,8 +5373,8 @@ msgstr "Email address"
 msgid "Quartier étudiant, zone à accès facile"
 msgstr "Student district, easily accessible area"
 
-#: pages/templates/pages/a_propos.html:363 templates/base.html:593
-#: templates/base.html:600 templates/includes/nav_items.html:12
+#: pages/templates/pages/a_propos.html:363 templates/base.html:597
+#: templates/base.html:604 templates/includes/nav_items.html:12
 #: templates/includes/nav_items.html:25
 msgid "Contact"
 msgstr "Contact"
@@ -5636,6 +5414,8 @@ msgid ""
 "Que tu sois étudiant, professionnel ou partenaire d'entreprise, il y a une "
 "place pour toi dans notre écosystème."
 msgstr ""
+"Whether you're a student, professional or corporate partner, there's a place"
+" for you in our ecosystem."
 
 #: pages/templates/pages/a_propos.html:413
 #: pages/templates/pages/contact.html:286
@@ -5719,8 +5499,10 @@ msgstr "Official certificates"
 
 #: pages/templates/pages/accueil.html:310
 msgid ""
-"Reçois un certificat PDF vérifiable à la fin de chaque cours payant complété."
-msgstr "Receive a verifiable PDF certificate upon completing each paid course."
+"Reçois un certificat PDF vérifiable à la fin de chaque cours payant "
+"complété."
+msgstr ""
+"Receive a verifiable PDF certificate upon completing each paid course."
 
 #: pages/templates/pages/accueil.html:317
 msgid "Exercices interactifs"
@@ -5729,9 +5511,9 @@ msgstr "Interactive exercises"
 #: pages/templates/pages/accueil.html:318
 msgid "Des QCM avec corrigés détaillés visibles seulement après réussite."
 msgstr ""
-"Multiple-choice questions with detailed answers visible only after passing."
-"Multiple-choice questions with detailed solutions revealed only after "
-"success."
+"Multiple-choice questions with detailed answers visible only after "
+"passing.Multiple-choice questions with detailed solutions revealed only "
+"after success."
 
 #: pages/templates/pages/accueil.html:325
 msgid "Accessible à tous"
@@ -5777,6 +5559,8 @@ msgid ""
 "Conditions Générales d'Utilisation de Numeria Institute : accès à la "
 "plateforme, propriété intellectuelle, paiements et responsabilités."
 msgstr ""
+"Numeria Institute Terms of Use: platform access, intellectual property, "
+"payments and liabilities."
 
 #: pages/templates/pages/cgu.html:11
 #: pages/templates/pages/confidentialite.html:11
@@ -5796,9 +5580,12 @@ msgstr "1. Purpose"
 msgid ""
 "Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et "
 "l'utilisation de la plateforme Numeria Institute, accessible à l'adresse "
-"<strong>numeriainstitute.com</strong>, exploitée par Numeria Institute, basé "
-"à Lomé, Togo."
+"<strong>numeriainstitute.com</strong>, exploitée par Numeria Institute, basé"
+" à Lomé, Togo."
 msgstr ""
+"These Terms of Use (\"ToU\") govern access to and use of the Numeria "
+"Institute platform, available at <strong>numeriainstitute.com</strong>, "
+"operated by Numeria Institute, based in Lomé, Togo."
 
 #: pages/templates/pages/cgu.html:31
 msgid ""
@@ -5806,6 +5593,8 @@ msgid ""
 "Si vous n'acceptez pas ces conditions, vous devez cesser d'utiliser la "
 "plateforme."
 msgstr ""
+"By accessing the platform, you unconditionally accept these Terms of Use. If"
+" you do not accept these terms, you must stop using the platform."
 
 #: pages/templates/pages/cgu.html:40
 msgid "2. Accès à la plateforme"
@@ -5813,32 +5602,40 @@ msgstr "2. Platform Access"
 
 #: pages/templates/pages/cgu.html:43
 msgid ""
-"L'accès à la plateforme nécessite la création d'un compte avec une adresse e-"
-"mail valide."
+"L'accès à la plateforme nécessite la création d'un compte avec une adresse "
+"e-mail valide."
 msgstr ""
+"Access to the platform requires creating an account with a valid email "
+"address."
 
 #: pages/templates/pages/cgu.html:44
 msgid ""
-"Vous êtes responsable de la confidentialité de vos identifiants de connexion."
-msgstr ""
+"Vous êtes responsable de la confidentialité de vos identifiants de "
+"connexion."
+msgstr "You are responsible for keeping your login credentials confidential."
 
 #: pages/templates/pages/cgu.html:45
 msgid ""
 "Numeria Institute se réserve le droit de suspendre ou supprimer tout compte "
 "en cas de violation des présentes CGU."
 msgstr ""
+"Numeria Institute reserves the right to suspend or delete any account in the"
+" event of a violation of these Terms of Use."
 
 #: pages/templates/pages/cgu.html:46
 msgid ""
 "Certains contenus sont accessibles gratuitement ; d'autres nécessitent un "
 "paiement préalable."
 msgstr ""
+"Some content is freely accessible; other content requires prior payment."
 
 #: pages/templates/pages/cgu.html:47
 msgid ""
 "La plateforme est accessible 24h/24, 7j/7, sous réserve de maintenances "
 "planifiées ou d'incidents techniques."
 msgstr ""
+"The platform is accessible 24/7, subject to planned maintenance or technical"
+" incidents."
 
 #: pages/templates/pages/cgu.html:54
 msgid "3. Propriété intellectuelle"
@@ -5848,29 +5645,38 @@ msgstr "3. Intellectual Property"
 msgid ""
 "Tous les contenus présents sur la plateforme (textes, vidéos, exercices, "
 "schémas, code source, logos) sont la propriété exclusive de Numeria "
-"Institute ou de ses partenaires et sont protégés par les lois applicables en "
-"matière de propriété intellectuelle."
+"Institute ou de ses partenaires et sont protégés par les lois applicables en"
+" matière de propriété intellectuelle."
 msgstr ""
+"All content on the platform (texts, videos, exercises, diagrams, source "
+"code, logos) is the exclusive property of Numeria Institute or its partners "
+"and is protected by applicable intellectual property laws."
 
 #: pages/templates/pages/cgu.html:62
 msgid ""
 "Toute reproduction, redistribution ou exploitation commerciale des contenus "
 "sans autorisation écrite préalable est interdite."
 msgstr ""
+"Any reproduction, redistribution or commercial use of the content without "
+"prior written authorization is prohibited."
 
 #: pages/templates/pages/cgu.html:63
 msgid ""
 "L'accès aux cours vous confère une licence personnelle, non cessible et non "
 "exclusive pour votre usage propre."
 msgstr ""
+"Access to courses grants you a personal, non-transferable and non-exclusive "
+"license for your own use."
 
 #: pages/templates/pages/cgu.html:64
 #, fuzzy
-#| msgid "Ce certificat a été émis par Numeria Institute et est authentifié."
+#| msgid ""
+#| "Ce certificat a été émis par Numeria Institute et est authentifié."
 msgid ""
-"Les certificats délivrés par Numeria Institute sont nominatifs et ne peuvent "
-"être revendus ni transférés."
-msgstr "This certificate was issued by Numeria Institute and is authenticated."
+"Les certificats délivrés par Numeria Institute sont nominatifs et ne peuvent"
+" être revendus ni transférés."
+msgstr ""
+"This certificate was issued by Numeria Institute and is authenticated."
 
 #: pages/templates/pages/cgu.html:71
 #, fuzzy
@@ -5888,13 +5694,14 @@ msgstr "Join Numeria Institute"
 msgid ""
 "Mettre à disposition des contenus de qualité et à jour dans la mesure du "
 "possible."
-msgstr ""
+msgstr "Provide quality, up-to-date content as far as possible."
 
 #: pages/templates/pages/cgu.html:76
 msgid ""
-"Garantir la sécurité des données personnelles conformément à notre politique "
-"de confidentialité."
+"Garantir la sécurité des données personnelles conformément à notre politique"
+" de confidentialité."
 msgstr ""
+"Ensure the security of personal data in accordance with our privacy policy."
 
 #: pages/templates/pages/cgu.html:77
 msgid "Traiter les demandes d'assistance dans un délai raisonnable."
@@ -5909,6 +5716,7 @@ msgid ""
 "Utiliser la plateforme dans le respect des lois en vigueur et des présentes "
 "CGU."
 msgstr ""
+"Use the platform in compliance with applicable laws and these Terms of Use."
 
 #: pages/templates/pages/cgu.html:82
 msgid "Ne pas tenter de pirater, déstabiliser ou surcharger la plateforme."
@@ -5921,7 +5729,7 @@ msgstr "Not share login credentials with third parties."
 #: pages/templates/pages/cgu.html:84
 msgid ""
 "Fournir des informations exactes lors de l'inscription et des candidatures."
-msgstr ""
+msgstr "Provide accurate information when registering and applying."
 
 #: pages/templates/pages/cgu.html:91
 msgid "5. Paiements et remboursements"
@@ -5929,15 +5737,18 @@ msgstr "5. Payments and Refunds"
 
 #: pages/templates/pages/cgu.html:94
 msgid ""
-"Les prix des cours et frais de candidature sont indiqués en Francs CFA (XOF) "
-"et sont TTC."
+"Les prix des cours et frais de candidature sont indiqués en Francs CFA (XOF)"
+" et sont TTC."
 msgstr ""
+"Course prices and application fees are shown in CFA francs (XOF) and include"
+" all taxes."
 
 #: pages/templates/pages/cgu.html:95
 msgid ""
 "Les paiements sont traités via des prestataires sécurisés (Mobile Money, "
 "carte bancaire)."
 msgstr ""
+"Payments are processed via secure providers (Mobile Money, bank card)."
 
 #: pages/templates/pages/cgu.html:96
 msgid "Tout achat est définitif sauf indication contraire."
@@ -5946,23 +5757,31 @@ msgstr "All purchases are final unless otherwise stated."
 #: pages/templates/pages/cgu.html:97
 #, python-format
 msgid ""
-"Une demande de remboursement peut être soumise dans les <strong>7 jours</"
-"strong> suivant l'achat, à condition que moins de 20 %% du contenu du cours "
-"ait été consulté."
+"Une demande de remboursement peut être soumise dans les <strong>7 "
+"jours</strong> suivant l'achat, à condition que moins de 20 %% du contenu du"
+" cours ait été consulté."
 msgstr ""
+"A refund request may be submitted within <strong>7 days</strong> of "
+"purchase, provided that less than 20%% of the course content has been "
+"viewed."
 
 #: pages/templates/pages/cgu.html:98
 msgid ""
 "Les frais de candidature à un programme d'admission sont non remboursables "
 "une fois le dossier soumis."
 msgstr ""
+"Application fees for an admission program are non-refundable once the "
+"application has been submitted."
 
 #: pages/templates/pages/cgu.html:99
 msgid ""
-"Pour toute demande de remboursement, contactez : <a href=\"mailto:"
-"numeriainstitude@gmail.com\" class=\"text-numeria-teal hover:"
-"underline\">numeriainstitude@gmail.com</a>"
+"Pour toute demande de remboursement, contactez : <a "
+"href=\"mailto:numeriainstitude@gmail.com\" class=\"text-numeria-teal "
+"hover:underline\">numeriainstitude@gmail.com</a>"
 msgstr ""
+"For any refund request, contact: <a "
+"href=\"mailto:numeriainstitude@gmail.com\" class=\"text-numeria-teal "
+"hover:underline\">numeriainstitude@gmail.com</a>"
 
 #: pages/templates/pages/cgu.html:106
 #, fuzzy
@@ -5975,24 +5794,32 @@ msgid ""
 "Vous pouvez clôturer votre compte à tout moment depuis la section "
 "<strong>Supprimer mon compte</strong> de votre profil."
 msgstr ""
+"You can close your account at any time from the <strong>Delete my "
+"account</strong> section of your profile."
 
 #: pages/templates/pages/cgu.html:110
 msgid ""
 "Numeria Institute se réserve le droit de résilier ou suspendre un compte "
 "sans préavis en cas de manquement grave aux présentes CGU."
 msgstr ""
+"Numeria Institute reserves the right to terminate or suspend an account "
+"without notice in the event of a serious breach of these Terms of Use."
 
 #: pages/templates/pages/cgu.html:111
 msgid ""
 "En cas de résiliation, vos données sont supprimées conformément à notre "
 "politique de confidentialité."
 msgstr ""
+"In the event of termination, your data is deleted in accordance with our "
+"privacy policy."
 
 #: pages/templates/pages/cgu.html:112
 msgid ""
 "Les accès aux cours payants sont maintenus jusqu'à la date d'expiration "
 "éventuelle ou la suppression du compte."
 msgstr ""
+"Access to paid courses is maintained until the eventual expiration date or "
+"deletion of the account."
 
 #: pages/templates/pages/cgu.html:119
 msgid "7. Modification des CGU"
@@ -6005,6 +5832,10 @@ msgid ""
 "plateforme. La poursuite de l'utilisation de la plateforme après "
 "notification vaut acceptation des nouvelles conditions."
 msgstr ""
+"Numeria Institute reserves the right to modify these Terms of Use at any "
+"time. Users will be notified by email or by a notice on the platform. "
+"Continued use of the platform after notification constitutes acceptance of "
+"the new terms."
 
 #: pages/templates/pages/cgu.html:131
 msgid "8. Droit applicable"
@@ -6012,10 +5843,13 @@ msgstr "8. Applicable Law"
 
 #: pages/templates/pages/cgu.html:134
 msgid ""
-"Les présentes CGU sont régies par le droit togolais. Tout litige sera soumis "
-"aux tribunaux compétents de Lomé, Togo, sauf disposition légale contraire "
+"Les présentes CGU sont régies par le droit togolais. Tout litige sera soumis"
+" aux tribunaux compétents de Lomé, Togo, sauf disposition légale contraire "
 "applicable à l'utilisateur."
 msgstr ""
+"These Terms of Use are governed by Togolese law. Any dispute shall be "
+"submitted to the competent courts of Lomé, Togo, unless otherwise required "
+"by law applicable to the user."
 
 #: pages/templates/pages/cgu.html:143
 #: pages/templates/pages/confidentialite.html:116
@@ -6042,6 +5876,8 @@ msgid ""
 "Politique de confidentialité de Numeria Institute : données collectées, "
 "utilisation, cookies et droits des utilisateurs."
 msgstr ""
+"Numeria Institute Privacy Policy: data collected, use, cookies and user "
+"rights."
 
 #: pages/templates/pages/confidentialite.html:22
 msgid ""
@@ -6050,6 +5886,9 @@ msgid ""
 "quelles données nous collectons, pourquoi nous les collectons et comment "
 "vous pouvez exercer vos droits."
 msgstr ""
+"Numeria Institute (<strong>numeriainstitude@gmail.com</strong>) is committed"
+" to protecting the privacy of its users. This policy describes what data we "
+"collect, why we collect it, and how you can exercise your rights."
 
 #: pages/templates/pages/confidentialite.html:30
 msgid "1. Données collectées"
@@ -6060,39 +5899,50 @@ msgid ""
 "Lors de votre inscription et utilisation de la plateforme, nous collectons "
 "les informations suivantes :"
 msgstr ""
+"When you register and use the platform, we collect the following "
+"information:"
 
 #: pages/templates/pages/confidentialite.html:34
 msgid "<strong>Identité :</strong> nom, prénom, adresse e-mail."
-msgstr ""
+msgstr "<strong>Identity:</strong> first name, last name, email address."
 
 #: pages/templates/pages/confidentialite.html:35
 msgid ""
 "<strong>Profil :</strong> pays, ville, niveau d'études, domaine d'intérêt."
 msgstr ""
+"<strong>Profile:</strong> country, city, level of study, area of interest."
 
 #: pages/templates/pages/confidentialite.html:36
 msgid ""
 "<strong>Progression pédagogique :</strong> cours suivis, leçons terminées, "
 "exercices soumis, certificats obtenus."
 msgstr ""
+"<strong>Educational progress:</strong> courses followed, lessons completed, "
+"exercises submitted, certificates obtained."
 
 #: pages/templates/pages/confidentialite.html:37
 msgid ""
 "<strong>Données de candidature :</strong> CV, lettre de motivation, relevés "
 "de notes (pour les dossiers d'admission uniquement)."
 msgstr ""
+"<strong>Application data:</strong> CV, cover letter, transcripts (for "
+"university admission files only)."
 
 #: pages/templates/pages/confidentialite.html:38
 msgid ""
 "<strong>Données de paiement :</strong> référence de transaction (nous ne "
 "stockons pas les numéros de carte bancaire)."
 msgstr ""
+"<strong>Payment data:</strong> transaction reference (we do not store bank "
+"card numbers)."
 
 #: pages/templates/pages/confidentialite.html:39
 msgid ""
 "<strong>Données techniques :</strong> adresse IP, type de navigateur, pages "
 "visitées (via journaux serveur)."
 msgstr ""
+"<strong>Technical data:</strong> IP address, browser type, pages visited "
+"(via server logs)."
 
 #: pages/templates/pages/confidentialite.html:46
 msgid "2. Utilisation des données"
@@ -6129,12 +5979,16 @@ msgid ""
 "Vous envoyer des notifications liées à votre activité (réponse à "
 "candidature, confirmation de paiement)."
 msgstr ""
+"Send you notifications related to your activity (application response, "
+"payment confirmation)."
 
 #: pages/templates/pages/confidentialite.html:57
 msgid ""
 "Nous ne vendons, ne louons ni ne partageons vos données personnelles avec "
 "des tiers à des fins commerciales."
 msgstr ""
+"We do not sell, rent or share your personal data with third parties for "
+"commercial purposes."
 
 #: pages/templates/pages/confidentialite.html:63
 msgid "3. Cookies"
@@ -6145,29 +5999,37 @@ msgid ""
 "Numeria Institute utilise des cookies techniques strictement nécessaires au "
 "bon fonctionnement du site :"
 msgstr ""
+"Numeria Institute uses technical cookies strictly necessary for the proper "
+"functioning of the site:"
 
 #: pages/templates/pages/confidentialite.html:67
 msgid ""
 "<strong>Session Django :</strong> maintient votre connexion entre les pages."
-msgstr ""
+msgstr "<strong>Django session:</strong> keeps you logged in between pages."
 
 #: pages/templates/pages/confidentialite.html:68
 msgid ""
-"<strong>CSRF token :</strong> protège les formulaires contre les attaques de "
-"type falsification de requêtes."
+"<strong>CSRF token :</strong> protège les formulaires contre les attaques de"
+" type falsification de requêtes."
 msgstr ""
+"<strong>CSRF token:</strong> protects forms against cross-site request "
+"forgery attacks."
 
 #: pages/templates/pages/confidentialite.html:69
 msgid ""
-"<strong>Préférence d'affichage :</strong> mémorise votre choix de mode clair/"
-"sombre (stocké dans <code>localStorage</code>, pas un cookie)."
+"<strong>Préférence d'affichage :</strong> mémorise votre choix de mode "
+"clair/sombre (stocké dans <code>localStorage</code>, pas un cookie)."
 msgstr ""
+"<strong>Display preference:</strong> remembers your light/dark mode choice "
+"(stored in <code>localStorage</code>, not a cookie)."
 
 #: pages/templates/pages/confidentialite.html:71
 msgid ""
 "Nous n'utilisons pas de cookies publicitaires ni de traceurs tiers (Google "
 "Analytics, Facebook Pixel, etc.)."
 msgstr ""
+"We do not use advertising cookies or third-party trackers (Google Analytics,"
+" Facebook Pixel, etc.)."
 
 #: pages/templates/pages/confidentialite.html:77
 msgid "4. Vos droits"
@@ -6175,45 +6037,57 @@ msgstr "4. Your Rights"
 
 #: pages/templates/pages/confidentialite.html:79
 msgid ""
-"Conformément aux principes généraux de protection des données, vous disposez "
-"des droits suivants :"
+"Conformément aux principes généraux de protection des données, vous disposez"
+" des droits suivants :"
 msgstr ""
+"In accordance with general data protection principles, you have the "
+"following rights:"
 
 #: pages/templates/pages/confidentialite.html:81
 msgid ""
 "<strong>Droit d'accès :</strong> obtenir une copie des données vous "
 "concernant."
 msgstr ""
+"<strong>Right of access:</strong> obtain a copy of the data concerning you."
 
 #: pages/templates/pages/confidentialite.html:82
 msgid ""
 "<strong>Droit de rectification :</strong> corriger des informations "
 "inexactes ou incomplètes."
 msgstr ""
+"<strong>Right to rectification:</strong> correct inaccurate or incomplete "
+"information."
 
 #: pages/templates/pages/confidentialite.html:83
 msgid ""
 "<strong>Droit à l'effacement :</strong> demander la suppression de votre "
 "compte et de vos données."
 msgstr ""
+"<strong>Right to erasure:</strong> request the deletion of your account and "
+"your data."
 
 #: pages/templates/pages/confidentialite.html:84
 msgid ""
 "<strong>Droit à la portabilité :</strong> recevoir vos données dans un "
 "format structuré."
 msgstr ""
+"<strong>Right to portability:</strong> receive your data in a structured "
+"format."
 
 #: pages/templates/pages/confidentialite.html:85
 msgid ""
-"<strong>Droit d'opposition :</strong> vous opposer à certains traitements de "
-"vos données."
+"<strong>Droit d'opposition :</strong> vous opposer à certains traitements de"
+" vos données."
 msgstr ""
+"<strong>Right to object:</strong> object to certain processing of your data."
 
 #: pages/templates/pages/confidentialite.html:88
 msgid ""
 "Vous pouvez exercer ces droits directement depuis votre profil (section "
 "<strong>Supprimer mon compte</strong>) ou en nous contactant."
 msgstr ""
+"You can exercise these rights directly from your profile (<strong>Delete my "
+"account</strong> section) or by contacting us."
 
 #: pages/templates/pages/confidentialite.html:97
 msgid "5. Conservation des données"
@@ -6222,10 +6096,13 @@ msgstr "5. Data Retention"
 #: pages/templates/pages/confidentialite.html:99
 msgid ""
 "Vos données sont conservées aussi longtemps que votre compte est actif. En "
-"cas de suppression de compte, vos données personnelles sont effacées dans un "
-"délai de 30 jours. Les données de transaction sont conservées 5 ans à des "
+"cas de suppression de compte, vos données personnelles sont effacées dans un"
+" délai de 30 jours. Les données de transaction sont conservées 5 ans à des "
 "fins comptables et légales."
 msgstr ""
+"Your data is retained for as long as your account is active. If the account "
+"is deleted, your personal data is erased within 30 days. Transaction data is"
+" kept for 5 years for accounting and legal purposes."
 
 #: pages/templates/pages/confidentialite.html:105
 #, fuzzy
@@ -6269,6 +6146,8 @@ msgid ""
 "Je souhaite discuter d'un <strong>partenariat</strong> avec Numeria "
 "Institute (université, entreprise, ONG, institution)"
 msgstr ""
+"I would like to discuss a <strong>partnership</strong> with Numeria "
+"Institute (university, company, NGO, institution)"
 
 #: pages/templates/pages/contact.html:174
 #, fuzzy
@@ -6319,9 +6198,11 @@ msgstr "How do I apply for in-person programmes?"
 
 #: pages/templates/pages/contact.html:266
 msgid ""
-"Les candidatures se font en ligne. Créez un compte et suivez le processus de "
-"candidature."
+"Les candidatures se font en ligne. Créez un compte et suivez le processus de"
+" candidature."
 msgstr ""
+"Applications are made online. Create an account and follow the application "
+"process."
 
 #: pages/templates/pages/contact.html:272
 msgid "Proposez-vous des bourses ?"
@@ -6340,12 +6221,15 @@ msgid ""
 "Université, entreprise, ONG ou institution — construisons ensemble l'avenir "
 "scientifique de l'Afrique."
 msgstr ""
+"University, company, NGO or institution — let's build Africa's scientific "
+"future together."
 
 #: pages/templates/pages/contact.html:292
 msgid ""
 "Cochez la case partenariat dans le formulaire pour qu'on vous recontacte en "
 "priorité."
 msgstr ""
+"Check the partnership box on the form so we can prioritize contacting you."
 
 #: pages/templates/pages/contact.html:309
 #, fuzzy
@@ -6399,16 +6283,16 @@ msgid ""
 "Découvrez Numeria Institute, notre mission et notre équipe pour l'éducation "
 "scientifique en Afrique."
 msgstr ""
-"Discover Numeria Institute, our mission and team for scientific education in "
-"Africa."
+"Discover Numeria Institute, our mission and team for scientific education in"
+" Africa."
 
 #: pages/views.py:147
 msgid ""
-"Discover Numeria Institute, our mission and team for scientific education in "
-"Africa."
+"Discover Numeria Institute, our mission and team for scientific education in"
+" Africa."
 msgstr ""
-"Discover Numeria Institute, our mission and team for scientific education in "
-"Africa."
+"Discover Numeria Institute, our mission and team for scientific education in"
+" Africa."
 
 #: pages/views.py:203
 msgid "Nouveau message de contact"
@@ -6442,6 +6326,8 @@ msgid ""
 "Tu es maintenant inscrit à la session <strong>%(session)s</strong> de "
 "<strong>%(formation)s</strong>."
 msgstr ""
+"You are now enrolled in the <strong>%(session)s</strong> session of "
+"<strong>%(formation)s</strong>."
 
 #: paiements/templates/paiements/confirmation.html:24
 msgid "Bonne apprentissage ! 🎓"
@@ -6460,8 +6346,8 @@ msgid "Voir la session →"
 msgstr "View courses →"
 
 #: paiements/templates/paiements/confirmation.html:73
-#: templates/admin_panel/dashboard.html:5 templates/base.html:478
-#: templates/base.html:538
+#: templates/admin_panel/dashboard.html:5 templates/base.html:482
+#: templates/base.html:542
 msgid "Tableau de bord"
 msgstr "Dashboard"
 
@@ -6566,15 +6452,15 @@ msgstr "Camera/mic access denied"
 
 #: templates/403.html:13
 msgid "Vous n'avez pas la permission d'accéder à cette page."
-msgstr ""
+msgstr "You do not have permission to access this page."
 
 #: templates/404.html:3 templates/404.html:10
 msgid "Page introuvable"
-msgstr ""
+msgstr "Page not found"
 
 #: templates/404.html:13
 msgid "La page que vous cherchez n'existe pas ou a été déplacée."
-msgstr ""
+msgstr "The page you are looking for does not exist or has been moved."
 
 #: templates/admin_panel/activity_log.html:10
 msgid "Les 50 dernières actions effectuées par le staff."
@@ -6588,25 +6474,80 @@ msgstr "No activity recorded yet."
 msgid "Staff — Numeria"
 msgstr "Staff — Numeria"
 
-#: templates/admin_panel/base_staff.html:214 templates/base.html:540
+#: templates/admin_panel/base_staff.html:270 templates/base.html:544
 msgid "Se déconnecter"
 msgstr "Sign out"
 
-#: templates/admin_panel/base_staff.html:229
+#: templates/admin_panel/base_staff.html:285
 msgid "Staff Dashboard"
 msgstr "Staff Dashboard"
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:7
+#: templates/admin_panel/blocks/_typed_ex_create.html:39
+#, fuzzy
+#| msgid "Aucun mentor trouvé"
+msgid "Aucun exercice lié."
+msgstr "No mentor found"
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:10
+#, fuzzy
+#| msgid "Créer l'exercice"
+msgid "Créer un exercice et le lier"
+msgstr "Create exercise"
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:14
+#, fuzzy
+#| msgid "Titre"
+msgid "Titre *"
+msgstr "Title"
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:17
+#, fuzzy
+#| msgid "Instructeurs"
+msgid "Instructions (Markdown)"
+msgstr "Instructors"
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:31
+#, fuzzy
+#| msgid "Créer le premier sujet"
+msgid "Créer et lier"
+msgstr "Create the first topic"
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:33
+#, fuzzy
+#| msgid "Voir le détail"
+msgid "Configurez les détails ensuite via"
+msgstr "View details"
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:34
+#, fuzzy
+#| msgid "Tous les exercices"
+msgid "la liste des exercices"
+msgstr "All exercises"
+
+#: templates/admin_panel/blocks/block_preview.html:36
+#, fuzzy
+#| msgid "Exercices interactifs"
+msgid "Exercice interactif"
+msgstr "Interactive exercises"
+
+#: templates/admin_panel/blocks/block_preview.html:38
+#, fuzzy
+#| msgid "Aucun mentor trouvé"
+msgid "Bloc exercice non configuré."
+msgstr "No mentor found"
 
 #: templates/admin_panel/candidature_detail.html:6
 #: templates/admin_panel/candidatures_list.html:4
 #: templates/admin_panel/candidatures_list.html:5
-#: templates/admin_panel/user_detail.html:62 templates/base.html:591
+#: templates/admin_panel/user_detail.html:62 templates/base.html:595
 #: templates/includes/nav_items.html:8 templates/includes/nav_items.html:21
 msgid "Candidatures"
 msgstr "Applications"
 
 #: templates/admin_panel/candidature_detail.html:20
 msgid "En cours de révision"
-msgstr ""
+msgstr "Under review"
 
 #: templates/admin_panel/candidature_detail.html:29
 #, fuzzy
@@ -6638,7 +6579,7 @@ msgstr "Applicant"
 
 #: templates/admin_panel/candidature_detail.html:88
 msgid "Né(e) le"
-msgstr ""
+msgstr "Date of birth"
 
 #: templates/admin_panel/candidature_detail.html:97
 #: templates/admin_panel/candidatures_list.html:37
@@ -6651,9 +6592,15 @@ msgstr "Programme"
 msgid "Campagne"
 msgstr "Campaign closed"
 
+#: templates/admin_panel/candidature_detail.html:99
+#: templates/admin_panel/candidatures_list.html:38
+#: templates/admin_panel/mentorat_detail.html:80
+msgid "Soumis le"
+msgstr "Submitted on"
+
 #: templates/admin_panel/candidature_detail.html:103
 msgid "Diplôme"
-msgstr ""
+msgstr "Degree"
 
 #: templates/admin_panel/candidature_detail.html:111
 #: templates/admin_panel/candidature_detail.html:120
@@ -6714,8 +6661,11 @@ msgid "Refuser la candidature"
 msgstr "Reject application"
 
 #: templates/admin_panel/candidature_detail.html:185
-msgid "Obligatoire — sera visible dans l\\"
-msgstr ""
+#, fuzzy
+#| msgid ""
+#| "Indiquez la raison (obligatoire). Un email sera envoyé au candidat."
+msgid "Obligatoire — sera visible dans le mail envoyé au candidat."
+msgstr "Please provide a reason (required). An email will be sent."
 
 #: templates/admin_panel/candidature_detail.html:198
 msgid "Mettre en liste d'attente"
@@ -6728,7 +6678,7 @@ msgstr "All"
 
 #: templates/admin_panel/candidatures_list.html:24
 msgid "Nom, email, filière, référence…"
-msgstr ""
+msgstr "Name, email, program, reference…"
 
 #: templates/admin_panel/candidatures_list.html:26
 #: templates/admin_panel/contacts_list.html:22
@@ -6743,7 +6693,6 @@ msgstr "Ref."
 
 #: templates/admin_panel/candidatures_list.html:40
 #: templates/admin_panel/contacts_list.html:50
-#: templates/admin_panel/exercises_list.html:60
 #: templates/admin_panel/mcq_list.html:36
 #: templates/admin_panel/mentorat_list.html:33
 #: templates/admin_panel/users_list.html:33
@@ -6824,53 +6773,60 @@ msgstr "Mark as read"
 msgid "Aucun message trouvé."
 msgstr "No mentor found"
 
+#: templates/admin_panel/cours_list.html:6
+#, fuzzy
+#| msgid "Leçon / Cours"
+msgid "Gestion des cours"
+msgstr "Lesson / Course"
+
 #: templates/admin_panel/dashboard.html:4
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
-#: templates/admin_panel/dashboard.html:16
+#: templates/admin_panel/dashboard.html:59
 msgid "Messages non lus"
 msgstr "Unread messages"
 
-#: templates/admin_panel/dashboard.html:25
+#: templates/admin_panel/dashboard.html:68
 msgid "Candidatures en attente"
 msgstr "Pending applications"
 
-#: templates/admin_panel/dashboard.html:34
+#: templates/admin_panel/dashboard.html:77
 #, fuzzy
 #| msgid "Candidatures"
 msgid "Candidatures mentor"
 msgstr "Applications"
 
-#: templates/admin_panel/dashboard.html:43
+#: templates/admin_panel/dashboard.html:86
 msgid "Demandes mentorat"
 msgstr "Mentorship requests"
 
-#: templates/admin_panel/dashboard.html:52
+#: templates/admin_panel/dashboard.html:95
 msgid "Utilisateurs actifs"
 msgstr "Active users"
 
-#: templates/admin_panel/dashboard.html:61
+#: templates/admin_panel/dashboard.html:104
 msgid "Cours publiés"
 msgstr "Published courses"
 
-#: templates/admin_panel/dashboard.html:69
+#: templates/admin_panel/dashboard.html:112
 msgid "Paiements ce mois"
 msgstr "Payments this month"
 
-#: templates/admin_panel/dashboard.html:78
+#: templates/admin_panel/dashboard.html:121
 msgid "Activité récente"
 msgstr "Recent activity"
 
-#: templates/admin_panel/dashboard.html:79
+#: templates/admin_panel/dashboard.html:122
 msgid "Tout voir"
 msgstr "See all"
 
-#: templates/admin_panel/dashboard.html:90 templates/notifications/bell.html:56
+#: templates/admin_panel/dashboard.html:133
+#: templates/notifications/bell.html:56
 msgid "ago"
 msgstr "ago"
 
-#: templates/admin_panel/dashboard.html:96
+#: templates/admin_panel/dashboard.html:139
 msgid "Aucune activité enregistrée."
 msgstr "No activity recorded."
 
@@ -6898,6 +6854,28 @@ msgstr "Create"
 msgid "Informations de base"
 msgstr "Basic information"
 
+#: templates/admin_panel/exercise_form.html:31
+msgid "Mode d'évaluation"
+msgstr "Evaluation mode"
+
+#: templates/admin_panel/exercise_form.html:40
+#: templates/admin_panel/mcq_list.html:34
+msgid "Difficulté"
+msgstr "Difficulty"
+
+#: templates/admin_panel/exercise_form.html:48
+#: templates/admin_panel/exercise_results.html:95
+msgid "Points"
+msgstr "Points"
+
+#: templates/admin_panel/exercise_form.html:53
+msgid "Tentatives max"
+msgstr "Max attempts"
+
+#: templates/admin_panel/exercise_form.html:58
+msgid "Ordre"
+msgstr "Order"
+
 #: templates/admin_panel/exercise_form.html:66
 msgid "Exercice actif"
 msgstr "Active exercise"
@@ -6915,12 +6893,29 @@ msgid "Code"
 msgstr "Code"
 
 #: templates/admin_panel/exercise_form.html:89
+msgid "Code de départ"
+msgstr "Starter code"
+
+#: templates/admin_panel/exercise_form.html:89
 msgid "affiché à l'étudiant"
 msgstr "shown to the student"
 
 #: templates/admin_panel/exercise_form.html:95
+#: templates/sandbox/sandbox_widget.html:148
+msgid "Solution"
+msgstr "Solution"
+
+#: templates/admin_panel/exercise_form.html:95
 msgid "jamais montrée à l'étudiant"
 msgstr "never shown to the student"
+
+#: templates/admin_panel/exercise_form.html:102
+msgid "Output attendu"
+msgstr "Expected output"
+
+#: templates/admin_panel/exercise_form.html:109
+msgid "Code de tests"
+msgstr "Test code"
 
 #: templates/admin_panel/exercise_form.html:109
 msgid "caché à l'étudiant"
@@ -6966,6 +6961,17 @@ msgstr "Incorrect"
 msgid "Tous les exercices"
 msgstr "All exercises"
 
+#: templates/admin_panel/exercise_results.html:49
+#: templates/admin_panel/exercise_results.html:93
+msgid "Étudiant"
+msgstr "Student"
+
+#: templates/admin_panel/exercise_results.html:50
+#, fuzzy
+#| msgid "Exercice pratique"
+msgid "Exercice"
+msgstr "Practical exercise"
+
 #: templates/admin_panel/exercise_results.html:79
 msgid "Aucune soumission trouvée."
 msgstr "No submissions found."
@@ -6982,95 +6988,20 @@ msgstr "Exercises passed"
 msgid "Aucun exercice réussi pour le moment."
 msgstr "No exercises passed yet."
 
-#: templates/admin_panel/exercises_list.html:21
-msgid "Tous les cours"
-msgstr "All courses"
-
-#: templates/admin_panel/exercises_list.html:30
+#: templates/admin_panel/formation_list.html:6
 #, fuzzy
-#| msgid "Voir toutes les formations"
-msgid "Toutes les formations"
-msgstr "View all training programmes"
-
-#: templates/admin_panel/exercises_list.html:44
-msgid "Voir les résultats étudiants"
-msgstr "View student results"
-
-#: templates/admin_panel/exercises_list.html:54
-#: templates/admin_panel/mcq_list.html:31
-#, fuzzy
-#| msgid "Leçon / Cours"
-msgid "Leçon / Parent"
-msgstr "Lesson / Course"
-
-#: templates/admin_panel/exercises_list.html:56
-msgid "Mode"
-msgstr "Mode"
-
-#: templates/admin_panel/exercises_list.html:58
-#: templates/admin_panel/mcq_list.html:35
-msgid "Pts"
-msgstr ""
-
-#: templates/admin_panel/exercises_list.html:59
-msgid "Réussis"
-msgstr "Passed"
-
-#: templates/admin_panel/exercises_list.html:107
-msgid "Supprimer cet exercice ?"
-msgstr ""
-
-#: templates/admin_panel/exercises_list.html:109
-#: templates/admin_panel/mcq_list.html:73
-msgid "Suppr."
-msgstr "Del."
-
-#: templates/admin_panel/exercises_list.html:120
-#, fuzzy
-#| msgid "Aucun mentor trouvé"
-msgid "Aucun exercice trouvé."
-msgstr "No mentor found"
-
-#: templates/admin_panel/exercises_list.html:121
-msgid ""
-"Créez un exercice depuis l'éditeur de leçon ou via le formulaire ci-dessous."
-msgstr ""
-
-#: templates/admin_panel/exercises_list.html:128
-msgid "Ajouter un exercice à une leçon"
-msgstr "Add an exercise to a lesson"
-
-#: templates/admin_panel/exercises_list.html:145
-#, fuzzy
-#| msgid "— Choisir une leçon —"
-msgid "— Choisir une leçon de cours —"
-msgstr "— Choose a lesson —"
-
-#: templates/admin_panel/exercises_list.html:154
-#: templates/admin_panel/exercises_list.html:178
-msgid "Ajouter"
-msgstr "Add"
-
-#: templates/admin_panel/exercises_list.html:163
-#, fuzzy
-#| msgid "— Choisir une leçon —"
-msgid "— Choisir une formation —"
-msgstr "— Choose a lesson —"
-
-#: templates/admin_panel/exercises_list.html:170
-msgid "— Module —"
-msgstr ""
-
-#: templates/admin_panel/exercises_list.html:174
-#, fuzzy
-#| msgid "— Choisir une leçon —"
-msgid "— Leçon —"
-msgstr "— Choose a lesson —"
+#| msgid "Session de formation"
+msgid "Gestion des formations"
+msgstr "Training session"
 
 #: templates/admin_panel/includes/pagination.html:8
 #: templates/notifications/list.html:99
 msgid "Page"
 msgstr "Page"
+
+#: templates/admin_panel/mcq_list.html:4
+msgid "Exercices QCM"
+msgstr "MCQ Exercises"
 
 #: templates/admin_panel/mcq_list.html:5
 #, fuzzy
@@ -7084,13 +7015,33 @@ msgstr "Original question"
 msgid "Rechercher…"
 msgstr "Search"
 
+#: templates/admin_panel/mcq_list.html:30
+#, fuzzy
+#| msgid "Questions"
+msgid "Question"
+msgstr "Questions"
+
+#: templates/admin_panel/mcq_list.html:31
+#, fuzzy
+#| msgid "Leçon / Cours"
+msgid "Leçon / Parent"
+msgstr "Lesson / Course"
+
 #: templates/admin_panel/mcq_list.html:33
 msgid "Choix"
-msgstr ""
+msgstr "Choice"
+
+#: templates/admin_panel/mcq_list.html:35
+msgid "Pts"
+msgstr "Pts"
 
 #: templates/admin_panel/mcq_list.html:71
 msgid "Supprimer ce QCM ?"
 msgstr "Delete this MCQ?"
+
+#: templates/admin_panel/mcq_list.html:73
+msgid "Suppr."
+msgstr "Del."
 
 #: templates/admin_panel/mcq_list.html:84
 msgid "Aucun QCM trouvé. Créez-en depuis l'éditeur de leçon."
@@ -7206,12 +7157,17 @@ msgid "Réinitialiser MDP"
 msgstr "Reset password"
 
 #: templates/admin_panel/user_detail.html:26
+#: templates/admin_panel/users_list.html:31
+msgid "Actif"
+msgstr "Active"
+
+#: templates/admin_panel/user_detail.html:26
 msgid "Inactif"
 msgstr "Inactive"
 
 #: templates/admin_panel/user_detail.html:38
 msgid "Username"
-msgstr ""
+msgstr "Username"
 
 #: templates/admin_panel/user_detail.html:40
 #: templates/admin_panel/users_list.html:30
@@ -7249,13 +7205,13 @@ msgid "Rendre staff ?"
 msgstr "Make staff?"
 
 #: templates/admin_panel/user_detail.html:138
-#: templates/admin_panel/users_list.html:67 templates/notifications/send.html:4
-#: templates/notifications/send.html:10
+#: templates/admin_panel/users_list.html:67
+#: templates/notifications/send.html:4 templates/notifications/send.html:10
 msgid "Envoyer une notification"
 msgstr "Send a notification"
 
 #: templates/admin_panel/user_detail.html:145
-#: templates/admin_panel/users_list.html:74
+#: templates/admin_panel/users_list.html:75 templates/video_room.html:75
 msgid "Envoyer"
 msgstr "Send"
 
@@ -7274,7 +7230,7 @@ msgstr "Send email"
 
 #: templates/admin_panel/users_list.html:17
 msgid "Nom, email, username…"
-msgstr ""
+msgstr "Name, email, username…"
 
 #: templates/admin_panel/users_list.html:58
 msgid "Aucun utilisateur trouvé."
@@ -7288,21 +7244,22 @@ msgstr ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses."
 
-#: templates/base.html:462 templates/base.html:536 templates/base.html:645
-#: templates/base.html:646 templates/base.html:652 templates/base.html:657
-#: templates/sandbox/sandbox_page.html:4 templates/sandbox/sandbox_page.html:20
+#: templates/base.html:466 templates/base.html:540 templates/base.html:649
+#: templates/base.html:650 templates/base.html:656 templates/base.html:661
+#: templates/sandbox/sandbox_page.html:4
+#: templates/sandbox/sandbox_page.html:20
 msgid "Sandbox Python"
 msgstr "Python Sandbox"
 
-#: templates/base.html:473
+#: templates/base.html:477
 msgid "Admin"
-msgstr ""
+msgstr "Admin"
 
-#: templates/base.html:532
+#: templates/base.html:536
 msgid "Admin Panel"
-msgstr ""
+msgstr "Admin Panel"
 
-#: templates/base.html:580
+#: templates/base.html:584
 msgid ""
 "L'éducation scientifique accessible, engageante et gratuite pour tous les "
 "apprenants africains et francophones du monde entier."
@@ -7310,85 +7267,82 @@ msgstr ""
 "Accessible, engaging and free scientific education for all African and "
 "French-speaking learners worldwide."
 
-#: templates/base.html:587
+#: templates/base.html:591
 msgid "Navigation"
 msgstr "Navigation"
 
-#: templates/base.html:589
+#: templates/base.html:593
 msgid "Nos cours"
 msgstr "Our courses"
 
-#: templates/base.html:590
+#: templates/base.html:594
 msgid "Le blog"
 msgstr "The blog"
 
-#: templates/base.html:592 templates/includes/nav_items.html:11
+#: templates/base.html:596 templates/includes/nav_items.html:11
 #: templates/includes/nav_items.html:24
 msgid "À propos"
 msgstr "About"
 
-#: templates/base.html:607
+#: templates/base.html:611
 msgid "Afrique de l'Ouest"
 msgstr "West Africa"
 
-#: templates/base.html:631
+#: templates/base.html:635
 msgid "Tous droits réservés"
 msgstr "All rights reserved"
 
-#: templates/base.html:633
+#: templates/base.html:637
 msgid "Confidentialité"
 msgstr "Privacy Policy"
 
-#: templates/base.html:634
+#: templates/base.html:638
 msgid "CGU"
 msgstr "Terms of Service"
 
-#: templates/base.html:661 templates/sandbox/full_sandbox.html:31
+#: templates/base.html:665
 msgid "Ouvrir en plein écran"
-msgstr ""
+msgstr "Open in fullscreen"
 
-#: templates/base.html:664
+#: templates/base.html:668
 #, fuzzy
 #| msgid "Fermé"
 msgid "Fermer"
 msgstr "Closed"
 
-#: templates/base.html:671
+#: templates/base.html:675
 msgid "Cliquez sur ▶ Exécuter pour initialiser Python dans votre navigateur."
-msgstr ""
+msgstr "Click ▶ Run to initialize Python in your browser."
 
-#: templates/base.html:674
+#: templates/base.html:678
 #, fuzzy
 #| msgid "Spécialisation"
 msgid "Initialiser Python"
 msgstr "Specialisation"
 
-#: templates/base.html:685 templates/sandbox/full_sandbox.html:42
-#: templates/sandbox/sandbox_page.html:36
+#: templates/base.html:689 templates/sandbox/sandbox_page.html:36
 msgid "Mes scripts"
 msgstr "My scripts"
 
-#: templates/base.html:689 templates/sandbox/full_sandbox.html:48
-#: templates/sandbox/sandbox_page.html:39
+#: templates/base.html:693 templates/sandbox/sandbox_page.html:39
 msgid "Nouveau"
 msgstr "New"
 
-#: templates/base.html:714 templates/sandbox/full_sandbox.html:77
-#: templates/sandbox/sandbox_page.html:101
+#: templates/base.html:718 templates/sandbox/sandbox_page.html:101
 #: templates/sandbox/sandbox_widget.html:99
 msgid "Sauvegarder"
 msgstr "Save"
 
-#: templates/base.html:737 templates/sandbox/sandbox_page.html:116
+#: templates/base.html:741 templates/sandbox/sandbox_page.html:116
 msgid "Output apparaîtra ici…"
-msgstr ""
+msgstr "Output will appear here…"
 
-#: templates/base.html:1005 templates/sandbox/sandbox_page.html:244
+#: templates/base.html:1015 templates/sandbox/sandbox_page.html:244
 #: templates/sandbox/sandbox_widget.html:474
 msgid "Nom du script"
 msgstr "Script name"
 
-#: templates/base.html:1005 templates/sandbox/sandbox_page.html:93
+#: templates/base.html:1015 templates/sandbox/sandbox_page.html:93
 #: templates/sandbox/sandbox_page.html:229
 #: templates/sandbox/sandbox_page.html:243
 #: templates/sandbox/sandbox_widget.html:474
@@ -7406,6 +7360,7 @@ msgid ""
 "Ton lien de vérification a expiré. Nous t'avons envoyé un nouvel email si "
 "nécessaire."
 msgstr ""
+"Your verification link has expired. We've sent you a new email if necessary."
 
 #: templates/comptes/verification_expired.html:8
 msgid "Tu peux en demander un autre ici :"
@@ -7427,7 +7382,7 @@ msgstr "Verification code"
 msgid ""
 "Le lien de vérification que tu as utilisé est incorrect ou a déjà été "
 "utilisé."
-msgstr ""
+msgstr "The verification link you used is incorrect or has already been used."
 
 #: templates/comptes/verification_invalid.html:8
 msgid "Tu peux demander un nouvel email de vérification ici :"
@@ -7445,6 +7400,8 @@ msgid ""
 "Saisis l'adresse email utilisée lors de ton inscription et nous te "
 "renverrons un lien d'activation."
 msgstr ""
+"Enter the email address used during registration and we'll send you a new "
+"activation link."
 
 #: templates/comptes/verification_resend.html:17
 msgid "Renvoyer"
@@ -7461,21 +7418,20 @@ msgid ""
 "Un email a été envoyé à ton adresse. Clique sur le lien reçu pour activer "
 "ton compte."
 msgstr ""
+"An email has been sent to your address. Click the link you received to "
+"activate your account."
 
 #: templates/comptes/verification_sent.html:8
 msgid ""
 "Si tu ne le reçois pas dans quelques minutes, vérifie ton dossier spam ou"
 msgstr ""
+"If you don't receive it within a few minutes, check your spam folder or"
 
 #: templates/comptes/verification_sent.html:8
 #, fuzzy
 #| msgid "Code de vérification"
 msgid "renvoie l'email de vérification"
 msgstr "Verification code"
-
-#: templates/includes/nav_items.html:6 templates/includes/nav_items.html:19
-msgid "Formations"
-msgstr "Training Programmes"
 
 #: templates/includes/nav_items.html:14 templates/includes/nav_items.html:27
 msgid "Analytics"
@@ -7546,7 +7502,7 @@ msgstr "Forgot your password?"
 #: templates/registration/password_reset_complete.html:7
 msgid ""
 "Ton mot de passe a bien été réinitialisé. Tu peux maintenant te connecter."
-msgstr ""
+msgstr "Your password has been successfully reset. You can now log in."
 
 #: templates/registration/password_reset_confirm.html:6
 #, fuzzy
@@ -7562,12 +7518,12 @@ msgstr "Reset link sent"
 msgid ""
 "Nous avons envoyé un email avec les instructions pour réinitialiser ton mot "
 "de passe."
-msgstr ""
+msgstr "We've sent you an email with instructions to reset your password."
 
 #: templates/registration/password_reset_email.html:2
 #, python-format
 msgid "Bonjour %(user.get_full_name|default:username)s,"
-msgstr ""
+msgstr "Hello %(user.get_full_name|default:username)s,"
 
 #: templates/registration/password_reset_email.html:4
 #, fuzzy
@@ -7609,27 +7565,26 @@ msgstr "Send the request"
 msgid "Réinitialisation du mot de passe Numeria"
 msgstr "Repeat your password"
 
-#: templates/sandbox/full_sandbox.html:45
+#: templates/sandbox/full_sandbox.html:48
 #, fuzzy
-#| msgid "Nom du script"
-msgid "Nom du script…"
-msgstr "Script name"
+#| msgid "Chargement de Python…"
+msgid "Chargement Python…"
+msgstr "Loading Python..."
 
-#: templates/sandbox/full_sandbox.html:81
+#: templates/sandbox/full_sandbox.html:168
+#: templates/sandbox/full_sandbox.html:424
+msgid "Output apparaîtra ici après exécution…"
+msgstr "Output will appear here after execution…"
+
+#: templates/sandbox/full_sandbox.html:178
+msgid "Exécutez du code matplotlib pour voir votre graphique ici"
+msgstr "Run matplotlib code to see your chart here"
+
+#: templates/sandbox/full_sandbox.html:389
 #, fuzzy
-#| msgid "Effacer le code ?"
-msgid "Effacer le code"
-msgstr "Clear the code?"
-
-#: templates/sandbox/full_sandbox.html:85
-#, fuzzy
-#| msgid "Continuer le cours"
-msgid "Copier le code"
-msgstr "Continue the course"
-
-#: templates/sandbox/full_sandbox.html:89
-msgid "Insérer dans leçon"
-msgstr ""
+#| msgid "aucun output"
+msgid "(aucun output)"
+msgstr "no output"
 
 #: templates/sandbox/sandbox_page.html:54
 msgid "Aucun script sauvegardé."
@@ -7640,261 +7595,487 @@ msgid "Effacer"
 msgstr "Clear"
 
 #: templates/sandbox/sandbox_widget.html:267
-msgid "Temps d\\'exécution dépassé (10s)."
-msgstr ""
+msgid "Temps d'exécution dépassé (10s)."
+msgstr "Execution time exceeded (10s)."
 
-#: templates/video_room.html:42
+#: templates/video_room.html:27
 #, fuzzy
 #| msgid "Connexion"
 msgid "Connexion…"
 msgstr "Login"
 
-#: templates/video_room.html:110 templates/video_room.html:259
-#: templates/video_room.html:263
+#: templates/video_room.html:61 templates/video_room.html:100
 #, fuzzy
 #| msgid "Participant"
 msgid "Participants"
 msgstr "Participant"
 
-#: templates/video_room.html:115 templates/video_room.html:267
-#: templates/video_room.html:274
+#: templates/video_room.html:62 templates/video_room.html:103
 msgid "Chat"
 msgstr "Chat"
 
-#: templates/video_room.html:122
+#: templates/video_room.html:65
 #, fuzzy
-#| msgid "Participant"
-msgid "participants"
-msgstr "Participant"
+#| msgid "a rejoint la réunion"
+msgid "Dans la réunion"
+msgstr "joined the meeting"
 
-#: templates/video_room.html:138
-msgid "Aucun participant pour l'instant."
-msgstr "No participants yet."
-
-#: templates/video_room.html:145
+#: templates/video_room.html:70
 #, fuzzy
 #| msgid "Les cours populaires apparaîtront ici"
 msgid "Les messages apparaîtront ici."
 msgstr "Popular courses will appear here"
 
-#: templates/video_room.html:149
+#: templates/video_room.html:73
 #, fuzzy
 #| msgid "Envoyer la demande"
 msgid "Envoyer un message…"
 msgstr "Send the request"
 
-#: templates/video_room.html:184 templates/video_room.html:193
-msgid "Micro"
+#: templates/video_room.html:86
+#, fuzzy
+#| msgid "Micro"
+msgid "Micro (d)"
 msgstr "Mic"
 
-#: templates/video_room.html:191
+#: templates/video_room.html:90
 #, fuzzy
-#| msgid "Continuer le cours"
-msgid "Couper le micro"
-msgstr "Continue the course"
-
-#: templates/video_room.html:200 templates/video_room.html:209
-msgid "Caméra"
+#| msgid "Caméra"
+msgid "Caméra (e)"
 msgstr "Camera"
 
-#: templates/video_room.html:207
-msgid "Couper la caméra"
-msgstr "Turn off camera"
-
-#: templates/video_room.html:216 templates/video_room.html:220
-#, fuzzy
-#| msgid "Partager"
-msgid "Partager l'écran"
-msgstr "Share"
-
-#: templates/video_room.html:222
-msgid "Écran"
-msgstr "Screen"
-
-#: templates/video_room.html:229 templates/video_room.html:233
-#, fuzzy
-#| msgid "Terminer la formation"
-msgid "Lever la main"
-msgstr "Complete the training programme"
-
-#: templates/video_room.html:235
-msgid "Main"
-msgstr "Hand"
-
-#: templates/video_room.html:244 templates/video_room.html:250
-msgid "Quitter"
-msgstr "Leave"
-
-#: templates/video_room.html:248
-msgid "Quitter l'appel"
-msgstr "Leave call"
-
-#: templates/video_room.html:567 templates/video_room.html:1051
-msgid "Non supporté par ce navigateur"
-msgstr "Not supported by this browser"
-
-#: templates/video_room.html:574 templates/video_room.html:749
-#, fuzzy
-#| msgid "Catalogue des cours"
-msgid "Partage en cours par"
-msgstr "Course catalogue"
-
-#: templates/video_room.html:575
-#, fuzzy
-#| msgid "Catalogue des cours"
-msgid "Partage en cours"
-msgstr "Course catalogue"
-
-#: templates/video_room.html:579 templates/video_room.html:580
-#: templates/video_room.html:776
-msgid "Arrêter le partage"
-msgstr "Stop sharing"
-
-#: templates/video_room.html:579 templates/video_room.html:580
-#, fuzzy
-#| msgid "Partager"
-msgid "Partager l\\'écran"
-msgstr "Share"
-
-#: templates/video_room.html:643
-#, fuzzy
-#| msgid "Partager"
-msgid "Partage d\\'écran"
-msgstr "Share"
-
-#: templates/video_room.html:705
-msgid "Micro activé"
-msgstr "Mic on"
-
-#: templates/video_room.html:705
-msgid "Micro coupé"
-msgstr "Mic off"
-
-#: templates/video_room.html:719
-msgid "Caméra activée"
-msgstr "Camera on"
-
-#: templates/video_room.html:719
-msgid "Caméra désactivée"
-msgstr "Camera off"
-
-#: templates/video_room.html:728 templates/video_room.html:739
-msgid "Main levée"
-msgstr "Hand raised"
-
-#: templates/video_room.html:728
-msgid "Main baissée"
-msgstr "Hand lowered"
-
-#: templates/video_room.html:756
-msgid "Impossible d\\"
-msgstr ""
-
-#: templates/video_room.html:779 templates/video_room.html:814
-#, fuzzy
-#| msgid "Partager"
-msgid "Partage d\\"
-msgstr "Share"
-
-#: templates/video_room.html:785
-msgid "Impossible de partager l\\"
-msgstr ""
-
-#: templates/video_room.html:810
+#: templates/video_room.html:94
 #, fuzzy
 #| msgid "Partager"
 msgid "Partager l\\"
 msgstr "Share"
 
-#: templates/video_room.html:823 templates/video_room.html:826
+#: templates/video_room.html:97
+#, fuzzy
+#| msgid "Terminer la formation"
+msgid "Lever la main (h)"
+msgstr "Complete the training programme"
+
+#: templates/video_room.html:107
+#, fuzzy
+#| msgid "Quitter l'appel"
+msgid "Quitter (Échap)"
+msgstr "Leave call"
+
+#: templates/video_room.html:411
+msgid "Aucun participant pour l'instant."
+msgstr "No participants yet."
+
+#: templates/video_room.html:420
+#, fuzzy
+#| msgid "Formation en ligne"
+msgid "En ligne"
+msgstr "Online training"
+
+#: templates/video_room.html:507
+#, fuzzy
+#| msgid "En attente de confirmation"
+msgid "En attente des autres participants…"
+msgstr "Awaiting confirmation"
+
+#: templates/video_room.html:512
+#, fuzzy
+#| msgid "Inscription indisponible"
+msgid "Caméra/micro indisponible"
+msgstr "Enrolment unavailable"
+
+#: templates/video_room.html:513
+msgid ""
+"Impossible d'accéder à la caméra ou au micro. Vérifiez les autorisations du "
+"navigateur."
+msgstr ""
+"Unable to access the camera or microphone. Check your browser permissions."
+
+#: templates/video_room.html:551
+msgid "Micro activé"
+msgstr "Mic on"
+
+#: templates/video_room.html:551
+msgid "Micro coupé"
+msgstr "Mic off"
+
+#: templates/video_room.html:585
+#, fuzzy
+#| msgid "Impossible de démarrer la session vidéo."
+msgid "Impossible de réactiver la caméra."
+msgstr "Unable to start the video session."
+
+#: templates/video_room.html:592
+msgid "Caméra activée"
+msgstr "Camera on"
+
+#: templates/video_room.html:592
+msgid "Caméra désactivée"
+msgstr "Camera off"
+
+#: templates/video_room.html:601 templates/video_room.html:611
+msgid "Main levée"
+msgstr "Hand raised"
+
+#: templates/video_room.html:601
+msgid "Main baissée"
+msgstr "Hand lowered"
+
+#: templates/video_room.html:621
+#, fuzzy
+#| msgid "Non supporté par ce navigateur"
+msgid "Le partage d'écran n'est pas supporté par ce navigateur."
+msgstr "Not supported by this browser"
+
+#: templates/video_room.html:641
+#, fuzzy
+#| msgid "Partager"
+msgid "Partage d'écran activé"
+msgstr "Share"
+
+#: templates/video_room.html:644
+#, fuzzy
+#| msgid "Impossible de démarrer la session vidéo."
+msgid "Impossible de démarrer le partage d'écran."
+msgstr "Unable to start the video session."
+
+#: templates/video_room.html:668
+#, fuzzy
+#| msgid "Partager"
+msgid "Partage d'écran arrêté"
+msgstr "Share"
+
+#: templates/video_room.html:676
 #, fuzzy
 #| msgid "Partager"
 msgid "Partage d'écran"
 msgstr "Share"
 
-#: templates/video_room.html:872
+#: templates/video_room.html:739
 #, fuzzy
 #| msgid "Se connecter"
-msgid "Non connecté"
+msgid "Non connecté au serveur."
 msgstr "Log in"
 
-#: templates/video_room.html:954
+#: templates/video_room.html:780
 #, fuzzy
 #| msgid "Connectez-vous"
 msgid "Connecté"
 msgstr "Connect"
 
-#: templates/video_room.html:955
+#: templates/video_room.html:782
 #, fuzzy
 #| msgid "Connexion"
 msgid "Reconnexion…"
 msgstr "Login"
 
-#: templates/video_room.html:960
-msgid "Recherche du réseau…"
-msgstr "Searching for network…"
+#: templates/video_room.html:854
+msgid "Connexion établie, initialisation de la caméra…"
+msgstr "Connection established, initializing camera…"
 
-#: templates/video_room.html:961
-msgid "Problème de réseau"
-msgstr "Network problem"
-
-#: templates/video_room.html:966
-msgid "Traversée du réseau réussie"
-msgstr "Network traversal successful"
-
-#: templates/video_room.html:1006
-#, fuzzy
-#| msgid "En attente de confirmation"
-msgid "En attente des participants…"
-msgstr "Awaiting confirmation"
-
-#: templates/video_room.html:1009
-msgid "Accès caméra/micro refusé"
-msgstr "Camera/mic access denied"
-
-#: templates/video_room.html:1012
-msgid "Accès caméra/micro refusé. Vérifiez les permissions."
-msgstr "Camera/mic access denied. Check permissions."
-
-#: templates/video_room.html:1024
-msgid "Impossible de démarrer la session vidéo."
-msgstr "Unable to start the video session."
-
-#: templates/video_room.html:1036
-msgid "Impossible de répondre à l\\"
-msgstr ""
-
-#: templates/video_room.html:1058 templates/video_room.html:1086
-msgid "a rejoint la réunion"
-msgstr "joined the meeting"
-
-#: templates/video_room.html:1058 templates/video_room.html:1103
-msgid "a quitté la réunion"
-msgstr "left the meeting"
-
-#: templates/video_room.html:1069
-#, fuzzy
-#| msgid "Connexion"
-msgid "Connexion établie"
-msgstr "Login"
-
-#: templates/video_room.html:1074
-msgid "Erreur WebSocket"
-msgstr "WebSocket error"
-
-#: templates/video_room.html:1075
+#: templates/video_room.html:859
 #, fuzzy
 #| msgid "Se déconnecter"
 msgid "Déconnecté"
 msgstr "Log out"
 
-#: templates/video_room.html:1136
+#: templates/video_room.html:860
+#, fuzzy
+#| msgid "Connexion"
+msgid "Erreur de connexion"
+msgstr "Login"
+
+#: templates/video_room.html:884
+msgid "a rejoint la réunion"
+msgstr "joined the meeting"
+
+#: templates/video_room.html:893
+msgid "a quitté la réunion"
+msgstr "left the meeting"
+
+#: templates/video_room.html:929
 #, fuzzy
 #| msgid "Continuer le cours"
 msgid "Connexion en cours…"
 msgstr "Continue the course"
 
-#~| msgid "Exercice de code"
+#, fuzzy, python-brace-format
+#~ msgid "🎉 Bienvenue sur Numeria, {prenom} !"
+#~ msgstr "Welcome to Numeria, {first_name}! 🎓"
+
+#~ msgid "Output exact"
+#~ msgstr "Exact output"
+
+#~ msgid "Output contient"
+#~ msgstr "Output contains"
+
+#~ msgid "Tests unitaires"
+#~ msgstr "Unit tests"
+
+#~ msgid "Leçon de formation"
+#~ msgstr "Training lesson"
+
+#, fuzzy
+#~ msgid "Créé par"
+#~ msgstr "Reviewed by"
+
+#~ msgid "Exercice de code"
+#~ msgstr "Code exercise"
+
+#, fuzzy
+#~ msgid "Code soumis"
+#~ msgstr "Current proof"
+
+#~ msgid "Tentative n°"
+#~ msgstr "Attempt #"
+
+#~ msgid "Temps (s)"
+#~ msgstr "Time (s)"
+
+#~ msgid "Soumission de code"
+#~ msgstr "Code submission"
+
+#~ msgid "Soumissions de code"
+#~ msgstr "Code submissions"
+
+#, fuzzy
+#~ msgid "Sandbox Python libre"
+#~ msgstr "Python Sandbox"
+
+#, fuzzy
+#~ msgid "Exercice de code Python"
+#~ msgstr "Python code exercise"
+
+#~ msgid "Question à choix multiples"
+#~ msgstr "Multiple choice question"
+
+#, fuzzy
+#~ msgid "Texte à trous"
+#~ msgstr "Fill in the blank"
+
+#~ msgid "Vrai ou Faux"
+#~ msgstr "True or False"
+
+#, fuzzy
+#~ msgid "Ordonner le code"
+#~ msgstr "Order the code"
+
+#, fuzzy
+#~ msgid "Associations"
+#~ msgstr "Matching"
+
+#, fuzzy
+#~ msgid "Réponse courte"
+#~ msgstr "Short answer"
+
+#, fuzzy
+#~ msgid "Tentatives max (0=illimité)"
+#~ msgstr "Max attempts"
+
+#~ msgid "Plusieurs bonnes réponses possibles"
+#~ msgstr "Multiple correct answers possible"
+
+#~ msgid "Mélanger les choix"
+#~ msgstr "Shuffle choices"
+
+#~ msgid "Exercice QCM"
+#~ msgstr "MCQ Exercise"
+
+#, fuzzy
+#~ msgid "Texte du choix"
+#~ msgstr "Topic title"
+
+#, fuzzy
+#~ msgid "Bonne réponse"
+#~ msgstr "Correct answer!"
+
+#, fuzzy
+#~ msgid "Feedback spécifique"
+#~ msgstr "Specific needs"
+
+#, fuzzy
+#~ msgid "Note exercice code"
+#~ msgstr "Code exercise grade"
+
+#, fuzzy
+#~ msgid "Réponse invalide."
+#~ msgstr "Response on"
+
+#~ msgid "Vous devez terminer le cours avant de le noter."
+#~ msgstr "You must complete the course before rating it."
+
+#~ msgid "La note doit être entre 1 et 5."
+#~ msgstr "The rating must be between 1 and 5."
+
+#~ msgid "✅ Merci pour votre évaluation !"
+#~ msgstr "✅ Thank you for your review!"
+
+#, python-format
+#~ msgid "Erreur lors de l'évaluation : %(err)s"
+#~ msgstr "Error during rating: %(err)s"
+
+#~ msgid "Vous devez être inscrit au cours pour poser une question."
+#~ msgstr "You must be enrolled in the course to ask a question."
+
+#~ msgid "La question doit contenir au moins 5 caractères."
+#~ msgstr "The question must contain at least 5 characters."
+
+#~ msgid "La question ne peut pas dépasser 500 caractères."
+#~ msgstr "The question cannot exceed 500 characters."
+
+#~ msgid "✅ Votre question a été soumise et sera modérée par un admin."
+#~ msgstr "✅ Your question has been submitted and will be reviewed by an admin."
+
+#, python-format
+#~ msgid "Erreur lors de la soumission : %(err)s"
+#~ msgstr "Error during submission: %(err)s"
+
+#~ msgid "Vidéo pédagogique"
+#~ msgstr "Educational video"
+
+#~ msgid "Exercice pratique"
+#~ msgstr "Practical exercise"
+
+#~ msgid "Démarrer l'exercice"
+#~ msgstr "Start the exercise"
+
+#~ msgid "Cette session n'est plus ouverte aux inscriptions."
+#~ msgstr "This session is no longer open for enrollment."
+
+#~ msgid "Vous êtes déjà inscrit à cette session."
+#~ msgstr "You are already enrolled in this session."
+
+#, fuzzy
+#~ msgid "Inscription créée. Veuillez effectuer le paiement."
+#~ msgstr "No payment found. Please make the payment."
+
+#~ msgid "Votre accès à cette formation a expiré."
+#~ msgstr "Your access to this training program has expired."
+
+#, fuzzy
+#~ msgid "Formation terminée."
+#~ msgstr "Training programme completed!"
+
+#, fuzzy
+#~ msgid "Leçon marquée comme complétée."
+#~ msgstr "Mark as completed"
+
+#, fuzzy
+#~ msgid "Ce certificat a expiré."
+#~ msgstr "Authentic certificate"
+
+#~ msgid "Tous les cours"
+#~ msgstr "All courses"
+
+#, fuzzy
+#~ msgid "Toutes les formations"
+#~ msgstr "View all training programmes"
+
+#~ msgid "Voir les résultats étudiants"
+#~ msgstr "View student results"
+
+#~ msgid "Mode"
+#~ msgstr "Mode"
+
+#~ msgid "Réussis"
+#~ msgstr "Passed"
+
+#, fuzzy
+#~ msgid "— Choisir une leçon de cours —"
+#~ msgstr "— Choose a lesson —"
+
+#~ msgid "Ajouter"
+#~ msgstr "Add"
+
+#, fuzzy
+#~ msgid "— Choisir une formation —"
+#~ msgstr "— Choose a lesson —"
+
+#, fuzzy
+#~ msgid "— Leçon —"
+#~ msgstr "— Choose a lesson —"
+
+#, fuzzy
+#~ msgid "Nom du script…"
+#~ msgstr "Script name"
+
+#, fuzzy
+#~ msgid "Effacer le code"
+#~ msgstr "Clear the code?"
+
+#, fuzzy
+#~ msgid "Copier le code"
+#~ msgstr "Continue the course"
+
+#, fuzzy
+#~ msgid "participants"
+#~ msgstr "Participant"
+
+#, fuzzy
+#~ msgid "Couper le micro"
+#~ msgstr "Continue the course"
+
+#~ msgid "Couper la caméra"
+#~ msgstr "Turn off camera"
+
+#, fuzzy
+#~ msgid "Partager l'écran"
+#~ msgstr "Share"
+
+#~ msgid "Écran"
+#~ msgstr "Screen"
+
+#~ msgid "Main"
+#~ msgstr "Hand"
+
+#~ msgid "Quitter"
+#~ msgstr "Leave"
+
+#, fuzzy
+#~ msgid "Partage en cours par"
+#~ msgstr "Course catalogue"
+
+#, fuzzy
+#~ msgid "Partage en cours"
+#~ msgstr "Course catalogue"
+
+#~ msgid "Arrêter le partage"
+#~ msgstr "Stop sharing"
+
+#, fuzzy
+#~ msgid "Partager l\\'écran"
+#~ msgstr "Share"
+
+#, fuzzy
+#~ msgid "Partage d\\'écran"
+#~ msgstr "Share"
+
+#, fuzzy
+#~ msgid "Partage d\\"
+#~ msgstr "Share"
+
+#~ msgid "Recherche du réseau…"
+#~ msgstr "Searching for network…"
+
+#~ msgid "Problème de réseau"
+#~ msgstr "Network problem"
+
+#~ msgid "Traversée du réseau réussie"
+#~ msgstr "Network traversal successful"
+
+#~ msgid "Accès caméra/micro refusé"
+#~ msgstr "Camera/mic access denied"
+
+#~ msgid "Accès caméra/micro refusé. Vérifiez les permissions."
+#~ msgstr "Camera/mic access denied. Check permissions."
+
+#, fuzzy
+#~ msgid "Connexion établie"
+#~ msgstr "Login"
+
+#~ msgid "Erreur WebSocket"
+#~ msgstr "WebSocket error"
+
 #~ msgid "Exercice de code évalué"
 #~ msgstr "Evaluated code exercise"
 
@@ -7905,15 +8086,12 @@ msgstr "Continue the course"
 #~ msgstr "Clear the code?"
 
 #, fuzzy
-#~| msgid "Titre du sujet"
 #~ msgid "Titre du script"
 #~ msgstr "Topic title"
 
-#~| msgid "Chargement de Python…"
 #~ msgid "Chargement…"
 #~ msgstr "Loading..."
 
-#~| msgid "Voir le sujet complet"
 #~ msgid "Ouvrir le sandbox complet"
 #~ msgstr "Open full sandbox"
 
@@ -7934,9 +8112,6 @@ msgstr "Continue the course"
 
 #~ msgid "Ce compte est déjà activé. Connecte-toi pour continuer."
 #~ msgstr "This account is already activated. Log in to continue."
-
-#~ msgid "Aucun compte actif n'a été trouvé pour cette adresse email."
-#~ msgstr "No active account was found for this email address."
 
 #~ msgid "No file selected!"
 #~ msgstr "No file selected!"

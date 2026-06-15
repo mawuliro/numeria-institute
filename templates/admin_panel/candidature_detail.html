@@ -182,7 +182,7 @@
     <form method="post" action="{% url 'admin_panel:candidature_action' c.id %}">
       {% csrf_token %}<input type="hidden" name="action" value="reject">
       <label class="block text-xs font-semibold text-slate-600 mb-1">{% trans "Raison de refus" %} *</label>
-      <textarea name="rejection_reason" rows="3" required placeholder="{% trans 'Obligatoire — sera visible dans l\'email au candidat.' %}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-3"></textarea>
+      <textarea name="rejection_reason" rows="3" required placeholder="{% trans 'Obligatoire — sera visible dans le mail envoyé au candidat.' %}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-3"></textarea>
       <textarea name="notes" rows="2" placeholder="{% trans 'Notes admin (optionnel)' %}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm mb-4"></textarea>
       <div class="flex gap-2 justify-end">
         <button type="button" onclick="closeModal('modal-reject')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm">{% trans "Annuler" %}</button>

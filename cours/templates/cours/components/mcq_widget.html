@@ -254,7 +254,7 @@ function showFeedback(d, selected) {
   } else {
     fb.style.backgroundColor = '#fef2f2';
     fb.style.border = '1px solid #fecaca';
-    var msg = '<p class="font-bold text-red-700 text-sm">❌ {% trans "Ce n\'est pas la bonne réponse." %}';
+    var msg = '<p class="font-bold text-red-700 text-sm">❌ {% filter escapejs %}{% trans "Ce n'est pas la bonne réponse." %}{% endfilter %}';
     if (MAX_ATT > 0) msg += ' {% trans "Tentative" %} ' + attCount + ' / ' + MAX_ATT + '.';
     msg += '</p>';
     // Per-choice feedback

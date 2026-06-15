@@ -1,5 +1,5 @@
 {% load i18n sandbox_tags %}
-{#
+{% comment %}
   Shared Python Sandbox / Code Exercise widget.
 
   Variables (pass via {% include 'sandbox/sandbox_widget.html' with ... %}):
@@ -18,7 +18,7 @@
     exercise.points, exercise.max_attempts, exercise.instructions,
     exercise.hint, exercise.is_solved, exercise.attempts_used,
     exercise.test_code_b64  (base64 — never plain test_code)
-#}
+{% endcomment %}
 {% with sid=sandbox_id|default:"sw" %}
 <div id="sw-{{ sid }}" class="sw-root rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden">
 
@@ -264,7 +264,7 @@ window['swRun_' + SID] = async function() {
   if (g('result')) g('result').style.display = 'none';
 
   execTimeout = setTimeout(function() {
-    outEl.innerHTML = '<span style="color:#f87171">⏱ {% trans "Temps d\'exécution dépassé (10s)." %}</span>';
+    outEl.innerHTML = '<span style="color:#f87171">⏱ {% filter escapejs %}{% trans "Temps d'exécution dépassé (10s)." %}{% endfilter %}</span>';
     outEl.style.color = '';
     btn.disabled = false;
     btn.innerHTML = '▶ {% trans "Exécuter" %}';
@@ -384,7 +384,7 @@ function showResult(correct, output) {
   } else {
     resEl.style.backgroundColor = '#fef2f2';
     resEl.style.borderTop = '1px solid #fecaca';
-    var msg = '<p class="font-bold text-red-700 text-sm">❌ {% trans "Ce n\'est pas la bonne réponse. Réessaie !" %}</p>';
+    var msg = '<p class="font-bold text-red-700 text-sm">❌ {% filter escapejs %}{% trans "Ce n'est pas la bonne réponse. Réessaie !" %}{% endfilter %}</p>';
     if (EVAL_MODE === 'exact' && EXPECTED) {
       msg += '<div class="text-xs font-mono mt-2 space-y-1">';
       msg += '<div><span class="text-slate-500">{% trans "Attendu" %} :</span> <span class="bg-green-50 text-green-800 px-1 rounded">' + esc(EXPECTED.trim()) + '</span></div>';

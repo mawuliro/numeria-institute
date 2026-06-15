@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Numeria Institute\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-28 21:09+0000\n"
+"POT-Creation-Date: 2026-06-15 16:18+0000\n"
 "PO-Revision-Date: 2026-04-12 14:14+0000\n"
 "Last-Translator: Numeria Institute <contact@numeriainstitute.com>\n"
 "Language-Team: French <contact@numeriainstitute.com>\n"
@@ -15,7 +15,410 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#: admin_panel/models.py:8 admin_panel/models.py:59
+msgid "Réponse contact"
+msgstr ""
+
+#: admin_panel/models.py:9 templates/admin_panel/candidature_detail.html:16
+msgid "Candidature acceptée"
+msgstr ""
+
+#: admin_panel/models.py:10 templates/admin_panel/candidature_detail.html:18
+msgid "Candidature rejetée"
+msgstr ""
+
+#: admin_panel/models.py:11
+msgid "Candidature en attente"
+msgstr ""
+
+#: admin_panel/models.py:12
+msgid "Candidature en revue"
+msgstr ""
+
+#: admin_panel/models.py:13
+msgid "Mentorat accepté"
+msgstr ""
+
+#: admin_panel/models.py:14
+msgid "Mentorat rejeté"
+msgstr ""
+
+#: admin_panel/models.py:15
+msgid "Utilisateur activé"
+msgstr ""
+
+#: admin_panel/models.py:16
+msgid "Utilisateur désactivé"
+msgstr ""
+
+#: admin_panel/models.py:17
+msgid "Notification envoyée"
+msgstr ""
+
+#: admin_panel/models.py:22
+msgid "Effectué par"
+msgstr ""
+
+#: admin_panel/models.py:25
+msgid "Type d'action"
+msgstr ""
+
+#: admin_panel/models.py:27
+#: communaute/templates/communaute/creer_categorie.html:47
+#: mentorat/models.py:448 mentorat/templates/mentorat/planifier_seance.html:53
+msgid "Description"
+msgstr ""
+
+#: admin_panel/models.py:30
+msgid "Utilisateur concerné"
+msgstr ""
+
+#: admin_panel/models.py:32 mentorat/templates/mentorat/video_seance.html:63
+#: notifications/models.py:38 pages/models.py:110
+#: paiements/templates/paiements/confirmation.html:52
+#: templates/admin_panel/contacts_list.html:48
+#: templates/admin_panel/exercise_results.html:55
+#: templates/admin_panel/mentorat_list.html:31
+msgid "Date"
+msgstr ""
+
+#: admin_panel/models.py:36 templates/admin_panel/activity_log.html:4
+#: templates/admin_panel/activity_log.html:5
+msgid "Journal d'activité"
+msgstr ""
+
+#: admin_panel/models.py:37
+msgid "Journal d'activités"
+msgstr ""
+
+#: admin_panel/models.py:47 pages/models.py:119
+msgid "Message de contact"
+msgstr ""
+
+#: admin_panel/models.py:51
+msgid "Répondu par"
+msgstr ""
+
+#: admin_panel/models.py:53
+#: communaute/templates/communaute/detail_categorie.html:55 pages/forms.py:43
+#: pages/models.py:108 pages/templates/pages/contact.html:121
+#: templates/admin_panel/contact_detail.html:24
+#: templates/admin_panel/contact_detail.html:57
+#: templates/admin_panel/contacts_list.html:47
+msgid "Sujet"
+msgstr ""
+
+#: admin_panel/models.py:54 notifications/models.py:35 pages/forms.py:48
+#: pages/models.py:109 pages/templates/pages/contact.html:145
+#: templates/admin_panel/contact_detail.html:4
+#: templates/admin_panel/contact_detail.html:63
+#: templates/admin_panel/mentorat_list.html:30
+#: templates/admin_panel/user_detail.html:142
+#: templates/admin_panel/users_list.html:72
+#: templates/notifications/send.html:35
+msgid "Message"
+msgstr ""
+
+#: admin_panel/models.py:55
+msgid "Envoyé le"
+msgstr ""
+
+#: admin_panel/models.py:60
+msgid "Réponses contact"
+msgstr ""
+
+#: admin_panel/models.py:69
+msgid "Image"
+msgstr ""
+
+#: admin_panel/models.py:70
+msgid "PDF"
+msgstr ""
+
+#: admin_panel/models.py:71 comptes/models.py:41 mentorat/models.py:30
+#: mentorat/models.py:259 pages/forms.py:15
+msgid "Autre"
+msgstr ""
+
+#: admin_panel/models.py:73
+msgid "Fichier"
+msgstr ""
+
+#: admin_panel/models.py:74 comptes/templates/comptes/inscription.html:91
+#: pages/models.py:106 templates/admin_panel/candidature_detail.html:84
+#: templates/admin_panel/contacts_list.html:45
+#: templates/admin_panel/mentorat_detail.html:59
+#: templates/admin_panel/mentorat_detail.html:68
+#: templates/admin_panel/users_list.html:28
+msgid "Nom"
+msgstr ""
+
+#: admin_panel/models.py:78
+msgid "Uploadé par"
+msgstr ""
+
+#: admin_panel/models.py:80
+msgid "Uploadé le"
+msgstr ""
+
+#: admin_panel/models.py:81
+msgid "Taille (octets)"
+msgstr ""
+
+#: admin_panel/models.py:85
+msgid "Média uploadé"
+msgstr ""
+
+#: admin_panel/models.py:86
+msgid "Médias uploadés"
+msgstr ""
+
+#: admin_panel/views.py:80
+msgid "Messages marqués comme lus."
+msgstr ""
+
+#: admin_panel/views.py:92 admin_panel/views.py:525
+#: templates/admin_panel/exercise_results.html:26
+#: templates/notifications/list.html:24
+msgid "Tous"
+msgstr ""
+
+#: admin_panel/views.py:93
+msgid "Non lus"
+msgstr ""
+
+#: admin_panel/views.py:94
+msgid "Lus"
+msgstr ""
+
+#: admin_panel/views.py:95
+msgid "Répondus"
+msgstr ""
+
+#: admin_panel/views.py:119
+msgid "Le message de réponse ne peut pas être vide."
+msgstr ""
+
+#: admin_panel/views.py:125
+msgid "L'adresse email de destination n'est pas valide."
+msgstr ""
+
+#: admin_panel/views.py:154
+msgid "Réponse envoyée"
+msgstr ""
+
+#: admin_panel/views.py:165
+msgid "Réponse envoyée avec succès."
+msgstr ""
+
+#: admin_panel/views.py:169
+#, python-format
+msgid "Erreur lors de l'envoi de l'email : %(err)s"
+msgstr ""
+
+#: admin_panel/views.py:209
+msgid "Soumise"
+msgstr ""
+
+#: admin_panel/views.py:210 templates/admin_panel/candidature_detail.html:44
+msgid "En revue"
+msgstr ""
+
+#: admin_panel/views.py:211 admin_panel/views.py:377 mentorat/models.py:322
+msgid "Acceptée"
+msgstr ""
+
+#: admin_panel/views.py:212 admin_panel/views.py:378 mentorat/models.py:323
+msgid "Refusée"
+msgstr ""
+
+#: admin_panel/views.py:213 admin_panel/views.py:329
+#: templates/admin_panel/candidature_detail.html:22
+#: templates/admin_panel/candidature_detail.html:50
+msgid "Liste d'attente"
+msgstr ""
+
+#: admin_panel/views.py:214
+msgid "Brouillon"
+msgstr ""
+
+#: admin_panel/views.py:245 mentorat/views.py:369
+msgid "Cette candidature a déjà été traitée et ne peut plus être modifiée."
+msgstr ""
+
+#: admin_panel/views.py:261
+msgid "Candidature acceptée !"
+msgstr ""
+
+#: admin_panel/views.py:262
+#, python-format
+msgid "Votre candidature pour %(prog)s a été acceptée ! 🎉"
+msgstr ""
+
+#: admin_panel/views.py:272
+#, python-format
+msgid "✅ Candidature de %(name)s acceptée."
+msgstr ""
+
+#: admin_panel/views.py:278 admin_panel/views.py:464
+msgid "La raison de refus est obligatoire."
+msgstr ""
+
+#: admin_panel/views.py:297
+msgid "Résultat de votre candidature"
+msgstr ""
+
+#: admin_panel/views.py:298
+#, python-format
+msgid "Nous avons examiné votre candidature pour %(prog)s."
+msgstr ""
+
+#: admin_panel/views.py:307
+#, python-format
+msgid "Candidature de %(name)s refusée."
+msgstr ""
+
+#: admin_panel/views.py:318
+msgid "Candidature marquée comme en cours de révision."
+msgstr ""
+
+#: admin_panel/views.py:330
+#, python-format
+msgid "Vous êtes sur la liste d'attente pour %(prog)s."
+msgstr ""
+
+#: admin_panel/views.py:339
+msgid "Candidature mise en liste d'attente."
+msgstr ""
+
+#: admin_panel/views.py:376 mentorat/models.py:122 mentorat/models.py:321
+#: templates/admin_panel/candidature_detail.html:24
+#: templates/admin_panel/mentorat_detail.html:21
+msgid "En attente"
+msgstr ""
+
+#: admin_panel/views.py:379 mentorat/models.py:324 mentorat/models.py:462
+msgid "Terminée"
+msgstr ""
+
+#: admin_panel/views.py:420
+msgid "Cette demande a déjà été traitée et ne peut plus être modifiée."
+msgstr ""
+
+#: admin_panel/views.py:438
+msgid "Demande de mentorat acceptée"
+msgstr ""
+
+#: admin_panel/views.py:439
+#, python-format
+msgid "%(mentor)s va vous accompagner comme mentor. 🤝"
+msgstr ""
+
+#: admin_panel/views.py:448
+msgid "Nouveau mentee assigné"
+msgstr ""
+
+#: admin_panel/views.py:449
+#, python-format
+msgid "%(mentee)s vous a été assigné comme mentee."
+msgstr ""
+
+#: admin_panel/views.py:459
+msgid "✅ Demande de mentorat acceptée."
+msgstr ""
+
+#: admin_panel/views.py:471 mentorat/models.py:346
+#: mentorat/templates/mentorat/demander_mentorat.html:18
+#: templates/admin_panel/mentorat_detail.html:5
+msgid "Demande de mentorat"
+msgstr ""
+
+#: admin_panel/views.py:472
+msgid "Votre demande de mentorat n'a pas pu être satisfaite pour le moment."
+msgstr ""
+
+#: admin_panel/views.py:479
+msgid "Demande de mentorat refusée."
+msgstr ""
+
+#: admin_panel/views.py:488
+msgid "Mentor réassigné avec succès."
+msgstr ""
+
+#: admin_panel/views.py:490
+msgid "Mentor introuvable."
+msgstr ""
+
+#: admin_panel/views.py:526
+msgid "Actifs"
+msgstr ""
+
+#: admin_panel/views.py:527
+msgid "Inactifs"
+msgstr ""
+
+#: admin_panel/views.py:528 templates/admin_panel/users_list.html:32
+msgid "Staff"
+msgstr ""
+
+#: admin_panel/views.py:576
+msgid "Vous ne pouvez pas vous désactiver vous-même."
+msgstr ""
+
+#: admin_panel/views.py:583
+msgid "Compte activé."
+msgstr ""
+
+#: admin_panel/views.py:587
+msgid "Compte désactivé."
+msgstr ""
+
+#: admin_panel/views.py:591
+msgid "Vous ne pouvez pas modifier votre propre statut staff."
+msgstr ""
+
+#: admin_panel/views.py:595
+msgid "Statut staff mis à jour."
+msgstr ""
+
+#: admin_panel/views.py:606
+msgid "Notification envoyée."
+msgstr ""
+
+#: admin_panel/views.py:608
+msgid "Titre et message requis."
+msgstr ""
+
+#: admin_panel/views.py:622
+#, python-format
+msgid "Email de réinitialisation envoyé à %(email)s"
+msgstr ""
+
+#: admin_panel/views.py:625
+msgid "Impossible d'envoyer l'email (adresse invalide ?)"
+msgstr ""
+
+#: admin_panel/views.py:726 admin_panel/views.py:756
+msgid "Titre, code de départ et solution sont obligatoires."
+msgstr ""
+
+#: admin_panel/views.py:731 admin_panel/views.py:761
+msgid "Exercice créé avec succès."
+msgstr ""
+
+#: admin_panel/views.py:797
+msgid "Exercice mis à jour."
+msgstr ""
+
+#: admin_panel/views.py:819
+#, python-format
+msgid "Exercice « %(title)s » supprimé."
+msgstr ""
+
 #: admissions/templates/admissions/candidature.html:3
+#: notifications/models.py:15 templates/admin_panel/candidature_detail.html:4
+#: templates/admin_panel/candidature_detail.html:94
+#: templates/notifications/list.html:40
 msgid "Candidature"
 msgstr ""
 
@@ -43,10 +446,12 @@ msgid "Parcours académique"
 msgstr ""
 
 #: admissions/templates/admissions/candidature.html:162
+#: templates/admin_panel/candidature_detail.html:117
 msgid "Documents"
 msgstr ""
 
 #: admissions/templates/admissions/candidature.html:204
+#: cours/templates/cours/components/grouped_exercise_widget.html:12
 msgid "Questions"
 msgstr ""
 
@@ -81,6 +486,7 @@ msgstr ""
 #: admissions/templates/admissions/paiement_candidature.html:43
 #: formation/templates/formation/detail_session.html:80
 #: formation/templates/formation/paiement.html:36
+#: templates/admin_panel/mcq_list.html:14
 msgid "Formation"
 msgstr ""
 
@@ -92,6 +498,7 @@ msgstr ""
 #: admissions/templates/admissions/confirmation_paiement.html:37
 #: cours/templates/cours/verifier_certificat.html:112
 #: paiements/templates/paiements/confirmation.html:34
+#: templates/admin_panel/candidature_detail.html:96
 msgid "Référence"
 msgstr ""
 
@@ -108,7 +515,10 @@ msgid "Retour à mes candidatures"
 msgstr ""
 
 #: admissions/templates/admissions/detail_candidature.html:27
-#: mentorat/models.py:330 mentorat/models.py:468
+#: mentorat/models.py:330 mentorat/models.py:469 pages/models.py:114
+#: templates/admin_panel/candidatures_list.html:39
+#: templates/admin_panel/contacts_list.html:49
+#: templates/admin_panel/mentorat_list.html:32
 msgid "Statut"
 msgstr ""
 
@@ -133,7 +543,9 @@ msgid "Nous sommes désolés, votre candidature n'a pas été retenue cette ann�
 msgstr ""
 
 #: admissions/templates/admissions/detail_candidature.html:65
-#: mentorat/models.py:132
+#: mentorat/models.py:132 pages/forms.py:19
+#: pages/templates/pages/contact.html:67
+#: templates/admin_panel/user_detail.html:37
 msgid "Nom complet"
 msgstr ""
 
@@ -142,13 +554,15 @@ msgid "Date de naissance"
 msgstr ""
 
 #: admissions/templates/admissions/detail_candidature.html:67
-#: mentorat/models.py:475
+#: mentorat/models.py:476 pages/templates/pages/contact.html:223
+#: templates/admin_panel/candidature_detail.html:86
 msgid "Téléphone"
 msgstr ""
 
 #: admissions/templates/admissions/detail_candidature.html:69
 #: comptes/forms.py:114 comptes/forms.py:213
 #: mentorat/templates/mentorat/detail_mentor.html:136
+#: templates/admin_panel/candidature_detail.html:87
 msgid "Pays"
 msgstr ""
 
@@ -219,7 +633,7 @@ msgstr ""
 
 #: admissions/templates/admissions/liste_campagnes.html:75
 #: cours/templates/cours/catalogue.html:206
-#: pages/templates/pages/accueil.html:231
+#: pages/templates/pages/accueil.html:237
 #: paiements/templates/paiements/page_paiement.html:159
 msgid "Gratuit"
 msgstr ""
@@ -349,7 +763,7 @@ msgstr ""
 msgid "❌ Veuillez corriger les erreurs ci-dessous."
 msgstr ""
 
-#: admissions/views.py:313
+#: admissions/views.py:324
 #, python-format
 msgid "✅ Statut mis à jour : %(statut)s"
 msgstr ""
@@ -513,7 +927,8 @@ msgstr ""
 #: communaute/templates/communaute/liste_categories.html:41
 #: communaute/templates/communaute/modifier_message.html:3
 #: communaute/templates/communaute/modifier_profil.html:3
-#: comptes/templates/comptes/inscription.html:248 templates/base.html:418
+#: comptes/templates/comptes/inscription.html:248
+#: pages/templates/pages/contact.html:337 templates/base.html:598
 #: templates/includes/nav_items.html:9 templates/includes/nav_items.html:22
 msgid "Communauté"
 msgstr ""
@@ -543,11 +958,6 @@ msgstr ""
 msgid "Nom de la catégorie"
 msgstr ""
 
-#: communaute/templates/communaute/creer_categorie.html:47
-#: mentorat/models.py:447 mentorat/templates/mentorat/planifier_seance.html:53
-msgid "Description"
-msgstr ""
-
 #: communaute/templates/communaute/creer_categorie.html:58
 msgid "Ordre d'affichage"
 msgstr ""
@@ -566,13 +976,29 @@ msgstr ""
 #: communaute/templates/communaute/modifier_profil.html:100
 #: communaute/templates/communaute/modifier_sujet.html:70
 #: communaute/templates/communaute/repondre_sujet.html:71
-#: cours/templates/cours/detail.html:511
+#: cours/templates/cours/detail.html:535
 #: mentorat/templates/mentorat/demander_mentorat.html:95
 #: mentorat/templates/mentorat/devenir_mentee.html:90
 #: mentorat/templates/mentorat/devenir_mentor.html:92
 #: mentorat/templates/mentorat/planifier_seance.html:110
 #: mentorat/templates/mentorat/terminer_relation.html:79
 #: mentorat/templates/mentorat/terminer_seance.html:66
+#: templates/admin_panel/candidature_detail.html:155
+#: templates/admin_panel/candidature_detail.html:171
+#: templates/admin_panel/candidature_detail.html:188
+#: templates/admin_panel/candidature_detail.html:203
+#: templates/admin_panel/candidatures_list.html:99
+#: templates/admin_panel/candidatures_list.html:119
+#: templates/admin_panel/exercise_form.html:128
+#: templates/admin_panel/mentorat_detail.html:108
+#: templates/admin_panel/mentorat_detail.html:124
+#: templates/admin_panel/mentorat_detail.html:144
+#: templates/admin_panel/user_detail.html:102
+#: templates/admin_panel/user_detail.html:116
+#: templates/admin_panel/user_detail.html:129
+#: templates/admin_panel/user_detail.html:144
+#: templates/admin_panel/user_detail.html:158
+#: templates/admin_panel/users_list.html:74
 msgid "Annuler"
 msgstr ""
 
@@ -660,10 +1086,6 @@ msgstr ""
 msgid "Nouvelle catégorie"
 msgstr ""
 
-#: communaute/templates/communaute/detail_categorie.html:55
-msgid "Sujet"
-msgstr ""
-
 #: communaute/templates/communaute/detail_categorie.html:56
 msgid "Réponses"
 msgstr ""
@@ -688,15 +1110,19 @@ msgstr ""
 
 #: communaute/templates/communaute/detail_categorie.html:168
 #: communaute/templates/communaute/detail_sujet.html:256
-#: formation/templates/formation/voir_lecon.html:158
+#: formation/templates/formation/voir_lecon.html:139
 #: mentorat/templates/mentorat/liste_mentors.html:180
+#: templates/admin_panel/includes/pagination.html:6
+#: templates/notifications/list.html:95
 msgid "Précédent"
 msgstr ""
 
 #: communaute/templates/communaute/detail_categorie.html:182
 #: communaute/templates/communaute/detail_sujet.html:270
-#: formation/templates/formation/voir_lecon.html:166
+#: formation/templates/formation/voir_lecon.html:147
 #: mentorat/templates/mentorat/liste_mentors.html:189
+#: templates/admin_panel/includes/pagination.html:11
+#: templates/notifications/list.html:104
 msgid "Suivant"
 msgstr ""
 
@@ -748,6 +1174,8 @@ msgstr ""
 #: communaute/templates/communaute/detail_sujet.html:96
 #: communaute/templates/communaute/detail_sujet.html:208
 #: communaute/templates/communaute/modifier_sujet.html:3
+#: templates/admin_panel/exercise_form.html:5
+#: templates/admin_panel/mcq_list.html:69
 msgid "Modifier"
 msgstr ""
 
@@ -786,7 +1214,8 @@ msgstr ""
 #: communaute/templates/communaute/detail_sujet.html:307
 #: communaute/templates/communaute/liste_categories.html:203
 #: comptes/templates/comptes/connexion.html:129
-#: comptes/templates/comptes/inscription.html:230 templates/base.html:366
+#: comptes/templates/comptes/inscription.html:230 templates/403.html:21
+#: templates/base.html:546
 #: templates/registration/password_reset_complete.html:8
 msgid "Se connecter"
 msgstr ""
@@ -812,7 +1241,6 @@ msgid "Sujets"
 msgstr ""
 
 #: communaute/templates/communaute/liste_categories.html:55
-#: env/lib/python3.12/site-packages/django/contrib/messages/apps.py:16
 msgid "Messages"
 msgstr ""
 
@@ -857,6 +1285,10 @@ msgid "Soyez le premier à poster"
 msgstr ""
 
 #: communaute/templates/communaute/liste_categories.html:156
+#: templates/admin_panel/candidatures_list.html:60
+#: templates/admin_panel/contacts_list.html:73
+#: templates/admin_panel/mentorat_list.html:50
+#: templates/admin_panel/users_list.html:49
 msgid "Voir"
 msgstr ""
 
@@ -1001,13 +1433,14 @@ msgid "Messages postés"
 msgstr ""
 
 #: communaute/templates/communaute/profil_utilisateur.html:72
-#: comptes/templates/comptes/tableau_de_bord.html:25
+#: comptes/templates/comptes/tableau_de_bord.html:26
 #: mentorat/templates/mentorat/detail_mentor.html:104
 msgid "Membre depuis"
 msgstr ""
 
 #: communaute/templates/communaute/profil_utilisateur.html:83
 #: mentorat/templates/mentorat/detail_mentor.html:131
+#: templates/admin_panel/user_detail.html:35
 msgid "Informations"
 msgstr ""
 
@@ -1060,7 +1493,7 @@ msgstr ""
 msgid "Publier la réponse"
 msgstr ""
 
-#: comptes/forms.py:97 comptes/forms.py:245
+#: comptes/forms.py:97 comptes/forms.py:245 pages/forms.py:27
 msgid "Adresse email"
 msgstr ""
 
@@ -1148,10 +1581,6 @@ msgstr ""
 msgid "Professionnel"
 msgstr ""
 
-#: comptes/models.py:41 mentorat/models.py:30 mentorat/models.py:259
-msgid "Autre"
-msgstr ""
-
 #: comptes/models.py:112
 msgid "Profil"
 msgstr ""
@@ -1172,7 +1601,7 @@ msgstr ""
 msgid "Changer le mot de passe"
 msgstr ""
 
-#: comptes/templates/comptes/connexion.html:3 templates/base.html:325
+#: comptes/templates/comptes/connexion.html:3 templates/base.html:498
 msgid "Connexion"
 msgstr ""
 
@@ -1198,12 +1627,14 @@ msgstr ""
 
 #: comptes/templates/comptes/connexion.html:140
 #: cours/templates/cours/detail.html:52 pages/templates/pages/a_propos.html:409
-#: templates/base.html:367
+#: templates/base.html:547
 msgid "S'inscrire gratuitement"
 msgstr ""
 
 #: comptes/templates/comptes/connexion.html:149
 #: comptes/templates/comptes/inscription.html:255
+#: comptes/templates/comptes/locked.html:15 templates/403.html:17
+#: templates/404.html:17
 msgid "Retour à l'accueil"
 msgstr ""
 
@@ -1215,12 +1646,8 @@ msgstr ""
 msgid "Crée ton compte gratuitement et commence à apprendre"
 msgstr ""
 
-#: comptes/templates/comptes/inscription.html:91
-msgid "Nom"
-msgstr ""
-
 #: comptes/templates/comptes/inscription.html:219
-#: pages/templates/pages/accueil.html:356
+#: pages/templates/pages/accueil.html:362
 msgid "Créer mon compte gratuitement"
 msgstr ""
 
@@ -1236,6 +1663,20 @@ msgstr ""
 msgid "Certificats PDF"
 msgstr ""
 
+#: comptes/templates/comptes/locked.html:3
+msgid "Compte temporairement verrouillé"
+msgstr ""
+
+#: comptes/templates/comptes/locked.html:9
+msgid "Trop de tentatives de connexion"
+msgstr ""
+
+#: comptes/templates/comptes/locked.html:12
+msgid ""
+"Votre accès a été temporairement bloqué suite à plusieurs tentatives de "
+"connexion échouées. Réessayez dans 1 heure."
+msgstr ""
+
 #: comptes/templates/comptes/profil.html:110
 #: comptes/templates/comptes/supprimer_compte.html:19
 msgid "Supprimer mon compte"
@@ -1245,151 +1686,145 @@ msgstr ""
 msgid "Pour confirmer la suppression, entre ton mot de passe actuel :"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:22
+#: comptes/templates/comptes/tableau_de_bord.html:23
 #, python-format
 msgid "Bonjour, %(name)s"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:33
+#: comptes/templates/comptes/tableau_de_bord.html:34
 msgid "Nouveau cours"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:37 templates/base.html:363
+#: comptes/templates/comptes/tableau_de_bord.html:38 templates/base.html:543
 msgid "Mon profil"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:53
+#: comptes/templates/comptes/tableau_de_bord.html:54
+#: templates/admin_panel/user_detail.html:45
 msgid "Cours inscrits"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:65
-#: formation/templates/formation/mes_formations.html:65 mentorat/models.py:460
+#: comptes/templates/comptes/tableau_de_bord.html:66
+#: formation/templates/formation/mes_formations.html:65 mentorat/models.py:461
 msgid "En cours"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:77
+#: comptes/templates/comptes/tableau_de_bord.html:78
 msgid "Terminés"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:89
+#: comptes/templates/comptes/tableau_de_bord.html:90
 msgid "Progression globale"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:110
+#: comptes/templates/comptes/tableau_de_bord.html:111
 msgid "Mes cours"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:113
+#: comptes/templates/comptes/tableau_de_bord.html:114
 msgid "Voir tout"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:133
+#: comptes/templates/comptes/tableau_de_bord.html:134
 msgid "Terminé"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:136
+#: comptes/templates/comptes/tableau_de_bord.html:137
 msgid "Payant"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:159
+#: comptes/templates/comptes/tableau_de_bord.html:160
 msgid "Revoir"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:159
+#: comptes/templates/comptes/tableau_de_bord.html:160
 msgid "Continuer"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:177
+#: comptes/templates/comptes/tableau_de_bord.html:178
 msgid "Tu n'es inscrit à aucun cours"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:178
+#: comptes/templates/comptes/tableau_de_bord.html:179
 msgid "Découvre notre catalogue et commence à apprendre dès aujourd'hui !"
 msgstr ""
 
-#: comptes/templates/comptes/tableau_de_bord.html:262
+#: comptes/templates/comptes/tableau_de_bord.html:263
 msgid "Pour toi"
 msgstr ""
 
-#: comptes/views.py:30
-msgid ""
-"✅ Ton compte a été créé. Vérifie ta boîte email pour activer ton accès."
+#: comptes/views.py:47
+msgid "Un email de vérification a été envoyé à ton adresse."
 msgstr ""
 
-#: comptes/views.py:33 comptes/views.py:264
+#: comptes/views.py:50 comptes/views.py:274
 msgid "Veuillez corriger les erreurs ci-dessous."
 msgstr ""
 
-#: comptes/views.py:53
-msgid "Ton compte est déjà activé. Connecte-toi pour continuer."
+#: comptes/views.py:83
+msgid "Un nouvel email de vérification a été envoyé."
 msgstr ""
 
-#: comptes/views.py:60
-msgid "🎉 Ton adresse email est confirmée. Bienvenue sur Numeria !"
+#: comptes/views.py:86
+msgid "Aucun compte inactif n'est associé à cette adresse email."
 msgstr ""
 
-#: comptes/views.py:72
-#, python-brace-format
-msgid ""
-"Un nouvel email de confirmation a été envoyé à {email}. Vérifie ta boîte de "
-"réception."
-msgstr ""
-
-#: comptes/views.py:75
-msgid "Ce compte est déjà activé. Connecte-toi pour continuer."
-msgstr ""
-
-#: comptes/views.py:77
-msgid "Aucun compte actif n'a été trouvé pour cette adresse email."
-msgstr ""
-
-#: comptes/views.py:99
+#: comptes/views.py:109
 #, python-brace-format
 msgid "Bon retour, {first_name} ! 👋"
 msgstr ""
 
-#: comptes/views.py:106
+#: comptes/views.py:116
 msgid "Nom d'utilisateur ou mot de passe incorrect."
 msgstr ""
 
-#: comptes/views.py:118
+#: comptes/views.py:128
 #, python-brace-format
 msgid "À bientôt, {prenom} ! 👋"
 msgstr ""
 
-#: comptes/views.py:184
+#: comptes/views.py:194
 msgid "Ton profil a été mis à jour ! ✅"
 msgstr ""
 
-#: comptes/views.py:200
+#: comptes/views.py:210
 msgid ""
 "Profil mis à jour, mais la photo n'a pas pu être enregistrée (Cloudinary non "
 "configuré)."
 msgstr ""
 
-#: comptes/views.py:206
+#: comptes/views.py:216
 msgid "Veuillez corriger les erreurs."
 msgstr ""
 
-#: comptes/views.py:239
+#: comptes/views.py:249
 msgid "Ta photo de profil a été supprimée. ✅"
 msgstr ""
 
-#: comptes/views.py:241
+#: comptes/views.py:251
 msgid "Tu n'as pas de photo de profil à supprimer."
 msgstr ""
 
-#: comptes/views.py:261
+#: comptes/views.py:271
 msgid "Ton mot de passe a été changé avec succès ! 🔐"
 msgstr ""
 
-#: comptes/views.py:281
+#: comptes/views.py:291
 #, python-brace-format
 msgid "Ton compte a été supprimé, {prenom}. Nous espérons te revoir ! 👋"
 msgstr ""
 
-#: comptes/views.py:284
+#: comptes/views.py:294
 msgid "Mot de passe incorrect. Ton compte n'a pas été supprimé."
+msgstr ""
+
+#: cours/grades.py:97
+msgid "Exercice réussi ! 🎉"
+msgstr ""
+
+#: cours/grades.py:98
+#, python-brace-format
+msgid "Tu as répondu correctement à '{title}' (+{points} pts)"
 msgstr ""
 
 #: cours/templates/cours/catalogue.html:3
@@ -1422,14 +1857,292 @@ msgid "Essaie d'autres filtres ou reviens bientôt !"
 msgstr ""
 
 #: cours/templates/cours/catalogue.html:231
-#: pages/templates/pages/accueil.html:254
+#: pages/templates/pages/accueil.html:260
 msgid "Voir tous les cours"
 msgstr ""
 
+#: cours/templates/cours/components/code_order_widget.html:9
+#: cours/templates/cours/components/code_order_widget.html:32
+#: cours/templates/cours/components/fill_blank_widget.html:10
+#: cours/templates/cours/components/fill_blank_widget.html:23
+#: cours/templates/cours/components/fill_blank_widget.html:57
+#: cours/templates/cours/components/matching_widget.html:9
+#: cours/templates/cours/components/matching_widget.html:43
+#: cours/templates/cours/components/mcq_widget.html:217
+#: cours/templates/cours/components/mcq_widget.html:320
+#: cours/templates/cours/components/short_answer_widget.html:9
+#: cours/templates/cours/components/short_answer_widget.html:33
+#: cours/templates/cours/components/true_false_widget.html:9
+#: cours/templates/cours/components/true_false_widget.html:40
+#: templates/sandbox/sandbox_widget.html:416
+msgid "Résolu"
+msgstr ""
+
+#: cours/templates/cours/components/code_order_widget.html:14
+msgid "Glisse les lignes pour les ordonner."
+msgstr ""
+
+#: cours/templates/cours/components/code_order_widget.html:32
+msgid "Valider l'ordre"
+msgstr ""
+
+#: cours/templates/cours/components/code_order_widget.html:67
+#: cours/templates/cours/components/code_sandbox.html:345
+#: cours/templates/cours/components/fill_blank_widget.html:55
+#: cours/templates/cours/components/mcq_widget.html:249
+#: cours/templates/cours/components/short_answer_widget.html:65
+#: templates/sandbox/sandbox_widget.html:382
+msgid "Bonne réponse !"
+msgstr ""
+
+#: cours/templates/cours/components/code_order_widget.html:73
+msgid "L'ordre n'est pas correct. Réessaie !"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:37
+#: cours/templates/cours/components/mcq_widget.html:21
+#: templates/admin_panel/blocks/_typed_ex_create.html:21
+#: templates/admin_panel/mcq_list.html:61
+#: templates/sandbox/sandbox_widget.html:50
+msgid "Facile"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:39
+#: cours/templates/cours/components/mcq_widget.html:22
+#: templates/admin_panel/blocks/_typed_ex_create.html:22
+#: templates/admin_panel/mcq_list.html:62
+#: templates/sandbox/sandbox_widget.html:51
+msgid "Moyen"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:41
+#: cours/templates/cours/components/mcq_widget.html:23
+#: templates/admin_panel/blocks/_typed_ex_create.html:23
+#: templates/admin_panel/mcq_list.html:63
+#: templates/sandbox/sandbox_widget.html:52
+msgid "Difficile"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:46
+#: cours/templates/cours/components/code_sandbox.html:301
+msgid "Réussi"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:65
+#: templates/sandbox/sandbox_page.html:27
+#: templates/sandbox/sandbox_widget.html:36
+msgid "Chargement de Python…"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:77
+#: cours/templates/cours/components/code_sandbox.html:310
+#: cours/templates/cours/components/code_sandbox.html:319
+#: cours/templates/cours/components/code_sandbox.html:325
+#: templates/base.html:715 templates/base.html:991
+#: templates/sandbox/full_sandbox.html:124
+#: templates/sandbox/full_sandbox.html:406
+#: templates/sandbox/sandbox_page.html:98
+#: templates/sandbox/sandbox_page.html:204
+#: templates/sandbox/sandbox_widget.html:88
+#: templates/sandbox/sandbox_widget.html:270
+#: templates/sandbox/sandbox_widget.html:346
+msgid "Exécuter"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:81
+#: mentorat/templates/mentorat/liste_mentors.html:73
+#: templates/registration/password_reset_confirm.html:10
+#: templates/sandbox/sandbox_widget.html:92
+msgid "Réinitialiser"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:85
+#: cours/templates/cours/components/code_sandbox.html:435
+#: templates/sandbox/sandbox_widget.html:95
+msgid "Copier"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:90
+#: cours/templates/cours/components/code_sandbox.html:109
+#: cours/templates/cours/components/mcq_widget.html:43
+#: cours/templates/cours/components/mcq_widget.html:68
+#: cours/templates/cours/components/short_answer_widget.html:18
+#: cours/templates/cours/components/short_answer_widget.html:39
+#: templates/admin_panel/exercise_form.html:78
+#: templates/sandbox/sandbox_widget.html:107
+#: templates/sandbox/sandbox_widget.html:120
+msgid "Indice"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:96
+#: cours/templates/cours/components/code_sandbox.html:359
+#: cours/templates/cours/components/fill_blank_widget.html:60
+#: cours/templates/cours/components/fill_blank_widget.html:63
+#: cours/templates/cours/components/mcq_widget.html:180
+#: cours/templates/cours/components/mcq_widget.html:258
+#: cours/templates/cours/components/short_answer_widget.html:71
+#: cours/templates/cours/components/short_answer_widget.html:76
+#: cours/templates/cours/components/short_answer_widget.html:80
+#: templates/admin_panel/exercise_results.html:53
+#: templates/sandbox/sandbox_widget.html:396
+#: templates/sandbox/sandbox_widget.html:442
+msgid "Tentative"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:101
+msgid "Voir la solution"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:210
+msgid "En cours d'exécution…"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:258
+msgid "Temps d'exécution dépassé (10s)"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:263
+#: templates/sandbox/sandbox_widget.html:299
+msgid "aucun output"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:305
+#: cours/templates/cours/components/mcq_widget.html:223
+#: templates/sandbox/sandbox_widget.html:408
+msgid "Tentatives épuisées"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:345
+msgid "points"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:350
+#: templates/sandbox/sandbox_widget.html:387
+msgid "Ce n'est pas la bonne réponse. Réessaie !"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:353
+#: templates/sandbox/sandbox_widget.html:390
+msgid "Attendu"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:354
+#: templates/sandbox/sandbox_widget.html:391
+msgid "Reçu"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:360
+#: templates/sandbox/sandbox_widget.html:397
+msgid "restante(s)"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:404
+msgid "Exercices réussis ce cours"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:424
+#: templates/sandbox/sandbox_widget.html:458
+msgid "Réinitialiser le code ?"
+msgstr ""
+
+#: cours/templates/cours/components/code_sandbox.html:434
+msgid "Copié !"
+msgstr ""
+
+#: cours/templates/cours/components/fill_blank_widget.html:23
+#: cours/templates/cours/components/matching_widget.html:43
+#: cours/templates/cours/components/short_answer_widget.html:33
+#: cours/templates/cours/components/true_false_widget.html:40
+msgid "Valider"
+msgstr ""
+
+#: cours/templates/cours/components/fill_blank_widget.html:60
+msgid "Certains blancs sont incorrects."
+msgstr ""
+
+#: cours/templates/cours/components/grouped_exercise_widget.html:39
+msgid "Type de question non pris en charge."
+msgstr ""
+
+#: cours/templates/cours/components/matching_widget.html:17
+msgid "Éléments"
+msgstr ""
+
+#: cours/templates/cours/components/matching_widget.html:26
+msgid "Correspondances"
+msgstr ""
+
+#: cours/templates/cours/components/matching_widget.html:31
+msgid "Choisir"
+msgstr ""
+
+#: cours/templates/cours/components/matching_widget.html:66
+msgid "Toutes les associations sont correctes !"
+msgstr ""
+
+#: cours/templates/cours/components/matching_widget.html:70
+msgid "associations correctes"
+msgstr ""
+
+#: cours/templates/cours/components/matching_widget.html:70
+msgid "Réessaie !"
+msgstr ""
+
+#: cours/templates/cours/components/mcq_widget.html:26
+#: templates/sandbox/sandbox_widget.html:54
+msgid "Déjà résolu"
+msgstr ""
+
+#: cours/templates/cours/components/mcq_widget.html:57
+msgid "Explication"
+msgstr ""
+
+#: cours/templates/cours/components/mcq_widget.html:74
+#: cours/templates/cours/components/mcq_widget.html:237
+msgid "Valider ma réponse"
+msgstr ""
+
+#: cours/templates/cours/components/mcq_widget.html:226
+msgid "Réessayer"
+msgstr ""
+
+#: cours/templates/cours/components/mcq_widget.html:253
+msgid "Tentatives épuisées."
+msgstr ""
+
+#: cours/templates/cours/components/mcq_widget.html:257
+msgid "Ce n'est pas la bonne réponse."
+msgstr ""
+
+#: cours/templates/cours/components/mcq_widget.html:317
+msgid "Déjà résolu !"
+msgstr ""
+
+#: cours/templates/cours/components/short_answer_widget.html:24
+#: templates/admin_panel/contact_detail.html:65
+msgid "Votre réponse…"
+msgstr ""
+
+#: cours/templates/cours/components/short_answer_widget.html:70
+msgid "Pas tout à fait. Réessaie !"
+msgstr ""
+
+#: cours/templates/cours/components/true_false_widget.html:23
+msgid "Vrai"
+msgstr ""
+
+#: cours/templates/cours/components/true_false_widget.html:30
+msgid "Faux"
+msgstr ""
+
+#: cours/templates/cours/components/true_false_widget.html:68
+msgid "Toutes les réponses sont correctes !"
+msgstr ""
+
 #: cours/templates/cours/detail.html:52 cours/templates/cours/detail.html:226
-#: cours/templates/cours/detail.html:297 cours/templates/cours/detail.html:786
+#: cours/templates/cours/detail.html:303 cours/templates/cours/detail.html:810
 #: formation/templates/formation/detail_formation.html:194
-#: formation/templates/formation/detail_session.html:46 templates/base.html:329
+#: formation/templates/formation/detail_session.html:46 templates/base.html:502
 msgid "S'inscrire"
 msgstr ""
 
@@ -1437,17 +2150,77 @@ msgstr ""
 msgid "Inscris-toi pour accéder aux leçons"
 msgstr ""
 
-#: cours/templates/cours/detail.html:226 cours/templates/cours/detail.html:297
-#: cours/templates/cours/detail.html:786
+#: cours/templates/cours/detail.html:226 cours/templates/cours/detail.html:303
+#: cours/templates/cours/detail.html:810
 msgid "Commencer gratuitement"
 msgstr ""
 
-#: cours/templates/cours/detail.html:288
+#: cours/templates/cours/detail.html:294
 msgid "Contenu réservé aux inscrits"
 msgstr ""
 
-#: cours/templates/cours/detail.html:291
+#: cours/templates/cours/detail.html:297
 msgid "Inscris-toi gratuitement pour accéder à tout le contenu."
+msgstr ""
+
+#: cours/templates/cours/detail.html:504
+#: formation/templates/formation/voir_lecon.html:55
+msgid "Exercices de code"
+msgstr ""
+
+#: cours/templates/cours/detail.html:510
+msgid ""
+"Le code s'exécute directement dans ton navigateur — aucune installation "
+"requise."
+msgstr ""
+
+#: cours/templates/cours/mes_notes.html:4
+#: cours/templates/cours/mes_notes.html:8
+#: cours/templates/cours/mes_notes_detail.html:4
+#: cours/templates/cours/mes_notes_detail.html:8
+msgid "Mes notes"
+msgstr ""
+
+#: cours/templates/cours/mes_notes.html:10
+msgid "Total points obtenus"
+msgstr ""
+
+#: cours/templates/cours/mes_notes.html:15 notifications/models.py:12
+#: paiements/templates/paiements/confirmation.html:42
+#: templates/admin_panel/mcq_list.html:13 templates/includes/nav_items.html:5
+#: templates/includes/nav_items.html:18 templates/notifications/list.html:28
+msgid "Cours"
+msgstr ""
+
+#: cours/templates/cours/mes_notes.html:24
+#: cours/templates/cours/mes_notes.html:46
+msgid "pts"
+msgstr ""
+
+#: cours/templates/cours/mes_notes.html:24
+#: cours/templates/cours/mes_notes.html:46
+msgid "progression"
+msgstr ""
+
+#: cours/templates/cours/mes_notes.html:37 templates/includes/nav_items.html:6
+#: templates/includes/nav_items.html:19
+msgid "Formations"
+msgstr ""
+
+#: cours/templates/cours/mes_notes.html:58
+msgid "Inscrivez-vous à un cours ou une formation pour voir vos notes."
+msgstr ""
+
+#: cours/templates/cours/mes_notes_detail.html:29
+msgid "tent."
+msgstr ""
+
+#: cours/templates/cours/mes_notes_detail.html:34
+msgid "Aucun exercice noté dans cette leçon."
+msgstr ""
+
+#: cours/templates/cours/mes_notes_detail.html:38
+msgid "Aucune leçon publiée."
 msgstr ""
 
 #: cours/templates/cours/verifier_certificat.html:3
@@ -1477,6 +2250,8 @@ msgstr ""
 
 #: cours/templates/cours/verifier_certificat.html:94
 #: formation/templates/formation/liste.html:62
+#: templates/admin_panel/candidature_detail.html:104
+#: templates/admin_panel/mentorat_detail.html:62
 msgid "Niveau"
 msgstr ""
 
@@ -1497,1353 +2272,70 @@ msgstr ""
 msgid "Tu es déjà inscrit au cours « %(titre)s » ! 📚"
 msgstr ""
 
-#: cours/views.py:186
+#: cours/views.py:189
+msgid "Inscription confirmée"
+msgstr ""
+
+#: cours/views.py:190
+#, python-format
+msgid "Vous êtes inscrit au cours %(titre)s."
+msgstr ""
+
+#: cours/views.py:196
 #, python-format
 msgid "🎉 Bienvenue dans le cours « %(titre)s » !"
 msgstr ""
 
-#: cours/views.py:207
+#: cours/views.py:217
 #, python-format
 msgid "Tu t'es désinscrit du cours « %(titre)s » ."
 msgstr ""
 
-#: cours/views.py:209 cours/views.py:228 cours/views.py:328
+#: cours/views.py:219 cours/views.py:238
 msgid "Tu n'es pas inscrit à ce cours."
 msgstr ""
 
-#: cours/views.py:250
+#: cours/views.py:260
 #, python-format
 msgid "🎉 Félicitations ! Tu as terminé le cours « %(titre)s » !"
 msgstr ""
 
-#: cours/views.py:255
+#: cours/views.py:265
 #, python-format
 msgid "✅ Leçon terminée ! Progression : %(pct)s%%"
 msgstr ""
 
-#: cours/views.py:259
+#: cours/views.py:269
 msgid "Cette leçon était déjà marquée comme terminée."
 msgstr ""
 
-#: cours/views.py:303
+#: cours/views.py:313
 msgid "Leçon marquée comme non terminée."
 msgstr ""
 
-#: cours/views.py:335
-msgid "Réponse invalide."
+#: cours/views.py:329
+msgid "Ce type d'exercice n'est plus disponible."
 msgstr ""
 
-#: cours/views.py:390
+#: cours/views.py:352
 msgid "Les certificats sont réservés aux cours payants."
 msgstr ""
 
-#: cours/views.py:452
-msgid "Vous devez terminer le cours avant de le noter."
+#: cours/views.py:405
+msgid "L'évaluation des cours sera disponible prochainement."
 msgstr ""
 
-#: cours/views.py:459
-msgid "La note doit être entre 1 et 5."
+#: cours/views.py:413
+msgid "La FAQ des cours sera disponible prochainement."
 msgstr ""
 
-#: cours/views.py:474
-msgid "✅ Merci pour votre évaluation !"
+#: cours/views.py:609
+msgid "QCM réussi ! 🎉"
 msgstr ""
 
-#: cours/views.py:476
+#: cours/views.py:610
 #, python-format
-msgid "Erreur lors de l'évaluation : %(err)s"
-msgstr ""
-
-#: cours/views.py:495
-msgid "Vous devez être inscrit au cours pour poser une question."
-msgstr ""
-
-#: cours/views.py:502
-msgid "La question doit contenir au moins 5 caractères."
-msgstr ""
-
-#: cours/views.py:505
-msgid "La question ne peut pas dépasser 500 caractères."
-msgstr ""
-
-#: cours/views.py:517
-msgid "✅ Votre question a été soumise et sera modérée par un admin."
-msgstr ""
-
-#: cours/views.py:519
-#, python-format
-msgid "Erreur lors de la soumission : %(err)s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/cloudinary/forms.py:55
-#: env/lib/python3.12/site-packages/cloudinary/forms.py:124
-msgid "No file selected!"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
-msgid "Site Maps"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
-msgid "Syndication"
-msgstr ""
-
-#. Translators: String used to replace omitted page numbers in elided page
-#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
-#: env/lib/python3.12/site-packages/django/core/paginator.py:33
-msgid "…"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/paginator.py:35
-msgid "That page number is not an integer"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/paginator.py:36
-msgid "That page number is less than 1"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/paginator.py:37
-msgid "That page contains no results"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:22
-msgid "Enter a valid value."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:70
-msgid "Enter a valid domain name."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:153
-#: env/lib/python3.12/site-packages/django/forms/fields.py:773
-msgid "Enter a valid URL."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:200
-msgid "Enter a valid integer."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:211
-msgid "Enter a valid email address."
-msgstr ""
-
-#. Translators: "letters" means latin letters: a-z and A-Z.
-#: env/lib/python3.12/site-packages/django/core/validators.py:289
-msgid ""
-"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:297
-msgid ""
-"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
-"hyphens."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:309
-#: env/lib/python3.12/site-packages/django/core/validators.py:318
-#: env/lib/python3.12/site-packages/django/core/validators.py:332
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2220
-#, python-format
-msgid "Enter a valid %(protocol)s address."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:311
-msgid "IPv4"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:320
-#: env/lib/python3.12/site-packages/django/utils/ipv6.py:43
-msgid "IPv6"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:334
-msgid "IPv4 or IPv6"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:375
-msgid "Enter only digits separated by commas."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:381
-#, python-format
-msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:416
-#, python-format
-msgid "Ensure this value is less than or equal to %(limit_value)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:425
-#, python-format
-msgid "Ensure this value is greater than or equal to %(limit_value)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:434
-#, python-format
-msgid "Ensure this value is a multiple of step size %(limit_value)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:441
-#, python-format
-msgid ""
-"Ensure this value is a multiple of step size %(limit_value)s, starting from "
-"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:473
-#, python-format
-msgid ""
-"Ensure this value has at least %(limit_value)d character (it has "
-"%(show_value)d)."
-msgid_plural ""
-"Ensure this value has at least %(limit_value)d characters (it has "
-"%(show_value)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:491
-#, python-format
-msgid ""
-"Ensure this value has at most %(limit_value)d character (it has "
-"%(show_value)d)."
-msgid_plural ""
-"Ensure this value has at most %(limit_value)d characters (it has "
-"%(show_value)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:514
-#: env/lib/python3.12/site-packages/django/forms/fields.py:364
-#: env/lib/python3.12/site-packages/django/forms/fields.py:403
-msgid "Enter a number."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:516
-#, python-format
-msgid "Ensure that there are no more than %(max)s digit in total."
-msgid_plural "Ensure that there are no more than %(max)s digits in total."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:521
-#, python-format
-msgid "Ensure that there are no more than %(max)s decimal place."
-msgid_plural "Ensure that there are no more than %(max)s decimal places."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:526
-#, python-format
-msgid ""
-"Ensure that there are no more than %(max)s digit before the decimal point."
-msgid_plural ""
-"Ensure that there are no more than %(max)s digits before the decimal point."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:597
-#, python-format
-msgid ""
-"File extension “%(extension)s” is not allowed. Allowed extensions are: "
-"%(allowed_extensions)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/core/validators.py:659
-msgid "Null characters are not allowed."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/base.py:1633
-#: env/lib/python3.12/site-packages/django/forms/models.py:932
-msgid "and"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/base.py:1635
-#, python-format
-msgid "%(model_name)s with this %(field_labels)s already exists."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/constraints.py:20
-#, python-format
-msgid "Constraint “%(name)s” is violated."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:134
-#, python-format
-msgid "Value %(value)r is not a valid choice."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:135
-msgid "This field cannot be null."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:136
-msgid "This field cannot be blank."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:137
-#, python-format
-msgid "%(model_name)s with this %(field_label)s already exists."
-msgstr ""
-
-#. Translators: The 'lookup_type' is one of 'date', 'year' or
-#. 'month'. Eg: "Title must be unique for pub_date year"
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:141
-#, python-format
-msgid ""
-"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:180
-#, python-format
-msgid "Field of type: %(field_type)s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1161
-#, python-format
-msgid "“%(value)s” value must be either True or False."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1162
-#, python-format
-msgid "“%(value)s” value must be either True, False, or None."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1164
-msgid "Boolean (Either True or False)"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1214
-#, python-format
-msgid "String (up to %(max_length)s)"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1216
-msgid "String (unlimited)"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1325
-msgid "Comma-separated integers"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1426
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
-"format."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1430
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1565
-#, python-format
-msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
-"date."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1434
-msgid "Date (without time)"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1561
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
-"uuuuuu]][TZ] format."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1569
-#, python-format
-msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
-"[TZ]) but it is an invalid date/time."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1574
-msgid "Date (with time)"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1701
-#, python-format
-msgid "“%(value)s” value must be a decimal number."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1703
-msgid "Decimal number"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1864
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
-"uuuuuu] format."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1868
-msgid "Duration"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
-msgid "Email address"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1945
-msgid "File path"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2023
-#, python-format
-msgid "“%(value)s” value must be a float."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2025
-msgid "Floating point number"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2065
-#, python-format
-msgid "“%(value)s” value must be an integer."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2067
-msgid "Integer"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2163
-msgid "Big (8 byte) integer"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2180
-msgid "Small integer"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2188
-msgid "IPv4 address"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2219
-msgid "IP address"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2310
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2311
-#, python-format
-msgid "“%(value)s” value must be either None, True or False."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2313
-msgid "Boolean (Either True, False or None)"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2364
-msgid "Positive big integer"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2379
-msgid "Positive integer"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2394
-msgid "Positive small integer"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2410
-#, python-format
-msgid "Slug (up to %(max_length)s)"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2446
-msgid "Text"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2526
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
-"format."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2530
-#, python-format
-msgid ""
-"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
-"invalid time."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2534
-msgid "Time"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2642
-msgid "URL"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2666
-msgid "Raw binary data"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2731
-#, python-format
-msgid "“%(value)s” is not a valid UUID."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2733
-msgid "Universally unique identifier"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/files.py:244
-msgid "File"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/files.py:420
-msgid "Image"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/json.py:24
-msgid "A JSON object"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/json.py:26
-msgid "Value must be valid JSON."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:978
-#, python-format
-msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:981
-msgid "Foreign Key (type determined by related field)"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1275
-msgid "One-to-one relationship"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1332
-#, python-format
-msgid "%(from)s-%(to)s relationship"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1334
-#, python-format
-msgid "%(from)s-%(to)s relationships"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/db/models/fields/related.py:1382
-msgid "Many-to-many relationship"
-msgstr ""
-
-#. Translators: If found as last label character, these punctuation
-#. characters will prevent the default label_suffix to be appended to
-#. the label
-#: env/lib/python3.12/site-packages/django/forms/boundfield.py:188
-msgid ":?.!"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:91
-msgid "This field is required."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:313
-msgid "Enter a whole number."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:484
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1241
-msgid "Enter a valid date."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:507
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1242
-msgid "Enter a valid time."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:534
-msgid "Enter a valid date/time."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:568
-msgid "Enter a valid duration."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:569
-#, python-brace-format
-msgid "The number of days must be between {min_days} and {max_days}."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:638
-msgid "No file was submitted. Check the encoding type on the form."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:639
-msgid "No file was submitted."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:640
-msgid "The submitted file is empty."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:642
-#, python-format
-msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
-msgid_plural ""
-"Ensure this filename has at most %(max)d characters (it has %(length)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:647
-msgid "Please either submit a file or check the clear checkbox, not both."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:715
-msgid ""
-"Upload a valid image. The file you uploaded was either not an image or a "
-"corrupted image."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:862
-#: env/lib/python3.12/site-packages/django/forms/fields.py:949
-#: env/lib/python3.12/site-packages/django/forms/models.py:1621
-#, python-format
-msgid "Select a valid choice. %(value)s is not one of the available choices."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:951
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1070
-#: env/lib/python3.12/site-packages/django/forms/models.py:1619
-msgid "Enter a list of values."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1071
-msgid "Enter a complete value."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1313
-msgid "Enter a valid UUID."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/fields.py:1343
-msgid "Enter a valid JSON."
-msgstr ""
-
-#. Translators: This is the default suffix added to form field labels
-#: env/lib/python3.12/site-packages/django/forms/forms.py:97
-msgid ":"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/forms.py:239
-#, python-format
-msgid "(Hidden field %(name)s) %(error)s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:61
-#, python-format
-msgid ""
-"ManagementForm data is missing or has been tampered with. Missing fields: "
-"%(field_names)s. You may need to file a bug report if the issue persists."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:65
-#, python-format
-msgid "Please submit at most %(num)d form."
-msgid_plural "Please submit at most %(num)d forms."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:70
-#, python-format
-msgid "Please submit at least %(num)d form."
-msgid_plural "Please submit at least %(num)d forms."
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:484
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:491
-msgid "Order"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/formsets.py:499
-msgid "Delete"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:925
-#, python-format
-msgid "Please correct the duplicate data for %(field)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:930
-#, python-format
-msgid "Please correct the duplicate data for %(field)s, which must be unique."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:937
-#, python-format
-msgid ""
-"Please correct the duplicate data for %(field_name)s which must be unique "
-"for the %(lookup)s in %(date_field)s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:946
-msgid "Please correct the duplicate values below."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:1383
-msgid "The inline value did not match the parent instance."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:1474
-msgid "Select a valid choice. That choice is not one of the available choices."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/models.py:1623
-#, python-format
-msgid "“%(pk)s” is not a valid value."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/utils.py:229
-#, python-format
-msgid ""
-"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
-"may be ambiguous or it may not exist."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:528
-msgid "Clear"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:529
-msgid "Currently"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:530
-msgid "Change"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:869
-msgid "Unknown"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:870
-msgid "Yes"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/forms/widgets.py:871
-msgid "No"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/tasks/base.py:34
-msgctxt "Task"
-msgid "Ready"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/tasks/base.py:36
-msgctxt "Task"
-msgid "Running"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/tasks/base.py:38
-msgctxt "Task"
-msgid "Failed"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/tasks/base.py:40
-msgctxt "Task"
-msgid "Successful"
-msgstr ""
-
-#. Translators: Please do not add spaces around commas.
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:878
-msgid "yes,no,maybe"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:908
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:925
-#, python-format
-msgid "%(size)d byte"
-msgid_plural "%(size)d bytes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:927
-#, python-format
-msgid "%s KB"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:929
-#, python-format
-msgid "%s MB"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:931
-#, python-format
-msgid "%s GB"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:933
-#, python-format
-msgid "%s TB"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/template/defaultfilters.py:935
-#, python-format
-msgid "%s PB"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:74
-msgid "p.m."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:75
-msgid "a.m."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:80
-msgid "PM"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:81
-msgid "AM"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:153
-msgid "midnight"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dateformat.py:155
-msgid "noon"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:7
-msgid "Monday"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:8
-msgid "Tuesday"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:9
-msgid "Wednesday"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:10
-msgid "Thursday"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:11
-msgid "Friday"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:12
-msgid "Saturday"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:13
-msgid "Sunday"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:16
-msgid "Mon"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:17
-msgid "Tue"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:18
-msgid "Wed"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:19
-msgid "Thu"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:20
-msgid "Fri"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:21
-msgid "Sat"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:22
-msgid "Sun"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:25
-msgid "January"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:26
-msgid "February"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:27
-msgid "March"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:28
-msgid "April"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:29
-msgid "May"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:30
-msgid "June"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:31
-msgid "July"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:32
-msgid "August"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:33
-msgid "September"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:34
-msgid "October"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:35
-msgid "November"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:36
-msgid "December"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:39
-msgid "jan"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:40
-msgid "feb"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:41
-msgid "mar"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:42
-msgid "apr"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:43
-msgid "may"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:44
-msgid "jun"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:45
-msgid "jul"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:46
-msgid "aug"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:47
-msgid "sep"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:48
-msgid "oct"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:49
-msgid "nov"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:50
-msgid "dec"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:53
-msgctxt "abbrev. month"
-msgid "Jan."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:54
-msgctxt "abbrev. month"
-msgid "Feb."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:55
-msgctxt "abbrev. month"
-msgid "March"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:56
-msgctxt "abbrev. month"
-msgid "April"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:57
-msgctxt "abbrev. month"
-msgid "May"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:58
-msgctxt "abbrev. month"
-msgid "June"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:59
-msgctxt "abbrev. month"
-msgid "July"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:60
-msgctxt "abbrev. month"
-msgid "Aug."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:61
-msgctxt "abbrev. month"
-msgid "Sept."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:62
-msgctxt "abbrev. month"
-msgid "Oct."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:63
-msgctxt "abbrev. month"
-msgid "Nov."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:64
-msgctxt "abbrev. month"
-msgid "Dec."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:67
-msgctxt "alt. month"
-msgid "January"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:68
-msgctxt "alt. month"
-msgid "February"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:69
-msgctxt "alt. month"
-msgid "March"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:70
-msgctxt "alt. month"
-msgid "April"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:71
-msgctxt "alt. month"
-msgid "May"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:72
-msgctxt "alt. month"
-msgid "June"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:73
-msgctxt "alt. month"
-msgid "July"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:74
-msgctxt "alt. month"
-msgid "August"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:75
-msgctxt "alt. month"
-msgid "September"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:76
-msgctxt "alt. month"
-msgid "October"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:77
-msgctxt "alt. month"
-msgid "November"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/dates.py:78
-msgctxt "alt. month"
-msgid "December"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/ipv6.py:20
-msgid "This is not a valid IPv6 address."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/text.py:76
-#, python-format
-msgctxt "String to return when truncating text"
-msgid "%(truncated_text)s…"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/text.py:282
-msgid "or"
-msgstr ""
-
-#. Translators: This string is used as a separator between list elements
-#: env/lib/python3.12/site-packages/django/utils/text.py:301
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:135
-msgid ", "
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:8
-#, python-format
-msgid "%(num)d year"
-msgid_plural "%(num)d years"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:9
-#, python-format
-msgid "%(num)d month"
-msgid_plural "%(num)d months"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:10
-#, python-format
-msgid "%(num)d week"
-msgid_plural "%(num)d weeks"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:11
-#, python-format
-msgid "%(num)d day"
-msgid_plural "%(num)d days"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:12
-#, python-format
-msgid "%(num)d hour"
-msgid_plural "%(num)d hours"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/utils/timesince.py:13
-#, python-format
-msgid "%(num)d minute"
-msgid_plural "%(num)d minutes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:29
-msgid "Forbidden"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:30
-msgid "CSRF verification failed. Request aborted."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:34
-msgid ""
-"You are seeing this message because this HTTPS site requires a “Referer "
-"header” to be sent by your web browser, but none was sent. This header is "
-"required for security reasons, to ensure that your browser is not being "
-"hijacked by third parties."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:40
-msgid ""
-"If you have configured your browser to disable “Referer” headers, please re-"
-"enable them, at least for this site, or for HTTPS connections, or for “same-"
-"origin” requests."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:45
-msgid ""
-"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
-"including the “Referrer-Policy: no-referrer” header, please remove them. The "
-"CSRF protection requires the “Referer” header to do strict referer checking. "
-"If you’re concerned about privacy, use alternatives like <a "
-"rel=\"noreferrer\" …> for links to third-party sites."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:54
-msgid ""
-"You are seeing this message because this site requires a CSRF cookie when "
-"submitting forms. This cookie is required for security reasons, to ensure "
-"that your browser is not being hijacked by third parties."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:60
-msgid ""
-"If you have configured your browser to disable cookies, please re-enable "
-"them, at least for this site, or for “same-origin” requests."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/csrf.py:66
-msgid "More information is available with DEBUG=True."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:44
-msgid "No year specified"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:64
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:115
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:214
-msgid "Date out of range"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:94
-msgid "No month specified"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:147
-msgid "No day specified"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:194
-msgid "No week specified"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:353
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:384
-#, python-format
-msgid "No %(verbose_name_plural)s available"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:680
-#, python-format
-msgid ""
-"Future %(verbose_name_plural)s not available because %(class_name)s."
-"allow_future is False."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/dates.py:720
-#, python-format
-msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/detail.py:56
-#, python-format
-msgid "No %(verbose_name)s found matching the query"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/list.py:70
-msgid "Page is not “last”, nor can it be converted to an int."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/list.py:77
-#, python-format
-msgid "Invalid page (%(page_number)s): %(message)s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/generic/list.py:173
-#, python-format
-msgid "Empty list and “%(class_name)s.allow_empty” is False."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/static.py:49
-msgid "Directory indexes are not allowed here."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/static.py:51
-#, python-format
-msgid "“%(path)s” does not exist"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/static.py:68
-#: env/lib/python3.12/site-packages/django/views/templates/directory_index.html:8
-#: env/lib/python3.12/site-packages/django/views/templates/directory_index.html:11
-#, python-format
-msgid "Index of %(directory)s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:7
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:204
-msgid "The install worked successfully! Congratulations!"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:206
-#, python-format
-msgid ""
-"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
-"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:208
-#, python-format
-msgid ""
-"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
-"%(version)s/ref/settings/#debug\" target=\"_blank\" "
-"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
-"configured any URLs."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:217
-msgid "Django Documentation"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:218
-msgid "Topics, references, &amp; how-to’s"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:226
-msgid "Tutorial: A Polling App"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:227
-msgid "Get started with Django"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:235
-msgid "Django Community"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:236
-msgid "Connect, get help, or contribute"
-msgstr ""
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:407
-#, python-format
-msgid "Content purported to be compressed with %s but failed to decompress."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:571
-#, python-format
-msgid "Unsupported value for qop: %s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:575
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:653
-#, python-format
-msgid "Unsupported value for algorithm: %s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:648
-msgid "The challenge doesn't contain a server nonce, or this one is empty."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:658
-#, python-format
-msgid "Unsupported value for pw-algorithm: %s."
-msgstr ""
-
-#: env/lib/python3.12/site-packages/httplib2/__init__.py:1471
-msgid "Redirected but the response is missing a Location: header."
+msgid "Tu as répondu correctement à '%(title)s' (+%(pts)s pts)"
 msgstr ""
 
 #: formation/templates/formation/detail_formation.html:39
@@ -2992,6 +2484,7 @@ msgid "Type de formation"
 msgstr ""
 
 #: formation/templates/formation/liste.html:51
+#: templates/admin_panel/mcq_list.html:12
 msgid "Tous les types"
 msgstr ""
 
@@ -3085,8 +2578,8 @@ msgid "Formations en cours"
 msgstr ""
 
 #: formation/templates/formation/mes_formations.html:75
-#: formation/templates/formation/voir_lecon.html:23
-#: formation/templates/formation/voir_lecon.html:191
+#: formation/templates/formation/voir_lecon.html:22
+#: formation/templates/formation/voir_lecon.html:168
 msgid "Progression"
 msgstr ""
 
@@ -3164,11 +2657,7 @@ msgstr ""
 msgid "Session"
 msgstr ""
 
-#: formation/templates/formation/paiement.html:59 templates/video_room.html:619
-#: templates/video_room.html:668 templates/video_room.html:892
-#: templates/video_room.html:897 templates/video_room.html:1079
-#: templates/video_room.html:1095 templates/video_room.html:1103
-#: templates/video_room.html:1116
+#: formation/templates/formation/paiement.html:59 templates/video_room.html:339
 msgid "Participant"
 msgstr ""
 
@@ -3210,7 +2699,8 @@ msgid ""
 "au paiement pour cette inscription."
 msgstr ""
 
-#: formation/templates/formation/paiement.html:150 templates/video_room.html:26
+#: formation/templates/formation/paiement.html:150
+#: templates/admin_panel/contact_detail.html:75 templates/video_room.html:14
 msgid "Retour"
 msgstr ""
 
@@ -3314,64 +2804,36 @@ msgstr ""
 msgid "Valable à vie"
 msgstr ""
 
-#: formation/templates/formation/voir_lecon.html:14
+#: formation/templates/formation/voir_lecon.html:13
+#: templates/admin_panel/exercise_form.html:117
+#: templates/admin_panel/exercise_results.html:51
 msgid "Leçon"
 msgstr ""
 
-#: formation/templates/formation/voir_lecon.html:49
-msgid "Vidéo pédagogique"
-msgstr ""
-
-#: formation/templates/formation/voir_lecon.html:88
+#: formation/templates/formation/voir_lecon.html:83
 msgid "Ressources"
 msgstr ""
 
-#: formation/templates/formation/voir_lecon.html:113
-msgid "Exercice pratique"
-msgstr ""
-
+#: formation/templates/formation/voir_lecon.html:105
 #: formation/templates/formation/voir_lecon.html:121
-msgid "Démarrer l'exercice"
-msgstr ""
-
-#: formation/templates/formation/voir_lecon.html:136
 msgid "Marquer cette leçon comme complétée"
 msgstr ""
 
-#: formation/templates/formation/voir_lecon.html:144
+#: formation/templates/formation/voir_lecon.html:111
+#: formation/templates/formation/voir_lecon.html:127
 msgid "Leçon complétée le"
 msgstr ""
 
-#: formation/templates/formation/voir_lecon.html:176
+#: formation/templates/formation/voir_lecon.html:154
 msgid "Terminer la formation"
 msgstr ""
 
-#: formation/templates/formation/voir_lecon.html:200
+#: formation/templates/formation/voir_lecon.html:174
 msgid "Complétion"
 msgstr ""
 
-#: formation/templates/formation/voir_lecon.html:213
+#: formation/templates/formation/voir_lecon.html:182
 msgid "leçons"
-msgstr ""
-
-#: formation/views.py:175
-msgid "Cette session n'est plus ouverte aux inscriptions."
-msgstr ""
-
-#: formation/views.py:182
-msgid "Vous êtes déjà inscrit à cette session."
-msgstr ""
-
-#: formation/views.py:193
-msgid "Inscription créée. Veuillez effectuer le paiement."
-msgstr ""
-
-#: formation/views.py:239
-msgid "Votre accès à cette formation a expiré."
-msgstr ""
-
-#: formation/views.py:311
-msgid "Ce certificat a expiré."
 msgstr ""
 
 #: mentorat/admin.py:41
@@ -3515,13 +2977,13 @@ msgstr ""
 msgid "Vos notes sur la séance..."
 msgstr ""
 
-#: mentorat/forms.py:239 mentorat/models.py:488
+#: mentorat/forms.py:239 mentorat/models.py:489
 #: mentorat/templates/mentorat/detail_relation.html:197
 #: mentorat/templates/mentorat/terminer_seance.html:39
 msgid "Notes du mentor"
 msgstr ""
 
-#: mentorat/forms.py:248 mentorat/models.py:492
+#: mentorat/forms.py:248 mentorat/models.py:493
 #: mentorat/templates/mentorat/detail_relation.html:203
 #: mentorat/templates/mentorat/terminer_seance.html:50
 msgid "Notes du mentoré"
@@ -3659,10 +3121,6 @@ msgstr ""
 msgid "Mentors"
 msgstr ""
 
-#: mentorat/models.py:122 mentorat/models.py:321
-msgid "En attente"
-msgstr ""
-
 #: mentorat/models.py:123
 msgid "Approuvé"
 msgstr ""
@@ -3784,18 +3242,6 @@ msgstr ""
 msgid "Mentorés"
 msgstr ""
 
-#: mentorat/models.py:322
-msgid "Acceptée"
-msgstr ""
-
-#: mentorat/models.py:323
-msgid "Refusée"
-msgstr ""
-
-#: mentorat/models.py:324 mentorat/models.py:461
-msgid "Terminée"
-msgstr ""
-
 #: mentorat/models.py:336
 msgid "Message au mentor"
 msgstr ""
@@ -3804,168 +3250,200 @@ msgstr ""
 msgid "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor..."
 msgstr ""
 
-#: mentorat/models.py:345 mentorat/templates/mentorat/demander_mentorat.html:18
-msgid "Demande de mentorat"
+#: mentorat/models.py:343 templates/admin_panel/candidature_detail.html:129
+#: templates/admin_panel/mentorat_detail.html:92
+msgid "Notes admin"
 msgstr ""
 
-#: mentorat/models.py:346
+#: mentorat/models.py:347
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:81
+#: templates/admin_panel/mentorat_list.html:5
 msgid "Demandes de mentorat"
 msgstr ""
 
-#: mentorat/models.py:406
+#: mentorat/models.py:407
 msgid "Objectifs de la relation"
 msgstr ""
 
-#: mentorat/models.py:410 mentorat/templates/mentorat/detail_relation.html:3
+#: mentorat/models.py:411 mentorat/templates/mentorat/detail_relation.html:3
 #: mentorat/templates/mentorat/detail_relation.html:29
 msgid "Relation de mentorat"
 msgstr ""
 
-#: mentorat/models.py:411
+#: mentorat/models.py:412
 msgid "Relations de mentorat"
 msgstr ""
 
-#: mentorat/models.py:443 mentorat/templates/mentorat/planifier_seance.html:41
+#: mentorat/models.py:444 mentorat/templates/mentorat/planifier_seance.html:41
 msgid "Titre de la séance"
 msgstr ""
 
-#: mentorat/models.py:451 mentorat/templates/mentorat/planifier_seance.html:66
+#: mentorat/models.py:452 mentorat/templates/mentorat/planifier_seance.html:66
 msgid "Date et heure"
 msgstr ""
 
-#: mentorat/models.py:454 mentorat/templates/mentorat/planifier_seance.html:76
+#: mentorat/models.py:455 mentorat/templates/mentorat/planifier_seance.html:76
 msgid "Durée (minutes)"
 msgstr ""
 
-#: mentorat/models.py:459
+#: mentorat/models.py:460
 msgid "Planifiée"
 msgstr ""
 
-#: mentorat/models.py:462
+#: mentorat/models.py:463
 msgid "Annulée"
 msgstr ""
 
-#: mentorat/models.py:473
+#: mentorat/models.py:474
 msgid "Présentiel"
 msgstr ""
 
-#: mentorat/models.py:474 mentorat/templates/mentorat/video_seance.html:4
+#: mentorat/models.py:475 mentorat/templates/mentorat/video_seance.html:4
 #: mentorat/templates/mentorat/video_seance.html:16
 msgid "Visioconférence"
 msgstr ""
 
-#: mentorat/models.py:476 pages/templates/pages/a_propos.html:350
+#: mentorat/models.py:477 pages/models.py:107
+#: pages/templates/pages/a_propos.html:350
+#: pages/templates/pages/contact.html:85 pages/templates/pages/contact.html:210
+#: templates/admin_panel/candidature_detail.html:85
+#: templates/admin_panel/contacts_list.html:46
+#: templates/admin_panel/mentorat_detail.html:60
+#: templates/admin_panel/mentorat_detail.html:69
+#: templates/admin_panel/user_detail.html:39
+#: templates/admin_panel/users_list.html:29
 msgid "Email"
 msgstr ""
 
-#: mentorat/models.py:482 mentorat/templates/mentorat/planifier_seance.html:86
+#: mentorat/models.py:483 mentorat/templates/mentorat/planifier_seance.html:86
 #: mentorat/templates/mentorat/video_seance.html:66
 msgid "Modalité"
 msgstr ""
 
-#: mentorat/models.py:500
+#: mentorat/models.py:501
 msgid "Séance de mentorat"
 msgstr ""
 
-#: mentorat/models.py:501
+#: mentorat/models.py:502
 msgid "Séances de mentorat"
 msgstr ""
 
-#: mentorat/models.py:543
+#: mentorat/models.py:544
 msgid "Montant total (FCFA)"
 msgstr ""
 
-#: mentorat/models.py:544
+#: mentorat/models.py:545
 msgid "Commission Numeria (FCFA)"
 msgstr ""
 
-#: mentorat/models.py:545
+#: mentorat/models.py:546
 msgid "Part mentor (FCFA)"
 msgstr ""
 
-#: mentorat/models.py:549
+#: mentorat/models.py:550
 msgid "En attente de paiement"
 msgstr ""
 
-#: mentorat/models.py:550
+#: mentorat/models.py:551
 msgid "Preuve soumise"
 msgstr ""
 
-#: mentorat/models.py:551
+#: mentorat/models.py:552
 msgid "Confirmé"
 msgstr ""
 
-#: mentorat/models.py:552
+#: mentorat/models.py:553
 msgid "Échec / Annulé"
 msgstr ""
 
-#: mentorat/models.py:559
+#: mentorat/models.py:560
 msgid "Référence mobile money"
 msgstr ""
 
-#: mentorat/models.py:560
+#: mentorat/models.py:561
 msgid "Numéro de transaction TMoney / Flooz / autre"
 msgstr ""
 
-#: mentorat/models.py:565 mentorat/templates/mentorat/paiement_seance.html:193
+#: mentorat/models.py:566 mentorat/templates/mentorat/paiement_seance.html:193
 msgid "Capture d'écran du paiement"
 msgstr ""
 
-#: mentorat/models.py:571
+#: mentorat/models.py:572
 msgid "Paiement flaggé comme suspect"
 msgstr ""
 
-#: mentorat/models.py:572
+#: mentorat/models.py:573
 msgid "En escrow pour vérification admin"
 msgstr ""
 
-#: mentorat/models.py:576
+#: mentorat/models.py:577
 msgid "Raisons du flagging"
 msgstr ""
 
-#: mentorat/models.py:577
+#: mentorat/models.py:578
 msgid "Séparées par |"
 msgstr ""
 
-#: mentorat/models.py:581
+#: mentorat/models.py:582
 msgid "Date de déblocage (escrow)"
 msgstr ""
 
-#: mentorat/models.py:582
+#: mentorat/models.py:583
 msgid "Après cette date, si pas de contestation, débloquer"
 msgstr ""
 
-#: mentorat/models.py:586
+#: mentorat/models.py:587
 msgid "Date de soumission de preuve"
 msgstr ""
 
-#: mentorat/models.py:590
+#: mentorat/models.py:591
 msgid "Raison de l'échec/contestation"
 msgstr ""
 
-#: mentorat/models.py:594
+#: mentorat/models.py:595
 msgid "Signature HMAC du mentoré"
 msgstr ""
 
-#: mentorat/models.py:595
+#: mentorat/models.py:596
 msgid "Empêche modification du montant"
 msgstr ""
 
-#: mentorat/models.py:601
+#: mentorat/models.py:602
 msgid "IP du mentoré (audit)"
 msgstr ""
 
-#: mentorat/models.py:605
+#: mentorat/models.py:606
 msgid "User-Agent (audit)"
 msgstr ""
 
-#: mentorat/models.py:613
+#: mentorat/models.py:614
 msgid "Paiement de séance"
 msgstr ""
 
-#: mentorat/models.py:614
+#: mentorat/models.py:615
 msgid "Paiements de séances"
+msgstr ""
+
+#: mentorat/templates/mentorat/admin_application_detail.html:24
+#: mentorat/views.py:379
+msgid "Candidature mentor approuvée"
+msgstr ""
+
+#: mentorat/templates/mentorat/admin_application_detail.html:26
+#: mentorat/views.py:394
+msgid "Candidature mentor rejetée"
+msgstr ""
+
+#: mentorat/templates/mentorat/admin_application_detail.html:28
+msgid "En attente de décision"
+msgstr ""
+
+#: mentorat/templates/mentorat/admin_application_detail.html:31
+msgid "Approuvée le"
+msgstr ""
+
+#: mentorat/templates/mentorat/admin_application_detail.html:33
+msgid "Rejetée le"
 msgstr ""
 
 #: mentorat/templates/mentorat/demander_mentorat.html:3
@@ -3986,6 +3464,8 @@ msgid "Présentez-vous et expliquez pourquoi vous souhaitez ce mentor."
 msgstr ""
 
 #: mentorat/templates/mentorat/demander_mentorat.html:45
+#: templates/admin_panel/mentorat_detail.html:66
+#: templates/admin_panel/mentorat_list.html:29
 msgid "Mentor demandé"
 msgstr ""
 
@@ -4111,11 +3591,13 @@ msgid "Terminer la relation"
 msgstr ""
 
 #: mentorat/templates/mentorat/detail_relation.html:118
+#: templates/admin_panel/mentorat_detail.html:61
 msgid "Objectifs"
 msgstr ""
 
 #: mentorat/templates/mentorat/detail_relation.html:135
 #: mentorat/templates/mentorat/liste_mentors.html:55
+#: templates/admin_panel/mentorat_detail.html:71
 msgid "Expérience"
 msgstr ""
 
@@ -4164,8 +3646,11 @@ msgstr ""
 
 #: mentorat/templates/mentorat/devenir_mentee.html:18
 #: mentorat/templates/mentorat/devenir_mentor.html:18
-#: mentorat/templates/mentorat/index.html:4
+#: mentorat/templates/mentorat/index.html:4 notifications/models.py:14
+#: templates/admin_panel/mentorat_detail.html:6
+#: templates/admin_panel/mentorat_list.html:4
 #: templates/includes/nav_items.html:10 templates/includes/nav_items.html:23
+#: templates/notifications/list.html:36
 msgid "Mentorat"
 msgstr ""
 
@@ -4393,12 +3878,8 @@ msgid "Tous niveaux"
 msgstr ""
 
 #: mentorat/templates/mentorat/liste_mentors.html:69
+#: templates/admin_panel/exercise_results.html:36
 msgid "Filtrer"
-msgstr ""
-
-#: mentorat/templates/mentorat/liste_mentors.html:73
-#: templates/registration/password_reset_confirm.html:10
-msgid "Réinitialiser"
 msgstr ""
 
 #: mentorat/templates/mentorat/liste_mentors.html:129
@@ -4685,10 +4166,23 @@ msgid "Séances payées"
 msgstr ""
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:104
+#: templates/admin_panel/candidature_detail.html:46
+#: templates/admin_panel/candidature_detail.html:53
+#: templates/admin_panel/candidature_detail.html:172
+#: templates/admin_panel/candidatures_list.html:65
+#: templates/admin_panel/mentorat_detail.html:29
+#: templates/admin_panel/mentorat_detail.html:109
 msgid "Accepter"
 msgstr ""
 
 #: mentorat/templates/mentorat/tableau_de_bord_mentor.html:108
+#: templates/admin_panel/candidature_detail.html:48
+#: templates/admin_panel/candidature_detail.html:55
+#: templates/admin_panel/candidature_detail.html:189
+#: templates/admin_panel/candidatures_list.html:69
+#: templates/admin_panel/candidatures_list.html:120
+#: templates/admin_panel/mentorat_detail.html:30
+#: templates/admin_panel/mentorat_detail.html:125
 msgid "Refuser"
 msgstr ""
 
@@ -4754,7 +4248,7 @@ msgid "Initialisation..."
 msgstr ""
 
 #: mentorat/templates/mentorat/video_seance.html:41
-#: templates/video_room.html:80 templates/video_room.html:868
+#: templates/video_room.html:49 templates/video_room.html:742
 msgid "Vous"
 msgstr ""
 
@@ -4763,6 +4257,7 @@ msgid "Interlocuteur"
 msgstr ""
 
 #: mentorat/templates/mentorat/video_seance.html:55
+#: templates/admin_panel/exercise_form.html:72
 msgid "Instructions"
 msgstr ""
 
@@ -4778,16 +4273,12 @@ msgstr ""
 msgid "L'audio et la vidéo sont envoyés directement entre vos navigateurs."
 msgstr ""
 
-#: mentorat/templates/mentorat/video_seance.html:63
-#: paiements/templates/paiements/confirmation.html:52
-msgid "Date"
-msgstr ""
-
 #: mentorat/templates/mentorat/video_seance.html:64
 msgid "Heure"
 msgstr ""
 
 #: mentorat/templates/mentorat/video_seance.html:65
+#: templates/admin_panel/exercise_results.html:54
 msgid "Durée"
 msgstr ""
 
@@ -4838,128 +4329,303 @@ msgstr ""
 msgid "Réponse reçue. Connexion en cours..."
 msgstr ""
 
-#: mentorat/views.py:72 mentorat/views.py:132
+#: mentorat/views.py:78 mentorat/views.py:138
 msgid "Votre profil n'est pas configuré. Veuillez contacter l'administrateur."
 msgstr ""
 
-#: mentorat/views.py:83
+#: mentorat/views.py:89
 msgid "Votre profil mentor a été mis à jour."
 msgstr ""
 
-#: mentorat/views.py:113
+#: mentorat/views.py:119
 msgid ""
 "Votre candidature a bien été envoyée. Un administrateur la validera "
 "prochainement."
 msgstr ""
 
-#: mentorat/views.py:137
+#: mentorat/views.py:143
 msgid "Vous êtes déjà inscrit en tant que mentoré."
 msgstr ""
 
-#: mentorat/views.py:146
+#: mentorat/views.py:152
 msgid "Vous êtes maintenant inscrit en tant que mentoré."
 msgstr ""
 
-#: mentorat/views.py:227
+#: mentorat/views.py:233
 msgid "Vous devez d'abord vous inscrire en tant que mentoré."
 msgstr ""
 
-#: mentorat/views.py:238
+#: mentorat/views.py:244
 msgid "Vous avez déjà une demande en cours avec ce mentor."
 msgstr ""
 
-#: mentorat/views.py:246
+#: mentorat/views.py:252
 msgid "Vous êtes déjà en relation de mentorat avec ce mentor."
 msgstr ""
 
-#: mentorat/views.py:256
+#: mentorat/views.py:262
 msgid "Votre demande de mentorat a été envoyée !"
 msgstr ""
 
-#: mentorat/views.py:273
+#: mentorat/views.py:279
 msgid "Vous n'êtes pas inscrit en tant que mentor."
 msgstr ""
 
-#: mentorat/views.py:364
+#: mentorat/views.py:380
+msgid "Votre candidature pour devenir mentor a été approuvée."
+msgstr ""
+
+#: mentorat/views.py:385
 msgid "La candidature a été approuvée et le mentor a été activé."
 msgstr ""
 
-#: mentorat/views.py:367
+#: mentorat/views.py:395
+msgid "Votre candidature pour devenir mentor a été refusée."
+msgstr ""
+
+#: mentorat/views.py:400
 msgid "La candidature a été rejetée."
 msgstr ""
 
-#: mentorat/views.py:445
+#: mentorat/views.py:478
 msgid "Vous n'êtes pas inscrit en tant que mentoré."
 msgstr ""
 
-#: mentorat/views.py:483 mentorat/views.py:517 mentorat/views.py:562
-#: mentorat/views.py:588 mentorat/views.py:629 mentorat/views.py:654
+#: mentorat/views.py:516 mentorat/views.py:563 mentorat/views.py:608
+#: mentorat/views.py:634 mentorat/views.py:675 mentorat/views.py:700
 msgid "Accès non autorisé."
 msgstr ""
 
-#: mentorat/views.py:487
+#: mentorat/views.py:520
 msgid "Cette demande ne vous concerne pas."
 msgstr ""
 
-#: mentorat/views.py:496
+#: mentorat/views.py:542
 #, python-format
 msgid "Demande de %(mentee)s acceptée !"
 msgstr ""
 
-#: mentorat/views.py:499
+#: mentorat/views.py:545
 #, python-format
 msgid "Demande de %(mentee)s refusée."
 msgstr ""
 
-#: mentorat/views.py:535
+#: mentorat/views.py:581
 msgid "Séance planifiée. Veuillez procéder au paiement pour la confirmer."
 msgstr ""
 
-#: mentorat/views.py:537
+#: mentorat/views.py:583
 msgid "Séance planifiée avec succès !"
 msgstr ""
 
-#: mentorat/views.py:605
+#: mentorat/views.py:651
 msgid "Séance terminée avec succès !"
 msgstr ""
 
-#: mentorat/views.py:634
+#: mentorat/views.py:680
 msgid "Relation de mentorat terminée."
 msgstr ""
 
-#: mentorat/views.py:668
+#: mentorat/views.py:714
 msgid "Ce paiement est déjà confirmé."
 msgstr ""
 
-#: mentorat/views.py:713
+#: mentorat/views.py:759
 msgid ""
 "Preuve de paiement envoyée. Votre séance sera confirmée après vérification."
 msgstr ""
 
-#: numeria_project/settings.py:146
+#: notifications/models.py:8
+msgid "Information"
+msgstr ""
+
+#: notifications/models.py:9
+msgid "Succès"
+msgstr ""
+
+#: notifications/models.py:10
+msgid "Avertissement"
+msgstr ""
+
+#: notifications/models.py:11
+msgid "Alerte"
+msgstr ""
+
+#: notifications/models.py:13
+#: paiements/templates/paiements/page_paiement.html:3
+#: templates/notifications/list.html:32
+msgid "Paiement"
+msgstr ""
+
+#: notifications/models.py:16
+msgid "Annonce générale"
+msgstr ""
+
+#: notifications/models.py:26
+msgid "Destinataire"
+msgstr ""
+
+#: notifications/models.py:32 templates/admin_panel/mcq_list.html:32
+#: templates/notifications/send.html:42
+msgid "Type"
+msgstr ""
+
+#: notifications/models.py:34 templates/admin_panel/exercise_form.html:26
+#: templates/admin_panel/user_detail.html:141
+#: templates/admin_panel/users_list.html:70
+#: templates/notifications/send.html:28
+msgid "Titre"
+msgstr ""
+
+#: notifications/models.py:36
+msgid "Lien (CTA)"
+msgstr ""
+
+#: notifications/models.py:37 pages/models.py:102 pages/models.py:111
+#: templates/admin_panel/contact_detail.html:20
+#: templates/admin_panel/contacts_list.html:66
+#: templates/admin_panel/user_detail.html:83
+msgid "Lu"
+msgstr ""
+
+#: notifications/models.py:45
+msgid "Envoyé par"
+msgstr ""
+
+#: notifications/models.py:50 templates/admin_panel/user_detail.html:22
+msgid "Notification"
+msgstr ""
+
+#: notifications/models.py:51 templates/notifications/bell.html:8
+#: templates/notifications/bell.html:27
+msgid "Notifications"
+msgstr ""
+
+#: notifications/views.py:59
+msgid "Toutes les notifications ont été marquées comme lues."
+msgstr ""
+
+#: notifications/views.py:85
+msgid "Le titre et le message sont obligatoires."
+msgstr ""
+
+#: notifications/views.py:140
+#, python-format
+msgid "Utilisateur introuvable : %(u)s"
+msgstr ""
+
+#: notifications/views.py:148
+#, python-format
+msgid "Notification envoyée à %(count)s utilisateur(s)"
+msgstr ""
+
+#: notifications/views.py:153
+msgid "Tout le monde (broadcast)"
+msgstr ""
+
+#: notifications/views.py:154
+msgid "Tous les étudiants inscrits à au moins un cours"
+msgstr ""
+
+#: notifications/views.py:155
+msgid "Tous les mentorés actifs"
+msgstr ""
+
+#: notifications/views.py:156
+msgid "Tous les mentors actifs"
+msgstr ""
+
+#: notifications/views.py:157
+msgid "Tous les candidats (soumis/acceptés)"
+msgstr ""
+
+#: notifications/views.py:158
+msgid "Utilisateur spécifique (par username ou email)"
+msgstr ""
+
+#: numeria_project/settings.py:158
 msgid "Français"
 msgstr ""
 
-#: numeria_project/settings.py:147
+#: numeria_project/settings.py:159
 msgid "English"
 msgstr ""
 
-#: pages/templates/pages/a_propos.html:42 templates/base.html:406
+#: pages/forms.py:9
+msgid "— Choisir un sujet —"
+msgstr ""
+
+#: pages/forms.py:10
+msgid "Demande d'information"
+msgstr ""
+
+#: pages/forms.py:11
+msgid "Inscription aux filières"
+msgstr ""
+
+#: pages/forms.py:12
+msgid "Proposition de partenariat"
+msgstr ""
+
+#: pages/forms.py:13
+msgid "Contact presse / média"
+msgstr ""
+
+#: pages/forms.py:14
+msgid "Problème technique"
+msgstr ""
+
+#: pages/forms.py:22 pages/templates/pages/contact.html:74
+msgid "Votre nom et prénom"
+msgstr ""
+
+#: pages/forms.py:34
+msgid "Organisation / Université"
+msgstr ""
+
+#: pages/forms.py:38
+msgid "Optionnel — Ex: Université de Lomé"
+msgstr ""
+
+#: pages/forms.py:51
+msgid "Écrivez votre message ici..."
+msgstr ""
+
+#: pages/forms.py:57
+msgid "Je souhaite discuter d'un partenariat avec Numeria Institute"
+msgstr ""
+
+#: pages/models.py:101 templates/admin_panel/contact_detail.html:19
+#: templates/admin_panel/contacts_list.html:65
+#: templates/admin_panel/user_detail.html:83
+msgid "Non lu"
+msgstr ""
+
+#: pages/models.py:103 templates/admin_panel/contact_detail.html:21
+#: templates/admin_panel/contacts_list.html:67
+msgid "Répondu"
+msgstr ""
+
+#: pages/models.py:120 templates/admin_panel/contacts_list.html:5
+msgid "Messages de contact"
+msgstr ""
+
+#: pages/templates/pages/a_propos.html:42 templates/base.html:586
 msgid "Rayonnement CEDEAO"
 msgstr ""
 
 #: pages/templates/pages/a_propos.html:54
-#: pages/templates/pages/accueil.html:131
+#: pages/templates/pages/accueil.html:133
 msgid "Étudiants inscrits"
 msgstr ""
 
 #: pages/templates/pages/a_propos.html:58
-#: pages/templates/pages/accueil.html:135
+#: pages/templates/pages/accueil.html:139
 msgid "Cours disponibles"
 msgstr ""
 
 #: pages/templates/pages/a_propos.html:62
-#: pages/templates/pages/accueil.html:139
+#: pages/templates/pages/accueil.html:145
 msgid "Pays représentés"
 msgstr ""
 
@@ -5214,6 +4880,7 @@ msgid "Basé à Lomé, rayonnement dans toute l'Afrique de l'Ouest"
 msgstr ""
 
 #: pages/templates/pages/a_propos.html:339
+#: pages/templates/pages/contact.html:200
 msgid "Adresse"
 msgstr ""
 
@@ -5221,8 +4888,8 @@ msgstr ""
 msgid "Quartier étudiant, zone à accès facile"
 msgstr ""
 
-#: pages/templates/pages/a_propos.html:363 templates/base.html:417
-#: templates/base.html:424 templates/includes/nav_items.html:12
+#: pages/templates/pages/a_propos.html:363 templates/base.html:597
+#: templates/base.html:604 templates/includes/nav_items.html:12
 #: templates/includes/nav_items.html:25
 msgid "Contact"
 msgstr ""
@@ -5262,10 +4929,11 @@ msgid ""
 msgstr ""
 
 #: pages/templates/pages/a_propos.html:413
+#: pages/templates/pages/contact.html:286
 msgid "Devenir partenaire"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:54
+#: pages/templates/pages/accueil.html:54 templates/404.html:20
 msgid "Voir les cours"
 msgstr ""
 
@@ -5273,115 +4941,115 @@ msgstr ""
 msgid "étudiants"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:172
+#: pages/templates/pages/accueil.html:178
 msgid "Ce que disent nos étudiants"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:199
+#: pages/templates/pages/accueil.html:205
 msgid "Cours populaires"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:201
+#: pages/templates/pages/accueil.html:207
 msgid "Commence à apprendre aujourd'hui"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:204
+#: pages/templates/pages/accueil.html:210
 msgid ""
 "Mathématiques, sciences, IA — des contenus rigoureux accessibles à tous "
 "niveaux."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:239
+#: pages/templates/pages/accueil.html:245
 msgid "Voir le cours"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:245
+#: pages/templates/pages/accueil.html:251
 msgid "Aucun cours disponible pour le moment."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:269
+#: pages/templates/pages/accueil.html:275
 msgid "Pourquoi choisir Numeria ?"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:271
+#: pages/templates/pages/accueil.html:277
 msgid "Une plateforme conçue pour les apprenants africains"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:279
+#: pages/templates/pages/accueil.html:285
 msgid "Cours de qualité"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:280
+#: pages/templates/pages/accueil.html:286
 msgid ""
 "Contenus scientifiques rigoureux avec formules LaTeX et exercices corrigés."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:287
+#: pages/templates/pages/accueil.html:293
 msgid "Ancrage africain"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:288
+#: pages/templates/pages/accueil.html:294
 msgid ""
 "Des exemples et projets ancrés dans les réalités africaines et togolaises."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:295
+#: pages/templates/pages/accueil.html:301
 #, python-format
 msgid "100%% responsive"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:296
+#: pages/templates/pages/accueil.html:302
 msgid "Apprends depuis ton téléphone, ta tablette ou ton ordinateur."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:303
+#: pages/templates/pages/accueil.html:309
 msgid "Certificats officiels"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:304
+#: pages/templates/pages/accueil.html:310
 msgid ""
 "Reçois un certificat PDF vérifiable à la fin de chaque cours payant complété."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:311
+#: pages/templates/pages/accueil.html:317
 msgid "Exercices interactifs"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:312
+#: pages/templates/pages/accueil.html:318
 msgid "Des QCM avec corrigés détaillés visibles seulement après réussite."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:319
+#: pages/templates/pages/accueil.html:325
 msgid "Accessible à tous"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:320
+#: pages/templates/pages/accueil.html:326
 msgid "La majorité des cours sont gratuits. Paiement Mobile Money disponible."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:337
+#: pages/templates/pages/accueil.html:343
 msgid "Rejoins-nous"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:340
+#: pages/templates/pages/accueil.html:346
 msgid "Prêt à commencer ton voyage scientifique ?"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:343
+#: pages/templates/pages/accueil.html:349
 msgid ""
 "Rejoins des milliers d'apprenants qui transforment leur avenir grâce à la "
 "science."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:349
+#: pages/templates/pages/accueil.html:355
 msgid "Aller à mon tableau de bord"
 msgstr ""
 
-#: pages/templates/pages/accueil.html:351
+#: pages/templates/pages/accueil.html:357
 msgid "Passe en revue tes cours et continue ton apprentissage."
 msgstr ""
 
-#: pages/templates/pages/accueil.html:358
+#: pages/templates/pages/accueil.html:364
 msgid ""
 "Aucune carte bancaire requise · Cours gratuits disponibles immédiatement"
 msgstr ""
@@ -5838,47 +5506,152 @@ msgid ""
 "Pour toute question relative à vos données personnelles, contactez-nous à :"
 msgstr ""
 
-#: pages/templates/pages/contact.html:276
+#: pages/templates/pages/contact.html:35
+msgid "Envoyer un message"
+msgstr ""
+
+#: pages/templates/pages/contact.html:105
+msgid "Organisation"
+msgstr ""
+
+#: pages/templates/pages/contact.html:106
+msgid "optionnel"
+msgstr ""
+
+#: pages/templates/pages/contact.html:113
+msgid "Université, entreprise, ONG..."
+msgstr ""
+
+#: pages/templates/pages/contact.html:150
+msgid "Écrivez votre message ici... (minimum 20 caractères)"
+msgstr ""
+
+#: pages/templates/pages/contact.html:166
+msgid ""
+"Je souhaite discuter d'un <strong>partenariat</strong> avec Numeria "
+"Institute (université, entreprise, ONG, institution)"
+msgstr ""
+
+#: pages/templates/pages/contact.html:174
+msgid "Envoyer le message"
+msgstr ""
+
+#: pages/templates/pages/contact.html:178
+msgid "Nous répondons sous 24 à 48 heures ouvrables."
+msgstr ""
+
+#: pages/templates/pages/contact.html:191
+msgid "Nos coordonnées"
+msgstr ""
+
+#: pages/templates/pages/contact.html:236
+msgid "Horaires"
+msgstr ""
+
+#: pages/templates/pages/contact.html:238
+msgid "Heure de Lomé (GMT+0)"
+msgstr ""
+
+#: pages/templates/pages/contact.html:248
+msgid "Questions fréquentes"
+msgstr ""
+
+#: pages/templates/pages/contact.html:254
+msgid "Les cours en ligne sont-ils gratuits ?"
+msgstr ""
+
+#: pages/templates/pages/contact.html:257
+msgid ""
+"Oui, la majorité des cours en ligne sont gratuits. Certains cours avancés "
+"sont payants."
+msgstr ""
+
+#: pages/templates/pages/contact.html:263
+msgid "Comment candidater aux filières physiques ?"
+msgstr ""
+
+#: pages/templates/pages/contact.html:266
+msgid ""
+"Les candidatures se font en ligne. Créez un compte et suivez le processus de "
+"candidature."
+msgstr ""
+
+#: pages/templates/pages/contact.html:272
+msgid "Proposez-vous des bourses ?"
+msgstr ""
+
+#: pages/templates/pages/contact.html:275
 msgid ""
 "Oui, des bourses sont disponibles pour les candidats méritants. Contactez-"
 "nous pour en savoir plus."
 msgstr ""
 
-#: pages/views.py:48 templates/base.html:21 templates/base.html:24
+#: pages/templates/pages/contact.html:289
+msgid ""
+"Université, entreprise, ONG ou institution — construisons ensemble l'avenir "
+"scientifique de l'Afrique."
+msgstr ""
+
+#: pages/templates/pages/contact.html:292
+msgid ""
+"Cochez la case partenariat dans le formulaire pour qu'on vous recontacte en "
+"priorité."
+msgstr ""
+
+#: pages/templates/pages/contact.html:309
+msgid "Suivez-nous"
+msgstr ""
+
+#: pages/templates/pages/contact.html:312
+msgid "Restez informés des dernières actualités de Numeria Institute"
+msgstr ""
+
+#: pages/templates/pages/contact.html:321
+msgid "Cours & tutoriels"
+msgstr ""
+
+#: pages/templates/pages/contact.html:329
+msgid "Actualités pro"
+msgstr ""
+
+#: pages/templates/pages/contact.html:345
+msgid "Vie du campus"
+msgstr ""
+
+#: pages/views.py:46 templates/base.html:21 templates/base.html:24
 #: templates/base.html:33
 msgid ""
 "Éducation scientifique accessible en Afrique. Cours de mathématiques, "
 "sciences et IA pour apprenants africains et francophones."
 msgstr ""
 
-#: pages/views.py:69
+#: pages/views.py:67
 msgid ""
 "Accessible scientific education in Africa. Mathematics, science and AI "
 "courses for African and French-speaking learners."
 msgstr ""
 
-#: pages/views.py:134
+#: pages/views.py:132
 msgid ""
 "Découvrez Numeria Institute, notre mission et notre équipe pour l'éducation "
 "scientifique en Afrique."
 msgstr ""
 
-#: pages/views.py:149
+#: pages/views.py:147
 msgid ""
 "Discover Numeria Institute, our mission and team for scientific education in "
 "Africa."
 msgstr ""
 
-#: pages/views.py:247
-#, python-brace-format
-msgid ""
-"✅ Merci {nom} ! Ton message a bien été envoyé. Nous te répondrons dans "
-"24-48h."
+#: pages/views.py:203
+msgid "Nouveau message de contact"
 msgstr ""
 
-#: pages/views.py:252
+#: pages/views.py:213
 #, python-brace-format
-msgid "✅ Message reçu {nom} ! Nous te répondrons bientôt."
+msgid ""
+"✅ Merci {nom} ! Votre message a bien été reçu. Nous vous répondrons sous "
+"24-48h."
 msgstr ""
 
 #: paiements/templates/paiements/confirmation.html:16
@@ -5901,11 +5674,6 @@ msgstr ""
 msgid "Bonne apprentissage ! 🎓"
 msgstr ""
 
-#: paiements/templates/paiements/confirmation.html:42
-#: templates/includes/nav_items.html:5 templates/includes/nav_items.html:18
-msgid "Cours"
-msgstr ""
-
 #: paiements/templates/paiements/confirmation.html:63
 msgid "Commencer le cours →"
 msgstr ""
@@ -5914,8 +5682,9 @@ msgstr ""
 msgid "Voir la session →"
 msgstr ""
 
-#: paiements/templates/paiements/confirmation.html:73 templates/base.html:309
-#: templates/base.html:362
+#: paiements/templates/paiements/confirmation.html:73
+#: templates/admin_panel/dashboard.html:5 templates/base.html:482
+#: templates/base.html:542
 msgid "Tableau de bord"
 msgstr ""
 
@@ -5925,10 +5694,6 @@ msgstr ""
 
 #: paiements/templates/paiements/historique.html:82
 msgid "Inscris-toi à un contenu payant pour voir ton historique ici."
-msgstr ""
-
-#: paiements/templates/paiements/page_paiement.html:3
-msgid "Paiement"
 msgstr ""
 
 #: paiements/templates/paiements/page_paiement.html:15
@@ -6007,58 +5772,819 @@ msgstr ""
 msgid "Support par email"
 msgstr ""
 
+#: templates/403.html:3 templates/403.html:10
+msgid "Accès refusé"
+msgstr ""
+
+#: templates/403.html:13
+msgid "Vous n'avez pas la permission d'accéder à cette page."
+msgstr ""
+
+#: templates/404.html:3 templates/404.html:10
+msgid "Page introuvable"
+msgstr ""
+
+#: templates/404.html:13
+msgid "La page que vous cherchez n'existe pas ou a été déplacée."
+msgstr ""
+
+#: templates/admin_panel/activity_log.html:10
+msgid "Les 50 dernières actions effectuées par le staff."
+msgstr ""
+
+#: templates/admin_panel/activity_log.html:37
+msgid "Aucune activité enregistrée pour le moment."
+msgstr ""
+
+#: templates/admin_panel/base_staff.html:7
+msgid "Staff — Numeria"
+msgstr ""
+
+#: templates/admin_panel/base_staff.html:270 templates/base.html:544
+msgid "Se déconnecter"
+msgstr ""
+
+#: templates/admin_panel/base_staff.html:285
+msgid "Staff Dashboard"
+msgstr ""
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:7
+#: templates/admin_panel/blocks/_typed_ex_create.html:39
+msgid "Aucun exercice lié."
+msgstr ""
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:10
+msgid "Créer un exercice et le lier"
+msgstr ""
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:14
+msgid "Titre *"
+msgstr ""
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:17
+msgid "Instructions (Markdown)"
+msgstr ""
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:31
+msgid "Créer et lier"
+msgstr ""
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:33
+msgid "Configurez les détails ensuite via"
+msgstr ""
+
+#: templates/admin_panel/blocks/_typed_ex_create.html:34
+msgid "la liste des exercices"
+msgstr ""
+
+#: templates/admin_panel/blocks/block_preview.html:36
+msgid "Exercice interactif"
+msgstr ""
+
+#: templates/admin_panel/blocks/block_preview.html:38
+msgid "Bloc exercice non configuré."
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:6
+#: templates/admin_panel/candidatures_list.html:4
+#: templates/admin_panel/candidatures_list.html:5
+#: templates/admin_panel/user_detail.html:62 templates/base.html:595
+#: templates/includes/nav_items.html:8 templates/includes/nav_items.html:21
+msgid "Candidatures"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:20
+msgid "En cours de révision"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:29
+msgid "Approuvée par"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:31
+msgid "Rejetée par"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:33
+msgid "Mise en liste d'attente par"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:35
+#: templates/admin_panel/candidature_detail.html:101
+msgid "Traité par"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:82
+#: templates/admin_panel/candidatures_list.html:36
+msgid "Candidat"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:88
+msgid "Né(e) le"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:97
+#: templates/admin_panel/candidatures_list.html:37
+msgid "Filière"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:98
+msgid "Campagne"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:99
+#: templates/admin_panel/candidatures_list.html:38
+#: templates/admin_panel/mentorat_detail.html:80
+msgid "Soumis le"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:103
+msgid "Diplôme"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:111
+#: templates/admin_panel/candidature_detail.html:120
+msgid "Lettre de motivation"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:121
+msgid "Relevés de notes"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:122
+msgid "Autres"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:136
+#: templates/admin_panel/candidature_detail.html:184
+msgid "Raison de refus"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:150
+msgid "Marquer en revue"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:153
+#: templates/admin_panel/candidature_detail.html:169
+#: templates/admin_panel/candidature_detail.html:186
+#: templates/admin_panel/candidature_detail.html:201
+#: templates/admin_panel/candidatures_list.html:96
+#: templates/admin_panel/candidatures_list.html:116
+#: templates/admin_panel/mentorat_detail.html:106
+msgid "Notes admin (optionnel)"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:156
+#: templates/admin_panel/candidature_detail.html:204
+#: templates/admin_panel/candidatures_list.html:100
+#: templates/admin_panel/user_detail.html:130
+msgid "Confirmer"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:165
+msgid "Accepter la candidature"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:166
+msgid "Un email et une notification seront envoyés à"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:181
+#: templates/admin_panel/candidatures_list.html:109
+msgid "Refuser la candidature"
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:185
+msgid "Obligatoire — sera visible dans le mail envoyé au candidat."
+msgstr ""
+
+#: templates/admin_panel/candidature_detail.html:198
+msgid "Mettre en liste d'attente"
+msgstr ""
+
+#: templates/admin_panel/candidatures_list.html:13
+#: templates/admin_panel/mentorat_list.html:10
+msgid "Toutes"
+msgstr ""
+
+#: templates/admin_panel/candidatures_list.html:24
+msgid "Nom, email, filière, référence…"
+msgstr ""
+
+#: templates/admin_panel/candidatures_list.html:26
+#: templates/admin_panel/contacts_list.html:22
+#: templates/admin_panel/mentorat_list.html:19
+#: templates/admin_panel/users_list.html:19
+msgid "Chercher"
+msgstr ""
+
+#: templates/admin_panel/candidatures_list.html:35
+msgid "Réf."
+msgstr ""
+
+#: templates/admin_panel/candidatures_list.html:40
+#: templates/admin_panel/contacts_list.html:50
+#: templates/admin_panel/mcq_list.html:36
+#: templates/admin_panel/mentorat_list.html:33
+#: templates/admin_panel/users_list.html:33
+msgid "Actions"
+msgstr ""
+
+#: templates/admin_panel/candidatures_list.html:81
+msgid "Aucune candidature trouvée."
+msgstr ""
+
+#: templates/admin_panel/candidatures_list.html:91
+msgid "Confirmer l'acceptation"
+msgstr ""
+
+#: templates/admin_panel/candidatures_list.html:92
+msgid "Cette action enverra un email et une notification au candidat."
+msgstr ""
+
+#: templates/admin_panel/candidatures_list.html:110
+msgid "Indiquez la raison (obligatoire). Un email sera envoyé au candidat."
+msgstr ""
+
+#: templates/admin_panel/candidatures_list.html:114
+msgid "Raison de refus (obligatoire)…"
+msgstr ""
+
+#: templates/admin_panel/contact_detail.html:6
+#: templates/admin_panel/contacts_list.html:4
+msgid "Contacts"
+msgstr ""
+
+#: templates/admin_panel/contact_detail.html:31
+msgid "Réponses précédentes"
+msgstr ""
+
+#: templates/admin_panel/contact_detail.html:46
+msgid "Envoyer une réponse"
+msgstr ""
+
+#: templates/admin_panel/contact_detail.html:52
+msgid "À"
+msgstr ""
+
+#: templates/admin_panel/contact_detail.html:71
+msgid "Envoyer la réponse"
+msgstr ""
+
+#: templates/admin_panel/contacts_list.html:4
+#: templates/admin_panel/contacts_list.html:5
+msgid "non lus"
+msgstr ""
+
+#: templates/admin_panel/contacts_list.html:20
+msgid "Rechercher nom, email, sujet…"
+msgstr ""
+
+#: templates/admin_panel/contacts_list.html:33
+msgid "Tout sélectionner"
+msgstr ""
+
+#: templates/admin_panel/contacts_list.html:36
+msgid "Marquer lu"
+msgstr ""
+
+#: templates/admin_panel/contacts_list.html:83
+msgid "Aucun message trouvé."
+msgstr ""
+
+#: templates/admin_panel/cours_list.html:6
+msgid "Gestion des cours"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:4
+msgid "Dashboard"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:59
+msgid "Messages non lus"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:68
+msgid "Candidatures en attente"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:77
+msgid "Candidatures mentor"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:86
+msgid "Demandes mentorat"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:95
+msgid "Utilisateurs actifs"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:104
+msgid "Cours publiés"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:112
+msgid "Paiements ce mois"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:121
+msgid "Activité récente"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:122
+msgid "Tout voir"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:133
+#: templates/notifications/bell.html:56
+msgid "ago"
+msgstr ""
+
+#: templates/admin_panel/dashboard.html:139
+msgid "Aucune activité enregistrée."
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:4
+#: templates/admin_panel/exercise_form.html:5
+msgid "Nouvel exercice"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:4
+msgid "Modifier exercice"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:6
+#: templates/admin_panel/exercise_results.html:6
+msgid "Exercices"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:6
+msgid "Créer"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:22
+msgid "Informations de base"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:31
+msgid "Mode d'évaluation"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:40
+#: templates/admin_panel/mcq_list.html:34
+msgid "Difficulté"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:48
+#: templates/admin_panel/exercise_results.html:95
+msgid "Points"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:53
+msgid "Tentatives max"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:58
+msgid "Ordre"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:66
+msgid "Exercice actif"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:72
+msgid "Markdown supporté"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:78
+msgid "affiché après 3 tentatives échouées"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:86
+msgid "Code"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:89
+msgid "Code de départ"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:89
+msgid "affiché à l'étudiant"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:95
+#: templates/sandbox/sandbox_widget.html:148
+msgid "Solution"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:95
+msgid "jamais montrée à l'étudiant"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:102
+msgid "Output attendu"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:109
+msgid "Code de tests"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:109
+msgid "caché à l'étudiant"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:124
+msgid "Créer l'exercice"
+msgstr ""
+
+#: templates/admin_panel/exercise_form.html:124
+msgid "Enregistrer"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:4
+msgid "Résultats exercices"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:5
+msgid "Résultats des exercices de code"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:6
+msgid "Résultats"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:13
+msgid "Soumissions"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:17
+msgid "Classement"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:27
+msgid "Corrects"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:28
+msgid "Incorrects"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:31
+msgid "Tous les exercices"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:49
+#: templates/admin_panel/exercise_results.html:93
+msgid "Étudiant"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:50
+msgid "Exercice"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:79
+msgid "Aucune soumission trouvée."
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:87
+msgid "Top 20 étudiants"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:94
+msgid "Exercices réussis"
+msgstr ""
+
+#: templates/admin_panel/exercise_results.html:115
+msgid "Aucun exercice réussi pour le moment."
+msgstr ""
+
+#: templates/admin_panel/formation_list.html:6
+msgid "Gestion des formations"
+msgstr ""
+
+#: templates/admin_panel/includes/pagination.html:8
+#: templates/notifications/list.html:99
+msgid "Page"
+msgstr ""
+
+#: templates/admin_panel/mcq_list.html:4
+msgid "Exercices QCM"
+msgstr ""
+
+#: templates/admin_panel/mcq_list.html:5
+msgid "Questions à Choix Multiples"
+msgstr ""
+
+#: templates/admin_panel/mcq_list.html:16
+msgid "Rechercher…"
+msgstr ""
+
+#: templates/admin_panel/mcq_list.html:30
+msgid "Question"
+msgstr ""
+
+#: templates/admin_panel/mcq_list.html:31
+msgid "Leçon / Parent"
+msgstr ""
+
+#: templates/admin_panel/mcq_list.html:33
+msgid "Choix"
+msgstr ""
+
+#: templates/admin_panel/mcq_list.html:35
+msgid "Pts"
+msgstr ""
+
+#: templates/admin_panel/mcq_list.html:71
+msgid "Supprimer ce QCM ?"
+msgstr ""
+
+#: templates/admin_panel/mcq_list.html:73
+msgid "Suppr."
+msgstr ""
+
+#: templates/admin_panel/mcq_list.html:84
+msgid "Aucun QCM trouvé. Créez-en depuis l'éditeur de leçon."
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:4
+msgid "Demande mentorat"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:17
+msgid "Demande acceptée"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:19
+msgid "Demande refusée"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:31
+msgid "Réassigner mentor"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:57
+#: templates/admin_panel/mentorat_list.html:28
+msgid "Mentee"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:70
+msgid "Expertise"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:78
+msgid "Message du mentee"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:85
+msgid "Motif du refus"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:102
+msgid "Accepter la demande de mentorat"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:103
+msgid "Le mentee et le mentor recevront chacun un email et une notification."
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:118
+msgid "Refuser la demande"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:121
+msgid "Raison (obligatoire)"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:134
+msgid "Réassigner le mentor"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:137
+msgid "Nouveau mentor"
+msgstr ""
+
+#: templates/admin_panel/mentorat_detail.html:145
+msgid "Réassigner"
+msgstr ""
+
+#: templates/admin_panel/mentorat_list.html:17
+msgid "Mentee, email, message…"
+msgstr ""
+
+#: templates/admin_panel/mentorat_list.html:57
+msgid "Aucune demande trouvée."
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:6
+#: templates/admin_panel/users_list.html:4
+#: templates/admin_panel/users_list.html:5
+msgid "Utilisateurs"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:15
+#: templates/admin_panel/user_detail.html:117
+msgid "Désactiver"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:17
+#: templates/admin_panel/user_detail.html:103
+msgid "Activer"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:20
+msgid "Retirer staff"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:20
+msgid "Rendre staff"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:23
+msgid "Réinitialiser MDP"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:26
+#: templates/admin_panel/users_list.html:31
+msgid "Actif"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:26
+msgid "Inactif"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:38
+msgid "Username"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:40
+#: templates/admin_panel/users_list.html:30
+msgid "Inscription"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:41
+msgid "Dernière connexion"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:55
+msgid "Aucun cours."
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:78
+msgid "Notifications récentes"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:97
+msgid "Activer ce compte ?"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:111
+msgid "Désactiver ce compte ?"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:125
+msgid "Retirer le statut staff ?"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:125
+msgid "Rendre staff ?"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:138
+#: templates/admin_panel/users_list.html:67 templates/notifications/send.html:4
+#: templates/notifications/send.html:10
+msgid "Envoyer une notification"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:145
+#: templates/admin_panel/users_list.html:75 templates/video_room.html:75
+msgid "Envoyer"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:153
+#: templates/registration/password_reset_form.html:6
+msgid "Réinitialiser le mot de passe"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:154
+msgid "Un email sera envoyé à"
+msgstr ""
+
+#: templates/admin_panel/user_detail.html:159
+msgid "Envoyer l'email"
+msgstr ""
+
+#: templates/admin_panel/users_list.html:17
+msgid "Nom, email, username…"
+msgstr ""
+
+#: templates/admin_panel/users_list.html:58
+msgid "Aucun utilisateur trouvé."
+msgstr ""
+
 #: templates/base.html:49
 msgid ""
 "Éducation scientifique accessible en Afrique. Cours de mathématiques, "
 "sciences et IA."
 msgstr ""
 
-#: templates/base.html:364
-msgid "Se déconnecter"
+#: templates/base.html:466 templates/base.html:540 templates/base.html:649
+#: templates/base.html:650 templates/base.html:656 templates/base.html:661
+#: templates/sandbox/sandbox_page.html:4 templates/sandbox/sandbox_page.html:20
+msgid "Sandbox Python"
 msgstr ""
 
-#: templates/base.html:404
+#: templates/base.html:477
+msgid "Admin"
+msgstr ""
+
+#: templates/base.html:536
+msgid "Admin Panel"
+msgstr ""
+
+#: templates/base.html:584
 msgid ""
 "L'éducation scientifique accessible, engageante et gratuite pour tous les "
 "apprenants africains et francophones du monde entier."
 msgstr ""
 
-#: templates/base.html:411
+#: templates/base.html:591
 msgid "Navigation"
 msgstr ""
 
-#: templates/base.html:413
+#: templates/base.html:593
 msgid "Nos cours"
 msgstr ""
 
-#: templates/base.html:414
+#: templates/base.html:594
 msgid "Le blog"
 msgstr ""
 
-#: templates/base.html:415 templates/includes/nav_items.html:8
-#: templates/includes/nav_items.html:21
-msgid "Candidatures"
-msgstr ""
-
-#: templates/base.html:416 templates/includes/nav_items.html:11
+#: templates/base.html:596 templates/includes/nav_items.html:11
 #: templates/includes/nav_items.html:24
 msgid "À propos"
 msgstr ""
 
-#: templates/base.html:431
+#: templates/base.html:611
 msgid "Afrique de l'Ouest"
 msgstr ""
 
-#: templates/base.html:455
+#: templates/base.html:635
 msgid "Tous droits réservés"
 msgstr ""
 
-#: templates/base.html:457
+#: templates/base.html:637
 msgid "Confidentialité"
 msgstr ""
 
-#: templates/base.html:458
+#: templates/base.html:638
 msgid "CGU"
+msgstr ""
+
+#: templates/base.html:665
+msgid "Ouvrir en plein écran"
+msgstr ""
+
+#: templates/base.html:668
+msgid "Fermer"
+msgstr ""
+
+#: templates/base.html:675
+msgid "Cliquez sur ▶ Exécuter pour initialiser Python dans votre navigateur."
+msgstr ""
+
+#: templates/base.html:678
+msgid "Initialiser Python"
+msgstr ""
+
+#: templates/base.html:689 templates/sandbox/sandbox_page.html:36
+msgid "Mes scripts"
+msgstr ""
+
+#: templates/base.html:693 templates/sandbox/sandbox_page.html:39
+msgid "Nouveau"
+msgstr ""
+
+#: templates/base.html:718 templates/sandbox/sandbox_page.html:101
+#: templates/sandbox/sandbox_widget.html:99
+msgid "Sauvegarder"
+msgstr ""
+
+#: templates/base.html:741 templates/sandbox/sandbox_page.html:116
+msgid "Output apparaîtra ici…"
+msgstr ""
+
+#: templates/base.html:1015 templates/sandbox/sandbox_page.html:244
+#: templates/sandbox/sandbox_widget.html:474
+msgid "Nom du script"
+msgstr ""
+
+#: templates/base.html:1015 templates/sandbox/sandbox_page.html:93
+#: templates/sandbox/sandbox_page.html:229
+#: templates/sandbox/sandbox_page.html:243
+#: templates/sandbox/sandbox_widget.html:474
+msgid "Sans titre"
 msgstr ""
 
 #: templates/comptes/verification_expired.html:6
@@ -6127,12 +6653,64 @@ msgstr ""
 msgid "renvoie l'email de vérification"
 msgstr ""
 
-#: templates/includes/nav_items.html:6 templates/includes/nav_items.html:19
-msgid "Formations"
-msgstr ""
-
 #: templates/includes/nav_items.html:14 templates/includes/nav_items.html:27
 msgid "Analytics"
+msgstr ""
+
+#: templates/notifications/bell.html:29
+msgid "non lues"
+msgstr ""
+
+#: templates/notifications/bell.html:63 templates/notifications/list.html:113
+msgid "Aucune notification"
+msgstr ""
+
+#: templates/notifications/bell.html:71
+msgid "Voir toutes les notifications"
+msgstr ""
+
+#: templates/notifications/list.html:4 templates/notifications/list.html:10
+msgid "Mes notifications"
+msgstr ""
+
+#: templates/notifications/list.html:15
+msgid "Tout marquer comme lu"
+msgstr ""
+
+#: templates/notifications/list.html:44
+msgid "Annonces"
+msgstr ""
+
+#: templates/notifications/list.html:114
+msgid "Vous n'avez aucune notification pour le moment."
+msgstr ""
+
+#: templates/notifications/send.html:11
+msgid "Réservé aux membres du staff."
+msgstr ""
+
+#: templates/notifications/send.html:31
+msgid "Titre de la notification"
+msgstr ""
+
+#: templates/notifications/send.html:38
+msgid "Contenu de la notification..."
+msgstr ""
+
+#: templates/notifications/send.html:52
+msgid "Destinataires"
+msgstr ""
+
+#: templates/notifications/send.html:65
+msgid "Nom d'utilisateur ou email"
+msgstr ""
+
+#: templates/notifications/send.html:73
+msgid "Lien CTA (optionnel)"
+msgstr ""
+
+#: templates/notifications/send.html:81
+msgid "Envoyer la notification"
 msgstr ""
 
 #: templates/registration/password_reset_complete.html:6
@@ -6179,10 +6757,6 @@ msgstr ""
 msgid "À bientôt,\\nL'équipe Numeria Institute"
 msgstr ""
 
-#: templates/registration/password_reset_form.html:6
-msgid "Réinitialiser le mot de passe"
-msgstr ""
-
 #: templates/registration/password_reset_form.html:7
 msgid "Entrez votre adresse email pour recevoir un lien de réinitialisation."
 msgstr ""
@@ -6195,209 +6769,181 @@ msgstr ""
 msgid "Réinitialisation du mot de passe Numeria"
 msgstr ""
 
-#: templates/video_room.html:42
+#: templates/sandbox/full_sandbox.html:48
+msgid "Chargement Python…"
+msgstr ""
+
+#: templates/sandbox/full_sandbox.html:168
+#: templates/sandbox/full_sandbox.html:424
+msgid "Output apparaîtra ici après exécution…"
+msgstr ""
+
+#: templates/sandbox/full_sandbox.html:178
+msgid "Exécutez du code matplotlib pour voir votre graphique ici"
+msgstr ""
+
+#: templates/sandbox/full_sandbox.html:389
+msgid "(aucun output)"
+msgstr ""
+
+#: templates/sandbox/sandbox_page.html:54
+msgid "Aucun script sauvegardé."
+msgstr ""
+
+#: templates/sandbox/sandbox_page.html:114
+msgid "Effacer"
+msgstr ""
+
+#: templates/sandbox/sandbox_widget.html:267
+msgid "Temps d'exécution dépassé (10s)."
+msgstr ""
+
+#: templates/video_room.html:27
 msgid "Connexion…"
 msgstr ""
 
-#: templates/video_room.html:110 templates/video_room.html:259
-#: templates/video_room.html:263
+#: templates/video_room.html:61 templates/video_room.html:100
 msgid "Participants"
 msgstr ""
 
-#: templates/video_room.html:115 templates/video_room.html:267
-#: templates/video_room.html:274
+#: templates/video_room.html:62 templates/video_room.html:103
 msgid "Chat"
 msgstr ""
 
-#: templates/video_room.html:122
-msgid "participants"
+#: templates/video_room.html:65
+msgid "Dans la réunion"
 msgstr ""
 
-#: templates/video_room.html:138
-msgid "Aucun participant pour l'instant."
-msgstr ""
-
-#: templates/video_room.html:145
+#: templates/video_room.html:70
 msgid "Les messages apparaîtront ici."
 msgstr ""
 
-#: templates/video_room.html:149
+#: templates/video_room.html:73
 msgid "Envoyer un message…"
 msgstr ""
 
-#: templates/video_room.html:184 templates/video_room.html:193
-msgid "Micro"
+#: templates/video_room.html:86
+msgid "Micro (d)"
 msgstr ""
 
-#: templates/video_room.html:191
-msgid "Couper le micro"
+#: templates/video_room.html:90
+msgid "Caméra (e)"
 msgstr ""
 
-#: templates/video_room.html:200 templates/video_room.html:209
-msgid "Caméra"
-msgstr ""
-
-#: templates/video_room.html:207
-msgid "Couper la caméra"
-msgstr ""
-
-#: templates/video_room.html:216 templates/video_room.html:220
-msgid "Partager l'écran"
-msgstr ""
-
-#: templates/video_room.html:222
-msgid "Écran"
-msgstr ""
-
-#: templates/video_room.html:229 templates/video_room.html:233
-msgid "Lever la main"
-msgstr ""
-
-#: templates/video_room.html:235
-msgid "Main"
-msgstr ""
-
-#: templates/video_room.html:244 templates/video_room.html:250
-msgid "Quitter"
-msgstr ""
-
-#: templates/video_room.html:248
-msgid "Quitter l'appel"
-msgstr ""
-
-#: templates/video_room.html:560 templates/video_room.html:1044
-msgid "Non supporté par ce navigateur"
-msgstr ""
-
-#: templates/video_room.html:567 templates/video_room.html:742
-msgid "Partage en cours par"
-msgstr ""
-
-#: templates/video_room.html:568
-msgid "Partage en cours"
-msgstr ""
-
-#: templates/video_room.html:572 templates/video_room.html:573
-#: templates/video_room.html:769
-msgid "Arrêter le partage"
-msgstr ""
-
-#: templates/video_room.html:572 templates/video_room.html:573
-msgid "Partager l\\'écran"
-msgstr ""
-
-#: templates/video_room.html:636
-msgid "Partage d\\'écran"
-msgstr ""
-
-#: templates/video_room.html:698
-msgid "Micro activé"
-msgstr ""
-
-#: templates/video_room.html:698
-msgid "Micro coupé"
-msgstr ""
-
-#: templates/video_room.html:712
-msgid "Caméra activée"
-msgstr ""
-
-#: templates/video_room.html:712
-msgid "Caméra désactivée"
-msgstr ""
-
-#: templates/video_room.html:721 templates/video_room.html:732
-msgid "Main levée"
-msgstr ""
-
-#: templates/video_room.html:721
-msgid "Main baissée"
-msgstr ""
-
-#: templates/video_room.html:749
-msgid "Impossible d\\"
-msgstr ""
-
-#: templates/video_room.html:772 templates/video_room.html:807
-msgid "Partage d\\"
-msgstr ""
-
-#: templates/video_room.html:778
-msgid "Impossible de partager l\\"
-msgstr ""
-
-#: templates/video_room.html:803
+#: templates/video_room.html:94
 msgid "Partager l\\"
 msgstr ""
 
-#: templates/video_room.html:816 templates/video_room.html:819
+#: templates/video_room.html:97
+msgid "Lever la main (h)"
+msgstr ""
+
+#: templates/video_room.html:107
+msgid "Quitter (Échap)"
+msgstr ""
+
+#: templates/video_room.html:411
+msgid "Aucun participant pour l'instant."
+msgstr ""
+
+#: templates/video_room.html:420
+msgid "En ligne"
+msgstr ""
+
+#: templates/video_room.html:507
+msgid "En attente des autres participants…"
+msgstr ""
+
+#: templates/video_room.html:512
+msgid "Caméra/micro indisponible"
+msgstr ""
+
+#: templates/video_room.html:513
+msgid ""
+"Impossible d'accéder à la caméra ou au micro. Vérifiez les autorisations du "
+"navigateur."
+msgstr ""
+
+#: templates/video_room.html:551
+msgid "Micro activé"
+msgstr ""
+
+#: templates/video_room.html:551
+msgid "Micro coupé"
+msgstr ""
+
+#: templates/video_room.html:585
+msgid "Impossible de réactiver la caméra."
+msgstr ""
+
+#: templates/video_room.html:592
+msgid "Caméra activée"
+msgstr ""
+
+#: templates/video_room.html:592
+msgid "Caméra désactivée"
+msgstr ""
+
+#: templates/video_room.html:601 templates/video_room.html:611
+msgid "Main levée"
+msgstr ""
+
+#: templates/video_room.html:601
+msgid "Main baissée"
+msgstr ""
+
+#: templates/video_room.html:621
+msgid "Le partage d'écran n'est pas supporté par ce navigateur."
+msgstr ""
+
+#: templates/video_room.html:641
+msgid "Partage d'écran activé"
+msgstr ""
+
+#: templates/video_room.html:644
+msgid "Impossible de démarrer le partage d'écran."
+msgstr ""
+
+#: templates/video_room.html:668
+msgid "Partage d'écran arrêté"
+msgstr ""
+
+#: templates/video_room.html:676
 msgid "Partage d'écran"
 msgstr ""
 
-#: templates/video_room.html:865
-msgid "Non connecté"
+#: templates/video_room.html:739
+msgid "Non connecté au serveur."
 msgstr ""
 
-#: templates/video_room.html:947
+#: templates/video_room.html:780
 msgid "Connecté"
 msgstr ""
 
-#: templates/video_room.html:948
+#: templates/video_room.html:782
 msgid "Reconnexion…"
 msgstr ""
 
-#: templates/video_room.html:953
-msgid "Recherche du réseau…"
+#: templates/video_room.html:854
+msgid "Connexion établie, initialisation de la caméra…"
 msgstr ""
 
-#: templates/video_room.html:954
-msgid "Problème de réseau"
-msgstr ""
-
-#: templates/video_room.html:959
-msgid "Traversée du réseau réussie"
-msgstr ""
-
-#: templates/video_room.html:999
-msgid "En attente des participants…"
-msgstr ""
-
-#: templates/video_room.html:1002
-msgid "Accès caméra/micro refusé"
-msgstr ""
-
-#: templates/video_room.html:1005
-msgid "Accès caméra/micro refusé. Vérifiez les permissions."
-msgstr ""
-
-#: templates/video_room.html:1017
-msgid "Impossible de démarrer la session vidéo."
-msgstr ""
-
-#: templates/video_room.html:1029
-msgid "Impossible de répondre à l\\"
-msgstr ""
-
-#: templates/video_room.html:1051 templates/video_room.html:1079
-msgid "a rejoint la réunion"
-msgstr ""
-
-#: templates/video_room.html:1051 templates/video_room.html:1096
-msgid "a quitté la réunion"
-msgstr ""
-
-#: templates/video_room.html:1062
-msgid "Connexion établie"
-msgstr ""
-
-#: templates/video_room.html:1067
-msgid "Erreur WebSocket"
-msgstr ""
-
-#: templates/video_room.html:1068
+#: templates/video_room.html:859
 msgid "Déconnecté"
 msgstr ""
 
-#: templates/video_room.html:1129
+#: templates/video_room.html:860
+msgid "Erreur de connexion"
+msgstr ""
+
+#: templates/video_room.html:884
+msgid "a rejoint la réunion"
+msgstr ""
+
+#: templates/video_room.html:893
+msgid "a quitté la réunion"
+msgstr ""
+
+#: templates/video_room.html:929
 msgid "Connexion en cours…"
 msgstr ""

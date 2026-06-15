@@ -70,7 +70,7 @@ window['coSubmit_' + CID] = async function() {
     document.querySelectorAll('#co-' + CID + '-list .co-line').forEach(function(el){ el.draggable = false; el.style.cursor='default'; });
   } else {
     res.className = 'rounded-xl px-4 py-3 text-sm bg-red-50 text-red-800 border border-red-200';
-    res.innerHTML = '❌ {% trans "L\'ordre n\'est pas correct. Réessaie !" %}';
+    res.innerHTML = '❌ {% filter escapejs %}{% trans "L'ordre n'est pas correct. Réessaie !" %}{% endfilter %}';
   }
 };
 })();
