@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Formation, FormationModule, FormationLesson
+from .models import Formation, FormationModule, FormationLesson, InscriptionFormation
 
 
 @admin.register(Formation)
@@ -22,4 +22,11 @@ class FormationLessonAdmin(admin.ModelAdmin):
     list_display = ['formation', 'module', 'title', 'order', 'is_active', 'is_free_preview']
     list_filter = ['is_active', 'is_free_preview', 'formation']
     search_fields = ['title', 'formation__title']
+
+
+@admin.register(InscriptionFormation)
+class InscriptionFormationAdmin(admin.ModelAdmin):
+    list_display = ['formation', 'etudiant', 'statut', 'progression', 'date_inscription']
+    list_filter = ['statut', 'formation']
+    search_fields = ['formation__title', 'etudiant__username', 'etudiant__email']
 
