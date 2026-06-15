@@ -45,10 +45,6 @@
         <div id="vroomLocalAvatar" class="vroom-avatar">
           <span class="vroom-avatar-circle">{{ current_user_name|first|upper }}</span>
         </div>
-        <div id="vroomLocalSharing" class="vroom-avatar" style="display:none; flex-direction:column; gap:10px;">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg>
-          <span style="font-size:13px; color:rgba(255,255,255,.75); font-weight:500;">{% trans "Vous partagez votre écran" %}</span>
-        </div>
         <div class="vroom-tile-bar">
           <span class="vroom-tile-name">{% trans "Vous" %} — {{ current_user_name }}</span>
           <span class="vroom-tile-role">{{ role_label }}</span>
@@ -361,7 +357,6 @@ window.VRoom = (function(){
   const localTile    = $('tile-local');
   const localVideo   = $('vroomLocalVideo');
   const localAvatar  = $('vroomLocalAvatar');
-  const localSharing = $('vroomLocalSharing');
   const sidebar     = $('vroomSidebar');
   const peopleList  = $('vroomPeopleList');
   const chatBox     = $('vroomChatMessages');
@@ -635,13 +630,10 @@ window.VRoom = (function(){
         const sender = p.pc.getSenders().find(s => !s.track || s.track.kind === 'video');
         if(sender) await sender.replaceTrack(track);
       }
-      /* Don't show the live screen capture in our own tile: if the shared
-         screen/tab includes this page, the preview would contain itself,
-         producing an infinite "hall of mirrors" effect. Show a simple
-         placeholder instead — remote peers still get the real stream. */
-      localVideo.style.display = 'none';
+      localVideo.srcObject = screenStream;
+      localVideo.style.transform = 'none';
+      localVideo.style.objectFit = 'contain';
       showLocalAvatar(false);
-      localSharing.style.display = 'flex';
       screenSharing = true;
       $('vroomBtnScreen').classList.add('vroom-ctrl-on');
       setScreenBadge('tile-local', true, null);
@@ -663,11 +655,11 @@ window.VRoom = (function(){
       const sender = p.pc.getSenders().find(s => !s.track || s.track.kind === 'video');
       if(sender) sender.replaceTrack(camTrack || null).catch(() => {});
     }
-    localSharing.style.display = 'none';
-    localVideo.style.display = '';
     localVideo.style.transform = 'scaleX(-1)';
+    localVideo.style.objectFit = 'cover';
     if(localStream){
       localVideo.srcObject = localStream;
+      localVideo.play().catch(() => {});
       showLocalAvatar(!camOn);
     }
     $('vroomBtnScreen').classList.remove('vroom-ctrl-on');
