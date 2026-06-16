@@ -81,6 +81,7 @@ def meeting_room(request, room_code):
         defaults={
             'is_host': room.host_id == request.user.id,
             'display_name': request.user.get_full_name() or request.user.username,
+            'is_approved': room.host_id == request.user.id,
         }
     )
     if not created and participant.left_at is not None:
@@ -93,6 +94,27 @@ def meeting_room(request, room_code):
     return render(request, 'visioconference/meeting_room.html', {
         'room': room,
         'is_host': room.host == request.user,
+        'ws_url': ws_url,
+    })
+
+
+@login_required
+def waiting_room(request, room_code):
+    room = get_object_or_404(MeetingRoom, room_code=room_code, is_active=True)
+    if room.host == request.user:
+        return redirect('visioconference:meeting_room', room_code=room.room_code)
+
+    participant = MeetingParticipant.objects.filter(room=room, user=request.user, left_at__isnull=True).first()
+    if participant and participant.is_approved:
+        return redirect('visioconference:meeting_room', room_code=room.room_code)
+
+    scheme = 'wss' if request.is_secure() else 'ws'
+    ws_url = f"{scheme}://{request.get_host()}/ws/visio/{room.room_code}/"
+
+    return render(request, 'visioconference/waiting_room.html', {
+        'room': room,
+        'host_name': room.host.get_full_name() or room.host.username,
+        'display_name': request.user.get_full_name() or request.user.username,
         'ws_url': ws_url,
     })
 

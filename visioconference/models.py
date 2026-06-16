@@ -11,13 +11,14 @@ def generate_room_code():
 
 
 class MeetingRoom(models.Model):
-    host = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='meeting_rooms')
+    host = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='visio_rooms')
     title = models.CharField(max_length=120)
     room_code = models.CharField(max_length=9, unique=True, default=generate_room_code)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     max_participants = models.PositiveSmallIntegerField(default=10)
     password = models.CharField(max_length=128, blank=True, null=True)
+    waiting_room = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['-created_at']
@@ -33,15 +34,19 @@ class MeetingRoom(models.Model):
         return generate_room_code()
 
     def has_capacity(self):
-        return self.participants.filter(left_at__isnull=True).count() < self.max_participants
+        return self.participants.filter(left_at__isnull=True, is_approved=True).count() < self.max_participants
 
 
 class MeetingParticipant(models.Model):
     room = models.ForeignKey(MeetingRoom, on_delete=models.CASCADE, related_name='participants')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='meeting_participations')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='visio_participations')
     joined_at = models.DateTimeField(auto_now_add=True)
     left_at = models.DateTimeField(blank=True, null=True)
     is_host = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=False)
+    is_muted = models.BooleanField(default=False)
+    camera_on = models.BooleanField(default=True)
+    hand_raised = models.BooleanField(default=False)
     peer_id = models.CharField(max_length=64, blank=True)
     display_name = models.CharField(max_length=150, blank=True)
 
@@ -58,8 +63,8 @@ class MeetingParticipant(models.Model):
 
 
 class ChatMessage(models.Model):
-    room = models.ForeignKey(MeetingRoom, on_delete=models.CASCADE, related_name='chat_messages')
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='meeting_chat_messages')
+    room = models.ForeignKey(MeetingRoom, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='visio_chat_messages')
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 

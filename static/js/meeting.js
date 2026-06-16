@@ -23,12 +23,16 @@ class NumeriaConference {
     this.chatFeed = document.querySelector('#chatFeed');
     this.chatInput = document.querySelector('#chat-input');
     this.participantsList = document.querySelector('#participants-list');
+    this.waitingQueue = document.querySelector('#waiting-queue');
+    this.waitingCount = document.querySelector('#waiting-count');
     this.localVideoElement = document.querySelector('#local-video');
     this.localCameraOff = document.querySelector('#local-camera-off');
     this.copyRoomCodeButton = document.querySelector('#copyRoomCode');
     this.meetingTimer = document.querySelector('#meeting-timer');
     this.connectionTimer = null;
     this.startTime = null;
+    this.shouldReconnect = true;
+    this.screenShareTrack = null;
   }
 
   init() {
@@ -81,6 +85,9 @@ class NumeriaConference {
   }
 
   connectWebSocket() {
+    if (!this.shouldReconnect) {
+      return;
+    }
     this.showStatus('Connexion WebSocket en cours...', false);
     try {
       this.ws = new WebSocket(this.wsUrl);
@@ -116,6 +123,10 @@ class NumeriaConference {
   }
 
   onWsClose() {
+    if (!this.shouldReconnect) {
+      this.showStatus('Connexion fermée.', true);
+      return;
+    }
     this.showStatus('Connexion WebSocket perdue. Reconnexion...', true);
     setTimeout(() => this.connectWebSocket(), 3000);
   }
@@ -135,21 +146,52 @@ class NumeriaConference {
   async handleSignaling(data) {
     switch (data.type) {
       case 'participants_list':
-        this.buildParticipants(data.participants || []);
+        await this.processParticipants(data.participants || []);
         this.renderChatHistory(data.chat_history || []);
         break;
       case 'user_joined':
         if (data.peer_id === this.localPeerId) return;
-        this.addParticipantToSidebar(data.peer_id, data.username);
-        if (this.localPeerId < data.peer_id) {
-          await this.createPeerConnection(data.peer_id, true);
-        } else {
-          this.createPeerConnection(data.peer_id, false);
-        }
+        this.addParticipantToSidebar(data.peer_id, data.username, data.is_host);
+        await this.createPeerConnection(data.peer_id, false);
         break;
       case 'user_left':
         this.removeRemoteVideo(data.peer_id);
         this.removeParticipantFromSidebar(data.peer_id);
+        break;
+      case 'mute_all':
+        this.setLocalMute(true, true);
+        this.showToast('L’hôte a coupé le micro de tous.');
+        break;
+      case 'camera_off_all':
+        this.setLocalCamera(false, true);
+        this.showToast('L’hôte a coupé la caméra de tous.');
+        break;
+      case 'waiting_list':
+        if (IS_HOST) {
+          this.renderWaitingList(data.waiting || []);
+        }
+        break;
+      case 'admitted':
+        if (data.target === undefined || data.target === this.localPeerId) {
+          this.showToast('Vous avez été admis·e en réunion.', false);
+          setTimeout(() => {
+            window.location.reload();
+          }, 800);
+        }
+        break;
+      case 'rejected':
+        if (data.target === undefined || data.target === this.localPeerId) {
+          this.showError(data.message || 'Votre participation a été refusée.');
+          setTimeout(() => {
+            window.location.href = '/visio/';
+          }, 2000);
+        }
+        break;
+      case 'removed':
+        if (data.target === undefined || data.target === this.localPeerId) {
+          this.showToast(data.message || 'Vous avez été retiré·e par l’hôte.', true);
+          setTimeout(() => this.leaveMeeting(), 1200);
+        }
         break;
       case 'offer':
         if (data.target !== this.localPeerId) return;
@@ -179,21 +221,28 @@ class NumeriaConference {
         this.showToast('La réunion a été terminée par l’hôte.', true);
         setTimeout(() => this.leaveMeeting(), 2500);
         break;
+      case 'error':
+        this.showError(data.message || 'Erreur de réunion.');
+        break;
       default:
         console.debug('Signal inconnu reçu:', data);
         break;
     }
   }
 
-  buildParticipants(participants) {
+  async processParticipants(participants) {
+    if (!this.participantsList) return;
     this.participantsList.innerHTML = '';
-    let count = 1;
+    const remoteParticipants = [];
+
     participants.forEach(item => {
       if (item.peer_id === this.localPeerId) return;
       this.addParticipantToSidebar(item.peer_id, item.username, item.is_host);
-      count += 1;
+      remoteParticipants.push(item);
     });
-    this.updateVideoCount(count);
+    this.updateVideoCount(remoteParticipants.length + 1);
+
+    await Promise.all(remoteParticipants.map(item => this.createPeerConnection(item.peer_id, true)));
   }
 
   renderChatHistory(messages) {
@@ -208,17 +257,60 @@ class NumeriaConference {
     const item = document.createElement('div');
     item.dataset.peerId = peerId;
     item.className = 'rounded-3xl border border-slate-700 bg-[#020617] p-4';
-    item.innerHTML = `<div class="flex items-center justify-between gap-3"><div><p class="font-semibold text-white">${this.escapeHtml(username)}</p><p class="text-xs text-slate-400">${isHost ? 'Hôte' : 'Participant'}</p></div><span id="participant-status-${peerId}" class="text-xs text-teal-300">En ligne</span></div>`;
+    item.innerHTML = `<div class="flex items-center justify-between gap-3"><div><p class="font-semibold text-white">${this.escapeHtml(username)}</p><p class="text-xs text-slate-400">${isHost ? 'Hôte' : 'Participant'}</p></div><div class="flex items-center gap-2"><span id="participant-status-${peerId}" class="text-xs text-teal-300">En ligne</span>${IS_HOST && !isHost ? `<button type="button" data-remove-participant="${this.escapeHtml(peerId)}" class="rounded-full bg-red-700 px-3 py-1 text-xs font-semibold text-white">Retirer</button>` : ''}</div></div>`;
     this.participantsList.appendChild(item);
-    this.updateVideoCount(this.participantsList.childElementCount + 1);
+    this.updateVideoCount();
+  }
+
+  renderWaitingList(waiting) {
+    if (!this.waitingQueue) return;
+    this.waitingQueue.innerHTML = '';
+    waiting.forEach(item => {
+      const row = document.createElement('div');
+      row.dataset.peerId = item.peer_id;
+      row.className = 'rounded-3xl border border-slate-700 bg-[#020617] p-4 flex items-center justify-between gap-3';
+      row.innerHTML = `
+        <div>
+          <p class="font-semibold text-white">${this.escapeHtml(item.username)}</p>
+          <p class="text-xs text-slate-400">En attente d’admission</p>
+        </div>
+        <div class="flex gap-2">
+          <button data-admit-participant="${this.escapeHtml(item.peer_id)}" class="rounded-3xl bg-teal-500 px-3 py-2 text-xs font-semibold text-slate-950">Admettre</button>
+          <button data-reject-participant="${this.escapeHtml(item.peer_id)}" class="rounded-3xl bg-red-600 px-3 py-2 text-xs font-semibold text-white">Rejeter</button>
+        </div>
+      `;
+      this.waitingQueue.appendChild(row);
+    });
+    this.updateWaitingCount(waiting.length);
+  }
+
+  updateWaitingCount(count) {
+    if (!this.waitingCount) return;
+    this.waitingCount.textContent = count.toString();
   }
 
   removeParticipantFromSidebar(peerId) {
     const participant = this.participantsList.querySelector(`[data-peer-id="${peerId}"]`);
     if (participant) {
       participant.remove();
-      this.updateVideoCount(this.participantsList.childElementCount + 1);
+      this.updateVideoCount();
     }
+    if (this.peerConnections[peerId]) {
+      this.peerConnections[peerId].close();
+      delete this.peerConnections[peerId];
+    }
+  }
+
+  admitParticipant(peerId) {
+    this.sendMessage({ type: 'admit_participant', target: peerId });
+  }
+
+  rejectParticipant(peerId) {
+    this.sendMessage({ type: 'reject_participant', target: peerId });
+  }
+
+  removeParticipant(peerId) {
+    this.sendMessage({ type: 'remove_participant', target: peerId });
   }
 
   async createPeerConnection(peerId, initiator) {
@@ -344,7 +436,7 @@ class NumeriaConference {
         <div id="remote-muted-${peerId}" class="absolute right-4 top-4 hidden rounded-full bg-black/70 px-3 py-1 text-xs text-white">🔇</div>
       `;
       document.querySelector('#video-grid')?.appendChild(tile);
-      this.updateVideoCount((document.querySelectorAll('#video-grid > div').length || 0) + 1);
+      this.updateVideoCount();
     }
     const video = tile.querySelector('video');
     if (video) {
@@ -358,7 +450,7 @@ class NumeriaConference {
     if (tile) {
       tile.remove();
       delete this.peerConnections[peerId];
-      this.updateVideoCount(Math.max(1, document.querySelectorAll('#video-grid > div').length + 1));
+      this.updateVideoCount();
     }
     if (this.peerConnections[peerId]) {
       this.peerConnections[peerId].close();
@@ -368,32 +460,49 @@ class NumeriaConference {
 
   toggleMute() {
     if (!this.localStream) return;
-    this.isMuted = !this.isMuted;
+    this.setLocalMute(!this.isMuted, true);
+  }
+
+  toggleCamera() {
+    if (!this.localStream) return;
+    this.setLocalCamera(this.isCameraOff, true);
+  }
+
+  updateLocalCameraState() {
+    if (!this.localCameraOff) return;
+    this.localCameraOff.classList.toggle('hidden', !this.isCameraOff);
+  }
+
+  setLocalMute(muted, notify = false) {
+    if (!this.localStream) return;
+    this.isMuted = muted;
     this.localStream.getAudioTracks().forEach(track => track.enabled = !this.isMuted);
     const button = document.querySelector('#btn-mute');
     if (button) {
       button.classList.toggle('bg-red-600', this.isMuted);
       button.textContent = this.isMuted ? '🔇 Micro coupé' : '🎤 Micro actif';
     }
-    this.sendMessage({ type: 'mute_status', peer_id: this.localPeerId, value: this.isMuted });
+    if (notify) {
+      this.sendMessage({ type: 'mute_status', peer_id: this.localPeerId, value: this.isMuted });
+    }
   }
 
-  toggleCamera() {
+  setLocalCamera(enabled, notify = false) {
     if (!this.localStream) return;
-    this.isCameraOff = !this.isCameraOff;
-    this.localStream.getVideoTracks().forEach(track => track.enabled = !this.isCameraOff);
+    this.isCameraOff = !enabled;
+    this.localStream.getVideoTracks().forEach(track => track.enabled = enabled);
+    this.updateLocalCameraState();
     const button = document.querySelector('#btn-camera');
     if (button) {
       button.classList.toggle('bg-red-600', this.isCameraOff);
       button.textContent = this.isCameraOff ? '🚫 Vidéo coupée' : '📷 Vidéo active';
     }
-    this.updateLocalCameraState();
-    this.sendMessage({ type: 'camera_status', peer_id: this.localPeerId, value: !this.isCameraOff });
-  }
-
-  updateLocalCameraState() {
-    if (!this.localCameraOff) return;
-    this.localCameraOff.classList.toggle('hidden', !this.isCameraOff);
+    if (!enabled && this.isScreenSharing) {
+      this.stopScreenShare();
+    }
+    if (notify) {
+      this.sendMessage({ type: 'camera_status', peer_id: this.localPeerId, value: enabled });
+    }
   }
 
   async startScreenShare() {
@@ -408,13 +517,14 @@ class NumeriaConference {
     try {
       const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
       const screenTrack = screenStream.getVideoTracks()[0];
-      const localVideoTrack = this.localStream?.getVideoTracks()[0];
+      const cameraTrack = this.localStream?.getVideoTracks()[0];
 
       if (!screenTrack) {
         throw new Error('Aucune piste d’écran disponible.');
       }
 
       this.isScreenSharing = true;
+      this.screenShareTrack = screenTrack;
       document.querySelector('#btn-screen')?.classList.add('bg-teal-500');
       document.querySelector('#btn-screen').textContent = '🛑 Arrêter le partage';
       this.localVideoElement.srcObject = screenStream;
@@ -437,16 +547,21 @@ class NumeriaConference {
   stopScreenShare() {
     if (!this.isScreenSharing) return;
     const cameraTrack = this.localStream?.getVideoTracks()[0];
-    if (!cameraTrack) {
-      return;
+
+    if (this.screenShareTrack) {
+      this.screenShareTrack.stop();
+      this.screenShareTrack = null;
     }
 
-    Object.values(this.peerConnections).forEach(pc => {
-      const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
-      if (sender) {
-        sender.replaceTrack(cameraTrack);
-      }
-    });
+    if (cameraTrack) {
+      Object.values(this.peerConnections).forEach(pc => {
+        const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+        if (sender) {
+          sender.replaceTrack(cameraTrack);
+        }
+      });
+    }
+
     this.localVideoElement.srcObject = this.localStream;
     this.localVideoElement.play().catch(() => {});
     this.isScreenSharing = false;
@@ -539,10 +654,14 @@ class NumeriaConference {
 
   updateVideoCount(count) {
     if (!this.videoCountElement) return;
+    if (typeof count === 'undefined' || count === null) {
+      count = 1 + (document.querySelectorAll('#video-grid > div').length || 0);
+    }
     this.videoCountElement.textContent = count.toString();
   }
 
   async leaveMeeting() {
+    this.shouldReconnect = false;
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.sendMessage({ type: 'leave', peer_id: this.localPeerId });
       this.ws.close();
@@ -554,6 +673,22 @@ class NumeriaConference {
       pc.close();
     });
     window.location.href = '/visio/';
+  }
+
+  async muteAll() {
+    if (!IS_HOST) {
+      this.showToast('Seul l’hôte peut couper tous les micros.', true);
+      return;
+    }
+    this.sendMessage({ type: 'mute_all' });
+  }
+
+  async cameraOffAll() {
+    if (!IS_HOST) {
+      this.showToast('Seul l’hôte peut couper toutes les caméras.', true);
+      return;
+    }
+    this.sendMessage({ type: 'camera_off_all' });
   }
 
   async endMeeting() {
@@ -571,6 +706,7 @@ class NumeriaConference {
         body: '',
       });
       if (response.ok) {
+        this.shouldReconnect = false;
         this.showToast('Réunion terminée pour tous.', false);
         this.leaveMeeting();
       } else {
@@ -585,6 +721,8 @@ class NumeriaConference {
   bindGlobalButtons() {
     document.querySelector('#btn-mute')?.addEventListener('click', () => this.toggleMute());
     document.querySelector('#btn-camera')?.addEventListener('click', () => this.toggleCamera());
+    document.querySelector('#btn-mute-all')?.addEventListener('click', () => this.muteAll());
+    document.querySelector('#btn-camera-all')?.addEventListener('click', () => this.cameraOffAll());
     document.querySelector('#btn-screen')?.addEventListener('click', () => this.startScreenShare());
     document.querySelector('#btn-chat')?.addEventListener('click', () => this.toggleChat());
     document.querySelector('#btn-participants')?.addEventListener('click', () => this.toggleParticipants());
@@ -605,6 +743,21 @@ class NumeriaConference {
       }).catch(() => {
         this.showToast('Impossible de copier le code', true);
       });
+    });
+
+    document.body.addEventListener('click', event => {
+      const admitButton = event.target.closest('[data-admit-participant]');
+      const rejectButton = event.target.closest('[data-reject-participant]');
+      const removeButton = event.target.closest('[data-remove-participant]');
+      if (admitButton) {
+        this.admitParticipant(admitButton.dataset.admitParticipant);
+      }
+      if (rejectButton) {
+        this.rejectParticipant(rejectButton.dataset.rejectParticipant);
+      }
+      if (removeButton) {
+        this.removeParticipant(removeButton.dataset.removeParticipant);
+      }
     });
   }
 

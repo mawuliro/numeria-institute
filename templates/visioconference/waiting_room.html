@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Salle d’attente - {{ room.title }}{% endblock %}
+
+{% block contenu %}
+<main class="min-h-screen bg-[#020617] text-white py-12">
+  <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <div class="mb-8 rounded-[2rem] border border-slate-800 bg-[#08111F] p-8 shadow-2xl shadow-black/40">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p class="text-sm uppercase tracking-[0.35em] text-slate-500">Salle d’attente</p>
+          <h1 class="mt-3 text-3xl font-semibold text-white">Votre entrée est en cours de validation</h1>
+          <p class="mt-2 max-w-2xl text-slate-300">L’hôte va vérifier votre demande et vous admettre dès que possible.</p>
+        </div>
+        <div class="rounded-3xl bg-[#0B1323] px-5 py-4 text-sm text-slate-300">
+          <p><span class="font-semibold text-white">Salle :</span> {{ room.title }}</p>
+          <p class="mt-1"><span class="font-semibold text-white">Hôte :</span> {{ host_name }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-[2rem] border border-slate-800 bg-[#08111F] p-8 shadow-2xl shadow-black/40">
+      <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+        <div class="space-y-6">
+          <div class="rounded-[2rem] border border-slate-700 bg-[#0B1323] p-6">
+            <p class="text-sm uppercase tracking-[0.35em] text-slate-400">Statut</p>
+            <p id="waiting-status" class="mt-4 text-lg font-semibold text-teal-300">Connexion à la salle d’attente...</p>
+            <p id="waiting-details" class="mt-3 text-sm text-slate-300">Restez sur cette page tant que l’hôte n’a pas donné accès.</p>
+          </div>
+          <div class="rounded-[2rem] border border-slate-700 bg-[#0B1323] p-6">
+            <h2 class="text-sm font-semibold text-white">Utilisateur</h2>
+            <p class="mt-3 text-sm text-slate-300">{{ display_name }}</p>
+          </div>
+        </div>
+
+        <div class="rounded-[2rem] border border-slate-700 bg-[#0B1323] p-6">
+          <h2 class="text-sm font-semibold text-white">Actions</h2>
+          <div class="mt-5 space-y-3">
+            <button id="btn-leave-waiting" type="button" class="w-full rounded-3xl bg-red-600 px-5 py-4 text-sm font-semibold text-white transition hover:bg-red-500">Quitter la salle d’attente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const ROOM_CODE = "{{ room.room_code }}";
+  const CURRENT_USER = "{{ display_name|escapejs }}";
+  const WS_URL = "{{ ws_url }}";
+</script>
+<script src="{% static 'js/waiting_room.js' %}"></script>
+{% endblock %}

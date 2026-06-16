@@ -59,7 +59,7 @@
       </section>
 
       <aside class="hidden w-full max-w-sm shrink-0 space-y-4 xl:block">
-        <div id="chat-sidebar" class="rounded-[2rem] border border-white/10 bg-[#08101F] p-5 shadow-2xl shadow-black/30 hidden">
+        <div id="chat-sidebar" class="rounded-[2rem] border border-white/10 bg-[#08101F] p-5 shadow-2xl shadow-black/30">
           <div class="mb-4 flex items-center justify-between">
             <h2 class="text-lg font-semibold text-white">Discussion</h2>
             <span id="chatBadge" class="hidden rounded-full bg-teal-500 px-3 py-1 text-xs font-semibold text-slate-950">0</span>
@@ -71,12 +71,24 @@
           </div>
         </div>
 
-        <div id="participants-sidebar" class="rounded-[2rem] border border-white/10 bg-[#08101F] p-5 shadow-2xl shadow-black/30 hidden">
+        <div id="participants-sidebar" class="rounded-[2rem] border border-white/10 bg-[#08101F] p-5 shadow-2xl shadow-black/30">
           <div class="mb-4 flex items-center justify-between">
             <h2 class="text-lg font-semibold text-white">Participants</h2>
             <span id="participants-count" class="text-sm text-slate-400">1</span>
           </div>
           <div id="participants-list" class="space-y-3 text-sm text-slate-300"></div>
+        {% if is_host %}
+          <div class="mt-6 rounded-[2rem] border border-slate-700 bg-[#0B1323] p-4 shadow-inner shadow-black/20">
+            <div class="mb-4 flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-semibold text-white">Salle d’attente</h3>
+                <p class="text-xs text-slate-400">Admettez ou rejetez les demandes en attente.</p>
+              </div>
+              <span id="waiting-count" class="rounded-full bg-teal-500 px-3 py-1 text-xs font-semibold text-slate-950">0</span>
+            </div>
+            <div id="waiting-queue" class="space-y-3 text-sm text-slate-300"></div>
+          </div>
+        {% endif %}
         </div>
       </aside>
     </div>
@@ -95,6 +107,8 @@
       </div>
       <div class="flex flex-wrap items-center gap-3">
         {% if is_host %}
+          <button id="btn-mute-all" type="button" class="rounded-3xl bg-[#0F766E] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#115E59]">🔇 Tout couper</button>
+          <button id="btn-camera-all" type="button" class="rounded-3xl bg-[#0F766E] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#115E59]">📷 Caméras off</button>
           <button id="btn-end" type="button" class="rounded-3xl bg-[#EF4444] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#F87171]">⛔ Terminer</button>
         {% endif %}
         <button id="btn-leave" type="button" class="rounded-3xl bg-[#DC2626] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#EF4444]">🔴 Quitter</button>
