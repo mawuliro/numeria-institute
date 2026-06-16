@@ -527,8 +527,10 @@ class NumeriaConference {
       this.screenShareTrack = screenTrack;
       document.querySelector('#btn-screen')?.classList.add('bg-teal-500');
       document.querySelector('#btn-screen').textContent = '🛑 Arrêter le partage';
-      this.localVideoElement.srcObject = screenStream;
-      this.localVideoElement.play().catch(() => {});
+      if (this.localStream) {
+        this.localVideoElement.srcObject = this.localStream;
+        this.localVideoElement.play().catch(() => {});
+      }
 
       Object.values(this.peerConnections).forEach(pc => {
         const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
