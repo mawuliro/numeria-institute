@@ -630,7 +630,11 @@ window.VRoom = (function(){
         const sender = p.pc.getSenders().find(s => !s.track || s.track.kind === 'video');
         if(sender) await sender.replaceTrack(track);
       }
-      localVideo.srcObject = screenStream;
+      // Keep the local preview on camera or avatar to avoid recursive tab capture when sharing this page.
+      if(localStream){
+        localVideo.srcObject = localStream;
+        localVideo.play().catch(() => {});
+      }
       localVideo.style.transform = 'none';
       localVideo.style.objectFit = 'contain';
       showLocalAvatar(false);
