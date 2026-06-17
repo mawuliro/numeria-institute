@@ -527,6 +527,7 @@ class NumeriaConference {
       this.screenShareTrack = screenTrack;
       document.querySelector('#btn-screen')?.classList.add('bg-teal-500');
       document.querySelector('#btn-screen').textContent = '🛑 Arrêter le partage';
+      this.hideScreenSharePreview();
       if (this.localStream) {
         this.localVideoElement.srcObject = this.localStream;
         this.localVideoElement.play().catch(() => {});
@@ -567,11 +568,22 @@ class NumeriaConference {
     this.localVideoElement.srcObject = this.localStream;
     this.localVideoElement.play().catch(() => {});
     this.isScreenSharing = false;
+    this.showScreenSharePreview();
     const button = document.querySelector('#btn-screen');
     if (button) {
       button.classList.remove('bg-teal-500');
       button.textContent = '🖥️ Partager l’écran';
     }
+  }
+
+  hideScreenSharePreview() {
+    document.querySelector('#video-grid')?.classList.add('hidden');
+    document.querySelector('#local-video-container')?.classList.add('hidden');
+  }
+
+  showScreenSharePreview() {
+    document.querySelector('#video-grid')?.classList.remove('hidden');
+    document.querySelector('#local-video-container')?.classList.remove('hidden');
   }
 
   toggleChat() {
