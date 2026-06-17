@@ -1,6 +1,7 @@
 class NumeriaConference {
   constructor() {
     this.localStream = null;
+    this.screenStream = null;
     this.peerConnections = {};
     this.ws = null;
     this.isMuted = false;
@@ -354,7 +355,15 @@ class NumeriaConference {
     };
 
     if (this.localStream) {
-      this.localStream.getTracks().forEach(track => pc.addTrack(track, this.localStream));
+      if (this.isScreenSharing && this.screenStream) {
+        const sharedVideoTrack = this.screenStream.getVideoTracks()[0];
+        if (sharedVideoTrack) {
+          pc.addTrack(sharedVideoTrack, this.screenStream);
+        }
+        this.localStream.getAudioTracks().forEach(track => pc.addTrack(track, this.localStream));
+      } else {
+        this.localStream.getTracks().forEach(track => pc.addTrack(track, this.localStream));
+      }
     }
 
     if (initiator) {
@@ -524,6 +533,7 @@ class NumeriaConference {
       }
 
       this.isScreenSharing = true;
+      this.screenStream = screenStream;
       this.screenShareTrack = screenTrack;
       document.querySelector('#btn-screen')?.classList.add('bg-teal-500');
       document.querySelector('#btn-screen').textContent = '🛑 Arrêter le partage';
@@ -556,6 +566,11 @@ class NumeriaConference {
       this.screenShareTrack = null;
     }
 
+    if (this.screenStream) {
+      this.screenStream.getTracks().forEach(track => track.stop());
+      this.screenStream = null;
+    }
+
     if (cameraTrack) {
       Object.values(this.peerConnections).forEach(pc => {
         const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
@@ -579,11 +594,15 @@ class NumeriaConference {
   hideScreenSharePreview() {
     document.querySelector('#video-grid')?.classList.add('hidden');
     document.querySelector('#local-video-container')?.classList.add('hidden');
+    document.querySelector('header')?.classList.add('hidden');
+    document.querySelector('main')?.classList.add('hidden');
   }
 
   showScreenSharePreview() {
     document.querySelector('#video-grid')?.classList.remove('hidden');
     document.querySelector('#local-video-container')?.classList.remove('hidden');
+    document.querySelector('header')?.classList.remove('hidden');
+    document.querySelector('main')?.classList.remove('hidden');
   }
 
   toggleChat() {
