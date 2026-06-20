@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block titre %}{% trans "Catalogue des cours" %} — Numeria Institute{% endblock %}
-{% block meta_description %}Découvrez tous les cours de Numeria Institute : mathématiques, sciences, IA, Python, Fortran et bien plus. Gratuits et accessibles partout en Afrique.{% endblock %}
-{% block og_titre %}{% trans "Catalogue des cours" %} — Numeria Institute{% endblock %}
-{% block og_description %}Découvrez tous les cours de Numeria Institute : mathématiques, sciences, IA, Python, Fortran et bien plus.{% endblock %}
+{% block titre %}{% trans "Course catalogue" %} — Numeria Institute{% endblock %}
+{% block meta_description %}{% trans "Discover all Numeria Institute courses: mathematics, science, AI, Python and more. Free and accessible everywhere in Africa." %}{% endblock %}
+{% block og_titre %}{% trans "Course catalogue" %} — Numeria Institute{% endblock %}
+{% block og_description %}{% trans "Discover all Numeria Institute courses: mathematics, science, AI, Python and more." %}{% endblock %}
 {% block contenu %}
 
 <!-- EN-TÊTE -->
@@ -21,31 +21,12 @@
             {% trans "Catalogue" %}
         </div>
         <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl lg:text-5xl text-white mb-3">
-            {% trans "Tous nos cours" %}
+            {% trans "All our courses" %}
         </h1>
         <p class="text-blue-200 text-lg mb-8">
             <span class="text-numeria-teal font-bold">{{ cours|length }}</span>
-            cours disponible{{ cours|length|pluralize }} · Science, IA & Scolaire
+            {% blocktrans count counter=cours|length %}course available{% plural %}courses available{% endblocktrans %} · {% trans "Science, AI & School" %}
         </p>
-
-        <!-- Onglets Tous / Général / Scolaire -->
-        <div class="flex gap-2 flex-wrap">
-            <a href="{% url 'cours:catalogue' %}"
-               style="font-family:'Outfit',sans-serif;font-weight:600;"
-               class="px-5 py-2 rounded-full text-sm transition-all {% if not type_actif %}bg-numeria-teal text-numeria-bleu shadow-md{% else %}bg-white/10 text-blue-200 hover:bg-white/20{% endif %}">
-                Tous ({{ cours_generaux|add:cours_scolaires }})
-            </a>
-            <a href="?type=general"
-               style="font-family:'Outfit',sans-serif;font-weight:600;"
-               class="px-5 py-2 rounded-full text-sm transition-all {% if type_actif == 'general' %}bg-numeria-teal text-numeria-bleu shadow-md{% else %}bg-white/10 text-blue-200 hover:bg-white/20{% endif %}">
-                🎓 Général ({{ cours_generaux }})
-            </a>
-            <a href="?type=scolaire"
-               style="font-family:'Outfit',sans-serif;font-weight:600;"
-               class="px-5 py-2 rounded-full text-sm transition-all {% if type_actif == 'scolaire' %}bg-numeria-teal text-numeria-bleu shadow-md{% else %}bg-white/10 text-blue-200 hover:bg-white/20{% endif %}">
-                🏫 Scolaire ({{ cours_scolaires }})
-            </a>
-        </div>
     </div>
 </section>
 
@@ -59,75 +40,58 @@
 
                     <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-sm text-numeria-bleu dark:text-white mb-4 flex items-center gap-2">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-                        Filtres
+                        {% trans "Filters" %}
                     </h3>
 
-                    {% if type_actif == 'scolaire' or not type_actif %}
+                    <!-- Filtre par catégorie -->
                     <div class="mb-5">
                         <p style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2.5">
-                            Cycle scolaire
+                            {% trans "Category" %}
                         </p>
-                        <div class="flex flex-col gap-2">
-                            <a href="?type=scolaire"
+                        <div class="flex flex-col gap-1.5">
+                            <a href="{% url 'cours:catalogue' %}{% if niveau_actif %}?niveau={{ niveau_actif }}{% endif %}"
                                class="text-sm py-2 px-3 rounded-xl transition-colors font-medium
-                               {% if not cycle_actif and type_actif == 'scolaire' %}bg-numeria-teal/15 text-numeria-teal{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
-                                {% trans "Tous les cycles" %}
+                               {% if not matiere_active %}bg-numeria-teal/15 text-numeria-teal{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                                {% trans "All categories" %}
                             </a>
-                            <a href="?type=scolaire&cycle=primaire"
+                            {% for code, label in matieres %}
+                            <a href="?matiere={{ code }}{% if niveau_actif %}&niveau={{ niveau_actif }}{% endif %}"
                                class="text-sm py-2 px-3 rounded-xl transition-colors
-                               {% if cycle_actif == 'primaire' %}bg-numeria-teal/15 text-numeria-teal font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
-                                🏫 Primaire
+                               {% if matiere_active == code %}bg-numeria-teal/15 text-numeria-teal font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                                {{ label }}
                             </a>
-                            <a href="?type=scolaire&cycle=college"
-                               class="text-sm py-2 px-3 rounded-xl transition-colors
-                               {% if cycle_actif == 'college' %}bg-numeria-teal/15 text-numeria-teal font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
-                                🏫 Collège
-                            </a>
-                            <a href="?type=scolaire&cycle=lycee"
-                               class="text-sm py-2 px-3 rounded-xl transition-colors
-                               {% if cycle_actif == 'lycee' %}bg-numeria-teal/15 text-numeria-teal font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
-                                🎓 Lycée
-                            </a>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    {% if cycle_actif %}
-                    <div class="mb-4">
-                        <p style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2.5">
-                            Classe
-                        </p>
-                        <div class="flex flex-col gap-1">
-                            {% for code, label in classes %}
-                                {% if cycle_actif == 'primaire' and code in 'CP,CE1,CE2,CM1,CM2' %}
-                                <a href="?type=scolaire&cycle={{ cycle_actif }}&classe={{ code }}"
-                                   class="text-sm py-1.5 px-3 rounded-xl transition-colors
-                                   {% if classe_active == code %}bg-numeria-bleu text-white font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
-                                    {{ label }}
-                                </a>
-                                {% elif cycle_actif == 'college' and code in '6eme,5eme,4eme,3eme' %}
-                                <a href="?type=scolaire&cycle={{ cycle_actif }}&classe={{ code }}"
-                                   class="text-sm py-1.5 px-3 rounded-xl transition-colors
-                                   {% if classe_active == code %}bg-numeria-bleu text-white font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
-                                    {{ label }}
-                                </a>
-                                {% elif cycle_actif == 'lycee' and code in '2nde,1ere_A,1ere_C,1ere_D,1ere_E,1ere_F,1ere_G,Tle_A,Tle_C,Tle_D,Tle_E,Tle_F,Tle_G' %}
-                                <a href="?type=scolaire&cycle={{ cycle_actif }}&classe={{ code }}"
-                                   class="text-sm py-1.5 px-3 rounded-xl transition-colors
-                                   {% if classe_active == code %}bg-numeria-bleu text-white font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
-                                    {{ label }}
-                                </a>
-                                {% endif %}
                             {% endfor %}
                         </div>
                     </div>
-                    {% endif %}
 
+                    <!-- Filtre par niveau -->
+                    <div class="mb-4">
+                        <p style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2.5">
+                            {% trans "Level" %}
+                        </p>
+                        <div class="flex flex-col gap-1.5">
+                            <a href="{% url 'cours:catalogue' %}{% if matiere_active %}?matiere={{ matiere_active }}{% endif %}"
+                               class="text-sm py-2 px-3 rounded-xl transition-colors font-medium
+                               {% if not niveau_actif %}bg-numeria-teal/15 text-numeria-teal{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                                {% trans "All levels" %}
+                            </a>
+                            {% for code, label in niveaux %}
+                            <a href="?niveau={{ code }}{% if matiere_active %}&matiere={{ matiere_active }}{% endif %}"
+                               class="text-sm py-2 px-3 rounded-xl transition-colors
+                               {% if niveau_actif == code %}bg-numeria-teal/15 text-numeria-teal font-medium{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                                {{ label }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {% if matiere_active or niveau_actif %}
                     <a href="{% url 'cours:catalogue' %}"
                        class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-numeria-teal transition-colors mt-3">
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.84"/></svg>
-                        Réinitialiser
+                        {% trans "Reset" %}
                     </a>
+                    {% endif %}
                 </div>
             </div>
 
@@ -143,72 +107,43 @@
                             <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.35),_transparent_55%)]"></div>
                             <div class="relative flex items-start justify-between gap-3">
                                 <span style="font-family:'Outfit',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;" class="text-white">
-                                    {{ un_cours.get_matiere_display }}
+                                    {{ un_cours.get_category_display }}
                                 </span>
-                                {% if un_cours.type_cours == 'scolaire' and un_cours.classe %}
+                                {% if un_cours.estimated_hours %}
                                 <span class="bg-white/20 text-white text-xs font-semibold px-2 py-1 rounded-full flex-shrink-0 ml-2">
-                                    {{ un_cours.get_classe_display }}
+                                    {{ un_cours.estimated_hours }}h
                                 </span>
                                 {% endif %}
                             </div>
                             <h3 style="font-family:'Outfit',sans-serif;font-weight:800;" class="relative text-white text-base leading-snug mt-4 group-hover:text-numeria-or transition-colors">
-                                {{ un_cours.titre }}
+                                {{ un_cours.title }}
                             </h3>
                         </div>
 
                         <div class="p-6 flex flex-col flex-1">
                             <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3">
-                                {{ un_cours.resume }}
+                                {{ un_cours.short_description|default:un_cours.description|truncatewords:25 }}
                             </p>
-                            
-                            <!-- TAGS -->
-                            {% if un_cours.tags.all %}
-                            <div class="flex flex-wrap gap-1 mb-4">
-                                {% for tag in un_cours.tags.all|slice:":3" %}
-                                <span class="text-xs font-semibold px-2 py-1 rounded-full text-white"
-                                      style="background-color: {{ tag.couleur }}">
-                                    {{ tag.nom }}
-                                </span>
-                                {% endfor %}
-                                {% if un_cours.tags.all|length > 3 %}
-                                <span class="text-xs text-gray-400 px-2 py-1">
-                                    +{{ un_cours.tags.all|length|add:"-3" }}
-                                </span>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-                            
-                            <!-- RATING -->
-                            {% if un_cours.note_moyenne %}
-                            <div class="flex items-center gap-2 mb-4 text-sm">
-                                <span class="text-numeria-or font-bold">
-                                    ★ {{ un_cours.note_moyenne|floatformat:1 }}/5
-                                </span>
-                                <span class="text-xs text-gray-400">
-                                    ({{ un_cours.evaluations.count }})
-                                </span>
-                            </div>
-                            {% endif %}
 
                             <div class="mt-auto flex flex-col gap-4">
                                 <div class="grid grid-cols-2 gap-3 text-xs text-gray-500 dark:text-gray-400">
                                     <span class="inline-flex items-center gap-2">
                                         <span class="text-numeria-teal">📚</span>
-                                        {{ un_cours.nombre_lecons }} leçons
+                                        {% blocktrans count counter=un_cours.lessons.count %}{{ counter }} lesson{% plural %}{{ counter }} lessons{% endblocktrans %}
                                     </span>
                                     <span class="inline-flex items-center gap-2">
                                         <span class="text-numeria-teal">🎯</span>
-                                        {{ un_cours.get_niveau_display }}
+                                        {{ un_cours.get_level_display }}
                                     </span>
                                 </div>
                                 <div class="flex items-center justify-between gap-3">
-                                    {% if un_cours.est_gratuit %}
-                                        <span class="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full">{% trans "Gratuit" %}</span>
+                                    {% if un_cours.is_free %}
+                                        <span class="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full">{% trans "Free" %}</span>
                                     {% else %}
-                                        <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-3 py-1 rounded-full">{{ un_cours.prix }} FCFA</span>
+                                        <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-3 py-1 rounded-full">{{ un_cours.price }} XOF</span>
                                     {% endif %}
                                     <span class="text-numeria-bleu dark:text-white text-xs font-semibold uppercase tracking-[0.08em]">
-                                        {% trans "En savoir plus" %} →
+                                        {% trans "Learn more" %} →
                                     </span>
                                 </div>
                             </div>
@@ -223,12 +158,12 @@
                     <div class="w-20 h-20 bg-numeria-bleu/8 rounded-2xl flex items-center justify-center mx-auto mb-5">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1A3C6E" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                     </div>
-                    <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-gray-700 dark:text-gray-200 text-xl mb-2">{% trans "Aucun cours trouvé" %}</h3>
-                    <p class="text-gray-400 dark:text-gray-500 mb-6">{% trans "Essaie d'autres filtres ou reviens bientôt !" %}</p>
+                    <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-gray-700 dark:text-gray-200 text-xl mb-2">{% trans "No course found" %}</h3>
+                    <p class="text-gray-400 dark:text-gray-500 mb-6">{% trans "Try different filters or check back soon!" %}</p>
                     <a href="{% url 'cours:catalogue' %}"
                        style="font-family:'Outfit',sans-serif;font-weight:700;"
                        class="inline-block bg-numeria-teal text-numeria-bleu px-8 py-3 rounded-xl hover:bg-teal-300 transition-colors">
-                        {% trans "Voir tous les cours" %}
+                        {% trans "View all courses" %}
                     </a>
                 </div>
                 {% endif %}

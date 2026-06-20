@@ -94,9 +94,15 @@ Allow: /
 Sitemap: {base_url}/sitemap.xml
 
 Disallow: /admin/
+Disallow: /numeria-staff-portal/
+Disallow: /admin-panel/
 Disallow: /analytics/
-Disallow: /comptes/profil/supprimer/
-Disallow: /comptes/profil/changer-mot-de-passe/
+Disallow: /comptes/
+Disallow: /paiements/
+Disallow: /mentorat/tableau-bord-mentor/
+Disallow: /mentorat/tableau-bord-mentee/
+Disallow: /visio/
+Disallow: /sandbox/
 """
     return HttpResponse(content, content_type='text/plain')
 

@@ -530,7 +530,7 @@ def gerer_demande(request, demande_pk, action):
         try:
             send_mentorship_acceptance_email(demande, language=getattr(request, 'LANGUAGE_CODE', None))
         except Exception:
-            pass
+            logger.exception('send_mentorship_acceptance_email failed for demande %s', demande.pk)
         try:
             from notifications.notifications import notify_user
             mentor_user = demande.mentor.profil.utilisateur
@@ -540,10 +540,10 @@ def gerer_demande(request, demande_pk, action):
                 title="Demande de mentorat acceptée",
                 message=f"{mentor_user.get_full_name() or mentor_user.username} a accepté votre demande de mentorat.",
                 notification_type='mentorship',
-                link='/mentorat/tableau-de-bord-mentee/',
+                link=reverse('mentorat:tableau_de_bord_mentee'),
             )
         except Exception:
-            pass
+            logger.exception('notify_user failed for accepted mentorat demande %s', demande.pk)
         messages.success(request, _("Demande de %(mentee)s acceptée !") % {'mentee': demande.mentee})
     elif action == 'refuser':
         demande.refuser()
