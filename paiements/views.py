@@ -196,14 +196,16 @@ def historique_paiements(request):
     """
     Historique de tous les paiements de l'étudiant.
     """
-    paiements = Paiement.objects.filter(
-        etudiant=request.user
-    ).select_related('course')
+    paiements = (
+        Paiement.objects.filter(etudiant=request.user)
+        .select_related('cours', 'formation')
+    )
 
     contexte = {
         'paiements': paiements,
         'total_depense': sum(
-            p.montant for p in paiements if p.statut == 'reussi'
+            (p.montant_final for p in paiements if p.statut == 'reussi'),
+            0,
         ),
     }
     return render(request, 'paiements/historique.html', contexte)

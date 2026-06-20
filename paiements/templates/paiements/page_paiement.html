@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block titre %}{% trans "Paiement" %} {% if objet_type == 'cours' %}{{ objet.titre }}{% else %}{{ objet.session.formation.titre }} — {{ objet.session.nom }}{% endif %} — Numeria Institute{% endblock %}
+{% block titre %}{% trans "Paiement" %} {% if objet_type == 'cours' %}{{ objet.title }}{% else %}{{ objet.formation.title }}{% endif %} — Numeria Institute{% endblock %}
 {% block contenu %}
 
 <section class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 py-12">
@@ -15,9 +15,9 @@
                     ← {% trans "Retour au cours" %}
                 </a>
                 {% else %}
-                <a href="{% url 'formation:session_detail' objet.session.id %}"
+                <a href="{% url 'formation:detail' objet.formation.slug %}"
                    class="text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-or transition-colors text-sm">
-                    ← {% trans "Retour à la session" %}
+                    ← {% trans "Retour à la formation" %}
                 </a>
                 {% endif %}
                 <h1 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mt-4">
@@ -95,9 +95,9 @@
                         <button type="submit"
                             class="w-full bg-numeria-or text-numeria-bleu font-bold py-4 rounded-2xl hover:bg-yellow-400 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform text-lg">
                             {% if objet_type == 'cours' %}
-                                {% blocktrans with prix=objet.prix devise=objet.get_devise_display %}Payer {{ prix }} {{ devise }} →{% endblocktrans %}
+                                {% blocktrans with prix=objet.price %}Payer {{ prix }} XOF →{% endblocktrans %}
                             {% else %}
-                                {% blocktrans with prix=objet.prix_paye_fcfa %}Payer {{ prix }} FCFA →{% endblocktrans %}
+                                {% blocktrans with prix=objet.formation.price %}Payer {{ prix }} XOF →{% endblocktrans %}
                             {% endif %}
                         </button>
 
@@ -121,25 +121,25 @@
                             <div class="w-12 h-12 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0">
                                 <span class="text-numeria-or text-xs font-bold">
                                     {% if objet_type == 'cours' %}
-                                        {{ objet.get_matiere_display|first|upper }}
+                                        {{ objet.get_category_display|first|upper }}
                                     {% else %}
-                                        {{ objet.session.formation.get_type_display|first|upper }}
+                                        {{ objet.formation.get_category_display|first|upper }}
                                     {% endif %}
                                 </span>
                             </div>
                             <div>
                                 <p class="font-bold text-gray-800 dark:text-gray-100 text-sm">
                                     {% if objet_type == 'cours' %}
-                                        {{ objet.titre }}
+                                        {{ objet.title }}
                                     {% else %}
-                                        {{ objet.session.formation.titre }} — {{ objet.session.nom }}
+                                        {{ objet.formation.title }}
                                     {% endif %}
                                 </p>
                                 <p class="text-gray-400 dark:text-gray-500 text-xs mt-0.5">
                                     {% if objet_type == 'cours' %}
-                                        {% blocktrans with n=objet.nombre_lecons niveau=objet.get_niveau_display %}{{ n }} leçons · {{ niveau }}{% endblocktrans %}
+                                        {% blocktrans with n=objet.lessons.count niveau=objet.get_level_display %}{{ n }} leçons · {{ niveau }}{% endblocktrans %}
                                     {% else %}
-                                        {% trans "Session de formation" %}
+                                        {% trans "Formation" %}
                                     {% endif %}
                                 </p>
                             </div>
@@ -148,10 +148,10 @@
                         <!-- Prix -->
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-gray-500 dark:text-gray-400 text-sm">
-                                {% if objet_type == 'cours' %}{% trans "Prix du cours" %}{% else %}{% trans "Prix de la session" %}{% endif %}
+                                {% if objet_type == 'cours' %}{% trans "Prix du cours" %}{% else %}{% trans "Prix de la formation" %}{% endif %}
                             </span>
                             <span class="font-bold text-gray-800 dark:text-gray-100">
-                                {% if objet_type == 'cours' %}{{ objet.prix }} XOF{% else %}{{ objet.prix_paye_fcfa }} XOF{% endif %}
+                                {% if objet_type == 'cours' %}{{ objet.price }} XOF{% else %}{{ objet.formation.price }} XOF{% endif %}
                             </span>
                         </div>
                         <div class="flex items-center justify-between mb-5 pb-5 border-b border-gray-100 dark:border-gray-700">
@@ -163,7 +163,7 @@
                         <div class="flex items-center justify-between mb-5">
                             <span class="font-bold text-gray-800 dark:text-gray-100">{% trans "Total" %}</span>
                             <span class="text-2xl font-bold text-numeria-bleu dark:text-numeria-or">
-                                {% if objet_type == 'cours' %}{{ objet.prix }} XOF{% else %}{{ objet.prix_paye_fcfa }} XOF{% endif %}
+                                {% if objet_type == 'cours' %}{{ objet.price }} XOF{% else %}{{ objet.formation.price }} XOF{% endif %}
                             </span>
                         </div>
 
@@ -176,9 +176,9 @@
                                 <li class="flex items-center gap-2">
                                     <span class="text-green-500">✅</span>
                                     {% if objet_type == 'cours' %}
-                                        {% blocktrans with n=objet.nombre_lecons %}{{ n }} leçons complètes{% endblocktrans %}
+                                        {% blocktrans with n=objet.lessons.count %}{{ n }} leçons complètes{% endblocktrans %}
                                     {% else %}
-                                        {% trans "Accès à toutes les leçons de la session" %}
+                                        {% trans "Accès à toutes les leçons de la formation" %}
                                     {% endif %}
                                 </li>
                                 <li class="flex items-center gap-2">

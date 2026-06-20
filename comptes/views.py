@@ -68,8 +68,12 @@ def verify_email(request, token):
 
     user.is_active = True
     user.save()
-    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-    return redirect('comptes:tableau_de_bord')
+    # SECURITY: Do NOT auto-login the user on email verification.
+    # The verification link is sent in clear-text email and is valid for 24h;
+    # anyone who obtains it (forwarded email, shared inbox, browser history)
+    # would otherwise get a passwordless login. Require explicit authentication.
+    messages.success(request, _("Ton email a été vérifié ! Tu peux maintenant te connecter."))
+    return redirect('comptes:connexion')
 
 
 def resend_verification_email(request):

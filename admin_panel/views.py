@@ -895,12 +895,19 @@ def exercise_results_csv(request):
                      'Correct', 'Attempts', 'Points Earned', 'Date'])
 
     # ExerciseAttempt replaces removed StudentCodeSubmission
-    for attempt in ExerciseAttempt.objects.filter(exercise_type='code').select_related(
-        'student'
-    ).order_by('-submitted_at')[:5000]:
-        # Lookup exercise title
-        ex = CodeExercise.objects.filter(pk=attempt.exercise_id).first()
-        ex_title = ex.title if ex else f'#{attempt.exercise_id}'
+    attempts = list(
+        ExerciseAttempt.objects.filter(exercise_type='code')
+        .select_related('student')
+        .order_by('-submitted_at')[:5000]
+    )
+    # Batch-load all exercise titles in one query to avoid N+1 (was: 1 query
+    # per attempt = up to 5000 extra queries per CSV export).
+    ex_ids = {a.exercise_id for a in attempts if a.exercise_id}
+    ex_titles = dict(
+        CodeExercise.objects.filter(id__in=ex_ids).values_list('id', 'title')
+    ) if ex_ids else {}
+    for attempt in attempts:
+        ex_title = ex_titles.get(attempt.exercise_id) or f'#{attempt.exercise_id}'
         writer.writerow([
             attempt.student.get_full_name() or attempt.student.username,
             attempt.student.email,
