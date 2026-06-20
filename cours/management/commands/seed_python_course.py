@@ -443,9 +443,9 @@ Les opérateurs `+=`, `-=`, `*=`, `/=` sont des raccourcis très utiles.""",
                         'answers': {
                             'blank_1': ['"Awa"', "'Awa'"],
                             'blank_2': ['20'],
-                            'blank_3': ['nom', 'age'],
+                            'blank_3': ['nom, age', 'nom,age'],
                         },
-                        'explanation': 'On utilise des guillemets pour le texte, un nombre sans guillemets pour age, et on affiche les variables.',
+                        'explanation': 'On utilise des guillemets pour le texte, un nombre sans guillemets pour age, et print(nom, age) affiche les deux variables.',
                     },
                     {
                         'type': 'code_exercise',
