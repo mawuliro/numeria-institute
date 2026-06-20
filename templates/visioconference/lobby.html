@@ -1,83 +1,178 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Lobby de réunion{% endblock %}
+{% block title %}{% trans "Prêt à rejoindre ?" %} — {{ room.title }}{% endblock %}
 
 {% block contenu %}
-<main class="min-h-screen bg-[#020617] text-white py-12">
-  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-    <div class="mb-8 rounded-[2rem] border border-slate-800 bg-[#08111F] p-8 shadow-2xl shadow-black/40">
-      <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+<main class="min-h-screen bg-[#0B0F1A] text-white relative overflow-hidden">
+  <!-- Ambient background -->
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div class="absolute -top-40 -right-40 w-[520px] h-[520px] rounded-full" style="background: radial-gradient(circle, rgba(45,212,191,0.08) 0%, transparent 70%);"></div>
+    <div class="absolute -bottom-40 -left-40 w-[460px] h-[460px] rounded-full" style="background: radial-gradient(circle, rgba(201,162,39,0.06) 0%, transparent 70%);"></div>
+  </div>
+
+  <div class="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+
+    <!-- Top bar: room info -->
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-numeria-teal/15 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-numeria-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="23 7 16 12 23 17 23 7"/>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+          </svg>
+        </div>
         <div>
-          <p class="text-sm uppercase tracking-[0.35em] text-slate-500">Préparation</p>
-          <h1 class="mt-3 text-3xl font-semibold text-white">Vous êtes presque prêt·e</h1>
-          <p class="mt-2 max-w-2xl text-slate-300">Vérifiez votre caméra et votre micro avant de rejoindre le meeting.</p>
+          <p class="text-xs uppercase tracking-widest text-slate-400">{% trans "Numeria Visio" %}</p>
+          <p class="text-lg font-semibold text-white">{{ room.title }}</p>
         </div>
-        <div class="rounded-3xl bg-[#0B1323] px-5 py-4 text-sm text-slate-300">
-          <p><span class="font-semibold text-white">Salle :</span> {{ room.title }}</p>
-          <p class="mt-1"><span class="font-semibold text-white">Code :</span> {{ room.room_code }}</p>
-        </div>
+      </div>
+      <div class="flex items-center gap-2 text-xs text-slate-400 bg-[#131826] border border-slate-700/50 rounded-full px-4 py-2">
+        <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        {% trans "Code" %} : <span class="font-mono font-semibold text-white tracking-wider">{{ room.room_code }}</span>
       </div>
     </div>
 
-    <div class="grid gap-8 xl:grid-cols-[1.4fr_0.8fr]">
-      <section class="rounded-[2rem] border border-slate-800 bg-[#08111F] p-6 shadow-2xl shadow-black/40">
-        <div class="mb-5 flex items-center justify-between">
-          <div>
-            <p class="text-sm uppercase tracking-[0.35em] text-slate-400">Aperçu caméra</p>
-            <h2 class="text-xl font-semibold text-white">Vérifiez votre image</h2>
+    <!-- Main: big self-preview + "Ready to Join?" controls -->
+    <div class="grid gap-6 lg:gap-8 lg:grid-cols-[1.5fr_1fr]">
+
+      <!-- Self preview (big) -->
+      <section class="rounded-3xl border border-slate-700/50 bg-black overflow-hidden shadow-2xl shadow-black/40 relative" style="min-height: 360px;">
+        <video id="preview-video" autoplay muted playsinline class="absolute inset-0 w-full h-full object-cover"></video>
+
+        <!-- Camera-off overlay -->
+        <div id="preview-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 to-slate-950 text-center opacity-0 transition-opacity duration-300">
+          <div class="w-24 h-24 rounded-full bg-slate-700 flex items-center justify-center text-4xl font-bold text-white mb-4" style="font-family:'Outfit',sans-serif;">
+            {{ display_name|first|upper }}
           </div>
-          <span class="rounded-full bg-teal-500/15 px-3 py-1 text-xs uppercase tracking-[0.35em] text-teal-300">Numeria Live</span>
+          <p class="text-slate-300 text-sm">{% trans "Caméra désactivée" %}</p>
         </div>
-        <div class="relative overflow-hidden rounded-[2rem] bg-black pb-[56.25%]">
-          <video id="preview-video" autoplay muted playsinline class="absolute inset-0 h-full w-full object-cover"></video>
-          <div id="preview-overlay" class="absolute inset-0 flex items-center justify-center bg-black/70 text-center text-white opacity-0 transition-opacity">Autorisez la caméra pour voir l’aperçu.</div>
+
+        <!-- Permission prompt -->
+        <div id="preview-permission" class="absolute inset-0 hidden flex-col items-center justify-center bg-gradient-to-br from-slate-900 to-slate-950 text-center p-6">
+          <div class="w-16 h-16 rounded-2xl bg-numeria-teal/10 flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-numeria-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M23 7l-7 5 7 5V7z"/>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            </svg>
+          </div>
+          <p class="text-white font-medium mb-2">{% trans "Autorisez la caméra et le micro" %}</p>
+          <p class="text-slate-400 text-xs max-w-xs">{% trans "Cliquez sur l'icône caméra dans la barre d'adresse du navigateur pour autoriser l'accès." %}</p>
         </div>
-        <div id="previewError" class="mt-4 hidden rounded-3xl border border-red-500 bg-red-950/50 px-4 py-3 text-sm text-red-200"></div>
+
+        <!-- Bottom name overlay -->
+        <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+          <div class="bg-black/60 backdrop-blur-md rounded-full px-4 py-2 text-sm text-white flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+            {{ display_name }}
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="togglePreviewMic" type="button" title="{% trans 'Micro' %}" class="w-11 h-11 rounded-full bg-black/60 backdrop-blur-md hover:bg-black/80 text-white flex items-center justify-center transition" aria-label="{% trans 'Activer/Couper le micro' %}">
+              <svg class="w-5 h-5 mic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+              <svg class="w-5 h-5 mic-off hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="1" y1="1" x2="23" y2="23"/>
+                <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/>
+                <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+            </button>
+            <button id="togglePreviewCamera" type="button" title="{% trans 'Caméra' %}" class="w-11 h-11 rounded-full bg-black/60 backdrop-blur-md hover:bg-black/80 text-white flex items-center justify-center transition" aria-label="{% trans 'Activer/Couper la caméra' %}">
+              <svg class="w-5 h-5 cam-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="23 7 16 12 23 17 23 7"/>
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+              </svg>
+              <svg class="w-5 h-5 cam-off hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+        </div>
       </section>
 
-      <aside class="rounded-[2rem] border border-slate-800 bg-[#08111F] p-6 shadow-2xl shadow-black/40">
-        <div class="mb-6">
-          <p class="text-sm uppercase tracking-[0.35em] text-slate-400">Informations</p>
-          <h2 class="mt-3 text-xl font-semibold text-white">Prêt à rejoindre</h2>
+      <!-- Side: "Ready to Join?" card -->
+      <aside class="flex flex-col gap-5">
+        <div class="rounded-3xl border border-slate-700/50 bg-[#131826] p-6 shadow-2xl shadow-black/40">
+          <h2 class="text-2xl font-bold text-white mb-2" style="font-family:'Playfair Display', Georgia, serif;">{% trans "Prêt à rejoindre ?" %}</h2>
+          <p class="text-slate-400 text-sm mb-6">{% trans "Vérifiez votre caméra et votre micro, puis entrez dans la salle." %}</p>
+
+          <div class="space-y-3 mb-6">
+            <div class="flex items-center justify-between rounded-xl bg-[#0B1120] border border-slate-700/40 px-4 py-3">
+              <span class="text-xs text-slate-400 uppercase tracking-wider">{% trans "Vous" %}</span>
+              <span class="text-sm font-semibold text-white">{{ display_name }}</span>
+            </div>
+            <div class="flex items-center justify-between rounded-xl bg-[#0B1120] border border-slate-700/40 px-4 py-3">
+              <span class="text-xs text-slate-400 uppercase tracking-wider">{% trans "Réunion" %}</span>
+              <span class="text-sm font-semibold text-white truncate ml-2">{{ room.title }}</span>
+            </div>
+            <div class="flex items-center justify-between rounded-xl bg-[#0B1120] border border-slate-700/40 px-4 py-3">
+              <span class="text-xs text-slate-400 uppercase tracking-wider">{% trans "Capacité" %}</span>
+              <span class="text-sm font-semibold text-white">{{ room.max_participants }} {% trans "participants" %}</span>
+            </div>
+          </div>
+
+          <a href="{% url 'visioconference:waiting_room' room_code=room.room_code %}" class="block rounded-xl bg-numeria-teal px-6 py-4 text-center text-sm font-semibold text-[#0B0F1A] transition hover:bg-teal-300 mb-3">
+            {% trans "Rejoindre maintenant" %}
+          </a>
+          <a href="{% url 'visioconference:create_room' %}" class="block rounded-xl bg-transparent border border-slate-700 px-6 py-3 text-center text-sm font-medium text-slate-300 transition hover:border-slate-500 hover:text-white">
+            {% trans "Annuler" %}
+          </a>
         </div>
-        <div class="space-y-4 text-sm text-slate-300">
-          <div class="rounded-3xl border border-slate-700 bg-[#0B1323] p-4">
-            <p class="text-slate-400">Utilisateur</p>
-            <p class="mt-2 font-semibold text-white">{{ display_name }}</p>
-          </div>
-          <div class="rounded-3xl border border-slate-700 bg-[#0B1323] p-4">
-            <p class="text-slate-400">Réunion</p>
-            <p class="mt-2 font-semibold text-white">{{ room.title }}</p>
-          </div>
-          <div class="rounded-3xl border border-slate-700 bg-[#0B1323] p-4">
-            <p class="text-slate-400">Participants maximum</p>
-            <p class="mt-2 font-semibold text-white">{{ room.max_participants }}</p>
-          </div>
-        </div>
-        <div class="mt-8 space-y-4">
-          <button id="togglePreviewCamera" type="button" class="w-full rounded-3xl bg-slate-700 px-5 py-4 text-sm font-semibold text-white transition hover:bg-slate-600">Couper / activer la caméra</button>
-          <button id="togglePreviewMic" type="button" class="w-full rounded-3xl bg-slate-700 px-5 py-4 text-sm font-semibold text-white transition hover:bg-slate-600">Couper / activer le micro</button>
-          <a href="{% url 'visioconference:waiting_room' room_code=room.room_code %}" class="block rounded-3xl bg-teal-500 px-5 py-4 text-center text-sm font-semibold text-slate-950 transition hover:bg-teal-400">Rejoindre maintenant</a>
-          <a href="{% url 'visioconference:create_room' %}" class="block rounded-3xl border border-slate-700 bg-transparent px-5 py-4 text-center text-sm font-semibold text-slate-300 transition hover:border-teal-400 hover:text-white">Annuler</a>
+
+        <div id="previewError" class="hidden rounded-2xl border border-amber-500/30 bg-amber-950/30 px-5 py-4 text-sm text-amber-100 flex items-start gap-3">
+          <svg class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <span id="previewErrorText"></span>
         </div>
       </aside>
+
     </div>
+
   </div>
 </main>
 
 <script>
   const previewVideo = document.querySelector('#preview-video');
   const previewOverlay = document.querySelector('#preview-overlay');
+  const previewPermission = document.querySelector('#preview-permission');
   const previewError = document.querySelector('#previewError');
+  const previewErrorText = document.querySelector('#previewErrorText');
+  const micBtn = document.querySelector('#togglePreviewMic');
+  const camBtn = document.querySelector('#togglePreviewCamera');
   let previewStream = null;
   let previewAudioEnabled = true;
   let previewCameraEnabled = true;
 
+  function updateMicIcon() {
+    micBtn.querySelector('.mic-on').classList.toggle('hidden', !previewAudioEnabled);
+    micBtn.querySelector('.mic-off').classList.toggle('hidden', previewAudioEnabled);
+    micBtn.classList.toggle('bg-red-500/80', !previewAudioEnabled);
+  }
+  function updateCamIcon() {
+    camBtn.querySelector('.cam-on').classList.toggle('hidden', !previewCameraEnabled);
+    camBtn.querySelector('.cam-off').classList.toggle('hidden', previewCameraEnabled);
+    camBtn.classList.toggle('bg-red-500/80', !previewCameraEnabled);
+    previewOverlay.classList.toggle('opacity-0', previewCameraEnabled);
+  }
+
   async function startPreview() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      previewError.textContent = 'Votre navigateur ne supporte pas la capture vidéo en direct.';
+      previewErrorText.textContent = "{% trans 'Votre navigateur ne supporte pas la capture vidéo en direct.' %}";
       previewError.classList.remove('hidden');
+      previewPermission.classList.remove('hidden');
+      previewPermission.classList.add('flex');
       return;
     }
 
@@ -86,34 +181,33 @@
       previewVideo.srcObject = previewStream;
       previewOverlay.classList.add('opacity-0');
       previewVideo.play().catch(() => {});
+      updateMicIcon();
+      updateCamIcon();
     } catch (error) {
-      previewError.textContent = 'Impossible d’accéder à la caméra ou au micro. Vérifiez les permissions du navigateur.';
+      previewErrorText.textContent = "{% trans 'Impossible d’accéder à la caméra ou au micro. Vérifiez les permissions du navigateur.' %}";
       previewError.classList.remove('hidden');
-      previewOverlay.classList.remove('opacity-0');
+      previewPermission.classList.remove('hidden');
+      previewPermission.classList.add('flex');
     }
   }
 
   function togglePreviewTrack(kind) {
-    if (!previewStream) {
-      return;
-    }
+    if (!previewStream) return;
     const tracks = previewStream.getTracks().filter(track => track.kind === kind);
-    tracks.forEach(track => {
-      track.enabled = !track.enabled;
-      if (kind === 'video') {
-        previewCameraEnabled = track.enabled;
-        previewOverlay.classList.toggle('opacity-0', track.enabled);
-      }
-      if (kind === 'audio') {
-        previewAudioEnabled = track.enabled;
-      }
-    });
+    tracks.forEach(track => { track.enabled = !track.enabled; });
+    if (kind === 'video') {
+      previewCameraEnabled = !previewCameraEnabled;
+      updateCamIcon();
+    } else {
+      previewAudioEnabled = !previewAudioEnabled;
+      updateMicIcon();
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     startPreview();
-    document.querySelector('#togglePreviewCamera').addEventListener('click', () => togglePreviewTrack('video'));
-    document.querySelector('#togglePreviewMic').addEventListener('click', () => togglePreviewTrack('audio'));
+    micBtn.addEventListener('click', () => togglePreviewTrack('audio'));
+    camBtn.addEventListener('click', () => togglePreviewTrack('video'));
   });
 </script>
 {% endblock %}

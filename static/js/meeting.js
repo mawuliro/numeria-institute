@@ -257,8 +257,28 @@ class NumeriaConference {
     if (existing) return;
     const item = document.createElement('div');
     item.dataset.peerId = peerId;
-    item.className = 'rounded-3xl border border-slate-700 bg-[#020617] p-4';
-    item.innerHTML = `<div class="flex items-center justify-between gap-3"><div><p class="font-semibold text-white">${this.escapeHtml(username)}</p><p class="text-xs text-slate-400">${isHost ? 'Hôte' : 'Participant'}</p></div><div class="flex items-center gap-2"><span id="participant-status-${peerId}" class="text-xs text-teal-300">En ligne</span>${IS_HOST && !isHost ? `<button type="button" data-remove-participant="${this.escapeHtml(peerId)}" class="rounded-full bg-red-700 px-3 py-1 text-xs font-semibold text-white">Retirer</button>` : ''}</div></div>`;
+    item.className = 'flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 bg-[#0B1120] border border-slate-700/40';
+    const initial = (username || '?').charAt(0).toUpperCase();
+    item.innerHTML = `
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-9 h-9 rounded-full ${isHost ? 'bg-numeria-or/20 text-numeria-or' : 'bg-numeria-teal/20 text-numeria-teal'} flex items-center justify-center text-sm font-bold flex-shrink-0" style="font-family:'Outfit',sans-serif;">
+          ${this.escapeHtml(initial)}
+        </div>
+        <div class="min-w-0">
+          <p class="text-sm font-semibold text-white truncate">${this.escapeHtml(username)}</p>
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider">${isHost ? 'Hôte' : 'Participant'}</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <span id="participant-status-${peerId}" class="text-[10px] text-emerald-400 uppercase tracking-wider">En ligne</span>
+        ${IS_HOST && !isHost ? `<button type="button" data-remove-participant="${this.escapeHtml(peerId)}" class="w-7 h-7 rounded-full bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center transition" title="Retirer" aria-label="Retirer ce participant">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>` : ''}
+      </div>
+    `;
     this.participantsList.appendChild(item);
     this.updateVideoCount();
   }
@@ -438,11 +458,22 @@ class NumeriaConference {
     if (!tile) {
       tile = document.createElement('div');
       tile.id = `remote-tile-${peerId}`;
-      tile.className = 'relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#08101F] shadow-inner shadow-black/40';
+      tile.className = 'relative overflow-hidden rounded-2xl border border-white/10 bg-[#131826] shadow-lg shadow-black/30 aspect-video min-h-[200px]';
       tile.innerHTML = `
-        <video id="remote-video-${peerId}" autoplay playsinline class="h-full w-full min-h-[220px] object-cover"></video>
-        <div class="absolute left-4 bottom-4 rounded-full bg-[#0F766E]/90 px-3 py-1 text-sm font-semibold text-white">${this.escapeHtml(username)}</div>
-        <div id="remote-muted-${peerId}" class="absolute right-4 top-4 hidden rounded-full bg-black/70 px-3 py-1 text-xs text-white">🔇</div>
+        <video id="remote-video-${peerId}" autoplay playsinline class="absolute inset-0 w-full h-full object-cover"></video>
+        <div class="absolute inset-0 hidden items-center justify-center bg-[#1A2235]" id="remote-camera-off-${peerId}">
+          <div class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-xl font-bold text-white" style="font-family:'Outfit',sans-serif;">${this.escapeHtml(username.charAt(0).toUpperCase())}</div>
+        </div>
+        <div class="absolute bottom-2 left-2 right-2 flex items-center justify-between gap-2 pointer-events-none">
+          <div class="bg-black/70 backdrop-blur-sm rounded-full px-2.5 py-1 text-xs font-medium text-white truncate max-w-[80%]">${this.escapeHtml(username)}</div>
+          <div id="remote-muted-${peerId}" class="hidden w-6 h-6 rounded-full bg-red-500/80 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+            <svg class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="1" y1="1" x2="23" y2="23"/>
+              <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/>
+              <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/>
+            </svg>
+          </div>
+        </div>
       `;
       document.querySelector('#video-grid')?.appendChild(tile);
       this.updateVideoCount();
@@ -479,7 +510,14 @@ class NumeriaConference {
 
   updateLocalCameraState() {
     if (!this.localCameraOff) return;
-    this.localCameraOff.classList.toggle('hidden', !this.isCameraOff);
+    // Use 'flex' / 'hidden' so the overlay's inner flex centering works
+    if (this.isCameraOff) {
+      this.localCameraOff.classList.remove('hidden');
+      this.localCameraOff.classList.add('flex');
+    } else {
+      this.localCameraOff.classList.add('hidden');
+      this.localCameraOff.classList.remove('flex');
+    }
   }
 
   setLocalMute(muted, notify = false) {
@@ -488,8 +526,23 @@ class NumeriaConference {
     this.localStream.getAudioTracks().forEach(track => track.enabled = !this.isMuted);
     const button = document.querySelector('#btn-mute');
     if (button) {
-      button.classList.toggle('bg-red-600', this.isMuted);
-      button.textContent = this.isMuted ? '🔇 Micro coupé' : '🎤 Micro actif';
+      // Swap mic icon (svg.mic-on / svg.mic-off)
+      const micOn = button.querySelector('.mic-on');
+      const micOff = button.querySelector('.mic-off');
+      if (micOn && micOff) {
+        micOn.classList.toggle('hidden', this.isMuted);
+        micOff.classList.toggle('hidden', !this.isMuted);
+      }
+      button.classList.toggle('bg-red-500', this.isMuted);
+      button.classList.toggle('hover:bg-red-600', this.isMuted);
+      button.classList.toggle('bg-[#1A2235]', !this.isMuted);
+      button.classList.toggle('hover:bg-[#243049]', !this.isMuted);
+    }
+    // Update local mic badge in self-view
+    const micBadge = document.querySelector('#local-mic-badge');
+    if (micBadge) {
+      micBadge.classList.toggle('bg-red-500/80', this.isMuted);
+      micBadge.classList.toggle('bg-black/70', !this.isMuted);
     }
     if (notify) {
       this.sendMessage({ type: 'mute_status', peer_id: this.localPeerId, value: this.isMuted });
@@ -503,8 +556,17 @@ class NumeriaConference {
     this.updateLocalCameraState();
     const button = document.querySelector('#btn-camera');
     if (button) {
-      button.classList.toggle('bg-red-600', this.isCameraOff);
-      button.textContent = this.isCameraOff ? '🚫 Vidéo coupée' : '📷 Vidéo active';
+      // Swap camera icon (svg.cam-on / svg.cam-off)
+      const camOn = button.querySelector('.cam-on');
+      const camOff = button.querySelector('.cam-off');
+      if (camOn && camOff) {
+        camOn.classList.toggle('hidden', this.isCameraOff);
+        camOff.classList.toggle('hidden', !this.isCameraOff);
+      }
+      button.classList.toggle('bg-red-500', this.isCameraOff);
+      button.classList.toggle('hover:bg-red-600', this.isCameraOff);
+      button.classList.toggle('bg-[#1A2235]', !this.isCameraOff);
+      button.classList.toggle('hover:bg-[#243049]', !this.isCameraOff);
     }
     if (!enabled && this.isScreenSharing) {
       this.stopScreenShare();
@@ -535,8 +597,12 @@ class NumeriaConference {
       this.isScreenSharing = true;
       this.screenStream = screenStream;
       this.screenShareTrack = screenTrack;
-      document.querySelector('#btn-screen')?.classList.add('bg-teal-500');
-      document.querySelector('#btn-screen').textContent = '🛑 Arrêter le partage';
+      const screenBtn = document.querySelector('#btn-screen');
+      if (screenBtn) {
+        screenBtn.classList.add('bg-numeria-teal', 'text-[#0B0F1A]');
+        screenBtn.classList.remove('bg-[#1A2235]', 'text-white');
+        screenBtn.title = 'Arrêter le partage';
+      }
       this.hideScreenSharePreview();
       if (this.localStream) {
         this.localVideoElement.srcObject = this.localStream;
@@ -586,37 +652,54 @@ class NumeriaConference {
     this.showScreenSharePreview();
     const button = document.querySelector('#btn-screen');
     if (button) {
-      button.classList.remove('bg-teal-500');
-      button.textContent = '🖥️ Partager l’écran';
+      button.classList.remove('bg-numeria-teal', 'text-[#0B0F1A]');
+      button.classList.add('bg-[#1A2235]', 'text-white');
+      button.title = 'Partager l\'écran';
     }
   }
 
   hideScreenSharePreview() {
+    // Hide the video grid (other participants' tiles) while screen-sharing.
+    // Keep the local self-view visible so the sharer still sees themselves.
     document.querySelector('#video-grid')?.classList.add('hidden');
-    document.querySelector('#local-video-container')?.classList.add('hidden');
-    document.querySelector('header')?.classList.add('hidden');
-    document.querySelector('main')?.classList.add('hidden');
   }
 
   showScreenSharePreview() {
     document.querySelector('#video-grid')?.classList.remove('hidden');
-    document.querySelector('#local-video-container')?.classList.remove('hidden');
-    document.querySelector('header')?.classList.remove('hidden');
-    document.querySelector('main')?.classList.remove('hidden');
   }
 
   toggleChat() {
     if (!this.chatSidebar) return;
-    this.chatSidebar.classList.toggle('hidden');
-    if (!this.chatSidebar.classList.contains('hidden')) {
+    // Use the same hidden/flex toggle pattern as the template's close button.
+    // Also close the participants sidebar if open (Meet-style: only one panel at a time).
+    if (this.chatSidebar.classList.contains('hidden')) {
+      this.chatSidebar.classList.remove('hidden');
+      this.chatSidebar.classList.add('flex');
+      // Close participants
+      this.participantsSidebar?.classList.add('hidden');
+      this.participantsSidebar?.classList.remove('flex');
       this.unreadMessages = 0;
       this.updateChatBadge();
+      // Clear the floating chat badge too
+      document.querySelector('#chatBtnBadge')?.classList.add('hidden');
+    } else {
+      this.chatSidebar.classList.add('hidden');
+      this.chatSidebar.classList.remove('flex');
     }
   }
 
   toggleParticipants() {
     if (!this.participantsSidebar) return;
-    this.participantsSidebar.classList.toggle('hidden');
+    if (this.participantsSidebar.classList.contains('hidden')) {
+      this.participantsSidebar.classList.remove('hidden');
+      this.participantsSidebar.classList.add('flex');
+      // Close chat
+      this.chatSidebar?.classList.add('hidden');
+      this.chatSidebar?.classList.remove('flex');
+    } else {
+      this.participantsSidebar.classList.add('hidden');
+      this.participantsSidebar.classList.remove('flex');
+    }
   }
 
   async sendChatMessage() {
@@ -630,8 +713,15 @@ class NumeriaConference {
   displayChatMessage(username, message, isLocal) {
     if (!this.chatFeed) return;
     const line = document.createElement('div');
-    line.className = `rounded-3xl px-4 py-3 ${isLocal ? 'bg-teal-500/15 text-white' : 'bg-white/5 text-slate-200'}`;
-    line.innerHTML = `<p class="text-xs text-slate-400">${this.escapeHtml(username)}</p><p class="mt-1 text-sm">${this.escapeHtml(message)}</p>`;
+    line.className = `flex flex-col ${isLocal ? 'items-end' : 'items-start'}`;
+    const initial = (username || '?').charAt(0).toUpperCase();
+    line.innerHTML = `
+      <div class="flex items-center gap-2 mb-1 ${isLocal ? 'flex-row-reverse' : ''}">
+        <div class="w-5 h-5 rounded-full ${isLocal ? 'bg-numeria-teal/20 text-numeria-teal' : 'bg-slate-700 text-slate-300'} flex items-center justify-center text-[10px] font-bold" style="font-family:'Outfit',sans-serif;">${this.escapeHtml(initial)}</div>
+        <span class="text-[11px] font-medium ${isLocal ? 'text-numeria-teal' : 'text-slate-400'}">${this.escapeHtml(username)}</span>
+      </div>
+      <div class="${isLocal ? 'bg-numeria-teal/15 text-white' : 'bg-white/5 text-slate-200'} rounded-2xl px-3 py-2 text-sm max-w-[85%] break-words">${this.escapeHtml(message)}</div>
+    `;
     this.chatFeed.appendChild(line);
     this.chatFeed.scrollTop = this.chatFeed.scrollHeight;
     if (this.chatSidebar && this.chatSidebar.classList.contains('hidden')) {
@@ -641,13 +731,29 @@ class NumeriaConference {
   }
 
   updateChatBadge() {
-    if (!this.chatBadge) return;
-    if (this.unreadMessages > 0) {
-      this.chatBadge.classList.remove('hidden');
-      this.chatBadge.textContent = this.unreadMessages;
-    } else {
-      this.chatBadge.classList.add('hidden');
-    }
+    // Update the in-sidebar badge (#chatBadge) AND the floating
+    // control-button badge (#chatBtnBadge) so unread messages are
+    // visible even when the chat panel is closed.
+    const badges = [
+      document.querySelector('#chatBadge'),
+      document.querySelector('#chatBtnBadge'),
+    ];
+    badges.forEach(badge => {
+      if (!badge) return;
+      if (this.unreadMessages > 0) {
+        badge.classList.remove('hidden');
+        badge.textContent = this.unreadMessages;
+        // Ensure it's display-flex if it was hidden via 'hidden' class
+        if (badge.id === 'chatBtnBadge') {
+          badge.classList.add('flex');
+        }
+      } else {
+        badge.classList.add('hidden');
+        if (badge.id === 'chatBtnBadge') {
+          badge.classList.remove('flex');
+        }
+      }
+    });
   }
 
   updateParticipantState(peerId, kind, value) {
@@ -661,10 +767,32 @@ class NumeriaConference {
     }
     if (kind === 'mute') {
       statusLabel.textContent = value ? 'Muet' : 'Micro actif';
+      // Toggle the muted indicator in the remote video tile
+      const mutedIndicator = document.querySelector(`#remote-muted-${peerId}`);
+      if (mutedIndicator) {
+        if (value) {
+          mutedIndicator.classList.remove('hidden');
+          mutedIndicator.classList.add('flex');
+        } else {
+          mutedIndicator.classList.add('hidden');
+          mutedIndicator.classList.remove('flex');
+        }
+      }
     }
     if (kind === 'camera') {
       statusLabel.textContent = value ? 'Vidéo active' : 'Vidéo coupée';
+      // Toggle the camera-off overlay in the remote video tile
       const tile = document.querySelector(`#remote-tile-${peerId}`);
+      const cameraOffOverlay = document.querySelector(`#remote-camera-off-${peerId}`);
+      if (cameraOffOverlay) {
+        if (value) {
+          cameraOffOverlay.classList.add('hidden');
+          cameraOffOverlay.classList.remove('flex');
+        } else {
+          cameraOffOverlay.classList.remove('hidden');
+          cameraOffOverlay.classList.add('flex');
+        }
+      }
       if (tile) {
         tile.classList.toggle('opacity-50', !value);
       }
