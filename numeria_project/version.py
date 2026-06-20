@@ -1,1 +1,1 @@
-DEPLOY_COMMIT = 'ffa596a'
+DEPLOY_COMMIT = 'f3c2d72'
