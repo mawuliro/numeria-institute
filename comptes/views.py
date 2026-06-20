@@ -1,5 +1,5 @@
 import logging
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -10,7 +10,6 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django_ratelimit.decorators import ratelimit
-from django_ratelimit.exceptions import Ratelimited
 from django.contrib.auth.views import PasswordResetView
 from django.urls import reverse_lazy
 from numeria_project.emails import send_verification_email, verify_email_token
