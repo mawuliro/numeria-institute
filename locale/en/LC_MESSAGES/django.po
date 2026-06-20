@@ -4966,16 +4966,12 @@ msgid "— Choisir un sujet —"
 msgstr "— Choose a subject —"
 
 #: pages/forms.py:10
-#, fuzzy
-#| msgid "Demande de mentorat"
 msgid "Demande d'information"
-msgstr "Mentoring request"
+msgstr "Information request"
 
 #: pages/forms.py:11
-#, fuzzy
-#| msgid "Inscriptions fermées"
 msgid "Inscription aux filières"
-msgstr "Enrolments closed"
+msgstr "Programme enrollment"
 
 #: pages/forms.py:12
 msgid "Proposition de partenariat"
@@ -4986,16 +4982,12 @@ msgid "Contact presse / média"
 msgstr "Press / media contact"
 
 #: pages/forms.py:14
-#, fuzzy
-#| msgid "Problème de réseau"
 msgid "Problème technique"
-msgstr "Network problem"
+msgstr "Technical issue"
 
 #: pages/forms.py:22 pages/templates/pages/contact.html:74
-#, fuzzy
-#| msgid "Votre prénom"
 msgid "Votre nom et prénom"
-msgstr "Your first name"
+msgstr "Your full name"
 
 #: pages/forms.py:34
 msgid "Organisation / Université"
@@ -5052,10 +5044,8 @@ msgid "Pays représentés"
 msgstr "Countries represented"
 
 #: pages/templates/pages/a_propos.html:66
-#, fuzzy
-#| msgid "En attente de confirmation"
 msgid "Année de création"
-msgstr "Awaiting confirmation"
+msgstr "Year founded"
 
 #: pages/templates/pages/a_propos.html:80
 msgid "Notre histoire"
@@ -6116,16 +6106,12 @@ msgid ""
 msgstr "For any questions regarding your personal data, contact us at:"
 
 #: pages/templates/pages/contact.html:35
-#, fuzzy
-#| msgid "Envoyer la demande"
 msgid "Envoyer un message"
-msgstr "Send the request"
+msgstr "Send a message"
 
 #: pages/templates/pages/contact.html:105
-#, fuzzy
-#| msgid "Navigation"
 msgid "Organisation"
-msgstr "Navigation"
+msgstr "Organisation"
 
 #: pages/templates/pages/contact.html:106
 #, fuzzy
@@ -6150,20 +6136,16 @@ msgstr ""
 "Institute (university, company, NGO, institution)"
 
 #: pages/templates/pages/contact.html:174
-#, fuzzy
-#| msgid "Envoyer la demande"
 msgid "Envoyer le message"
-msgstr "Send the request"
+msgstr "Send message"
 
 #: pages/templates/pages/contact.html:178
 msgid "Nous répondons sous 24 à 48 heures ouvrables."
 msgstr "We respond within 24 to 48 business hours."
 
 #: pages/templates/pages/contact.html:191
-#, fuzzy
-#| msgid "Nos cours"
 msgid "Nos coordonnées"
-msgstr "Our courses"
+msgstr "Our contact details"
 
 #: pages/templates/pages/contact.html:236
 msgid "Horaires"
@@ -6174,10 +6156,8 @@ msgid "Heure de Lomé (GMT+0)"
 msgstr "Lomé time (GMT+0)"
 
 #: pages/templates/pages/contact.html:248
-#, fuzzy
-#| msgid "Question initiale"
 msgid "Questions fréquentes"
-msgstr "Original question"
+msgstr "Frequently asked questions"
 
 #: pages/templates/pages/contact.html:254
 msgid "Les cours en ligne sont-ils gratuits ?"

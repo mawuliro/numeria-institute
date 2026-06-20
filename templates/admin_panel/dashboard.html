@@ -2,46 +2,46 @@
 {% load i18n humanize %}
 
 {% block page_title %}{% trans "Dashboard" %}{% endblock %}
-{% block page_heading %}{% trans "Tableau de bord" %}{% endblock %}
+{% block page_heading %}{% trans "Dashboard" %}{% endblock %}
 
 {% block content %}
 <div class="grid gap-4 mb-8 xl:grid-cols-[1.7fr_1fr]">
   <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
     <div class="flex items-start justify-between gap-4">
       <div>
-        <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Vue rapide</p>
-        <h2 class="mt-3 text-2xl font-semibold text-slate-900">Bienvenue dans l’espace staff</h2>
-        <p class="mt-2 text-sm text-slate-500 max-w-2xl">Gérez les contenus, suivez les candidatures, et accédez aux statistiques pédagogiques en un seul endroit.</p>
+        <p class="text-xs uppercase tracking-[0.24em] text-slate-400">{% trans "Quick view" %}</p>
+        <h2 class="mt-3 text-2xl font-semibold text-slate-900">{% trans "Welcome to the staff space" %}</h2>
+        <p class="mt-2 text-sm text-slate-500 max-w-2xl">{% trans "Manage content, track applications, and access pedagogical statistics in one place." %}</p>
       </div>
       <div class="inline-flex h-12 w-12 items-center justify-center rounded-3xl bg-sky-100 text-sky-700 text-2xl">⚡</div>
     </div>
     <div class="mt-6 grid gap-3 sm:grid-cols-2">
       <a href="{% url 'admin_panel:cours_create' %}"
-         class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">Créer un cours</a>
+         class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">{% trans "Create a course" %}</a>
       <a href="{% url 'admin_panel:formation_create' %}"
-         class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">Créer une formation</a>
+         class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">{% trans "Create a formation" %}</a>
       <a href="{% url 'admin_panel:contacts_list' %}?status=unread"
-         class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">Messages non lus</a>
+         class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">{% trans "Unread messages" %}</a>
       <a href="{% url 'admin_panel:activity_log' %}"
-         class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">Activité récente</a>
+         class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">{% trans "Recent activity" %}</a>
     </div>
   </div>
 
   <div class="rounded-2xl border border-slate-200 bg-gradient-to-br from-sky-600 to-cyan-500 p-6 text-white shadow-md">
     <div class="flex items-start gap-4">
       <div>
-        <p class="uppercase tracking-[0.24em] text-sky-200 text-[11px]">Synthèse</p>
-        <h3 class="mt-3 text-2xl font-semibold">Statistiques clés</h3>
+        <p class="uppercase tracking-[0.24em] text-sky-200 text-[11px]">{% trans "Summary" %}</p>
+        <h3 class="mt-3 text-2xl font-semibold">{% trans "Key statistics" %}</h3>
       </div>
       <div class="ml-auto text-4xl">📈</div>
     </div>
     <div class="mt-6 grid gap-3">
       <div class="rounded-2xl bg-white/10 p-4">
-        <div class="text-xs uppercase tracking-[0.18em] text-sky-200">Paiements ce mois</div>
+        <div class="text-xs uppercase tracking-[0.18em] text-sky-200">{% trans "Payments this month" %}</div>
         <div class="mt-2 text-3xl font-semibold">{{ cards.payments_this_month }}</div>
       </div>
       <div class="rounded-2xl bg-white/10 p-4">
-        <div class="text-xs uppercase tracking-[0.18em] text-sky-200">Montant</div>
+        <div class="text-xs uppercase tracking-[0.18em] text-sky-200">{% trans "Amount" %}</div>
         <div class="mt-2 text-3xl font-semibold">{{ cards.payments_amount|intcomma }} FCFA</div>
       </div>
     </div>
@@ -56,7 +56,7 @@
     <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl">📩</div>
     <div>
       <div class="text-2xl font-bold text-slate-800">{{ cards.unread_contacts }}</div>
-      <div class="text-sm text-slate-500">{% trans "Messages non lus" %}</div>
+      <div class="text-sm text-slate-500">{% trans "Unread messages" %}</div>
     </div>
   </a>
 
@@ -65,7 +65,7 @@
     <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-2xl">📋</div>
     <div>
       <div class="text-2xl font-bold text-slate-800">{{ cards.pending_candidacies }}</div>
-      <div class="text-sm text-slate-500">{% trans "Candidatures en attente" %}</div>
+      <div class="text-sm text-slate-500">{% trans "Pending applications" %}</div>
     </div>
   </a>
 
@@ -74,7 +74,7 @@
     <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl">🧑‍🏫</div>
     <div>
       <div class="text-2xl font-bold text-slate-800">{{ cards.pending_mentor_applications }}</div>
-      <div class="text-sm text-slate-500">{% trans "Candidatures mentor" %}</div>
+      <div class="text-sm text-slate-500">{% trans "Mentor applications" %}</div>
     </div>
   </a>
 
@@ -83,7 +83,7 @@
     <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-2xl">🤝</div>
     <div>
       <div class="text-2xl font-bold text-slate-800">{{ cards.pending_mentorships }}</div>
-      <div class="text-sm text-slate-500">{% trans "Demandes mentorat" %}</div>
+      <div class="text-sm text-slate-500">{% trans "Mentorship requests" %}</div>
     </div>
   </a>
 
@@ -92,7 +92,7 @@
     <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-2xl">👥</div>
     <div>
       <div class="text-2xl font-bold text-slate-800">{{ cards.total_users|intcomma }}</div>
-      <div class="text-sm text-slate-500">{% trans "Utilisateurs actifs" %}</div>
+      <div class="text-sm text-slate-500">{% trans "Active users" %}</div>
     </div>
   </a>
 
@@ -101,7 +101,7 @@
     <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-2xl">📚</div>
     <div>
       <div class="text-2xl font-bold text-slate-800">{{ cards.total_courses }}</div>
-      <div class="text-sm text-slate-500">{% trans "Cours publiés" %}</div>
+      <div class="text-sm text-slate-500">{% trans "Published courses" %}</div>
     </div>
   </a>
 
@@ -109,7 +109,7 @@
     <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl">💰</div>
     <div>
       <div class="text-2xl font-bold text-slate-800">{{ cards.payments_this_month }}</div>
-      <div class="text-sm text-slate-500">{% trans "Paiements ce mois" %} · {{ cards.payments_amount|intcomma }} FCFA</div>
+      <div class="text-sm text-slate-500">{% trans "Payments this month" %} · {{ cards.payments_amount|intcomma }} FCFA</div>
     </div>
   </div>
 
@@ -118,8 +118,8 @@
 <!-- Recent activity -->
 <div class="bg-white rounded-xl border border-slate-200">
   <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-    <h2 class="font-semibold text-slate-800">📊 {% trans "Activité récente" %}</h2>
-    <a href="{% url 'admin_panel:activity_log' %}" class="text-sky-600 text-sm hover:underline">{% trans "Tout voir" %}</a>
+    <h2 class="font-semibold text-slate-800">📊 {% trans "Recent activity" %}</h2>
+    <a href="{% url 'admin_panel:activity_log' %}" class="text-sky-600 text-sm hover:underline">{% trans "See all" %}</a>
   </div>
   {% if recent_activity %}
   <ul class="divide-y divide-slate-100">

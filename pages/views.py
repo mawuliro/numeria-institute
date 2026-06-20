@@ -168,6 +168,7 @@ def contact(request):
     """Vue de la page Contact — sauvegarde en base uniquement, aucun email."""
     from .forms import FormulaireContact
     from django.contrib import messages
+    from django.utils.translation import get_language
 
     contactpage = ContactPage.objects.first()
     if not contactpage:
@@ -184,6 +185,16 @@ def contact(request):
     elif contactpage.email != settings.CONTACT_EMAIL:
         contactpage.email = settings.CONTACT_EMAIL
         contactpage.save(update_fields=['email'])
+
+    # Override DB-stored fields with locale-appropriate strings at render time.
+    # The DB keeps the French default; English visitors see English content.
+    if get_language() == 'en':
+        contactpage.title = _("Contact us")
+        contactpage.intro = _("A question, a partnership idea, or simply want to know more? We are here for you.")
+        contactpage.address = _("Lomé, Togo")
+        contactpage.hours = _("Mon-Fri: 9am-6pm")
+        contactpage.meta_title = "Contact - Numeria Institute"
+        contactpage.meta_description = _("Contact Numeria Institute for any question or partnership.")
 
     if request.method == 'POST':
         formulaire = FormulaireContact(request.POST)

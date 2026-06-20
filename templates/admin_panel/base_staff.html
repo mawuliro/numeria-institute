@@ -150,111 +150,111 @@
     <!-- Dashboard -->
     <a href="{% url 'admin_panel:dashboard' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if request.resolver_match.url_name == 'dashboard' %}active{% else %}text-slate-300{% endif %}">
-      <span>🏠</span> Dashboard
+      <span>🏠</span> {% trans "Dashboard" %}
     </a>
 
-    <div class="sidebar-heading">Création</div>
+    <div class="sidebar-heading">{% trans "Create" %}</div>
     <a href="{% url 'admin_panel:cours_create' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if request.resolver_match.url_name == 'cours_create' %}active{% else %}text-slate-300{% endif %}">
-      <span>➕</span> Nouveau cours
+      <span>➕</span> {% trans "New course" %}
     </a>
     <a href="{% url 'admin_panel:formation_create' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if request.resolver_match.url_name == 'formation_create' %}active{% else %}text-slate-300{% endif %}">
-      <span>➕</span> Nouvelle formation
+      <span>➕</span> {% trans "New formation" %}
     </a>
 
     <div class="sidebar-separator"></div>
-    <div class="sidebar-heading">Contenu</div>
+    <div class="sidebar-heading">{% trans "Content" %}</div>
 
     <a href="{% url 'admin_panel:cours_list' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'cours' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
-      <span>📚</span> Cours
+      <span>📚</span> {% trans "Courses" %}
       {% if sidebar_draft_courses %}<span class="ml-auto bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_draft_courses }}</span>{% endif %}
     </a>
 
     <a href="{% url 'admin_panel:formation_list' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'formation' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
-      <span>🎓</span> Formations
+      <span>🎓</span> {% trans "Formations" %}
       {% if sidebar_draft_formations %}<span class="ml-auto bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_draft_formations }}</span>{% endif %}
     </a>
 
     <a href="{% url 'admin_panel:blog_list' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'blog' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
-      <span>📝</span> Blog / Articles
+      <span>📝</span> {% trans "Blog / Articles" %}
     </a>
 
     <a href="{% url 'admin_panel:media_list' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'media' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
-      <span>🖼️</span> Médiathèque
+      <span>🖼️</span> {% trans "Media library" %}
     </a>
 
-    <div class="sidebar-heading">Apprenants</div>
+    <div class="sidebar-heading">{% trans "Learners" %}</div>
 
     <a href="{% url 'admin_panel:contacts_list' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'contact' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
-      <span>📩</span> Contacts
+      <span>📩</span> {% trans "Contacts" %}
       {% if sidebar_unread_contacts %}<span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_unread_contacts }}</span>{% endif %}
     </a>
 
     <a href="{% url 'admin_panel:candidatures_list' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'candidature' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
-      <span>📋</span> Candidatures
+      <span>📋</span> {% trans "Applications" %}
       {% if sidebar_pending_candidacies %}<span class="ml-auto bg-yellow-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_pending_candidacies }}</span>{% endif %}
     </a>
 
     <a href="{% url 'mentorat:applications_list' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'applications_list' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
-      <span>🎓</span> Candidatures Mentor
+      <span>🎓</span> {% trans "Mentor applications" %}
     </a>
 
     <a href="{% url 'admin_panel:mentorat_list' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'mentorat' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
-      <span>🤝</span> Mentorat
+      <span>🤝</span> {% trans "Mentorship" %}
       {% if sidebar_pending_mentorships %}<span class="ml-auto bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ sidebar_pending_mentorships }}</span>{% endif %}
     </a>
 
     <a href="{% url 'admin_panel:users_list' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'user' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
-      <span>👥</span> Utilisateurs
+      <span>👥</span> {% trans "Users" %}
     </a>
 
     <a href="{% url 'admin_panel:exercises_list' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'exercise' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
-      <span>💻</span> Exercices code
+      <span>💻</span> {% trans "Code exercises" %}
     </a>
 
     <a href="{% url 'admin_panel:mcq_list' %}"
        class="sidebar-link flex items-center gap-3 px-5 py-2.5 font-medium {% if 'mcq' in request.resolver_match.url_name %}active{% else %}text-slate-300{% endif %}">
-      <span>🔘</span> Exercices QCM
+      <span>🔘</span> {% trans "MCQ exercises" %}
     </a>
 
     <!-- ── SYSTÈME ── -->
-    <div class="px-5 py-1.5 text-slate-500 text-[10px] uppercase tracking-wider mt-2">Système</div>
+    <div class="px-5 py-1.5 text-slate-500 text-[10px] uppercase tracking-wider mt-2">{% trans "System" %}</div>
 
     <a href="{% url 'notifications:send' %}"
        class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 text-slate-300">
-      <span>🔔</span> Notifications
+      <span>🔔</span> {% trans "Notifications" %}
     </a>
 
     <a href="{% url 'admin_panel:admin_sandbox' %}"
        class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if request.resolver_match.url_name == 'admin_sandbox' %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
-      <span>🐍</span> Sandbox Admin
+      <span>🐍</span> {% trans "Sandbox Admin" %}
     </a>
 
     <a href="{% url 'admin_panel:activity_log' %}"
        class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 {% if request.resolver_match.url_name == 'activity_log' %}bg-white/10 text-sky-400{% else %}text-slate-300{% endif %}">
-      <span>📊</span> Activité
+      <span>📊</span> {% trans "Activity" %}
     </a>
 
     <div class="border-t border-white/10 my-2"></div>
 
     <a href="/numeria-staff-portal/" target="_blank"
        class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 text-slate-500">
-      <span>⚙️</span> Django Admin
+      <span>⚙️</span> {% trans "Django Admin" %}
     </a>
     <a href="{% url 'accueil' %}"
        class="flex items-center gap-3 px-5 py-2.5 font-medium transition-colors hover:bg-white/10 text-slate-500">
-      <span>🌐</span> Voir le site
+      <span>🌐</span> {% trans "View site" %}
     </a>
   </nav>
 
