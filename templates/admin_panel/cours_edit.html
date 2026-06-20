@@ -367,6 +367,9 @@ const SAVE_URL          = '{{ save_url }}';
 const MODULE_CREATE_URL = '{{ module_create_url }}';
 const REORDER_URL       = '{{ reorder_url }}';
 const CSRF              = document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '';
+// Locale-aware admin-panel prefix — was hardcoded to '/fr/admin-panel' which 404'd
+// for English-locale staff. i18n_patterns prefixes every locale (fr/en).
+const AP                = '/{{ request.LANGUAGE_CODE }}/admin-panel';
 
 const BLOCK_PALETTE = [
   ['📝','text','Texte'],
@@ -504,7 +507,7 @@ async function createModule() {
 
 async function saveModuleTitle(id, title) {
   if (!title) return;
-  await fetch(`/fr/admin-panel/cours/ajax/module/${id}/update/`, {
+  await fetch(`${AP}/cours/ajax/module/${id}/update/`, {
     method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
     body: JSON.stringify({titre: title}),
   });
@@ -512,7 +515,7 @@ async function saveModuleTitle(id, title) {
 
 function confirmDeleteModule(id, title) {
   if (!confirm(`Supprimer le module « ${title} » et toutes ses leçons ?`)) return;
-  fetch(`/fr/admin-panel/cours/ajax/module/${id}/delete/`, {
+  fetch(`${AP}/cours/ajax/module/${id}/delete/`, {
     method:'POST', headers:{'X-CSRFToken':CSRF},
   }).then(() => window.location.reload());
 }
@@ -530,7 +533,7 @@ async function submitAddLesson() {
   const title    = document.getElementById('new-lesson-title').value.trim();
   const moduleId = document.getElementById('new-lesson-module-id').value;
   if (!title) return;
-  const r = await fetch(`/fr/admin-panel/cours/${COURSE_SLUG}/ajax/lecon/create/`, {
+  const r = await fetch(`${AP}/cours/${COURSE_SLUG}/ajax/lecon/create/`, {
     method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
     body: JSON.stringify({titre: title, module_id: moduleId || null}),
   });
@@ -539,7 +542,7 @@ async function submitAddLesson() {
 
 function confirmDeleteLesson(id, title) {
   if (!confirm(`Supprimer la leçon « ${title} » ?`)) return;
-  fetch(`/fr/admin-panel/cours/ajax/lecon/${id}/delete/`, {
+  fetch(`${AP}/cours/ajax/lecon/${id}/delete/`, {
     method:'POST', headers:{'X-CSRFToken':CSRF},
   }).then(() => window.location.reload());
 }
@@ -607,8 +610,8 @@ function saveDrawerTitle() {
   const title = document.getElementById('drawer-lesson-title').textContent.trim();
   if (!title || !drawerLessonId) return;
   const url = drawerLessonType === 'formation'
-    ? `/fr/admin-panel/formations/ajax/lecon/${drawerLessonId}/save/`
-    : `/fr/admin-panel/cours/ajax/lecon/${drawerLessonId}/save/`;
+    ? `${AP}/formations/ajax/lecon/${drawerLessonId}/save/`
+    : `${AP}/cours/ajax/lecon/${drawerLessonId}/save/`;
   fetch(url, {
     method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
     body: JSON.stringify({titre: title}),
@@ -619,8 +622,8 @@ async function loadDrawerBlocks(lessonId, type) {
   document.getElementById('drawer-body').innerHTML =
     '<div class="flex items-center justify-center h-40 text-slate-400 text-sm">Chargement…</div>';
   const url = type === 'formation'
-    ? `/fr/admin-panel/formation-lessons/${lessonId}/blocks/`
-    : `/fr/admin-panel/lessons/${lessonId}/blocks/`;
+    ? `${AP}/formation-lessons/${lessonId}/blocks/`
+    : `${AP}/lessons/${lessonId}/blocks/`;
   const r = await fetch(url);
   if (!r.ok) { document.getElementById('drawer-body').innerHTML = '<p class="p-4 text-red-500">Erreur de chargement</p>'; return; }
   const data = await r.json();
@@ -651,8 +654,8 @@ function togglePalette() {
 async function addBlock(blockType) {
   document.getElementById('block-palette').classList.add('hidden');
   const url = drawerLessonType === 'formation'
-    ? `/fr/admin-panel/formation-lessons/${drawerLessonId}/blocks/add/`
-    : `/fr/admin-panel/lessons/${drawerLessonId}/blocks/add/`;
+    ? `${AP}/formation-lessons/${drawerLessonId}/blocks/add/`
+    : `${AP}/lessons/${drawerLessonId}/blocks/add/`;
   const r = await fetch(url, {
     method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
     body: JSON.stringify({block_type: blockType}),
