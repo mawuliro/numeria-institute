@@ -482,6 +482,7 @@ class LessonBlock(models.Model):
                 data['fill_blank_id'] = ex.id
                 data['title'] = ex.title
                 data['text_with_blanks'] = ex.text_with_blanks or ''
+                data['text_rendered'] = ex.text_with_blanks or ''
                 data['blank_count'] = len(ex.answers) if isinstance(ex.answers, dict) else 0
                 data['points'] = ex.points
                 data['difficulty'] = ex.difficulty
