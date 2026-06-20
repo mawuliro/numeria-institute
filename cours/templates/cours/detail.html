@@ -279,13 +279,19 @@
                     {% if lesson_blocks %}
                     {# New block-based rendering #}
                     {% include 'cours/components/lesson_blocks_render.html' with lesson_blocks=lesson_blocks %}
-                    {% else %}
-                    {# Legacy: single contenu field #}
+                    {% elif code_exercises %}
+                    {# Legacy: code exercises without blocks #}
                     <div class="contenu-article prose dark:prose-invert max-w-none
                                 text-gray-700 dark:text-gray-200 leading-relaxed mb-8">
-                        {% if lesson_blocks %}
-                            {% include 'cours/components/lesson_blocks_render.html' with lesson_blocks=lesson_blocks %}
-                        {% endif %}
+                        {% for ex in code_exercises %}
+                            {% include 'cours/components/code_sandbox.html' with exercise=ex %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {# No content yet #}
+                    <div class="contenu-article prose dark:prose-invert max-w-none
+                                text-gray-700 dark:text-gray-200 leading-relaxed mb-8">
+                        <p class="text-gray-400 italic">{% trans "Le contenu de cette leçon sera bientôt disponible." %}</p>
                     </div>
                     {% endif %}
                     {% else %}
