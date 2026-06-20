@@ -87,7 +87,7 @@ class Command(BaseCommand):
         for module_data in COURSE_STRUCTURE:
             module = self.upsert_module(course, module_data)
             for lesson_data in module_data['lessons']:
-                lesson = self.upsert_lesson(module, lesson_data)
+                lesson = self.upsert_lesson(course, module, lesson_data)
                 self.upsert_blocks(lesson, lesson_data['blocks'])
 
         self.stdout.write(self.style.SUCCESS(
@@ -106,10 +106,10 @@ class Command(BaseCommand):
         )
         return module
 
-    def upsert_lesson(self, module, data):
+    def upsert_lesson(self, course, module, data):
         slug = data.get('slug') or data['title'].lower().replace(' ', '-').replace('é', 'e').replace('à', 'a').replace('è', 'e').replace('û', 'u').replace("'", '-')
         lesson, _ = CourseLesson.objects.get_or_create(
-            module=module, title=data['title'],
+            course=course, module=module, title=data['title'],
             defaults={
                 'slug': slug,
                 'order': data['order'],
