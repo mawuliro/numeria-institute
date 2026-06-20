@@ -56,16 +56,16 @@ def render_content(value):
 
     def protect(match):
         # Use a placeholder that Markdown won't interpret.
-        # Double underscores (__PROT0__) were previously used but Markdown
-        # interprets __text__ as bold, destroying the placeholder.
         # ZQZPROT0ZQZ has no Markdown significance.
         key = f'ZQZPROT{counter[0]}ZQZ'
         placeholders[key] = match.group(0)
         counter[0] += 1
         return key
 
-    # Protect code and blanks before LaTeX
-    text = _FENCED.sub(protect, text)
+    # Protect ONLY inline code and blanks before LaTeX.
+    # Do NOT protect fenced code blocks — the 'fenced_code' Markdown
+    # extension handles them natively and produces <pre><code> HTML.
+    # Protecting them would prevent Markdown from seeing the ``` markers.
     text = _INLINE_CODE.sub(protect, text)
     text = _BLANK.sub(protect, text)
 
