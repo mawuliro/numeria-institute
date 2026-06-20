@@ -156,13 +156,13 @@ function renderChoices() {
   }
 }
 
-function mcqOnChange(mid) {
+window['mcqOnChange'] = function(mid) {
   var any = document.querySelectorAll(
     'input[name="mcq-' + mid + '-choice"]:checked'
   ).length > 0;
   var btn = document.getElementById('mcq-submit-' + mid);
   if (btn) btn.disabled = !any;
-}
+};
 
 function updateAttemptsLabel() {
   var el = document.getElementById('mcq-attempts-' + MID);
