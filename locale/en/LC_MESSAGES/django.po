@@ -8955,3 +8955,14 @@ msgstr "Tip: check that your camera and microphone work while you wait."
 
 msgid "Caméra off"
 msgstr "Camera off"
+
+# ─── Visioconference extras: reactions, pin, fullscreen, quality ──────────
+
+msgid "Réactions"
+msgstr "Reactions"
+
+msgid "Envoyer une réaction"
+msgstr "Send a reaction"
+
+msgid "Aucun participant épinglé"
+msgstr "No participant pinned"
