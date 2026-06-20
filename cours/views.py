@@ -47,7 +47,7 @@ def detail_cours(request, cours_id):
     from .lesson_blocks import build_lesson_blocks, build_legacy_code_exercises
 
     cours  = get_object_or_404(Course, id=cours_id, status='published')
-    lecons = cours.lessons.filter(is_active=True)
+    lecons = cours.lessons.filter(is_active=True).order_by('module__order', 'order')
 
     est_inscrit          = False
     inscription          = None

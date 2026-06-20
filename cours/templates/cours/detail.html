@@ -180,7 +180,7 @@
                         {% if lecon.id in lecons_terminees_ids %}
                             ✓
                         {% else %}
-                            {{ lecon.order }}
+                            {{ lecon.order|add:1 }}
                         {% endif %}
                     </div>
 
@@ -260,7 +260,7 @@
                     <div class="flex items-start justify-between gap-4 mb-6">
                         <div>
                             <p class="text-xs text-gray-400 dark:text-gray-500 mb-1">
-                                Leçon {{ lecon_active.order }} sur {{ total_lecons }}
+                                Leçon {{ lecon_active.order|add:1 }} sur {{ total_lecons }}
                             </p>
                             <h1 class="text-2xl sm:text-3xl font-bold text-numeria-bleu dark:text-numeria-or">
                                 {{ lecon_active.title }}
@@ -315,7 +315,7 @@
                     {% endif %}
 
                     <!-- ===== EXERCICES DE LA LEÇON ===== -->
-                    {% if exercices and est_inscrit %}
+                    {% if exercices and est_inscrit and not lesson_blocks %}
                     <div class="border-t border-gray-200 dark:border-gray-700 pt-8 mb-8">
 
                         <h2 class="text-xl font-bold text-numeria-bleu dark:text-numeria-or mb-6 flex items-center gap-2">
