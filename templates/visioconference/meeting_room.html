@@ -57,8 +57,16 @@
     <div class="h-full flex gap-3">
 
       <!-- Video grid (flexes) -->
-      <section class="flex-1 min-w-0">
-        <div id="video-grid" class="grid gap-3 h-full auto-rows-fr" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));"></div>
+      <section class="flex-1 min-w-0 flex flex-col gap-3">
+        <!-- Pinned tile: when a participant is pinned, this large tile shows them.
+             The grid below shrinks to thumbnails. Hidden by default. -->
+        <div id="pinned-tile-container" class="hidden flex-1 min-h-[300px] relative rounded-2xl overflow-hidden border border-white/10 bg-[#131826] shadow-lg shadow-black/30">
+          <!-- Tile content is injected here by JS (the pinned participant's tile gets moved in) -->
+          <div id="pinned-tile-empty" class="absolute inset-0 flex items-center justify-center text-slate-500 text-sm">
+            {% trans "Aucun participant épinglé" %}
+          </div>
+        </div>
+        <div id="video-grid" class="grid gap-3 auto-rows-fr flex-1" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));"></div>
 
         <!-- Local self-view: floating thumbnail (Meet-style) -->
         <div id="local-video-container" class="absolute top-4 right-4 z-20 w-[180px] sm:w-[220px] aspect-video rounded-2xl overflow-hidden border-2 border-white/10 bg-[#131826] shadow-2xl shadow-black/50 cursor-move transition-all hover:border-white/30">
@@ -117,6 +125,10 @@
           </div>
         </div>
       </aside>
+
+      <!-- ============ FLOATING REACTIONS OVERLAY ============ -->
+      <!-- Emoji reactions float up here when any participant sends one -->
+      <div id="reactions-overlay" class="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden="true"></div>
 
       <!-- ============ PARTICIPANTS SIDEBAR (slide-in overlay) ============ -->
       <aside id="participants-sidebar" class="hidden w-full sm:w-[340px] absolute right-0 top-0 bottom-0 z-30 bg-[#131826] border-l border-slate-700/50 flex-col shadow-2xl shadow-black/50 overflow-y-auto">
@@ -227,6 +239,34 @@
         <span class="absolute -bottom-7 left-1/2 -translate-x-1/2 text-[10px] text-slate-400 opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none">{% trans "Partager" %}</span>
       </button>
 
+      <!-- Reactions button (with emoji popover) -->
+      <div class="relative">
+        <button id="btn-reactions" type="button" title="{% trans 'Réactions' %}" class="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#1A2235] hover:bg-[#243049] text-white flex items-center justify-center transition" aria-label="{% trans 'Envoyer une réaction' %}">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+            <line x1="9" y1="9" x2="9.01" y2="9"/>
+            <line x1="15" y1="9" x2="15.01" y2="9"/>
+          </svg>
+          <span class="absolute -bottom-7 left-1/2 -translate-x-1/2 text-[10px] text-slate-400 opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none">{% trans "Réactions" %}</span>
+        </button>
+        <!-- Emoji popover -->
+        <div id="reactions-menu" class="hidden absolute bottom-full mb-2 right-0 bg-[#131826] border border-slate-700 rounded-2xl shadow-2xl shadow-black/50 p-2 z-40">
+          <div class="grid grid-cols-5 gap-1">
+            <button type="button" class="reaction-emoji w-10 h-10 rounded-xl hover:bg-white/10 text-2xl transition flex items-center justify-center" data-emoji="👍">👍</button>
+            <button type="button" class="reaction-emoji w-10 h-10 rounded-xl hover:bg-white/10 text-2xl transition flex items-center justify-center" data-emoji="🎉">🎉</button>
+            <button type="button" class="reaction-emoji w-10 h-10 rounded-xl hover:bg-white/10 text-2xl transition flex items-center justify-center" data-emoji="❤️">❤️</button>
+            <button type="button" class="reaction-emoji w-10 h-10 rounded-xl hover:bg-white/10 text-2xl transition flex items-center justify-center" data-emoji="👏">👏</button>
+            <button type="button" class="reaction-emoji w-10 h-10 rounded-xl hover:bg-white/10 text-2xl transition flex items-center justify-center" data-emoji="😂">😂</button>
+            <button type="button" class="reaction-emoji w-10 h-10 rounded-xl hover:bg-white/10 text-2xl transition flex items-center justify-center" data-emoji="😮">😮</button>
+            <button type="button" class="reaction-emoji w-10 h-10 rounded-xl hover:bg-white/10 text-2xl transition flex items-center justify-center" data-emoji="😢">😢</button>
+            <button type="button" class="reaction-emoji w-10 h-10 rounded-xl hover:bg-white/10 text-2xl transition flex items-center justify-center" data-emoji="🙏">🙏</button>
+            <button type="button" class="reaction-emoji w-10 h-10 rounded-xl hover:bg-white/10 text-2xl transition flex items-center justify-center" data-emoji="🔥">🔥</button>
+            <button type="button" class="reaction-emoji w-10 h-10 rounded-xl hover:bg-white/10 text-2xl transition flex items-center justify-center" data-emoji="💡">💡</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Chat button -->
       <button id="btn-chat" type="button" title="{% trans 'Discussion' %}" class="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#1A2235] hover:bg-[#243049] text-white flex items-center justify-center transition" aria-label="{% trans 'Discussion' %}">
         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -312,7 +352,7 @@
   const IS_HOST = {{ is_host|yesno:"true,false" }};
   const WS_URL = "{{ ws_url }}";
 
-  // ====== Wire up new UI buttons (close-panel + More menu + draggable self-view) ======
+  // ====== Wire up new UI buttons (close-panel + More menu + draggable self-view + reactions) ======
   // NOTE: The mic/camera/screen/chat/participants/leave/etc buttons are bound by
   // meeting.js via bindGlobalButtons() — we only add the NEW UI affordances here.
   document.addEventListener('DOMContentLoaded', () => {
@@ -340,6 +380,30 @@
       if (!moreBtn?.contains(e.target) && !moreMenu?.contains(e.target)) {
         moreMenu?.classList.add('hidden');
       }
+    });
+
+    // Reactions popover toggle
+    const reactionsBtn = document.querySelector('#btn-reactions');
+    const reactionsMenu = document.querySelector('#reactions-menu');
+    reactionsBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      reactionsMenu.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      if (!reactionsBtn?.contains(e.target) && !reactionsMenu?.contains(e.target)) {
+        reactionsMenu?.classList.add('hidden');
+      }
+    });
+    // Wire each emoji button to send a reaction
+    document.querySelectorAll('.reaction-emoji').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const emoji = btn.dataset.emoji;
+        if (emoji && window.numeriaConference) {
+          window.numeriaConference.sendReaction(emoji);
+        }
+        reactionsMenu?.classList.add('hidden');
+      });
     });
 
     // Make local self-view draggable (Meet-style)

@@ -85,6 +85,10 @@ class MeetingConsumer(AsyncWebsocketConsumer):
             await self.handle_camera_off_all()
         elif action == 'end_meeting':
             await self.handle_end_meeting()
+        elif action == 'reaction':
+            await self.handle_reaction(data)
+        elif action == 'pin_participant':
+            await self.handle_pin_participant(data)
 
     async def broadcast(self, event):
         await self.channel_layer.group_send(self.room_group_name, {'type': 'broadcast_event', 'event': event})
@@ -310,6 +314,34 @@ class MeetingConsumer(AsyncWebsocketConsumer):
             return
         await self.deactivate_room(room)
         await self.broadcast({'type': 'meeting_ended'})
+
+    async def handle_reaction(self, data):
+        """Broadcast an emoji reaction to all participants.
+        The reaction floats up on every screen for a few seconds.
+        Allowed emoji are validated server-side to prevent injection.
+        """
+        ALLOWED_REACTIONS = {'👍', '🎉', '❤️', '👏', '😂', '😮', '😢', '🙏', '🔥', '💡'}
+        emoji = (data.get('emoji') or '').strip()
+        if emoji not in ALLOWED_REACTIONS:
+            return
+        await self.broadcast({
+            'type': 'reaction',
+            'peer_id': self.peer_id,
+            'username': self.username,
+            'emoji': emoji,
+        })
+
+    async def handle_pin_participant(self, data):
+        """Broadcast a pin event so every participant sees the same tile pinned.
+        Any participant can pin (Meet-style); pinning a new participant un-pins the previous one.
+        Sending peer_id=None clears the pinned tile.
+        """
+        target = data.get('peer_id')
+        await self.broadcast({
+            'type': 'pin_participant',
+            'peer_id': target,
+            'pinned_by': self.peer_id,
+        })
 
     async def send_to_peer(self, peer_id, event):
         channel_name = MeetingConsumer.room_peer_channels.get(self.room_code, {}).get(peer_id)

@@ -218,6 +218,12 @@ class NumeriaConference {
       case 'camera_status':
         this.updateParticipantState(data.peer_id, 'camera', data.value);
         break;
+      case 'reaction':
+        this.spawnFloatingReaction(data.emoji, data.username);
+        break;
+      case 'pin_participant':
+        this.handlePinEvent(data.peer_id, data.pinned_by);
+        break;
       case 'meeting_ended':
         this.showToast('La réunion a été terminée par l’hôte.', true);
         setTimeout(() => this.leaveMeeting(), 2500);
@@ -228,6 +234,119 @@ class NumeriaConference {
       default:
         console.debug('Signal inconnu reçu:', data);
         break;
+    }
+  }
+
+  // ====== REACTIONS ======
+  spawnFloatingReaction(emoji, username = '') {
+    const overlay = document.querySelector('#reactions-overlay');
+    if (!overlay) return;
+    const el = document.createElement('div');
+    // Random horizontal position across the overlay width
+    const leftPercent = 15 + Math.random() * 70;
+    el.className = 'absolute text-5xl sm:text-6xl select-none';
+    el.style.left = `${leftPercent}%`;
+    el.style.bottom = '0';
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(0) scale(0.5)';
+    el.style.transition = 'transform 3.5s ease-out, opacity 3.5s ease-out';
+    el.style.willChange = 'transform, opacity';
+    el.style.textShadow = '0 4px 12px rgba(0,0,0,0.5)';
+    el.innerHTML = `<span>${this.escapeHtml(emoji)}</span>${username ? `<span class="block text-xs text-white/80 font-medium mt-1">${this.escapeHtml(username)}</span>` : ''}`;
+    overlay.appendChild(el);
+    // Trigger the float-up animation on next frame
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(-65vh) scale(1.4) rotate(' + (Math.random() * 30 - 15) + 'deg)';
+    });
+    // Remove after animation completes
+    setTimeout(() => el.remove(), 3600);
+  }
+
+  sendReaction(emoji) {
+    this.sendMessage({ type: 'reaction', emoji: emoji });
+    // Show locally immediately (don't wait for server echo)
+    this.spawnFloatingReaction(emoji, this.localUserName);
+  }
+
+  // ====== PIN PARTICIPANT ======
+  handlePinEvent(peerId, pinnedBy) {
+    const pinnedContainer = document.querySelector('#pinned-tile-container');
+    const pinnedEmpty = document.querySelector('#pinned-tile-empty');
+    const videoGrid = document.querySelector('#video-grid');
+    if (!pinnedContainer || !videoGrid) return;
+
+    // Clear previous pinned tile
+    const previousPinned = pinnedContainer.querySelector('[data-pinned-tile]');
+    if (previousPinned) {
+      // Move the tile back to the grid
+      videoGrid.appendChild(previousPinned);
+      previousPinned.removeAttribute('data-pinned-tile');
+      previousPinned.classList.remove('pinned-tile-active');
+    }
+
+    if (!peerId) {
+      // Unpin everyone
+      pinnedContainer.classList.add('hidden');
+      pinnedContainer.classList.remove('flex');
+      videoGrid.classList.remove('hidden');
+      // Remove "pinned" indicator from all tiles
+      document.querySelectorAll('.pin-indicator').forEach(el => el.classList.add('hidden'));
+      return;
+    }
+
+    // Find the tile to pin (local user uses #local-video-container, remote uses #remote-tile-{peerId})
+    let tileToPin = null;
+    if (peerId === this.localPeerId) {
+      tileToPin = document.querySelector('#local-video-container');
+    } else {
+      tileToPin = document.querySelector(`#remote-tile-${peerId}`);
+    }
+
+    if (!tileToPin) {
+      // Can't find the tile (maybe participant not connected yet) — just show empty
+      pinnedContainer.classList.remove('hidden');
+      pinnedContainer.classList.add('flex');
+      videoGrid.classList.add('hidden');
+      if (pinnedEmpty) {
+        pinnedEmpty.classList.remove('hidden');
+        pinnedEmpty.classList.add('flex');
+      }
+      return;
+    }
+
+    // Move the tile into the pinned container
+    pinnedContainer.appendChild(tileToPin);
+    tileToPin.setAttribute('data-pinned-tile', '1');
+    tileToPin.classList.add('pinned-tile-active');
+    // Make the pinned tile fill the container
+    tileToPin.classList.add('absolute', 'inset-0', 'w-full', 'h-full', 'rounded-2xl', 'border-0');
+    tileToPin.classList.remove('aspect-video', 'min-h-[200px]');
+
+    pinnedContainer.classList.remove('hidden');
+    pinnedContainer.classList.add('flex');
+    videoGrid.classList.remove('hidden');
+    videoGrid.classList.add('grid', 'grid-cols-4', 'sm:grid-cols-5', 'md:grid-cols-6', 'lg:grid-cols-8', 'gap-2');
+    videoGrid.style.gridTemplateColumns = '';  // Reset to Tailwind classes
+    // Make grid tiles smaller (thumbnails)
+    videoGrid.querySelectorAll('div[id^="remote-tile-"]').forEach(t => {
+      t.classList.add('aspect-video', 'min-h-[100px]', 'max-h-[140px]');
+    });
+    if (pinnedEmpty) pinnedEmpty.classList.add('hidden');
+
+    // Show "pinned" indicator on the pinned tile
+    const pinIndicator = tileToPin.querySelector('.pin-indicator');
+    if (pinIndicator) pinIndicator.classList.remove('hidden');
+  }
+
+  togglePinParticipant(peerId) {
+    // If already pinned, unpin; otherwise pin
+    const currentlyPinned = document.querySelector('[data-pinned-tile]');
+    const currentPeerId = currentlyPinned?.dataset.peerId || currentlyPinned?.id?.replace('remote-tile-', '').replace('local-video-container', this.localPeerId);
+    if (currentlyPinned && (currentPeerId === peerId)) {
+      this.sendMessage({ type: 'pin_participant', peer_id: null });
+    } else {
+      this.sendMessage({ type: 'pin_participant', peer_id: peerId });
     }
   }
 
@@ -458,12 +577,52 @@ class NumeriaConference {
     if (!tile) {
       tile = document.createElement('div');
       tile.id = `remote-tile-${peerId}`;
-      tile.className = 'relative overflow-hidden rounded-2xl border border-white/10 bg-[#131826] shadow-lg shadow-black/30 aspect-video min-h-[200px]';
+      tile.dataset.peerId = peerId;
+      tile.className = 'group relative overflow-hidden rounded-2xl border border-white/10 bg-[#131826] shadow-lg shadow-black/30 aspect-video min-h-[200px]';
       tile.innerHTML = `
         <video id="remote-video-${peerId}" autoplay playsinline class="absolute inset-0 w-full h-full object-cover"></video>
         <div class="absolute inset-0 hidden items-center justify-center bg-[#1A2235]" id="remote-camera-off-${peerId}">
           <div class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-xl font-bold text-white" style="font-family:'Outfit',sans-serif;">${this.escapeHtml(username.charAt(0).toUpperCase())}</div>
         </div>
+
+        <!-- Top-right hover controls: pin + fullscreen + connection quality -->
+        <div class="absolute top-2 right-2 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+          <!-- Connection quality indicator (updates via updateConnectionQuality) -->
+          <div id="quality-${peerId}" class="flex items-end gap-[2px] h-4 mr-1" title="Qualité de connexion">
+            <span class="w-[3px] h-1.5 bg-emerald-400 rounded-sm"></span>
+            <span class="w-[3px] h-2.5 bg-emerald-400 rounded-sm"></span>
+            <span class="w-[3px] h-3.5 bg-emerald-400 rounded-sm"></span>
+          </div>
+          <!-- Pin button -->
+          <button type="button" data-pin-peer="${this.escapeHtml(peerId)}" class="w-7 h-7 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white flex items-center justify-center transition" title="Épingler" aria-label="Épingler ce participant">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="17" x2="12" y2="22"/>
+              <path d="M5 17h14l-1.5-3h-11z"/>
+              <path d="M8 14V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v10"/>
+            </svg>
+          </button>
+          <!-- Fullscreen button -->
+          <button type="button" data-fullscreen-peer="${this.escapeHtml(peerId)}" class="w-7 h-7 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white flex items-center justify-center transition" title="Plein écran" aria-label="Plein écran">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3"/>
+              <path d="M21 8V5a2 2 0 0 0-2-2h-3"/>
+              <path d="M3 16v3a2 2 0 0 0 2 2h3"/>
+              <path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Pinned indicator (shown when this tile is pinned) -->
+        <div class="pin-indicator hidden absolute top-2 left-2 bg-numeria-or/90 text-[#0B0F1A] text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 z-10">
+          <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="12" y1="17" x2="12" y2="22"/>
+            <path d="M5 17h14l-1.5-3h-11z"/>
+            <path d="M8 14V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v10"/>
+          </svg>
+          Épinglé
+        </div>
+
+        <!-- Bottom: name + mic indicator -->
         <div class="absolute bottom-2 left-2 right-2 flex items-center justify-between gap-2 pointer-events-none">
           <div class="bg-black/70 backdrop-blur-sm rounded-full px-2.5 py-1 text-xs font-medium text-white truncate max-w-[80%]">${this.escapeHtml(username)}</div>
           <div id="remote-muted-${peerId}" class="hidden w-6 h-6 rounded-full bg-red-500/80 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
@@ -477,6 +636,21 @@ class NumeriaConference {
       `;
       document.querySelector('#video-grid')?.appendChild(tile);
       this.updateVideoCount();
+
+      // Wire up the pin + fullscreen hover buttons
+      tile.querySelector('[data-pin-peer]')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.togglePinParticipant(peerId);
+      });
+      tile.querySelector('[data-fullscreen-peer]')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleTileFullscreen(tile);
+      });
+      // Double-click on tile = fullscreen
+      tile.addEventListener('dblclick', () => this.toggleTileFullscreen(tile));
+
+      // Start tracking connection quality for this peer
+      this.startConnectionQualityTracking(peerId);
     }
     const video = tile.querySelector('video');
     if (video) {
@@ -485,12 +659,101 @@ class NumeriaConference {
     }
   }
 
+  // ====== FULLSCREEN TILE ======
+  toggleTileFullscreen(tile) {
+    if (!tile) return;
+    // Use the browser Fullscreen API on the tile element
+    if (!document.fullscreenElement) {
+      const request = tile.requestFullscreen || tile.webkitRequestFullscreen || tile.mozRequestFullScreen || tile.msRequestFullscreen;
+      if (request) {
+        request.call(tile).catch(err => console.warn('Fullscreen request failed:', err));
+        tile.classList.add('fullscreen-active');
+      }
+    } else {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+      if (exit) {
+        exit.call(document).catch(err => console.warn('Fullscreen exit failed:', err));
+      }
+      document.querySelectorAll('.fullscreen-active').forEach(el => el.classList.remove('fullscreen-active'));
+    }
+  }
+
+  // ====== CONNECTION QUALITY INDICATOR ======
+  // Updates the 3-bar signal indicator on each remote tile based on
+  // WebRTC stats (packets lost, RTT, etc.).
+  startConnectionQualityTracking(peerId) {
+    if (this._qualityIntervals && this._qualityIntervals[peerId]) return;
+    if (!this._qualityIntervals) this._qualityIntervals = {};
+
+    this._qualityIntervals[peerId] = setInterval(async () => {
+      const pc = this.peerConnections[peerId];
+      if (!pc) return;
+      let stats;
+      try {
+        stats = await pc.getStats(null);
+      } catch (e) { return; }
+
+      let packetsLost = 0;
+      let packetsReceived = 0;
+      let rtt = 0;
+      let jitter = 0;
+
+      stats.forEach(report => {
+        if (report.type === 'inbound-rtp' && report.kind === 'video') {
+          packetsLost = report.packetsLost || 0;
+          packetsReceived = report.packetsReceived || 0;
+          jitter = report.jitter || 0;
+        }
+        if (report.type === 'candidate-pair' && report.nominated && report.state === 'succeeded') {
+          rtt = report.currentRoundTripTime ? report.currentRoundTripTime * 1000 : 0;
+        }
+      });
+
+      // Calculate quality score: 0 (worst) to 3 (best)
+      const lossRate = packetsReceived > 0 ? packetsLost / packetsReceived : 0;
+      let quality = 3;
+      if (lossRate > 0.05 || rtt > 400 || jitter > 0.1) quality = 1;
+      else if (lossRate > 0.02 || rtt > 200 || jitter > 0.05) quality = 2;
+
+      this.updateConnectionQuality(peerId, quality);
+    }, 3000);
+  }
+
+  updateConnectionQuality(peerId, quality) {
+    const indicator = document.querySelector(`#quality-${peerId}`);
+    if (!indicator) return;
+    const bars = indicator.querySelectorAll('span');
+    if (bars.length !== 3) return;
+
+    // Color mapping: 3=green, 2=amber, 1=red, 0=red (only 1 bar shown)
+    const colors = ['bg-red-500', 'bg-red-500', 'bg-amber-400', 'bg-emerald-400'];
+    const filledBars = Math.max(1, quality);
+
+    bars.forEach((bar, i) => {
+      bar.classList.remove('bg-emerald-400', 'bg-amber-400', 'bg-red-500', 'opacity-30');
+      if (i < filledBars) {
+        bar.classList.add(colors[quality]);
+      } else {
+        bar.classList.add(colors[quality], 'opacity-30');
+      }
+    });
+
+    // Update title for accessibility
+    const labels = ['Très faible', 'Faible', 'Moyenne', 'Bonne'];
+    indicator.title = `Qualité : ${labels[quality] || 'Bonne'}`;
+  }
+
   removeRemoteVideo(peerId) {
     const tile = document.querySelector(`#remote-tile-${peerId}`);
     if (tile) {
       tile.remove();
       delete this.peerConnections[peerId];
       this.updateVideoCount();
+    }
+    // Clear the connection-quality polling interval for this peer
+    if (this._qualityIntervals && this._qualityIntervals[peerId]) {
+      clearInterval(this._qualityIntervals[peerId]);
+      delete this._qualityIntervals[peerId];
     }
     if (this.peerConnections[peerId]) {
       this.peerConnections[peerId].close();
@@ -1011,5 +1274,7 @@ class NumeriaConference {
 
 document.addEventListener('DOMContentLoaded', () => {
   const conference = new NumeriaConference();
+  // Expose on window so the inline template script can call sendReaction etc.
+  window.numeriaConference = conference;
   conference.init();
 });
