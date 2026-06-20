@@ -103,7 +103,7 @@ def formation_create(request):
             objectives='',
             created_by=request.user,
         )
-        log_staff_action(request.user, 'notification_sent', f"Formation créée : «{formation.title}»")
+        log_staff_action(request.user, 'formation_created', f"Formation créée : «{formation.title}»")
         return redirect('admin_panel:formation_edit', slug=formation.slug)
 
     from formation.models import Formation as F

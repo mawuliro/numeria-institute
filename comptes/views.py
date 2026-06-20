@@ -216,7 +216,7 @@ def modifier_profil(request):
                 raise
         else:
             if request.user.is_superuser:
-                print(formulaire.errors)
+                logger.debug('Profil form errors for user %s: %s', request.user.pk, formulaire.errors)
             messages.error(request, _("Veuillez corriger les erreurs."))
     else:
         formulaire = FormulaireProfil(instance=profil, user=request.user)
@@ -245,7 +245,7 @@ def supprimer_photo(request):
                     cloudinary.uploader.destroy(profil.photo.public_id)
             except Exception as e:
                 # En développement, on ignore les erreurs Cloudinary
-                print(f"Erreur suppression Cloudinary: {e}")
+                logger.warning('Cloudinary photo deletion failed for user %s: %s', request.user.pk, e)
 
             # Vider le champ en base de données
             profil.photo = None

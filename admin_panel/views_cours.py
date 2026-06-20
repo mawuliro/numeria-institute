@@ -124,7 +124,7 @@ def cours_create(request):
             status='draft',
             created_by=request.user,
         )
-        log_staff_action(request.user, 'notification_sent',
+        log_staff_action(request.user, 'course_created',
                          f"Cours créé : «{cours.title}»")
         return redirect('admin_panel:cours_edit', slug=cours.slug)
 
@@ -158,7 +158,7 @@ def cours_delete(request, slug):
     cours = get_object_or_404(Course, slug=slug)
     titre = cours.title
     cours.delete()
-    log_staff_action(request.user, 'notification_sent', f"Cours supprimé : «{titre}»")
+    log_staff_action(request.user, 'course_deleted', f"Cours supprimé : «{titre}»")
     messages.success(request, f'Cours «{titre}» supprimé.')
     return redirect('admin_panel:cours_list')
 

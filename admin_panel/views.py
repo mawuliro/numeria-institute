@@ -726,7 +726,7 @@ def exercise_create(request, lecon_id):
             messages.error(request, _("Titre, code de départ et solution sont obligatoires."))
         else:
             CodeExercise.objects.create(course_lesson=lecon, **f)
-            log_staff_action(request.user, 'notification_sent',
+            log_staff_action(request.user, 'exercise_created',
                              f"Exercice créé: '{f['title']}' pour {lecon.title}")
             messages.success(request, _("Exercice créé avec succès."))
             return redirect('admin_panel:exercises_list')
@@ -756,7 +756,7 @@ def exercise_create_formation(request, lecon_id):
             messages.error(request, _("Titre, code de départ et solution sont obligatoires."))
         else:
             CodeExercise.objects.create(formation_lesson=fl, course_lesson=None, **f)
-            log_staff_action(request.user, 'notification_sent',
+            log_staff_action(request.user, 'exercise_created',
                              f"Exercice créé: '{f['title']}' pour {fl.title}")
             messages.success(request, _("Exercice créé avec succès."))
             return redirect('admin_panel:exercises_list')
