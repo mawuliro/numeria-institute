@@ -1,151 +1,139 @@
 {% load i18n sandbox_tags %}
-{% comment %}
-  Shared Python Sandbox / Code Exercise widget.
-
-  Variables (pass via 'include' tag with the following kwargs):
-    sandbox_id      — required, unique string per page
-    initial_code    — pre-filled code (default: '# Écris ton code ici\n')
-    height          — editor height px (default: 250)
-    exercise_id     — if set, evaluate against CodeExercise
-    title           — display title (optional)
-    show_save       — show Save Script button (default: False)
-    show_packages   — show package loader checkboxes (default: False)
-    show_fullscreen — show fullscreen link (default: True)
-    readonly        — disable editing (default: False)
-
-  When exercise_id is set, the following exercise context dict is expected:
-    exercise.evaluation_mode, exercise.expected_output, exercise.difficulty,
-    exercise.points, exercise.max_attempts, exercise.instructions,
-    exercise.hint, exercise.is_solved, exercise.attempts_used,
-    exercise.test_code_b64  (base64 — never plain test_code)
-{% endcomment %}
+{% comment %}Shared Python Sandbox / Code Exercise widget{% endcomment %}
 {% with sid=sandbox_id|default:"sw" %}
-<div id="sw-{{ sid }}" class="sw-root rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden">
+<div id="sw-{{ sid }}" class="sw-root rounded-2xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
 
-  {# ── Header ──────────────────────────────────────────────────────────── #}
-  <div class="sw-header flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-    <span class="font-bold text-numeria-bleu dark:text-numeria-teal text-sm">
-      🐍 {{ title|default:"Sandbox Python" }}
-    </span>
-    <div id="sw-{{ sid }}-status"
-         class="text-xs text-sky-600 bg-sky-50 dark:bg-sky-900/20 dark:text-sky-400 px-2 py-0.5 rounded-full flex items-center gap-1.5">
-      <svg class="animate-spin w-2.5 h-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-      </svg>
+  {# ── Header ── #}
+  <div class="sw-header flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-slate-800 to-slate-900 border-b border-slate-700">
+    <div class="flex items-center gap-2">
+      <div class="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+        <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <span class="font-bold text-white text-sm">{{ title|default:"Sandbox Python" }}</span>
+    </div>
+    <div id="sw-{{ sid }}-status" class="text-xs text-sky-300 bg-sky-500/10 px-2 py-0.5 rounded-full flex items-center gap-1.5 border border-sky-500/20">
+      <svg class="animate-spin w-2.5 h-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
       <span>{% trans "Chargement de Python…" %}</span>
     </div>
-    <div class="ml-auto flex items-center gap-1.5">
+    <div class="ml-auto flex items-center gap-2">
       {% if show_fullscreen != False %}
-      <a href="{% url 'sandbox_page' %}" target="_blank" rel="noopener"
-         class="text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors text-xs" title="↗️">↗️</a>
+      <a href="{% url 'sandbox_page' %}" target="_blank" rel="noopener" class="text-slate-400 hover:text-sky-400 transition-colors text-xs flex items-center gap-1" title="{% trans 'Plein écran' %}">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
+      </a>
       {% endif %}
     </div>
   </div>
 
-  {# ── Exercise instructions (if exercise_id) ───────────────────────────── #}
+  {# ── Exercise instructions ── #}
   {% if exercise_id and exercise %}
-  <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+  <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
     <div class="flex items-center gap-2 mb-2 flex-wrap">
-      {% if exercise.difficulty == 'easy' %}<span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{% trans "Facile" %}</span>
-      {% elif exercise.difficulty == 'medium' %}<span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">{% trans "Moyen" %}</span>
-      {% else %}<span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">{% trans "Difficile" %}</span>{% endif %}
-      <span class="text-xs text-gray-400">{{ exercise.points }} pts</span>
-      {% if exercise.is_solved %}<span class="text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full ml-auto">✅ {% trans "Déjà résolu" %}</span>{% endif %}
+      {% if exercise.difficulty == 'easy' %}<span class="text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 px-2.5 py-0.5 rounded-full font-medium">{% trans "Facile" %}</span>
+      {% elif exercise.difficulty == 'medium' %}<span class="text-xs bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-2.5 py-0.5 rounded-full font-medium">{% trans "Moyen" %}</span>
+      {% else %}<span class="text-xs bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-2.5 py-0.5 rounded-full font-medium">{% trans "Difficile" %}</span>{% endif %}
+      <span class="text-xs text-slate-400 flex items-center gap-1">
+        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+        {{ exercise.points }} pts
+      </span>
+      {% if exercise.is_solved %}<span class="text-xs bg-emerald-500 text-white font-bold px-2.5 py-0.5 rounded-full ml-auto flex items-center gap-1"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> {% trans "Déjà résolu" %}</span>{% endif %}
     </div>
     {% if exercise.instructions %}
-    <div class="prose prose-sm dark:prose-invert max-w-none text-gray-700 dark:text-gray-200 text-sm">
+    <div class="prose prose-sm dark:prose-invert max-w-none text-slate-700 dark:text-slate-200 text-sm leading-relaxed">
       {{ exercise.instructions|render_content }}
     </div>
     {% endif %}
   </div>
   {% endif %}
 
-  {# ── Package loader ──────────────────────────────────────────────────── #}
+  {# ── Package loader ── #}
   {% if show_packages %}
-  <div class="flex flex-wrap items-center gap-3 px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-    <span class="text-xs text-gray-400">📦</span>
+  <div class="flex flex-wrap items-center gap-3 px-4 py-2 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+    <span class="text-xs text-slate-400 font-medium">📦 Packages</span>
     {% for pkg in "numpy,matplotlib,pandas,scipy,sympy"|split:"," %}
-    <label class="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300 cursor-pointer hover:text-sky-600">
-      <input type="checkbox" id="sw-{{ sid }}-pkg-{{ pkg }}"
-             onchange="swTogglePkg_{{ sid }}('{{ pkg }}', this.checked)">
-      {{ pkg }}<span id="sw-{{ sid }}-pkg-st-{{ pkg }}" class="text-gray-400"></span>
+    <label class="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300 cursor-pointer hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+      <input type="checkbox" id="sw-{{ sid }}-pkg-{{ pkg }}" onchange="swTogglePkg_{{ sid }}('{{ pkg }}', this.checked)" class="accent-sky-500">
+      {{ pkg }}<span id="sw-{{ sid }}-pkg-st-{{ pkg }}" class="text-slate-400"></span>
     </label>
     {% endfor %}
   </div>
   {% endif %}
 
-  {# ── CodeMirror editor ───────────────────────────────────────────────── #}
-  <div id="sw-{{ sid }}-cm-wrap"
-       style="min-height:{{ height|default:250 }}px;"
-       class="tex2jax_ignore"></div>
+  {# ── CodeMirror editor ── #}
+  <div id="sw-{{ sid }}-cm-wrap" style="min-height:{{ height|default:250 }}px;" class="tex2jax_ignore"></div>
 
-  {# ── Toolbar ─────────────────────────────────────────────────────────── #}
-  <div class="flex flex-wrap items-center gap-2 px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
-    <button id="sw-{{ sid }}-run-btn" disabled type="button"
-            onclick="swRun_{{ sid }}()"
-            class="flex items-center gap-1.5 bg-numeria-bleu hover:bg-blue-800 text-white text-xs font-bold px-3 py-2 rounded-lg disabled:opacity-50 transition-colors">
-      ▶ {% trans "Exécuter" %}
+  {# ── Toolbar ── #}
+  <div class="flex flex-wrap items-center gap-2 px-4 py-2.5 bg-slate-100 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
+    <button id="sw-{{ sid }}-run-btn" disabled type="button" onclick="swRun_{{ sid }}()"
+            class="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow">
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      {% trans "Exécuter" %}
     </button>
     <button type="button" onclick="swReset_{{ sid }}()"
-            class="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 px-2 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            title="{% trans 'Réinitialiser' %}">🔄</button>
+            class="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 px-2.5 py-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            title="{% trans 'Réinitialiser' %}">
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+    </button>
     <button id="sw-{{ sid }}-copy-btn" type="button" onclick="swCopy_{{ sid }}()"
-            class="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 px-2 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            title="{% trans 'Copier' %}">📋</button>
+            class="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 px-2.5 py-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            title="{% trans 'Copier' %}">
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    </button>
     {% if show_save %}
     <button type="button" onclick="swSave_{{ sid }}()"
-            class="text-xs bg-slate-100 dark:bg-gray-700 hover:bg-slate-200 dark:hover:bg-gray-600 text-slate-700 dark:text-gray-200 px-3 py-2 rounded-lg font-semibold transition-colors">
-      💾 {% trans "Sauvegarder" %}
+            class="flex items-center gap-1 text-xs bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-3 py-2 rounded-lg font-medium transition-colors">
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      {% trans "Sauvegarder" %}
     </button>
     {% endif %}
-    {# Hint — shown after 3 failures when exercise #}
     {% if exercise_id and exercise.hint %}
-    <button id="sw-{{ sid }}-hint-btn" type="button" style="display:none"
-            onclick="swShowHint_{{ sid }}()"
-            class="text-xs text-amber-600 dark:text-amber-400 border border-amber-300 px-3 py-2 rounded-lg hover:bg-amber-50 font-medium">
+    <button id="sw-{{ sid }}-hint-btn" type="button" style="display:none" onclick="swShowHint_{{ sid }}()"
+            class="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 border border-amber-300 dark:border-amber-600 px-3 py-2 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/20 font-medium transition-colors">
       💡 {% trans "Indice" %}
     </button>
     {% endif %}
-    {# Attempt counter #}
     {% if exercise_id and exercise.max_attempts %}
-    <span id="sw-{{ sid }}-attempts" class="text-xs text-gray-400 ml-auto"></span>
+    <span id="sw-{{ sid }}-attempts" class="text-xs text-slate-400 ml-auto"></span>
     {% endif %}
   </div>
 
-  {# ── Hint panel ───────────────────────────────────────────────────────── #}
+  {# ── Hint panel ── #}
   {% if exercise_id and exercise.hint %}
-  <div id="sw-{{ sid }}-hint-panel" style="display:none"
-       class="px-4 py-3 bg-amber-50 dark:bg-amber-900/20 border-t border-amber-200 dark:border-amber-700 text-sm text-amber-800 dark:text-amber-300">
+  <div id="sw-{{ sid }}-hint-panel" style="display:none" class="px-4 py-3 bg-amber-50 dark:bg-amber-900/20 border-t border-amber-200 dark:border-amber-700 text-sm text-amber-800 dark:text-amber-300">
     💡 <strong>{% trans "Indice" %} :</strong> {{ exercise.hint }}
   </div>
   {% endif %}
 
-  {# ── Output panel ─────────────────────────────────────────────────────── #}
-  <div id="sw-{{ sid }}-out-wrap" style="display:none" class="border-t border-gray-200 dark:border-gray-700">
-    <div class="flex items-center px-4 py-1.5 bg-gray-800">
-      <span class="text-xs text-gray-400 font-mono">OUTPUT</span>
-      <button type="button" onclick="document.getElementById('sw-{{ sid }}-out-wrap').style.display='none'"
-              class="ml-auto text-gray-500 hover:text-gray-300 text-xs transition-colors">✕</button>
+  {# ── Output panel ── #}
+  <div id="sw-{{ sid }}-out-wrap" style="display:none" class="border-t border-slate-700">
+    <div class="flex items-center px-4 py-2 bg-slate-900 border-b border-slate-700">
+      <div class="flex items-center gap-2">
+        <div class="flex gap-1.5">
+          <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+          <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+        </div>
+        <span class="text-xs text-slate-400 font-mono ml-2">OUTPUT</span>
+      </div>
+      <button type="button" onclick="document.getElementById('sw-{{ sid }}-out-wrap').style.display='none'" class="ml-auto text-slate-500 hover:text-slate-300 text-xs transition-colors flex items-center gap-1">
+        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
-    <pre id="sw-{{ sid }}-out"
-         class="bg-gray-900 text-green-400 font-mono text-sm px-4 py-3 overflow-auto max-h-48 whitespace-pre-wrap min-h-6"></pre>
-    <div id="sw-{{ sid }}-plot-wrap" class="hidden bg-gray-900 px-4 pb-3">
+    <pre id="sw-{{ sid }}-out" class="bg-slate-900 text-emerald-400 font-mono text-sm px-4 py-3 overflow-auto max-h-56 whitespace-pre-wrap min-h-6 leading-relaxed"></pre>
+    <div id="sw-{{ sid }}-plot-wrap" class="hidden bg-slate-900 px-4 pb-3">
       <img id="sw-{{ sid }}-plot-img" src="" alt="plot" class="max-w-full rounded-lg">
     </div>
   </div>
 
-  {# ── Result banner (exercise mode) ────────────────────────────────────── #}
+  {# ── Result banner ── #}
   {% if exercise_id %}
-  <div id="sw-{{ sid }}-result" style="display:none"
-       class="px-5 py-4 border-t border-gray-100 dark:border-gray-700 relative overflow-hidden">
+  <div id="sw-{{ sid }}-result" style="display:none" class="px-5 py-4 border-t border-slate-100 dark:border-slate-700 relative overflow-hidden">
     <div id="sw-{{ sid }}-confetti" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
     <div id="sw-{{ sid }}-result-body"></div>
   </div>
-  {# Solution reveal (shown when max attempts exhausted) #}
-  <div id="sw-{{ sid }}-solution-wrap" style="display:none" class="border-t border-gray-200 dark:border-gray-700">
-    <div class="px-4 py-2 bg-purple-50 dark:bg-purple-900/20 text-xs text-purple-700 dark:text-purple-400 font-semibold">
-      🔑 {% trans "Solution" %}
+  <div id="sw-{{ sid }}-solution-wrap" style="display:none" class="border-t border-slate-200 dark:border-slate-700">
+    <div class="px-4 py-2 bg-purple-50 dark:bg-purple-900/20 text-xs text-purple-700 dark:text-purple-400 font-semibold flex items-center gap-2">
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      {% trans "Solution" %}
     </div>
     <div id="sw-{{ sid }}-solution-cm-wrap" class="tex2jax_ignore"></div>
   </div>
@@ -153,12 +141,11 @@
 
 </div>
 
-{% comment %}PER-SANDBOX JAVASCRIPT — one IIFE per widget, shared Pyodide instance{% endcomment %}
+{% comment %}PER-SANDBOX JAVASCRIPT{% endcomment %}
 <script>
 (function(){
 'use strict';
 
-/* ── Configuration ─────────────────────────────────────────────────────── */
 var SID          = "{{ sid|escapejs }}";
 var INIT_CODE    = "{{ initial_code|default:'# Écris ton code ici\n'|escapejs }}";
 var HEIGHT       = {{ height|default:250 }};
@@ -183,11 +170,10 @@ var solved       = IS_SOLVED;
 var startTime    = Date.now();
 var execTimeout  = null;
 
-/* ── DOM helpers ──────────────────────────────────────────────────────── */
 function g(s){ return document.getElementById('sw-' + SID + '-' + s); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-/* ── Global Pyodide — load once per page ─────────────────────────────── */
+/* ── Global Pyodide — load once per page ── */
 if (!window._swPyodideReady) {
   window._swPyodideReady = (function() {
     if (typeof loadPyodide === 'function') {
@@ -205,34 +191,67 @@ if (!window._swPyodideReady) {
   })();
 }
 
-/* ── CodeMirror init ─────────────────────────────────────────────────── */
+/* ── CodeMirror init with autocomplete + bracket matching ── */
 function initCM() {
   if (!window.CodeMirror) { setTimeout(initCM, 100); return; }
   var wrap = g('cm-wrap');
   if (!wrap || cm) return;
-  var saved = localStorage.getItem(LS_KEY);
-  cm = CodeMirror(wrap, {
-    value: saved || INIT_CODE,
-    mode: 'python', theme: 'dracula', lineNumbers: true,
-    indentUnit: 4, tabSize: 4, indentWithTabs: false,
-    lineWrapping: true, viewportMargin: Infinity, autoCloseBrackets: true,
-    readOnly: READONLY,
-    extraKeys: {
-      Tab: function(c){ c.replaceSelection('    ', 'end'); },
-      'Ctrl-Enter': window['swRun_' + SID],
-      'Cmd-Enter':  window['swRun_' + SID],
-    },
-  });
-  cm.getWrapperElement().style.minHeight = HEIGHT + 'px';
-  cm.on('change', function(){ localStorage.setItem(LS_KEY, cm.getValue()); });
-  updateAttemptsLabel();
 
-  if (IS_SOLVED) {
-    markSolved();
+  /* Load CodeMirror addons if not already loaded */
+  var addons = [
+    'addon/edit/closebrackets.min.js',
+    'addon/edit/matchbrackets.min.js',
+    'addon/selection/active-line.min.js',
+  ];
+  var pendingAddons = addons.filter(function(a) {
+    var src = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/' + a;
+    return !document.querySelector('script[src="' + src + '"]');
+  });
+
+  function createCM() {
+    var saved = localStorage.getItem(LS_KEY);
+    cm = CodeMirror(wrap, {
+      value: saved || INIT_CODE,
+      mode: 'python',
+      theme: 'dracula',
+      lineNumbers: true,
+      indentUnit: 4,
+      tabSize: 4,
+      indentWithTabs: false,
+      lineWrapping: true,
+      viewportMargin: Infinity,
+      autoCloseBrackets: true,
+      matchBrackets: true,
+      styleActiveLine: true,
+      readOnly: READONLY,
+      extraKeys: {
+        Tab: function(c){ c.replaceSelection('    ', 'end'); },
+        'Ctrl-Enter': window['swRun_' + SID],
+        'Cmd-Enter':  window['swRun_' + SID],
+        'Ctrl-Space': 'autocomplete',
+      },
+    });
+    cm.getWrapperElement().style.minHeight = HEIGHT + 'px';
+    cm.on('change', function(){ localStorage.setItem(LS_KEY, cm.getValue()); });
+    updateAttemptsLabel();
+    if (IS_SOLVED) markSolved();
+  }
+
+  if (pendingAddons.length === 0) {
+    createCM();
+  } else {
+    var loaded = 0;
+    pendingAddons.forEach(function(a) {
+      var s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/' + a;
+      s.onload = function() { loaded++; if (loaded === pendingAddons.length) createCM(); };
+      s.onerror = function() { loaded++; if (loaded === pendingAddons.length) createCM(); };
+      document.head.appendChild(s);
+    });
   }
 }
 
-/* ── Wait for Pyodide, then enable Run ───────────────────────────────── */
+/* ── Wait for Pyodide, then enable Run ── */
 window._swPyodideReady.then(function() {
   var st = g('status');
   if (st) st.style.display = 'none';
@@ -240,10 +259,10 @@ window._swPyodideReady.then(function() {
   if (btn) btn.disabled = false;
 }).catch(function(e) {
   var st = g('status');
-  if (st) st.innerHTML = '<span style="color:red">Python unavailable: ' + esc(String(e)) + '</span>';
+  if (st) st.innerHTML = '<span style="color:#ef4444">⚠ Python: ' + esc(String(e)) + '</span>';
 });
 
-/* ── Run ─────────────────────────────────────────────────────────────── */
+/* ── Run ── */
 window['swRun_' + SID] = async function() {
   if (solved && EXERCISE_ID) return;
   if (MAX_ATTEMPTS > 0 && attempts >= MAX_ATTEMPTS) return;
@@ -254,10 +273,10 @@ window['swRun_' + SID] = async function() {
   var outWr = g('out-wrap');
 
   btn.disabled = true;
-  btn.innerHTML = '⏳ …';
+  btn.innerHTML = '<svg class="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg> …';
   outWr.style.display = 'block';
   outEl.textContent = '…';
-  outEl.style.color = '#9ca3af';
+  outEl.style.color = '#94a3b8';
   g('plot-wrap').classList.add('hidden');
   if (g('result')) g('result').style.display = 'none';
 
@@ -265,16 +284,14 @@ window['swRun_' + SID] = async function() {
     outEl.innerHTML = '<span style="color:#f87171">⏱ {% filter escapejs %}{% trans "Temps d'exécution dépassé (10s)." %}{% endfilter %}</span>';
     outEl.style.color = '';
     btn.disabled = false;
-    btn.innerHTML = '▶ {% trans "Exécuter" %}';
+    btn.innerHTML = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> {% trans "Exécuter" %}';
   }, 10000);
 
   try {
     var pyodide = await window._swPyodideReady;
     await pyodide.loadPackagesFromImports(code);
 
-    /* Isolated namespace */
     var ns = pyodide.globals.get('dict')();
-
     await pyodide.runPythonAsync(
       'import sys\nfrom io import StringIO\n_sw_out = StringIO()\nsys.stdout = _sw_out',
       { globals: ns }
@@ -287,7 +304,6 @@ window['swRun_' + SID] = async function() {
 
     var output = String(await pyodide.runPythonAsync('_sw_out.getvalue()', { globals: ns }));
     await pyodide.runPythonAsync('sys.stdout = sys.__stdout__', { globals: ns });
-
     clearTimeout(execTimeout);
 
     if (runError) {
@@ -298,16 +314,11 @@ window['swRun_' + SID] = async function() {
       outEl.style.color = '#4ade80';
     }
 
-    /* Matplotlib capture */
     try {
-      var hasMpl = Boolean(await pyodide.runPythonAsync(
-        '\'matplotlib\' in __import__(\'sys\').modules', { globals: ns }
-      ));
+      var hasMpl = Boolean(await pyodide.runPythonAsync('\'matplotlib\' in __import__(\'sys\').modules', { globals: ns }));
       if (hasMpl) {
         var b64 = String(await pyodide.runPythonAsync(
-          'import matplotlib.pyplot as _p, io as _io, base64 as _b64\n' +
-          '_buf = _io.BytesIO()\n_p.savefig(_buf, format=\'png\', bbox_inches=\'tight\', dpi=100)\n' +
-          '_p.close()\n_buf.seek(0)\n_b64.b64encode(_buf.read()).decode()',
+          'import matplotlib.pyplot as _p, io as _io, base64 as _b64\n_buf = _io.BytesIO()\n_p.savefig(_buf, format=\'png\', bbox_inches=\'tight\', dpi=100)\n_p.close()\n_buf.seek(0)\n_b64.b64encode(_buf.read()).decode()',
           { globals: ns }
         ));
         g('plot-img').src = 'data:image/png;base64,' + b64;
@@ -315,7 +326,6 @@ window['swRun_' + SID] = async function() {
       }
     } catch(_) {}
 
-    /* Exercise evaluation */
     if (EXERCISE_ID && !runError) {
       attempts++;
       updateAttemptsLabel();
@@ -341,10 +351,10 @@ window['swRun_' + SID] = async function() {
   }
 
   btn.disabled = false;
-  btn.innerHTML = '▶ {% trans "Exécuter" %}';
+  btn.innerHTML = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> {% trans "Exécuter" %}';
 };
 
-/* ── Submit ──────────────────────────────────────────────────────────── */
+/* ── Submit ── */
 function submitResult(correct, output, code) {
   showResult(correct, output);
   if (!SUBMIT_URL) return;
@@ -352,22 +362,14 @@ function submitResult(correct, output, code) {
   fetch(SUBMIT_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
-    body: JSON.stringify({
-      code: code, output: output, is_correct: correct,
-      attempt_number: attempts, time_spent: elapsed,
-    }),
+    body: JSON.stringify({ code: code, output: output, is_correct: correct, attempt_number: attempts, time_spent: elapsed }),
   }).then(function(r){ return r.json(); }).then(function(d){
-    if (d.is_correct && !solved) {
-      solved = true;
-      markSolved();
-    }
-    if (d.max_attempts > 0 && attempts >= d.max_attempts && !solved) {
-      revealSolution();
-    }
+    if (d.is_correct && !solved) { solved = true; markSolved(); }
+    if (d.max_attempts > 0 && attempts >= d.max_attempts && !solved) revealSolution();
   }).catch(function(){});
 }
 
-/* ── Result display ─────────────────────────────────────────────────── */
+/* ── Result display ── */
 function showResult(correct, output) {
   var resEl = g('result');
   var body  = g('result-body');
@@ -377,16 +379,16 @@ function showResult(correct, output) {
   if (correct) {
     resEl.style.backgroundColor = '#f0fdf4';
     resEl.style.borderTop = '1px solid #bbf7d0';
-    body.innerHTML = '<p class="font-bold text-green-700 text-sm">✅ {% trans "Bonne réponse !" %} +' + POINTS + ' pts</p>';
+    body.innerHTML = '<p class="font-bold text-emerald-700 text-sm flex items-center gap-2"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> {% trans "Bonne réponse !" %} +' + POINTS + ' pts</p>';
     triggerConfetti(g('confetti'));
   } else {
     resEl.style.backgroundColor = '#fef2f2';
     resEl.style.borderTop = '1px solid #fecaca';
-    var msg = '<p class="font-bold text-red-700 text-sm">❌ {% filter escapejs %}{% trans "Ce n'est pas la bonne réponse. Réessaie !" %}{% endfilter %}</p>';
+    var msg = '<p class="font-bold text-red-700 text-sm flex items-center gap-2"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> {% filter escapejs %}{% trans "Ce n'est pas la bonne réponse. Réessaie !" %}{% endfilter %}</p>';
     if (EVAL_MODE === 'exact' && EXPECTED) {
-      msg += '<div class="text-xs font-mono mt-2 space-y-1">';
-      msg += '<div><span class="text-slate-500">{% trans "Attendu" %} :</span> <span class="bg-green-50 text-green-800 px-1 rounded">' + esc(EXPECTED.trim()) + '</span></div>';
-      msg += '<div><span class="text-slate-500">{% trans "Reçu" %} :</span> <span class="bg-red-50 text-red-800 px-1 rounded">' + esc((output||'').trim()) + '</span></div>';
+      msg += '<div class="text-xs font-mono mt-2 space-y-1 bg-slate-50 dark:bg-slate-800 rounded-lg p-2">';
+      msg += '<div><span class="text-slate-500">{% trans "Attendu" %}:</span> <span class="bg-emerald-50 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 px-1.5 py-0.5 rounded">' + esc(EXPECTED.trim()) + '</span></div>';
+      msg += '<div><span class="text-slate-500">{% trans "Reçu" %}:</span> <span class="bg-red-50 text-red-800 dark:bg-red-900/30 dark:text-red-400 px-1.5 py-0.5 rounded">' + esc((output||'').trim()) + '</span></div>';
       msg += '</div>';
     }
     if (MAX_ATTEMPTS > 0) {
@@ -397,10 +399,7 @@ function showResult(correct, output) {
     }
     body.innerHTML = msg;
 
-    if (attempts >= 3) {
-      var hintBtn = g('hint-btn');
-      if (hintBtn) hintBtn.style.display = 'inline-flex';
-    }
+    if (attempts >= 3) { var hintBtn = g('hint-btn'); if (hintBtn) hintBtn.style.display = 'inline-flex'; }
     if (MAX_ATTEMPTS > 0 && attempts >= MAX_ATTEMPTS) {
       var runBtn = g('run-btn');
       if (runBtn) { runBtn.disabled = true; runBtn.innerHTML = '{% trans "Tentatives épuisées" %}'; }
@@ -411,29 +410,23 @@ function showResult(correct, output) {
 
 function markSolved() {
   var runBtn = g('run-btn');
-  if (runBtn) { runBtn.disabled = true; runBtn.innerHTML = '✅ {% trans "Résolu" %}'; }
+  if (runBtn) { runBtn.disabled = true; runBtn.innerHTML = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> {% trans "Résolu" %}'; }
 }
 
 function revealSolution() {
   var solWrap = g('solution-wrap');
   if (!solWrap || solCm) return;
   solWrap.style.display = 'block';
-  /* Fetch solution from server */
-  fetch('{% url "cours:get_exercise_solution" 0 %}'.replace('/0/', '/' + EXERCISE_ID + '/'), {
-    headers: { 'X-CSRFToken': CSRF },
-  }).then(function(r){ return r.json(); }).then(function(d){
+  fetch('{% url "cours:get_exercise_solution" 0 %}'.replace('/0/', '/' + EXERCISE_ID + '/'), { headers: { 'X-CSRFToken': CSRF } })
+  .then(function(r){ return r.json(); }).then(function(d){
     if (d.solution && window.CodeMirror) {
       var wrap = g('solution-cm-wrap');
-      solCm = CodeMirror(wrap, {
-        value: d.solution,
-        mode: 'python', theme: 'dracula', lineNumbers: true,
-        readOnly: true, lineWrapping: true, viewportMargin: Infinity,
-      });
+      solCm = CodeMirror(wrap, { value: d.solution, mode: 'python', theme: 'dracula', lineNumbers: true, readOnly: true, lineWrapping: true, viewportMargin: Infinity, autoCloseBrackets: true, matchBrackets: true });
     }
   }).catch(function(){});
 }
 
-/* ── Helpers ─────────────────────────────────────────────────────────── */
+/* ── Helpers ── */
 function updateAttemptsLabel() {
   var el = g('attempts');
   if (!el || !MAX_ATTEMPTS) return;
@@ -464,18 +457,15 @@ window['swReset_' + SID] = function() {
 window['swCopy_' + SID] = function() {
   var btn = g('copy-btn');
   navigator.clipboard.writeText(cm ? cm.getValue() : '').then(function(){
-    if (btn) { btn.textContent = '✅'; setTimeout(function(){ btn.textContent = '📋'; }, 2000); }
+    if (btn) { btn.innerHTML = '<svg class="w-3.5 h-3.5 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'; setTimeout(function(){ btn.innerHTML = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>'; }, 2000); }
   }).catch(function(){});
 };
 
 window['swSave_' + SID] = function() {
   var title = prompt('{% trans "Nom du script" %} :', '{% trans "Sans titre" %}');
   if (!title) return;
-  fetch('/sandbox/scripts/save/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
-    body: JSON.stringify({ titre: title, code: cm ? cm.getValue() : '' }),
-  }).then(function(r){ return r.json(); }).then(function(d){
+  fetch('/sandbox/scripts/save/', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF }, body: JSON.stringify({ titre: title, code: cm ? cm.getValue() : '' }) })
+  .then(function(r){ return r.json(); }).then(function(d){
     if (d.ok && window.nbToast) nbToast('Script «' + d.titre + '» sauvegardé ✓', 'success');
   }).catch(function(){});
 };
@@ -490,13 +480,11 @@ window['swTogglePkg_' + SID] = function(pkg, load) {
   if (!load) { if (st) st.textContent = ''; return; }
   if (st) st.textContent = ' ⏳';
   window._swPyodideReady.then(function(py) {
-    py.loadPackage(pkg).then(function(){
-      if (st) st.textContent = ' ✓';
-    }).catch(function(){ if (st) st.textContent = ' ❌'; });
+    py.loadPackage(pkg).then(function(){ if (st) st.textContent = ' ✓'; }).catch(function(){ if (st) st.textContent = ' ❌'; });
   });
 };
 
-/* ── Init ────────────────────────────────────────────────────────────── */
+/* ── Init ── */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initCM);
 } else { initCM(); }
