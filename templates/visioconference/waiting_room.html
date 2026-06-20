@@ -1,47 +1,80 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Salle d’attente - {{ room.title }}{% endblock %}
+{% block title %}{% trans "Salle d'attente" %} — {{ room.title }}{% endblock %}
 
 {% block contenu %}
-<main class="min-h-screen bg-[#020617] text-white py-12">
-  <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-    <div class="mb-8 rounded-[2rem] border border-slate-800 bg-[#08111F] p-8 shadow-2xl shadow-black/40">
-      <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <p class="text-sm uppercase tracking-[0.35em] text-slate-500">Salle d’attente</p>
-          <h1 class="mt-3 text-3xl font-semibold text-white">Votre entrée est en cours de validation</h1>
-          <p class="mt-2 max-w-2xl text-slate-300">L’hôte va vérifier votre demande et vous admettre dès que possible.</p>
-        </div>
-        <div class="rounded-3xl bg-[#0B1323] px-5 py-4 text-sm text-slate-300">
-          <p><span class="font-semibold text-white">Salle :</span> {{ room.title }}</p>
-          <p class="mt-1"><span class="font-semibold text-white">Hôte :</span> {{ host_name }}</p>
+<main class="min-h-screen bg-[#0B0F1A] text-white relative overflow-hidden flex items-center justify-center">
+  <!-- Ambient background -->
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div class="absolute top-1/4 left-1/4 w-[520px] h-[520px] rounded-full" style="background: radial-gradient(circle, rgba(45,212,191,0.08) 0%, transparent 70%);"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-[460px] h-[460px] rounded-full" style="background: radial-gradient(circle, rgba(201,162,39,0.05) 0%, transparent 70%);"></div>
+  </div>
+
+  <div class="relative mx-auto max-w-2xl w-full px-4 sm:px-6 py-12">
+
+    <!-- Card -->
+    <div class="rounded-3xl border border-slate-700/50 bg-[#131826] p-8 sm:p-10 shadow-2xl shadow-black/40 text-center">
+
+      <!-- Animated waiting indicator -->
+      <div class="relative w-24 h-24 mx-auto mb-6">
+        <div class="absolute inset-0 rounded-full border-2 border-slate-700"></div>
+        <div class="absolute inset-0 rounded-full border-2 border-transparent border-t-numeria-teal animate-spin"></div>
+        <div class="absolute inset-3 rounded-full bg-numeria-teal/10 flex items-center justify-center">
+          <svg class="w-8 h-8 text-numeria-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
         </div>
       </div>
-    </div>
 
-    <div class="rounded-[2rem] border border-slate-800 bg-[#08111F] p-8 shadow-2xl shadow-black/40">
-      <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-        <div class="space-y-6">
-          <div class="rounded-[2rem] border border-slate-700 bg-[#0B1323] p-6">
-            <p class="text-sm uppercase tracking-[0.35em] text-slate-400">Statut</p>
-            <p id="waiting-status" class="mt-4 text-lg font-semibold text-teal-300">Connexion à la salle d’attente...</p>
-            <p id="waiting-details" class="mt-3 text-sm text-slate-300">Restez sur cette page tant que l’hôte n’a pas donné accès.</p>
-          </div>
-          <div class="rounded-[2rem] border border-slate-700 bg-[#0B1323] p-6">
-            <h2 class="text-sm font-semibold text-white">Utilisateur</h2>
-            <p class="mt-3 text-sm text-slate-300">{{ display_name }}</p>
-          </div>
+      <!-- Status -->
+      <p class="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">{% trans "Salle d'attente" %}</p>
+      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3" style="font-family:'Playfair Display', Georgia, serif;">
+        {% trans "Demande d'entrée envoyée" %}
+      </h1>
+      <p id="waiting-status" class="text-numeria-teal font-medium mb-2">{% trans "En attente de l'autorisation de l'hôte..." %}</p>
+      <p id="waiting-details" class="text-slate-400 text-sm max-w-md mx-auto mb-8">
+        {% trans "Restez sur cette page — l'hôte va vous admettre dès que possible." %}
+      </p>
+
+      <!-- Meeting info card -->
+      <div class="rounded-2xl bg-[#0B1120] border border-slate-700/40 p-5 mb-8 text-left space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-slate-400 uppercase tracking-wider">{% trans "Réunion" %}</span>
+          <span class="text-sm font-semibold text-white">{{ room.title }}</span>
         </div>
-
-        <div class="rounded-[2rem] border border-slate-700 bg-[#0B1323] p-6">
-          <h2 class="text-sm font-semibold text-white">Actions</h2>
-          <div class="mt-5 space-y-3">
-            <button id="btn-leave-waiting" type="button" class="w-full rounded-3xl bg-red-600 px-5 py-4 text-sm font-semibold text-white transition hover:bg-red-500">Quitter la salle d’attente</button>
-          </div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-slate-400 uppercase tracking-wider">{% trans "Hôte" %}</span>
+          <span class="text-sm font-semibold text-white flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-numeria-teal/20 flex items-center justify-center text-[10px] font-bold text-numeria-teal">
+              {{ host_name|first|upper }}
+            </span>
+            {{ host_name }}
+          </span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-slate-400 uppercase tracking-wider">{% trans "Vous" %}</span>
+          <span class="text-sm font-semibold text-white">{{ display_name }}</span>
         </div>
       </div>
+
+      <!-- Leave button -->
+      <button id="btn-leave-waiting" type="button" class="w-full rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 px-5 py-3 text-sm font-semibold text-red-300 transition flex items-center justify-center gap-2">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        {% trans "Quitter la salle d'attente" %}
+      </button>
     </div>
+
+    <!-- Tips below the card -->
+    <p class="text-center text-slate-500 text-xs mt-6">
+      {% trans "Conseil : vérifiez que votre caméra et votre micro fonctionnent pendant que vous attendez." %}
+    </p>
+
   </div>
 </main>
 

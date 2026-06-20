@@ -8740,3 +8740,218 @@ msgstr "Learn from your phone, tablet or computer."
 
 msgid "Fondé en 2025"
 msgstr "Founded 2025"
+
+# ─── Visioconference (Meet-style redesign) ────────────────────────────────
+
+msgid "Réunions — Numeria Visio"
+msgstr "Meetings — Numeria Visio"
+
+msgid "Numeria Visio"
+msgstr "Numeria Visio"
+
+msgid "Réunions vidéo pour la classe"
+msgstr "Video meetings for the classroom"
+
+msgid "Créez une salle privée ou rejoignez une réunion existante. Sécurisé, sans installation, directement dans le navigateur."
+msgstr "Create a private room or join an existing meeting. Secure, no installation, directly in the browser."
+
+msgid "Démarrer"
+msgstr "Start"
+
+msgid "Nouvelle réunion"
+msgstr "New meeting"
+
+msgid "Nouveau"
+msgstr "New"
+
+msgid "Titre de la réunion"
+msgstr "Meeting title"
+
+msgid "Ex. Cours de mathématiques — Chapitre 4"
+msgstr "E.g. Mathematics class — Chapter 4"
+
+msgid "Participants max"
+msgstr "Max participants"
+
+msgid "Mot de passe (optionnel)"
+msgstr "Password (optional)"
+
+msgid "Code"
+msgstr "Code"
+
+msgid "Démarrer la réunion"
+msgstr "Start meeting"
+
+msgid "Avec un code"
+msgstr "With a code"
+
+msgid "Rejoindre"
+msgstr "Join"
+
+msgid "Code de la salle"
+msgstr "Room code"
+
+msgid "Mot de passe (si demandé)"
+msgstr "Password (if required)"
+
+msgid "Mot de passe"
+msgstr "Password"
+
+msgid "Privé"
+msgstr "Private"
+
+msgid "Chiffré de bout en bout"
+msgstr "End-to-end encrypted"
+
+msgid "Jusqu'à 20 participants"
+msgstr "Up to 20 participants"
+
+msgid "Sans installation"
+msgstr "No installation"
+
+msgid "Fonctionne dans Chrome, Firefox, Safari, Edge."
+msgstr "Works in Chrome, Firefox, Safari, Edge."
+
+msgid "Partage d'écran"
+msgstr "Screen sharing"
+
+msgid "Présentez vos slides, votre code ou vos documents."
+msgstr "Present your slides, code or documents."
+
+msgid "Salle d'attente"
+msgstr "Waiting room"
+
+msgid "L'hôte valide chaque participant qui entre."
+msgstr "The host approves each participant who joins."
+
+msgid "Prêt à rejoindre ?"
+msgstr "Ready to join?"
+
+msgid "Vérifiez votre caméra et votre micro, puis entrez dans la salle."
+msgstr "Check your camera and microphone, then enter the room."
+
+msgid "Vous"
+msgstr "You"
+
+msgid "Réunion"
+msgstr "Meeting"
+
+msgid "Capacité"
+msgstr "Capacity"
+
+msgid "participants"
+msgstr "participants"
+
+msgid "Rejoindre maintenant"
+msgstr "Join now"
+
+msgid "Annuler"
+msgstr "Cancel"
+
+msgid "Autorisez la caméra et le micro"
+msgstr "Allow camera and microphone"
+
+msgid "Cliquez sur l'icône caméra dans la barre d'adresse du navigateur pour autoriser l'accès."
+msgstr "Click the camera icon in the browser's address bar to allow access."
+
+msgid "Caméra désactivée"
+msgstr "Camera disabled"
+
+msgid "Micro"
+msgstr "Microphone"
+
+msgid "Caméra"
+msgstr "Camera"
+
+msgid "Activer/Couper le micro"
+msgstr "Toggle microphone"
+
+msgid "Activer/Couper la caméra"
+msgstr "Toggle camera"
+
+msgid "Connexion..."
+msgstr "Connecting..."
+
+msgid "Copier le code"
+msgstr "Copy code"
+
+msgid "Discussion"
+msgstr "Chat"
+
+msgid "Fermer le chat"
+msgstr "Close chat"
+
+msgid "Écrire un message..."
+msgstr "Type a message..."
+
+msgid "Envoyer"
+msgstr "Send"
+
+msgid "Participants"
+msgstr "Participants"
+
+msgid "Fermer"
+msgstr "Close"
+
+msgid "Aucune demande en attente."
+msgstr "No pending requests."
+
+msgid "Contrôles hôte"
+msgstr "Host controls"
+
+msgid "Couper tous les micros"
+msgstr "Mute all microphones"
+
+msgid "Éteindre toutes les caméras"
+msgstr "Turn off all cameras"
+
+msgid "Partager l'écran"
+msgstr "Share screen"
+
+msgid "Partager"
+msgstr "Share"
+
+msgid "Chat"
+msgstr "Chat"
+
+msgid "Plus"
+msgstr "More"
+
+msgid "Plus d actions"
+msgstr "More actions"
+
+msgid "Lever la main"
+msgstr "Raise hand"
+
+msgid "Enregistrer"
+msgstr "Record"
+
+msgid "Quitter"
+msgstr "Leave"
+
+msgid "Quitter la réunion"
+msgstr "Leave meeting"
+
+msgid "Terminer pour tous"
+msgstr "End for everyone"
+
+msgid "Terminer la réunion pour tous"
+msgstr "End meeting for everyone"
+
+msgid "Terminer"
+msgstr "End"
+
+msgid "Demande d'entrée envoyée"
+msgstr "Entry request sent"
+
+msgid "En attente de l'autorisation de l'hôte..."
+msgstr "Waiting for host approval..."
+
+msgid "Restez sur cette page — l'hôte va vous admettre dès que possible."
+msgstr "Stay on this page — the host will admit you as soon as possible."
+
+msgid "Conseil : vérifiez que votre caméra et votre micro fonctionnent pendant que vous attendez."
+msgstr "Tip: check that your camera and microphone work while you wait."
+
+msgid "Caméra off"
+msgstr "Camera off"
