@@ -55,7 +55,11 @@ def render_content(value):
     counter = [0]
 
     def protect(match):
-        key = f'__PROT{counter[0]}__'
+        # Use a placeholder that Markdown won't interpret.
+        # Double underscores (__PROT0__) were previously used but Markdown
+        # interprets __text__ as bold, destroying the placeholder.
+        # ZQZPROT0ZQZ has no Markdown significance.
+        key = f'ZQZPROT{counter[0]}ZQZ'
         placeholders[key] = match.group(0)
         counter[0] += 1
         return key
@@ -66,7 +70,7 @@ def render_content(value):
     text = _BLANK.sub(protect, text)
 
     def protect_latex(match):
-        key = f'__LATEX{counter[0]}__'
+        key = f'ZQZLATEX{counter[0]}ZQZ'
         placeholders[key] = match.group(0)
         counter[0] += 1
         return key
