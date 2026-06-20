@@ -1,14 +1,5 @@
 {% load i18n sandbox_tags %}
-{#
-  MCQ Widget — renders a single MCQExercise for students.
-  Props (from lesson_blocks_render context):
-    block.mcq_id, block.mcq_title, block.question, block.hint,
-    block.allow_multiple, block.shuffle, block.max_attempts, block.points,
-    block.difficulty, block.choices  [{id, text, order}]
-    block.is_solved, block.points_earned, block.attempts_used,
-    block.correct_ids  ([] unless already solved or exhausted),
-    block.explanation  ('' unless already solved or exhausted)
-#}
+{% comment %}MCQ Widget — renders a single MCQExercise for students.{% endcomment %}
 {% with mcq=block %}
 <div id="mcq-{{ mcq.mcq_id }}"
      class="mcq-widget bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm mb-8">

@@ -56,12 +56,7 @@
 
         </div>
 
-        {#
-          iframe YouTube — src vide au chargement (performance).
-          CORRIGÉ : data-src construit avec '&' car url contient déjà '?'.
-          On utilise directement {{ url }} qui est déjà l'URL embed nocookie
-          avec ses paramètres, puis on ajoute &autoplay=1.
-        #}
+        {% comment %}iframe YouTube — src vide au chargement (performance).{% endcomment %}
         <iframe
             id="iframe-{{ id_youtube }}"
             src=""

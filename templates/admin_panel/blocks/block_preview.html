@@ -1,10 +1,10 @@
 {% load i18n %}
 {% load content_filters %}
-{# Renders staff preview blocks built by admin_panel.block_preview.build_block_previews.
-   Each `block` is a plain dict. Solutions/test code are never included.
-   SECURITY: text_content and instructions are piped through render_content
-   (Markdown + bleach) instead of |safe to prevent admin-to-admin stored XSS. #}
-<div class="space-y-5">
+{% comment %}Renders staff preview blocks{% endcomment %}
+
+
+
+
   {% for block in lesson_blocks %}
     {% if block.type == 'text' %}
     <div class="prose prose-sm max-w-none text-slate-700 leading-relaxed">{{ block.text_content|render_content }}</div>
