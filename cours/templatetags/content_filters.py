@@ -16,20 +16,29 @@ ALLOWED_TAGS = [
     'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
     'ul', 'ol', 'li', 'blockquote', 'hr',
     'table', 'thead', 'tbody', 'tr', 'th', 'td',
-    'a', 'img', 'iframe', 'div', 'span', 'figure', 'figcaption',
+    'a', 'img', 'div', 'span', 'figure', 'figcaption',
     'sup', 'sub', 'mark', 'details', 'summary',
 ]
 
+# SECURITY: `iframe` was previously allowed — it permitted any staff-authored
+# lesson to embed arbitrary third-party content (stored XSS / phishing vector).
+# `style` was previously in the global '*' allowlist — it allowed CSS-based
+# data exfiltration (background:url(...)) and UI redressing (position:fixed).
+# Both have been removed. To embed a YouTube video in a lesson, use the
+# dedicated !youtube() markdown extension or convert the URL via
+# cours.models.convertir_url_youtube at render time.
 ALLOWED_ATTRS = {
-    '*': ['class', 'id', 'style'],
+    '*': ['class', 'id'],
     'a': ['href', 'title', 'target', 'rel'],
     'img': ['src', 'alt', 'title', 'width', 'height'],
-    'iframe': ['src', 'width', 'height', 'frameborder', 'allowfullscreen', 'allow'],
     'code': ['class'],
     'td': ['colspan', 'rowspan'],
     'th': ['colspan', 'rowspan'],
     'pre': ['class'],
 }
+
+# Only http(s) and mailto URLs are permitted; scrubbs javascript: URIs.
+ALLOWED_PROTOCOLS = ['http', 'https', 'mailto']
 
 _FENCED = re.compile(r'```[\s\S]*?```')
 _INLINE_CODE = re.compile(r'`[^`\n]+`')
@@ -75,5 +84,11 @@ def render_content(value):
     for key, val in placeholders.items():
         html = html.replace(key, val)
 
-    html = bleach.clean(html, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS, strip=False)
+    html = bleach.clean(
+        html,
+        tags=ALLOWED_TAGS,
+        attributes=ALLOWED_ATTRS,
+        protocols=ALLOWED_PROTOCOLS,
+        strip=False,
+    )
     return mark_safe(html)

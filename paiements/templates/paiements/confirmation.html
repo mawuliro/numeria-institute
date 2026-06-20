@@ -17,9 +17,11 @@
             </h1>
             <p class="text-gray-500 dark:text-gray-400 text-lg mb-8">
                 {% if paiement.objet_type == 'cours' %}
-                    {% blocktrans with titre=paiement.cours.titre %}Tu es maintenant inscrit au cours <strong>{{ titre }}</strong>.{% endblocktrans %}
+                    {% blocktrans with titre=paiement.cours.title %}Tu es maintenant inscrit au cours <strong>{{ titre }}</strong>.{% endblocktrans %}
+                {% elif paiement.objet_type == 'formation' %}
+                    {% blocktrans with formation=paiement.formation.title %}Tu es maintenant inscrit à la formation <strong>{{ formation }}</strong>.{% endblocktrans %}
                 {% else %}
-                    {% blocktrans with session=paiement.formation_inscription.session.nom formation=paiement.formation_inscription.session.formation.titre %}Tu es maintenant inscrit à la session <strong>{{ session }}</strong> de <strong>{{ formation }}</strong>.{% endblocktrans %}
+                    {% trans "Ton paiement a été reçu." %}
                 {% endif %}
                 {% trans "Bonne apprentissage ! 🎓" %}
             </p>
@@ -36,15 +38,17 @@
                     </div>
                     <div>
                         <p class="text-gray-400 dark:text-gray-500">{% trans "Montant payé" %}</p>
-                        <p class="font-bold text-gray-800 dark:text-gray-100">{{ paiement.montant }} {{ paiement.devise }}</p>
+                        <p class="font-bold text-gray-800 dark:text-gray-100">{{ paiement.montant_final }} {{ paiement.devise }}</p>
                     </div>
                     <div>
-                        <p class="text-gray-400 dark:text-gray-500">{% if paiement.objet_type == 'cours' %}{% trans "Cours" %}{% else %}{% trans "Session" %}{% endif %}</p>
+                        <p class="text-gray-400 dark:text-gray-500">{% if paiement.objet_type == 'cours' %}{% trans "Cours" %}{% else %}{% trans "Formation" %}{% endif %}</p>
                         <p class="font-bold text-gray-800 dark:text-gray-100">
                             {% if paiement.objet_type == 'cours' %}
-                                {{ paiement.cours.titre }}
+                                {{ paiement.cours.title }}
+                            {% elif paiement.objet_type == 'formation' %}
+                                {{ paiement.formation.title }}
                             {% else %}
-                                {{ paiement.formation_inscription.session.formation.titre }} — {{ paiement.formation_inscription.session.nom }}
+                                —
                             {% endif %}
                         </p>
                     </div>
@@ -62,10 +66,10 @@
                    class="bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
                     {% trans "Commencer le cours →" %}
                 </a>
-                {% else %}
-                <a href="{% url 'formation:session_detail' paiement.formation_inscription.session.id %}"
+                {% elif paiement.objet_type == 'formation' %}
+                <a href="{% url 'formation:detail' paiement.formation.slug %}"
                    class="bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
-                    {% trans "Voir la session →" %}
+                    {% trans "Voir la formation →" %}
                 </a>
                 {% endif %}
                 <a href="{% url 'comptes:tableau_de_bord' %}"

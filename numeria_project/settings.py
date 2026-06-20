@@ -343,5 +343,38 @@ LOGGING = {
             'level': 'WARNING',
             'propagate': True,
         },
+        # App loggers at INFO so email-success, fraud/escrow, and payment-event
+        # logs (which use logger.info) actually reach stdout. Without these the
+        # root WARNING filter silently dropped them.
+        'numeria_project': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'comptes': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'cours': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'mentorat': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'paiements': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'admin_panel': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
     },
 }

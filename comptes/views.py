@@ -1,5 +1,5 @@
 import logging
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -10,7 +10,6 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django_ratelimit.decorators import ratelimit
-from django_ratelimit.exceptions import Ratelimited
 from django.contrib.auth.views import PasswordResetView
 from django.urls import reverse_lazy
 from numeria_project.emails import send_verification_email, verify_email_token
@@ -68,10 +67,15 @@ def verify_email(request, token):
 
     user.is_active = True
     user.save()
-    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-    return redirect('comptes:tableau_de_bord')
+    # SECURITY: Do NOT auto-login the user on email verification.
+    # The verification link is sent in clear-text email and is valid for 24h;
+    # anyone who obtains it (forwarded email, shared inbox, browser history)
+    # would otherwise get a passwordless login. Require explicit authentication.
+    messages.success(request, _("Ton email a été vérifié ! Tu peux maintenant te connecter."))
+    return redirect('comptes:connexion')
 
 
+@ratelimit(key='ip', rate='3/h', method='POST', block=True)
 def resend_verification_email(request):
     if request.method == 'POST':
         formulaire = VerificationResendForm(request.POST)
@@ -212,7 +216,7 @@ def modifier_profil(request):
                 raise
         else:
             if request.user.is_superuser:
-                print(formulaire.errors)
+                logger.debug('Profil form errors for user %s: %s', request.user.pk, formulaire.errors)
             messages.error(request, _("Veuillez corriger les erreurs."))
     else:
         formulaire = FormulaireProfil(instance=profil, user=request.user)
@@ -241,7 +245,7 @@ def supprimer_photo(request):
                     cloudinary.uploader.destroy(profil.photo.public_id)
             except Exception as e:
                 # En développement, on ignore les erreurs Cloudinary
-                print(f"Erreur suppression Cloudinary: {e}")
+                logger.warning('Cloudinary photo deletion failed for user %s: %s', request.user.pk, e)
 
             # Vider le champ en base de données
             profil.photo = None

@@ -90,6 +90,35 @@ class Paiement(models.Model):
     def __str__(self):
         return f"{self.reference_numeria} — {self.etudiant_id} — {self.statut}"
 
+    # ── Template compatibility helpers ────────────────────────────────────────
+    # Templates historically referenced `paiement.objet_type`, `paiement.objet`
+    # and `paiement.montant`. After the rebuild the FKs are `cours` / `formation`
+    # and the amount field is `montant_final`. These properties keep the old
+    # template contract working without touching every template.
+
+    @property
+    def objet_type(self):
+        """Returns 'cours', 'formation' or None — used by templates."""
+        if self.cours_id:
+            return 'cours'
+        if self.formation_id:
+            return 'formation'
+        return None
+
+    @property
+    def objet(self):
+        """Returns the related Course or Formation instance (or None)."""
+        if self.cours_id:
+            return self.cours
+        if self.formation_id:
+            return self.formation
+        return None
+
+    @property
+    def montant(self):
+        """Backward-compat alias for montant_final (used by old templates)."""
+        return self.montant_final
+
     class Meta:
         verbose_name = 'Paiement'
         verbose_name_plural = 'Paiements'

@@ -5,15 +5,13 @@ All views are protected by the staff_only decorator.
 import json
 import logging
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q, Count, Sum
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.utils.text import slugify
-from django.utils.translation import gettext as _
-from django.views.decorators.http import require_POST, require_http_methods
+from django.views.decorators.http import require_POST
 
 from .utils import staff_only, log_staff_action
 
@@ -124,7 +122,7 @@ def cours_create(request):
             status='draft',
             created_by=request.user,
         )
-        log_staff_action(request.user, 'notification_sent',
+        log_staff_action(request.user, 'course_created',
                          f"Cours créé : «{cours.title}»")
         return redirect('admin_panel:cours_edit', slug=cours.slug)
 
@@ -158,7 +156,7 @@ def cours_delete(request, slug):
     cours = get_object_or_404(Course, slug=slug)
     titre = cours.title
     cours.delete()
-    log_staff_action(request.user, 'notification_sent', f"Cours supprimé : «{titre}»")
+    log_staff_action(request.user, 'course_deleted', f"Cours supprimé : «{titre}»")
     messages.success(request, f'Cours «{titre}» supprimé.')
     return redirect('admin_panel:cours_list')
 

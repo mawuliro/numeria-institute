@@ -98,15 +98,21 @@
                                 {{ demande.message|truncatechars:100 }}
                             </p>
                             <div class="flex gap-2">
-                                <a href="{% url 'mentorat:gerer_demande' demande.pk 'accepter' %}"
-                                   style="font-family:'Outfit',sans-serif;font-weight:700;"
-                                   class="bg-numeria-teal text-numeria-bleu px-4 py-1.5 rounded-lg text-xs hover:bg-teal-300 transition-colors">
-                                    ✓ {% trans "Accepter" %}
-                                </a>
-                                <a href="{% url 'mentorat:gerer_demande' demande.pk 'refuser' %}"
-                                   class="bg-red-50 dark:bg-red-900/20 text-red-500 px-4 py-1.5 rounded-lg text-xs hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
-                                    ✗ {% trans "Refuser" %}
-                                </a>
+                                <form method="post" action="{% url 'mentorat:gerer_demande' demande.pk 'accepter' %}" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                       style="font-family:'Outfit',sans-serif;font-weight:700;"
+                                       class="bg-numeria-teal text-numeria-bleu px-4 py-1.5 rounded-lg text-xs hover:bg-teal-300 transition-colors">
+                                        ✓ {% trans "Accepter" %}
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'mentorat:gerer_demande' demande.pk 'refuser' %}" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                       class="bg-red-50 dark:bg-red-900/20 text-red-500 px-4 py-1.5 rounded-lg text-xs hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
+                                        ✗ {% trans "Refuser" %}
+                                    </button>
+                                </form>
                             </div>
                         </div>
                         {% endfor %}

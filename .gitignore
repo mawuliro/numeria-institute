@@ -19,6 +19,13 @@ __pycache__/
 # ── Médias uploadés ──
 media/
 
+# ── Build artifacts (collectstatic output) ──
+staticfiles/
+
+# ── Compiled translation catalogs (rebuilt from .po via compilemessages) ──
+*.mo
+locale/**/*.mo
+
 # ── Fichiers système ──
 .DS_Store
 Thumbs.db

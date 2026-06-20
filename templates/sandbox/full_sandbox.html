@@ -237,6 +237,8 @@ Parameters: sandbox_id, height (px), auto_load_pkgs, show_insert_lesson, initial
 var SID='{{ sid|escapejs }}',HEIGHT={{ h }},AUTO_PKGS={% if auto_load_pkgs %}true{% else %}false{% endif %};
 var LS_CODE='nb_fsbx_'+SID+'_code',LS_PKG='nb_fsbx_'+SID+'_pkgs';
 var CSRF=(document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+// Locale-aware admin-panel prefix — was hardcoded to '/fr/admin-panel' which 404'd for English-locale staff.
+var AP='/{{ request.LANGUAGE_CODE }}/admin-panel';
 var INSERT_MODE='cours',cm=null,pyReady=false,currentScriptId=null;
 
 function g(id){return document.getElementById('fsbx-'+SID+'-'+id);}
@@ -464,7 +466,7 @@ var obj=window['fsbx_'+SID]={
   loadInsertContents:function(){
     var sel=g('ins-content');if(!sel)return;
     sel.innerHTML='<option>— Chargement… —</option>';sel.disabled=true;
-    fetch(INSERT_MODE==='cours'?'/fr/admin-panel/api/courses/':'/fr/admin-panel/api/formations/').then(function(r){return r.json();}).then(function(d){
+    fetch(INSERT_MODE==='cours'?AP+'/api/courses/':AP+'/api/formations/').then(function(r){return r.json();}).then(function(d){
       var items=INSERT_MODE==='cours'?d.courses:d.formations;
       sel.innerHTML='<option value="">— Choisir… —</option>';
       (items||[]).forEach(function(c){sel.add(new Option(c.title||c.titre,c.id+'|'+(c.slug||'')));});
@@ -478,7 +480,7 @@ var obj=window['fsbx_'+SID]={
     if(!val)return;
     var slug=val.split('|')[1]||val.split('|')[0],sel=g('ins-module');
     sel.innerHTML='<option>— Chargement… —</option>';sel.disabled=true;
-    fetch((INSERT_MODE==='cours'?'/fr/admin-panel/api/courses/':'/fr/admin-panel/api/formations/')+slug+'/modules/').then(function(r){return r.json();}).then(function(d){
+    fetch((INSERT_MODE==='cours'?AP+'/api/courses/':AP+'/api/formations/')+slug+'/modules/').then(function(r){return r.json();}).then(function(d){
       sel.innerHTML='<option value="">— Choisir un module —</option>';
       (d.modules||[]).forEach(function(m){sel.add(new Option(m.titre||m.title,m.id));});
       sel.disabled=false;var l=g('ins-lesson');if(l){l.innerHTML='<option value="">— Choisir d\'abord… —</option>';l.disabled=true;}
@@ -487,7 +489,7 @@ var obj=window['fsbx_'+SID]={
   loadInsertLessons:function(mid){
     if(!mid)return;
     var sel=g('ins-lesson');sel.innerHTML='<option>— Chargement… —</option>';sel.disabled=true;
-    fetch((INSERT_MODE==='cours'?'/fr/admin-panel/api/modules/':'/fr/admin-panel/api/formation-modules/')+mid+'/lessons/').then(function(r){return r.json();}).then(function(d){
+    fetch((INSERT_MODE==='cours'?AP+'/api/modules/':AP+'/api/formation-modules/')+mid+'/lessons/').then(function(r){return r.json();}).then(function(d){
       sel.innerHTML='<option value="">— Choisir une leçon —</option>';
       (d.lessons||[]).forEach(function(l){sel.add(new Option(l.titre||l.title,l.id));});
       sel.disabled=false;
@@ -497,7 +499,7 @@ var obj=window['fsbx_'+SID]={
     var ls=g('ins-lesson'),lid=ls?ls.value:'';
     if(!lid){if(window.nbToast)nbToast('Sélectionne une leçon.','warning');return;}
     var mel=g('marker-text'),marker=mel?mel.textContent:'';
-    var url=(INSERT_MODE==='cours'?'/fr/admin-panel/api/lessons/':'/fr/admin-panel/api/formation-lessons/')+lid+'/insert-sandbox/';
+    var url=(INSERT_MODE==='cours'?AP+'/api/lessons/':AP+'/api/formation-lessons/')+lid+'/insert-sandbox/';
     var btn=g('insert-btn');if(btn){btn.disabled=true;btn.textContent='⏳ Insertion…';}
     fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify({marker:marker})})
       .then(function(r){return r.json();}).then(function(d){

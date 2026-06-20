@@ -8,7 +8,7 @@ from django.db.models import F
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
-from django.views.decorators.http import require_POST, require_GET
+from django.views.decorators.http import require_POST
 
 from .utils import staff_only
 

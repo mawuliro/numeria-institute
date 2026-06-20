@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
+import logging
 from cours.models import Course
 from formation.models import InscriptionFormation
 from .models import Paiement
@@ -13,6 +14,8 @@ from .service import (
     verifier_acces_formation
 )
 from .constants import PAYMENT_PROVIDERS
+
+logger = logging.getLogger(__name__)
 
 
 def _post_payment_actions(user, paiement):
@@ -33,7 +36,7 @@ def _post_payment_actions(user, paiement):
             link=reverse('paiements:confirmation', args=[paiement.id]),
         )
     except Exception:
-        pass
+        logger.exception('Post-payment notification failed for paiement %s', paiement.id)
 
 
 @login_required
@@ -196,14 +199,16 @@ def historique_paiements(request):
     """
     Historique de tous les paiements de l'étudiant.
     """
-    paiements = Paiement.objects.filter(
-        etudiant=request.user
-    ).select_related('course')
+    paiements = (
+        Paiement.objects.filter(etudiant=request.user)
+        .select_related('cours', 'formation')
+    )
 
     contexte = {
         'paiements': paiements,
         'total_depense': sum(
-            p.montant for p in paiements if p.statut == 'reussi'
+            (p.montant_final for p in paiements if p.statut == 'reussi'),
+            0,
         ),
     }
     return render(request, 'paiements/historique.html', contexte)
