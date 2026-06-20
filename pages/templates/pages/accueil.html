@@ -46,12 +46,12 @@
                         <a href="{% url 'comptes:tableau_de_bord' %}"
                            style="font-family:'Outfit',sans-serif; font-weight:700;"
                            class="bg-numeria-teal text-numeria-bleu px-8 py-3.5 rounded-xl hover:bg-teal-300 transition-colors text-center text-base">
-                            Mon tableau de bord →
+                            {% trans "My dashboard" %} →
                         </a>
                         <a href="{% url 'cours:catalogue' %}"
                            style="font-family:'Outfit',sans-serif; font-weight:600;"
                            class="border-2 border-white/25 text-white px-8 py-3.5 rounded-xl hover:border-numeria-teal hover:text-numeria-teal transition-colors text-center text-base">
-                            {% trans "Voir les cours" %}
+                            {% trans "View courses" %}
                         </a>
                     {% else %}
                         <a href="{% url 'cours:catalogue' %}"
@@ -75,7 +75,7 @@
                             <div class="w-7 h-7 rounded-full bg-numeria-or flex items-center justify-center text-numeria-bleu font-black text-xs border-2 border-numeria-bleu" style="font-family:'Outfit',sans-serif;">K</div>
                             <div class="w-7 h-7 rounded-full bg-blue-400 flex items-center justify-center text-white font-black text-xs border-2 border-numeria-bleu" style="font-family:'Outfit',sans-serif;">F</div>
                         </div>
-                        <span class="text-blue-300 text-sm">{{ nb_etudiants }}+ {% trans "étudiants" %}</span>
+                        <span class="text-blue-300 text-sm">{{ nb_etudiants }}+ {% trans "students" %}</span>
                     </div>
                     <div class="h-4 w-px bg-white/20"></div>
                     <div class="flex items-center gap-1.5 text-blue-300 text-sm">
@@ -123,6 +123,7 @@
 </section>
 
 <!-- ===== STATISTIQUES ===== -->
+{% if nb_etudiants > 0 or nb_cours > 0 or nb_pays > 0 %}
 <section class="bg-numeria-bleu-fonce w-full border-t border-white/10">
     <div class="w-full px-4 sm:px-8 lg:px-16 py-8">
         <div class="grid grid-cols-3 gap-4 text-center">
@@ -130,42 +131,89 @@
                 <div style="font-family:'Outfit',sans-serif; font-weight:800;"
                      class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl"
                      data-nb-count="{{ nb_etudiants }}" data-nb-count-dur="1400">{{ nb_etudiants }}</div>
-                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Étudiants inscrits" %}</div>
+                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Enrolled students" %}</div>
             </div>
             <div class="py-2 border-x border-white/10">
                 <div style="font-family:'Outfit',sans-serif; font-weight:800;"
                      class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl"
                      data-nb-count="{{ nb_cours }}" data-nb-count-dur="1000">{{ nb_cours }}</div>
-                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Cours disponibles" %}</div>
+                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Available courses" %}</div>
             </div>
             <div class="py-2">
                 <div style="font-family:'Outfit',sans-serif; font-weight:800;"
                      class="text-numeria-teal text-2xl sm:text-3xl lg:text-4xl"
                      data-nb-count="{{ nb_pays }}" data-nb-count-dur="800">{{ nb_pays }}</div>
-                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Pays représentés" %}</div>
+                <div class="text-blue-300 text-xs sm:text-sm mt-1">{% trans "Countries represented" %}</div>
             </div>
         </div>
     </div>
 </section>
+{% endif %}
 
-<!-- ===== FONCTIONNALITÉS ===== -->
-<section class="w-full py-16 md:py-20 bg-gray-50 dark:bg-gray-800">
+<!-- ===== POURQUOI NUMERIA (principale) ===== -->
+<section class="w-full py-16 bg-white dark:bg-gray-800">
     <div class="w-full px-4 sm:px-8 lg:px-16">
-        <div class="text-center mb-12">
-            <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
-                {{ homepage.features_title }}
-            </h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {% for feature in homepage.features %}
-            <div class="text-center nb-card rounded-2xl p-6 bg-transparent hover:bg-white dark:hover:bg-gray-700 transition-colors">
-                <div class="w-16 h-16 bg-numeria-teal rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span class="text-2xl">{{ feature.icon }}</span>
-                </div>
-                <h3 class="text-xl font-bold text-numeria-bleu dark:text-white mb-2">{{ feature.title }}</h3>
-                <p class="text-gray-600 dark:text-gray-300">{{ feature.description }}</p>
+        <div class="max-w-5xl mx-auto">
+
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 bg-numeria-bleu/8 text-numeria-bleu dark:text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">{% trans "Our strengths" %}</div>
+                <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
+                    {% trans "Why choose Numeria?" %}
+                </h2>
+                <p class="text-gray-500 dark:text-gray-400">{% trans "A platform designed for African learners" %}</p>
             </div>
-            {% endfor %}
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🎓</div>
+                    <div>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "Quality courses" %}</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "Rigorous scientific content with LaTeX formulas and worked exercises." %}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🌍</div>
+                    <div>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "African roots" %}</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "Examples and projects rooted in African and Togolese realities." %}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">📱</div>
+                    <div>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "100% responsive" %}</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "Learn from your phone, tablet or computer." %}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🏆</div>
+                    <div>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "Official certificates" %}</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "Receive a verifiable PDF certificate upon completing each paid course." %}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🧪</div>
+                    <div>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "Interactive exercises" %}</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "Multiple-choice questions with detailed solutions revealed only after success." %}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
+                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">💰</div>
+                    <div>
+                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "Accessible to all" %}</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "Most courses are free. Mobile Money payment available." %}</p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </section>
@@ -175,7 +223,7 @@
     <div class="w-full px-4 sm:px-8 lg:px-16">
         <div class="text-center mb-12">
             <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
-                {% trans "Ce que disent nos étudiants" %}
+                {% trans "What our students say" %}
             </h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -198,16 +246,17 @@
 </section>
 
 <!-- ===== COURS POPULAIRES ===== -->
+{% if cours_recents %}
 <section class="w-full py-16 md:py-20 bg-numeria-blanc dark:bg-gray-900">
     <div class="w-full px-4 sm:px-8 lg:px-16">
 
         <div class="text-center mb-12">
-            <div class="inline-flex items-center gap-2 bg-numeria-teal/10 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">{% trans "Cours populaires" %}</div>
+            <div class="inline-flex items-center gap-2 bg-numeria-teal/10 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">{% trans "Popular courses" %}</div>
             <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
-                {% trans "Commence à apprendre aujourd'hui" %}
+                {% trans "Start learning today" %}
             </h2>
             <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-                {% trans "Mathématiques, sciences, IA — des contenus rigoureux accessibles à tous niveaux." %}
+                {% trans "Mathematics, science, AI — rigorous content accessible to all levels." %}
             </p>
         </div>
 
@@ -218,37 +267,33 @@
                 <div class="bg-numeria-bleu px-6 py-5 relative overflow-hidden">
                     <div style="position:absolute; top:-20px; right:-20px; width:80px; height:80px; background:rgba(45,212,191,0.1); border-radius:50%;"></div>
                     <span style="font-family:'Outfit',sans-serif; font-weight:700; letter-spacing:0.1em; font-size:0.65rem; text-transform:uppercase;" class="text-numeria-teal block mb-2">
-                        {{ un_cours.get_matiere_display }}
+                        {{ un_cours.get_category_display }}
                     </span>
                     <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-white text-lg leading-snug">
-                        {{ un_cours.titre }}
+                        {{ un_cours.title }}
                     </h3>
                 </div>
                 <!-- Body carte -->
                 <div class="p-5">
                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 leading-relaxed line-clamp-2">
-                        {{ un_cours.resume }}
+                        {{ un_cours.short_description|default:un_cours.description|truncatewords:20 }}
                     </p>
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-gray-400 dark:text-gray-500 text-xs">
-                            {{ un_cours.nombre_lecons }} leçons · {{ un_cours.get_niveau_display }}
+                            {% blocktrans count counter=un_cours.lessons.count %}{{ counter }} lesson{% plural %}{{ counter }} lessons{% endblocktrans %} · {{ un_cours.get_level_display }}
                         </span>
-                        {% if un_cours.est_gratuit %}
-                            <span class="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full">{% trans "Gratuit" %}</span>
+                        {% if un_cours.is_free %}
+                            <span class="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full">{% trans "Free" %}</span>
                         {% else %}
-                            <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-3 py-1 rounded-full">{{ un_cours.prix }} FCFA</span>
+                            <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-3 py-1 rounded-full">{{ un_cours.price }} XOF</span>
                         {% endif %}
                     </div>
                     <a href="{% url 'cours:detail' un_cours.id %}"
                        style="font-family:'Outfit',sans-serif; font-weight:700;"
                        class="block w-full text-center bg-numeria-bleu text-white py-2.5 rounded-xl hover:bg-numeria-teal hover:text-numeria-bleu transition-colors text-sm group-hover:bg-numeria-teal group-hover:text-numeria-bleu">
-                        {% trans "Voir le cours" %} →
+                        {% trans "View course" %} →
                     </a>
                 </div>
-            </div>
-            {% empty %}
-            <div class="col-span-3 text-center py-10">
-                <p class="text-gray-400">{% trans "Aucun cours disponible pour le moment." %}</p>
             </div>
             {% endfor %}
         </div>
@@ -257,80 +302,13 @@
             <a href="{% url 'cours:catalogue' %}"
                style="font-family:'Outfit',sans-serif; font-weight:700;"
                class="inline-flex items-center gap-2 border-2 border-numeria-bleu dark:border-numeria-teal text-numeria-bleu dark:text-numeria-teal px-8 py-3 rounded-xl hover:bg-numeria-bleu hover:text-white dark:hover:bg-numeria-teal dark:hover:text-numeria-bleu transition-colors">
-                {% trans "Voir tous les cours" %} →
+                {% trans "View all courses" %} →
             </a>
         </div>
 
     </div>
 </section>
-
-<!-- ===== POURQUOI NUMERIA ===== -->
-<section class="w-full py-16 bg-white dark:bg-gray-800">
-    <div class="w-full px-4 sm:px-8 lg:px-16">
-        <div class="max-w-5xl mx-auto">
-
-            <div class="text-center mb-12">
-                <div class="inline-flex items-center gap-2 bg-numeria-bleu/8 text-numeria-bleu dark:text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">Nos atouts</div>
-                <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl text-numeria-bleu dark:text-white mb-3">
-                    {% trans "Pourquoi choisir Numeria ?" %}
-                </h2>
-                <p class="text-gray-500 dark:text-gray-400">{% trans "Une plateforme conçue pour les apprenants africains" %}</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
-                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🎓</div>
-                    <div>
-                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "Cours de qualité" %}</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "Contenus scientifiques rigoureux avec formules LaTeX et exercices corrigés." %}</p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
-                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🌍</div>
-                    <div>
-                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "Ancrage africain" %}</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "Des exemples et projets ancrés dans les réalités africaines et togolaises." %}</p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
-                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">📱</div>
-                    <div>
-                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "100% responsive" %}</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "Apprends depuis ton téléphone, ta tablette ou ton ordinateur." %}</p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
-                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🏆</div>
-                    <div>
-                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "Certificats officiels" %}</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "Reçois un certificat PDF vérifiable à la fin de chaque cours payant complété." %}</p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
-                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">🧪</div>
-                    <div>
-                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "Exercices interactifs" %}</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "Des QCM avec corrigés détaillés visibles seulement après réussite." %}</p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4 p-5 rounded-2xl bg-numeria-blanc dark:bg-gray-700 border border-gray-100 dark:border-gray-600 hover:border-numeria-teal/30 transition-colors group">
-                    <div class="w-11 h-11 bg-numeria-bleu rounded-xl flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">💰</div>
-                    <div>
-                        <h3 style="font-family:'Outfit',sans-serif; font-weight:700;" class="text-numeria-bleu dark:text-white mb-1">{% trans "Accessible à tous" %}</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{% trans "La majorité des cours sont gratuits. Paiement Mobile Money disponible." %}</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
+{% endif %}
 
 <!-- ===== APPEL À L'ACTION ===== -->
 <section class="bg-numeria-bleu w-full relative overflow-hidden">
@@ -340,28 +318,28 @@
     </div>
     <div class="w-full px-4 sm:px-8 lg:px-16 py-16 md:py-20 text-center relative">
         <div class="inline-flex items-center gap-2 bg-numeria-teal/15 border border-numeria-teal/30 text-numeria-teal text-xs font-bold px-4 py-1.5 rounded-full mb-6 tracking-widest uppercase" style="font-family:'Outfit',sans-serif;">
-            {% trans "Rejoins-nous" %}
+            {% trans "Join us" %}
         </div>
         <h2 style="font-family:'Outfit',sans-serif; font-weight:800;" class="text-3xl sm:text-4xl lg:text-5xl text-white mb-4">
-            {% trans "Prêt à commencer ton voyage scientifique ?" %}
+            {% trans "Ready to start your scientific journey?" %}
         </h2>
         <p class="text-blue-200 mb-8 text-sm sm:text-base max-w-xl mx-auto">
-            {% trans "Rejoins des milliers d'apprenants qui transforment leur avenir grâce à la science." %}
+            {% trans "Join thousands of learners transforming their future through science." %}
         </p>
         {% if user.is_authenticated %}
             <a href="{% url 'comptes:tableau_de_bord' %}"
                style="font-family:'Outfit',sans-serif; font-weight:800; font-size:1.05rem;"
                class="inline-block bg-numeria-teal text-numeria-bleu px-10 sm:px-14 py-3.5 sm:py-4 rounded-xl hover:bg-teal-300 transition-colors">
-                {% trans "Aller à mon tableau de bord" %} →
+                {% trans "Go to my dashboard" %} →
             </a>
-            <p class="text-blue-400 text-xs mt-4">{% trans "Passe en revue tes cours et continue ton apprentissage." %}</p>
+            <p class="text-blue-400 text-xs mt-4">{% trans "Review your courses and continue your learning." %}</p>
         {% else %}
             <a href="{% url 'comptes:inscription' %}"
                style="font-family:'Outfit',sans-serif; font-weight:800; font-size:1.05rem;"
                class="inline-block bg-numeria-teal text-numeria-bleu px-10 sm:px-14 py-3.5 sm:py-4 rounded-xl hover:bg-teal-300 transition-colors">
-                {% trans "Créer mon compte gratuitement" %} →
+                {% trans "Create my account for free" %} →
             </a>
-            <p class="text-blue-400 text-xs mt-4">{% trans "Aucune carte bancaire requise · Cours gratuits disponibles immédiatement" %}</p>
+            <p class="text-blue-400 text-xs mt-4">{% trans "No credit card required · Free courses available immediately" %}</p>
         {% endif %}
     </div>
 </section>
