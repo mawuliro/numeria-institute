@@ -76,6 +76,7 @@ def verify_email(request, token):
     return redirect('comptes:connexion')
 
 
+@ratelimit(key='ip', rate='3/h', method='POST', block=True)
 def resend_verification_email(request):
     if request.method == 'POST':
         formulaire = VerificationResendForm(request.POST)

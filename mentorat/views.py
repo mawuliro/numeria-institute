@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.views.decorators.http import require_POST
 
 logger = logging.getLogger(__name__)
 from django.contrib.auth.models import User
@@ -507,9 +508,11 @@ def tableau_de_bord_mentee(request):
 
 
 @login_required
+@require_POST
 def gerer_demande(request, demande_pk, action):
     """
     Accepter ou refuser une demande de mentorat.
+    POST-only to prevent CSRF via GET (was: <img src=".../accepter/">).
     """
     demande = get_object_or_404(DemandeMentorat, pk=demande_pk)
 
