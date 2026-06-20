@@ -378,6 +378,213 @@ class LessonBlock(models.Model):
         if not self.course_lesson and not self.formation_lesson:
             raise ValidationError('Must set course_lesson or formation_lesson.')
 
+    def get_payload(self, user=None, preview=False):
+        """Build a sanitised dict for the lesson_blocks_render.html template.
+
+        Never includes solution_code or test_code in plain text —
+        test_code is base64-encoded for client-side evaluation only.
+        """
+        import base64
+
+        data = {
+            'id': self.id,
+            'type': self.block_type,
+            'order': self.order,
+        }
+
+        if self.block_type == 'text':
+            data['text_content'] = self.text_content or ''
+
+        elif self.block_type == 'video':
+            data['embed_url'] = self._embed_url(self.video_url)
+            data['video_caption'] = self.video_caption or ''
+
+        elif self.block_type == 'sandbox':
+            data['title'] = self.sandbox_title or 'Essaie toi-même'
+            data['initial_code'] = self.sandbox_initial_code or ''
+
+        elif self.block_type == 'code_exercise':
+            ex = self.code_exercise
+            if ex:
+                data['exercise_id'] = ex.id
+                data['id'] = ex.id
+                data['title'] = ex.title
+                data['instructions'] = ex.instructions or ''
+                data['difficulty'] = ex.difficulty
+                data['points'] = ex.points
+                data['hint'] = ex.hint or ''
+                data['max_attempts'] = ex.max_attempts
+                data['starter_code'] = ex.starter_code or ''
+                data['expected_output'] = ex.expected_output or ''
+                data['evaluation_mode'] = ex.evaluation_mode
+                data['test_code_b64'] = base64.b64encode(
+                    (ex.test_code or '').encode()
+                ).decode() if ex.test_code else ''
+                data['order'] = ex.order
+                data['is_solved'] = False
+                data['points_earned'] = 0
+                data['attempts_used'] = 0
+                if user and not preview:
+                    from cours.models import StudentProgress, ExerciseAttempt
+                    progress = StudentProgress.objects.filter(
+                        student=user, exercise_type='code',
+                        exercise_id=ex.id
+                    ).first()
+                    if progress:
+                        data['is_solved'] = progress.is_solved
+                        data['points_earned'] = progress.points_earned
+                    data['attempts_used'] = ExerciseAttempt.objects.filter(
+                        exercise_type='code', exercise_id=ex.id, student=user
+                    ).count()
+
+        elif self.block_type == 'mcq':
+            ex = self.mcq_exercise
+            if ex:
+                data['mcq_id'] = ex.id
+                data['mcq_title'] = ex.title
+                data['title'] = ex.title
+                data['question'] = ex.question or ''
+                data['hint'] = ex.hint or ''
+                data['allow_multiple'] = ex.allow_multiple_correct
+                data['shuffle'] = ex.shuffle_choices
+                data['max_attempts'] = ex.max_attempts
+                data['points'] = ex.points
+                data['difficulty'] = ex.difficulty
+                data['explanation'] = ''  # hidden until solved/exhausted
+                data['is_solved'] = False
+                data['points_earned'] = 0
+                data['attempts_used'] = 0
+                data['correct_ids'] = []
+                data['choices'] = [
+                    {'id': c.id, 'text': c.text, 'order': c.order}
+                    for c in ex.choices.all().order_by('order')
+                ]
+                if user and not preview:
+                    from cours.models import StudentProgress, ExerciseAttempt
+                    progress = StudentProgress.objects.filter(
+                        student=user, exercise_type='mcq',
+                        exercise_id=ex.id
+                    ).first()
+                    if progress:
+                        data['is_solved'] = progress.is_solved
+                        data['points_earned'] = progress.points_earned
+                    data['attempts_used'] = ExerciseAttempt.objects.filter(
+                        exercise_type='mcq', exercise_id=ex.id, student=user
+                    ).count()
+                    # Reveal correct answers if solved or attempts exhausted
+                    if data['is_solved'] or (ex.max_attempts > 0 and data['attempts_used'] >= ex.max_attempts):
+                        data['correct_ids'] = [c.id for c in ex.choices.filter(is_correct=True)]
+                        data['explanation'] = ex.explanation or ''
+
+        elif self.block_type == 'fill_blank':
+            ex = self.fill_blank
+            if ex:
+                data['fill_blank_id'] = ex.id
+                data['title'] = ex.title
+                data['text_with_blanks'] = ex.text_with_blanks or ''
+                data['blank_count'] = len(ex.answers) if isinstance(ex.answers, dict) else 0
+                data['points'] = ex.points
+                data['difficulty'] = ex.difficulty
+                data['hint'] = ex.hint or ''
+                data['max_attempts'] = ex.max_attempts
+                data['is_solved'] = False
+                data['attempts_used'] = 0
+                if user and not preview:
+                    from cours.models import StudentProgress, ExerciseAttempt
+                    progress = StudentProgress.objects.filter(
+                        student=user, exercise_type='fill_blank',
+                        exercise_id=ex.id
+                    ).first()
+                    if progress:
+                        data['is_solved'] = progress.is_solved
+                    data['attempts_used'] = ExerciseAttempt.objects.filter(
+                        exercise_type='fill_blank', exercise_id=ex.id, student=user
+                    ).count()
+
+        elif self.block_type == 'true_false':
+            ex = self.true_false
+            if ex:
+                data['true_false_id'] = ex.id
+                data['title'] = ex.title
+                data['statements'] = ex.statements or []
+                data['points_per_statement'] = ex.points_per_statement
+                data['points'] = ex.points
+                data['difficulty'] = ex.difficulty
+                data['hint'] = ex.hint or ''
+                data['max_attempts'] = ex.max_attempts
+                data['is_solved'] = False
+                data['attempts_used'] = 0
+                if user and not preview:
+                    from cours.models import StudentProgress, ExerciseAttempt
+                    progress = StudentProgress.objects.filter(
+                        student=user, exercise_type='true_false',
+                        exercise_id=ex.id
+                    ).first()
+                    if progress:
+                        data['is_solved'] = progress.is_solved
+                    data['attempts_used'] = ExerciseAttempt.objects.filter(
+                        exercise_type='true_false', exercise_id=ex.id, student=user
+                    ).count()
+
+        elif self.block_type == 'code_order':
+            ex = self.code_order
+            if ex:
+                data['code_order_id'] = ex.id
+                data['title'] = ex.title
+                data['instructions'] = ex.instructions or ''
+                data['correct_order'] = ex.correct_order or []
+                data['distractor_lines'] = ex.distractor_lines or []
+                data['points'] = ex.points
+                data['difficulty'] = ex.difficulty
+                data['hint'] = ex.hint or ''
+                data['is_solved'] = False
+                data['attempts_used'] = 0
+
+        elif self.block_type == 'matching':
+            ex = self.matching
+            if ex:
+                data['matching_id'] = ex.id
+                data['title'] = ex.title
+                data['instructions'] = ex.instructions or ''
+                data['pairs'] = ex.pairs or []
+                data['points'] = ex.points
+                data['difficulty'] = ex.difficulty
+                data['hint'] = ex.hint or ''
+                data['is_solved'] = False
+                data['attempts_used'] = 0
+
+        elif self.block_type == 'short_answer':
+            ex = self.short_answer
+            if ex:
+                data['short_answer_id'] = ex.id
+                data['title'] = ex.title
+                data['instructions'] = ex.instructions or ''
+                data['points'] = ex.points
+                data['difficulty'] = ex.difficulty
+                data['hint'] = ex.hint or ''
+                data['max_attempts'] = ex.max_attempts
+                data['is_solved'] = False
+                data['attempts_used'] = 0
+
+        return data
+
+    @staticmethod
+    def _embed_url(url):
+        """Convert YouTube/Vimeo URLs to embeddable iframe URLs."""
+        if not url:
+            return ''
+        u = url.strip()
+        if 'youtube.com/watch' in u and 'v=' in u:
+            vid = u.split('v=', 1)[1].split('&', 1)[0]
+            return f'https://www.youtube.com/embed/{vid}'
+        if 'youtu.be/' in u:
+            vid = u.split('youtu.be/', 1)[1].split('?', 1)[0]
+            return f'https://www.youtube.com/embed/{vid}'
+        if 'vimeo.com/' in u and '/embed/' not in u:
+            vid = u.rstrip('/').split('/')[-1]
+            return f'https://player.vimeo.com/video/{vid}'
+        return u
+
 
 # =============================================================================
 # Exercises (SPEC)

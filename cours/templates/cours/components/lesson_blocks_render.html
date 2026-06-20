@@ -42,7 +42,7 @@
       show_packages=False %}
 </div>
 
-{% elif block.type == 'exercise' and block.exercise_id %}
+{% elif block.type == 'code_exercise' and block.exercise_id %}
 <div class="lesson-block lesson-block--exercise mb-8">
   {% include 'cours/components/code_sandbox.html' with exercise=block %}
 </div>
