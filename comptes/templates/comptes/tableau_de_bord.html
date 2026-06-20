@@ -179,7 +179,7 @@
                                 <p class="text-gray-400 dark:text-gray-500 text-sm mb-6">{% trans "Découvre notre catalogue et commence à apprendre dès aujourd'hui !" %}</p>
                                 <a href="{% url 'cours:catalogue' %}"
                                    class="inline-block bg-numeria-teal text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-teal-300 transition-colors text-sm" style="font-family:'Outfit',sans-serif;">
-                                    {% trans "Explore courses" %} →
+                                    {% trans "Explorer les cours" %} →
                                 </a>
                             </div>
                         {% endif %}
@@ -223,7 +223,7 @@
                 <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-5">
                     <h2 style="font-family:'Outfit',sans-serif;" class="text-sm font-bold text-numeria-bleu dark:text-white mb-4 flex items-center gap-2">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        {% trans "My profile" %}
+                        {% trans "Mon profil" %}
                     </h2>
                     <div class="flex flex-col gap-2.5 text-sm">
                         {% if profil.niveau_etudes %}
@@ -246,12 +246,12 @@
                         {% endif %}
                         <div class="flex items-center gap-2.5">
                             <span class="text-numeria-teal w-4 flex-shrink-0">📅</span>
-                            <span class="text-gray-700 dark:text-gray-200 text-xs">{% blocktrans with date=user.date_joined|date:"F Y" %}Since {{ date }}{% endblocktrans %}</span>
+                            <span class="text-gray-700 dark:text-gray-200 text-xs">{% blocktrans with date=user.date_joined|date:"F Y" %}Membre depuis {{ date }}{% endblocktrans %}</span>
                         </div>
                     </div>
                     <a href="{% url 'comptes:modifier_profil' %}"
                        class="block text-center mt-4 bg-numeria-bleu/5 border border-numeria-bleu/20 dark:border-numeria-teal/30 text-numeria-bleu dark:text-numeria-teal font-semibold py-2 rounded-xl hover:bg-numeria-bleu hover:text-white dark:hover:bg-numeria-teal dark:hover:text-numeria-bleu transition-colors text-xs">
-                        ✏️ {% trans "Edit my profile" %}
+                        ✏️ {% trans "Modifier mon profil" %}
                     </a>
                 </div>
 
@@ -272,9 +272,9 @@
                             <div class="flex-1 min-w-0">
                                 <h3 class="text-xs font-bold text-gray-800 dark:text-gray-100 group-hover:text-numeria-teal transition-colors leading-tight truncate">{{ cours.title }}</h3>
                                 <div class="flex items-center gap-1.5 mt-0.5">
-                                    <span class="text-xs text-gray-400">{% blocktrans count counter=cours.lessons.count %}{{ counter }} lesson{% plural %}{{ counter }} lessons{% endblocktrans %}</span>
+                                    <span class="text-xs text-gray-400">{% blocktrans count counter=cours.lessons.count %}{{ counter }} leçon{% plural %}{{ counter }} leçons{% endblocktrans %}</span>
                                     {% if cours.is_free %}
-                                        <span class="text-xs font-bold text-green-500">· {% trans "Free" %}</span>
+                                        <span class="text-xs font-bold text-green-500">· {% trans "Gratuit" %}</span>
                                     {% else %}
                                         <span class="text-xs font-bold text-numeria-or">· {{ cours.price }} XOF</span>
                                     {% endif %}
@@ -285,7 +285,7 @@
                     </div>
                     <a href="{% url 'cours:catalogue' %}"
                        class="block text-center mt-3 bg-numeria-teal text-numeria-bleu font-bold py-2 rounded-xl hover:bg-teal-300 transition-colors text-xs" style="font-family:'Outfit',sans-serif;">
-                        {% trans "View catalogue" %} →
+                        {% trans "Voir le catalogue" %} →
                     </a>
                 </div>
                 {% endif %}
@@ -295,30 +295,30 @@
                     <div class="absolute top-0 right-0 w-24 h-24 bg-numeria-teal/10 rounded-bl-3xl pointer-events-none"></div>
                     <h2 style="font-family:'Outfit',sans-serif;" class="text-sm font-bold text-numeria-teal mb-4 flex items-center gap-2">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                        {% trans "Quick actions" %}
+                        {% trans "Actions rapides" %}
                     </h2>
                     <div class="flex flex-col gap-0.5">
                         <a href="{% url 'comptes:profil' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
-                            <span class="w-5 text-center">👤</span> {% trans "View my profile" %}
+                            <span class="w-5 text-center">👤</span> {% trans "Voir mon profil" %}
                         </a>
                         <a href="{% url 'comptes:modifier_profil' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
-                            <span class="w-5 text-center">✏️</span> {% trans "Edit my profile" %}
+                            <span class="w-5 text-center">✏️</span> {% trans "Modifier mon profil" %}
                         </a>
                         <a href="{% url 'comptes:changer_mot_de_passe' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
-                            <span class="w-5 text-center">🔐</span> {% trans "Change password" %}
+                            <span class="w-5 text-center">🔐</span> {% trans "Changer mot de passe" %}
                         </a>
                         <a href="{% url 'cours:catalogue' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
-                            <span class="w-5 text-center">📚</span> {% trans "Explore courses" %}
+                            <span class="w-5 text-center">📚</span> {% trans "Explorer les cours" %}
                         </a>
                         <a href="{% url 'blog:liste' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
-                            <span class="w-5 text-center">📝</span> {% trans "Read the blog" %}
+                            <span class="w-5 text-center">📝</span> {% trans "Lire le blog" %}
                         </a>
                         <a href="{% url 'paiements:historique' %}" class="flex items-center gap-3 text-blue-200 hover:text-numeria-teal py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
-                            <span class="w-5 text-center">💳</span> {% trans "My payments" %}
+                            <span class="w-5 text-center">💳</span> {% trans "Mes paiements" %}
                         </a>
                         <div class="border-t border-white/10 my-2"></div>
                         <a href="{% url 'comptes:deconnexion' %}" class="flex items-center gap-3 text-blue-300 hover:text-red-400 py-2 px-2 rounded-lg hover:bg-white/5 transition-colors text-xs font-medium">
-                            <span class="w-5 text-center">👋</span> {% trans "Log out" %}
+                            <span class="w-5 text-center">👋</span> {% trans "Se déconnecter" %}
                         </a>
                     </div>
                 </div>

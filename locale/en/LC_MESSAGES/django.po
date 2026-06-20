@@ -6456,7 +6456,7 @@ msgstr "Staff — Numeria"
 
 #: templates/admin_panel/base_staff.html:270 templates/base.html:544
 msgid "Se déconnecter"
-msgstr "Sign out"
+msgstr "Log out"
 
 #: templates/admin_panel/base_staff.html:285
 msgid "Staff Dashboard"
@@ -8586,3 +8586,154 @@ msgstr "Continue the course"
 
 #~ msgid "Sujet fermé"
 #~ msgstr "Closed topic"
+
+# ─── Translations added for site-review fixes (FR is source language) ────────
+
+msgid "Création"
+msgstr "Create"
+
+msgid "Nouvelle formation"
+msgstr "New formation"
+
+msgid "Médiathèque"
+msgstr "Media library"
+
+msgid "Apprenants"
+msgstr "Learners"
+
+msgid "Candidatures Mentor"
+msgstr "Mentor applications"
+
+msgid "Exercices code"
+msgstr "Code exercises"
+
+msgid "Exercices QCM"
+msgstr "MCQ exercises"
+
+msgid "Système"
+msgstr "System"
+
+msgid "Voir le site"
+msgstr "View site"
+
+msgid "Vue rapide"
+msgstr "Quick view"
+
+msgid "Bienvenue dans l'espace staff"
+msgstr "Welcome to the staff space"
+
+msgid "Gérez les contenus, suivez les candidatures, et accédez aux statistiques pédagogiques en un seul endroit."
+msgstr "Manage content, track applications, and access pedagogical statistics in one place."
+
+msgid "Créer un cours"
+msgstr "Create a course"
+
+msgid "Créer une formation"
+msgstr "Create a formation"
+
+msgid "Synthèse"
+msgstr "Summary"
+
+msgid "Statistiques clés"
+msgstr "Key statistics"
+
+msgid "Montant"
+msgstr "Amount"
+
+msgid "Informations académiques"
+msgstr "Academic information"
+
+msgid "Non renseigné"
+msgstr "Not specified"
+
+msgid "Modifier le profil"
+msgstr "Edit profile"
+
+msgid "Actions rapides"
+msgstr "Quick actions"
+
+msgid "Voir mon profil"
+msgstr "View my profile"
+
+msgid "Modifier mon profil"
+msgstr "Edit my profile"
+
+msgid "Changer mot de passe"
+msgstr "Change password"
+
+msgid "Explorer les cours"
+msgstr "Explore courses"
+
+msgid "Lire le blog"
+msgstr "Read the blog"
+
+msgid "Mes paiements"
+msgstr "My payments"
+
+msgid "Voir le catalogue"
+msgstr "View catalogue"
+
+msgid "cours disponible"
+msgid_plural "cours disponibles"
+msgstr[0] "course available"
+msgstr[1] "courses available"
+
+msgid "Science, IA & Scolaire"
+msgstr "Science, AI & School"
+
+msgid "Toutes les catégories"
+msgstr "All categories"
+
+msgid "Nos atouts"
+msgstr "Our strengths"
+
+msgid "Contenus scientifiques rigoureux avec formules LaTeX et exercices corrigés."
+msgstr "Rigorous scientific content with LaTeX formulas and worked exercises."
+
+msgid "Des exemples et projets ancrés dans les réalités africaines et togolaises."
+msgstr "Examples and projects rooted in African and Togolese realities."
+
+msgid "100% responsive"
+msgstr "100% responsive"
+
+msgid "Reçois un certificat PDF vérifiable à la fin de chaque cours payant complété."
+msgstr "Receive a verifiable PDF certificate upon completing each paid course."
+
+msgid "Mathématiques, sciences, IA — des contenus rigoureux accessibles à tous niveaux."
+msgstr "Mathematics, science, AI — rigorous content accessible to all levels."
+
+msgid "Rejoins des milliers d'apprenants qui transforment leur avenir grâce à la science."
+msgstr "Join thousands of learners transforming their future through science."
+
+msgid "Aucune carte bancaire requise · Cours gratuits disponibles immédiatement"
+msgstr "No credit card required · Free courses available immediately"
+
+msgid "Mode sombre"
+msgstr "Dark mode"
+
+msgid "Contactez-nous"
+msgstr "Contact us"
+
+msgid "Une question, une idée de partenariat ou simplement envie d'en savoir plus ? Nous sommes là pour vous."
+msgstr "A question, a partnership idea, or simply want to know more? We are here for you."
+
+msgid "Lomé, Togo"
+msgstr "Lomé, Togo"
+
+msgid "Lundi-Vendredi: 9h-18h"
+msgstr "Mon-Fri: 9am-6pm"
+
+msgid "Contactez Numeria Institute pour toute question ou partenariat."
+msgstr "Contact Numeria Institute for any question or partnership."
+
+msgid "Passe en revue tes cours et continue ton apprentissage."
+msgstr "Review your courses and continue your learning."
+
+msgid "Des QCM avec corrigés détaillés visibles seulement après réussite."
+msgstr "Multiple-choice questions with detailed solutions revealed only after success."
+
+msgid "La majorité des cours sont gratuits. Paiement Mobile Money disponible."
+msgstr "Most courses are free. Mobile Money payment available."
+
+msgid "Apprends depuis ton téléphone, ta tablette ou ton ordinateur."
+msgstr "Learn from your phone, tablet or computer."
