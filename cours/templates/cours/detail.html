@@ -9,6 +9,107 @@
 
 {% block contenu %}
 
+<style>
+/* ── Callout boxes (Udemy-style) ── */
+.callout {
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  border-left: 4px solid;
+}
+.callout-header {
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.callout-body { font-size: 0.875rem; line-height: 1.6; }
+.callout-body p { margin: 0.5rem 0; }
+.callout-body code { background: rgba(0,0,0,0.08); padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.8rem; }
+.callout-body pre { margin: 0.5rem 0; }
+
+.callout-tip { background: #fffbeb; border-left-color: #f59e0b; }
+.callout-tip .callout-header { color: #92400e; }
+.callout-warning { background: #fef2f2; border-left-color: #ef4444; }
+.callout-warning .callout-header { color: #991b1b; }
+.callout-info { background: #eff6ff; border-left-color: #3b82f6; }
+.callout-info .callout-header { color: #1e40af; }
+.callout-example { background: #f0fdf4; border-left-color: #22c55e; }
+.callout-example .callout-header { color: #166534; }
+.callout-note { background: #f8fafc; border-left-color: #64748b; }
+.callout-note .callout-header { color: #334155; }
+
+/* ── Code blocks (dark terminal style) ── */
+.code-block-wrapper {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin: 1.25rem 0;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+}
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+.code-block-header span { font-size: 0.75rem; font-family: monospace; color: #94a3b8; display: flex; align-items: center; gap: 0.5rem; }
+.code-block-header button { font-size: 0.75rem; color: #94a3b8; transition: color 0.2s; display: flex; align-items: center; gap: 0.25rem; background: none; border: none; cursor: pointer; }
+.code-block-header button:hover { color: #fff; }
+.code-block-wrapper pre {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.6;
+  margin: 0;
+}
+.code-block-wrapper pre code { background: none; padding: 0; font-size: inherit; color: inherit; }
+
+/* ── Lesson content typography ── */
+.lesson-block--text h1 { font-size: 1.75rem; font-weight: 700; color: #1B2A4E; margin-top: 1.5rem; margin-bottom: 0.75rem; font-family: 'Playfair Display', Georgia, serif; }
+.lesson-block--text h2 { font-size: 1.4rem; font-weight: 700; color: #1B2A4E; margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+.lesson-block--text h3 { font-size: 1.15rem; font-weight: 600; color: #334155; margin-top: 1rem; margin-bottom: 0.5rem; }
+.lesson-block--text p { margin: 0.75rem 0; line-height: 1.7; }
+.lesson-block--text ul, .lesson-block--text ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.lesson-block--text li { margin: 0.375rem 0; line-height: 1.6; }
+.lesson-block--text table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+.lesson-block--text th, .lesson-block--text td { border: 1px solid #e2e8f0; padding: 0.5rem 0.75rem; text-align: left; font-size: 0.875rem; }
+.lesson-block--text th { background: #f1f5f9; font-weight: 600; }
+.lesson-block--text code:not(.hljs):not([class*="language-"]) { background: #f1f5f9; color: #1B2A4E; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.85em; font-family: 'Courier New', monospace; }
+.lesson-block--text blockquote { border-left: 4px solid #C9A227; background: #fffbeb; padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+.lesson-block--text hr { border: none; border-top: 2px solid #e2e8f0; margin: 1.5rem 0; }
+
+/* Dark mode */
+.dark .lesson-block--text h1, .dark .lesson-block--text h2 { color: #f1f5f9; }
+.dark .lesson-block--text h3 { color: #cbd5e1; }
+.dark .lesson-block--text th { background: #1e293b; }
+.dark .lesson-block--text th, .dark .lesson-block--text td { border-color: #334155; }
+.dark .lesson-block--text code:not(.hljs) { background: #1e293b; color: #7dd3fc; }
+.dark .callout-tip { background: #422006; }
+.dark .callout-warning { background: #450a0a; }
+.dark .callout-info { background: #172554; }
+.dark .callout-example { background: #052e16; }
+.dark .callout-note { background: #1e293b; }
+</style>
+
+<script>
+function copyCodeBlock(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = el.textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = el.closest('.code-block-wrapper').querySelector('button');
+    if (btn) { btn.innerHTML = '<svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Copié'; setTimeout(function() { btn.innerHTML = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copier'; }, 2000); }
+  });
+}
+</script>
+
 <div class="w-full min-h-screen bg-numeria-blanc dark:bg-gray-900 flex flex-col">
 
     <!-- ===== BARRE DE PROGRESSION EN HAUT ===== -->
@@ -41,9 +142,17 @@
 
                 <!-- Statut inscription -->
                 {% if est_inscrit %}
-                <span class="text-xs text-green-500 font-bold flex-shrink-0">
-                    {{ lecons_terminees_count }}/{{ total_lecons }} leçons
-                </span>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                    <div class="hidden sm:flex items-center gap-2">
+                        <div class="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-numeria-teal rounded-full transition-all duration-500" style="width: {% widthratio lecons_terminees_count total_lecons 100 %}%;"></div>
+                        </div>
+                        <span class="text-xs text-gray-500 font-medium whitespace-nowrap">{{ lecons_terminees_count }}/{{ total_lecons }}</span>
+                    </div>
+                    <span class="text-xs text-emerald-500 font-bold">
+                        {% if lecons_terminees_count == total_lecons %}✅ {% trans "Terminé" %}{% else %}{{ lecons_terminees_count }}/{{ total_lecons }} {% trans "leçons" %}{% endif %}
+                    </span>
+                </div>
                 {% else %}
                 <form method="POST" action="{% url 'cours:inscrire' cours.id %}">
                     {% csrf_token %}
