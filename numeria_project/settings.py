@@ -269,7 +269,7 @@ RATELIMIT_USE_CACHE = 'default'
 # ── EMAIL — Resend API for transactional emails ─────────────────────────────
 RESEND_API_KEY = config('RESEND_API_KEY', default='')
 DEFAULT_FROM_EMAIL  = 'Numeria Institute <onboarding@resend.dev>'
-CONTACT_EMAIL    = config('CONTACT_EMAIL', default='numeriainstitude@gmail.com')
+CONTACT_EMAIL    = config('CONTACT_EMAIL', default='numeriainstitute@gmail.com')
 ADMIN_EMAIL      = config('ADMIN_EMAIL', default='admin@numeriainstitute.com')
 EMAIL_TIMEOUT    = config('EMAIL_TIMEOUT', default=10, cast=int)
 
@@ -299,8 +299,8 @@ LANGUAGE_COOKIE_SAMESITE = 'Lax'
 SILENCED_SYSTEM_CHECKS = ['security.W008']  # SECURE_SSL_REDIRECT=False is intentional
 
 # ── ERREURS — notification silencieuse ───────────────────────────────────────
-ADMINS      = [('Roland', config('ADMIN_EMAIL', default='numeriainstitude@gmail.com'))]
-SERVER_EMAIL = config('DEFAULT_FROM_EMAIL', default='Numeria Institute <numeriainstitude@gmail.com>')
+ADMINS      = [('Roland', config('ADMIN_EMAIL', default='numeriainstitute@gmail.com'))]
+SERVER_EMAIL = config('DEFAULT_FROM_EMAIL', default='Numeria Institute <numeriainstitute@gmail.com>')
 
 # ── LOGGING — stdout pour Railway, security + axes auditables ─────────────────
 LOGGING = {

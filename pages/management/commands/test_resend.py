@@ -7,7 +7,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         success = send_email(
-            to_email='numeriainstitude@gmail.com',
+            to_email='numeriainstitute@gmail.com',
             subject='Numeria — Test Resend',
             html_content='<p>Resend is working correctly on Railway.</p>'
         )

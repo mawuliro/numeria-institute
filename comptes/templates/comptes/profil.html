@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block titre %}Mon profil — Numeria Institute{% endblock %}
+{% block titre %}{% trans "My profile" %} — Numeria Institute{% endblock %}
 {% block contenu %}
 
 <section class="w-full py-12">
@@ -35,7 +35,7 @@
                         <p class="text-blue-200 text-sm mt-1">📍 {{ profil.ville }}{% if profil.ville and profil.pays %}, {% endif %}{{ profil.pays }}</p>
                         {% endif %}
                         <p class="text-blue-400 text-xs mt-2">
-                            Membre depuis {{ user.date_joined|date:"F Y" }}
+                            {% blocktrans with date=user.date_joined|date:"F Y" %}Member since {{ date }}{% endblocktrans %}
                         </p>
                     </div>
                 </div>
@@ -53,26 +53,26 @@
                 <!-- Informations académiques -->
                 <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
                     <h2 class="text-xl font-bold text-numeria-bleu mb-4">
-                        Informations académiques
+                        {% trans "Academic information" %}
                     </h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <p class="text-gray-400 text-sm">Niveau d'études</p>
+                            <p class="text-gray-400 text-sm">{% trans "Education level" %}</p>
                             <p class="font-semibold text-gray-700">
-                                {{ profil.get_niveau_etudes_display|default:"Non renseigné" }}
+                                {{ profil.get_niveau_etudes_display|default:_("Not specified") }}
                             </p>
                         </div>
                         <div>
-                            <p class="text-gray-400 text-sm">Domaine</p>
+                            <p class="text-gray-400 text-sm">{% trans "Field" %}</p>
                             <p class="font-semibold text-gray-700">
-                                {{ profil.domaine|default:"Non renseigné" }}
+                                {{ profil.domaine|default:_("Not specified") }}
                             </p>
                         </div>
                         {% if profil.linkedin %}
                         <div>
                             <p class="text-gray-400 text-sm">LinkedIn</p>
                             <a href="{{ profil.linkedin }}" target="_blank" class="text-numeria-bleu hover:text-numeria-or text-sm">
-                                Voir le profil →
+                                {% trans "View profile" %} →
                             </a>
                         </div>
                         {% endif %}
@@ -80,7 +80,7 @@
                         <div>
                             <p class="text-gray-400 text-sm">GitHub</p>
                             <a href="{{ profil.github }}" target="_blank" class="text-numeria-bleu hover:text-numeria-or text-sm">
-                                Voir le profil →
+                                {% trans "View profile" %} →
                             </a>
                         </div>
                         {% endif %}
@@ -91,23 +91,23 @@
                 <div class="flex flex-col gap-3">
                     <a href="{% url 'comptes:tableau_de_bord' %}"
                        class="block bg-numeria-bleu text-white font-semibold py-3 px-4 rounded-lg hover:bg-numeria-bleu-fonce transition-colors text-center">
-                        🎓 Tableau de bord
+                        🎓 {% trans "Dashboard" %}
                     </a>
                     <a href="{% url 'comptes:modifier_profil' %}"
                        class="block bg-numeria-or text-numeria-bleu font-semibold py-3 px-4 rounded-lg hover:bg-yellow-400 transition-colors text-center">
-                        ✏️ Modifier le profil
+                        ✏️ {% trans "Edit profile" %}
                     </a>
                     <a href="{% url 'comptes:changer_mot_de_passe' %}"
                        class="block border border-numeria-bleu text-numeria-bleu font-semibold py-3 px-4 rounded-lg hover:bg-numeria-bleu hover:text-white transition-colors text-center">
-                        🔐 {% trans "Changer le mot de passe" %}
+                        🔐 {% trans "Change password" %}
                     </a>
                     <a href="{% url 'comptes:deconnexion' %}"
                        class="block border border-gray-300 text-gray-500 font-semibold py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors text-center">
-                        👋 Se déconnecter
+                        👋 {% trans "Log out" %}
                     </a>
                     <a href="{% url 'comptes:supprimer_compte' %}"
                        class="block border border-red-300 text-red-500 font-semibold py-3 px-4 rounded-lg hover:bg-red-50 transition-colors text-center text-sm">
-                        ⚠️ {% trans "Supprimer mon compte" %}
+                        ⚠️ {% trans "Delete my account" %}
                     </a>
                 </div>
 
