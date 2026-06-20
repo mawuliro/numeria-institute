@@ -8737,3 +8737,6 @@ msgstr "Most courses are free. Mobile Money payment available."
 
 msgid "Apprends depuis ton téléphone, ta tablette ou ton ordinateur."
 msgstr "Learn from your phone, tablet or computer."
+
+msgid "Fondé en 2025"
+msgstr "Founded 2025"
