@@ -1,8 +1,8 @@
 {% load i18n %}
-{#
-  Renders a single LessonBlock as a collapsible card for the admin block builder.
-  Context: block, all_exercises
-#}
+{% comment %}Renders a single LessonBlock as a collapsible card{% endcomment %}
+
+
+
 <div class="lb-card border border-slate-200 dark:border-slate-600 rounded-xl overflow-hidden bg-white dark:bg-slate-800 shadow-sm"
      data-block-id="{{ block.id }}"
      data-block-type="{{ block.block_type }}"

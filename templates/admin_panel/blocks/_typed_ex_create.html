@@ -1,7 +1,5 @@
 {% load i18n %}
-{# Inline "create + link" form for typed exercises (fill_blank, true_false,
-   code_order, matching, short_answer). Posts to lesson_exercise_create.
-   Context: block, lesson_type, ex_kind #}
+{% comment %}Inline create+link form for typed exercises{% endcomment %}
 {% if block.course_lesson_id or block.formation_lesson_id %}
 <div class="space-y-2">
   <p class="text-slate-400">{% trans "Aucun exercice lié." %}</p>
