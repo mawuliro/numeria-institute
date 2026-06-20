@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% load i18n sandbox_tags %}
 {% load video_tags %}
-{% block titre %}{{ cours.titre }} — Numeria Institute{% endblock %}
-{% block meta_description %}{{ cours.resume|truncatechars:160 }}{% endblock %}
-{% block og_titre %}{{ cours.titre }} — Numeria Institute{% endblock %}
-{% block og_description %}{{ cours.resume|truncatechars:160 }}{% endblock %}
+{% block titre %}{{ cours.title }} — Numeria Institute{% endblock %}
+{% block meta_description %}{{ cours.short_description|default:cours.description|truncatechars:160 }}{% endblock %}
+{% block og_titre %}{{ cours.title }} — Numeria Institute{% endblock %}
+{% block og_description %}{{ cours.short_description|default:cours.description|truncatechars:160 }}{% endblock %}
 {% block og_type %}course{% endblock %}
 
 {% block contenu %}
@@ -24,7 +24,7 @@
 
                 <!-- Titre du cours -->
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs text-gray-400 dark:text-gray-500 truncate">{{ cours.titre }}</p>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 truncate">{{ cours.title }}</p>
                     {% if est_inscrit %}
                     <div class="flex items-center gap-2 mt-1">
                         <div class="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
@@ -49,7 +49,7 @@
                     {% csrf_token %}
                     <button type="submit"
                         class="bg-numeria-or text-numeria-bleu font-bold px-4 py-1.5 rounded-lg text-xs hover:bg-yellow-400 transition-colors">
-                        {% if cours.est_gratuit %}{% trans "S'inscrire gratuitement" %}{% else %}{% trans "S'inscrire" %}{% endif %}
+                        {% if cours.is_free %}{% trans "S'inscrire gratuitement" %}{% else %}{% trans "S'inscrire" %}{% endif %}
                     </button>
                 </form>
                 {% endif %}
@@ -83,19 +83,19 @@
             <div class="p-5 border-b border-gray-100 dark:border-gray-700">
                 <div class="flex items-center gap-2 mb-1">
                     <span class="text-numeria-or text-xs font-bold uppercase tracking-wide">
-                        {{ cours.get_matiere_display }}
+                        {{ cours.get_category_display }}
                     </span>
-                    {% if cours.type_cours == 'scolaire' and cours.classe %}
+                    {% if cours.category == "scolaire" and cours.level %}
                     <span class="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 text-xs font-bold px-2 py-0.5 rounded-full">
-                        {{ cours.get_classe_display }}
+                        {{ cours.get_level_display }}
                     </span>
                     {% endif %}
                 </div>
                 <h2 class="font-bold text-gray-800 dark:text-gray-100 text-sm leading-snug">
-                    {{ cours.titre }}
+                    {{ cours.title }}
                 </h2>
                 <p class="text-gray-400 dark:text-gray-500 text-xs mt-1">
-                    {{ cours.get_niveau_display }} · {{ total_lecons }} leçons
+                    {{ cours.get_level_display }} · {{ total_lecons }} leçons
                 </p>
                 
                 <!-- TAGS -->
@@ -146,7 +146,7 @@
                 <div class="space-y-2">
                     {% for prereq in cours.cours_prerequises.all %}
                     <div class="text-xs text-gray-700 dark:text-gray-200">
-                        • {{ prereq.titre }}
+                        • {{ prereq.title }}
                     </div>
                     {% endfor %}
                 </div>
@@ -180,7 +180,7 @@
                         {% if lecon.id in lecons_terminees_ids %}
                             ✓
                         {% else %}
-                            {{ lecon.ordre }}
+                            {{ lecon.order }}
                         {% endif %}
                     </div>
 
@@ -194,7 +194,7 @@
                             {% else %}
                                 text-gray-700 dark:text-gray-200
                             {% endif %}">
-                            {{ lecon.titre }}
+                            {{ lecon.title }}
                         </p>
                         <p class="text-xs mt-1
                             {% if lecon_active and lecon.id == lecon_active.id %}
@@ -202,7 +202,7 @@
                             {% else %}
                                 text-gray-400 dark:text-gray-500
                             {% endif %}">
-                            ⏱ {{ lecon.duree_minutes }} min
+                            ⏱ {{ lecon.estimated_minutes }} min
                         </p>
                     </div>
 
@@ -223,7 +223,7 @@
                         {% csrf_token %}
                         <button type="submit"
                             class="w-full bg-numeria-bleu text-white font-bold py-2 rounded-lg text-xs hover:bg-numeria-bleu-fonce transition-colors">
-                            {% if cours.est_gratuit %}{% trans "Commencer gratuitement" %}{% else %}{% trans "S'inscrire" %}{% endif %}
+                            {% if cours.is_free %}{% trans "Commencer gratuitement" %}{% else %}{% trans "S'inscrire" %}{% endif %}
                         </button>
                     </form>
                 </div>
@@ -238,17 +238,17 @@
             {% if lecon_active %}
 
                 <!-- VIDÉO DE LA LEÇON -->
-                {% if lecon_active.video_youtube %}
+                {% if lecon_active.video_url %}
                 <div class="w-full bg-black">
                     <div class="max-w-5xl mx-auto">
-                        {% lecteur_video lecon_active.video_youtube titre=lecon_active.titre %}
+                        {% lecteur_video lecon_active.video_url titre=lecon_active.title %}
                     </div>
                 </div>
-                {% elif cours.video_youtube and not est_inscrit %}
+                {% elif cours.video_url and not est_inscrit %}
                 <!-- Vidéo principale du cours pour les non-inscrits -->
                 <div class="w-full bg-black">
                     <div class="max-w-5xl mx-auto">
-                        {% lecteur_video cours.video_youtube titre=cours.titre %}
+                        {% lecteur_video cours.video_url titre=cours.title %}
                     </div>
                 </div>
                 {% endif %}
@@ -260,13 +260,13 @@
                     <div class="flex items-start justify-between gap-4 mb-6">
                         <div>
                             <p class="text-xs text-gray-400 dark:text-gray-500 mb-1">
-                                Leçon {{ lecon_active.ordre }} sur {{ total_lecons }}
+                                Leçon {{ lecon_active.order }} sur {{ total_lecons }}
                             </p>
                             <h1 class="text-2xl sm:text-3xl font-bold text-numeria-bleu dark:text-numeria-or">
-                                {{ lecon_active.titre }}
+                                {{ lecon_active.title }}
                             </h1>
                             <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">
-                                ⏱ {{ lecon_active.duree_minutes }} minutes
+                                ⏱ {{ lecon_active.estimated_minutes }} minutes
                                 {% if lecon_active.id in lecons_terminees_ids %}
                                 · <span class="text-green-500 font-semibold">✅ Terminée</span>
                                 {% endif %}
@@ -283,7 +283,9 @@
                     {# Legacy: single contenu field #}
                     <div class="contenu-article prose dark:prose-invert max-w-none
                                 text-gray-700 dark:text-gray-200 leading-relaxed mb-8">
-                        {{ lecon_active.contenu|safe }}
+                        {% if lesson_blocks %}
+                            {% include 'cours/components/lesson_blocks_render.html' with lesson_blocks=lesson_blocks %}
+                        {% endif %}
                     </div>
                     {% endif %}
                     {% else %}
@@ -300,7 +302,7 @@
                             {% csrf_token %}
                             <button type="submit"
                                 class="bg-numeria-or text-numeria-bleu font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
-                                {% if cours.est_gratuit %}🚀 {% trans "Commencer gratuitement" %}{% else %}💳 {% trans "S'inscrire" %}{% endif %}
+                                {% if cours.is_free %}🚀 {% trans "Commencer gratuitement" %}{% else %}💳 {% trans "S'inscrire" %}{% endif %}
                             </button>
                         </form>
                     </div>
@@ -350,10 +352,10 @@
                                             {% endif %}">
                                             {% if exercice.id in exercices_reussis_ids %}✓
                                             {% elif exercice_actif_id == exercice.id and resultat_exercice == 'incorrect' %}✗
-                                            {% else %}{{ exercice.ordre }}{% endif %}
+                                            {% else %}{{ exercice.order }}{% endif %}
                                         </div>
                                         <span class="font-bold text-sm text-gray-700 dark:text-gray-200">
-                                            Exercice {{ exercice.ordre }}
+                                            Exercice {{ exercice.order }}
                                         </span>
                                     </div>
                                     <div class="flex items-center gap-2">
@@ -557,7 +559,7 @@
                                 <span>←</span>
                                 <div class="text-left">
                                     <p class="text-xs text-gray-400">Précédente</p>
-                                    <p class="text-sm font-semibold truncate max-w-32">{{ lecon_precedente.titre }}</p>
+                                    <p class="text-sm font-semibold truncate max-w-32">{{ lecon_precedente.title }}</p>
                                 </div>
                             </a>
                             {% else %}
@@ -569,7 +571,7 @@
                                class="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-numeria-bleu dark:hover:text-numeria-or transition-colors">
                                 <div class="text-right">
                                     <p class="text-xs text-gray-400">Suivante</p>
-                                    <p class="text-sm font-semibold truncate max-w-32">{{ lecon_suivante.titre }}</p>
+                                    <p class="text-sm font-semibold truncate max-w-32">{{ lecon_suivante.title }}</p>
                                 </div>
                                 <span>→</span>
                             </a>
@@ -768,31 +770,31 @@
                 <!-- PAS DE LEÇON — Page d'introduction du cours -->
                 <div class="max-w-4xl mx-auto px-4 sm:px-8 py-8">
 
-                    {% if cours.video_youtube %}
+                    {% if cours.video_url %}
                     <div class="mb-8 rounded-2xl overflow-hidden shadow-lg">
-                        {% lecteur_video cours.video_youtube titre=cours.titre %}
+                        {% lecteur_video cours.video_url titre=cours.title %}
                     </div>
                     {% endif %}
 
                     <h1 class="text-3xl font-bold text-numeria-bleu dark:text-numeria-or mb-4">
-                        {{ cours.titre }}
+                        {{ cours.title }}
                     </h1>
 
                     <div class="flex flex-wrap gap-3 mb-6">
                         <span class="bg-numeria-or text-numeria-bleu text-xs font-bold px-3 py-1 rounded-full">
-                            {{ cours.get_matiere_display }}
+                            {{ cours.get_category_display }}
                         </span>
                         <span class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-semibold px-3 py-1 rounded-full">
-                            {{ cours.get_niveau_display }}
+                            {{ cours.get_level_display }}
                         </span>
-                        {% if cours.est_gratuit %}
+                        {% if cours.is_free %}
                         <span class="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 text-xs font-bold px-3 py-1 rounded-full">
                             Gratuit
                         </span>
                         {% endif %}
-                        {% if cours.type_cours == 'scolaire' and cours.classe %}
+                        {% if cours.category == "scolaire" and cours.level %}
                         <span class="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 text-xs font-bold px-3 py-1 rounded-full">
-                            {{ cours.get_classe_display }}
+                            {{ cours.get_level_display }}
                         </span>
                         {% endif %}
                     </div>
@@ -807,7 +809,7 @@
                         {% csrf_token %}
                         <button type="submit"
                             class="bg-numeria-or text-numeria-bleu font-bold px-10 py-4 rounded-xl hover:bg-yellow-400 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform text-lg">
-                            {% if cours.est_gratuit %}🚀 {% trans "Commencer gratuitement" %}{% else %}💳 {% trans "S'inscrire" %} — {{ cours.prix }} FCFA{% endif %}
+                            {% if cours.is_free %}🚀 {% trans "Commencer gratuitement" %}{% else %}💳 {% trans "S'inscrire" %} — {{ cours.price }} FCFA{% endif %}
                         </button>
                     </form>
                     {% else %}
