@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block titre %}{% trans "Course catalogue" %} — Numeria Institute{% endblock %}
-{% block meta_description %}{% trans "Discover all Numeria Institute courses: mathematics, science, AI, Python and more. Free and accessible everywhere in Africa." %}{% endblock %}
-{% block og_titre %}{% trans "Course catalogue" %} — Numeria Institute{% endblock %}
-{% block og_description %}{% trans "Discover all Numeria Institute courses: mathematics, science, AI, Python and more." %}{% endblock %}
+{% block titre %}{% trans "Catalogue des cours" %} — Numeria Institute{% endblock %}
+{% block meta_description %}{% trans "Découvrez tous les cours de Numeria Institute : mathématiques, sciences, IA, Python et bien plus. Gratuits et accessibles partout en Afrique." %}{% endblock %}
+{% block og_titre %}{% trans "Catalogue des cours" %} — Numeria Institute{% endblock %}
+{% block og_description %}{% trans "Découvrez tous les cours de Numeria Institute : mathématiques, sciences, IA, Python et bien plus." %}{% endblock %}
 {% block contenu %}
 
 <!-- EN-TÊTE -->
@@ -21,11 +21,11 @@
             {% trans "Catalogue" %}
         </div>
         <h1 style="font-family:'Outfit',sans-serif;font-weight:800;" class="text-3xl sm:text-4xl lg:text-5xl text-white mb-3">
-            {% trans "All our courses" %}
+            {% trans "Tous nos cours" %}
         </h1>
         <p class="text-blue-200 text-lg mb-8">
             <span class="text-numeria-teal font-bold">{{ cours|length }}</span>
-            {% blocktrans count counter=cours|length %}course available{% plural %}courses available{% endblocktrans %} · {% trans "Science, AI & School" %}
+            {% blocktrans count counter=cours|length %}cours disponible{% plural %}cours disponibles{% endblocktrans %} · {% trans "Science, IA & Scolaire" %}
         </p>
     </div>
 </section>
@@ -40,19 +40,19 @@
 
                     <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-sm text-numeria-bleu dark:text-white mb-4 flex items-center gap-2">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-                        {% trans "Filters" %}
+                        {% trans "Filtres" %}
                     </h3>
 
                     <!-- Filtre par catégorie -->
                     <div class="mb-5">
                         <p style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2.5">
-                            {% trans "Category" %}
+                            {% trans "Catégorie" %}
                         </p>
                         <div class="flex flex-col gap-1.5">
                             <a href="{% url 'cours:catalogue' %}{% if niveau_actif %}?niveau={{ niveau_actif }}{% endif %}"
                                class="text-sm py-2 px-3 rounded-xl transition-colors font-medium
                                {% if not matiere_active %}bg-numeria-teal/15 text-numeria-teal{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
-                                {% trans "All categories" %}
+                                {% trans "Toutes les catégories" %}
                             </a>
                             {% for code, label in matieres %}
                             <a href="?matiere={{ code }}{% if niveau_actif %}&niveau={{ niveau_actif }}{% endif %}"
@@ -67,13 +67,13 @@
                     <!-- Filtre par niveau -->
                     <div class="mb-4">
                         <p style="font-family:'Outfit',sans-serif;font-weight:600;" class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2.5">
-                            {% trans "Level" %}
+                            {% trans "Niveau" %}
                         </p>
                         <div class="flex flex-col gap-1.5">
                             <a href="{% url 'cours:catalogue' %}{% if matiere_active %}?matiere={{ matiere_active }}{% endif %}"
                                class="text-sm py-2 px-3 rounded-xl transition-colors font-medium
                                {% if not niveau_actif %}bg-numeria-teal/15 text-numeria-teal{% else %}text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
-                                {% trans "All levels" %}
+                                {% trans "Tous les niveaux" %}
                             </a>
                             {% for code, label in niveaux %}
                             <a href="?niveau={{ code }}{% if matiere_active %}&matiere={{ matiere_active }}{% endif %}"
@@ -89,7 +89,7 @@
                     <a href="{% url 'cours:catalogue' %}"
                        class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-numeria-teal transition-colors mt-3">
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.84"/></svg>
-                        {% trans "Reset" %}
+                        {% trans "Réinitialiser" %}
                     </a>
                     {% endif %}
                 </div>
@@ -129,7 +129,7 @@
                                 <div class="grid grid-cols-2 gap-3 text-xs text-gray-500 dark:text-gray-400">
                                     <span class="inline-flex items-center gap-2">
                                         <span class="text-numeria-teal">📚</span>
-                                        {% blocktrans count counter=un_cours.lessons.count %}{{ counter }} lesson{% plural %}{{ counter }} lessons{% endblocktrans %}
+                                        {% blocktrans count counter=un_cours.lessons.count %}{{ counter }} leçon{% plural %}{{ counter }} leçons{% endblocktrans %}
                                     </span>
                                     <span class="inline-flex items-center gap-2">
                                         <span class="text-numeria-teal">🎯</span>
@@ -138,12 +138,12 @@
                                 </div>
                                 <div class="flex items-center justify-between gap-3">
                                     {% if un_cours.is_free %}
-                                        <span class="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full">{% trans "Free" %}</span>
+                                        <span class="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full">{% trans "Gratuit" %}</span>
                                     {% else %}
                                         <span class="bg-numeria-or/15 text-numeria-or text-xs font-bold px-3 py-1 rounded-full">{{ un_cours.price }} XOF</span>
                                     {% endif %}
                                     <span class="text-numeria-bleu dark:text-white text-xs font-semibold uppercase tracking-[0.08em]">
-                                        {% trans "Learn more" %} →
+                                        {% trans "En savoir plus" %} →
                                     </span>
                                 </div>
                             </div>
@@ -158,12 +158,12 @@
                     <div class="w-20 h-20 bg-numeria-bleu/8 rounded-2xl flex items-center justify-center mx-auto mb-5">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1A3C6E" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                     </div>
-                    <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-gray-700 dark:text-gray-200 text-xl mb-2">{% trans "No course found" %}</h3>
-                    <p class="text-gray-400 dark:text-gray-500 mb-6">{% trans "Try different filters or check back soon!" %}</p>
+                    <h3 style="font-family:'Outfit',sans-serif;font-weight:700;" class="text-gray-700 dark:text-gray-200 text-xl mb-2">{% trans "Aucun cours trouvé" %}</h3>
+                    <p class="text-gray-400 dark:text-gray-500 mb-6">{% trans "Essaie d'autres filtres ou reviens bientôt !" %}</p>
                     <a href="{% url 'cours:catalogue' %}"
                        style="font-family:'Outfit',sans-serif;font-weight:700;"
                        class="inline-block bg-numeria-teal text-numeria-bleu px-8 py-3 rounded-xl hover:bg-teal-300 transition-colors">
-                        {% trans "View all courses" %}
+                        {% trans "Voir tous les cours" %}
                     </a>
                 </div>
                 {% endif %}

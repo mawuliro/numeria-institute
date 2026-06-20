@@ -188,13 +188,16 @@ def contact(request):
 
     # Override DB-stored fields with locale-appropriate strings at render time.
     # The DB keeps the French default; English visitors see English content.
+    # NOTE: msgids are French (source language); English translations live in
+    # locale/en/LC_MESSAGES/django.po. On French locale the msgid IS the
+    # displayed text; on English locale the msgstr is shown.
     if get_language() == 'en':
-        contactpage.title = _("Contact us")
-        contactpage.intro = _("A question, a partnership idea, or simply want to know more? We are here for you.")
+        contactpage.title = _("Contactez-nous")
+        contactpage.intro = _("Une question, une idée de partenariat ou simplement envie d'en savoir plus ? Nous sommes là pour vous.")
         contactpage.address = _("Lomé, Togo")
-        contactpage.hours = _("Mon-Fri: 9am-6pm")
+        contactpage.hours = _("Lundi-Vendredi: 9h-18h")
         contactpage.meta_title = "Contact - Numeria Institute"
-        contactpage.meta_description = _("Contact Numeria Institute for any question or partnership.")
+        contactpage.meta_description = _("Contactez Numeria Institute pour toute question ou partenariat.")
 
     if request.method == 'POST':
         formulaire = FormulaireContact(request.POST)
