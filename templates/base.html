@@ -63,7 +63,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -72,15 +72,20 @@
             theme: {
                 extend: {
                     colors: {
-                        'numeria-bleu':       '#1A3C6E',
-                        'numeria-bleu-fonce': '#152f58',
-                        'numeria-or':         '#E8A020',
-                        'numeria-blanc':      '#F4F6F8',
-                        'numeria-teal':       '#2DD4BF',
+                        // Oxford-inspired academic palette — warmer & more institutional
+                        // than the previous SaaS-leaning navy/teal/gold combo.
+                        'numeria-bleu':       '#1B2A4E',  // Oxford blue (was #1A3C6E)
+                        'numeria-bleu-fonce': '#0F1E3D',  // Deeper navy for footer/dark sections (was #152f58)
+                        'numeria-or':         '#C9A227',  // Academic gold (was #E8A020 mustard)
+                        'numeria-blanc':      '#FBFAF7',  // Warm ivory (was #F4F6F8 cold grey)
+                        'numeria-teal':       '#2DD4BF',  // Kept — accent for CTAs only
+                        'numeria-burgundy':   '#7C2D3A',  // New — oxford burgundy for institutional accents
+                        'numeria-paper':      '#F5F1E8',  // New — parchment tint for alternating sections
                     },
                     fontFamily: {
                         'sans':    ['Inter', 'ui-sans-serif', 'system-ui'],
                         'display': ['Outfit', 'ui-sans-serif', 'system-ui'],
+                        'serif':   ['"Playfair Display"', 'Georgia', 'serif'],  // New — academic headings
                     }
                 }
             }
@@ -165,10 +170,10 @@
         pre { border-radius: 8px; margin: 1.5rem 0; padding: 0 !important; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
         pre code.hljs { border-radius: 8px; padding: 1.5rem !important; font-size: 0.9rem; line-height: 1.6; font-family: 'Courier New', Courier, monospace; }
         .code-wrapper { position: relative; margin: 1.5rem 0; }
-        .code-lang-badge { position: absolute; top: 0; right: 0; background: #E8A020; color: #1A3C6E; font-size: 0.7rem; font-weight: 700; padding: 3px 12px; border-radius: 0 8px 0 8px; z-index: 10; text-transform: uppercase; letter-spacing: 1px; }
+        .code-lang-badge { position: absolute; top: 0; right: 0; background: #C9A227; color: #1B2A4E; font-size: 0.7rem; font-weight: 700; padding: 3px 12px; border-radius: 0 8px 0 8px; z-index: 10; text-transform: uppercase; letter-spacing: 1px; }
         .copy-btn { position: absolute; top: 8px; right: 90px; background: rgba(255,255,255,0.1); color: #ccc; border: 1px solid rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; z-index: 10; transition: all 0.2s; }
         .copy-btn:hover { background: rgba(255,255,255,0.2); color: white; }
-        code:not(.hljs) { background: #f0f0f0; color: #1A3C6E; padding: 2px 6px; border-radius: 4px; font-size: 0.85em; font-family: 'Courier New', Courier, monospace; }
+        code:not(.hljs) { background: #f0f0f0; color: #1B2A4E; padding: 2px 6px; border-radius: 4px; font-size: 0.85em; font-family: 'Courier New', Courier, monospace; }
         .dark input[type="text"], .dark input[type="email"], .dark input[type="password"],
         .dark input[type="url"], .dark textarea, .dark select {
             background-color: #374151; color: #F9FAFB; border-color: #4B5563;
@@ -557,46 +562,51 @@
     </main>
 
     <!-- ===== FOOTER ===== -->
-    <footer class="bg-numeria-bleu dark:bg-gray-900 w-full mt-20 border-t border-white/10">
-        <div class="w-full px-4 sm:px-8 lg:px-16 py-14">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+    <footer class="bg-numeria-bleu-fonce dark:bg-gray-900 w-full mt-20 relative">
+        <!-- Thin academic gold rule — signals "institutional publication" -->
+        <div class="h-[3px] w-full bg-gradient-to-r from-transparent via-numeria-or to-transparent"></div>
+        <div class="w-full px-4 sm:px-8 lg:px-16 py-16">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
 
                 <!-- Logo + mission -->
                 <div class="lg:col-span-2">
-                    <div class="flex items-center gap-3 mb-5">
+                    <div class="flex items-center gap-3 mb-6">
                         <svg width="36" height="36" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="22" cy="22" r="19" stroke="rgba(255,255,255,0.18)" stroke-width="1.2" fill="none"/>
                             <line x1="13" y1="10" x2="13" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
                             <line x1="13" y1="10" x2="31" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
                             <line x1="31" y1="10" x2="31" y2="34" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
-                            <circle cx="13" cy="10" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
-                            <circle cx="13" cy="34" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
-                            <circle cx="31" cy="10" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
-                            <circle cx="31" cy="34" r="3.2" fill="#1A3C6E" stroke="white" stroke-width="2"/>
-                            <circle cx="18.5" cy="18" r="3" fill="#2DD4BF"/>
-                            <circle cx="25.5" cy="26" r="3" fill="#2DD4BF"/>
+                            <circle cx="13" cy="10" r="3.2" fill="#1B2A4E" stroke="white" stroke-width="2"/>
+                            <circle cx="13" cy="34" r="3.2" fill="#1B2A4E" stroke="white" stroke-width="2"/>
+                            <circle cx="31" cy="10" r="3.2" fill="#1B2A4E" stroke="white" stroke-width="2"/>
+                            <circle cx="31" cy="34" r="3.2" fill="#1B2A4E" stroke="white" stroke-width="2"/>
+                            <circle cx="18.5" cy="18" r="3" fill="#C9A227"/>
+                            <circle cx="25.5" cy="26" r="3" fill="#C9A227"/>
                         </svg>
                         <div class="leading-none">
                             <div style="font-family:'Outfit',sans-serif; font-weight:800; letter-spacing:0.15em; color:white; font-size:1rem; line-height:1;">NUMERIA</div>
-                            <div style="font-family:'Outfit',sans-serif; font-weight:600; letter-spacing:0.28em; color:#2DD4BF; font-size:0.58rem; margin-top:5px; text-transform:uppercase; line-height:1;">Institute</div>
+                            <div style="font-family:'Outfit',sans-serif; font-weight:600; letter-spacing:0.28em; color:#C9A227; font-size:0.58rem; margin-top:5px; text-transform:uppercase; line-height:1;">Institute</div>
                         </div>
                     </div>
-                    <p class="text-blue-300 text-sm leading-relaxed mb-4 max-w-xs">
+                    <p class="text-blue-300 text-sm leading-relaxed mb-5 max-w-xs">
                         {% trans "L'éducation scientifique accessible, engageante et gratuite pour tous les apprenants africains et francophones du monde entier." %}
                     </p>
-                    <p class="text-blue-400 text-xs">📍 Lomé, Togo · {% trans "Rayonnement CEDEAO" %}</p>
+                    <!-- Institutional tagline — adds academic weight -->
+                    <p class="text-blue-400 text-xs tracking-wider uppercase" style="font-family:'Outfit',sans-serif; font-weight:600;">
+                        Numeria Institute · Lomé, Togo · {% trans "Fondé en 2025" %}
+                    </p>
                 </div>
 
                 <!-- Navigation -->
                 <div>
                     <div style="font-family:'Outfit',sans-serif; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; font-size:0.75rem;" class="text-white mb-5">{% trans "Navigation" %}</div>
                     <ul class="space-y-3">
-                        <li><a href="{% url 'cours:catalogue' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "Nos cours" %}</a></li>
-                        <li><a href="{% url 'blog:liste' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "Le blog" %}</a></li>
-                        <li><a href="{% url 'admissions:liste_campagnes' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "Candidatures" %}</a></li>
-                        <li><a href="{% url 'a_propos' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "À propos" %}</a></li>
-                        <li><a href="{% url 'contact' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "Contact" %}</a></li>
-                        <li><a href="{% url 'communaute:liste_categories' %}" class="text-blue-300 hover:text-numeria-teal text-sm transition-colors">{% trans "Communauté" %}</a></li>
+                        <li><a href="{% url 'cours:catalogue' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">{% trans "Nos cours" %}</a></li>
+                        <li><a href="{% url 'blog:liste' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">{% trans "Le blog" %}</a></li>
+                        <li><a href="{% url 'admissions:liste_campagnes' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">{% trans "Candidatures" %}</a></li>
+                        <li><a href="{% url 'a_propos' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">{% trans "À propos" %}</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">{% trans "Contact" %}</a></li>
+                        <li><a href="{% url 'communaute:liste_categories' %}" class="text-blue-300 hover:text-numeria-or text-sm transition-colors">{% trans "Communauté" %}</a></li>
                     </ul>
                 </div>
 
@@ -605,11 +615,11 @@
                     <div style="font-family:'Outfit',sans-serif; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; font-size:0.75rem;" class="text-white mb-5">{% trans "Contact" %}</div>
                     <div class="space-y-3">
                         <p class="text-blue-300 text-sm flex items-center gap-2">
-                            <span class="text-numeria-teal">✉</span>
-                            <a href="mailto:numeriainstitute@gmail.com" class="hover:text-numeria-teal transition-colors break-all">numeriainstitute@gmail.com</a>
+                            <span class="text-numeria-or">✉</span>
+                            <a href="mailto:numeriainstitute@gmail.com" class="hover:text-numeria-or transition-colors break-all">numeriainstitute@gmail.com</a>
                         </p>
-                        <p class="text-blue-300 text-sm flex items-center gap-2"><span class="text-numeria-teal">📍</span> Lomé, Togo</p>
-                        <p class="text-blue-300 text-sm flex items-center gap-2"><span class="text-numeria-teal">🌍</span> {% trans "Afrique de l'Ouest" %}</p>
+                        <p class="text-blue-300 text-sm flex items-center gap-2"><span class="text-numeria-or">📍</span> Lomé, Togo</p>
+                        <p class="text-blue-300 text-sm flex items-center gap-2"><span class="text-numeria-or">🌍</span> {% trans "Afrique de l'Ouest" %}</p>
                     </div>
                     <div class="flex gap-2.5 mt-5">
                         <span class="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center text-blue-300 text-xs font-bold cursor-default" title="LinkedIn — bientôt disponible">
@@ -632,11 +642,11 @@
 
             </div>
 
-            <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <p class="text-blue-400 text-sm">© 2026 Numeria Institute — {% trans "Tous droits réservés" %}</p>
                 <div class="flex gap-5">
-                    <a href="{% url 'confidentialite' %}" class="text-blue-400 hover:text-numeria-teal text-xs transition-colors">{% trans "Confidentialité" %}</a>
-                    <a href="{% url 'cgu' %}" class="text-blue-400 hover:text-numeria-teal text-xs transition-colors">{% trans "CGU" %}</a>
+                    <a href="{% url 'confidentialite' %}" class="text-blue-400 hover:text-numeria-or text-xs transition-colors">{% trans "Confidentialité" %}</a>
+                    <a href="{% url 'cgu' %}" class="text-blue-400 hover:text-numeria-or text-xs transition-colors">{% trans "CGU" %}</a>
                 </div>
             </div>
         </div>
