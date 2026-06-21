@@ -91,10 +91,32 @@ def meeting_room(request, room_code):
     scheme = 'wss' if request.is_secure() else 'ws'
     ws_url = f"{scheme}://{request.get_host()}/ws/visio/{room.room_code}/"
 
-    return render(request, 'visioconference/meeting_room.html', {
-        'room': room,
-        'is_host': room.host == request.user,
-        'ws_url': ws_url,
+    # Use the unified video_room.html template (same as mentorat visio)
+    participants = [
+        {
+            'id': room.host.id,
+            'name': room.host.get_full_name() or room.host.username,
+            'role': 'Hôte',
+        },
+    ]
+    return render(request, 'video_room.html', {
+        'room_type': 'visio',
+        'room_pk': room.id,
+        'room_title': room.title,
+        'room_description': f"Code: {room.room_code}",
+        'room_modalite': 'Visioconférence',
+        'room_date': room.created_at.strftime('%d %B %Y'),
+        'room_time': room.created_at.strftime('%H:%M'),
+        'room_duration': f"{room.max_participants} participants max",
+        'room_participants': participants,
+        'participants_count': 1,
+        'participant_label': 'Participants',
+        'current_user_id': request.user.id,
+        'current_user_name': request.user.get_full_name() or request.user.username,
+        'role_label': 'Hôte' if room.host == request.user else 'Participant',
+        'back_url': reverse('visioconference:index'),
+        'back_label': "Retour aux réunions",
+        'room_notes': "Activez votre micro et votre caméra, puis lancez la réunion.",
     })
 
 
