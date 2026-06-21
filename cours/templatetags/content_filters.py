@@ -164,10 +164,19 @@ def render_content(value):
     # Convert callout blockquotes BEFORE markdown processing
     text = _convert_callouts(text)
 
+    # Enable markdown processing inside HTML blocks (e.g. <details> used by
+    # application exercises). The md_in_html extension requires a
+    # markdown="1" attribute on the HTML block tag.
+    text = re.sub(r'<details(?![^>]*markdown=)', '<details markdown="1">', text)
+
     html = markdown.markdown(text, extensions=[
         'fenced_code', 'tables', 'nl2br', 'attr_list',
-        'def_list', 'footnotes', 'toc',
+        'def_list', 'footnotes', 'toc', 'md_in_html',
     ])
+
+    # Remove empty <blockquote></blockquote> artifacts produced by md_in_html
+    # when there is a blank line between <details> and <summary>.
+    html = re.sub(r'<blockquote>\s*</blockquote>', '', html)
 
     for key, val in placeholders.items():
         html = html.replace(key, val)
