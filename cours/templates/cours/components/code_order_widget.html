@@ -17,9 +17,9 @@
       <div class="co-line flex items-center gap-2 bg-gray-900 text-green-400 font-mono text-xs px-3 py-2 rounded-lg cursor-grab select-none"
            data-index="{{ forloop.counter0 }}"
            draggable="true"
-           ondragstart="coDragStart(event, {{ ex.code_order_id }})"
+           ondragstart="coDragStart_{{ ex.code_order_id }}(event)"
            ondragover="event.preventDefault()"
-           ondrop="coDrop(event, {{ ex.code_order_id }})">
+           ondrop="coDrop_{{ ex.code_order_id }}(event)">
         <span class="text-gray-500 flex-shrink-0">⠿</span>
         <code>{{ line }}</code>
       </div>
@@ -41,9 +41,9 @@ var CSRF = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
 var URL = '{% url "cours:submit_code_order" ex.code_order_id %}';
 var dragSrc = null;
 
-window['coDragStart'] = function(e, id) { if (id !== CID) return; dragSrc = e.currentTarget; e.dataTransfer.effectAllowed='move'; };
-window['coDrop'] = function(e, id) {
-  if (id !== CID || !dragSrc || dragSrc === e.currentTarget) return;
+window['coDragStart_' + CID] = function(e) { dragSrc = e.currentTarget; e.dataTransfer.effectAllowed='move'; };
+window['coDrop_' + CID] = function(e) {
+  if (!dragSrc || dragSrc === e.currentTarget) return;
   e.preventDefault();
   var list = document.getElementById('co-' + CID + '-list');
   var items = Array.from(list.children);

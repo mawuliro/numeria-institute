@@ -54,13 +54,13 @@
     <div class="flex items-center gap-3 flex-wrap">
       {% if mcq.hint %}
       <button id="mcq-hint-btn-{{ mcq.mcq_id }}" type="button"
-              onclick="mcqShowHint({{ mcq.mcq_id }})"
+              onclick="mcqShowHint_{{ mcq.mcq_id }}()"
               class="hidden text-xs text-amber-600 dark:text-amber-400 border border-amber-300 px-3 py-2 rounded-lg hover:bg-amber-50 transition-colors font-medium">
         💡 {% trans "Indice" %}
       </button>
       {% endif %}
       <button id="mcq-submit-{{ mcq.mcq_id }}" type="button" disabled
-              onclick="mcqSubmit({{ mcq.mcq_id }})"
+              onclick="mcqSubmit_{{ mcq.mcq_id }}()"
               class="flex items-center gap-1.5 bg-numeria-bleu hover:bg-blue-800 text-white text-sm font-bold px-5 py-2.5 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
         ✅ {% trans "Valider ma réponse" %}
       </button>
@@ -141,7 +141,7 @@ function renderChoices() {
       'name="' + inputName + '" value="' + ch.id + '" ' +
       checkedAttr + ' ' + disabledAttr +
       ' class="mt-0.5 accent-numeria-bleu flex-shrink-0" ' +
-      'onchange="mcqOnChange(' + MID + ')">' +
+      'onchange="mcqOnChange_' + MID + '()">' +
       '<span class="text-sm text-gray-800 dark:text-gray-100 leading-relaxed">' + esc(CHOICE_TEXTS[ch.id]) + '</span>' +
       (locked && isCorrect ? ' <span class="ml-auto text-green-600 flex-shrink-0">✅</span>' : '');
     container.appendChild(el);
@@ -156,11 +156,11 @@ function renderChoices() {
   }
 }
 
-window['mcqOnChange'] = function(mid) {
+window['mcqOnChange_' + MID] = function() {
   var any = document.querySelectorAll(
-    'input[name="mcq-' + mid + '-choice"]:checked'
+    'input[name="mcq-' + MID + '-choice"]:checked'
   ).length > 0;
-  var btn = document.getElementById('mcq-submit-' + mid);
+  var btn = document.getElementById('mcq-submit-' + MID);
   if (btn) btn.disabled = !any;
 };
 
@@ -177,8 +177,7 @@ function updateAttemptsLabel() {
 }
 
 /* ── Submit ── */
-window['mcqSubmit'] = function(mid) {
-  if (mid !== MID) return;
+window['mcqSubmit_' + MID] = function() {
   var selected = Array.from(
     document.querySelectorAll('input[name="mcq-' + MID + '-choice"]:checked')
   ).map(function(el){ return parseInt(el.value, 10); });
@@ -287,8 +286,7 @@ function triggerConfetti() {
   setTimeout(function(){ c.innerHTML=''; }, 3500);
 }
 
-window['mcqShowHint'] = function(mid) {
-  if (mid !== MID) return;
+window['mcqShowHint_' + MID] = function() {
   var el = document.getElementById('mcq-hint-' + MID);
   if (el) el.classList.remove('hidden');
 };
