@@ -85,17 +85,82 @@
 .lesson-block--text blockquote { border-left: 4px solid #C9A227; background: #fffbeb; padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
 .lesson-block--text hr { border: none; border-top: 2px solid #e2e8f0; margin: 1.5rem 0; }
 
-/* Dark mode */
-.dark .lesson-block--text h1, .dark .lesson-block--text h2 { color: #f1f5f9; }
-.dark .lesson-block--text h3 { color: #cbd5e1; }
-.dark .lesson-block--text th { background: #1e293b; }
-.dark .lesson-block--text th, .dark .lesson-block--text td { border-color: #334155; }
-.dark .lesson-block--text code:not(.hljs) { background: #1e293b; color: #7dd3fc; }
-.dark .callout-tip { background: #422006; }
-.dark .callout-warning { background: #450a0a; }
-.dark .callout-info { background: #172554; }
-.dark .callout-example { background: #052e16; }
-.dark .callout-note { background: #1e293b; }
+/* Dark mode — comprehensive fix for all course page elements */
+.dark .lesson-block--text h1, .dark .lesson-block--text h2 { color: #f1f5f9 !important; }
+.dark .lesson-block--text h3 { color: #cbd5e1 !important; }
+.dark .lesson-block--text p { color: #d1d5db !important; }
+.dark .lesson-block--text li { color: #d1d5db !important; }
+.dark .lesson-block--text td { color: #d1d5db !important; }
+.dark .lesson-block--text th { background: #1e293b !important; color: #e2e8f0 !important; }
+.dark .lesson-block--text th, .dark .lesson-block--text td { border-color: #334155 !important; }
+.dark .lesson-block--text code:not(.hljs) { background: #1e293b !important; color: #7dd3fc !important; }
+.dark .lesson-block--text blockquote { background: #422006 !important; border-left-color: #f59e0b !important; }
+.dark .lesson-block--text hr { border-top-color: #334155 !important; }
+
+/* Dark mode — lesson heading */
+.dark h1.text-numeria-bleu { color: #f1f5f9 !important; }
+.dark h2.text-numeria-bleu { color: #f1f5f9 !important; }
+.dark .text-numeria-bleu { color: #e2e8f0 !important; }
+.dark .text-numeria-or { color: #fbbf24 !important; }
+
+/* Dark mode — sidebar */
+.dark [class*="bg-white"][class*="border-r"] { background-color: #1e293b !important; border-color: #334155 !important; }
+.dark [class*="bg-white"][class*="border-b"] { background-color: #1e293b !important; border-color: #334155 !important; }
+
+/* Dark mode — lesson list items */
+.dark a[href*="lecon="] { background-color: #1e293b !important; border-color: #334155 !important; }
+.dark a[href*="lecon="] .text-gray-700 { color: #e2e8f0 !important; }
+.dark a[href*="lecon="] .text-gray-400 { color: #94a3b8 !important; }
+.dark a[href*="lecon="] .text-gray-500 { color: #94a3b8 !important; }
+.dark a[href*="lecon="] .bg-gray-100 { background-color: #334155 !important; }
+
+/* Dark mode — exercise widgets */
+.dark .mcq-widget { background-color: #1e293b !important; border-color: #334155 !important; }
+.dark .mcq-widget .bg-gray-50 { background-color: #0f172a !important; }
+.dark .mcq-widget .text-gray-800 { color: #e2e8f0 !important; }
+.dark .mcq-widget .text-gray-700 { color: #d1d5db !important; }
+.dark .mcq-widget .text-gray-600 { color: #d1d5db !important; }
+.dark .mcq-widget label { color: #d1d5db !important; }
+.dark .mcq-widget .bg-gray-50 { background-color: #0f172a !important; border-color: #334155 !important; }
+
+.dark [id^="tf-"] { background-color: #1e293b !important; border-color: #334155 !important; }
+.dark [id^="tf-"] .bg-gray-50 { background-color: #0f172a !important; }
+.dark [id^="tf-"] .text-gray-800 { color: #e2e8f0 !important; }
+.dark [id^="tf-"] label { color: #d1d5db !important; }
+
+.dark [id^="fb-"] { background-color: #1e293b !important; border-color: #334155 !important; }
+.dark [id^="fb-"] .bg-gray-50 { background-color: #0f172a !important; }
+.dark [id^="fb-"] .text-gray-800 { color: #e2e8f0 !important; }
+
+/* Dark mode — sandbox widget */
+.dark .sw-root { background-color: #1e293b !important; border-color: #334155 !important; }
+
+/* Dark mode — progress bar area */
+.dark .bg-white\/95 { background-color: rgba(30, 41, 59, 0.95) !important; }
+.dark .border-gray-200 { border-color: #334155 !important; }
+
+/* Dark mode — buttons */
+.dark .bg-numeria-bleu { background-color: #2D4A7C !important; }
+
+/* Dark mode — content area background */
+.dark .bg-numeria-blanc { background-color: #0f172a !important; }
+
+/* Dark mode — course info card */
+.dark .bg-white { background-color: #1e293b !important; }
+.dark .text-gray-800 { color: #e2e8f0 !important; }
+.dark .text-gray-700 { color: #d1d5db !important; }
+.dark .text-gray-600 { color: #d1d5db !important; }
+.dark .text-gray-500 { color: #94a3b8 !important; }
+.dark .border-gray-100 { border-color: #334155 !important; }
+
+/* Dark mode — callouts */
+.dark .callout-tip { background: #422006 !important; }
+.dark .callout-warning { background: #450a0a !important; }
+.dark .callout-info { background: #172554 !important; }
+.dark .callout-example { background: #052e16 !important; }
+.dark .callout-note { background: #1e293b !important; }
+.dark .callout-body { color: #e2e8f0 !important; }
+.dark .callout-body code { background: rgba(255,255,255,0.1) !important; color: #7dd3fc !important; }
 </style>
 
 <script>
