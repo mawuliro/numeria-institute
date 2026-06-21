@@ -11,7 +11,7 @@
     </div>
   </div>
   <div class="px-5 py-4">
-    <div id="fb-{{ ex.fill_blank_id }}-text" class="text-gray-800 dark:text-gray-100 text-sm leading-relaxed mb-5 prose prose-sm dark:prose-invert max-w-none">
+    <div id="fb-{{ ex.fill_blank_id }}-text" class="tex2jax_ignore text-gray-800 dark:text-gray-100 text-sm leading-relaxed mb-5 prose prose-sm dark:prose-invert max-w-none">
       {{ ex.text_rendered|render_content }}
     </div>
     <div id="fb-{{ ex.fill_blank_id }}-result" class="hidden mb-4 rounded-xl px-4 py-3 text-sm"></div>
@@ -63,15 +63,29 @@ window['fbSubmit_' + FID] = async function() {
   if (attEl && MAX > 0) attEl.textContent = '{% trans "Tentative" %} ' + ATT + '/' + MAX;
 };
 
-// Init: replace blank markers with inputs in rendered HTML
-document.addEventListener('DOMContentLoaded', function() {
+// Init: replace blank markers with inputs in rendered HTML.
+// The text container has class "tex2jax_ignore" so MathJax's initial
+// auto-typeset SKIPS it (otherwise {{blank_X}} inside $...$ gets eaten
+// by MathJax because {} are LaTeX grouping chars). We replace the
+// markers ourselves, then explicitly call MathJax.typesetPromise to
+// render the $...$ parts without touching the <input> fields.
+function initFbBlanks() {
   var textEl = document.getElementById('fb-' + FID + '-text');
   if (!textEl) return;
   textEl.innerHTML = textEl.innerHTML.replace(/\{\{blank_(\w+)\}\}/g, function(_, k) {
     return '<input data-blank="blank_' + k + '" type="text" class="inline-block border-b-2 border-numeria-bleu px-2 py-0.5 mx-1 text-sm bg-transparent focus:outline-none focus:border-numeria-teal min-w-16">';
   });
-  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([textEl]);
-});
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([textEl]).catch(function(e){ console.log('FB MathJax:', e); });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initFbBlanks);
+} else {
+  // DOM already ready (e.g. cached page) — run immediately
+  initFbBlanks();
+}
 })();
 </script>
 {% endwith %}

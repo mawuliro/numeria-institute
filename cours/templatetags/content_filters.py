@@ -167,6 +167,23 @@ def render_content(value):
     # Enable markdown processing inside HTML blocks (e.g. <details> used by
     # application exercises). The md_in_html extension requires a
     # markdown="1" attribute on the HTML block tag.
+    #
+    # We extract <summary>...</summary> blocks BEFORE markdown processing
+    # because md_in_html has a known issue where the > closing the <summary>
+    # tag leaks as a literal &gt; in the output. We restore them after.
+    summary_placeholders = {}
+    def _stash_summary(m):
+        key = f'ZQZSUMMARY{len(summary_placeholders)}ZQZ'
+        # Convert <b>...</b> to <strong>...</strong> so bleach keeps them
+        # (b is not in ALLOWED_TAGS, strong is).
+        inner = m.group(2).replace('<b>', '<strong>').replace('</b>', '</strong>')
+        summary_placeholders[key] = '<summary' + m.group(1) + '>' + inner + '</summary>'
+        return key
+    text = re.sub(
+        r'<summary([^>]*)>(.*?)</summary>',
+        _stash_summary, text, flags=re.DOTALL,
+    )
+
     text = re.sub(r'<details(?![^>]*markdown=)', '<details markdown="1">', text)
 
     html = markdown.markdown(text, extensions=[
@@ -175,8 +192,29 @@ def render_content(value):
     ])
 
     # Remove empty <blockquote></blockquote> artifacts produced by md_in_html
-    # when there is a blank line between <details> and <summary>.
+    # when there is a blank line between <details> and the stashed summary.
     html = re.sub(r'<blockquote>\s*</blockquote>', '', html)
+
+    # Restore <summary> blocks. Clean up any <p>/<blockquote> wrappers
+    # that markdown may have added around the placeholder.
+    for key, val in summary_placeholders.items():
+        # Strip <blockquote><p>...</p></blockquote> wrapper
+        html = re.sub(
+            r'<blockquote>\s*<p>\s*' + re.escape(key) + r'\s*</p>\s*</blockquote>',
+            val, html,
+        )
+        # Strip <blockquote>...</blockquote> wrapper (no <p> inside)
+        html = re.sub(
+            r'<blockquote>\s*' + re.escape(key) + r'\s*</blockquote>',
+            val, html,
+        )
+        # Strip <p>...</p> wrapper
+        html = re.sub(
+            r'<p>\s*' + re.escape(key) + r'\s*</p>',
+            val, html,
+        )
+        # Fallback: direct replacement
+        html = html.replace(key, val)
 
     for key, val in placeholders.items():
         html = html.replace(key, val)
