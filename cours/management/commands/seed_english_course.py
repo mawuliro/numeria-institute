@@ -51,7 +51,7 @@ class Command(BaseCommand):
             },
         )
         if not created:
-            self.stdout.write(self.style.WARNING(f'Course "{course.title}" already exists — updating.'))
+            self.stdout.write(self.style.WARNING(f'Course "{course.title}" already exists · updating.'))
 
         for module_data in COURSE_STRUCTURE:
             module = self.upsert_module(course, module_data)
@@ -177,11 +177,11 @@ COURSE_STRUCTURE = [
 
 **Scientific English** is a specialized register of English used in academic and professional scientific contexts. It is characterized by:
 
-- **Precision** — exact terminology, no ambiguity
-- **Objectivity** — passive voice, third-person perspective
-- **Conciseness** — short, information-dense sentences
-- **Formality** — no contractions (use "do not" not "don't"), no colloquialisms
-- **Structure** — clear logical flow with signposting
+- **Precision** · exact terminology, no ambiguity
+- **Objectivity** · passive voice, third-person perspective
+- **Conciseness** · short, information-dense sentences
+- **Formality** · no contractions (use "do not" not "don't"), no colloquialisms
+- **Structure** · clear logical flow with signposting
 
 ## Why is Scientific English important?
 
@@ -208,11 +208,11 @@ For university students in Africa and francophone countries, mastering Scientifi
 
 This course will cover:
 
-1. **Module 1** — Scientific vocabulary and terminology
-2. **Module 2** — Reading scientific papers
-3. **Module 3** — Writing scientific abstracts and papers
-4. **Module 4** — Oral presentations and conferences
-5. **Module 5** — Grammar for scientific writing
+1. **Module 1** · Scientific vocabulary and terminology
+2. **Module 2** · Reading scientific papers
+3. **Module 3** · Writing scientific abstracts and papers
+4. **Module 4** · Oral presentations and conferences
+5. **Module 5** · Grammar for scientific writing
 
 Let's begin! 🎓"""},
                     {'type': 'mcq', 'title': 'Scientific English characteristics', 'question': 'Which of the following is a characteristic of Scientific English?',
@@ -431,36 +431,36 @@ In scientific English, numbers follow specific conventions:
 
 Most scientific papers follow the **IMRaD** structure:
 
-- **I** — Introduction
-- **M** — Methods (or Materials and Methods)
-- **R** — Results
-- **aD** — and Discussion
+- **I** · Introduction
+- **M** · Methods (or Materials and Methods)
+- **R** · Results
+- **aD** · and Discussion
 
 Some papers also include:
-- **Abstract** — a summary at the beginning
-- **Conclusion** — at the end
-- **References** — bibliography
+- **Abstract** · a summary at the beginning
+- **Conclusion** · at the end
+- **References** · bibliography
 
 ## 1. Abstract
 
 The abstract is a **150-250 word** summary of the entire paper. It contains:
 
-- **Background** — why the study was done
-- **Methods** — how it was done (briefly)
-- **Results** — what was found
-- **Conclusion** — what it means
+- **Background** · why the study was done
+- **Methods** · how it was done (briefly)
+- **Results** · what was found
+- **Conclusion** · what it means
 
-> 💡 **Tip**: Always read the abstract first to decide if the paper is relevant.
+> 💡 **Tip** : Always read the abstract first to decide if the paper is relevant.
 
 ## 2. Introduction
 
 The introduction answers the question: **"Why did you do this study?"**
 
 It follows a **funnel structure**:
-1. **Broad context** — general background
-2. **Specific problem** — what is unknown
-3. **Research question** — what this study addresses
-4. **Hypothesis** — what you expected to find
+1. **Broad context** · general background
+2. **Specific problem** · what is unknown
+3. **Research question** · what this study addresses
+4. **Hypothesis** · what you expected to find
 
 Key phrases in introductions:
 - "Recent studies have shown that..."
@@ -472,14 +472,14 @@ Key phrases in introductions:
 
 The methods section answers: **"How did you do it?"**
 
-It must be detailed enough for **reproducibility** — another researcher should be able to repeat the study.
+It must be detailed enough for **reproducibility** · another researcher should be able to repeat the study.
 
 Common subsections:
-- **Study design** — experimental, observational, etc.
-- **Participants/Samples** — who or what was studied
-- **Procedure** — step-by-step protocol
-- **Measurements** — instruments and techniques
-- **Statistical analysis** — tests used
+- **Study design** · experimental, observational, etc.
+- **Participants/Samples** · who or what was studied
+- **Procedure** · step-by-step protocol
+- **Measurements** · instruments and techniques
+- **Statistical analysis** · tests used
 
 Key phrases:
 - "Data were collected using..."
@@ -491,11 +491,11 @@ Key phrases:
 
 The results section answers: **"What did you find?"**
 
-It presents the data **without interpretation** — just the facts.
+It presents the data **without interpretation** · just the facts.
 
 - Tables and figures are numbered: "Table 1", "Figure 2"
 - Past tense is used: "The mean was 25.3..."
-- No explanation — just results
+- No explanation · just results
 
 Key phrases:
 - "The results showed that..."
@@ -523,12 +523,12 @@ Key phrases:
 
 ## Reading strategy
 
-1. **Read the title and abstract** — is it relevant?
-2. **Scan the figures and tables** — what data is presented?
-3. **Read the introduction** — what is the research question?
-4. **Skip to the discussion** — what are the main conclusions?
-5. **Read the methods** — only if you need to evaluate quality
-6. **Read the results** — in detail if you need the data"""},
+1. **Read the title and abstract** · is it relevant?
+2. **Scan the figures and tables** · what data is presented?
+3. **Read the introduction** · what is the research question?
+4. **Skip to the discussion** · what are the main conclusions?
+5. **Read the methods** · only if you need to evaluate quality
+6. **Read the results** · in detail if you need the data"""},
                     {'type': 'mcq', 'title': 'IMRaD structure', 'question': 'What does the "M" in IMRaD stand for?',
                      'explanation': 'IMRaD = Introduction, Methods, Results, and Discussion.',
                      'choices': [
@@ -657,9 +657,9 @@ Key phrases:
                     {'type': 'mcq', 'title': 'Results vs Discussion', 'question': 'Which phrase belongs in the Results section (not Discussion)?',
                      'explanation': 'Results present facts; Discussion interprets them.',
                      'choices': [
-                         {'text': 'Our findings suggest that...', 'correct': False, 'feedback': 'This is interpretation — belongs in Discussion.'},
+                         {'text': 'Our findings suggest that...', 'correct': False, 'feedback': 'This is interpretation · belongs in Discussion.'},
                          {'text': 'The mean value was 25.3 ± 2.1.', 'correct': True, 'feedback': 'Correct! This is a factual report.'},
-                         {'text': 'This is consistent with previous studies.', 'correct': False, 'feedback': 'This is comparison — belongs in Discussion.'},
+                         {'text': 'This is consistent with previous studies.', 'correct': False, 'feedback': 'This is comparison · belongs in Discussion.'},
                          {'text': 'One possible explanation is that...', 'correct': False, 'feedback': 'This is interpretation.'},
                      ]},
                     {'type': 'true_false', 'title': 'True or False? Scientific phrases', 'statements': [
@@ -710,7 +710,7 @@ Briefly describe what you did.
 - "Statistical analysis was performed with..."
 
 ### 3. Results (What?)
-State your main findings — be specific with numbers.
+State your main findings · be specific with numbers.
 - "The results showed that..."
 - "We found a significant difference..."
 - "The mean was 25.3 (SD = 2.1)..."
@@ -810,7 +810,7 @@ Avoid personal language.
 - "The samples were analyzed by HPLC."
 - "Data were collected over 12 months."
 
-**Active** (focus on the doer — increasingly preferred):
+**Active** (focus on the doer · increasingly preferred):
 - "We analyzed the samples by HPLC."
 - "We collected data over 12 months."
 
@@ -832,11 +832,11 @@ Avoid personal language.
 | a number of | several |
 | at the present time | currently |
 | in the near future | soon |
-| it has been shown that | (delete — just state the fact) |
+| it has been shown that | (delete · just state the fact) |
 
 ### Misplaced modifiers
 ❌ "We only tested the samples at 25°C." (implies you did nothing else)
-✅ "We tested the samples only at 25°C." (correct — only 25°C was used)
+✅ "We tested the samples only at 25°C." (correct · only 25°C was used)
 
 ### Subject-verb agreement
 ❌ "The data shows..." (data is plural)
@@ -911,15 +911,15 @@ A typical conference presentation is **10-15 minutes**. Plan for:
 - "My presentation is divided into three parts..."
 
 ### 3. Introduction (2-3 min)
-- **Hook** — start with a question or striking fact
-- **Background** — what is known
-- **Gap** — what is unknown
-- **Objective** — what you did
+- **Hook** · start with a question or striking fact
+- **Background** · what is known
+- **Gap** · what is unknown
+- **Objective** · what you did
 
-> 💡 **Tip**: Use a question to engage the audience: "Did you know that...?"
+> 💡 **Tip** : Use a question to engage the audience: "Did you know that...?"
 
 ### 4. Methods (2 min)
-- Keep it brief — the audience trusts you did it correctly
+- Keep it brief · the audience trusts you did it correctly
 - Use **diagrams** instead of text
 - Only explain what is necessary to understand the results
 
@@ -961,11 +961,11 @@ Phrases:
 
 ## Handling questions
 
-- **Listen carefully** — let them finish
+- **Listen carefully** · let them finish
 - **Repeat** the question (for the audience)
 - **Take a moment** to think
 - **Admit** if you don't know: "That's an interesting question. I don't have the data to answer that, but..."
-- **Be concise** — 30-60 seconds per answer
+- **Be concise** · 30-60 seconds per answer
 
 ## Useful phrases
 
@@ -996,9 +996,9 @@ Phrases:
                     {'type': 'mcq', 'title': 'Presentation timing', 'question': 'How many slides should you plan for a 10-minute presentation?',
                      'explanation': 'Plan for about 1 slide per minute.',
                      'choices': [
-                         {'text': '5 slides', 'correct': False, 'feedback': 'Too few — you will rush.'},
+                         {'text': '5 slides', 'correct': False, 'feedback': 'Too few · you will rush.'},
                          {'text': '10 slides', 'correct': True, 'feedback': 'Correct! About 1 slide per minute.'},
-                         {'text': '25 slides', 'correct': False, 'feedback': 'Too many — you will rush.'},
+                         {'text': '25 slides', 'correct': False, 'feedback': 'Too many · you will rush.'},
                          {'text': '50 slides', 'correct': False, 'feedback': 'Way too many!'},
                      ]},
                     {'type': 'mcq', 'title': 'Results presentation', 'question': 'What is the best way to present results in a talk?',
@@ -1082,11 +1082,11 @@ Phrases:
 
 1. **Record yourself** and listen back
 2. **Use a mirror** to check your mouth movements
-3. **Slow down** — non-native speakers often speak too fast
-4. **Pause** between sections — 2-3 seconds of silence is powerful
-5. **Emphasize key words** — "The results were **significant**."""},
+3. **Slow down** · non-native speakers often speak too fast
+4. **Pause** between sections · 2-3 seconds of silence is powerful
+5. **Emphasize key words** · "The results were **significant**."""},
                     {'type': 'mcq', 'title': 'Word stress', 'question': 'Where is the stress in the word "scientific"?',
-                     'explanation': 'sci-en-TIF-ic — stress on the 3rd syllable.',
+                     'explanation': 'sci-en-TIF-ic · stress on the 3rd syllable.',
                      'choices': [
                          {'text': 'SCI-en-tif-ic (1st syllable)', 'correct': False},
                          {'text': 'sci-EN-tif-ic (2nd syllable)', 'correct': False},
@@ -1130,16 +1130,16 @@ The tense you choose depends on the **section** of the paper and what you are de
 
 | Section | Tense | Why |
 |---------|-------|-----|
-| Abstract — Background | Present | General truths |
-| Abstract — Methods | Past | What you did |
-| Abstract — Results | Past | What you found |
-| Abstract — Conclusion | Present | What it means now |
+| Abstract · Background | Present | General truths |
+| Abstract · Methods | Past | What you did |
+| Abstract · Results | Past | What you found |
+| Abstract · Conclusion | Present | What it means now |
 | Introduction | Present | Established facts |
-| Introduction — prior work | Present perfect | What has been done |
+| Introduction · prior work | Present perfect | What has been done |
 | Methods | Past | What you did |
 | Results | Past | What you found |
 | Discussion | Present | Interpreting results |
-| Discussion — prior work | Present / Present perfect | Comparing |
+| Discussion · prior work | Present / Present perfect | Comparing |
 
 ## 1. Present Simple
 
@@ -1214,7 +1214,7 @@ Rarely used in scientific writing, but can appear in:
                          {'text': 'Present perfect', 'correct': False, 'feedback': 'Present perfect is for prior research.'},
                      ]},
                     {'type': 'mcq', 'title': 'Tense for established facts', 'question': 'Which tense for: "Water ___ at 100°C."',
-                     'explanation': 'This is a general truth — always true.',
+                     'explanation': 'This is a general truth · always true.',
                      'choices': [
                          {'text': 'boiled', 'correct': False, 'feedback': 'Past implies it no longer boils at 100°C.'},
                          {'text': 'boils', 'correct': True, 'feedback': 'Correct! General truth = present.'},
@@ -1275,7 +1275,7 @@ In scientific writing, **what was done** is more important than **who did it**:
 
 ### What is hedging?
 
-**Hedging** is the use of cautious language to express uncertainty. In science, we rarely "prove" things — we **suggest**, **indicate**, or **support**.
+**Hedging** is the use of cautious language to express uncertainty. In science, we rarely "prove" things · we **suggest**, **indicate**, or **support**.
 
 ### Hedging verbs
 
@@ -1305,8 +1305,8 @@ In scientific writing, **what was done** is more important than **who did it**:
 
 ### When NOT to hedge
 
-- **Methods**: "The samples were centrifuged at 10,000 rpm for 10 minutes." (no hedging needed — this is a fact)
-- **Established facts**: "DNA contains four nucleotide bases." (no hedging — this is proven)
+- **Methods**: "The samples were centrifuged at 10,000 rpm for 10 minutes." (no hedging needed · this is a fact)
+- **Established facts**: "DNA contains four nucleotide bases." (no hedging · this is proven)
 
 ## Modal verbs for hedging
 
@@ -1339,9 +1339,9 @@ In scientific writing, **what was done** is more important than **who did it**:
                     {'type': 'mcq', 'title': 'Hedging', 'question': 'Which sentence is appropriately hedged for a scientific paper?',
                      'explanation': 'Scientific claims should be cautious, not absolute.',
                      'choices': [
-                         {'text': 'Our results prove that the drug cures all cancers.', 'correct': False, 'feedback': 'Too strong — "prove" and "all" are absolute.'},
+                         {'text': 'Our results prove that the drug cures all cancers.', 'correct': False, 'feedback': 'Too strong · "prove" and "all" are absolute.'},
                          {'text': 'Our results suggest that the drug may be effective against certain cancers.', 'correct': True, 'feedback': 'Correct! Appropriately hedged.'},
-                         {'text': 'Our results might possibly perhaps indicate something about cancer.', 'correct': False, 'feedback': 'Over-hedged — too many qualifiers.'},
+                         {'text': 'Our results might possibly perhaps indicate something about cancer.', 'correct': False, 'feedback': 'Over-hedged · too many qualifiers.'},
                          {'text': 'Cancer is cured by this drug.', 'correct': False, 'feedback': 'Too strong and absolute.'},
                      ]},
                     {'type': 'fill_blank', 'title': 'Complete with hedging words',

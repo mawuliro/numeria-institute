@@ -77,7 +77,7 @@ class Command(BaseCommand):
             },
         )
         if not created:
-            self.stdout.write(self.style.WARNING(f'Course "{course.title}" already exists — updating.'))
+            self.stdout.write(self.style.WARNING(f'Course "{course.title}" already exists · updating.'))
             course.status = status
             course.save(update_fields=['status'])
         else:
@@ -153,7 +153,7 @@ class Command(BaseCommand):
             block.true_false = ex
             block.save()
         else:
-            # Unsupported type for this seeder — skip silently
+            # Unsupported type for this seeder · skip silently
             return
 
     # ---------- Exercise factories ----------
@@ -230,12 +230,12 @@ class Command(BaseCommand):
 
 
 # =============================================================================
-# COURSE STRUCTURE — all content in French
+# COURSE STRUCTURE · all content in French
 # =============================================================================
 
 COURSE_STRUCTURE = [
     # ──────────────────────────────────────────────────────────────────────
-    # MODULE 1 — Introduction à Python
+    # MODULE 1 · Introduction à Python
     # ──────────────────────────────────────────────────────────────────────
     {
         'order': 0,
@@ -276,11 +276,11 @@ Le mot `print` est une **fonction**. Elle affiche à l'écran ce qu'on lui passe
 
 Nous allons partir de zéro et arriver jusqu'à la **programmation orientée objet**. Le parcours :
 
-1. **Module 1** — Introduction (variables, types, opérateurs)
-2. **Module 2** — Algorithmique (conditions, boucles, fonctions)
-3. **Module 3** — Structures de données (listes, tuples, dictionnaires)
-4. **Module 4** — Algorithmique avancée (récursivité, tri, complexité)
-5. **Module 5** — POO (classes, héritage, polymorphisme)
+1. **Module 1** · Introduction (variables, types, opérateurs)
+2. **Module 2** · Algorithmique (conditions, boucles, fonctions)
+3. **Module 3** · Structures de données (listes, tuples, dictionnaires)
+4. **Module 4** · Algorithmique avancée (récursivité, tri, complexité)
+5. **Module 5** · POO (classes, héritage, polymorphisme)
 
 Chaque leçon contient :
 - Un **cours théorique** avec des exemples
@@ -513,7 +513,7 @@ Ils renvoient un booléen `True` ou `False` :
 | `<=` | Inférieur ou égal | `5 <= 5` → `True` |
 | `>=` | Supérieur ou égal | `4 >= 5` → `False` |
 
-⚠ **Attention** : `=` (affectation) et `==` (comparaison) sont différents !
+> ⚠️ **Attention** : `=` (affectation) et `==` (comparaison) sont différents !
 
 ## Opérateurs logiques
 
@@ -528,7 +528,7 @@ Python possède trois opérateurs logiques :
 ```python
 age = 20
 permis = True
-print(age >= 18 and permis)   # True — peut conduire
+print(age >= 18 and permis)   # True · peut conduire
 print(age < 18 or not permis) # False
 ```
 
@@ -541,7 +541,7 @@ print(2 + 3 * 4)   # 14, pas 20  (3*4=12, puis 2+12)
 print((2 + 3) * 4) # 20  (parenthèses d'abord)
 ```
 
-Quand tu as un doute, **mets des parenthèses** — c'est plus lisible et plus sûr.
+Quand tu as un doute, **mets des parenthèses** · c'est plus lisible et plus sûr.
 
 ## Opérateurs sur les chaînes
 
@@ -577,7 +577,7 @@ print("Abc" * 3)             # "AbcAbcAbc"
                         'question': 'Que vaut `2 + 3 * 4` ?',
                         'explanation': "La multiplication est prioritaire sur l'addition : 3*4=12, puis 2+12=14.",
                         'choices': [
-                            {'text': '20', 'correct': False, 'feedback': 'Tu as fait (2+3)*4 — mais * est prioritaire sans parenthèses.'},
+                            {'text': '20', 'correct': False, 'feedback': 'Tu as fait (2+3)*4 · mais * est prioritaire sans parenthèses.'},
                             {'text': '14', 'correct': True, 'feedback': 'Exact ! 3*4=12, puis 2+12=14.'},
                             {'text': '24', 'correct': False, 'feedback': 'Non, ce n\'est pas 2*3*4.'},
                             {'text': '11', 'correct': False, 'feedback': 'Tu as sans doute oublié la priorité de *.'},
@@ -619,7 +619,7 @@ Calcule leur **moyenne** (somme divisée par 3) et affiche le résultat avec `pr
     },
 
     # ──────────────────────────────────────────────────────────────────────
-    # MODULE 2 — Algorithmique : les bases
+    # MODULE 2 · Algorithmique : les bases
     # ──────────────────────────────────────────────────────────────────────
     {
         'order': 1,
@@ -649,10 +649,10 @@ if condition:
     print("La condition est vraie")
 ```
 
-⚠ **Trois choses importantes** :
+> ⚠️ **Attention** : Trois choses importantes :
 1. La ligne `if` se termine par **`:`** (deux points)
 2. Le bloc indenté (4 espaces) est exécuté si la condition est vraie
-3. L'indentation est **obligatoire** en Python — c'est elle qui délimite les blocs
+3. L'indentation est **obligatoire** en Python · c'est elle qui délimite les blocs
 
 ## if / else
 
@@ -719,10 +719,10 @@ else:
 ## Piège fréquent : `=` vs `==`
 
 ```python
-# ❌ FAUX — c'est une affectation, pas une comparaison
+# ❌ FAUX · c'est une affectation, pas une comparaison
 if age = 18:  # SyntaxError
 
-# ✅ CORRECT — == compare
+# ✅ CORRECT · == compare
 if age == 18:
     print("Tu as pile 18 ans")
 ```""",
@@ -812,7 +812,7 @@ Les boucles permettent de **répéter** un bloc de code plusieurs fois.
 
 On l'utilise quand on connaît à l'avance le nombre d'itérations. En Python, `for` parcourt une séquence (liste, chaîne, `range`, etc.).
 
-### `range(n)` — de 0 à n-1
+### `range(n)` · de 0 à n-1
 
 ```python
 for i in range(5):
@@ -820,7 +820,7 @@ for i in range(5):
 # Affiche : 0 1 2 3 4
 ```
 
-### `range(a, b)` — de a à b-1
+### `range(a, b)` · de a à b-1
 
 ```python
 for i in range(1, 6):
@@ -828,7 +828,7 @@ for i in range(1, 6):
 # Affiche : 1 2 3 4 5
 ```
 
-### `range(a, b, pas)` — avec un pas
+### `range(a, b, pas)` · avec un pas
 
 ```python
 for i in range(0, 10, 2):
@@ -857,10 +857,10 @@ print("Décollage !")
 # Affiche : 5 4 3 2 1 Décollage !
 ```
 
-⚠ **Attention aux boucles infinies !** Si tu oublies de modifier la variable de condition, la boucle ne s'arrête jamais :
+> ⚠️ **Attention** : Boucles infinies ! Si tu oublies de modifier la variable de condition, la boucle ne s'arrête jamais :
 
 ```python
-# ❌ BOUCLE INFINIE — ne jamais faire ça
+# ❌ BOUCLE INFINIE · ne jamais faire ça
 n = 5
 while n > 0:
     print(n)
@@ -940,7 +940,7 @@ else:
                         'title': 'Somme de 1 à N',
                         'instructions': """Calcule la somme des entiers de 1 à 10 inclus (1 + 2 + 3 + ... + 10) avec une boucle `for`. Affiche le résultat final.
 
-(Astuce mathématique : la réponse est 55.)""",
+> 💡 **Astuce** : (Astuce mathématique : la réponse est 55.)""",
                         'difficulty': 'easy',
                         'points': 10,
                         'hint': 'Initialise une variable somme = 0, puis ajoute chaque i avec somme += i.',
@@ -1032,7 +1032,7 @@ resultat = carre(5)
 print(resultat)   # 25
 ```
 
-⚠ Une fois `return` exécuté, la fonction s'arrête. Le code après `return` n'est jamais exécuté.
+> ⚠️ **Attention** : Une fois `return` exécuté, la fonction s'arrête. Le code après `return` n'est jamais exécuté.
 
 ## Plusieurs paramètres
 
@@ -1055,7 +1055,7 @@ saluer("Awa")              # Bonjour Awa
 saluer("Kofi", "Salut")    # Salut Kofi
 ```
 
-⚠ Les paramètres avec valeur par défaut doivent être **en dernier**.
+> ⚠️ **Attention** : Les paramètres avec valeur par défaut doivent être **en dernier**.
 
 ## Arguments nommés
 
@@ -1186,7 +1186,7 @@ Teste avec `print(factorielle(5))` qui doit afficher `120` (car 1×2×3×4×5 = 
     },
 
     # ──────────────────────────────────────────────────────────────────────
-    # MODULE 3 — Structures de données
+    # MODULE 3 · Structures de données
     # ──────────────────────────────────────────────────────────────────────
     {
         'order': 2,
@@ -1451,7 +1451,7 @@ etudiant = {
 print(etudiant["nom"])    # "Awa"
 print(etudiant["age"])    # 20
 
-# Avec .get() — ne plante pas si la clé n'existe pas
+# Avec .get() · ne plante pas si la clé n'existe pas
 print(etudiant.get("ville", "Inconnue"))   # "Inconnue"
 ```
 
@@ -1677,7 +1677,7 @@ print("abc".isalpha())  # True
                         'title': 'Compte les voyelles',
                         'instructions': """Compte le nombre de voyelles (a, e, i, o, u, y) dans la chaîne `mot = "numeria"` et affiche le résultat.
 
-(Réponse attendue : 4 — u, e, i, a)""",
+(Réponse attendue : 4 · u, e, i, a)""",
                         'difficulty': 'medium',
                         'points': 15,
                         'hint': 'Parcours chaque lettre avec for lettre in mot: et teste si elle est dans "aeiouy".',
@@ -1693,7 +1693,7 @@ print("abc".isalpha())  # True
     },
 
     # ──────────────────────────────────────────────────────────────────────
-    # MODULE 4 — Algorithmique avancée
+    # MODULE 4 · Algorithmique avancée
     # ──────────────────────────────────────────────────────────────────────
     {
         'order': 3,
@@ -1766,7 +1766,7 @@ def fibonacci(n):
 print(fibonacci(10))   # 55
 ```
 
-⚠ Cette version est **très lente** pour n grand (exponentielle). On peut l'optimiser avec de la **mémoïsation**.
+> ⚠️ **Attention** : Cette version est **très lente** pour n grand (exponentielle). On peut l'optimiser avec de la **mémoïsation**.
 
 ## Puissance récursive
 
@@ -1916,7 +1916,7 @@ print(tri_selection([5, 2, 8, 1, 9, 3]))
 # [1, 2, 3, 5, 8, 9]
 ```
 
-**Complexité** : $O(n^2)$ — lent sur de grandes listes.
+**Complexité** : $O(n^2)$ · lent sur de grandes listes.
 
 ## Tri à bulles
 
@@ -1938,7 +1938,7 @@ print(tri_bulles([5, 2, 8, 1, 9, 3]))
 
 ## Tri par insertion
 
-**Idée** : comme quand on trie des cartes en main — on insère chaque nouvelle carte à sa place.
+**Idée** : comme quand on trie des cartes en main · on insère chaque nouvelle carte à sa place.
 
 ```python
 def tri_insertion(liste):
@@ -1956,7 +1956,7 @@ print(tri_insertion([5, 2, 8, 1, 9, 3]))
 
 **Complexité** : $O(n^2)$ dans le pire cas, $O(n)$ sur une liste déjà triée.
 
-## Tri rapide (Quicksort) — diviser pour régner
+## Tri rapide (Quicksort) · diviser pour régner
 
 **Idée** : choisir un **pivot**, partitionner la liste en deux (éléments ≤ pivot et > pivot), trier récursivement chaque moitié.
 
@@ -1980,7 +1980,7 @@ En pratique, on utilise `sorted()` ou `.sort()` :
 
 ```python
 liste = [5, 2, 8, 1, 9, 3]
-print(sorted(liste))      # [1, 2, 3, 5, 8, 9] — nouvelle liste
+print(sorted(liste))      # [1, 2, 3, 5, 8, 9] · nouvelle liste
 liste.sort()              # trie sur place
 liste.sort(reverse=True)  # tri décroissant
 ```
@@ -2090,7 +2090,7 @@ Pour $n = 1000$ :
 
 ## Exemple : recherche dans une liste
 
-### Recherche linéaire — $O(n)$
+### Recherche linéaire · $O(n)$
 
 ```python
 def recherche_lineaire(liste, cible):
@@ -2102,7 +2102,7 @@ def recherche_lineaire(liste, cible):
 
 On parcourt chaque élément : $O(n)$.
 
-### Recherche dichotomique — $O(\\log n)$
+### Recherche dichotomique · $O(\\log n)$
 
 **Condition** : la liste doit être **triée**.
 
@@ -2138,7 +2138,7 @@ Pour $n = 1\\,000\\,000$ :
 
 ## Règle pratique
 
-> Si ton algorithme doit traiter 10 000 éléments et qu'il est en $O(n^2)$, ça fait 100 millions d'opérations — ça commence à ramer. En $O(n)$, c'est instantané.
+> Si ton algorithme doit traiter 10 000 éléments et qu'il est en $O(n^2)$, ça fait 100 millions d'opérations · ça commence à ramer. En $O(n)$, c'est instantané.
 
 ## Compromis temps / espace
 
@@ -2147,13 +2147,13 @@ Parfois on gagne du temps en utilisant plus de mémoire :
 - **Recherche dichotomique** : $O(\\log n)$ temps, $O(1)$ mémoire
 - **Table de hachage** (dict) : $O(1)$ temps, $O(n)$ mémoire
 
-En Python, `in` sur un `dict` ou un `set` est en $O(1)$ — beaucoup plus rapide que sur une liste.
+En Python, `in` sur un `dict` ou un `set` est en $O(1)$ · beaucoup plus rapide que sur une liste.
 
 ```python
-# O(n) — lent sur une grande liste
+# O(n) · lent sur une grande liste
 if element in ma_liste: ...
 
-# O(1) — instantané
+# O(1) · instantané
 if element in mon_set: ...
 ```""",
                     },
@@ -2204,7 +2204,7 @@ if element in mon_set: ...
     },
 
     # ──────────────────────────────────────────────────────────────────────
-    # MODULE 5 — Programmation Orientée Objet (POO)
+    # MODULE 5 · Programmation Orientée Objet (POO)
     # ──────────────────────────────────────────────────────────────────────
     {
         'order': 4,
@@ -2251,7 +2251,7 @@ class Chien:
 ### Explications
 
 - `class Chien:` définit la classe
-- `__init__` est le **constructeur** — appelé quand on crée un objet
+- `__init__` est le **constructeur** · appelé quand on crée un objet
 - `self` représente l'objet lui-même (obligatoire comme premier paramètre)
 - `self.nom` et `self.age` sont des **attributs d'instance**
 
@@ -2273,7 +2273,7 @@ print(rex.age)   # 3
 ```python
 class Compteur:
     def __init__(self):
-        self.valeur = 0     # attribut — vit dans l'objet
+        self.valeur = 0     # attribut · vit dans l'objet
 
     def incrementer(self):
         # self.valeur est accessible partout dans l'objet
@@ -2344,7 +2344,7 @@ print(p1 == p2)   # True          → utilise __eq__
                         'type': 'mcq',
                         'title': 'Qu\'est-ce que self ?',
                         'question': "Que représente `self` dans une méthode Python ?",
-                        'explanation': "self est une référence à l'instance courante — l'objet sur lequel la méthode est appelée.",
+                        'explanation': "self est une référence à l'instance courante · l'objet sur lequel la méthode est appelée.",
                         'choices': [
                             {'text': 'Un mot-clé pour déclarer une variable', 'correct': False, 'feedback': 'Non, c\'est juste un paramètre.'},
                             {'text': 'L\'objet sur lequel la méthode est appelée', 'correct': True, 'feedback': 'Exact ! self = l\'instance courante.'},
@@ -2440,7 +2440,7 @@ class Animal:                    # classe mère
     def manger(self):
         print(f"{self.nom} mange.")
 
-class Chien(Animal):             # classe fille — hérite d'Animal
+class Chien(Animal):             # classe fille · hérite d'Animal
     def aboyer(self):
         print(f"{self.nom} fait : Wouf !")
 
@@ -2557,7 +2557,7 @@ class Voiture:
                     },
                     {
                         'type': 'mcq',
-                        'title': 'Héritage — définition',
+                        'title': 'Héritage · définition',
                         'question': "Qu'est-ce que l'héritage en POO ?",
                         'explanation': "L'héritage permet à une classe fille de récupérer attributs et méthodes d'une classe mère.",
                         'choices': [
@@ -2689,8 +2689,8 @@ L'**encapsulation** consiste à **protéger les données** internes d'un objet e
 ### Convention `_` et `__`
 
 - `nom` : **public** (accès libre)
-- `_nom` : **protégé** (convention — ne pas y toucher hors de la classe et des sous-classes)
-- `__nom` : **privé** (Python modifie le nom pour le cacher — *name mangling*)
+- `_nom` : **protégé** (convention · ne pas y toucher hors de la classe et des sous-classes)
+- `__nom` : **privé** (Python modifie le nom pour le cacher · *name mangling*)
 
 ```python
 class CompteBancaire:
@@ -2807,7 +2807,7 @@ Tu peux maintenant :
                         'type': 'mcq',
                         'title': 'Encapsulation',
                         'question': "Comment nomme-t-on un attribut 'privé' en Python (par convention) ?",
-                        'explanation': "Un attribut commençant par __ (double underscore) est 'privé' — Python applique le name mangling.",
+                        'explanation': "Un attribut commençant par __ (double underscore) est 'privé' · Python applique le name mangling.",
                         'choices': [
                             {'text': '_attribut (un underscore)', 'correct': False, 'feedback': 'Un seul underscore = protégé, pas privé.'},
                             {'text': '__attribut (deux underscores)', 'correct': True, 'feedback': 'Exact ! Le double underscore déclenche le name mangling.'},
@@ -2838,7 +2838,7 @@ Crée une liste `formes = [Carre(4), Cercle(3)]` et affiche l'aire de chaque for
                         'difficulty': 'medium',
                         'points': 15,
                         'hint': 'Chaque classe a sa propre méthode aire() qui calcule différemment.',
-                        'explanation': 'Deux classes indépendantes avec la même méthode aire() — polymorphisme.',
+                        'explanation': 'Deux classes indépendantes avec la même méthode aire() · polymorphisme.',
                         'starter': '# Crée les deux classes\n\n\n# Crée la liste et affiche les aires\nformes = [Carre(4), Cercle(3)]\nfor f in formes:\n    print(f.aire())\n',
                         'solution': 'class Carre:\n    def __init__(self, cote):\n        self.cote = cote\n    def aire(self):\n        return self.cote ** 2\n\nclass Cercle:\n    def __init__(self, rayon):\n        self.rayon = rayon\n    def aire(self):\n        return 3.14 * self.rayon ** 2\n\nformes = [Carre(4), Cercle(3)]\nfor f in formes:\n    print(f.aire())\n',
                         'expected_output': '16\n28.26\n',
