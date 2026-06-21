@@ -172,6 +172,18 @@ def render_content(value):
     for key, val in placeholders.items():
         html = html.replace(key, val)
 
+    # Second pass: restore nested placeholders (e.g. {{blank_X}} protected
+    # before $...$ LaTeX, so ZQZPROT is captured inside ZQZLATEX).
+    # Iterate until stable to handle arbitrary nesting depth.
+    for _ in range(5):  # 5 passes max, safety bound
+        changed = False
+        for key, val in placeholders.items():
+            if key in html:
+                html = html.replace(key, val)
+                changed = True
+        if not changed:
+            break
+
     # Add copy button + language label to fenced code blocks
     html = _enhance_code_blocks(html)
 
