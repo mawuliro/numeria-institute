@@ -64,17 +64,23 @@ window['fbSubmit_' + FID] = async function() {
 };
 
 // Init: replace blank markers with inputs in rendered HTML.
-// The text container has class "tex2jax_ignore" so MathJax's initial
-// auto-typeset SKIPS it (otherwise {{blank_X}} inside $...$ gets eaten
-// by MathJax because {} are LaTeX grouping chars). We replace the
-// markers ourselves, then explicitly call MathJax.typesetPromise to
-// render the $...$ parts without touching the <input> fields.
+// Strategy:
+//   1. The container has class "tex2jax_ignore" so MathJax's initial
+//      auto-typeset SKIPS it (otherwise {{blank_X}} inside $...$ gets
+//      eaten by MathJax because {} are LaTeX grouping chars).
+//   2. We replace {{blank_X}} with <input> elements.
+//   3. We REMOVE the tex2jax_ignore class so MathJax can process the
+//      element on explicit typesetPromise call.
+//   4. We call MathJax.typesetPromise([textEl]) to render the $...$ parts.
+//      MathJax will skip the <input> elements (they're not LaTeX).
 function initFbBlanks() {
   var textEl = document.getElementById('fb-' + FID + '-text');
   if (!textEl) return;
   textEl.innerHTML = textEl.innerHTML.replace(/\{\{blank_(\w+)\}\}/g, function(_, k) {
     return '<input data-blank="blank_' + k + '" type="text" class="inline-block border-b-2 border-numeria-bleu px-2 py-0.5 mx-1 text-sm bg-transparent focus:outline-none focus:border-numeria-teal min-w-16">';
   });
+  // Remove tex2jax_ignore so MathJax can process the $...$ on explicit call
+  textEl.classList.remove('tex2jax_ignore');
   if (window.MathJax && MathJax.typesetPromise) {
     MathJax.typesetPromise([textEl]).catch(function(e){ console.log('FB MathJax:', e); });
   }
