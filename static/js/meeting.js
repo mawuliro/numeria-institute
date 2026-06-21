@@ -242,23 +242,13 @@ class NumeriaConference {
     const overlay = document.querySelector('#reactions-overlay');
     if (!overlay) return;
     const el = document.createElement('div');
-    // Random horizontal position across the overlay width
     const leftPercent = 15 + Math.random() * 70;
-    el.className = 'absolute text-5xl sm:text-6xl select-none';
+    el.className = 'absolute text-5xl sm:text-6xl select-none reaction-emoji-float';
     el.style.left = `${leftPercent}%`;
     el.style.bottom = '0';
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(0) scale(0.5)';
-    el.style.transition = 'transform 3.5s ease-out, opacity 3.5s ease-out';
-    el.style.willChange = 'transform, opacity';
     el.style.textShadow = '0 4px 12px rgba(0,0,0,0.5)';
     el.innerHTML = `<span>${this.escapeHtml(emoji)}</span>${username ? `<span class="block text-xs text-white/80 font-medium mt-1">${this.escapeHtml(username)}</span>` : ''}`;
     overlay.appendChild(el);
-    // Trigger the float-up animation on next frame
-    requestAnimationFrame(() => {
-      el.style.opacity = '1';
-      el.style.transform = 'translateY(-65vh) scale(1.4) rotate(' + (Math.random() * 30 - 15) + 'deg)';
-    });
     // Remove after animation completes
     setTimeout(() => el.remove(), 3600);
   }

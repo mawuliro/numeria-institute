@@ -54,6 +54,37 @@
 
   <!-- ============ MAIN VIDEO AREA ============ -->
   <main class="flex-1 relative overflow-hidden px-2 sm:px-4 py-3">
+    <style>
+      @keyframes reactionFloat {
+        0%   { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 0; }
+        15%  { transform: translateY(-5vh) scale(1.3) rotate(8deg); opacity: 1; }
+        85%  { transform: translateY(-55vh) scale(1.5) rotate(-5deg); opacity: 1; }
+        100% { transform: translateY(-65vh) scale(1.8) rotate(12deg); opacity: 0; }
+      }
+      .reaction-emoji-float {
+        animation: reactionFloat 3.5s ease-out forwards;
+      }
+      /* Auto-fit video grid */
+      #video-grid {
+        display: grid;
+        gap: 0.75rem;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+        grid-auto-rows: 1fr;
+      }
+      #video-grid > div {
+        aspect-ratio: 16/9;
+        min-height: 120px;
+      }
+      /* When pinned is active, grid becomes thumbnails */
+      #video-grid.has-pinned {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      }
+      #video-grid.has-pinned > div {
+        aspect-ratio: 16/9;
+        min-height: 80px;
+        max-height: 120px;
+      }
+    </style>
     <div class="h-full flex gap-3">
 
       <!-- Video grid (flexes) -->

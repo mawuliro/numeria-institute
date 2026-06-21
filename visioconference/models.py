@@ -11,6 +11,7 @@ def generate_room_code():
 
 
 class MeetingRoom(models.Model):
+    id = models.BigAutoField(primary_key=True)
     host = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='visio_rooms')
     title = models.CharField(max_length=120)
     room_code = models.CharField(max_length=9, unique=True, default=generate_room_code)
@@ -38,6 +39,7 @@ class MeetingRoom(models.Model):
 
 
 class MeetingParticipant(models.Model):
+    id = models.BigAutoField(primary_key=True)
     room = models.ForeignKey(MeetingRoom, on_delete=models.CASCADE, related_name='participants')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='visio_participations')
     joined_at = models.DateTimeField(auto_now_add=True)
@@ -63,6 +65,7 @@ class MeetingParticipant(models.Model):
 
 
 class ChatMessage(models.Model):
+    id = models.BigAutoField(primary_key=True)
     room = models.ForeignKey(MeetingRoom, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='visio_chat_messages')
     content = models.TextField()
