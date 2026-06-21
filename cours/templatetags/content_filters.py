@@ -231,6 +231,32 @@ def render_content(value):
         if not changed:
             break
 
+    # Move {{blank_X}} out of $...$ so MathJax doesn't eat the <input>
+    # that the fill_blank widget JS will insert. Without this, MathJax
+    # renders "$...{{blank_X}}...$" as a single formula and the <input>
+    # ends up hidden inside the MathJax output (appears as empty space).
+    def _split_latex_around_blanks(match):
+        content = match.group(1)
+        if '{{blank_' not in content:
+            return match.group(0)
+        # Split at each {{blank_X}} boundary
+        parts = re.split(r'(\{\{blank_\w+\}\})', content)
+        result = ''
+        for part in parts:
+            if part.startswith('{{blank_'):
+                result += '$ ' + part + ' $'
+            elif part:
+                result += part
+        # Wrap in $...$ (may produce $$ at boundaries, cleaned below)
+        result = '$' + result + '$'
+        # Remove empty $$ or $ $ artifacts
+        result = re.sub(r'\$\s*\$', '', result)
+        return result
+    html = re.sub(
+        r'\$([^$]*\{\{blank_\w+\}\}[^$]*)\$',
+        _split_latex_around_blanks, html,
+    )
+
     # Add copy button + language label to fenced code blocks
     html = _enhance_code_blocks(html)
 
