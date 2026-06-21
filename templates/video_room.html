@@ -94,6 +94,28 @@
     <button id="vroomBtnScreen" class="vroom-ctrl vroom-ctrl-wide" onclick="VRoom.toggleScreenShare()" title="{% trans 'Partager l\'écran (s)' %}">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg>
     </button>
+
+    <!-- REACTIONS button with popover -->
+    <div style="position:relative;">
+      <button id="vroomBtnReactions" class="vroom-ctrl vroom-ctrl-wide" onclick="VRoom.toggleReactions()" title="{% trans 'Réactions' %}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+      </button>
+      <div id="vroomReactionsMenu" class="vroom-reactions-menu" style="display:none;">
+        <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:4px;">
+          <button class="vroom-reaction-emoji" onclick="VRoom.sendReaction('👍')">👍</button>
+          <button class="vroom-reaction-emoji" onclick="VRoom.sendReaction('🎉')">🎉</button>
+          <button class="vroom-reaction-emoji" onclick="VRoom.sendReaction('❤️')">❤️</button>
+          <button class="vroom-reaction-emoji" onclick="VRoom.sendReaction('👏')">👏</button>
+          <button class="vroom-reaction-emoji" onclick="VRoom.sendReaction('😂')">😂</button>
+          <button class="vroom-reaction-emoji" onclick="VRoom.sendReaction('😮')">😮</button>
+          <button class="vroom-reaction-emoji" onclick="VRoom.sendReaction('😢')">😢</button>
+          <button class="vroom-reaction-emoji" onclick="VRoom.sendReaction('🙏')">🙏</button>
+          <button class="vroom-reaction-emoji" onclick="VRoom.sendReaction('🔥')">🔥</button>
+          <button class="vroom-reaction-emoji" onclick="VRoom.sendReaction('💡')">💡</button>
+        </div>
+      </div>
+    </div>
+
     <button id="vroomBtnHand" class="vroom-ctrl vroom-ctrl-wide" onclick="VRoom.toggleHand()" title="{% trans 'Lever la main (h)' %}">
       <svg id="vroomHandIcon" width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,.65)"><path d="M21 7c0-1.38-1.12-2.5-2.5-2.5-.05 0-.09.01-.14.01C18.05 3.43 16.96 2.5 15.5 2.5c-.39 0-.77.08-1.1.23C14.01 1.75 13.13 1 12 1c-1.12 0-2 .87-2 1.97V8.12C9.73 7.44 9.02 7 8.2 7 6.98 7 6 8.02 6 9.25c0 .58.23 1.1.59 1.49L10.5 17H21V7zm-2 8H11.42l-3.92-4.54c-.08-.1-.25-.18-.31-.46 0-.41.35-.75.76-.75.21 0 .4.08.54.22l1.81 2.08L12 13V2.97c0-.53.44-.97 1-.97.53 0 1 .44 1 .97V9h2V4.25c0-.69.56-1.25 1.25-1.25S18.5 3.56 18.5 4.25V9h2V7c0-.69.56-1.25 1.25-1.25S23 6.31 23 7v8H19zM5 19h14v2H5z"/></svg>
     </button>
@@ -108,6 +130,9 @@
       <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="transform:rotate(135deg)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
     </button>
   </footer>
+
+  <!-- ── REACTIONS OVERLAY ─────────────────────────────────── -->
+  <div id="vroomReactionsOverlay" style="position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:50;"></div>
 
   <!-- ── TOAST ──────────────────────────────────────────────── -->
   <div id="vroomToast" class="vroom-toast"></div>
@@ -324,6 +349,31 @@
   white-space:nowrap;
 }
 .vroom-toast.vroom-show { opacity:1; transform:translateX(-50%) translateY(-6px); }
+
+/* Reactions menu */
+.vroom-reactions-menu {
+  position:absolute; bottom:100%; margin-bottom:8px; left:50%; transform:translateX(-50%);
+  background:#1a1a2e; border:1px solid rgba(255,255,255,.1); border-radius:14px;
+  padding:8px; z-index:100; box-shadow:0 8px 30px rgba(0,0,0,.5);
+}
+.vroom-reaction-emoji {
+  width:36px; height:36px; border:none; background:transparent; cursor:pointer;
+  border-radius:8px; font-size:20px; display:flex; align-items:center; justify-content:center;
+  transition:background .15s;
+}
+.vroom-reaction-emoji:hover { background:rgba(255,255,255,.1); }
+
+/* Reaction float animation */
+@keyframes vroomReactionFloat {
+  0%   { transform:translateY(0) scale(0.5) rotate(0deg); opacity:0; }
+  15%  { transform:translateY(-5vh) scale(1.3) rotate(8deg); opacity:1; }
+  85%  { transform:translateY(-55vh) scale(1.5) rotate(-5deg); opacity:1; }
+  100% { transform:translateY(-65vh) scale(1.8) rotate(12deg); opacity:0; }
+}
+.vroom-reaction-float {
+  position:absolute; font-size:48px; animation:vroomReactionFloat 3.5s ease-out forwards;
+  text-shadow:0 4px 12px rgba(0,0,0,.5); pointer-events:none;
+}
 </style>
 
 <script>
@@ -919,6 +969,13 @@ window.VRoom = (function(){
         return;
       }
 
+      if(type === 'reaction'){
+        if(msg.client_id !== clientId || msg.from){
+          spawnReaction(msg.emoji || '👍', msg.from || msg.sender_name || '');
+        }
+        return;
+      }
+
       /* WebRTC signaling: only handle messages addressed to us */
       if(msg.target_client_id && msg.target_client_id !== clientId) return;
       const from = msg.sender_client_id;
@@ -979,7 +1036,34 @@ window.VRoom = (function(){
   document.addEventListener('DOMContentLoaded', boot);
   if(document.readyState !== 'loading') boot();
 
-  return {toggleMic, toggleCam, toggleHand, toggleScreenShare, toggleSidebar, switchTab, sendChat, leave};
+  /* ── Reactions ── */
+  function toggleReactions(){
+    const menu = document.getElementById('vroomReactionsMenu');
+    if(menu) menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function sendReaction(emoji){
+    const menu = document.getElementById('vroomReactionsMenu');
+    if(menu) menu.style.display = 'none';
+    spawnReaction(emoji, MY_NAME);
+    if(socket?.readyState === WebSocket.OPEN){
+      socket.send(JSON.stringify({type:'reaction', emoji, from:MY_NAME}));
+    }
+  }
+
+  function spawnReaction(emoji, name){
+    const overlay = document.getElementById('vroomReactionsOverlay');
+    if(!overlay) return;
+    const el = document.createElement('div');
+    el.className = 'vroom-reaction-float';
+    el.style.left = (15 + Math.random() * 70) + '%';
+    el.style.bottom = '0';
+    el.innerHTML = '<span>' + escapeHtml(emoji) + '</span>' + (name ? '<div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:2px;">' + escapeHtml(name) + '</div>' : '');
+    overlay.appendChild(el);
+    setTimeout(() => el.remove(), 3600);
+  }
+
+  return {toggleMic, toggleCam, toggleHand, toggleScreenShare, toggleSidebar, switchTab, sendChat, leave, toggleReactions, sendReaction};
 })();
 </script>
 {% endblock %}
