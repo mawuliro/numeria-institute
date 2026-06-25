@@ -79,10 +79,16 @@ def detail_cours(request, cours_id):
     # Leçon active
     lecon_active_id = request.GET.get('lecon')
     lecon_active    = None
-    if lecon_active_id and est_inscrit:
+    if lecon_active_id:
         lecon_active = lecons.filter(id=lecon_active_id).first()
+    # If the requested lesson was not found (or no lesson requested):
+    # - For enrolled users → fall back to first lesson
+    # - For visitors → fall back to first lesson that has is_free_preview=True
     if not lecon_active and lecons.exists():
-        lecon_active = lecons.first()
+        if est_inscrit:
+            lecon_active = lecons.first()
+        else:
+            lecon_active = lecons.filter(is_free_preview=True).first() or lecons.first()
 
     # Leçon précédente et suivante
     lecon_precedente = None
@@ -133,7 +139,10 @@ def detail_cours(request, cours_id):
     code_exercises_data = []
     lesson_blocks_data  = []
 
-    if lecon_active and est_inscrit:
+    # Build lesson blocks if:
+    #   - user is enrolled, OR
+    #   - the lesson is a free preview (is_free_preview=True)
+    if lecon_active and (est_inscrit or getattr(lecon_active, 'is_free_preview', False)):
         lesson_blocks_data = build_lesson_blocks(
             course_lesson=lecon_active, user=request.user,
         )

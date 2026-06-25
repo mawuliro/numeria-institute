@@ -449,7 +449,7 @@ function copyCodeBlock(id) {
                     </div>
 
                     <!-- ── LESSON BLOCKS (new system) or legacy text ── -->
-                    {% if est_inscrit %}
+                    {% if est_inscrit or lecon_active.is_free_preview %}
                     {% if lesson_blocks %}
                     {# New block-based rendering #}
                     {% include 'cours/components/lesson_blocks_render.html' with lesson_blocks=lesson_blocks %}
