@@ -2161,3 +2161,722 @@ COURSE_STRUCTURE.append({
         },
     ],
 })
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# MODULE 5 — ATOME D'HYDROGÈNE
+# ═════════════════════════════════════════════════════════════════════════════
+COURSE_STRUCTURE.append({
+    "order": 5,
+    "title": "Atome d'hydrogène",
+    "description": (
+        "Résolution de l'équation radiale, niveaux d'énergie de Bohr, "
+        "fonctions d'onde radiales et harmoniques sphériques, "
+        "structure fine et corrections relativistes."
+    ),
+    "lessons": [
+        {
+            "order": 0,
+            "title": "Résolution de l'équation radiale",
+            "slug": "equation-radiale-hydrogene",
+            "minutes": 60,
+            "blocks": [
+                T(
+                    "# Résolution de l'équation radiale de l'atome d'hydrogène\n\n"
+                    "## 1. Le problème à deux corps\n\n"
+                    "L'atome d'hydrogène est constitué d'un proton (masse $m_p$) et d'un électron (masse $m_e$) interagissant par force coulombienne :\n"
+                    "$$V(r) = -\\frac{e^2}{4\\pi\\varepsilon_0 r}$$\n\n"
+                    "On se place dans le référentiel du centre de masse. Comme $m_p \\gg m_e$, la masse réduite $\\mu = m_e m_p/(m_e + m_p) \\approx m_e$. L'équation de Schrödinger indépendante du temps devient :\n"
+                    "$$\\hat{H}\\psi = E\\psi, \\quad \\hat{H} = -\\frac{\\hbar^2}{2\\mu}\\nabla^2 - \\frac{e^2}{4\\pi\\varepsilon_0 r}$$\n\n"
+                    "## 2. Séparation des variables en coordonnées sphériques\n\n"
+                    "En coordonnées sphériques $(r, \\theta, \\phi)$, le laplacien se décompose en parties radiale et angulaire. On cherche $\\psi(r, \\theta, \\phi) = R(r)\\, Y(\\theta, \\phi)$. L'équation se sépare en :\n\n"
+                    "- **Partie angulaire** : $\\hat{L}^2 Y = \\hbar^2 l(l+1) Y$ (harmoniques sphériques)\n"
+                    "- **Partie radiale** : équation effective avec potentiel centrifuge\n\n"
+                    "$$-\\frac{\\hbar^2}{2\\mu r^2}\\frac{d}{dr}\\!\\left(r^2 \\frac{dR}{dr}\\right) + \\left[V(r) + \\frac{\\hbar^2 l(l+1)}{2\\mu r^2}\\right]R = ER$$\n\n"
+                    "Le terme $\\hbar^2 l(l+1)/(2\\mu r^2)$ est le **potentiel centrifuge**.\n\n"
+                    "## 3. Niveaux d'énergie\n\n"
+                    "La résolution (polynômes de Laguerre) donne les niveaux quantifiés :\n"
+                    "$$\\boxed{\\;E_n = -\\frac{\\mu e^4}{2(4\\pi\\varepsilon_0)^2 \\hbar^2} \\cdot \\frac{1}{n^2} = -\\frac{13{,}6}{n^2} \\text{ eV}\\;}$$\n\n"
+                    "où $n = 1, 2, 3, \\ldots$ est le **nombre quantique principal**.\n\n"
+                    "### Dégénérescence\n"
+                    "Pour chaque $n$ :\n"
+                    "- $l = 0, 1, \\ldots, n-1$ (moment cinétique)\n"
+                    "- $m = -l, -l+1, \\ldots, +l$ (projection)\n"
+                    "- Dégénérescence totale : $g_n = \\sum_{l=0}^{n-1}(2l+1) = n^2$\n\n"
+                    "## 4. Rayon de Bohr\n\n"
+                    "Le rayon caractéristique de l'atome dans l'état fondamental :\n"
+                    "$$a_0 = \\frac{4\\pi\\varepsilon_0 \\hbar^2}{\\mu e^2} \\approx 0{,}529 \\text{ Å}$$\n\n"
+                    "## 5. Fonctions d'onde radiales\n\n"
+                    "Les fonctions radiales normalisées :\n"
+                    "$$R_{n,l}(r) = -\\sqrt{\\left(\\frac{2}{n a_0}\\right)^3 \\frac{(n-l-1)!}{2n[(n+l)!]}} \\, e^{-r/(na_0)} \\left(\\frac{2r}{n a_0}\\right)^l L_{n-l-1}^{2l+1}\\!\\left(\\frac{2r}{n a_0}\\right)$$\n\n"
+                    "où $L$ sont les polynômes de Laguerre associés.\n\n"
+                    "### Exemples\n"
+                    "- $R_{1,0}(r) = 2 a_0^{-3/2} e^{-r/a_0}$\n"
+                    "- $R_{2,0}(r) = \\frac{1}{\\sqrt{2}} a_0^{-3/2} \\left(1 - \\frac{r}{2a_0}\\right) e^{-r/(2a_0)}$\n"
+                    "- $R_{2,1}(r) = \\frac{1}{\\sqrt{24}} a_0^{-3/2} \\frac{r}{a_0} e^{-r/(2a_0)}$\n\n"
+                    "## 6. Vérification des constantes\n\n"
+                    "L'énergie fondamentale ($n=1$) :\n"
+                    "$$E_1 = -13{,}6 \\text{ eV} = -\\frac{\\mu e^4}{2(4\\pi\\varepsilon_0)^2 \\hbar^2}$$\n\n"
+                    "C'est l'énergie d'ionisation de l'hydrogène, en parfait accord avec l'expérience.\n\n"
+                    "> 💡 **Astuce** : Les niveaux d'énergie ne dépendent que de $n$ (pas de $l$ ni $m$). C'est une dégénérescence accidentelle due à la forme $1/r$ du potentiel coulombien."
+                ),
+
+                S(
+                    "Fonctions d'onde radiales de l'hydrogène",
+                    "import matplotlib.pyplot as plt\n"
+                    "import numpy as np\n"
+                    "from scipy.special import genlaguerre\n"
+                    "import math\n"
+                    "\n"
+                    "a0 = 1.0\n"
+                    "\n"
+                    "def R_radial(n, l, r):\n"
+                    "    rho = 2*r / (n*a0)\n"
+                    "    norm = np.sqrt((2/(n*a0))**3 * math.factorial(n-l-1) / (2*n*math.factorial(n+l)))\n"
+                    "    L = genlaguerre(n-l-1, 2*l+1)(rho)\n"
+                    "    return -norm * np.exp(-rho/2) * rho**l * L\n"
+                    "\n"
+                    "r = np.linspace(0, 20*a0, 500)\n"
+                    "\n"
+                    "fig, axes = plt.subplots(1, 2, figsize=(13, 6))\n"
+                    "\n"
+                    "states = [(1,0,'1s'), (2,0,'2s'), (2,1,'2p'), (3,0,'3s')]\n"
+                    "colors = ['blue', 'red', 'green', 'purple']\n"
+                    "for (n, l, name), color in zip(states, colors):\n"
+                    "    R = R_radial(n, l, r)\n"
+                    "    axes[0].plot(r/a0, R*a0**1.5, color=color, lw=2, label=f'{name}')\n"
+                    "axes[0].axhline(0, color='gray', lw=0.5)\n"
+                    "axes[0].set_xlabel(r'$r/a_0$', fontsize=12)\n"
+                    "axes[0].set_ylabel(r'$R_{n,l}(r) \\cdot a_0^{3/2}$', fontsize=12)\n"
+                    "axes[0].set_title('Fonctions radiales', fontsize=12)\n"
+                    "axes[0].legend(fontsize=9); axes[0].grid(True, alpha=0.3)\n"
+                    "axes[0].set_xlim(0, 15)\n"
+                    "\n"
+                    "for (n, l, name), color in zip(states, colors):\n"
+                    "    R = R_radial(n, l, r)\n"
+                    "    P = r**2 * R**2\n"
+                    "    axes[1].plot(r/a0, P*a0, color=color, lw=2, label=f'{name}')\n"
+                    "axes[1].set_xlabel(r'$r/a_0$', fontsize=12)\n"
+                    "axes[1].set_ylabel(r'$r^2 |R_{n,l}|^2 \\cdot a_0$', fontsize=12)\n"
+                    "axes[1].set_title('Densite radiale de probabilite', fontsize=12)\n"
+                    "axes[1].legend(fontsize=9); axes[1].grid(True, alpha=0.3)\n"
+                    "axes[1].set_xlim(0, 15)\n"
+                    "\n"
+                    "plt.tight_layout(); plt.savefig('plot.png')\n"
+                    "print('E1 = -13.6 eV, a0 = 0.529 Angstrom')\n"
+                ),
+
+                APP(
+                    "Énergie d'ionisation de l'hydrogène",
+                    "Calculer l'énergie fondamentale $E_1$ à partir des constantes. On donne $\\mu \\approx m_e = 9{,}109 \\times 10^{-31}$ kg, $e = 1{,}602 \\times 10^{-19}$ C, $\\varepsilon_0 = 8{,}854 \\times 10^{-12}$ F/m, $\\hbar = 1{,}055 \\times 10^{-34}$ J·s.\n\n"
+                    "1) Calculer $E_1$ en joules.\n"
+                    "2) Convertir en eV.",
+                    "1) **Énergie fondamentale** :\n"
+                    "$$E_1 = -\\frac{\\mu e^4}{2(4\\pi\\varepsilon_0)^2 \\hbar^2}$$\n"
+                    "Après calcul détaillé :\n"
+                    "$$E_1 = -2{,}179 \\times 10^{-18} \\text{ J}$$\n\n"
+                    "2) **En eV** : $E_1 = -2{,}179 \\times 10^{-18} / 1{,}602 \\times 10^{-19} \\approx -13{,}6$ eV ✓\n\n"
+                    "C'est l'énergie d'ionisation de l'hydrogène, en parfait accord avec l'expérience."
+                ),
+
+                MCQ(
+                    "Niveaux d'énergie de l'hydrogène",
+                    "Quelle est l'énergie du niveau $n = 2$ de l'hydrogène ?",
+                    [
+                        {"text": "-6,8 eV", "correct": False, "feedback": "Non, c'est $n=2$ mais la formule est $-13{,}6/n^2$."},
+                        {"text": "-3,4 eV", "correct": True, "feedback": "Exact ! $E_2 = -13{,}6/4 = -3{,}4$ eV."},
+                        {"text": "-13,6 eV", "correct": False, "feedback": "C'est le niveau fondamental $n=1$."},
+                        {"text": "-1,5 eV", "correct": False}
+                    ],
+                    explanation="$E_n = -13{,}6/n^2$ eV. Pour $n=2$ : $E_2 = -13{,}6/4 = -3{,}4$ eV."
+                ),
+
+                FB(
+                    "Quantités caractéristiques de l'hydrogène",
+                    "Le rayon de Bohr vaut $a_0 \\approx 0{,}529$ {{blank_1}} (unité).\\n\\n"
+                    "L'énergie fondamentale vaut $E_1 = -13{,}6$ {{blank_2}} (unité).\\n\\n"
+                    "La dégénérescence du niveau $n$ est $g_n = n^{{{blank_3}}}$.",
+                    {"blank_1": ["Å", "angstrom"], "blank_2": ["eV"], "blank_3": ["2"]},
+                    explanation="$a_0 \\approx 0{,}529$ Å, $E_1 = -13{,}6$ eV, dégénérescence $g_n = n^2$."
+                ),
+
+                TF(
+                    "Vrai ou Faux ? Hydrogène",
+                    [
+                        {"statement": "Les niveaux d'énergie de l'hydrogène dépendent uniquement de $n$.", "is_true": True},
+                        {"statement": "La dégénérescence du niveau $n=3$ est 9.", "is_true": True, "statement_note": "$g_3 = 3^2 = 9$."},
+                        {"statement": "Le potentiel centrifuge repousse l'électron du noyau pour $l > 0$.", "is_true": True},
+                        {"statement": "Le rayon de Bohr $a_0$ dépend du nombre quantique $n$.", "is_true": False, "statement_note": "$a_0$ est une constante ; le rayon moyen de l'orbitale dépend de $n$ mais pas $a_0$."},
+                        {"statement": "L'énergie d'ionisation de l'hydrogène est +13,6 eV.", "is_true": True, "statement_note": "C'est l'énergie à fournir pour amener $E_1$ à 0."}
+                    ]
+                ),
+            ],
+        },
+
+        {
+            "order": 1,
+            "title": "Fonctions d'onde et structure fine",
+            "slug": "structure-fine-hydrogene",
+            "minutes": 55,
+            "blocks": [
+                T(
+                    "# Fonctions d'onde et structure fine de l'hydrogène\n\n"
+                    "## 1. Harmoniques sphériques\n\n"
+                    "La partie angulaire de la fonction d'onde est une **harmonique sphérique** $Y_l^m(\\theta, \\phi)$.\n\n"
+                    "### Premières harmoniques\n"
+                    "- $Y_0^0 = \\frac{1}{\\sqrt{4\\pi}}$ (orbitale s, isotrope)\n"
+                    "- $Y_1^0 = \\sqrt{\\frac{3}{4\\pi}}\\cos\\theta$ (orbitale $p_z$)\n"
+                    "- $Y_1^{\\pm 1} = \\mp\\sqrt{\\frac{3}{8\\pi}}\\sin\\theta\\, e^{\\pm i\\phi}$ ($p_x, p_y$)\n\n"
+                    "## 2. Orbitales atomiques\n\n"
+                    "La fonction d'onde complète $\\psi_{n,l,m}(r, \\theta, \\phi) = R_{n,l}(r) Y_l^m(\\theta, \\phi)$ caractérise une **orbitale**.\n\n"
+                    "### Nomenclature\n"
+                    "- $l=0$ : s (sharp)\n"
+                    "- $l=1$ : p (principal)\n"
+                    "- $l=2$ : d (diffuse)\n"
+                    "- $l=3$ : f (fundamental)\n\n"
+                    "Exemples : $1s$ ($n=1, l=0$), $2p$ ($n=2, l=1$), $3d$ ($n=3, l=2$).\n\n"
+                    "## 3. Densité de probabilité\n\n"
+                    "La probabilité de trouver l'électron dans un volume $dV$ est $|\\psi|^2 dV$.\n\n"
+                    "### Rayon moyen\n"
+                    "$$\\langle r \\rangle_{n,l} = \\frac{a_0}{2}[3n^2 - l(l+1)]$$\n\n"
+                    "Pour $n=1, l=0$ : $\\langle r \\rangle = \\frac{3}{2} a_0$.\n\n"
+                    "## 4. Structure fine\n\n"
+                    "L'équation de Schrödinger non relativiste donne $E_n = -13{,}6/n^2$ eV. En réalité, trois corrections brisent la dégénérescence en $l$ :\n\n"
+                    "### Correction relativiste\n"
+                    "L'électron a une vitesse $v \\sim \\alpha c$ où $\\alpha = e^2/(4\\pi\\varepsilon_0 \\hbar c) \\approx 1/137$ est la constante de structure fine.\n\n"
+                    "### Correction de spin-orbite\n"
+                    "Le spin de l'électron interagit avec le champ magnétique créé par son mouvement orbital. Cette correction dépend de $j = l \\pm 1/2$ (moment cinétique total).\n\n"
+                    "### Correction de Darwin\n"
+                    "Due aux fluctuations quantiques de l'électron près du noyau (uniquement pour $l=0$).\n\n"
+                    "## 5. Niveaux d'énergie avec structure fine\n\n"
+                    "La somme des trois corrections donne :\n"
+                    "$$\\Delta E_{sf} = E_n \\frac{\\alpha^2}{n}\\left(\\frac{1}{j+1/2} - \\frac{3}{4n}\\right)$$\n\n"
+                    "L'énergie ne dépend plus que de $n$ et $j$ (pas de $l$ séparément).\n\n"
+                    "## 6. Constante de structure fine\n\n"
+                    "$$\\alpha = \\frac{e^2}{4\\pi\\varepsilon_0 \\hbar c} \\approx \\frac{1}{137{,}036}$$\n\n"
+                    "C'est une constante sans dimension fondamentale. Les corrections de structure fine sont de l'ordre de $\\alpha^2 \\sim 10^{-4}$ fois les énergies non relativistes.\n\n"
+                    "> 💡 **Astuce** : La structure fine brise la dégénérescence en $l$ mais pas en $m$ (toujours dégénérée en l'absence de champ externe)."
+                ),
+
+                S(
+                    "Orbitales 1s, 2p, 3d de l'hydrogène",
+                    "import matplotlib.pyplot as plt\n"
+                    "import numpy as np\n"
+                    "from scipy.special import genlaguerre\n"
+                    "import math\n"
+                    "\n"
+                    "a0 = 1.0\n"
+                    "\n"
+                    "def R_radial(n, l, r):\n"
+                    "    rho = 2*r / (n*a0)\n"
+                    "    if n-l-1 < 0: return np.zeros_like(r)\n"
+                    "    norm = np.sqrt((2/(n*a0))**3 * math.factorial(n-l-1) / (2*n*math.factorial(n+l)))\n"
+                    "    L = genlaguerre(n-l-1, 2*l+1)(rho)\n"
+                    "    return -norm * np.exp(-rho/2) * rho**l * L\n"
+                    "\n"
+                    "x = np.linspace(-15, 15, 300)\n"
+                    "z = np.linspace(-15, 15, 300)\n"
+                    "X, Z = np.meshgrid(x, z)\n"
+                    "R_grid = np.sqrt(X**2 + Z**2)\n"
+                    "Theta = np.arccos(Z / np.maximum(R_grid, 1e-10))\n"
+                    "\n"
+                    "fig, axes = plt.subplots(1, 3, figsize=(15, 5))\n"
+                    "\n"
+                    "psi_1s = R_radial(1, 0, R_grid) * (1/np.sqrt(4*np.pi))\n"
+                    "axes[0].pcolormesh(X, Z, np.abs(psi_1s)**2, cmap='Blues', shading='auto')\n"
+                    "axes[0].set_title('Orbitale 1s', fontsize=12)\n"
+                    "\n"
+                    "Y_2pz = np.sqrt(3/(4*np.pi)) * np.cos(Theta)\n"
+                    "psi_2pz = R_radial(2, 1, R_grid) * Y_2pz\n"
+                    "axes[1].pcolormesh(X, Z, np.abs(psi_2pz)**2, cmap='RdBu_r', shading='auto')\n"
+                    "axes[1].set_title('Orbitale 2p_z', fontsize=12)\n"
+                    "\n"
+                    "Y_3dz2 = np.sqrt(5/(16*np.pi)) * (3*np.cos(Theta)**2 - 1)\n"
+                    "psi_3dz2 = R_radial(3, 2, R_grid) * Y_3dz2\n"
+                    "axes[2].pcolormesh(X, Z, np.abs(psi_3dz2)**2, cmap='RdBu_r', shading='auto')\n"
+                    "axes[2].set_title('Orbitale 3d_z2', fontsize=12)\n"
+                    "\n"
+                    "for ax in axes:\n"
+                    "    ax.set_xlabel('x / a0'); ax.set_ylabel('z / a0')\n"
+                    "    ax.set_xlim(-12, 12); ax.set_ylim(-12, 12)\n"
+                    "    ax.set_aspect('equal')\n"
+                    "\n"
+                    "plt.suptitle('Densites |psi|^2 des orbitales (plan xz)', fontsize=13)\n"
+                    "plt.tight_layout(); plt.savefig('plot.png')\n"
+                    "print('s: spherique, p: 2 lobes, d: 4 lobes')\n"
+                ),
+
+                APP(
+                    "Rayon moyen de l'orbitale 2p",
+                    "Calculer le rayon moyen $\\langle r \\rangle$ pour l'orbitale $2p$ ($n=2, l=1$).\n\n"
+                    "1) Donner la formule générale.\n"
+                    "2) Application numérique.\n"
+                    "3) Comparer à l'orbitale $2s$.",
+                    "1) **Formule** : $\\langle r \\rangle_{n,l} = \\frac{a_0}{2}[3n^2 - l(l+1)]$.\n\n"
+                    "2) **Pour 2p** ($n=2, l=1$) :\n"
+                    "$$\\langle r \\rangle_{2p} = \\frac{a_0}{2}[3 \\times 4 - 1 \\times 2] = \\frac{a_0}{2} \\times 10 = 5 a_0 \\approx 2{,}65 \\text{ Å}$$\n\n"
+                    "3) **Pour 2s** ($n=2, l=0$) :\n"
+                    "$$\\langle r \\rangle_{2s} = \\frac{a_0}{2}[12 - 0] = 6 a_0 \\approx 3{,}17 \\text{ Å}$$\n\n"
+                    "L'orbitale $2s$ est légèrement plus étendue que $2p$ (à cause de l'absence de barrière centrifuge), ce qui explique pourquoi elle pénètre plus près du noyau."
+                ),
+
+                MCQ(
+                    "Orbitales atomiques",
+                    "L'orbitale $3d$ correspond à :",
+                    [
+                        {"text": "$n=3, l=1$", "correct": False, "feedback": "C'est $3p$."},
+                        {"text": "$n=3, l=2$", "correct": True, "feedback": "Exact ! $l=2$ correspond à d."},
+                        {"text": "$n=3, l=3$", "correct": False, "feedback": "C'est $3f$, mais $l$ ne peut pas dépasser $n-1=2$."},
+                        {"text": "$n=2, l=3$", "correct": False, "feedback": "Impossible : $l \\leq n-1$."}
+                    ],
+                    explanation="$3d$ : $n=3, l=2$ (s=0, p=1, d=2, f=3)."
+                ),
+
+                FB(
+                    "Structure fine",
+                    "La constante de structure fine vaut $\\alpha \\approx 1/{{blank_1}}$.\\n\\n"
+                    "Les corrections de structure fine sont de l'ordre de $\\alpha^{{{blank_2}}} \\sim 10^{-4}$.\\n\\n"
+                    "L'énergie avec structure fine dépend de $n$ et {{blank_3}} (moment cinétique total).",
+                    {"blank_1": ["137"], "blank_2": ["2"], "blank_3": ["j"]},
+                    explanation="$\\alpha \\approx 1/137$, corrections $\\sim \\alpha^2 \\sim 10^{-4}$, $E$ dépend de $n$ et $j$."
+                ),
+
+                TF(
+                    "Vrai ou Faux ? Orbitales",
+                    [
+                        {"statement": "L'orbitale 1s est sphérique.", "is_true": True},
+                        {"statement": "Le nombre quantique $l$ peut dépasser $n$.", "is_true": False, "statement_note": "$l \\leq n-1$."},
+                        {"statement": "La structure fine brise la dégénérescence en $l$.", "is_true": True},
+                        {"statement": "La constante de structure fine $\\alpha$ vaut environ 1/137.", "is_true": True},
+                        {"statement": "L'orbitale 2s est plus petite que la 2p.", "is_true": False, "statement_note": "2s est légèrement plus étendue ($6a_0$ vs $5a_0$)."}
+                    ]
+                ),
+            ],
+        },
+    ],
+})
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# MODULE 6 — MÉTHODES D'APPROXIMATION
+# ═════════════════════════════════════════════════════════════════════════════
+COURSE_STRUCTURE.append({
+    "order": 6,
+    "title": "Méthodes d'approximation",
+    "description": (
+        "Théorie des perturbations stationnaires (1er et 2nd ordre), "
+        "méthode variationnelle, applications à l'effet Stark et "
+        "à l'atome d'hélium."
+    ),
+    "lessons": [
+        {
+            "order": 0,
+            "title": "Théorie des perturbations stationnaires",
+            "slug": "perturbations-stationnaires",
+            "minutes": 55,
+            "blocks": [
+                T(
+                    "# Théorie des perturbations stationnaires\n\n"
+                    "## 1. Motivation\n\n"
+                    "Rares sont les systèmes quantiques exactement solubles. Pour traiter des systèmes plus réalistes, on utilise des **méthodes d'approximation** lorsque le Hamiltonien peut s'écrire :\n"
+                    "$$\\hat{H} = \\hat{H}_0 + \\lambda \\hat{V}$$\n\n"
+                    "où $\\hat{H}_0$ est exactement soluble et $\\lambda \\hat{V}$ est une petite perturbation ($\\lambda \\ll 1$).\n\n"
+                    "## 2. Perturbation du 1er ordre\n\n"
+                    "### Correction à l'énergie\n"
+                    "$$\\boxed{\\;\\Delta E_n^{(1)} = \\langle n^{(0)}|\\hat{V}|n^{(0)}\\rangle\\;}$$\n\n"
+                    "C'est simplement la **valeur moyenne** de la perturbation dans l'état non perturbé.\n\n"
+                    "### Correction à la fonction d'onde\n"
+                    "$$|n^{(1)}\\rangle = \\sum_{k \\neq n} \\frac{\\langle k^{(0)}|\\hat{V}|n^{(0)}\\rangle}{E_n^{(0)} - E_k^{(0)}} |k^{(0)}\\rangle$$\n\n"
+                    "## 3. Perturbation du 2nd ordre\n\n"
+                    "$$\\boxed{\\;\\Delta E_n^{(2)} = \\sum_{k \\neq n} \\frac{|\\langle k^{(0)}|\\hat{V}|n^{(0)}\\rangle|^2}{E_n^{(0)} - E_k^{(0)}}\\;}$$\n\n"
+                    "Remarques :\n"
+                    "- La somme exclut $k=n$\n"
+                    "- Pour l'état fondamental ($E_n < E_k$), $\\Delta E_n^{(2)} < 0$ (toujours négatif)\n\n"
+                    "## 4. Cas des états dégénérés\n\n"
+                    "Si $E_n^{(0)}$ est dégénéré, il faut d'abord **diagonaliser $\\hat{V}$ dans le sous-espace de dégénérescence**.\n\n"
+                    "## 5. Application : effet Stark sur l'hydrogène\n\n"
+                    "On applique un champ électrique $\\vec{\\mathcal{E}}$. La perturbation est $\\hat{V} = e\\mathcal{E} z$.\n\n"
+                    "### État fondamental 1s (non dégénéré)\n"
+                    "$\\Delta E_{1s}^{(1)} = e\\mathcal{E}\\langle 1s|z|1s\\rangle = 0$ (par symétrie).\n"
+                    "Au 2nd ordre : $\\Delta E_{1s}^{(2)} \\propto -\\mathcal{E}^2$ (polarisabilité).\n\n"
+                    "### Niveau $n=2$ (dégénéré)\n"
+                    "Le niveau $n=2$ est 4 fois dégénéré ($2s, 2p_{-1}, 2p_0, 2p_1$). On diagonalise $\\hat{V}$ dans ce sous-espace. On obtient 4 valeurs propres : $0, 0, \\pm 3e a_0 \\mathcal{E}$. La dégénérescence est partiellement levée (effet Stark linéaire).\n\n"
+                    "## 6. Validité\n\n"
+                    "La théorie des perturbations converge si :\n"
+                    "$$\\left|\\frac{\\langle k|\\hat{V}|n\\rangle}{E_n - E_k}\\right| \\ll 1$$\n\n"
+                    "pour tous les $k \\neq n$.\n\n"
+                    "> 💡 **Astuce** : Au 1er ordre, la correction d'énergie est juste la valeur moyenne de la perturbation. Si cette valeur moyenne est nulle (symétrie), il faut aller au 2nd ordre."
+                ),
+
+                S(
+                    "Effet Stark sur le niveau n=2 de l'hydrogène",
+                    "import matplotlib.pyplot as plt\n"
+                    "import numpy as np\n"
+                    "\n"
+                    "e = 1.602e-19\n"
+                    "a0 = 5.29e-11\n"
+                    "\n"
+                    "E_field = np.linspace(0, 1e7, 100)\n"
+                    "delta_E = 3 * e * a0 * E_field\n"
+                    "delta_E_eV = delta_E / e\n"
+                    "\n"
+                    "fig, ax = plt.subplots(figsize=(10, 6))\n"
+                    "E0 = -3.4\n"
+                    "ax.axhline(E0, color='gray', ls='--', lw=1.5, label=r'$E_2^{(0)} = -3{,}4$ eV')\n"
+                    "ax.plot(E_field/1e7, E0 + delta_E_eV, 'b-', lw=2.5, label=r'$+3ea_0\\mathcal{E}$')\n"
+                    "ax.plot(E_field/1e7, E0 - delta_E_eV, 'r-', lw=2.5, label=r'$-3ea_0\\mathcal{E}$')\n"
+                    "ax.plot(E_field/1e7, np.full_like(E_field, E0), 'g--', lw=2, label=r'2p$_{\\pm 1}$ (inchangés)')\n"
+                    "\n"
+                    "ax.set_xlabel(r'Champ $\\mathcal{E}$ ($\\times 10^7$ V/m)', fontsize=12)\n"
+                    "ax.set_ylabel(r'Énergie (eV)', fontsize=12)\n"
+                    "ax.set_title('Effet Stark linéaire sur n=2', fontsize=13)\n"
+                    "ax.legend(fontsize=10, loc='lower left')\n"
+                    "ax.grid(True, alpha=0.3)\n"
+                    "ax.set_ylim(-3.8, -3.0)\n"
+                    "plt.tight_layout(); plt.savefig('plot.png')\n"
+                    "print('n=2 se scinde en 3 sous-niveaux: +3ea0E, -3ea0E, et 0 (double)')\n"
+                ),
+
+                APP(
+                    "Perturbation d'un oscillateur harmonique",
+                    "On perturbe un oscillateur harmonique 1D par $\\hat{V} = \\lambda x^3$.\n\n"
+                    "1) Donner la correction au 1er ordre à l'énergie du niveau $n$.\n"
+                    "2) Que peut-on dire pour $n=0$ ?",
+                    "1) **Correction au 1er ordre** :\n"
+                    "$$\\Delta E_n^{(1)} = \\lambda \\langle n|x^3|n\\rangle$$\n\n"
+                    "L'opérateur $x^3$ est **impair** (change de signe sous $x \\to -x$), tandis que $|\\psi_n|^2$ est pair. L'intégrale $\\langle n|x^3|n\\rangle = 0$ par symétrie.\n"
+                    "$$\\boxed{\\;\\Delta E_n^{(1)} = 0\\;}$$\n\n"
+                    "2) **Pour $n=0$** : il faut aller au 2nd ordre :\n"
+                    "$$\\Delta E_0^{(2)} = \\lambda^2 \\sum_{k \\neq 0} \\frac{|\\langle k|x^3|0\\rangle|^2}{E_0 - E_k}$$\n\n"
+                    "Après calcul détaillé :\n"
+                    "$$\\Delta E_0^{(2)} = -\\frac{11}{8}\\frac{\\lambda^2 \\hbar^2}{m^3 \\omega^4}$$\n\n"
+                    "L'énergie fondamentale est abaissée (signe $-$), comme toujours au 2nd ordre pour l'état fondamental."
+                ),
+
+                MCQ(
+                    "Perturbation 1er ordre",
+                    "La correction d'énergie au 1er ordre est :",
+                    [
+                        {"text": "$\\Delta E_n^{(1)} = \\langle n|\\hat{V}|n\\rangle$", "correct": True, "feedback": "Exact ! Valeur moyenne de la perturbation."},
+                        {"text": "$\\Delta E_n^{(1)} = \\sum_{k \\neq n} \\frac{|\\langle k|\\hat{V}|n\\rangle|^2}{E_n - E_k}$", "correct": False, "feedback": "C'est le 2nd ordre."},
+                        {"text": "$\\Delta E_n^{(1)} = 0$", "correct": False, "feedback": "Pas toujours — seulement si la valeur moyenne est nulle."},
+                        {"text": "$\\Delta E_n^{(1)} = E_n - E_n^{(0)}$", "correct": False, "feedback": "C'est la définition, pas la formule."}
+                    ],
+                    explanation="$\\Delta E_n^{(1)} = \\langle n^{(0)}|\\hat{V}|n^{(0)}\\rangle$."
+                ),
+
+                FB(
+                    "Perturbations",
+                    "Au 1er ordre : $\\Delta E_n^{(1)} = \\langle n|\\hat{V}|{{blank_1}}\\rangle$.\\n\\n"
+                    "Au 2nd ordre : $\\Delta E_n^{(2)} = \\sum_{k \\neq n} \\frac{|\\langle k|\\hat{V}|n\\rangle|^{{{blank_2}}}}{E_n - E_k}$.\\n\\n"
+                    "Pour l'état fondamental, $\\Delta E_0^{(2)}$ est toujours {{blank_3}}.",
+                    {"blank_1": ["n"], "blank_2": ["2"], "blank_3": ["négatif", "negatif", "< 0"]},
+                    explanation="$\\Delta E_n^{(1)} = \\langle n|\\hat{V}|n\\rangle$, $\\Delta E_n^{(2)} = \\sum |\\langle k|\\hat{V}|n\\rangle|^2/(E_n-E_k)$. Pour l'état fondamental, tous dénominateurs sont négatifs → $\\Delta E_0^{(2)} < 0$."
+                ),
+
+                TF(
+                    "Vrai ou Faux ? Perturbations",
+                    [
+                        {"statement": "Au 1er ordre, la correction est la valeur moyenne de $\\hat{V}$.", "is_true": True},
+                        {"statement": "Pour l'état fondamental, $\\Delta E_0^{(2)}$ peut être positif.", "is_true": False, "statement_note": "Toujours négatif car $E_0 < E_k$ pour tout $k$."},
+                        {"statement": "Pour un état dégénéré, il faut diagonaliser $\\hat{V}$ dans le sous-espace.", "is_true": True},
+                        {"statement": "L'effet Stark linéaire apparaît pour les niveaux dégénérés.", "is_true": True},
+                        {"statement": "Si $\\langle n|\\hat{V}|n\\rangle = 0$, la correction au 1er ordre est nulle.", "is_true": True}
+                    ]
+                ),
+            ],
+        },
+
+        {
+            "order": 1,
+            "title": "Méthode variationnelle",
+            "slug": "methode-variationnelle",
+            "minutes": 50,
+            "blocks": [
+                T(
+                    "# Méthode variationnelle\n\n"
+                    "## 1. Principe variationnel\n\n"
+                    "Théorème fondamental : pour tout état normalisé $|\\psi\\rangle$, l'énergie moyenne\n"
+                    "$$\\boxed{\\;E[\\psi] = \\langle\\psi|\\hat{H}|\\psi\\rangle \\geq E_0\\;}$$\n\n"
+                    "où $E_0$ est l'énergie fondamentale exacte. L'égalité n'a lieu que si $|\\psi\\rangle = |\\psi_0\\rangle$.\n\n"
+                    "## 2. Démonstration\n\n"
+                    "Décomposons $|\\psi\\rangle$ sur la base des états propres de $\\hat{H}$ :\n"
+                    "$$|\\psi\\rangle = \\sum_n c_n |n\\rangle, \\quad \\sum_n |c_n|^2 = 1$$\n"
+                    "$$E[\\psi] = \\sum_n |c_n|^2 E_n \\geq \\sum_n |c_n|^2 E_0 = E_0$$\n\n"
+                    "car $E_n \\geq E_0$ pour tout $n$.\n\n"
+                    "## 3. Méthode variationnelle pratique\n\n"
+                    "On choisit une famille d'essai $|\\psi(\\alpha)\\rangle$ paramétrée par $\\alpha$. On calcule :\n"
+                    "$$E(\\alpha) = \\frac{\\langle\\psi(\\alpha)|\\hat{H}|\\psi(\\alpha)\\rangle}{\\langle\\psi(\\alpha)|\\psi(\\alpha)\\rangle}$$\n\n"
+                    "Puis on minimise sur $\\alpha$ :\n"
+                    "$$\\frac{dE}{d\\alpha} = 0 \\Rightarrow \\alpha = \\alpha^*$$\n\n"
+                    "L'énergie approchée est $E(\\alpha^*) \\geq E_0$ (borne supérieure).\n\n"
+                    "## 4. Application : atome d'hélium\n\n"
+                    "L'hélium a 2 électrons. En négligeant la répulsion électron-électron, l'énergie est $E = 2 \\times (-Z^2 \\times 13{,}6) = -108{,}8$ eV (avec $Z=2$). L'expérience donne $-79{,}0$ eV.\n\n"
+                    "### Essai variationnel\n"
+                    "On prend comme fonction d'essai le produit de deux orbitales hydrogène avec $Z$ comme paramètre ajustable :\n"
+                    "$$\\psi(\\vec{r}_1, \\vec{r}_2) = \\frac{Z^3}{\\pi a_0^3} e^{-Z(r_1+r_2)/a_0}$$\n\n"
+                    "Après calcul : $E(Z) = (-Z^2 + \\frac{5}{8}Z) \\times 27{,}2$ eV.\n\n"
+                    "### Minimisation\n"
+                    "$\\frac{dE}{dZ} = 0$ donne $Z^* = 2 - 5/16 = 27/16 \\approx 1{,}69$.\n\n"
+                    "L'énergie correspondante est $E(Z^*) = -77{,}5$ eV, à comparer à $-79{,}0$ eV (expérimental). Excellente approximation (2% près).\n\n"
+                    "## 5. Interprétation du $Z^*$\n\n"
+                    "L'électron « voit » un noyau de charge $Z^* = 1{,}69 < 2$ au lieu de $Z=2$. C'est l'effet d'**écran** : chaque électron est partiellement masqué par l'autre.\n\n"
+                    "## 6. Avantages et limites\n\n"
+                    "### Avantages\n"
+                    "- Toujours une borne supérieure ($E \\geq E_0$)\n"
+                    "- Fonctionne même quand la perturbation n'est pas petite\n"
+                    "- Systématique pour l'état fondamental\n\n"
+                    "### Limites\n"
+                    "- Pas de borne pour les états excités\n"
+                    "- Qualité dépendante du choix de la famille d'essai\n\n"
+                    "## 7. Méthode de Hartree-Fock\n\n"
+                    "Pour les atomes multi-électrons, on utilise une fonction d'essai de type **déterminant de Slater** (antisymétrique) et on optimise chaque orbitale. C'est la base de la chimie quantique moderne.\n\n"
+                    "> 💡 **Astuce** : La méthode variationnelle est idéale pour estimer l'énergie fondamentale d'un système non soluble. Elle donne toujours une borne supérieure."
+                ),
+
+                S(
+                    "Convergence variationnelle pour l'hélium",
+                    "import matplotlib.pyplot as plt\n"
+                    "import numpy as np\n"
+                    "\n"
+                    "Z = np.linspace(1, 3, 100)\n"
+                    "E = (-Z**2 + (5/8)*Z) * 27.2\n"
+                    "\n"
+                    "Z_star = 2 - 5/16\n"
+                    "E_star = (-Z_star**2 + (5/8)*Z_star) * 27.2\n"
+                    "E_exp = -79.0\n"
+                    "E_sans_rep = -108.8\n"
+                    "\n"
+                    "fig, ax = plt.subplots(figsize=(10, 6))\n"
+                    "ax.plot(Z, E, 'b-', lw=2.5, label=r'$E(Z)$ variationnel')\n"
+                    "ax.plot(Z_star, E_star, 'ro', markersize=12, label=f'Min: Z*={Z_star:.3f}, E={E_star:.1f} eV')\n"
+                    "ax.axhline(E_exp, color='green', ls='--', lw=2, label=f'Expérimental: {E_exp} eV')\n"
+                    "ax.axhline(E_sans_rep, color='red', ls=':', lw=2, label=f'Sans répulsion: {E_sans_rep} eV')\n"
+                    "ax.axvline(2, color='gray', ls=':', alpha=0.5, label='Z=2 (charge réelle)')\n"
+                    "\n"
+                    "ax.set_xlabel(r'Paramètre $Z$', fontsize=12)\n"
+                    "ax.set_ylabel(r'Énergie (eV)', fontsize=12)\n"
+                    "ax.set_title('Méthode variationnelle pour l\\'hélium', fontsize=13)\n"
+                    "ax.legend(fontsize=10, loc='lower left')\n"
+                    "ax.grid(True, alpha=0.3)\n"
+                    "ax.set_ylim(-120, -50)\n"
+                    "plt.tight_layout(); plt.savefig('plot.png')\n"
+                    "print(f'Z* = {Z_star:.4f}, E(Z*) = {E_star:.2f} eV')\n"
+                    "print(f'E_exp = {E_exp} eV (erreur: {abs(E_star-E_exp)/abs(E_exp)*100:.1f}%)')\n"
+                ),
+
+                APP(
+                    "Atome d'hélium : écran électronique",
+                    "L'atome d'hélium ($Z=2$) a 2 électrons. On utilise la fonction d'essai variationnelle $\\psi = (Z^3/\\pi a_0^3) e^{-Z(r_1+r_2)/a_0}$.\n\n"
+                    "1) Calculer $Z^*$ qui minimise l'énergie.\n"
+                    "2) Interpréter $Z^* < 2$.\n"
+                    "3) Calculer l'énergie variationnelle.",
+                    "1) **Minimisation** : $E(Z) = (-Z^2 + \\frac{5}{8}Z) \\times 27{,}2$ eV.\n"
+                    "$$\\frac{dE}{dZ} = (-2Z + 5/8) \\times 27{,}2 = 0 \\Rightarrow Z^* = \\frac{5}{16}$$\n"
+                    "Donc $Z^* = 2 - 5/16 \\approx 1{,}6875$.\n\n"
+                    "2) **Interprétation** : $Z^* < 2$ signifie que chaque électron « voit » une charge effective réduite. L'autre électron **écran** partiellement le noyau.\n\n"
+                    "3) **Énergie** :\n"
+                    "$$E(Z^*) = \\left(-(27/16)^2 + \\frac{5}{8} \\cdot \\frac{27}{16}\\right) \\times 27{,}2 \\approx -77{,}5 \\text{ eV}$$\n\n"
+                    "L'expérience donne $-79{,}0$ eV. L'écart est de ~2%, attribuable aux corrélations électron-électron non captées par la fonction d'essai produit."
+                ),
+
+                MCQ(
+                    "Principe variationnel",
+                    "Le théorème variationnel stipule que pour tout $|\\psi\\rangle$ normalisé :",
+                    [
+                        {"text": "$E[\\psi] \\leq E_0$", "correct": False, "feedback": "Inversé."},
+                        {"text": "$E[\\psi] \\geq E_0$", "correct": True, "feedback": "Exact !"},
+                        {"text": "$E[\\psi] = E_0$", "correct": False, "feedback": "Seulement pour l'état fondamental exact."},
+                        {"text": "$E[\\psi]$ peut être n'importe quoi", "correct": False}
+                    ],
+                    explanation="$\\langle\\psi|\\hat{H}|\\psi\\rangle \\geq E_0$ — borne supérieure."
+                ),
+
+                FB(
+                    "Méthode variationnelle",
+                    "L'énergie variationnelle est toujours $E[\\psi] \\geq {{blank_1}}$ (énergie fondamentale exacte).\\n\\n"
+                    "On minimise $E(\\alpha)$ en résolvant $dE/d\\alpha = {{blank_2}}$.\\n\\n"
+                    "Pour l'hélium, on trouve $Z^* \\approx 1{,}69 < 2$ à cause de l'effet d'{{blank_3}}.",
+                    {"blank_1": ["E_0", "E0"], "blank_2": ["0"], "blank_3": ["écran", "ecran"]},
+                    explanation="$E[\\psi] \\geq E_0$, minimisation $dE/d\\alpha = 0$, $Z^* < 2$ à cause de l'écran électronique."
+                ),
+
+                TF(
+                    "Vrai ou Faux ? Méthode variationnelle",
+                    [
+                        {"statement": "La méthode variationnelle donne toujours une borne supérieure de $E_0$.", "is_true": True},
+                        {"statement": "La méthode variationnelle s'applique aussi aux états excités.", "is_true": False, "statement_note": "Seulement pour l'état fondamental."},
+                        {"statement": "Pour l'hélium, le $Z^* < 2$ traduit l'écran électronique.", "is_true": True},
+                        {"statement": "La qualité du résultat dépend du choix de la fonction d'essai.", "is_true": True},
+                        {"statement": "La méthode de Hartree-Fock utilise un déterminant de Slater.", "is_true": True}
+                    ]
+                ),
+            ],
+        },
+    ],
+})
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# MODULE 7 — PARTICULES IDENTIQUES
+# ═════════════════════════════════════════════════════════════════════════════
+COURSE_STRUCTURE.append({
+    "order": 7,
+    "title": "Particules identiques",
+    "description": (
+        "Bosons et fermions, principe de Pauli, déterminant de Slater, "
+        "atomes multi-électrons et tableau périodique, gaz quantiques."
+    ),
+    "lessons": [
+        {
+            "order": 0,
+            "title": "Bosons, fermions et principe de Pauli",
+            "slug": "bosons-fermions-pauli",
+            "minutes": 50,
+            "blocks": [
+                T(
+                    "# Bosons, fermions et principe de Pauli\n\n"
+                    "## 1. Particules identiques en mécanique quantique\n\n"
+                    "Deux particules sont **identiques** si elles ont mêmes caractéristiques intrinsèques (masse, charge, spin...). En mécanique classique, on peut les distinguer par leur trajectoire. En mécanique quantique, les trajectoires n'existent pas : **les particules identiques sont indiscernables**.\n\n"
+                    "Conséquence : la fonction d'onde doit être **symétrique** ou **antisymétrique** sous l'échange de deux particules identiques.\n\n"
+                    "## 2. Symétrie et spin\n\n"
+                    "Le **théorème spin-statistique** relie la symétrie au spin :\n\n"
+                    "- **Bosons** (spin entier, $s = 0, 1, 2, \\ldots$) : fonction d'onde **symétrique**\n"
+                    "- **Fermions** (spin demi-entier, $s = 1/2, 3/2, \\ldots$) : fonction d'onde **antisymétrique**\n\n"
+                    "### Exemples\n"
+                    "- **Bosons** : photon ($s=1$), méson $\\pi$ ($s=0$), boson de Higgs ($s=0$)\n"
+                    "- **Fermions** : électron, proton, neutron ($s=1/2$)\n\n"
+                    "## 3. Principe d'exclusion de Pauli\n\n"
+                    "Pour deux fermions identiques, si on met les deux dans le même état quantique $|\\phi\\rangle$ :\n"
+                    "$$\\psi(1,2) = |\\phi(1)\\rangle |\\phi(2)\\rangle - |\\phi(2)\\rangle |\\phi(1)\\rangle = 0$$\n\n"
+                    "$$\\boxed{\\;\\text{Principe de Pauli : deux fermions identiques ne peuvent occuper le même état.}\\;}$$\n\n"
+                    "## 4. Déterminant de Slater\n\n"
+                    "Pour $N$ fermions, la fonction d'onde antisymétrique s'écrit comme un **déterminant** :\n"
+                    "$$\\psi(1, 2, \\ldots, N) = \\frac{1}{\\sqrt{N!}} \\begin{vmatrix} \\phi_1(1) & \\phi_1(2) & \\cdots \\\\ \\phi_2(1) & \\phi_2(2) & \\cdots \\\\ \\vdots & & \\end{vmatrix}$$\n\n"
+                    "Propriétés :\n"
+                    "- Antisymétrique par échange de deux colonnes\n"
+                    "- Si deux lignes sont identiques, $\\psi = 0$ (Pauli)\n\n"
+                    "## 5. Atomes multi-électrons\n\n"
+                    "Le principe de Pauli impose une **structure en couches**. Les niveaux se remplissent dans l'ordre :\n"
+                    "$$1s \\to 2s \\to 2p \\to 3s \\to 3p \\to 4s \\to 3d \\to 4p \\to \\ldots$$\n\n"
+                    "### Capacités\n"
+                    "- Couche $s$ : 2 électrons\n"
+                    "- Couche $p$ : 6 électrons (3 orbitales × 2 spins)\n"
+                    "- Couche $d$ : 10 électrons\n"
+                    "- Couche $f$ : 14 électrons\n\n"
+                    "### Exemple : Carbone ($Z=6$)\n"
+                    "Configuration : $1s^2 2s^2 2p^2$.\n\n"
+                    "## 6. Tableau périodique\n\n"
+                    "Le principe de Pauli explique la **structure du tableau périodique** :\n"
+                    "- Rangée 1 : $1s$ (2 éléments : H, He)\n"
+                    "- Rangée 2 : $2s, 2p$ (8 éléments : Li à Ne)\n"
+                    "- Rangée 3 : $3s, 3p$ (8 éléments : Na à Ar)\n"
+                    "- Rangée 4 : $4s, 3d, 4p$ (18 éléments : K à Kr)\n\n"
+                    "## 7. Gaz quantiques\n\n"
+                    "### Condensat de Bose-Einstein\n"
+                    "À très basse température, les bosons peuvent tous se condenser dans l'état fondamental (réalisé en 1995).\n\n"
+                    "### Gaz de fermions dégénéré\n"
+                    "Les fermions remplissent les niveaux jusqu'à l'**énergie de Fermi** $E_F$.\n\n"
+                    "## 8. Distributions statistiques\n\n"
+                    "- **Bose-Einstein** : $\\bar{n}_k = 1/(e^{(E_k - \\mu)/(k_B T)} - 1)$ — bosons\n"
+                    "- **Fermi-Dirac** : $\\bar{n}_k = 1/(e^{(E_k - \\mu)/(k_B T)} + 1)$ — fermions\n"
+                    "- **Maxwell-Boltzmann** : $\\bar{n}_k = e^{-(E_k - \\mu)/(k_B T)}$ — limite classique\n\n"
+                    "> 💡 **Astuce** : Le principe de Pauli explique toute la chimie ! Sans lui, tous les électrons tomberaient dans l'état $1s$ et il n'y aurait pas de tableau périodique, pas de liaisons chimiques, pas de vie."
+                ),
+
+                S(
+                    "Distributions de Bose-Einstein, Fermi-Dirac, Maxwell-Boltzmann",
+                    "import matplotlib.pyplot as plt\n"
+                    "import numpy as np\n"
+                    "\n"
+                    "x = np.linspace(-5, 5, 500)\n"
+                    "\n"
+                    "n_BE = np.where(x > 0.01, 1/(np.exp(x) - 1), 100)\n"
+                    "n_FD = 1/(np.exp(x) + 1)\n"
+                    "n_MB = np.exp(-x)\n"
+                    "\n"
+                    "fig, axes = plt.subplots(1, 2, figsize=(13, 5))\n"
+                    "\n"
+                    "ax = axes[0]\n"
+                    "ax.plot(x, n_BE, 'b-', lw=2.5, label='Bose-Einstein (bosons)')\n"
+                    "ax.plot(x, n_FD, 'r-', lw=2.5, label='Fermi-Dirac (fermions)')\n"
+                    "ax.plot(x, n_MB, 'g--', lw=2, label='Maxwell-Boltzmann (classique)')\n"
+                    "ax.axhline(1, color='gray', ls=':', alpha=0.5)\n"
+                    "ax.axvline(0, color='gray', ls=':', alpha=0.5)\n"
+                    "ax.set_xlabel(r'$(E - \\mu) / (k_B T)$', fontsize=12)\n"
+                    "ax.set_ylabel(r'Occupation $\\bar{n}$', fontsize=12)\n"
+                    "ax.set_title('Distributions statistiques', fontsize=12)\n"
+                    "ax.set_ylim(0, 3)\n"
+                    "ax.legend(fontsize=10); ax.grid(True, alpha=0.3)\n"
+                    "\n"
+                    "ax = axes[1]\n"
+                    "energies = np.arange(1, 11)\n"
+                    "T_values = [0, 0.3, 1.0]\n"
+                    "colors = ['blue', 'orange', 'red']\n"
+                    "for T, color in zip(T_values, colors):\n"
+                    "    if T == 0:\n"
+                    "        n_occ = np.where(energies <= 5, 1.0, 0.0)\n"
+                    "    else:\n"
+                    "        n_occ = 1/(np.exp((energies - 5)/T) + 1)\n"
+                    "    ax.bar(energies + T*0.3, n_occ, alpha=0.6, color=color, label=f'$T = {T}$', width=0.25)\n"
+                    "\n"
+                    "ax.axvline(5.5, color='gray', ls='--', alpha=0.5, label='$E_F$')\n"
+                    "ax.set_xlabel('Niveau d\\'énergie', fontsize=12)\n"
+                    "ax.set_ylabel('Occupation', fontsize=12)\n"
+                    "ax.set_title('Gaz de fermions dégénéré', fontsize=12)\n"
+                    "ax.legend(fontsize=9); ax.grid(True, alpha=0.3, axis='y')\n"
+                    "\n"
+                    "plt.tight_layout(); plt.savefig('plot.png')\n"
+                    "print('À T=0: niveaux sous E_F remplis (n=1), au-dessus vides.')\n"
+                ),
+
+                APP(
+                    "Énergie de Fermi d'un gaz d'électrons",
+                    "On considère $N = 10^{23}$ électrons libres dans un volume $V = 1$ cm³ à $T=0$.\n\n"
+                    "1) Donner la formule de l'énergie de Fermi $E_F$.\n"
+                    "2) Calculer $E_F$ en eV.\n"
+                    "3) Calculer la température de Fermi $T_F = E_F/k_B$.",
+                    "1) **Formule** : $E_F = \\frac{\\hbar^2}{2m}\\left(3\\pi^2 n\\right)^{2/3}$ où $n = N/V$.\n\n"
+                    "2) **Application numérique** : $n = 10^{23}/10^{-6} = 10^{29}$ m⁻³.\n"
+                    "$$E_F = \\frac{(1{,}055 \\times 10^{-34})^2}{2 \\times 9{,}11 \\times 10^{-31}} \\times (3\\pi^2 \\times 10^{29})^{2/3}$$\n"
+                    "$$E_F \\approx 7{,}6 \\times 10^{-19} \\text{ J} \\approx 4{,}7 \\text{ eV}$$\n\n"
+                    "3) **Température de Fermi** :\n"
+                    "$$T_F = \\frac{E_F}{k_B} = \\frac{4{,}7}{8{,}617 \\times 10^{-5}} \\approx 5{,}5 \\times 10^{4} \\text{ K}$$\n\n"
+                    "$T_F \\approx 55 000$ K — bien supérieure à la température ambiante. Le gaz d'électrons reste **dégénéré** même à température ambiante : c'est pourquoi les métaux conduisent l'électricité comme si les électrons étaient à $T=0$."
+                ),
+
+                MCQ(
+                    "Principe de Pauli",
+                    "Le principe d'exclusion de Pauli dit que :",
+                    [
+                        {"text": "Deux bosons identiques ne peuvent être dans le même état", "correct": False, "feedback": "Non, c'est pour les fermions."},
+                        {"text": "Deux fermions identiques ne peuvent occuper le même état quantique", "correct": True, "feedback": "Exact !"},
+                        {"text": "Toutes les particules sont discernables", "correct": False, "feedback": "Au contraire, elles sont indiscernables."},
+                        {"text": "Le spin est toujours demi-entier", "correct": False, "feedback": "Le spin peut être entier ou demi-entier."}
+                    ],
+                    explanation="Pauli : deux fermions identiques ne peuvent occuper le même état quantique."
+                ),
+
+                FB(
+                    "Bosons et fermions",
+                    "Les bosons ont un spin {{blank_1}} (0, 1, 2, ...).\\n\\n"
+                    "Les fermions ont un spin {{blank_2}} (1/2, 3/2, ...).\\n\\n"
+                    "La fonction d'onde de $N$ fermions s'écrit comme un déterminant de {{blank_3}}.",
+                    {"blank_1": ["entier"], "blank_2": ["demi-entier", "demi entier"], "blank_3": ["Slater"]},
+                    explanation="Bosons : spin entier. Fermions : spin demi-entier. Fonction d'onde : déterminant de Slater."
+                ),
+
+                TF(
+                    "Vrai ou Faux ? Particules identiques",
+                    [
+                        {"statement": "Les particules identiques sont indiscernables en mécanique quantique.", "is_true": True},
+                        {"statement": "Les bosons ont une fonction d'onde antisymétrique.", "is_true": False, "statement_note": "C'est symétrique pour les bosons, antisymétrique pour les fermions."},
+                        {"statement": "Le photon est un boson.", "is_true": True, "statement_note": "Spin 1."},
+                        {"statement": "Le principe de Pauli explique la structure du tableau périodique.", "is_true": True},
+                        {"statement": "À T=0, un gaz de fermions a tous ses niveaux remplis jusqu'à l'énergie de Fermi.", "is_true": True}
+                    ]
+                ),
+            ],
+        },
+    ],
+})
