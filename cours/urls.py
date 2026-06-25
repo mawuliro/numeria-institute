@@ -26,4 +26,6 @@ urlpatterns = [
     path('ordre-code/<int:exercise_id>/soumettre/', views.submit_code_order, name='submit_code_order'),
     path('associations/<int:exercise_id>/soumettre/', views.submit_matching, name='submit_matching'),
     path('reponse-courte/<int:exercise_id>/soumettre/', views.submit_short_answer, name='submit_short_answer'),
+    # Interactive lab — Pyodide simulation + adaptive branching challenges
+    path('lab/<int:lab_id>/submit/', views.submit_lab_answer, name='submit_lab'),
 ]

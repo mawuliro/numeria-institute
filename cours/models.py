@@ -287,6 +287,7 @@ class LessonBlock(models.Model):
         ('code_order', 'Ordonner le code'),
         ('matching', 'Associations'),
         ('short_answer', 'Réponse courte'),
+        ('interactive_lab', 'Lab interactif'),
     ]
 
     # Exactly one of these is set (Rule 5)
@@ -367,6 +368,13 @@ class LessonBlock(models.Model):
         null=True,
         blank=True,
         related_name='lesson_blocks',
+    )
+    interactive_lab = models.ForeignKey(
+        'InteractiveLab',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='blocks',
     )
 
     class Meta:
@@ -567,6 +575,29 @@ class LessonBlock(models.Model):
                 data['is_solved'] = False
                 data['attempts_used'] = 0
 
+        elif self.block_type == 'interactive_lab':
+            ex = self.interactive_lab
+            if ex:
+                data['lab_id'] = ex.id
+                data['title'] = ex.title
+                data['instructions'] = ex.instructions or ''
+                data['simulation_code'] = ex.simulation_code
+                data['slider_config'] = ex.slider_config
+                data['challenges'] = ex.challenges
+                data['points'] = ex.points
+                data['difficulty'] = ex.difficulty
+                # Student progress (if any)
+                data['current_challenge_id'] = ''
+                data['challenges_solved'] = []
+                data['is_completed'] = False
+                if user and not preview:
+                    from cours.models import LabProgress
+                    p = LabProgress.objects.filter(student=user, lab=ex).first()
+                    if p:
+                        data['current_challenge_id'] = p.current_challenge_id
+                        data['challenges_solved'] = p.challenges_solved
+                        data['is_completed'] = p.is_completed
+
         return data
 
     @staticmethod
@@ -695,6 +726,85 @@ class TrueFalseExercise(BaseExercise):
 
     class Meta:
         verbose_name = 'Vrai ou Faux'
+
+
+class InteractiveLab(BaseExercise):
+    """Lab interactif avec simulation Pyodide + challenges adaptatifs.
+
+    The `simulation_code` field holds Python code (executed client-side via
+    Pyodide) that must define a function `simulate(params)` returning a
+    matplotlib Figure. `slider_config` is a list of slider descriptors and
+    `challenges` is an ordered list of adaptive challenge objects with
+    branching `next_on_correct` / `next_on_wrong` pointers.
+    """
+    title = models.CharField(max_length=200)
+    instructions = models.TextField(blank=True)
+    simulation_code = models.TextField(
+        help_text="Code Python (Pyodide) qui définit une fonction simulate(params) retournant un dict de résultats"
+    )
+    slider_config = models.JSONField(
+        default=list,
+        help_text="Liste de sliders [{name, label, min, max, step, default, unit}]"
+    )
+    challenges = models.JSONField(
+        default=list, help_text="Liste ordonnée de challenges adaptatifs"
+    )
+    points = models.IntegerField(default=20)
+    difficulty = models.CharField(max_length=20, default='medium')
+    is_active = models.BooleanField(default=True)
+
+    # challenges structure (example):
+    # [
+    #   {
+    #     "id": "q1",
+    #     "question": "Quelle est la portée pour v₀=20 m/s et α=45° ?",
+    #     "expected_value": 40.8,
+    #     "tolerance": 1.0,
+    #     "unit": "m",
+    #     "hint": "Utilise P = v₀²sin(2α)/g",
+    #     "explanation": "P = 20²×sin(90°)/9.81 ≈ 40.8 m",
+    #     "next_on_correct": "q2",
+    #     "next_on_wrong": "q1b"
+    #   },
+    #   ...
+    # ]
+
+    class Meta:
+        verbose_name = 'Lab interactif'
+        verbose_name_plural = 'Labs interactifs'
+
+    def __str__(self):
+        return self.title
+
+
+class LabProgress(models.Model):
+    """Progression d'un étudiant dans un lab interactif."""
+    student = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='lab_progress',
+    )
+    lab = models.ForeignKey(
+        InteractiveLab,
+        on_delete=models.CASCADE,
+        related_name='progress',
+    )
+    current_challenge_id = models.CharField(max_length=50, default='')
+    challenges_solved = models.JSONField(default=list)
+    attempts = models.IntegerField(default=0)
+    is_completed = models.BooleanField(default=False)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = [('student', 'lab')]
+        ordering = ['-updated_at']
+        verbose_name = 'Progression de lab'
+        verbose_name_plural = 'Progressions de lab'
+
+    def __str__(self):
+        return f'{self.student} — {self.lab}'
 
 
 class CodeOrderExercise(BaseExercise):

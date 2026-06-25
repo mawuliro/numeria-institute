@@ -59,6 +59,11 @@
   {% include 'cours/components/short_answer_widget.html' with block=block %}
 </div>
 
+{% elif block.type == 'interactive_lab' and block.lab_id %}
+<div class="lesson-block lesson-block--interactive-lab mb-8">
+  {% include 'cours/components/interactive_lab_widget.html' with block=block %}
+</div>
+
 {% endif %}
 
 {% endfor %}

@@ -880,3 +880,127 @@ def submit_short_answer(request, exercise_id):
     if is_correct and ex.explanation:
         extra['explanation'] = ex.explanation
     return _award_and_respond(request, ex, progress, is_correct, ex.points, progress.attempts, extra=extra)
+
+
+# ─── INTERACTIVE LAB (Pyodide simulation + adaptive branching challenges) ────
+
+@login_required
+@require_POST
+def submit_lab_answer(request, lab_id):
+    """Record a lab challenge attempt and return the next branching step.
+
+    Request body (JSON):
+      {challenge_id, answer, is_correct}
+
+    Response (JSON):
+      {next_challenge_id, is_completed, attempts, challenges_solved}
+    """
+    from .models import InteractiveLab, LabProgress
+
+    lab = get_object_or_404(InteractiveLab, id=lab_id, is_active=True)
+    try:
+        payload = json.loads(request.body) or {}
+    except (ValueError, TypeError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    challenge_id = payload.get('challenge_id')
+    answer       = payload.get('answer')
+    is_correct   = bool(payload.get('is_correct'))
+
+    if not challenge_id:
+        return JsonResponse({'error': 'challenge_id is required'}, status=400)
+
+    challenges = lab.challenges or []
+    current_ch = None
+    for ch in challenges:
+        if str(ch.get('id')) == str(challenge_id):
+            current_ch = ch
+            break
+
+    if current_ch is None:
+        return JsonResponse({'error': 'Unknown challenge_id'}, status=404)
+
+    # ── Update or create the LabProgress row ──────────────────────────────
+    progress, _created = LabProgress.objects.get_or_create(
+        student=request.user,
+        lab=lab,
+        defaults={
+            'current_challenge_id': challenge_id,
+            'challenges_solved': [],
+            'attempts': 0,
+            'is_completed': False,
+        },
+    )
+
+    progress.attempts = (progress.attempts or 0) + 1
+
+    solved_list = list(progress.challenges_solved or [])
+    if is_correct and challenge_id not in solved_list:
+        solved_list.append(challenge_id)
+    progress.challenges_solved = solved_list
+
+    # ── Branching: pick the next challenge ────────────────────────────────
+    next_key = 'next_on_correct' if is_correct else 'next_on_wrong'
+    next_id  = current_ch.get(next_key)
+
+    # If no fallback is defined for a wrong answer, stay on the same challenge
+    # so the student can try again with the hint.
+    if not next_id and not is_correct:
+        next_id = challenge_id
+
+    # If next_id resolves to a non-existent challenge (or is null), fall back
+    # to the next sequential one (if any), else mark the lab as completed.
+    next_challenge_exists = False
+    if next_id:
+        next_challenge_exists = any(
+            str(c.get('id')) == str(next_id) for c in challenges
+        )
+
+    if not next_challenge_exists:
+        # Try sequential next (current index + 1)
+        try:
+            idx = next(
+                i for i, c in enumerate(challenges)
+                if str(c.get('id')) == str(challenge_id)
+            )
+        except StopIteration:
+            idx = -1
+        if 0 <= idx < len(challenges) - 1:
+            next_id = challenges[idx + 1].get('id')
+            next_challenge_exists = True
+        else:
+            next_id = ''
+
+    # Completion: all challenges solved OR no next challenge remains.
+    all_solved = len(solved_list) >= len(challenges) and len(challenges) > 0
+    if all_solved or not next_id:
+        if not progress.is_completed:
+            progress.is_completed = True
+            progress.completed_at = timezone.now()
+        progress.current_challenge_id = ''
+    else:
+        progress.current_challenge_id = str(next_id)
+
+    progress.save()
+
+    try:
+        from notifications.notifications import notify_user
+        if progress.is_completed and not _created:
+            notify_user(
+                request.user,
+                title=_("Lab terminé ! 🎉"),
+                message=_("Tu as terminé le lab « %(title)s » (+%(points)s pts).") % {
+                    'title': lab.title, 'points': lab.points,
+                },
+                notification_type='success',
+            )
+    except Exception:
+        pass
+
+    return JsonResponse({
+        'next_challenge_id': progress.current_challenge_id,
+        'is_completed':      progress.is_completed,
+        'attempts':          progress.attempts,
+        'challenges_solved': progress.challenges_solved,
+        'is_correct':        is_correct,
+    })

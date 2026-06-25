@@ -1,0 +1,308 @@
+{% load i18n sandbox_tags %}
+{% comment %}
+Interactive Lab widget — side-by-side layout:
+  LEFT  : simulation (sliders + Run button + matplotlib output canvas)
+  RIGHT : adaptive challenge (current question + numeric input + feedback)
+
+Server-side data is serialized via `|json_script` (slider_config / challenges /
+challenges_solved) and `|escapejs` (simulation_code) so arbitrary Python code
+or non-ASCII strings never break the JS parser.
+{% endcomment %}
+{% with lab=block %}
+<div id="lab-{{ lab.lab_id }}"
+     class="lab-widget bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm mb-8">
+  <div class="flex items-center gap-3 px-5 py-3.5 bg-gradient-to-r from-purple-500 to-indigo-500 border-b">
+    <span class="text-lg">🔬</span>
+    <span class="font-bold text-white text-sm">{{ lab.title }}</span>
+    <div class="ml-auto flex items-center gap-2">
+      <span class="text-xs bg-white/20 text-white px-2 py-0.5 rounded-full">{{ lab.points }} pts</span>
+      {% if lab.is_completed %}<span class="text-xs bg-green-400 text-white font-bold px-2 py-0.5 rounded-full">✅ {% trans "Terminé" %}</span>{% endif %}
+    </div>
+  </div>
+
+  {% if lab.instructions %}
+  <div class="px-5 py-3 text-sm text-gray-600 dark:text-gray-300 prose prose-sm dark:prose-invert max-w-none border-b border-gray-100 dark:border-gray-700">
+    {{ lab.instructions }}
+  </div>
+  {% endif %}
+
+  <div class="grid md:grid-cols-2 gap-0">
+    <!-- LEFT: Simulation -->
+    <div class="p-5 border-r dark:border-gray-700">
+      <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200 mb-3">📊 {% trans "Simulation" %}</h3>
+      <div id="lab-{{ lab.lab_id }}-sliders" class="space-y-3 mb-4"></div>
+      <button id="lab-{{ lab.lab_id }}-run"
+              type="button"
+              onclick="labRun_{{ lab.lab_id }}()"
+              class="w-full bg-numeria-bleu hover:bg-blue-800 text-white text-sm font-bold py-2.5 rounded-xl transition-colors">
+        ▶ {% trans "Exécuter" %}
+      </button>
+      <div id="lab-{{ lab.lab_id }}-output"
+           class="mt-4 min-h-64 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center text-gray-400 text-sm p-4">
+        {% trans "Cliquez « Exécuter » pour lancer la simulation" %}
+      </div>
+    </div>
+
+    <!-- RIGHT: Adaptive challenge -->
+    <div class="p-5">
+      <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200 mb-3">🎯 {% trans "Challenge" %}</h3>
+      <div id="lab-{{ lab.lab_id }}-challenge" class="space-y-3"></div>
+      <div id="lab-{{ lab.lab_id }}-feedback" class="hidden mt-3 rounded-xl px-4 py-3 text-sm"></div>
+    </div>
+  </div>
+</div>
+
+{# ── Server-side data passed as JSON script blocks (no JS injection possible) ── #}
+{% with id_suffix=lab.lab_id|stringformat:"s" %}
+  {% with slider_id="lab-slider-config-"|add:id_suffix challenges_id="lab-challenges-"|add:id_suffix solved_id="lab-solved-"|add:id_suffix %}
+    {{ lab.slider_config|json_script:slider_id }}
+    {{ lab.challenges|json_script:challenges_id }}
+    {{ lab.challenges_solved|json_script:solved_id }}
+  {% endwith %}
+{% endwith %}
+
+<script>
+(function(){
+'use strict';
+
+var LAB_ID    = {{ lab.lab_id }};
+var POINTS    = {{ lab.points }};
+var CSRF      = (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+var SUBMIT_URL = '/cours/lab/' + LAB_ID + '/submit/';
+
+/* Read JSON-serialised server data */
+function readJsonScript(id) {
+  var el = document.getElementById(id);
+  if (!el) return null;
+  try { return JSON.parse(el.textContent); } catch(e) { return null; }
+}
+
+var SLIDERS    = readJsonScript('lab-slider-config-' + LAB_ID) || [];
+var CHALLENGES = readJsonScript('lab-challenges-' + LAB_ID)    || [];
+var SOLVED     = readJsonScript('lab-solved-' + LAB_ID)        || [];
+
+/* simulation_code is plain Python — embed as an escapejs'd JS string. */
+var SIM_CODE  = "{{ lab.simulation_code|escapejs }}";
+
+var CURRENT_CHALLENGE_ID = '{{ lab.current_challenge_id|escapejs }}'
+  || (CHALLENGES[0] && CHALLENGES[0].id) || '';
+
+/* ─── Build sliders ─── */
+function buildSliders() {
+  var container = document.getElementById('lab-' + LAB_ID + '-sliders');
+  if (!container) return;
+  container.innerHTML = '';
+  SLIDERS.forEach(function(s) {
+    var div = document.createElement('div');
+    var label = s.label || s.name;
+    var unit  = s.unit ? ' (' + s.unit + ')' : '';
+    div.innerHTML =
+      '<label class="block text-xs text-gray-600 dark:text-gray-300 mb-1">' + label + unit + '</label>' +
+      '<div class="flex items-center gap-2">' +
+        '<input type="range" id="lab-' + LAB_ID + '-slider-' + s.name + '" ' +
+          'min="' + s.min + '" max="' + s.max + '" step="' + s.step + '" value="' + s.default + '" ' +
+          'class="flex-1 accent-purple-500">' +
+        '<span id="lab-' + LAB_ID + '-sliderval-' + s.name + '" ' +
+          'class="text-xs font-mono text-gray-700 dark:text-gray-200 w-14 text-right">' +
+          parseFloat(s.default).toFixed(2) +
+        '</span>' +
+      '</div>';
+    container.appendChild(div);
+    var slider  = div.querySelector('input[type=range]');
+    var valSpan = div.querySelector('span');
+    slider.addEventListener('input', function() {
+      valSpan.textContent = parseFloat(slider.value).toFixed(2);
+    });
+  });
+}
+
+/* ─── Run simulation via Pyodide ─── */
+window['labRun_' + LAB_ID] = async function() {
+  var output = document.getElementById('lab-' + LAB_ID + '-output');
+  if (!output) return;
+  output.innerHTML = '<div class="text-purple-500">⏳ {% trans "Chargement de Pyodide…" %}</div>';
+
+  /* Collect slider values */
+  var params = {};
+  SLIDERS.forEach(function(s) {
+    var el = document.getElementById('lab-' + LAB_ID + '-slider-' + s.name);
+    if (el) params[s.name] = parseFloat(el.value);
+  });
+
+  try {
+    if (!window.pyodide) {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js';
+      script.onload = async function() {
+        output.innerHTML = '<div class="text-purple-500">⏳ {% trans "Installation de matplotlib + numpy…" %}</div>';
+        window.pyodide = await loadPyodide();
+        await window.pyodide.loadPackage(['matplotlib', 'numpy']);
+        runSim(params, output);
+      };
+      script.onerror = function() {
+        output.innerHTML = '<div class="text-red-500 text-xs p-3">{% trans "Impossible de charger Pyodide (vérifiez votre connexion)." %}</div>';
+      };
+      document.head.appendChild(script);
+    } else {
+      runSim(params, output);
+    }
+  } catch(e) {
+    output.innerHTML = '<div class="text-red-500 text-xs p-3">Erreur: ' + e.message + '</div>';
+  }
+};
+
+async function runSim(params, output) {
+  output.innerHTML = '<div class="text-purple-500">⏳ {% trans "Exécution de la simulation…" %}</div>';
+  /*
+    The simulation_code must define `simulate(params)` returning a matplotlib Figure.
+    We serialise the slider params as JSON, run the code, then base64-encode the figure.
+  */
+  var paramsJson = JSON.stringify(params);
+  var wrappedCode =
+    "import matplotlib\n" +
+    "matplotlib.use('Agg')\n" +
+    "import matplotlib.pyplot as plt\n" +
+    "import numpy as np\n" +
+    "import io, base64, json\n" +
+    SIM_CODE + "\n" +
+    "params = json.loads(" + JSON.stringify(paramsJson) + ")\n" +
+    "fig = simulate(params)\n" +
+    "buf = io.BytesIO()\n" +
+    "fig.savefig(buf, format='png', dpi=100, bbox_inches='tight')\n" +
+    "buf.seek(0)\n" +
+    "img_b64 = base64.b64encode(buf.read()).decode()\n" +
+    "plt.close('all')\n";
+  try {
+    window.pyodide.runPython(wrappedCode);
+    var imgB64 = window.pyodide.globals.get('img_b64');
+    if (!imgB64) {
+      imgB64 = window.pyodide.runPython('img_b64');
+    }
+    output.innerHTML = '<img src="data:image/png;base64,' + imgB64 + '" class="w-full rounded-xl" alt="simulation output">';
+  } catch(e) {
+    output.innerHTML = '<div class="text-red-500 text-xs p-3 whitespace-pre-wrap">Erreur Python: ' + e.message + '</div>';
+  }
+}
+
+/* ─── Render the current challenge ─── */
+function findChallenge(id) {
+  for (var i = 0; i < CHALLENGES.length; i++) {
+    if (CHALLENGES[i].id === id) return CHALLENGES[i];
+  }
+  return null;
+}
+
+function renderChallenge() {
+  var container = document.getElementById('lab-' + LAB_ID + '-challenge');
+  if (!container) return;
+  var ch = findChallenge(CURRENT_CHALLENGE_ID);
+  if (!ch) {
+    container.innerHTML =
+      '<div class="bg-green-50 dark:bg-green-900/20 border border-green-200 rounded-xl p-4 text-sm text-green-700 dark:text-green-300">' +
+      '🎉 {% trans "Tous les challenges sont résolus ! Lab terminé." %}</div>';
+    return;
+  }
+  var html =
+    '<div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 rounded-xl p-4">' +
+      '<p class="text-sm text-gray-800 dark:text-gray-100 mb-3">' + ch.question + '</p>' +
+      '<div class="flex items-center gap-2">' +
+        '<input type="number" id="lab-' + LAB_ID + '-answer" step="any" ' +
+          'class="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700" ' +
+          'placeholder="{% trans "Votre réponse" %}">' +
+        '<span class="text-xs text-gray-500">' + (ch.unit || '') + '</span>' +
+      '</div>' +
+      '<button onclick="labSubmit_' + LAB_ID + '()" ' +
+        'class="mt-3 bg-purple-500 hover:bg-purple-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors">' +
+        '{% trans "Valider" %}</button>';
+  if (ch.hint) {
+    html +=
+      '<button type="button" onclick="this.nextElementSibling.classList.toggle(\'hidden\')" ' +
+        'class="ml-2 text-xs text-amber-600">{% trans "💡 Indice" %}</button>' +
+      '<div class="hidden mt-2 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 p-2 rounded">' +
+        ch.hint +
+      '</div>';
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+/* ─── Submit challenge answer ─── */
+function showFeedback(kind, html) {
+  var fb = document.getElementById('lab-' + LAB_ID + '-feedback');
+  if (!fb) return;
+  fb.classList.remove('hidden');
+  if (kind === 'success') {
+    fb.className = 'mt-3 rounded-xl px-4 py-3 text-sm bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-700';
+  } else {
+    fb.className = 'mt-3 rounded-xl px-4 py-3 text-sm bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-700';
+  }
+  fb.innerHTML = html;
+}
+
+window['labSubmit_' + LAB_ID] = async function() {
+  var ch = findChallenge(CURRENT_CHALLENGE_ID);
+  if (!ch) return;
+  var inp = document.getElementById('lab-' + LAB_ID + '-answer');
+  if (!inp) return;
+  var val = parseFloat(inp.value);
+  if (isNaN(val)) {
+    showFeedback('error', '{% trans "Veuillez entrer un nombre valide." %}');
+    return;
+  }
+
+  var expected   = (typeof ch.expected_value === 'number') ? ch.expected_value : parseFloat(ch.expected_value);
+  var tolerance  = (typeof ch.tolerance === 'number') ? ch.tolerance : parseFloat(ch.tolerance);
+  if (isNaN(expected))  expected  = 0;
+  if (isNaN(tolerance)) tolerance = 0;
+
+  var isCorrect = Math.abs(val - expected) <= tolerance;
+
+  if (isCorrect) {
+    showFeedback('success', '✅ {% trans "Correct !" %} ' + (ch.explanation || ''));
+    if (SOLVED.indexOf(ch.id) === -1) SOLVED.push(ch.id);
+  } else {
+    var diff = val - expected;
+    var msg = '❌ {% trans "Incorrect." %} ' +
+      '{% trans "Votre réponse :" %} ' + val + ' ' + (ch.unit || '') + '. ' +
+      (diff > 0 ? '{% trans "Trop élevé." %}' : '{% trans "Trop bas." %}');
+    if (ch.hint) msg += ' ' + ch.hint;
+    showFeedback('error', msg);
+  }
+
+  /* Submit to server — let server decide next branching step. */
+  try {
+    var r = await fetch(SUBMIT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
+      body: JSON.stringify({
+        challenge_id: ch.id,
+        answer: val,
+        is_correct: isCorrect
+      })
+    });
+    var d = await r.json();
+    if (d.next_challenge_id) {
+      CURRENT_CHALLENGE_ID = d.next_challenge_id;
+      setTimeout(renderChallenge, 1500);
+    } else if (d.is_completed) {
+      setTimeout(function() {
+        var container = document.getElementById('lab-' + LAB_ID + '-challenge');
+        if (container) {
+          container.innerHTML =
+            '<div class="bg-green-50 dark:bg-green-900/20 border border-green-200 rounded-xl p-4 text-sm text-green-700 dark:text-green-300">' +
+            '🎉 {% trans "Tous les challenges sont résolus ! Lab terminé." %}</div>';
+        }
+      }, 1500);
+    }
+  } catch(e) {
+    console.log('Lab submit error:', e);
+  }
+};
+
+/* ─── Init ─── */
+buildSliders();
+renderChallenge();
+
+})();
+</script>
+{% endwith %}
